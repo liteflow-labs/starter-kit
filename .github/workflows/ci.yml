@@ -1,0 +1,44 @@
+name: CI
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Node version
+        run: node -v
+
+      - name: Npm version
+        run: npm -v
+
+      - name: Set version in env
+        run: |
+          echo "node-version=$(node -v)" >> $GITHUB_ENV
+          echo "npm-version=$(npm -v)" >> $GITHUB_ENV
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ env.cache-name }}-node${{ env.node-version }}-npm${{ env.npm-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-node${{ env.node-version }}-npm${{ env.npm-version }}-
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm install
+
+      - name: Lint
+        run: npm run lint

@@ -1,0 +1,53 @@
+{
+  "name": "demo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf .next",
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "next lint",
+    "analyze": "ANALYZE=true npm run build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@nft/components": "^0.2.0",
+    "@nft/hooks": "^0.2.2",
+    "@nft/templates": "^0.2.0",
+    "@react-icons/all-files": "^4.1.0",
+    "@web3-react/injected-connector": "^6.0.7",
+    "@web3-react/walletconnect-connector": "^6.1.9",
+    "@web3-react/walletlink-connector": "^6.1.9",
+    "next": "^12.1.6",
+    "next-translate": "^1.4.0",
+    "nextjs-google-analytics": "^1.2.1",
+    "nprogress": "^0.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-toastify": "^8.2.0",
+    "ts-invariant": "^0.9.4"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^11.0.1",
+    "@tailwindcss/aspect-ratio": "^0.2.1",
+    "@tailwindcss/forms": "^0.3.3",
+    "@tailwindcss/line-clamp": "^0.2.1",
+    "@types/nprogress": "^0.2.0",
+    "@types/react": "^17.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.28.0",
+    "@typescript-eslint/parser": "^4.31.1",
+    "autoprefixer": "^10.2.6",
+    "eslint": "^7.29.0",
+    "eslint-config-next": "^11.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-deprecation": "^1.2.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-unused-imports": "^1.1.4",
+    "postcss": "^8.2.13",
+    "prettier": "^2.3.2",
+    "prettier-plugin-organize-imports": "^2.3.4",
+    "prettier-plugin-tailwindcss": "^0.1.3",
+    "tailwindcss": "^2.2.2",
+    "typescript": "^4.3.4"
+  }
+}
