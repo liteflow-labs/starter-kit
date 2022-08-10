@@ -5,12 +5,33 @@ const { white, black, blue, gray, green, red } = require('tailwindcss/colors')
 module.exports = {
   mode: 'jit',
   purge: [
-    './**/*.{js,ts,jsx,tsx}',
-    '../../packages/components/**/*.{js,ts,jsx,tsx}',
-    '../../packages/templates/**/*.{js,ts,jsx,tsx}',
+    'node_modules/@nft/components/**/*.{js,ts,jsx,tsx}',
+    'node_modules/@nft/templates/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './layouts/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    fontFamily: {
+      sans: ['Outfit'],
+    },
+    boxShadow: {
+      DEFAULT:
+        '0px 1px 2px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.1)',
+      base: '0px 1px 2px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.1)',
+      sm: '0px 1px 2px rgba(0, 0, 0, 0.05)',
+      md: '0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.1)',
+      lg: '0px 15px 10px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      xl: '0px 15px 10px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    },
+    borderRadius: {
+      DEFAULT: '4px',
+      md: '4px',
+      lg: '4px',
+      xl: '4px',
+      full: '9999px',
+    },
     colors: {
       // [#55990B]
       // [#6CB310]
@@ -25,10 +46,9 @@ module.exports = {
         600: blue[600],
       },
       brand: {
-        100: '#D3E2FF',
-        200: '#A7C4FF',
-        500: '#245BFF',
-        600: '#1A45DB',
+        200: '#2B59ED',
+        500: '#2B59ED',
+        600: '#1E3EA6',
         black: '#060F27',
       },
       gray: {
