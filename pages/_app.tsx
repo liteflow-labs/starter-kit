@@ -90,7 +90,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
       <Head
-        title="Liteflow NFT Marketplace - Test"
+        title="Liteflow NFT Marketplace Solution - Demo"
         description="The next-generation NFT Marketplace tailored to your needs"
       >
         <meta
