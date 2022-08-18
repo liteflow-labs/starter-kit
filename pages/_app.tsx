@@ -1,13 +1,9 @@
 import LiteflowNFTApp, {
   APOLLO_STATE_PROP_NAME,
-  Template,
+  Footer,
+  Navbar
 } from '@nft/components'
 import { EmailConnector } from '@nft/email-connector'
-import { SiDribbble } from '@react-icons/all-files/si/SiDribbble'
-import { SiFacebook } from '@react-icons/all-files/si/SiFacebook'
-import { SiGithub } from '@react-icons/all-files/si/SiGithub'
-import { SiInstagram } from '@react-icons/all-files/si/SiInstagram'
-import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
@@ -17,11 +13,10 @@ import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { useEffect, useMemo } from 'react'
-import 'react-toastify/dist/ReactToastify.css'
-import Banner from '../components/Banner/Banner'
 import Head from '../components/Head'
 import environment from '../environment'
 import '../styles/globals.css'
+import { theme } from '../styles/theme'
 
 NProgress.configure({ showSpinner: false })
 
@@ -44,45 +39,20 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     }
   }, [router])
 
-  const footerColumns = useMemo(
+  const footerLinks = useMemo(
     () => [
-      {
-        title: 'Liteflow',
-        links: [
-          { href: 'https://liteflow.com', label: 'About' },
-          { href: 'https://liteflow.com/#nft', label: 'NFT Solution' },
-          {
-            href: 'https://calendly.com/anthony-estebe/liteflow-nft-marketplace',
-            label: 'Schedule a demo',
-          },
-        ],
-      },
-      {
-        title: 'Platform',
-        links: [
-          { href: '/explore', label: 'Explore' },
-          { href: '#', label: 'Activity' },
-          { href: '#', label: 'Support' },
-        ],
-      },
-      {
-        title: 'Legal',
-        links: [
-          { href: '#', label: 'Terms' },
-          { href: '#', label: 'Privacy' },
-        ],
-      },
-    ],
-    [],
-  )
-
-  const footerSocials = useMemo(
-    () => [
-      { icon: SiFacebook, href: 'https://facebook.com' },
-      { icon: SiInstagram, href: 'https://instagram.com' },
-      { icon: SiTwitter, href: 'https://twitter.com' },
-      { icon: SiGithub, href: 'https://github.com' },
-      { icon: SiDribbble, href: 'https://dribbble.com' },
+      { href: 'https://liteflow.com', label: 'About' },
+      { href: 'https://liteflow.com/#nft', label: 'NFT Solution' },
+      { href: '/explore', label: 'Explore' },
+      { href: '#', label: 'Activity' },
+      { href: '#', label: 'Support' },
+      { href: '#', label: 'Terms' },
+      { href: '#', label: 'Privacy' },
+      { href: 'https://facebook.com', label: 'Facebook' },
+      { href: 'https://instagram.com', label: 'Instagram' },
+      { href: 'https://twitter.com', label: 'Twitter' },
+      { href: 'https://github.com', label: 'Github' },
+      { href: 'https://dribbble.com', label: 'Dribble' },
     ],
     [],
   )
@@ -120,7 +90,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
       <Head
-        title="Liteflow NFT Marketplace Solution - Demo"
+        title="Liteflow NFT Marketplace - Test"
         description="The next-generation NFT Marketplace tailored to your needs"
       >
         <meta
@@ -144,10 +114,10 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         user={pageProps.user}
         connectors={connectors}
         bugsnagAPIKey={environment.BUGSNAG_API_KEY}
+        theme={theme}
       >
         <div className="mt-12">
-          <Banner />
-          <Template.Navbar
+          <Navbar
             allowTopUp={true}
             router={{
               asPath: router.asPath,
@@ -165,12 +135,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
             }}
           />
           <Component {...pageProps} />
-          <Template.Footer
-            name="Liteflow"
-            columns={footerColumns}
-            socials={footerSocials}
-            newsletter={<Template.Newsletter />}
-          />
+          <Footer name="Liteflow" links={footerLinks} />
         </div>
       </LiteflowNFTApp>
     </>

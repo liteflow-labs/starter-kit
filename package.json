@@ -11,9 +11,11 @@
     "start": "next start"
   },
   "dependencies": {
-    "@nft/components": "^1.0.0-alpha.20220811084417",
-    "@nft/hooks": "^1.0.0-alpha.20220811084417",
-    "@nft/templates": "^1.0.0-alpha.20220811084417",
+    "@chakra-ui/react": "^1.8.8",
+    "@nft/api-graphql": "^1.0.0-alpha.20220818064052",
+    "@nft/components": "^1.0.0-alpha.20220818064052",
+    "@nft/hooks": "^1.0.0-alpha.20220818064052",
+    "@nft/templates": "^1.0.0-alpha.20220818064052",
     "@react-icons/all-files": "^4.1.0",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "^6.1.9",
@@ -24,7 +26,6 @@
     "nprogress": "^0.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-toastify": "^8.2.0",
     "ts-invariant": "^0.9.4"
   },
   "devDependencies": {
