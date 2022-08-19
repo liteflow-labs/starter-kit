@@ -13,6 +13,7 @@ import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { useEffect, useMemo } from 'react'
+import Banner from '../components/Banner/Banner'
 import Head from '../components/Head'
 import environment from '../environment'
 import '../styles/globals.css'
@@ -117,6 +118,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         theme={theme}
       >
         <div className="mt-12">
+          <Banner />
           <Navbar
             allowTopUp={true}
             router={{
