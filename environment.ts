@@ -6,8 +6,6 @@ type Environment = {
   BLOCKCHAIN_EXPLORER_URL: string
   BLOCKCHAIN_EXPLORER_NAME: string
   GRAPHQL_URL: string
-  PINATA_API_KEY: string
-  PINATA_SECRET_KEY: string
   FEATURED_TOKEN: string[]
   PAGINATION_LIMIT: number
   CHAIN_ID: number
@@ -42,13 +40,6 @@ invariant(
 
 // graphql
 invariant(process.env.NEXT_PUBLIC_GRAPHQL_URL, 'Missing GraphQL URL')
-
-// pinata
-invariant(process.env.NEXT_PUBLIC_PINATA_API_KEY, 'API key is not defined')
-invariant(
-  process.env.NEXT_PUBLIC_PINATA_SECRET_KEY,
-  'Secret key is not defined',
-)
 
 // feature token
 invariant(
@@ -105,8 +96,6 @@ const environment: Environment = {
   BLOCKCHAIN_EXPLORER_URL: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_URL,
   BLOCKCHAIN_EXPLORER_NAME: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
   GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
-  PINATA_API_KEY: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-  PINATA_SECRET_KEY: process.env.NEXT_PUBLIC_PINATA_SECRET_KEY,
   FEATURED_TOKEN: process.env.NEXT_PUBLIC_FEATURED_TOKEN.split(','),
   PAGINATION_LIMIT: 12,
   CHAIN_ID: CHAIN_ID,
