@@ -7,12 +7,7 @@ import SmallLayout from '../../layouts/small'
 const EditPage: NextPage = () => (
   <SmallLayout>
     <Head title="Account - Edit profile" />
-    <UserForm.Template
-      storageCredentials={{
-        apiKey: environment.PINATA_API_KEY,
-        secretKey: environment.PINATA_SECRET_KEY,
-      }}
-    />
+    <UserForm.Template uploadUrl={environment.UPLOAD_URL} />
   </SmallLayout>
 )
 

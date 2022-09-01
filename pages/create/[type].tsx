@@ -18,10 +18,6 @@ const CreatePage: NextPage<AssetForm.Props> = ({ multiple }) => (
         name: environment.BLOCKCHAIN_EXPLORER_NAME,
         url: environment.BLOCKCHAIN_EXPLORER_URL,
       }}
-      storageCredentials={{
-        apiKey: environment.PINATA_API_KEY,
-        secretKey: environment.PINATA_SECRET_KEY,
-      }}
       uploadUrl={environment.UPLOAD_URL}
       login={{
         email: true,
