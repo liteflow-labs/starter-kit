@@ -1,12 +1,13 @@
 import LiteflowNFTApp, {
   APOLLO_STATE_PROP_NAME,
   Footer,
-  Navbar
+  Navbar,
 } from '@nft/components'
 import { EmailConnector } from '@nft/email-connector'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
+import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
@@ -18,11 +19,14 @@ import Head from '../components/Head'
 import environment from '../environment'
 import '../styles/globals.css'
 import { theme } from '../styles/theme'
+require('dayjs/locale/ja')
+require('dayjs/locale/zh-cn')
 
 NProgress.configure({ showSpinner: false })
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const router = useRouter()
+  dayjs.locale(router.locale)
   usePageViews()
 
   useEffect(() => {
@@ -40,23 +44,49 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     }
   }, [router])
 
-  const footerLinks = useMemo(
-    () => [
+  const footerLinks = useMemo(() => {
+    const texts = {
+      en: {
+        explore: 'Explore',
+        support: 'Support',
+        legal: 'Legal',
+        terms: 'Terms',
+        privacy: 'Privacy',
+        referral: 'Referral',
+      },
+      ja: {
+        explore: '検索',
+        support: 'サポート',
+        legal: 'リーガル',
+        terms: '利用規約',
+        privacy: 'プライバシーポリシー',
+        referral: '紹介',
+      },
+      'zh-cn': {
+        explore: '探讨',
+        support: '支持',
+        legal: '法律',
+        terms: '条款',
+        privacy: '隐私',
+        referral: '转介',
+      },
+    }
+    const locale = (router.locale || 'en') as keyof typeof texts
+    return [
       { href: 'https://liteflow.com', label: 'About' },
       { href: 'https://liteflow.com/#nft', label: 'NFT Solution' },
-      { href: '/explore', label: 'Explore' },
-      { href: '#', label: 'Activity' },
-      { href: '#', label: 'Support' },
-      { href: '#', label: 'Terms' },
-      { href: '#', label: 'Privacy' },
+      { href: '/explore', label: texts[locale].explore },
+      { href: '#', label: texts[locale].support },
+      { href: '#', label: texts[locale].terms },
+      { href: '#', label: texts[locale].privacy },
+      { href: '/referral', label: texts[locale].referral },
       { href: 'https://facebook.com', label: 'Facebook' },
       { href: 'https://instagram.com', label: 'Instagram' },
       { href: 'https://twitter.com', label: 'Twitter' },
       { href: 'https://github.com', label: 'Github' },
       { href: 'https://dribbble.com', label: 'Dribble' },
-    ],
-    [],
-  )
+    ]
+  }, [router.locale])
 
   const connectors = useMemo(
     () => ({
@@ -134,6 +164,15 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
               walletConnect: true,
               coinbase: true,
               networkName: environment.NETWORK_NAME,
+            }}
+            multiLang={{
+              locale: router.locale,
+              pathname: router.pathname,
+              choices: [
+                { label: 'En', value: 'en' },
+                { label: '日本語', value: 'ja' },
+                { label: '中文', value: 'zh-cn' },
+              ],
             }}
           />
           <Component {...pageProps} />
