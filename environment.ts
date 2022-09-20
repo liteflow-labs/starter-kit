@@ -17,6 +17,7 @@ type Environment = {
   BUGSNAG_API_KEY?: string
   BASE_URL: string
   UPLOAD_URL: string
+  REFERRAL_PERCENTAGE: { base: number; secondary?: number }
 }
 
 // magic api key
@@ -107,6 +108,7 @@ const environment: Environment = {
   BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,
   BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   UPLOAD_URL: process.env.NEXT_PUBLIC_UPLOAD_URL,
+  REFERRAL_PERCENTAGE: { base: 20, secondary: 10 },
 }
 
 export default environment
