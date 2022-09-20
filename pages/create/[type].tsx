@@ -26,7 +26,7 @@ const CreatePage: NextPage<AssetForm.Props> = ({ multiple }) => (
         coinbase: true,
         networkName: environment.NETWORK_NAME,
       }}
-      activateUnlockableContent={false}
+      activateUnlockableContent={true}
     />
   </SmallLayout>
 )
