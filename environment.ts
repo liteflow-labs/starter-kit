@@ -108,7 +108,7 @@ const environment: Environment = {
   BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,
   BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   UPLOAD_URL: process.env.NEXT_PUBLIC_UPLOAD_URL,
-  REFERRAL_PERCENTAGE: { base: 20, secondary: 10 },
+  REFERRAL_PERCENTAGE: { base: 20 * 0.025, secondary: 20 * 0.01 },
 }
 
 export default environment
