@@ -37,6 +37,7 @@ const AuctionPage: NextPage<UserAuctions.Props> = ({
       orderBy={orderBy}
       page={page}
       userAddress={userAddress}
+      loginUrlForReferral={environment.BASE_URL + '/login'}
     />
   </LargeLayout>
 )

@@ -32,6 +32,7 @@ const OwnedPage: NextPage<UserOwnedAssets.Props> = ({
       orderBy={orderBy}
       page={page}
       userAddress={userAddress}
+      loginUrlForReferral={environment.BASE_URL + '/login'}
     />
   </LargeLayout>
 )

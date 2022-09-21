@@ -36,6 +36,7 @@ const BidPlacedPage: NextPage<UserBidPlaced.Props> = ({
       orderBy={orderBy}
       page={page}
       userAddress={userAddress}
+      loginUrlForReferral={environment.BASE_URL + '/login'}
     />
   </LargeLayout>
 )
