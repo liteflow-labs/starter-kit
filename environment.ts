@@ -42,7 +42,7 @@ invariant(
 // graphql
 invariant(process.env.NEXT_PUBLIC_GRAPHQL_URL, 'Missing GraphQL URL')
 
-// feature token
+// featured token
 invariant(
   process.env.NEXT_PUBLIC_FEATURED_TOKEN,
   'Featured token is not defined',
