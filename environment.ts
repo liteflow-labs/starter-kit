@@ -42,7 +42,7 @@ invariant(
 // graphql
 invariant(process.env.NEXT_PUBLIC_GRAPHQL_URL, 'Missing GraphQL URL')
 
-// feature token
+// featured token
 invariant(
   process.env.NEXT_PUBLIC_FEATURED_TOKEN,
   'Featured token is not defined',
@@ -50,7 +50,7 @@ invariant(
 
 // chain id
 invariant(process.env.NEXT_PUBLIC_CHAIN_ID, 'missing env NEXT_PUBLIC_CHAIN_ID')
-export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID, 10)
+const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID, 10)
 invariant(!isNaN(CHAIN_ID), 'env NEXT_PUBLIC_CHAIN_ID must be an integer')
 
 // network name
