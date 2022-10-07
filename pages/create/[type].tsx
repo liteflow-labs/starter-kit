@@ -31,6 +31,8 @@ const CreatePage: NextPage<AssetForm.Props> = ({
         networkName: environment.NETWORK_NAME,
       }}
       activateUnlockableContent={true}
+      restrictMintToVerifiedAccount={true}
+      reportEmail={environment.REPORT_EMAIL}
     />
   </SmallLayout>
 )
