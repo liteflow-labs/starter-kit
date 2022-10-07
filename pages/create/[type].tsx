@@ -6,13 +6,17 @@ import SmallLayout from '../../layouts/small'
 
 export const getServerSideProps = AssetForm.server(environment.GRAPHQL_URL)
 
-const CreatePage: NextPage<AssetForm.Props> = ({ multiple }) => (
+const CreatePage: NextPage<AssetForm.Props> = ({
+  currentAccount,
+  multiple,
+}) => (
   <SmallLayout>
     <Head
       title="Create Collectible"
       description="Create Collectible securely stored on blockchain"
     />
     <AssetForm.Template
+      currentAccount={currentAccount}
       multiple={multiple}
       explorer={{
         name: environment.BLOCKCHAIN_EXPLORER_NAME,

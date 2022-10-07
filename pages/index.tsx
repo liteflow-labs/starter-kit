@@ -13,6 +13,7 @@ export const getServerSideProps = Home.server(
 )
 
 const HomePage: NextPage<Home.Props> = ({
+  currentAccount,
   featuredTokens,
   limit,
   now,
@@ -21,6 +22,7 @@ const HomePage: NextPage<Home.Props> = ({
   return (
     <LargeLayout>
       <Home.Template
+        currentAccount={currentAccount}
         featuredTokens={featuredTokens}
         limit={limit}
         now={now}
