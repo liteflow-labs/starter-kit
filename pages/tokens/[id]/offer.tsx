@@ -6,7 +6,12 @@ import SmallLayout from '../../../layouts/small'
 
 export const getServerSideProps = OfferForm.server(environment.GRAPHQL_URL)
 
-const OfferPage: NextPage<OfferForm.Props> = ({ now, assetId, meta }) => (
+const OfferPage: NextPage<OfferForm.Props> = ({
+  currentAccount,
+  now,
+  assetId,
+  meta,
+}) => (
   <SmallLayout>
     <Head
       title={meta.title}
@@ -15,6 +20,7 @@ const OfferPage: NextPage<OfferForm.Props> = ({ now, assetId, meta }) => (
     />
 
     <OfferForm.Template
+      currentAccount={currentAccount}
       assetId={assetId}
       now={now}
       explorer={{

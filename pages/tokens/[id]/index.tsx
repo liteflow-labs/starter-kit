@@ -6,7 +6,12 @@ import LargeLayout from '../../../layouts/large'
 
 export const getServerSideProps = AssetDetail.server(environment.GRAPHQL_URL)
 
-const DetailPage: NextPage<AssetDetail.Props> = ({ assetId, now, meta }) => (
+const DetailPage: NextPage<AssetDetail.Props> = ({
+  currentAccount,
+  assetId,
+  now,
+  meta,
+}) => (
   <LargeLayout>
     <Head
       title={meta.title}
@@ -14,6 +19,7 @@ const DetailPage: NextPage<AssetDetail.Props> = ({ assetId, now, meta }) => (
       image={meta.image}
     />
     <AssetDetail.Template
+      currentAccount={currentAccount}
       assetId={assetId}
       now={now}
       explorer={{
