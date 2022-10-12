@@ -1,5 +1,3 @@
-import { Button, Heading } from '@chakra-ui/react'
-import { Link } from '@nft/components'
 import { Home } from '@nft/templates'
 import { NextPage } from 'next'
 import environment from '../environment'
@@ -32,30 +30,6 @@ const HomePage: NextPage<Home.Props> = ({
           url: environment.BLOCKCHAIN_EXPLORER_URL,
         }}
       />
-      <section className="mt-12 flex flex-col items-center justify-center p-16">
-        <Heading as="h1" variant="title" color="brand.black">
-          Got an NFT project in mind?
-        </Heading>
-        <Heading
-          as="h2"
-          variant="title"
-          fontWeight={500}
-          color="gray.500"
-          mt={2}
-        >
-          Schedule a demo with us
-        </Heading>
-
-        <Button
-          as={Link}
-          href="https://calendly.com/anthony-estebe/liteflow-nft-marketplace"
-          isExternal
-          mt={12}
-          size="lg"
-        >
-          Schedule a Demo
-        </Button>
-      </section>
     </LargeLayout>
   )
 }

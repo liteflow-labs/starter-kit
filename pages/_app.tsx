@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react'
 import LiteflowNFTApp, {
   APOLLO_STATE_PROP_NAME,
   Footer,
@@ -44,49 +45,55 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     }
   }, [router])
 
+  const userProfileLink = useMemo(
+    () =>
+      pageProps?.user?.address ? `/users/${pageProps.user.address}` : '/login',
+    [pageProps?.user?.address],
+  )
+
   const footerLinks = useMemo(() => {
     const texts = {
       en: {
         explore: 'Explore',
+        create: 'Create',
+        profile: 'Profile',
+        referral: 'Referral',
         support: 'Support',
-        legal: 'Legal',
         terms: 'Terms',
         privacy: 'Privacy',
-        referral: 'Referral',
       },
       ja: {
         explore: '検索',
+        create: '作成',
+        profile: 'プロフィール',
+        referral: '紹介',
         support: 'サポート',
-        legal: 'リーガル',
         terms: '利用規約',
         privacy: 'プライバシーポリシー',
-        referral: '紹介',
       },
       'zh-cn': {
         explore: '探讨',
+        create: '创造',
+        profile: '资料',
+        referral: '转介',
         support: '支持',
-        legal: '法律',
         terms: '条款',
         privacy: '隐私',
-        referral: '转介',
       },
     }
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
-      { href: 'https://liteflow.com', label: 'About' },
-      { href: 'https://liteflow.com/#nft', label: 'NFT Solution' },
       { href: '/explore', label: texts[locale].explore },
-      { href: '#', label: texts[locale].support },
-      { href: '#', label: texts[locale].terms },
-      { href: '#', label: texts[locale].privacy },
+      { href: '/create', label: texts[locale].create },
+      { href: userProfileLink, label: texts[locale].profile },
       { href: '/referral', label: texts[locale].referral },
-      { href: 'https://facebook.com', label: 'Facebook' },
-      { href: 'https://instagram.com', label: 'Instagram' },
+      { href: '/', label: texts[locale].support },
+      { href: '/', label: texts[locale].terms },
+      { href: '/', label: texts[locale].privacy },
       { href: 'https://twitter.com', label: 'Twitter' },
-      { href: 'https://github.com', label: 'Github' },
-      { href: 'https://dribbble.com', label: 'Dribble' },
+      { href: 'https://discord.com', label: 'Discord' },
     ]
-  }, [router.locale])
+  }, [router.locale, userProfileLink])
 
   const connectors = useMemo(
     () => ({
@@ -111,8 +118,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       }),
       coinbase: new WalletLinkConnector({
         supportedChainIds: [environment.CHAIN_ID],
-        appName: 'Liteflow',
-        url: 'https://nft.liteflow.com',
+        appName: 'Acme',
+        url: 'https://demo.liteflow.com',
       }),
     }),
     [],
@@ -121,19 +128,19 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
       <Head
-        title="Liteflow NFT Marketplace Solution - Demo"
-        description="The next-generation NFT Marketplace tailored to your needs"
+        title="Acme NFT Marketplace"
+        description="The Web3 as a Service Company"
       >
         <meta
           name="keywords"
           content="NFT, marketplace, platform, white-label, blockchain"
         />
 
-        <meta name="author" content="Liteflow, Inc." />
-        <meta name="application-name" content="Liteflow NFT Marketplace" />
+        <meta name="author" content="Acme, Inc." />
+        <meta name="application-name" content="Acme NFT Marketplace" />
 
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://nft.liteflow.com" />
+        <meta property="og:url" content="https://demo.liteflow.com" />
 
         <meta name="twitter:card" content="summary" />
       </Head>
@@ -147,7 +154,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         bugsnagAPIKey={environment.BUGSNAG_API_KEY}
         theme={theme}
       >
-        <div className="mt-12">
+        <Box mt={12}>
           <Banner />
           <Navbar
             allowTopUp={true}
@@ -176,8 +183,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
             }}
           />
           <Component {...pageProps} />
-          <Footer name="Liteflow" links={footerLinks} />
-        </div>
+          <Footer name="Acme, Inc." links={footerLinks} />
+        </Box>
       </LiteflowNFTApp>
     </>
   )

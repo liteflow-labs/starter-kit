@@ -15,7 +15,7 @@ export const COLORS = {
     600: '#2563EB',
   },
   brand: {
-    50: 'rgba(36, 91, 255, 0.05)',
+    50: '#F5F7FF',
     100: '#D3E2FF',
     200: '#A7C4FF',
     300: '#7BA3FF',
@@ -26,6 +26,12 @@ export const COLORS = {
     800: '#0B2393',
     900: '#06177A',
     black: '#060F27',
+  },
+  secondary: {
+    100: '#C9FBCB',
+    500: '#02B14F',
+    black: '#232323',
+    accent: '#08C725',
   },
   gray: {
     100: '#F3F4F6',
@@ -56,6 +62,10 @@ export const COLORS = {
   },
 }
 
+const fonts = {
+  banner: 'Poppins',
+}
+
 const radii = {
   none: '0',
   sm: '12px',
@@ -70,6 +80,7 @@ const radii = {
 
 export const theme = extendTheme({
   ...baseTheme,
+  fonts,
   colors: COLORS,
   radii,
 })
