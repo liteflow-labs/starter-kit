@@ -1,8 +1,14 @@
+import { Box } from '@chakra-ui/react'
 import { FC } from 'react'
 
 const LargeLayout: FC = (props) => (
-  <main
-    className="mx-auto max-w-7xl py-8 px-6 pb-10 lg:py-12 lg:px-8"
+  <Box
+    as="main"
+    mx="auto"
+    maxW="7xl"
+    py={{ base: 8, lg: 12 }}
+    px={{ base: 6, lg: 8 }}
+    pb={10}
     {...props}
   />
 )
