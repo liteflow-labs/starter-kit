@@ -5,5 +5,5 @@ enum Trait {
 export const keys = [Trait.Category]
 
 export const values = {
-  [Trait.Category]: ['Art', 'Photography', 'Currency', 'DeFi', 'Games'],
+  [Trait.Category]: ['Art', 'Currency', 'DeFi', 'Games', 'Photography'].sort(),
 }
