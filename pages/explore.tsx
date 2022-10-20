@@ -3,15 +3,18 @@ import { NextPage } from 'next'
 import Head from '../components/Head'
 import environment from '../environment'
 import LargeLayout from '../layouts/large'
+import { values } from '../traits'
 
 export const getServerSideProps = Explorer.server(
   environment.GRAPHQL_URL,
+  values,
   environment.PAGINATION_LIMIT,
 )
 
 const ExplorePage: NextPage<Explorer.Props> = ({
   now,
   offset,
+  traits,
   limit,
   queryFilter,
   filter,
@@ -23,6 +26,7 @@ const ExplorePage: NextPage<Explorer.Props> = ({
     <Head title="Explore Collectibles" />
     <Explorer.Template
       filter={filter}
+      traits={traits}
       limit={limit}
       limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
       now={now}
