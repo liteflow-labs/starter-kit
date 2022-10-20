@@ -18,7 +18,6 @@ import { useEffect, useMemo } from 'react'
 import Banner from '../components/Banner/Banner'
 import Head from '../components/Head'
 import environment from '../environment'
-import '../styles/globals.css'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
