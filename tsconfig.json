@@ -18,12 +18,6 @@
     "emitDecoratorMetadata": true,
     "incremental": true
   },
-  "include": [
-    "next-env.d.ts",
-    "type.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "tailwind.config.js"
-  ],
+  "include": ["next-env.d.ts", "type.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist"]
 }
