@@ -2,45 +2,74 @@
 
 This repository is an example of an application running on the Liteflow infrastructure to showcase the uses of the infrastructure and/or be used as a starter kit to launch a product fast.
 
-## Feature included
+## Features included
 
-This template includes a few important features likes:
+The Marketplace template includes the following features:
 
-- Listing the NFTs of the platform
-- Highlight NFTs on the home page
-- Explore with filters of NFTs
-- Offers for NFTs
-  - Fixed price
+- Open collections (User-generated content)
+  - Mint ERC-721
+  - Mint ERC-1155
+  - Creator's royalties support
+- Featured NFTs on the home page
+- Search system
+- Explore NFTs with filtering and sorting systems
+- Native currency support
+- List NFTs on sale
+  - Fixed price listing
+  - Timed auction listing
+- Make offers on NFTs
   - Open offer
-  - Timed auctions
-- Profile for users with
-  - NFTs on sale
-  - NFTs owned
-  - NFTs created
-  - Bids
-  - Trades
-  - Offers
+  - Timed auction offer
+- Purchase NFTs
+- User profile 
+  - Account
+    - Profile edition
+    - Wallet page
+  - NFTs "on sale"
+  - NFTs "owned"
+  - NFTs "created"
+  - Offers ("bids") management
+  - Trades history
+  - Listings ("offers") management
+- User verification system (verified status)
+- Report system
+  - Report a user
+  - Report an NFT
 - Notifications
-- Search
-- Creation of NFTs
-- NFT history
-- Multi-language support
+  - In-app notifications
+  - Email notifications
+- NFT history (activity)
+  - Minted
+  - Listed
+  - Purchased
+  - Transfered
 - Wallet connection with
   - Metamask
   - Coinbase
-  - Wallet connect
+  - WalletConnect
   - Magic link
 
-It also includes optional features like:
+It also includes compatibility with the following features:
+
+- Multi-language compatibility
+- Credit card payment gateway compatibility
+- Email connection compatibility
+
+
+## Additional Paid Features Showcased
+
+The Marketplace template showcases the following additional paid features:
 
 - Lazymint for NFTs
 - Unlockable content for NFTs
 - Multicurrency support
-- Advanced fee support
+- Advanced fee customization support
+- Referral system
+
 
 ## Libraries used
 
-This template is based on the following tech stack
+The Marketplace template is based on the following tech stack
 
 - [Next.js](https://nextjs.org/)
 - [React](https://reactjs.org/)
