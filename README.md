@@ -1,34 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Marketplace template
 
-## Getting Started
+This repository is an example of an application running on the Liteflow infrastructure to showcase the uses of the infrastructure and/or be used as a starter kit to launch a product fast.
 
-First, run the development server:
+## Feature included
 
-```bash
+This template includes a few important features likes:
+
+- Listing the NFTs of the platform
+- Highlight NFTs on the home page
+- Explore with filters of NFTs
+- Offers for NFTs
+  - Fixed price
+  - Open offer
+  - Timed auctions
+- Profile for users with
+  - NFTs on sale
+  - NFTs owned
+  - NFTs created
+  - Bids
+  - Trades
+  - Offers
+- Notifications
+- Search
+- Creation of NFTs
+- NFT history
+- Multi-language support
+- Wallet connection with
+  - Metamask
+  - Coinbase
+  - Wallet connect
+  - Magic link
+
+It also includes optional features like:
+
+- Lazymint for NFTs
+- Unlockable content for NFTs
+- Multicurrency support
+- Advanced fee support
+
+## Libraries used
+
+This template is based on the following tech stack
+
+- [Next.js](https://nextjs.org/)
+- [React](https://reactjs.org/)
+- [Typescript](https://www.typescriptlang.org/)
+- [Liteflow](https://liteflow.com/)
+- [ChakraUI](https://chakra-ui.com/)
+- [Web3React](https://github.com/Uniswap/web3-react)
+- [Next translate](https://github.com/aralroca/next-translate)
+
+## Get started
+
+To get started you will first need to set your environmental variables in the `.env` file based on the `.env.example` file.
+
+Once done you can install all the dependencies with `npm i` then run
+
+```
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Your application is now accessible at http://localhost:3000
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Customization
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+#### Theme
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The theme is based on [ChakraUI](https://chakra-ui.com/) and can be [customized](https://chakra-ui.com/docs/styled-system/customize-theme) in the `/styles/theme.ts` file.
 
-## Learn More
+#### Application
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Your application includes default navigation, metadata, and wallets that can be updated directly from the `pages/_app.tsx` file.
