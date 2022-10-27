@@ -16,6 +16,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { useEffect, useMemo } from 'react'
 import Banner from '../components/Banner/Banner'
+import ChatWindow from '../components/ChatWindow'
 import Head from '../components/Head'
 import environment from '../environment'
 import { theme } from '../styles/theme'
@@ -153,37 +154,39 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         bugsnagAPIKey={environment.BUGSNAG_API_KEY}
         theme={theme}
       >
-        <Box mt={12}>
-          <Banner />
-          <Navbar
-            allowTopUp={true}
-            router={{
-              asPath: router.asPath,
-              isReady: router.isReady,
-              push: router.push,
-              query: router.query,
-              events: router.events,
-            }}
-            login={{
-              email: true,
-              metamask: true,
-              walletConnect: true,
-              coinbase: true,
-              networkName: environment.NETWORK_NAME,
-            }}
-            multiLang={{
-              locale: router.locale,
-              pathname: router.pathname,
-              choices: [
-                { label: 'En', value: 'en' },
-                { label: '日本語', value: 'ja' },
-                { label: '中文', value: 'zh-cn' },
-              ],
-            }}
-          />
-          <Component {...pageProps} />
-          <Footer name="Acme, Inc." links={footerLinks} />
-        </Box>
+        <ChatWindow>
+          <Box mt={12}>
+            <Banner />
+            <Navbar
+              allowTopUp={true}
+              router={{
+                asPath: router.asPath,
+                isReady: router.isReady,
+                push: router.push,
+                query: router.query,
+                events: router.events,
+              }}
+              login={{
+                email: true,
+                metamask: true,
+                walletConnect: true,
+                coinbase: true,
+                networkName: environment.NETWORK_NAME,
+              }}
+              multiLang={{
+                locale: router.locale,
+                pathname: router.pathname,
+                choices: [
+                  { label: 'En', value: 'en' },
+                  { label: '日本語', value: 'ja' },
+                  { label: '中文', value: 'zh-cn' },
+                ],
+              }}
+            />
+            <Component {...pageProps} />
+            <Footer name="Acme, Inc." links={footerLinks} />
+          </Box>
+        </ChatWindow>
       </LiteflowNFTApp>
     </>
   )
