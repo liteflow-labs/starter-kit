@@ -3,6 +3,7 @@ import { Link } from '@nft/components'
 import { FC } from 'react'
 
 const Banner: FC = () => {
+  const isDemo = process.env.NEXT_PUBLIC_ENVIRONMENT === 'demo'
   return (
     <Flex
       position="fixed"
@@ -59,7 +60,7 @@ const Banner: FC = () => {
         display={{ base: 'none', md: 'flex' }}
         align="center"
         rounded="full"
-        bgColor="secondary.100"
+        bgColor={isDemo ? 'secondary.100' : 'red.100'}
         mx={3}
       >
         <Text
@@ -69,9 +70,9 @@ const Banner: FC = () => {
           fontSize="xs"
           fontWeight="medium"
           lineHeight={4}
-          color="secondary.500"
+          color={isDemo ? 'secondary.500' : 'red.500'}
         >
-          Demo Preview
+          {isDemo ? 'Demo Preview' : 'Test Preview'}
         </Text>
       </Flex>
       <Flex
