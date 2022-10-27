@@ -3,7 +3,7 @@ import { Link } from '@nft/components'
 import { FC } from 'react'
 
 const Banner: FC = () => {
-  const isDemo = process.env.NEXT_ENVIRONMENT === 'demo'
+  const isDemo = process.env.NEXT_PUBLIC_ENVIRONMENT === 'demo'
   return (
     <Flex
       position="fixed"
