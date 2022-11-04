@@ -13,7 +13,7 @@
   "dependencies": {
     "@chakra-ui/react": "^1.8.8",
     "@nft/api-graphql": "^1.0.0-beta.6",
-    "@nft/chat": "^0.1.5",
+    "@nft/chat": "^0.1.7",
     "@nft/components": "^1.0.0-beta.6",
     "@nft/email-connector": "^1.0.0-beta.6",
     "@nft/templates": "^1.0.0-beta.6",
