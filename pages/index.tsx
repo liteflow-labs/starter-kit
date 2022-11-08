@@ -1,4 +1,6 @@
 import { Home } from '@nft/templates'
+import { connectors } from 'connectors'
+import useEagerConnect from 'hooks/useEagerConnect'
 import { NextPage } from 'next'
 import environment from '../environment'
 import LargeLayout from '../layouts/large'
@@ -17,6 +19,8 @@ const HomePage: NextPage<Home.Props> = ({
   now,
   tokens,
 }) => {
+  const reconnected = useEagerConnect(connectors, currentAccount)
+
   return (
     <LargeLayout>
       <Home.Template
@@ -29,6 +33,7 @@ const HomePage: NextPage<Home.Props> = ({
           name: environment.BLOCKCHAIN_EXPLORER_NAME,
           url: environment.BLOCKCHAIN_EXPLORER_URL,
         }}
+        userHasBeenReconnected={reconnected}
       />
     </LargeLayout>
   )
