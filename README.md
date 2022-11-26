@@ -13,7 +13,7 @@ The Marketplace template includes the following features:
 - Featured NFTs on the home page
 - Search system
 - Explore NFTs with filtering and sorting systems
-- Native currency support
+- Native currency and ERC20 support
 - List NFTs on sale
   - Fixed price listing
   - Timed auction listing
