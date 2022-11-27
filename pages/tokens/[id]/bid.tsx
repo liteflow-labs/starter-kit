@@ -6,7 +6,12 @@ import SmallLayout from '../../../layouts/small'
 
 export const getServerSideProps = Bid.server(environment.GRAPHQL_URL)
 
-const BidPage: NextPage<Bid.Props> = ({ now, assetId, meta }) => (
+const BidPage: NextPage<Bid.Props> = ({
+  now,
+  assetId,
+  meta,
+  currentAccount,
+}) => (
   <SmallLayout>
     <Head
       title={meta.title}
@@ -30,6 +35,7 @@ const BidPage: NextPage<Bid.Props> = ({ now, assetId, meta }) => (
         coinbase: true,
         networkName: environment.NETWORK_NAME,
       }}
+      currentAccount={currentAccount}
     />
   </SmallLayout>
 )

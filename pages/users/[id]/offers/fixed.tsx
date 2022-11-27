@@ -17,6 +17,7 @@ const FixedPricePage: NextPage<UserFixedPrices.Props> = ({
   offset,
   orderBy,
   userAddress,
+  currentAccount,
 }) => (
   <LargeLayout>
     <Head
@@ -37,6 +38,7 @@ const FixedPricePage: NextPage<UserFixedPrices.Props> = ({
       page={page}
       userAddress={userAddress}
       loginUrlForReferral={environment.BASE_URL + '/login'}
+      currentAccount={currentAccount}
     />
   </LargeLayout>
 )

@@ -21,6 +21,7 @@ const ExplorePage: NextPage<Explorer.Props> = ({
   search,
   page,
   orderBy,
+  currentAccount,
 }) => (
   <LargeLayout>
     <Head title="Explore Collectibles" />
@@ -35,6 +36,7 @@ const ExplorePage: NextPage<Explorer.Props> = ({
       page={page}
       queryFilter={queryFilter}
       search={search}
+      currentAccount={currentAccount}
     />
   </LargeLayout>
 )

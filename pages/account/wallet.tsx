@@ -6,10 +6,13 @@ import SmallLayout from '../../layouts/small'
 
 export const getServerSideProps = UserWallet.server(environment.GRAPHQL_URL)
 
-const WalletPage: NextPage<UserWallet.Props> = () => (
+const WalletPage: NextPage<UserWallet.Props> = ({ currentAccount }) => (
   <SmallLayout>
     <Head title="Account - Wallet" />
-    <UserWallet.Template networkName={environment.NETWORK_NAME} />
+    <UserWallet.Template
+      networkName={environment.NETWORK_NAME}
+      currentAccount={currentAccount}
+    />
   </SmallLayout>
 )
 

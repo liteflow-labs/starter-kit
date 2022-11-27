@@ -6,7 +6,7 @@ import SmallLayout from '../../layouts/small'
 
 export const getServerSideProps = TypeSelector.server(environment.GRAPHQL_URL)
 
-const CreatePage: NextPage = () => (
+const CreatePage: NextPage<TypeSelector.Props> = ({ currentAccount }) => (
   <SmallLayout>
     <Head
       title="Create an NFT"
@@ -15,6 +15,7 @@ const CreatePage: NextPage = () => (
     <TypeSelector.Template
       restrictMintToVerifiedAccount={true}
       reportEmail={environment.REPORT_EMAIL}
+      currentAccount={currentAccount}
     />
   </SmallLayout>
 )

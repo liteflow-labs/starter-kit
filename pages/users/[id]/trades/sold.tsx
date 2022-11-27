@@ -17,6 +17,7 @@ const TradeSoldPage: NextPage<UserTradeSold.Props> = ({
   offset,
   orderBy,
   userAddress,
+  currentAccount,
 }) => (
   <LargeLayout>
     <Head
@@ -38,6 +39,7 @@ const TradeSoldPage: NextPage<UserTradeSold.Props> = ({
       page={page}
       userAddress={userAddress}
       loginUrlForReferral={environment.BASE_URL + '/login'}
+      currentAccount={currentAccount}
     />
   </LargeLayout>
 )

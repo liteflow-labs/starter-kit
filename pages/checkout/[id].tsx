@@ -6,7 +6,12 @@ import SmallLayout from '../../layouts/small'
 
 export const getServerSideProps = Checkout.server(environment.GRAPHQL_URL)
 
-const CheckoutPage: NextPage<Checkout.Props> = ({ now, offerId, meta }) => (
+const CheckoutPage: NextPage<Checkout.Props> = ({
+  now,
+  offerId,
+  meta,
+  currentAccount,
+}) => (
   <SmallLayout>
     <Head
       title={meta.title}
@@ -28,6 +33,7 @@ const CheckoutPage: NextPage<Checkout.Props> = ({ now, offerId, meta }) => (
         coinbase: true,
         networkName: environment.NETWORK_NAME,
       }}
+      currentAccount={currentAccount}
     />
   </SmallLayout>
 )
