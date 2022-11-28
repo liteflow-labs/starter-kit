@@ -1,43 +1,40 @@
 import { Bid } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../components/Head'
+import connectors from '../../../connectors'
 import environment from '../../../environment'
+import useEagerConnect from '../../../hooks/useEagerConnect'
 import SmallLayout from '../../../layouts/small'
 
 export const getServerSideProps = Bid.server(environment.GRAPHQL_URL)
 
-const BidPage: NextPage<Bid.Props> = ({
-  now,
-  assetId,
-  meta,
-  currentAccount,
-}) => (
-  <SmallLayout>
-    <Head
-      title={meta.title}
-      description={meta.description}
-      image={meta.image}
-    />
-    <Bid.Template
-      assetId={assetId}
-      explorer={{
-        name: environment.BLOCKCHAIN_EXPLORER_NAME,
-        url: environment.BLOCKCHAIN_EXPLORER_URL,
-      }}
-      now={now}
-      allowTopUp={true}
-      auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
-      offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-      login={{
-        email: true,
-        metamask: true,
-        walletConnect: true,
-        coinbase: true,
-        networkName: environment.NETWORK_NAME,
-      }}
-      currentAccount={currentAccount}
-    />
-  </SmallLayout>
-)
+const BidPage: NextPage<Bid.Props> = ({ now, assetId, meta }) => {
+  const ready = useEagerConnect()
+  return (
+    <SmallLayout>
+      <Head
+        title={meta.title}
+        description={meta.description}
+        image={meta.image}
+      />
+      <Bid.Template
+        assetId={assetId}
+        explorer={{
+          name: environment.BLOCKCHAIN_EXPLORER_NAME,
+          url: environment.BLOCKCHAIN_EXPLORER_URL,
+        }}
+        now={now}
+        allowTopUp={true}
+        auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
+        offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+        login={{
+          ...connectors,
+          networkName: environment.NETWORK_NAME,
+        }}
+        ready={ready}
+      />
+    </SmallLayout>
+  )
+}
 
 export default BidPage

@@ -2,6 +2,7 @@ import { UserOnSaleAssets } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../components/Head'
 import environment from '../../../environment'
+import useEagerConnect from '../../../hooks/useEagerConnect'
 import LargeLayout from '../../../layouts/large'
 
 export const getServerSideProps = UserOnSaleAssets.server(
@@ -17,26 +18,28 @@ const OnSalePage: NextPage<UserOnSaleAssets.Props> = ({
   offset,
   orderBy,
   userAddress,
-  currentAccount,
-}) => (
-  <LargeLayout>
-    <Head
-      title={meta.title}
-      description={meta.description}
-      image={meta.image}
-    />
-    <UserOnSaleAssets.Template
-      limit={limit}
-      limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-      now={now}
-      offset={offset}
-      orderBy={orderBy}
-      page={page}
-      userAddress={userAddress}
-      loginUrlForReferral={environment.BASE_URL + '/login'}
-      currentAccount={currentAccount}
-    />
-  </LargeLayout>
-)
+}) => {
+  const ready = useEagerConnect()
+  return (
+    <LargeLayout>
+      <Head
+        title={meta.title}
+        description={meta.description}
+        image={meta.image}
+      />
+      <UserOnSaleAssets.Template
+        limit={limit}
+        limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+        now={now}
+        offset={offset}
+        orderBy={orderBy}
+        page={page}
+        userAddress={userAddress}
+        loginUrlForReferral={environment.BASE_URL + '/login'}
+        ready={ready}
+      />
+    </LargeLayout>
+  )
+}
 
 export default OnSalePage

@@ -2,6 +2,7 @@ import { UserFixedPrices } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../../components/Head'
 import environment from '../../../../environment'
+import useEagerConnect from '../../../../hooks/useEagerConnect'
 import LargeLayout from '../../../../layouts/large'
 
 export const getServerSideProps = UserFixedPrices.server(
@@ -17,30 +18,31 @@ const FixedPricePage: NextPage<UserFixedPrices.Props> = ({
   offset,
   orderBy,
   userAddress,
-  currentAccount,
-}) => (
-  <LargeLayout>
-    <Head
-      title={meta.title}
-      description={meta.description}
-      image={meta.image}
-    />
-    <UserFixedPrices.Template
-      explorer={{
-        name: environment.BLOCKCHAIN_EXPLORER_NAME,
-        url: environment.BLOCKCHAIN_EXPLORER_URL,
-      }}
-      limit={limit}
-      limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-      now={now}
-      offset={offset}
-      orderBy={orderBy}
-      page={page}
-      userAddress={userAddress}
-      loginUrlForReferral={environment.BASE_URL + '/login'}
-      currentAccount={currentAccount}
-    />
-  </LargeLayout>
-)
+}) => {
+  useEagerConnect()
+  return (
+    <LargeLayout>
+      <Head
+        title={meta.title}
+        description={meta.description}
+        image={meta.image}
+      />
+      <UserFixedPrices.Template
+        explorer={{
+          name: environment.BLOCKCHAIN_EXPLORER_NAME,
+          url: environment.BLOCKCHAIN_EXPLORER_URL,
+        }}
+        limit={limit}
+        limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+        now={now}
+        offset={offset}
+        orderBy={orderBy}
+        page={page}
+        userAddress={userAddress}
+        loginUrlForReferral={environment.BASE_URL + '/login'}
+      />
+    </LargeLayout>
+  )
+}
 
 export default FixedPricePage

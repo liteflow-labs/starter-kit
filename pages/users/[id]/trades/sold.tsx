@@ -2,6 +2,7 @@ import { UserTradeSold } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../../components/Head'
 import environment from '../../../../environment'
+import useEagerConnect from '../../../../hooks/useEagerConnect'
 import LargeLayout from '../../../../layouts/large'
 
 export const getServerSideProps = UserTradeSold.server(
@@ -17,31 +18,32 @@ const TradeSoldPage: NextPage<UserTradeSold.Props> = ({
   offset,
   orderBy,
   userAddress,
-  currentAccount,
-}) => (
-  <LargeLayout>
-    <Head
-      title={meta.title}
-      description={meta.description}
-      image={meta.image}
-    />
+}) => {
+  useEagerConnect()
+  return (
+    <LargeLayout>
+      <Head
+        title={meta.title}
+        description={meta.description}
+        image={meta.image}
+      />
 
-    <UserTradeSold.Template
-      explorer={{
-        name: environment.BLOCKCHAIN_EXPLORER_NAME,
-        url: environment.BLOCKCHAIN_EXPLORER_URL,
-      }}
-      limit={limit}
-      now={now}
-      limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-      offset={offset}
-      orderBy={orderBy}
-      page={page}
-      userAddress={userAddress}
-      loginUrlForReferral={environment.BASE_URL + '/login'}
-      currentAccount={currentAccount}
-    />
-  </LargeLayout>
-)
+      <UserTradeSold.Template
+        explorer={{
+          name: environment.BLOCKCHAIN_EXPLORER_NAME,
+          url: environment.BLOCKCHAIN_EXPLORER_URL,
+        }}
+        limit={limit}
+        now={now}
+        limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+        offset={offset}
+        orderBy={orderBy}
+        page={page}
+        userAddress={userAddress}
+        loginUrlForReferral={environment.BASE_URL + '/login'}
+      />
+    </LargeLayout>
+  )
+}
 
 export default TradeSoldPage
