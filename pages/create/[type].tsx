@@ -1,3 +1,4 @@
+import { useSigner } from '@nft/hooks'
 import { AssetForm } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../components/Head'
@@ -18,6 +19,7 @@ const CreatePage: NextPage<AssetForm.Props> = ({
   multiple,
 }) => {
   const ready = useEagerConnect()
+  const signer = useSigner()
   return (
     <SmallLayout>
       <Head
@@ -41,6 +43,7 @@ const CreatePage: NextPage<AssetForm.Props> = ({
         restrictMintToVerifiedAccount={true}
         reportEmail={environment.REPORT_EMAIL}
         ready={ready}
+        signer={signer}
       />
     </SmallLayout>
   )

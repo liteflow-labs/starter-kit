@@ -1,3 +1,4 @@
+import { useSigner } from '@nft/hooks'
 import { Home } from '@nft/templates'
 import { NextPage } from 'next'
 import environment from '../environment'
@@ -19,6 +20,7 @@ const HomePage: NextPage<Home.Props> = ({
   tokens,
 }) => {
   const ready = useEagerConnect()
+  const signer = useSigner()
   return (
     <LargeLayout>
       <Home.Template
@@ -32,6 +34,7 @@ const HomePage: NextPage<Home.Props> = ({
           url: environment.BLOCKCHAIN_EXPLORER_URL,
         }}
         ready={ready}
+        signer={signer}
       />
     </LargeLayout>
   )

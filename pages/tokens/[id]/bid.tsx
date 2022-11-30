@@ -1,3 +1,4 @@
+import { useSigner } from '@nft/hooks'
 import { Bid } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../components/Head'
@@ -10,6 +11,7 @@ export const getServerSideProps = Bid.server(environment.GRAPHQL_URL)
 
 const BidPage: NextPage<Bid.Props> = ({ now, assetId, meta }) => {
   const ready = useEagerConnect()
+  const signer = useSigner()
   return (
     <SmallLayout>
       <Head
@@ -32,6 +34,7 @@ const BidPage: NextPage<Bid.Props> = ({ now, assetId, meta }) => {
           networkName: environment.NETWORK_NAME,
         }}
         ready={ready}
+        signer={signer}
       />
     </SmallLayout>
   )

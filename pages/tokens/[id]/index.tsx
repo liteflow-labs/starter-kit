@@ -1,3 +1,4 @@
+import { useSigner } from '@nft/hooks'
 import { AssetDetail } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../components/Head'
@@ -14,6 +15,7 @@ const DetailPage: NextPage<AssetDetail.Props> = ({
   meta,
 }) => {
   const ready = useEagerConnect()
+  const signer = useSigner()
   return (
     <LargeLayout>
       <Head
@@ -31,6 +33,7 @@ const DetailPage: NextPage<AssetDetail.Props> = ({
         }}
         reportEmail={environment.REPORT_EMAIL}
         ready={ready}
+        signer={signer}
       />
     </LargeLayout>
   )

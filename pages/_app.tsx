@@ -4,6 +4,7 @@ import LiteflowNFTApp, {
   Footer,
   Navbar,
 } from '@nft/components'
+import { useSigner } from '@nft/hooks'
 import ChatWindow from 'components/ChatWindow'
 import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
@@ -11,7 +12,7 @@ import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { useEffect, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo } from 'react'
 import Banner from '../components/Banner/Banner'
 import Head from '../components/Head'
 import connectors from '../connectors'
@@ -22,32 +23,16 @@ require('dayjs/locale/zh-cn')
 
 NProgress.configure({ showSpinner: false })
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+function Layout({
+  userAddress,
+  children,
+}: PropsWithChildren<{ userAddress: string | null }>) {
   const router = useRouter()
-  dayjs.locale(router.locale)
-  usePageViews()
-
-  useEffect(() => {
-    const handleStart = () => NProgress.start()
-    const handleStop = () => NProgress.done()
-
-    router.events.on('routeChangeStart', handleStart)
-    router.events.on('routeChangeComplete', handleStop)
-    router.events.on('routeChangeError', handleStop)
-
-    return () => {
-      router.events.off('routeChangeStart', handleStart)
-      router.events.off('routeChangeComplete', handleStop)
-      router.events.off('routeChangeError', handleStop)
-    }
-  }, [router])
-
+  const signer = useSigner()
   const userProfileLink = useMemo(
-    () =>
-      pageProps?.user?.address ? `/users/${pageProps.user.address}` : '/login',
-    [pageProps?.user?.address],
+    () => (userAddress ? `/users/${userAddress}` : '/login'),
+    [userAddress],
   )
-
   const footerLinks = useMemo(() => {
     const texts = {
       en: {
@@ -93,6 +78,61 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   }, [router.locale, userProfileLink])
 
   return (
+    <ChatWindow>
+      <Box mt={12}>
+        <Banner />
+        <Navbar
+          allowTopUp={true}
+          router={{
+            asPath: router.asPath,
+            isReady: router.isReady,
+            push: router.push,
+            query: router.query,
+            events: router.events,
+          }}
+          login={{
+            ...connectors,
+            networkName: environment.NETWORK_NAME,
+          }}
+          multiLang={{
+            locale: router.locale,
+            pathname: router.pathname,
+            choices: [
+              { label: 'En', value: 'en' },
+              { label: '日本語', value: 'ja' },
+              { label: '中文', value: 'zh-cn' },
+            ],
+          }}
+          signer={signer}
+        />
+        {children}
+        <Footer name="Acme, Inc." links={footerLinks} />
+      </Box>
+    </ChatWindow>
+  )
+}
+
+function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+  const router = useRouter()
+  dayjs.locale(router.locale)
+  usePageViews()
+
+  useEffect(() => {
+    const handleStart = () => NProgress.start()
+    const handleStop = () => NProgress.done()
+
+    router.events.on('routeChangeStart', handleStart)
+    router.events.on('routeChangeComplete', handleStop)
+    router.events.on('routeChangeError', handleStop)
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart)
+      router.events.off('routeChangeComplete', handleStop)
+      router.events.off('routeChangeError', handleStop)
+    }
+  }, [router])
+
+  return (
     <>
       <Head
         title="Acme NFT Marketplace"
@@ -117,40 +157,12 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         endpointUri={environment.GRAPHQL_URL}
         cache={pageProps[APOLLO_STATE_PROP_NAME]}
         user={pageProps.user}
-        connectors={connectors}
         bugsnagAPIKey={environment.BUGSNAG_API_KEY}
         theme={theme}
       >
-        <ChatWindow>
-          <Box mt={12}>
-            <Banner />
-            <Navbar
-              allowTopUp={true}
-              router={{
-                asPath: router.asPath,
-                isReady: router.isReady,
-                push: router.push,
-                query: router.query,
-                events: router.events,
-              }}
-              login={{
-                ...connectors,
-                networkName: environment.NETWORK_NAME,
-              }}
-              multiLang={{
-                locale: router.locale,
-                pathname: router.pathname,
-                choices: [
-                  { label: 'En', value: 'en' },
-                  { label: '日本語', value: 'ja' },
-                  { label: '中文', value: 'zh-cn' },
-                ],
-              }}
-            />
-            <Component {...pageProps} />
-            <Footer name="Acme, Inc." links={footerLinks} />
-          </Box>
-        </ChatWindow>
+        <Layout userAddress={pageProps?.user?.address || null}>
+          <Component {...pageProps} />
+        </Layout>
       </LiteflowNFTApp>
     </>
   )

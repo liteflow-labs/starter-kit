@@ -1,3 +1,4 @@
+import { useSigner } from '@nft/hooks'
 import { UserOnSaleAssets } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../components/Head'
@@ -20,6 +21,7 @@ const OnSalePage: NextPage<UserOnSaleAssets.Props> = ({
   userAddress,
 }) => {
   const ready = useEagerConnect()
+  const signer = useSigner()
   return (
     <LargeLayout>
       <Head
@@ -37,6 +39,7 @@ const OnSalePage: NextPage<UserOnSaleAssets.Props> = ({
         userAddress={userAddress}
         loginUrlForReferral={environment.BASE_URL + '/login'}
         ready={ready}
+        signer={signer}
       />
     </LargeLayout>
   )

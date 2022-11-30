@@ -1,3 +1,4 @@
+import { useSigner } from '@nft/hooks'
 import { OfferForm } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../components/Head'
@@ -14,6 +15,7 @@ const OfferPage: NextPage<OfferForm.Props> = ({
   meta,
 }) => {
   const ready = useEagerConnect()
+  const signer = useSigner()
   return (
     <SmallLayout>
       <Head
@@ -33,6 +35,7 @@ const OfferPage: NextPage<OfferForm.Props> = ({
         auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
         offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
         ready={ready}
+        signer={signer}
       />
     </SmallLayout>
   )

@@ -1,3 +1,4 @@
+import { useSigner } from '@nft/hooks'
 import { Checkout } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../components/Head'
@@ -10,6 +11,7 @@ export const getServerSideProps = Checkout.server(environment.GRAPHQL_URL)
 
 const CheckoutPage: NextPage<Checkout.Props> = ({ now, offerId, meta }) => {
   const ready = useEagerConnect()
+  const signer = useSigner()
   return (
     <SmallLayout>
       <Head
@@ -30,6 +32,7 @@ const CheckoutPage: NextPage<Checkout.Props> = ({ now, offerId, meta }) => {
           networkName: environment.NETWORK_NAME,
         }}
         ready={ready}
+        signer={signer}
       />
     </SmallLayout>
   )

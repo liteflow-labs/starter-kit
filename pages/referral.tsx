@@ -1,3 +1,4 @@
+import { useSigner } from '@nft/hooks'
 import { Referral } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../components/Head'
@@ -8,6 +9,7 @@ import SmallLayout from '../layouts/small'
 
 const LoginPage: NextPage = () => {
   useEagerConnect()
+  const signer = useSigner()
   return (
     <SmallLayout>
       <Head title="Referral" />
@@ -22,6 +24,7 @@ const LoginPage: NextPage = () => {
           ...connectors,
           networkName: environment.NETWORK_NAME,
         }}
+        signer={signer}
       />
     </SmallLayout>
   )
