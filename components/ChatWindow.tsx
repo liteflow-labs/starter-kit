@@ -1,4 +1,4 @@
-import { Box, IconButton, useTheme } from '@chakra-ui/react'
+import { Box, IconButton } from '@chakra-ui/react'
 import type { Account } from '@nft/chat'
 import { Chat as ChatComponent, ChatProvider, useChat } from '@nft/chat'
 import { useSigner } from '@nft/hooks'
@@ -7,6 +7,7 @@ import { HiOutlineChevronUp } from '@react-icons/all-files/hi/HiOutlineChevronUp
 import environment from 'environment'
 import request, { gql } from 'graphql-request'
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { theme } from 'styles/theme'
 
 const DEFAULT_CHAT_HEIGHT = 480
 const DEFAULT_CHAT_WIDTH = 356
@@ -58,7 +59,6 @@ export default function ChatWindow({
   children,
 }: PropsWithChildren<{}>): JSX.Element {
   const signer = useSigner()
-  const theme = useTheme()
 
   const lookupAddress = useCallback(async (address: string) => {
     const res = accounts.get(address)
