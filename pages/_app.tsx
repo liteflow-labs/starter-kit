@@ -8,14 +8,9 @@ import { Box } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { Web3Provider } from '@ethersproject/providers'
 import LiteflowNFTApp, { Footer, Navbar } from '@nft/components'
-import {
-  LiteflowProvider,
-  useAuthenticate,
-  useSession,
-  useSigner,
-} from '@nft/hooks'
+import { LiteflowProvider, useAuthenticate, useSigner } from '@nft/hooks'
 import { APOLLO_STATE_PROP_NAME } from '@nft/templates'
-import { Web3ReactProvider } from '@web3-react/core'
+import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import ChatWindow from 'components/ChatWindow'
 import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
@@ -149,7 +144,7 @@ function AccountProvider(
 ) {
   const signer = useSigner()
   const ready = useEagerConnect()
-  const { deactivate } = useSession()
+  const { deactivate } = useWeb3React()
   const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
     useAuthenticate()
   const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
