@@ -1,10 +1,24 @@
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from '@apollo/client'
 import { Box } from '@chakra-ui/react'
+import { Signer } from '@ethersproject/abstract-signer'
+import { Web3Provider } from '@ethersproject/providers'
 import LiteflowNFTApp, {
   APOLLO_STATE_PROP_NAME,
   Footer,
   Navbar,
 } from '@nft/components'
-import { useSigner } from '@nft/hooks'
+import {
+  LiteflowProvider,
+  useAuthenticate,
+  useSession,
+  useSigner,
+} from '@nft/hooks'
+import { Web3ReactProvider } from '@web3-react/core'
 import ChatWindow from 'components/ChatWindow'
 import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
@@ -12,16 +26,35 @@ import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { PropsWithChildren, useEffect, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
+import { CookiesProvider, useCookies } from 'react-cookie'
 import Banner from '../components/Banner/Banner'
 import Head from '../components/Head'
 import connectors from '../connectors'
 import environment from '../environment'
+import useEagerConnect from '../hooks/useEagerConnect'
+import {
+  COOKIE_JWT_TOKEN,
+  COOKIE_OPTIONS,
+  currentJWT,
+  jwtValidity,
+} from '../session'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
 
 NProgress.configure({ showSpinner: false })
+
+function web3Provider(provider: any): Web3Provider {
+  return new Web3Provider(
+    provider,
+    typeof provider.chainId === 'number'
+      ? provider.chainId
+      : typeof provider.chainId === 'string'
+      ? parseInt(provider.chainId)
+      : 'any',
+  )
+}
 
 function Layout({
   userAddress,
@@ -112,6 +145,73 @@ function Layout({
   )
 }
 
+function AccountProvider(
+  props: PropsWithChildren<{
+    cache: NormalizedCacheObject
+  }>,
+) {
+  const signer = useSigner()
+  const ready = useEagerConnect()
+  const { deactivate } = useSession()
+  const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
+    useAuthenticate()
+  const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
+
+  const clearAuthenticationToken = useCallback(async () => {
+    resetAuthenticationToken()
+    removeCookie(COOKIE_JWT_TOKEN, COOKIE_OPTIONS)
+  }, [removeCookie, resetAuthenticationToken])
+
+  const authenticateSigner = useCallback(
+    async (signer: Signer) => {
+      try {
+        const existingJWT = currentJWT(cookies)
+        const currentAddress = (await signer.getAddress()).toLowerCase()
+        const jwtAddress = existingJWT?.address.toLowerCase()
+        if (existingJWT && currentAddress === jwtAddress)
+          return setAuthenticationToken(existingJWT.jwt)
+        const { jwtToken } = await authenticate(signer)
+        setCookie(COOKIE_JWT_TOKEN, jwtToken, {
+          ...COOKIE_OPTIONS,
+          ...jwtValidity(jwtToken),
+        })
+      } catch {
+        deactivate()
+      }
+    },
+    [authenticate, setCookie, setAuthenticationToken, cookies, deactivate],
+  )
+
+  const client = useMemo(
+    () =>
+      new ApolloClient({
+        uri: environment.GRAPHQL_URL,
+        headers: cookies[COOKIE_JWT_TOKEN]
+          ? {
+              authorization: 'Bearer ' + cookies[COOKIE_JWT_TOKEN],
+            }
+          : {},
+        cache: new InMemoryCache({
+          typePolicies: {
+            Account: {
+              keyFields: ['address'],
+            },
+          },
+        }).restore(props.cache),
+        ssrMode: typeof window === 'undefined',
+      }),
+    [cookies, props.cache],
+  )
+
+  useEffect(() => {
+    if (!ready) return
+    if (!signer) return void clearAuthenticationToken()
+    authenticateSigner(signer).catch(clearAuthenticationToken)
+  }, [signer, ready, authenticateSigner, clearAuthenticationToken])
+
+  return <ApolloProvider client={client}>{props.children}</ApolloProvider>
+}
+
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const router = useRouter()
   dayjs.locale(router.locale)
@@ -152,18 +252,22 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         <meta name="twitter:card" content="summary" />
       </Head>
       <GoogleAnalytics strategy="lazyOnload" />
-      <LiteflowNFTApp
-        ssr={typeof window === 'undefined'}
-        endpointUri={environment.GRAPHQL_URL}
-        cache={pageProps[APOLLO_STATE_PROP_NAME]}
-        user={pageProps.user}
-        bugsnagAPIKey={environment.BUGSNAG_API_KEY}
-        theme={theme}
-      >
-        <Layout userAddress={pageProps?.user?.address || null}>
-          <Component {...pageProps} />
-        </Layout>
-      </LiteflowNFTApp>
+      <Web3ReactProvider getLibrary={web3Provider}>
+        <CookiesProvider>
+          <LiteflowNFTApp
+            bugsnagAPIKey={environment.BUGSNAG_API_KEY}
+            theme={theme}
+          >
+            <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
+              <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
+                <Layout userAddress={pageProps?.user?.address || null}>
+                  <Component {...pageProps} />
+                </Layout>
+              </AccountProvider>
+            </LiteflowProvider>
+          </LiteflowNFTApp>
+        </CookiesProvider>
+      </Web3ReactProvider>
     </>
   )
 }

@@ -1,9 +1,9 @@
-import { currentAccount } from '@nft/components/dist/session'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { isMobile } from 'react-device-detect'
 import connectors from '../connectors'
+import { currentAccount } from '../session'
 
 // Uniswap eager connect: https://github.com/Uniswap/uniswap-interface/blob/main/src/hooks/web3.ts#L15
 export default function useEagerConnect(): boolean {
