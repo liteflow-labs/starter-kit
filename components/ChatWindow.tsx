@@ -1,12 +1,12 @@
 import { Box, IconButton } from '@chakra-ui/react'
 import type { Account } from '@nft/chat'
 import { Chat as ChatComponent, ChatProvider, useChat } from '@nft/chat'
-import { useSigner } from '@nft/hooks'
 import { HiOutlineChevronDown } from '@react-icons/all-files/hi/HiOutlineChevronDown'
 import { HiOutlineChevronUp } from '@react-icons/all-files/hi/HiOutlineChevronUp'
 import request, { gql } from 'graphql-request'
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import environment from '../environment'
+import useSigner from '../hooks/useSigner'
 import { theme } from '../styles/theme'
 
 const DEFAULT_CHAT_HEIGHT = 480

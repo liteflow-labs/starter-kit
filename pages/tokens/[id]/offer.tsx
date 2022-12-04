@@ -1,9 +1,9 @@
-import { useSigner } from '@nft/hooks'
 import { OfferForm } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../components/Head'
 import environment from '../../../environment'
 import useEagerConnect from '../../../hooks/useEagerConnect'
+import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
 
 export const getServerSideProps = OfferForm.server(environment.GRAPHQL_URL)

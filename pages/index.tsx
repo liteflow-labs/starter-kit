@@ -1,8 +1,8 @@
-import { useSigner } from '@nft/hooks'
 import { Home } from '@nft/templates'
 import { NextPage } from 'next'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'
+import useSigner from '../hooks/useSigner'
 import LargeLayout from '../layouts/large'
 
 export const getServerSideProps = Home.server(

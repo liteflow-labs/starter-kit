@@ -8,7 +8,7 @@ import { Box } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { Web3Provider } from '@ethersproject/providers'
 import LiteflowNFTApp, { Footer, Navbar } from '@nft/components'
-import { LiteflowProvider, useAuthenticate, useSigner } from '@nft/hooks'
+import { LiteflowProvider, useAuthenticate } from '@nft/hooks'
 import { APOLLO_STATE_PROP_NAME } from '@nft/templates'
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import dayjs from 'dayjs'
@@ -25,6 +25,7 @@ import Head from '../components/Head'
 import connectors from '../connectors'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'
+import useSigner from '../hooks/useSigner'
 import {
   COOKIE_JWT_TOKEN,
   COOKIE_OPTIONS,
