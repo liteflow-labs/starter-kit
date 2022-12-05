@@ -1,0 +1,56 @@
+query FetchOnSaleAssets(
+  $address: Address!
+  $now: Datetime!
+  $limit: Int!
+  $offset: Int!
+  $orderBy: [AssetsOrderBy!]
+) {
+  account(address: $address) {
+    ...AccountDetail
+  }
+  created: assets(
+    filter: {
+      standard: { in: [ERC721, ERC1155] }
+      ownershipsExist: true
+      creatorAddress: { equalTo: $address }
+    }
+  ) {
+    totalCount
+  }
+  onSale: assets(
+    filter: {
+      or: [
+        {
+          sales: {
+            some: {
+              expiredAt: { greaterThan: $now }
+              makerAddress: { equalTo: $address }
+              availableQuantity: { greaterThan: "0" }
+            }
+          }
+        }
+        {
+          auctions: {
+            some: {
+              endAt: { greaterThan: $now }
+              creatorAddress: { equalTo: $address }
+            }
+          }
+        }
+      ]
+    }
+    first: $limit
+    offset: $offset
+    orderBy: $orderBy
+  ) {
+    totalCount
+    nodes {
+      ...AssetDetail
+    }
+  }
+  owned: ownerships(
+    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+  ) {
+    totalCount
+  }
+}

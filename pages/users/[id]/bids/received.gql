@@ -1,0 +1,90 @@
+query FetchUserBidsReceived(
+  $limit: Int!
+  $offset: Int!
+  $orderBy: [OfferOpenBuysOrderBy!]
+  $address: Address!
+  $now: Datetime
+) {
+  account(address: $address) {
+    ...AccountDetail
+  }
+  created: assets(
+    filter: {
+      standard: { in: [ERC721, ERC1155] }
+      ownershipsExist: true
+      creatorAddress: { equalTo: $address }
+    }
+  ) {
+    totalCount
+  }
+  onSale: assets(
+    filter: {
+      or: [
+        {
+          sales: {
+            some: {
+              expiredAt: { greaterThan: $now }
+              makerAddress: { equalTo: $address }
+              availableQuantity: { greaterThan: "0" }
+            }
+          }
+        }
+        {
+          auctions: {
+            some: {
+              endAt: { greaterThan: $now }
+              creatorAddress: { equalTo: $address }
+            }
+          }
+        }
+      ]
+    }
+  ) {
+    totalCount
+  }
+  owned: ownerships(
+    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+  ) {
+    totalCount
+  }
+  bids: offerOpenBuys(
+    orderBy: $orderBy
+    first: $limit
+    offset: $offset
+    filter: {
+      expiredAt: { greaterThan: $now }
+      makerAddress: { notEqualTo: $address }
+      asset: { ownerships: { some: { ownerAddress: { equalTo: $address } } } }
+    }
+  ) {
+    totalCount
+    nodes {
+      id
+      amount
+      unitPrice
+      availableQuantity
+      expiredAt
+      createdAt
+      maker {
+        address
+        name
+        image
+        verification {
+          status
+        }
+      }
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
+      asset {
+        id
+        name
+        image
+      }
+    }
+  }
+}

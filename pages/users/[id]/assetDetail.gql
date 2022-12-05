@@ -1,0 +1,70 @@
+fragment AssetDetail on Asset {
+  id
+  standard
+  name
+  image
+  animationUrl
+  unlockedContent {
+    url
+    mimetype
+  }
+  auctions(
+    first: 1
+    orderBy: CREATED_AT_DESC
+    filter: { endAt: { greaterThan: $now } }
+  ) {
+    nodes {
+      id
+      endAt
+      bestBid: offers(
+        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+        first: 1
+        filter: {
+          signature: { isNull: false }
+          expiredAt: { greaterThan: $now }
+        }
+      ) {
+        nodes {
+          unitPrice
+          amount
+          currency {
+            decimals
+            symbol
+          }
+        }
+      }
+    }
+  }
+  firstSale: sales(
+    first: 1
+    orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+  ) {
+    totalCount
+    nodes {
+      id
+      unitPrice
+      currency {
+        image
+        id
+        decimals
+        symbol
+      }
+    }
+  }
+  currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
+    aggregates {
+      distinctCount {
+        currencyId
+      }
+    }
+  }
+  creator {
+    address
+    name
+    image
+    verification {
+      status
+    }
+  }
+}

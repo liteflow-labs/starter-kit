@@ -1,0 +1,77 @@
+query FetchUserTradeSold(
+  $limit: Int!
+  $offset: Int!
+  $orderBy: [TradesOrderBy!]
+  $address: Address!
+  $now: Datetime
+) {
+  account(address: $address) {
+    ...AccountDetail
+  }
+  created: assets(
+    filter: {
+      standard: { in: [ERC721, ERC1155] }
+      ownershipsExist: true
+      creatorAddress: { equalTo: $address }
+    }
+  ) {
+    totalCount
+  }
+  onSale: assets(
+    filter: {
+      or: [
+        {
+          sales: {
+            some: {
+              expiredAt: { greaterThan: $now }
+              makerAddress: { equalTo: $address }
+              availableQuantity: { greaterThan: "0" }
+            }
+          }
+        }
+        {
+          auctions: {
+            some: {
+              endAt: { greaterThan: $now }
+              creatorAddress: { equalTo: $address }
+            }
+          }
+        }
+      ]
+    }
+  ) {
+    totalCount
+  }
+  owned: ownerships(
+    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+  ) {
+    totalCount
+  }
+  trades(
+    orderBy: $orderBy
+    first: $limit
+    offset: $offset
+    filter: { sellerAddress: { equalTo: $address } }
+  ) {
+    totalCount
+    nodes {
+      transactionHash
+      timestamp
+      buyerAddress
+      sellerAddress
+      amount
+      quantity
+      currency {
+        name
+        image
+        id
+        decimals
+        symbol
+      }
+      asset {
+        name
+        image
+      }
+    }
+  }
+}
