@@ -1,0 +1,102 @@
+query FeesForOffer($id: String!) {
+  orderFees(assetId: $id) {
+    valuePerTenThousand
+  }
+}
+
+query OfferForAsset($id: String!, $address: Address, $now: Datetime!) {
+  asset(id: $id) {
+    id
+    standard
+    name
+    image
+    animationUrl
+    royalties {
+      value
+    }
+    unlockedContent {
+      url
+      mimetype
+    }
+    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+      aggregates {
+        sum {
+          quantity
+        }
+      }
+    }
+    auctions(
+      first: 1
+      orderBy: CREATED_AT_DESC
+      filter: { endAt: { greaterThan: $now } }
+    ) {
+      nodes {
+        id
+        endAt
+        bestBid: offers(
+          orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+          first: 1
+          filter: {
+            signature: { isNull: false }
+            expiredAt: { greaterThan: $now }
+          }
+        ) {
+          nodes {
+            unitPrice
+            amount
+            currency {
+              image
+              name
+              id
+              decimals
+              symbol
+            }
+          }
+        }
+      }
+    }
+    firstSale: sales(
+      first: 1
+      orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
+      filter: { expiredAt: { greaterThan: $now } }
+    ) {
+      totalCount
+      nodes {
+        id
+        unitPrice
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
+      }
+    }
+    currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
+      aggregates {
+        distinctCount {
+          currencyId
+        }
+      }
+    }
+    creator {
+      address
+      name
+      image
+      verification {
+        status
+      }
+    }
+  }
+  currencies(orderBy: CREATED_AT_ASC) {
+    nodes {
+      image
+      name
+      id
+      decimals
+      symbol
+      address
+    }
+  }
+}
