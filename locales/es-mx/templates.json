@@ -1,0 +1,407 @@
+{
+  "error": {
+    "500": "Lo sentimos, algo salió mal."
+  },
+  "home": {
+    "explore": "Explorar Todos los Coleccionables",
+    "auctions": "Subastas",
+    "featured": "Coleccionables Destacados"
+  },
+  "explore": {
+    "title": "Explorar Coleccionables",
+    "empty": {
+      "title": "No hemos conseguido nada",
+      "description": "Actualiza tus filtros para encontrar más coleccionables."
+    },
+    "form": {
+      "submit": "Aplicar filtros",
+      "clear": "Limpiar filtros",
+      "currency": {
+        "label": "Rango de precios",
+        "placeholder": "Selecciona una moneda"
+      },
+      "min-price": {
+        "placeholder": "Desde"
+      },
+      "max-price": {
+        "placeholder": "Hasta"
+      },
+      "offers": {
+        "label": "Estatus",
+        "values": {
+          "fixed": "Precio Fijo",
+          "auction": "Subasta"
+        }
+      },
+      "categories": {
+        "label": "Categorías"
+      },
+      "collections": {
+        "label": "Colecciones"
+      }
+    },
+    "orderBy": {
+      "label": "Ordenar por",
+      "values": {
+        "createdAtDesc": "Fecha: más recientes",
+        "createdAtAsc": "Fecha: más antiguos"
+      }
+    }
+  },
+  "asset": {
+    "detail": {
+      "unlockable": {
+        "title": "Contenido desbloqueable",
+        "tooltip": "El contenido del ítem sólo puede ser desbloqueado por el propietario del ítem."
+      },
+      "show-preview": "Ver previsualización",
+      "description": "Descripción",
+      "traits": "Atributos",
+      "tabs": {
+        "bids": "Ofertas",
+        "history": "Historia"
+      },
+      "menu": {
+        "report": {
+          "label": "Reportar",
+          "subject": "Reportar un NFT",
+          "body": "Quisiera reportar el siguiente NFT: {{name}} (#{{id}})\nReason: "
+        }
+      },
+      "explorerLink": "Ver en {{name}}",
+      "ipfsLink": "Ver en IPFS",
+      "errors": {
+        "image": "Ocurrió un problema"
+      }
+    },
+    "form": {
+      "title": {
+        "single": "Crear Coleccionable Individual",
+        "multiple": "Crear Multiples Coleccionables"
+      },
+      "preview": "Previsualizar",
+      "notifications": {
+        "created": "¡Tu coleccionable ha sido creado!"
+      }
+    },
+    "typeSelector": {
+      "title": "Crear Coleccionable",
+      "description": "Elige \"Individual\" si quieres que tu coleccionable sea único, ó \"Multiple\" si quieres que existan multiples copias de un mismo coleccionable.",
+      "single": {
+        "title": "Individual",
+        "type": "ERC721"
+      },
+      "multiple": {
+        "title": "Multiple",
+        "type": "ERC1155"
+      }
+    },
+    "restricted": {
+      "title": "Creación Restringida para Usuarios Verificados",
+      "description": "Para solicitar la verificación de tu cuenta, por favor contacta a nuestro equipo de soporte en <0/> y te ayudaremos en cada paso del proceso.",
+      "info": "Una vez tu cuenta haya sido verificada, recibirás una notificación y podrás acceder a las funciones de creación en nuestra plataforma."
+    }
+  },
+  "login": {
+    "title": "¡Bienvenido!",
+    "subtitle": "Inicia sesión con tu Wallet",
+    "description": "Conéctate con alguna de las siguientes opciones:",
+    "alternative": "O inicia sesión con:",
+    "successes": {
+      "invitation": "Tu invitación ha sido asociada a tu cuenta."
+    },
+    "errors": {
+      "wrong-network": "Estás en la red incorrecta. Por favor, conéctate a la red {{networkName}}.",
+      "invitation": "Tu invitación no pudo ser asociada a ésta cuenta. Asegúrate que la cuenta no haya sido asociada a otro código de invitación previamente."
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "loadMore": "Mostrar más",
+    "empty": {
+      "title": "No Hay Notificaciones",
+      "description": "Vuelve más tarde o explora la plataforma mientras tanto"
+    }
+  },
+  "offers": {
+    "bid": {
+      "meta": {
+        "title": "Crea una oferta para {{name}}",
+        "description": "Crea una oferta para {{name}} creado por {{creator}}"
+      },
+      "title": "Crea una oferta",
+      "notifications": {
+        "created": "¡Tu oferta ha sido creada!"
+      },
+      "auction": "La subasta termina en: ",
+      "highestBid": "Oferta más alta"
+    },
+    "checkout": {
+      "from": "Vendedor",
+      "meta": {
+        "title": "Comprar {{name}}",
+        "description": "Comprar {{name}} creado por {{creator}}"
+      },
+      "title": "Finalizar Compra",
+      "notifications": {
+        "purchased": "¡La compra se realizó exitosamente!"
+      },
+      "on-sale": "En venta por",
+      "per-edition": "per edition"
+    },
+    "form": {
+      "meta": {
+        "title": "Crea una oferta por {{name}}",
+        "description": "Crea una oferta por {{name}}"
+      },
+      "title": "Oferta por el Coleccionable",
+      "notifications": {
+        "created": "Tu oferta ha sido creada."
+      },
+      "options": {
+        "label": "Tipo de Oferta",
+        "hints": {
+          "fixed": "Ingresa un precio para permitir a los usuarios comprar instantáneamente el coleccionable",
+          "auction": "Define un período de tiempo por el cual los usuarios podrán hacer ofertas"
+        },
+        "values": {
+          "fixed": "Precio Fijo",
+          "auction": "Subasta por Tiempo"
+        }
+      }
+    }
+  },
+  "pagination": {
+    "result": {
+      "label": "Resultados por página",
+      "caption": "<0>{{from}}</0> - <0>{{to}}</0> de <0>{{total}}</0> resultados",
+      "pages_one": "de {{count}} página",
+      "pages_other": "de {{count}} páginas"
+    }
+  },
+  "referral": {
+    "title": "Referir un creador",
+    "description": "Invita nuevos creadores a la plataforma de {{platformName}} a través de tu link de referencia y gana un porcentaje de las ventas de los NFTs que ellos creen.",
+    "link": "Tu link de referencia",
+    "how": {
+      "title": "Cómo funciona",
+      "steps": [
+        "Copia y comparte tu link de referencia al creador que quieras invitar",
+        "El creador usa tu link para ingresar a la plataforma y crearse una cuenta (sólo aplica para cuentas nuevas)",
+        "Tus recompensas por referencia son asociadas con la cuenta del creador",
+        "Cada vez que se venda un NFT creador por el creador invitado recibirás una recompensas de referencia"
+      ]
+    },
+    "rewards": {
+      "title": "Recompensas por Referencia",
+      "primary": {
+        "title": "Venta inicial",
+        "description": "Ganarás un {{percentage}}% de las ventas.",
+        "tooltip": "La venta inicial es la primera venta que sucede después de crear un NFT."
+      },
+      "secondary": {
+        "title": "Ventas secundarias",
+        "description": "Ganarás un {{percentage}}% de las ventas.",
+        "tooltip": "Las ventas secundarias son todas las que ocurren después de la venta inicial."
+      }
+    }
+  },
+  "user": {
+    "auctions": {
+      "nav": {
+        "fixed": "Precio Fijo",
+        "auction": "Subasta"
+      },
+      "notifications": {
+        "accepted": "Subasta aceptada"
+      },
+      "orderBy": {
+        "label": "Ordenar por",
+        "values": {
+          "createdAtDesc": "Fecha: más recientes",
+          "createdAtAsc": "Fecha: más antiguos"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Oferta más alta",
+        "status": "Estatus",
+        "created": "Creado"
+      }
+    },
+    "bid-placed": {
+      "nav": {
+        "received": "Recibida",
+        "placed": "Colocada"
+      },
+      "notifications": {
+        "canceled": "Oferta cancelada"
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "new": "Nueva oferta"
+      },
+      "orderBy": {
+        "label": "Ordenar por",
+        "values": {
+          "createdAtDesc": "Fecha: más recientes",
+          "createdAtAsc": "Fecha: más antiguos"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Monto Total",
+        "status": "Estatus",
+        "created": "Colocada"
+      },
+      "requested": "{{value}} solicitado",
+      "status": {
+        "expired": "Expirada",
+        "active": "Activa"
+      },
+      "cancel": {
+        "title": "Cancelar Oferta"
+      }
+    },
+    "bid-received": {
+      "nav": {
+        "received": "Recibida",
+        "placed": "Colocada"
+      },
+      "notifications": {
+        "accepted": "Oferta Aceptada"
+      },
+      "actions": {
+        "accept": "Aceptar"
+      },
+      "orderBy": {
+        "label": "Ordenar por",
+        "values": {
+          "createdAtDesc": "Fecha: más recientes",
+          "createdAtAsc": "Fecha: más antiguos"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Monto Total",
+        "from": "Comprador",
+        "created": "Recibida"
+      },
+      "requested": "{{value}} solicitado",
+      "accept": {
+        "title": "Aceptar Oferta"
+      }
+    },
+    "created-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "Fecha: más recientes",
+          "createdAtAsc": "Fecha: más antiguos"
+        }
+      }
+    },
+    "fixed": {
+      "nav": {
+        "fixed": "Precio Fijo",
+        "auction": "Subasta"
+      },
+      "notifications": {
+        "canceled": "Oferta cancelada"
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "new": "Nueva venta"
+      },
+      "orderBy": {
+        "label": "Ordenar por",
+        "values": {
+          "createdAtDesc": "Fecha: más recientes",
+          "createdAtAsc": "Fecha: más antiguos",
+          "unitPriceAsc": "Precio: menor a mayor",
+          "unitPriceDesc": "Precio: mayor a menor"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Precio (individual)",
+        "status": "Estatus",
+        "created": "Creado"
+      },
+      "status": {
+        "active": "Activa",
+        "expired": "Expirada"
+      },
+      "available": "{{value}} a la venta",
+      "cancel": {
+        "title": "Cancelar Oferta"
+      }
+    },
+    "on-sale-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "Lo más reciente",
+          "createdAtAsc": "Lo más antiguo"
+        }
+      }
+    },
+    "owned-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "Fecha: más recientes",
+          "createdAtAsc": "Fecha: más antiguos"
+        }
+      }
+    },
+    "trade-purchased": {
+      "nav": {
+        "sold": "Vendido",
+        "purchased": "Comprado"
+      },
+      "orderBy": {
+        "label": "Ordenar por",
+        "values": {
+          "timestampDesc": "Fecha: lo más reciente",
+          "timestampAsc": "Fecha: lo más antiguo",
+          "amountAsc": "Cantidad: menor a mayor",
+          "amountDesc": "Cantidad: mayor a menor"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Monto Total",
+        "from": "Vendedor",
+        "created": "Comprado"
+      },
+      "purchased": "{{value}} comprado"
+    },
+    "trade-sold": {
+      "nav": {
+        "sold": "Vendido",
+        "purchased": "Comprado"
+      },
+      "orderBy": {
+        "label": "Ordenar por",
+        "values": {
+          "timestampDesc": "Fecha: lo más reciente",
+          "timestampAsc": "Fecha: lo más antiguo",
+          "amountAsc": "Cantidad: menor a mayor",
+          "amountDesc": "Cantidad: mayor a menor"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Monto Total",
+        "to": "Comprador",
+        "created": "Vendido"
+      },
+      "sold": "{{value}} vendido"
+    }
+  },
+  "users": {
+    "form": {
+      "notifications": {
+        "updated": "Tu perfil ha sido actualizado."
+      }
+    }
+  }
+}

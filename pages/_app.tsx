@@ -9,7 +9,6 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { Web3Provider } from '@ethersproject/providers'
 import LiteflowNFTApp, { Footer, Navbar } from '@nft/components'
 import { LiteflowProvider, useAuthenticate } from '@nft/hooks'
-import { APOLLO_STATE_PROP_NAME } from '@nft/templates'
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
@@ -26,6 +25,7 @@ import connectors from '../connectors'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
+import { APOLLO_STATE_PROP_NAME } from '../props'
 import {
   COOKIE_JWT_TOKEN,
   COOKIE_OPTIONS,
@@ -35,6 +35,7 @@ import {
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
+require('dayjs/locale/es-mx')
 
 NProgress.configure({ showSpinner: false })
 
@@ -88,6 +89,15 @@ function Layout({
         terms: '条款',
         privacy: '隐私',
       },
+      'es-mx': {
+        explore: 'Explorar',
+        create: 'Crear',
+        profile: 'Perfil',
+        referral: 'Recomendación',
+        support: 'Apoyo',
+        terms: 'Letra chica',
+        privacy: 'Privacidad',
+      },
     }
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
@@ -127,6 +137,7 @@ function Layout({
               { label: 'En', value: 'en' },
               { label: '日本語', value: 'ja' },
               { label: '中文', value: 'zh-cn' },
+              { label: 'Spanish', value: 'es-mx' },
             ],
           }}
           signer={signer}
