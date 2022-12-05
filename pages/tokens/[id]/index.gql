@@ -1,0 +1,217 @@
+query FetchAssetIdFromTokenId($tokenId: String!) {
+  assets(condition: { tokenId: $tokenId }, first: 1) {
+    nodes {
+      id
+    }
+  }
+}
+
+query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
+  asset(id: $id) {
+    id
+    tokenId
+    collectionAddress
+    standard
+    name
+    description
+    traits {
+      nodes {
+        type
+        value
+      }
+    }
+    image
+    animationUrl
+    hasUnlockableContent
+    unlockedContent {
+      url
+      mimetype
+    }
+    creator {
+      address
+      name
+      image
+      verification {
+        status
+      }
+    }
+    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+      aggregates {
+        sum {
+          quantity
+        }
+      }
+    }
+    ownerships(
+      orderBy: [
+        QUANTITY_DESC
+        ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
+        OWNER_ADDRESS_ASC
+      ]
+    ) {
+      nodes {
+        ownerAddress
+        quantity
+        owner {
+          address
+          name
+          image
+          verification {
+            status
+          }
+        }
+      }
+      aggregates {
+        sum {
+          quantity
+        }
+      }
+    }
+    bids(
+      orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+      filter: { expiredAt: { greaterThan: $now } }
+    ) {
+      nodes {
+        id
+        createdAt
+        expiredAt
+        availableQuantity
+        taker {
+          address
+        }
+        maker {
+          address
+          name
+          image
+          verification {
+            status
+          }
+        }
+        amount
+        unitPrice
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
+      }
+    }
+    sales(
+      orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
+      filter: { expiredAt: { greaterThan: $now } }
+    ) {
+      nodes {
+        id
+        unitPrice
+        expiredAt
+        availableQuantity
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
+        maker {
+          image
+          address
+          name
+          verification {
+            status
+          }
+        }
+      }
+      aggregates {
+        sum {
+          availableQuantity
+        }
+      }
+    }
+    auctions(first: 1, orderBy: CREATED_AT_DESC) {
+      nodes {
+        id
+        endAt
+        expireAt
+        reserveAmount
+        winningOffer {
+          id
+        }
+        currency {
+          image
+          decimals
+          symbol
+        }
+        offers(
+          orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+          filter: { signature: { isNull: false } }
+        ) {
+          nodes {
+            id
+            createdAt
+            expiredAt
+            availableQuantity
+            taker {
+              address
+            }
+            maker {
+              address
+              name
+              image
+              verification {
+                status
+              }
+            }
+            amount
+            unitPrice
+            currency {
+              image
+              name
+              id
+              decimals
+              symbol
+            }
+          }
+        }
+      }
+    }
+    histories(orderBy: DATE_DESC) {
+      nodes {
+        action
+        date
+        unitPrice
+        quantity
+        fromAddress
+        from {
+          address
+          name
+          image
+          verification {
+            status
+          }
+        }
+        toAddress
+        to {
+          address
+          name
+          image
+          verification {
+            status
+          }
+        }
+        transactionHash
+        currency {
+          decimals
+          symbol
+        }
+      }
+    }
+  }
+  currencies(orderBy: CREATED_AT_ASC, filter: { address: { isNull: false } }) {
+    # keep only non-native currency. Cannot create bid with native currency.
+    nodes {
+      image
+    }
+  }
+}
