@@ -4,11 +4,14 @@
   "private": true,
   "scripts": {
     "clean": "rimraf .next",
+    "predev": "npm run graphql-codegen",
+    "prebuild": "npm run graphql-codegen",
     "dev": "next dev",
     "build": "next build",
     "lint": "next lint",
     "analyze": "ANALYZE=true npm run build",
-    "start": "next start"
+    "start": "next start",
+    "graphql-codegen": "graphql-codegen --overwrite"
   },
   "dependencies": {
     "@apollo/client": "^3.5.9",
