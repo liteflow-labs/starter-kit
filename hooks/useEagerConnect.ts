@@ -5,7 +5,6 @@ import { isMobile } from 'react-device-detect'
 import connectors from '../connectors'
 import { currentAccount } from '../session'
 
-// Uniswap eager connect: https://github.com/Uniswap/uniswap-interface/blob/main/src/hooks/web3.ts#L15
 export default function useEagerConnect(): boolean {
   const [cookies] = useCookies()
   const connectedAddress = currentAccount(cookies)
@@ -54,7 +53,7 @@ export default function useEagerConnect(): boolean {
   useEffect(() => {
     if (active) return
     void initialize()
-  }, [initialize]) /* eslint-disable-line react-hooks/exhaustive-deps */ // we need to re-run this on every update of the active connection, only when the initialized changes (and so the connectors)
+  }, [initialize]) /* eslint-disable-line react-hooks/exhaustive-deps */ // we don't need to re-run this on every update of the active connection, only when the initialized changes (and so the connectors)
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {
