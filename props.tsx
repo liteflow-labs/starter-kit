@@ -1,14 +1,14 @@
-import { NextApiRequestCookies } from 'next/dist/server/api-utils'
-import Cookies from 'universal-cookie'
-import { setContext } from '@apollo/client/link/context'
 import {
+  ApolloClient,
   createHttpLink,
   InMemoryCache,
-  ApolloClient,
   NormalizedCacheObject,
 } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import decode, { JwtPayload } from 'jwt-decode'
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
+import { NextApiRequestCookies } from 'next/dist/server/api-utils'
+import Cookies from 'universal-cookie'
 
 const COOKIE_JWT_TOKEN = 'jwt-token'
 
@@ -17,15 +17,16 @@ type UserProp = {
   token: string | null
 }
 
-export type PropsWithUser<T> = T & {
+export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
+
+export type PropsWithUserAndState = {
   user: UserProp
+  [APOLLO_STATE_PROP_NAME]: any
 }
 
 type GetServerSidePropsContextWithUser = GetServerSidePropsContext & {
   user: UserProp
 }
-
-export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
 function getClient(
   uri: string,

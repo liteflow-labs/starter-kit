@@ -485,7 +485,7 @@ const ExplorePage: NextPage<Props> = ({
               <Select
                 label={t('explore.form.currency.label')}
                 name="currencyId"
-                control={control}
+                control={control as any} // TODO: fix this type
                 placeholder={t('explore.form.currency.placeholder')}
                 choices={currencies.map((x) => ({
                   value: x.id,

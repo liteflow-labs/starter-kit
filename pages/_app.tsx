@@ -25,7 +25,7 @@ import connectors from '../connectors'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
-import { APOLLO_STATE_PROP_NAME } from '../props'
+import { APOLLO_STATE_PROP_NAME, PropsWithUserAndState } from '../props'
 import {
   COOKIE_JWT_TOKEN,
   COOKIE_OPTIONS,
@@ -216,7 +216,10 @@ function AccountProvider(
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+function MyApp({
+  Component,
+  pageProps,
+}: AppProps<PropsWithUserAndState>): JSX.Element {
   const router = useRouter()
   dayjs.locale(router.locale)
   usePageViews()
