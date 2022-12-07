@@ -2,6 +2,8 @@ import { UserOnSaleAssets } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../components/Head'
 import environment from '../../../environment'
+import useEagerConnect from '../../../hooks/useEagerConnect'
+import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
 
 export const getServerSideProps = UserOnSaleAssets.server(
@@ -17,24 +19,30 @@ const OnSalePage: NextPage<UserOnSaleAssets.Props> = ({
   offset,
   orderBy,
   userAddress,
-}) => (
-  <LargeLayout>
-    <Head
-      title={meta.title}
-      description={meta.description}
-      image={meta.image}
-    />
-    <UserOnSaleAssets.Template
-      limit={limit}
-      limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-      now={now}
-      offset={offset}
-      orderBy={orderBy}
-      page={page}
-      userAddress={userAddress}
-      loginUrlForReferral={environment.BASE_URL + '/login'}
-    />
-  </LargeLayout>
-)
+}) => {
+  const ready = useEagerConnect()
+  const signer = useSigner()
+  return (
+    <LargeLayout>
+      <Head
+        title={meta.title}
+        description={meta.description}
+        image={meta.image}
+      />
+      <UserOnSaleAssets.Template
+        limit={limit}
+        limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+        now={now}
+        offset={offset}
+        orderBy={orderBy}
+        page={page}
+        userAddress={userAddress}
+        loginUrlForReferral={environment.BASE_URL + '/login'}
+        ready={ready}
+        signer={signer}
+      />
+    </LargeLayout>
+  )
+}
 
 export default OnSalePage

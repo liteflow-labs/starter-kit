@@ -2,6 +2,8 @@ import { UserAuctions } from '@nft/templates'
 import { NextPage } from 'next'
 import Head from '../../../../components/Head'
 import environment from '../../../../environment'
+import useEagerConnect from '../../../../hooks/useEagerConnect'
+import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 
 export const getServerSideProps = UserAuctions.server(
@@ -17,29 +19,34 @@ const AuctionPage: NextPage<UserAuctions.Props> = ({
   offset,
   orderBy,
   userAddress,
-}) => (
-  <LargeLayout>
-    <Head
-      title={meta.title}
-      description={meta.description}
-      image={meta.image}
-    />
+}) => {
+  useEagerConnect()
+  const signer = useSigner()
+  return (
+    <LargeLayout>
+      <Head
+        title={meta.title}
+        description={meta.description}
+        image={meta.image}
+      />
 
-    <UserAuctions.Template
-      explorer={{
-        name: environment.BLOCKCHAIN_EXPLORER_NAME,
-        url: environment.BLOCKCHAIN_EXPLORER_URL,
-      }}
-      limit={limit}
-      limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-      now={now}
-      offset={offset}
-      orderBy={orderBy}
-      page={page}
-      userAddress={userAddress}
-      loginUrlForReferral={environment.BASE_URL + '/login'}
-    />
-  </LargeLayout>
-)
+      <UserAuctions.Template
+        explorer={{
+          name: environment.BLOCKCHAIN_EXPLORER_NAME,
+          url: environment.BLOCKCHAIN_EXPLORER_URL,
+        }}
+        limit={limit}
+        limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+        now={now}
+        offset={offset}
+        orderBy={orderBy}
+        page={page}
+        userAddress={userAddress}
+        loginUrlForReferral={environment.BASE_URL + '/login'}
+        signer={signer}
+      />
+    </LargeLayout>
+  )
+}
 
 export default AuctionPage
