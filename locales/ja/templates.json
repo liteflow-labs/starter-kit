@@ -5,5 +5,410 @@
     "Art": "芸術",
     "Photography": "写真術",
     "DeFi": "DeFi"
+  },
+  "error": {
+    "500": "申し訳ありません、エラーが発生しました。"
+  },
+  "home": {
+    "explore": "すべてのコレクションを見る",
+    "auctions": "オークション",
+    "featured": "注目のコレクション"
+  },
+  "explore": {
+    "title": "コレクションを探す",
+    "empty": {
+      "title": "コレクションが見つかりません",
+      "description": "フィルターを更新して、より多くのコレクションを探しましょう。"
+    },
+    "form": {
+      "submit": "適用する",
+      "clear": "すべてクリア",
+      "currency": {
+        "label": "価格レンジ",
+        "placeholder": "通貨の選択"
+      },
+      "min-price": {
+        "placeholder": "から"
+      },
+      "max-price": {
+        "placeholder": "まで"
+      },
+      "offers": {
+        "label": "状態",
+        "values": {
+          "fixed": "固定価格",
+          "auction": "オークション"
+        }
+      },
+      "categories": {
+        "label": "カテゴリー"
+      },
+      "collections": {
+        "label": "コレクション"
+      }
+    },
+    "orderBy": {
+      "label": "並び替え",
+      "values": {
+        "createdAtDesc": "日付: 最も新しい",
+        "createdAtAsc": "日付: 最も古い"
+      }
+    }
+  },
+  "asset": {
+    "detail": {
+      "unlockable": {
+        "title": "ロック解除可能なコンテンツ",
+        "tooltip": "アイテムのコンテンツは、アイテムの所有者のみがロックを解除できます。"
+      },
+      "show-preview": "プレビューを表示",
+      "description": "説明",
+      "traits": "特徴",
+      "tabs": {
+        "bids": "入札",
+        "history": "履歴"
+      },
+      "menu": {
+        "report": {
+          "label": "通報",
+          "subject": "NFTを通報する",
+          "body": "以下のNFT {{name}} (#{{id}}) を通報します\n理由: "
+        }
+      },
+      "explorerLink": "{{name}} で表示",
+      "ipfsLink": "IPFSで表示",
+      "errors": {
+        "image": "問題が発生しました"
+      }
+    },
+    "form": {
+      "title": {
+        "single": "シングルコレクションの作成",
+        "multiple": "マルチコレクションの作成"
+      },
+      "preview": "プレビュー",
+      "notifications": {
+        "created": "コレクションが無事に作成されました。"
+      }
+    },
+    "typeSelector": {
+      "title": "コレクションの作成",
+      "description": "1点もののコレクションの場合は「シングル」、1つのコレクションを複数販売したい場合は「マルチ」を選択してください",
+      "single": {
+        "title": "シングル",
+        "type": "ERC721"
+      },
+      "multiple": {
+        "title": "マルチ",
+        "type": "ERC1155"
+      }
+    },
+    "restricted": {
+      "title": "認証済みユーザーに制限された作成",
+      "description": "アカウントの確認をリクエストするには、<0/> のサポート チームにお問い合わせください。プロセスのすべてのステップをご案内します。",
+      "info": "アカウントが確認されると通知が届き、作成機能にアクセスできるようになります。"
+    }
+  },
+  "login": {
+    "title": "ようこそ！",
+    "subtitle": "ウォレットでサインインする",
+    "description": "以下のいずれかの方法で接続してください。",
+    "alternative": "別の方法でサインイン",
+    "successes": {
+      "invitation": "招待状がアカウントにリンクされました。"
+    },
+    "errors": {
+      "wrong-network": "間違ったネットワークに接続されています。{{networkName}} ネットワークに切り替えてください。",
+      "invitation": "招待状をこのアカウントにリンクできませんでした。 これが他の招待コードにリンクされていないアカウントであることを確認してください。"
+    }
+  },
+  "notifications": {
+    "title": "通知",
+    "loadMore": "もっと見る",
+    "empty": {
+      "title": "通知が見つかりません",
+      "description": "またお越しいただくか、プラットフォームをご覧ください"
+    }
+  },
+  "offers": {
+    "bid": {
+      "meta": {
+        "title": "{{name}} に入札する",
+        "description": "{{creator}} が作成した {{name}} に入札する"
+      },
+      "title": "入札する",
+      "notifications": {
+        "created": "入札が無事に成功jしました。"
+      },
+      "auction": "オークション終了まで",
+      "highestBid": "最高入札額"
+    },
+    "checkout": {
+      "from": "から",
+      "meta": {
+        "title": "{{name}} を購入する",
+        "description": "{{creator}} が作成した {{name}} を購入する"
+      },
+      "title": "チェックアウト",
+      "notifications": {
+        "purchased": "コレクションが無事に購入されました。"
+      },
+      "on-sale": "販売中",
+      "per-edition": "エディションあたり"
+    },
+    "form": {
+      "meta": {
+        "title": "{{name}} のオファーを作成する",
+        "description": "{{name}} のオファーを作成する"
+      },
+      "title": "コレクションのオファー",
+      "notifications": {
+        "created": "オファーが無事に作成されました。"
+      },
+      "options": {
+        "label": "オファーの種類",
+        "hints": {
+          "fixed": "コレクションを即座に購入可能な価格を入力してください",
+          "auction": "購入者が入札できる期間の設定"
+        },
+        "values": {
+          "fixed": "固定価格",
+          "auction": "期間限定オークション"
+        }
+      }
+    }
+  },
+  "pagination": {
+    "result": {
+      "label": "ページあたりの結果",
+      "caption": "<0>{{from}}</0> - <0>{{to}}</0> の <0>{{total}}</0> 結果",
+      "pages_one": "{{count}}ページの",
+      "pages_other": "{{count}}ページ分:"
+    }
+  },
+  "referral": {
+    "title": "クリエイターをスカウトする",
+    "description": "スカウトリンクを介して{{platformName}}プラットフォームに新しいクリエイターを登録する事で、彼らが作成したNFTの売上からパーセンテージを永続的に獲得出来ます。",
+    "link": "あなたのスカウトリンク",
+    "how": {
+      "title": "スカウトの内容",
+      "steps": [
+        "スカウトリンクをコピーして、登録したいクリエイターに共有します",
+        "クリエイターはあなたのスカウトリンクを使用してプラットフォームにサインインします（スカウトリンクを介して登録できるのは新しく接続するクリエイターのみです）",
+        "スカウト報酬がクリエイターのアカウントに関連付けられます",
+        "スカウトしたクリエイターが作成した NFT が販売されるたびに、スカウト報酬を受け取ることができます"
+      ]
+    },
+    "rewards": {
+      "title": "スカウト報酬",
+      "primary": {
+        "title": "一次販売",
+        "description": "あなたは販売売上から{{percentage}}％を獲得出来ます",
+        "tooltip": "ツールチップ コンテンツ > プライマリ セールは、NFT の発行後に行われる最初のセールです。"
+      },
+      "secondary": {
+        "title": "二次販売",
+        "description": "売上の{{percentage}}%があなたに還元されます",
+        "tooltip": "ツールチップ コンテンツ > 二次販売は、NFT の一次販売後に発生するすべての販売です。"
+      }
+    }
+  },
+  "user": {
+    "auctions": {
+      "nav": {
+        "fixed": "固定価格",
+        "auction": "オークション"
+      },
+      "notifications": {
+        "accepted": "オークションを受け付けました"
+      },
+      "orderBy": {
+        "label": "並び替え",
+        "values": {
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い"
+        }
+      },
+      "table": {
+        "item": "アイテム",
+        "price": "最高入札額",
+        "status": "状態",
+        "created": "作成済"
+      }
+    },
+    "bid-placed": {
+      "nav": {
+        "received": "受取済",
+        "placed": "入札済"
+      },
+      "notifications": {
+        "canceled": "入札がキャンセルされました"
+      },
+      "actions": {
+        "cancel": "キャンセル",
+        "new": "新規入札"
+      },
+      "orderBy": {
+        "label": "並び替え",
+        "values": {
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い"
+        }
+      },
+      "table": {
+        "item": "アイテム",
+        "price": "総額",
+        "status": "状態",
+        "created": "入札済"
+      },
+      "requested": "{{value}} をリクエスト",
+      "status": {
+        "expired": "期限切れ",
+        "active": "アクティブ"
+      },
+      "cancel": {
+        "title": "オファーをキャンセル"
+      }
+    },
+    "bid-received": {
+      "nav": {
+        "received": "受取済",
+        "placed": "入札済"
+      },
+      "notifications": {
+        "accepted": "入札受諾"
+      },
+      "actions": {
+        "accept": "受け入れる"
+      },
+      "orderBy": {
+        "label": "並び替え",
+        "values": {
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い"
+        }
+      },
+      "table": {
+        "item": "アイテム",
+        "price": "総額",
+        "from": "入札者",
+        "created": "受取済"
+      },
+      "requested": "{{value}}</> をリクエスト",
+      "accept": {
+        "title": "オファーを受け入れる"
+      }
+    },
+    "created-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い"
+        }
+      }
+    },
+    "fixed": {
+      "nav": {
+        "fixed": "固定価格",
+        "auction": "オークション"
+      },
+      "notifications": {
+        "canceled": "オファーがキャンセルされました"
+      },
+      "actions": {
+        "cancel": "キャンセル",
+        "new": "新発売"
+      },
+      "orderBy": {
+        "label": "並び替え",
+        "values": {
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い",
+          "unitPriceAsc": "価格: 低い順",
+          "unitPriceDesc": "価格: 高い順"
+        }
+      },
+      "table": {
+        "item": "アイテム",
+        "price": "ユニット価格",
+        "status": "状態",
+        "created": "作成済"
+      },
+      "status": {
+        "active": "アクティブ",
+        "expired": "期限切れ"
+      },
+      "available": "{{value}} を販売中",
+      "cancel": {
+        "title": "オファーをキャンセル"
+      }
+    },
+    "on-sale-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "資産: 最も新しい",
+          "createdAtAsc": "資産: 最も古い"
+        }
+      }
+    },
+    "owned-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い"
+        }
+      }
+    },
+    "trade-purchased": {
+      "nav": {
+        "sold": "販売済",
+        "purchased": "購入済"
+      },
+      "orderBy": {
+        "label": "並び替え",
+        "values": {
+          "timestampDesc": "日付: 最も新しい",
+          "timestampAsc": "日付: 最も古い",
+          "amountAsc": "数量: 低い順",
+          "amountDesc": "数量: 高い順"
+        }
+      },
+      "table": {
+        "item": "アイテム",
+        "price": "総額",
+        "from": "販売者",
+        "created": "購入済"
+      },
+      "purchased": "{{value}} を購入済"
+    },
+    "trade-sold": {
+      "nav": {
+        "sold": "販売済",
+        "purchased": "購入済"
+      },
+      "orderBy": {
+        "label": "並び替え",
+        "values": {
+          "timestampDesc": "日付: 最も新しい",
+          "timestampAsc": "日付: 最も古い",
+          "amountAsc": "数量: 低い順",
+          "amountDesc": "数量: 高い順"
+        }
+      },
+      "table": {
+        "item": "アイテム",
+        "price": "総額",
+        "to": "購入者",
+        "created": "販売済"
+      },
+      "sold": "{{value}} 販売済"
+    }
+  },
+  "users": {
+    "form": {
+      "notifications": {
+        "updated": "プロフィールが無事に更新されました。"
+      }
+    }
   }
 }

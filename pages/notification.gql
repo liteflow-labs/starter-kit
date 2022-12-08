@@ -1,0 +1,81 @@
+query GetNotifications($address: Address!, $cursor: Cursor) {
+  notifications(
+    filter: {
+      accountAddress: { equalTo: $address }
+      action: {
+        in: [
+          ACCOUNT_VERIFICATION_VALIDATED
+          BID_ACCEPTED
+          BID_CREATED
+          OFFER_PURCHASED
+          AUCTION_BID_CREATED
+          AUCTION_BID_EXPIRED
+          AUCTION_ENDED_WON_SELLER
+          AUCTION_ENDED_RESERVEPRICE_SELLER
+          AUCTION_ENDED_NOBIDS
+          AUCTION_ENDED_WON_BUYER
+          AUCTION_ENDED_RESERVEPRICE_BUYER
+          AUCTION_EXPIRED
+          AUCTION_EXPIRE_SOON
+          BID_EXPIRED
+          OFFER_EXPIRED
+          REFERRAL_REFEREE_REGISTERED
+        ]
+      }
+    }
+    first: 12
+    orderBy: CREATED_AT_DESC
+    after: $cursor
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      action
+      createdAt
+      accountVerification {
+        status
+        account {
+          address
+          image
+        }
+      }
+      offer {
+        amount
+        unitPrice
+        quantity
+        asset {
+          id
+          image
+          name
+        }
+        currency {
+          decimals
+          symbol
+        }
+      }
+      auction {
+        asset {
+          id
+          image
+          name
+        }
+      }
+      trade {
+        quantity
+        buyerAddress
+        buyer {
+          address
+          username
+        }
+      }
+      refereeAccount {
+        address
+        username
+        image
+      }
+    }
+  }
+}

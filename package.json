@@ -4,24 +4,28 @@
   "private": true,
   "scripts": {
     "clean": "rimraf .next",
+    "predev": "npm run graphql-codegen",
+    "prebuild": "npm run graphql-codegen",
     "dev": "next dev",
     "build": "next build",
     "lint": "next lint",
     "analyze": "ANALYZE=true npm run build",
-    "start": "next start"
+    "start": "next start",
+    "graphql-codegen": "graphql-codegen --overwrite"
   },
   "dependencies": {
     "@apollo/client": "^3.5.9",
     "@chakra-ui/react": "^1.8.8",
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@nft/api-graphql": "^1.0.0-beta.7",
     "@nft/chat": "^0.1.8",
     "@nft/components": "^1.0.0-beta.8",
     "@nft/email-connector": "^1.0.0-beta.8",
     "@nft/hooks": "^1.0.0-beta.8",
-    "@nft/templates": "^1.0.0-beta.8",
     "@react-icons/all-files": "^4.1.0",
+    "@web3-react/abstract-connector": "^6.0.7",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "^6.1.9",
@@ -38,9 +42,15 @@
     "react-cookie": "^4.1.1",
     "react-device-detect": "^1.17.0",
     "react-dom": "^17.0.2",
-    "ts-invariant": "^0.9.4"
+    "react-hook-form": "^7.17.2",
+    "ts-invariant": "^0.9.4",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.15.0",
+    "@graphql-codegen/typescript": "^2.8.3",
+    "@graphql-codegen/typescript-operations": "^2.5.8",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@next/bundle-analyzer": "^11.0.1",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^17.0.11",

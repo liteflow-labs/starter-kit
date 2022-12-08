@@ -18,6 +18,13 @@ type Environment = {
   BASE_URL: string
   UPLOAD_URL: string
   REFERRAL_PERCENTAGE: { base: number; secondary?: number }
+  // Set to true if you want only verified users to be able to create NFTs.
+  // Set to false if you want everyone to be able to create NFTs.
+  RESTRICT_TO_VERIFIED_ACCOUNT: boolean
+  // Limit the maximum percentage for royalties
+  MAX_ROYALTIES: number
+  // Allow users to top up their wallet with fiat
+  ALLOW_TOP_UP: boolean
 }
 
 // magic api key
@@ -109,6 +116,9 @@ const environment: Environment = {
   BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   UPLOAD_URL: process.env.NEXT_PUBLIC_UPLOAD_URL,
   REFERRAL_PERCENTAGE: { base: 20 * 0.025, secondary: 20 * 0.01 },
+  RESTRICT_TO_VERIFIED_ACCOUNT: true,
+  MAX_ROYALTIES: 30,
+  ALLOW_TOP_UP: true,
 }
 
 export default environment
