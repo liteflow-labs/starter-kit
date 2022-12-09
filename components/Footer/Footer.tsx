@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, Show, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 import Link from '../Link/Link'
 import LiteflowLogo from './LiteflowLogo'
 
@@ -10,10 +10,9 @@ type Props = {
     href: string
     label: string
   }[]
-  showPoweredBy?: boolean
 }
 
-const Footer: VFC<Props> = ({ name, links, showPoweredBy }) => {
+const Footer: VFC<Props> = ({ name, links }) => {
   const { t } = useTranslation('components')
   return (
     <>
@@ -76,30 +75,23 @@ const Footer: VFC<Props> = ({ name, links, showPoweredBy }) => {
                 name,
               })}
             </Text>
-            {showPoweredBy && (
-              <Flex>
-                <Show above="md">
-                  <Divider
-                    orientation="vertical"
-                    mx={6}
-                    color="gray.200"
-                    h={6}
-                  />
-                </Show>
-                <Text
-                  as="p"
-                  variant="text"
-                  color="gray.500"
-                  fontWeight="500"
-                  mr={1}
-                >
-                  Powered by
-                </Text>
-                <Link href="https://liteflow.com" isExternal>
-                  {LiteflowLogo}
-                </Link>
-              </Flex>
-            )}
+            <Flex>
+              <Show above="md">
+                <Divider orientation="vertical" mx={6} color="gray.200" h={6} />
+              </Show>
+              <Text
+                as="p"
+                variant="text"
+                color="gray.500"
+                fontWeight="500"
+                mr={1}
+              >
+                Powered by
+              </Text>
+              <Link href="https://liteflow.com" isExternal>
+                {LiteflowLogo}
+              </Link>
+            </Flex>
           </Flex>
         </Box>
       </footer>
