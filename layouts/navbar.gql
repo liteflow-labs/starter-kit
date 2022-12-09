@@ -1,0 +1,10 @@
+query NavbarAccount($account: Address!, $lastNotification: Datetime!) {
+  account(address: $account) {
+    address
+    name
+    image
+    notifications(filter: { createdAt: { greaterThan: $lastNotification } }) {
+      totalCount
+    }
+  }
+}

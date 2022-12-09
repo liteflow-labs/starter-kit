@@ -1,7 +1,7 @@
 schema: './node_modules/@nft/api-graphql/schema.graphql'
 documents:
   - './pages/**/*.gql'
-  - './pages/**/!(*.d).{ts,tsx}'
+  - './layouts/**/*.gql'
 generates:
   graphql.ts:
     plugins:
