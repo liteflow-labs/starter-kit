@@ -1,5 +1,4 @@
 import { Text } from '@chakra-ui/react'
-import { TokenGrid } from '@nft/components'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
@@ -9,6 +8,7 @@ import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import UserProfileTemplate from '../../../components/Profile'
+import TokenGrid from '../../../components/Token/Grid'
 import {
   convertAsset,
   convertAuctionWithBestBid,

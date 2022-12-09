@@ -8,13 +8,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  BackButton,
-  Radio,
-  SaleAuctionForm,
-  SaleDirectForm,
-  TokenCard,
-} from '@nft/components'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { useWeb3React } from '@web3-react/core'
@@ -25,6 +18,11 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
+import BackButton from '../../../components/Navbar/BackButton'
+import Radio from '../../../components/Radio/Radio'
+import SalesAuctionForm from '../../../components/Sales/Auction/Form'
+import SalesDirectForm from '../../../components/Sales/Direct/Form'
+import TokenCard from '../../../components/Token/Card'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -195,7 +193,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
     if (!asset) return
     if (sale === SaleType.FIXED_PRICE)
       return (
-        <SaleDirectForm
+        <SalesDirectForm
           asset={asset}
           currencies={currencies}
           blockExplorer={blockExplorer}
@@ -210,7 +208,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
       )
     if (sale === SaleType.TIMED_AUCTION)
       return (
-        <SaleAuctionForm
+        <SalesAuctionForm
           signer={signer}
           assetId={asset.id}
           currencies={currencies.filter((c) => c.address)} // Keep only non-native currency for bids on auction

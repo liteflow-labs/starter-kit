@@ -1,12 +1,13 @@
 import { Button, Heading, Icon, Stack, Text } from '@chakra-ui/react'
-import { Empty, Notification } from '@nft/components'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCookies } from 'react-cookie'
+import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
+import NotificationDetail from '../components/Notification/Detail'
 import { concatToQuery } from '../concat'
 import environment from '../environment'
 import {
@@ -104,7 +105,7 @@ const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
         {(notifications || []).length > 0 ? (
           <>
             {notifications.map((notification) => (
-              <Notification key={notification.id} {...notification} />
+              <NotificationDetail key={notification.id} {...notification} />
             ))}
             {hasNextPage && (
               <Button isLoading={loading} onClick={loadMore}>

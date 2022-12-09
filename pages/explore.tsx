@@ -21,7 +21,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { Empty, Pagination, Select, TokenCard } from '@nft/components'
 import { parsePrice, removeEmptyFromObject } from '@nft/hooks'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
@@ -29,7 +28,11 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
+import Pagination from '../components/Pagination/Pagination'
+import Select from '../components/Select/Select'
+import TokenCard from '../components/Token/Card'
 import {
   convertAsset,
   convertAuctionWithBestBid,

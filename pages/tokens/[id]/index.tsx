@@ -24,15 +24,6 @@ import {
   Tooltip,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  BidList,
-  HistoryList,
-  Link as ChakraLink,
-  SaleDetail,
-  TokenMedia,
-  TokenMetadata,
-  TraitList,
-} from '@nft/components'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
@@ -42,7 +33,14 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
+import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
+import HistoryList from '../../../components/History/HistoryList'
+import ChakraLink from '../../../components/Link/Link'
+import SaleDetail from '../../../components/Sales/Detail'
+import TokenMedia from '../../../components/Token/Media'
+import TokenMetadata from '../../../components/Token/Metadata'
+import TraitList from '../../../components/Trait/TraitList'
 import {
   convertAuctionFull,
   convertBidFull,

@@ -1,11 +1,12 @@
 import { useToast } from '@chakra-ui/react'
-import { Account, UserFormEdit } from '@nft/components'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
+import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
+import UserFormEdit from '../../components/User/Form/Edit'
 import environment from '../../environment'
 import { useGetAccountQuery } from '../../graphql'
 import useEagerConnect from '../../hooks/useEagerConnect'
@@ -46,14 +47,14 @@ const EditPage: NextPage = () => {
     <SmallLayout>
       <Head title="Account - Edit profile" />
 
-      <Account currentTab="edit-profile">
+      <AccountTemplate currentTab="edit-profile">
         <UserFormEdit
           signer={signer}
           onUpdated={onSubmit}
           uploadUrl={environment.UPLOAD_URL}
           account={data.account}
         />
-      </Account>
+      </AccountTemplate>
     </SmallLayout>
   )
 }

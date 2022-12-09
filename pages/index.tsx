@@ -8,12 +8,15 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { Link, Slider, TokenCard, TokenHeader } from '@nft/components'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
+import Link from '../components/Link/Link'
+import Slider from '../components/Slider/Slider'
+import TokenCard from '../components/Token/Card'
+import TokenHeader from '../components/Token/Header'
 import {
   convertAsset,
   convertAssetWithSupplies,

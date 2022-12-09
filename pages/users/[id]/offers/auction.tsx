@@ -13,15 +13,6 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
-import {
-  Image,
-  Link,
-  Pagination,
-  Price,
-  SaleAuctionAction,
-  SaleAuctionStatus,
-  Select,
-} from '@nft/components'
 import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
@@ -31,7 +22,14 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../../components/Head'
+import Image from '../../../../components/Image/Image'
+import Link from '../../../../components/Link/Link'
+import Pagination from '../../../../components/Pagination/Pagination'
+import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
+import SaleAuctionAction from '../../../../components/Sales/Auction/Action'
+import SaleAuctionStatus from '../../../../components/Sales/Auction/Status'
+import Select from '../../../../components/Select/Select'
 import {
   convertAuctionFull,
   convertAuctionWithBestBid,

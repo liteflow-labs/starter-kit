@@ -9,7 +9,6 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { BackButton, Link } from '@nft/components'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { IoImageOutline } from '@react-icons/all-files/io5/IoImageOutline'
 import { IoImagesOutline } from '@react-icons/all-files/io5/IoImagesOutline'
@@ -20,6 +19,8 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import React from 'react'
 import Head from '../../components/Head'
+import Link from '../../components/Link/Link'
+import BackButton from '../../components/Navbar/BackButton'
 import environment from '../../environment'
 import {
   FetchAccountVerificationStatusDocument,

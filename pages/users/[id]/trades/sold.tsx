@@ -13,7 +13,6 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
-import { Image, Link, Pagination, Price, Select } from '@nft/components'
 import { dateFromNow, formatAddress } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
 import { useWeb3React } from '@web3-react/core'
@@ -24,7 +23,12 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../../components/Head'
+import Image from '../../../../components/Image/Image'
+import Link from '../../../../components/Link/Link'
+import Pagination from '../../../../components/Pagination/Pagination'
+import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
+import Select from '../../../../components/Select/Select'
 import { convertFullUser, convertTrade } from '../../../../convert'
 import environment from '../../../../environment'
 import {

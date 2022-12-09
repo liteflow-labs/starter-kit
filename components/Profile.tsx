@@ -1,13 +1,11 @@
 import { GridItem, SimpleGrid, Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import {
-  UserProfileBanner,
-  UserProfileInfo,
-  UserProfileNavigation,
-} from '@nft/components'
-import type { TabsEnum } from '@nft/components/dist/User/Profile/Navigation'
 import { isSameAddress } from '@nft/hooks'
-import React, { FC } from 'react'
+import { FC } from 'react'
+import type { TabsEnum } from '../components/User/Profile/Navigation'
+import UserProfileNavigation from '../components/User/Profile/Navigation'
+import UserProfileBanner from './User/Profile/Banner'
+import UserProfileInfo from './User/Profile/Info'
 
 const UserProfileTemplate: FC<{
   signer: Signer | undefined
