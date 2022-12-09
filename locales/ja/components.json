@@ -1,9 +1,792 @@
 {
-  "categories": {
-    "Category": "カテゴリー",
-    "Games": "ゲーム",
-    "Art": "芸術",
-    "Photography": "写真術",
-    "DeFi": "DeFi"
+  "account": {
+    "title": "アカウント",
+    "tabs": {
+      "wallet": "ウォレット",
+      "edit-profile": "プロフィールの編集"
+    }
+  },
+  "bid": {
+    "list": {
+      "none": "入札無し"
+    },
+    "detail": {
+      "per-edition-single": "<0/>",
+      "per-edition-multiple": "<0/> エディションあたり",
+      "requested": "<0>{{quantity}}</0> をリクエスト",
+      "expires": ". 有効期限: {{date}}",
+      "accept": "入札を受け入れる",
+      "cancel": "キャンセル",
+      "modal": {
+        "accept": {
+          "title": "入札を受け入れる"
+        },
+        "cancel": {
+          "title": "オファーをキャンセル"
+        }
+      }
+    }
+  },
+  "countdown": {
+    "day": "{{value}}日",
+    "hour": "{{value}}時間",
+    "min": "{{value}}分",
+    "sec": "{{value}}秒"
+  },
+  "dropzone": {
+    "required": "必須の項目です"
+  },
+  "footer": {
+    "copyright": "© {{date}} {{name}} 無断転載を禁じます。"
+  },
+  "history": {
+    "none": "履歴無し",
+    "listing": {
+      "by": "までに<0/>",
+      "listed_one": "<0>{{count}}</0> エディションのリスト <1/>",
+      "listed_other": "<0>{{count}}</0> 各エディションのリスト <1/>"
+    },
+    "mint": {
+      "by": "までに<0/>",
+      "minted_one": "<0>{{count}}</0> エディションが作成されました",
+      "minted_other": "<0>{{count}}</0> エディションが作成されました"
+    },
+    "lazymint": {
+      "by": "までに<0/>",
+      "minted_one": "<0>{{count}}</0> エディション遅延作成",
+      "minted_other": "<0>{{count}}</0> エディション遅延作成"
+    },
+    "transfer": {
+      "from": "<0/>から",
+      "transferred_one": "<0>{{count}}</0> エディションが転送されました <1/>",
+      "transferred_other": "<0>{{count}}</0> エディションが転送されました <1/>"
+    },
+    "purchase": {
+      "from": "<0/>から<1/>へ",
+      "purchased_one": "<0>{{count}}</0> エディションを購入しました <1/>",
+      "purchased_other": "<0>{{count}}</0> 各エディションが購入されました <1/>"
+    }
+  },
+  "modal": {
+    "accept-auction": {
+      "description": "続行するにはウォレットでトランザクションを確認してください。この操作にはガス代がかかります。",
+      "action": "{{name}}で表示",
+      "auction": {
+        "resolve": {
+          "title": "オークションの確認中です",
+          "description": "ベストな入札を探し、検証しています"
+        },
+        "default": {
+          "title": "オークションが承認されました",
+          "description": "完了"
+        }
+      },
+      "approval": {
+        "resolve": {
+          "title": "権限が必要です",
+          "description": "続行するにはウォレットで許可してください。この操作にはガス代がかかりますが、トークンごとに行う必要があるのは一度だけです"
+        },
+        "signature": {
+          "title": "権限が必要です",
+          "description": "続行するにはウォレットで許可してください。この操作にはガス代がかかりますが、トークンごとに行う必要があるのは一度だけです"
+        },
+        "pending": {
+          "title": "許可を申請中です",
+          "description": "リクエストの処理中です"
+        },
+        "default": {
+          "title": "許可されました",
+          "description": "完了"
+        }
+      },
+      "transaction": {
+        "approval": {
+          "title": "確認が必要です",
+          "description": "ウォレットを開き、トランザクションを確認してください"
+        },
+        "signature": {
+          "title": "確認が必要です",
+          "description": "ウォレットを開き、トランザクションを確認してください"
+        },
+        "pending": {
+          "title": "確認を申請中です",
+          "description": "0/2 完了 - トランザクションはブロックチェーン上で保留中です"
+        },
+        "ownership": {
+          "title": "確認を申請中です",
+          "description": "1/2 完了 - 所有権を確認中です"
+        }
+      }
+    },
+    "accept-offer": {
+      "description": "続行するにはウォレットでトランザクションを確認してください。この操作にはガス代がかかります。",
+      "action": {
+        "permission": "{{name}}の権限に関する詳細",
+        "transaction": "{{name}}のトランザクション詳細"
+      },
+      "approval": {
+        "signature": {
+          "title": "権限が必要です",
+          "description": "続行するにはウォレットで許可してください。この操作にはガス代がかかりますが、トークンごとに行う必要があるのは一度だけです"
+        },
+        "pending": {
+          "title": "許可を申請中です",
+          "description": "リクエストの処理中です"
+        },
+        "default": {
+          "title": "許可されました",
+          "description": "完了"
+        }
+      },
+      "transaction": {
+        "approval": {
+          "title": "確認が必要です",
+          "description": "ウォレットを開き、トランザクションを確認してください"
+        },
+        "signature": {
+          "title": "確認が必要です",
+          "description": "ウォレットを開き、トランザクションを確認してください"
+        },
+        "pending": {
+          "title": "確認を申請中です",
+          "description": "0/2 完了 - トランザクションはブロックチェーン上で保留中です"
+        },
+        "ownership": {
+          "title": "確認を申請中です",
+          "description": "1/2 完了 - 所有権を確認中です"
+        }
+      }
+    },
+    "cancel-offer": {
+      "description": "続行するにはウォレットでトランザクションを確認してください。この操作にはガス代がかかります。",
+      "action": "{{name}}で表示",
+      "transaction": {
+        "signature": {
+          "title": "確認が必要です",
+          "description": "ウォレットを開き、トランザクションを確認してください"
+        },
+        "pending": {
+          "title": "確認を申請中です",
+          "description": "ランザクションはブロックチェーン上で保留中です"
+        }
+      }
+    },
+    "create-collectible": {
+      "description": "続行するにはウォレットでトランザクションを確認してください。この操作にはガス代がかかります。",
+      "description-lazymint": "次に進むには、ウォレットの表示メッセージに署名してください。",
+      "action": "{{name}}で表示",
+      "upload": {
+        "upload": {
+          "title": "ファイルのアップロード中",
+          "description": "ファイルのアップロードが完了するまでお待ちください"
+        },
+        "default": {
+          "title": "ファイルがアップロードされました",
+          "description": "完了"
+        }
+      },
+      "transaction": {
+        "upload": {
+          "title": "確認が必要です",
+          "description": "ウォレットを開き、トランザクションを確認してください"
+        },
+        "signature": {
+          "title": "確認が必要です",
+          "description": "ウォレットを開き、トランザクションを確認してください"
+        },
+        "pending": {
+          "title": "確認を申請中です",
+          "description": "0/2 完了 - トランザクションはブロックチェーン上で保留中です"
+        },
+        "ownership": {
+          "title": "確認を申請中です",
+          "description": "1/2 完了 - 所有権を確認中です"
+        },
+        "lazymint-signature": {
+          "title": "署名が必要です",
+          "description": "ウォレットで開き、メッセージに署名してください"
+        },
+        "lazymint-pending": {
+          "title": "アセットの作成",
+          "description": "アセットを作成しています"
+        }
+      }
+    },
+    "create-offer": {
+      "description": "次に進むには、ウォレットの表示メッセージに署名してください。",
+      "action": "{{name}}で表示",
+      "approval": {
+        "approval": {
+          "title": "権限が必要です",
+          "description": "続行するにはウォレットで許可してください。この操作にはガス代がかかりますが、トークンごとに行う必要があるのは一度だけです"
+        },
+        "pending": {
+          "title": "許可を申請中です",
+          "description": "リクエストの処理中です"
+        },
+        "signature": {
+          "title": "許可されました",
+          "description": "完了"
+        }
+      },
+      "signature": {
+        "pending": {
+          "title": "署名が必要です",
+          "description": "ウォレットで開き、メッセージに署名してください"
+        },
+        "signature": {
+          "title": "署名が必要です",
+          "description": "ウォレットを開き、トランザクションを確認してください"
+        }
+      }
+    },
+    "login": {
+      "title": "ウォレットでサインインする",
+      "description": "次のいずれかのオプションを使用して接続します。",
+      "alternative": "または、",
+      "errors": {
+        "wrong-network": "間違ったネットワークに接続しています。{{networkName}}ネットワークに切り替えてください。"
+      }
+    }
+  },
+  "back": "戻る",
+  "navbar": {
+    "open-menu": "メインメニューを開く",
+    "open-activity": "メインメニューを開く",
+    "explore": "検索",
+    "create": "作成する",
+    "search": "検索",
+    "sign-in": "サインイン",
+    "notifications": "通知",
+    "activity": {
+      "title": "アクティビティ",
+      "bids": "入札",
+      "trades": "取引",
+      "offers": "オファー"
+    },
+    "user": {
+      "title": "アカウント",
+      "profile": "プロフィール",
+      "wallet": "ウォレット",
+      "edit": "プロフィールの編集",
+      "top-up": "チャージ",
+      "sign-out": "サインアウト"
+    }
+  },
+  "network-selection": {
+    "title": "間違ったネットワーク",
+    "description": "間違ったネットワークに接続されています。",
+    "hint": "<0>{{networkName}}</0>ネットワークに切り替えてください。"
+  },
+  "newsletter": {
+    "title": "ニュースレターの購読を申し込む",
+    "action": "購読",
+    "coming-soon": "近日公開予定の機能",
+    "form": {
+      "validation": {
+        "required": "必須の項目です",
+        "email": "有効なEメールアドレスを入力してください"
+      },
+      "email": {
+        "placeholder": "Eメールアドレスを入力"
+      }
+    }
+  },
+  "notification": {
+    "account-verification-validated": "プロフィールは確認されました。<0>プロフィールを確認する</0>",
+    "auction": {
+      "bid": {
+        "created": "<0/>の新規入札が<1>{{name}}</1>のオークションにありました",
+        "expired": "<0/>の入札が<1>{{name}}</1> のオークションに行われましたが、有効期限を迎えました。入札はキャンセルされました"
+      },
+      "ended": {
+        "no-bids": "<0>{{name}}</0>のオークションが終了しましたが、入札はありませんでした。今すぐ新規販売を行いましょう！",
+        "reserve-price-buyer": "<0>{{name}}</0>のオークションは最低落札価格に到達せずに終了しました。",
+        "reserve-price-seller": "<0>{{name}}</0>のオークションが終了しましたが、最低落札価格に到達しませんでした。今すぐ新規販売を行いましょう！",
+        "won-buyer": "おめでとうございます 🎉 <0>{{name}}</0>のオークションを落札できました！所有者による所有権移動の確認をお待ちください",
+        "won-seller": "おめでとうございます 🎉 <0>{{name}}</0>のオークションは<1/>で落札されました！販売を確認し、代金を回収してください"
+      },
+      "expired": "<0>{{name}}</0>の有効期限を迎えました。オークションと入札はキャンセルされました。新規販売を行いましょう！",
+      "expire-soon": "<0>{{name}}</0>のオークションと<1/>の入札は24時間以内に有効期限を迎えます 🔥 手遅れになる前に、販売を確認しましょう！"
+    },
+    "bid": {
+      "accepted": {
+        "one": "おめでとうございます 🎉 <0>{{count}}</0>エディションの<1>{{name}}</1>の<2/>の入札が受理されました。",
+        "other": "おめでとうございます 🎉 <0>{{count}}</0>エディションの<1>{{name}}</1>の各<2/>の入札が受理されました。"
+      },
+      "created": {
+        "one": " <0>{{count}}</0>エディションの<1>{{name}}</1>の<2/>の入札を受け取りました",
+        "other": " <0>{{count}}</0>エディションの<1>{{name}}</1>の各<2/>の入札を受け取りました"
+      },
+      "expired": {
+        "one": "<0>{{count}}</0>エディションの<1>{{name}}</1>の<2/>の入札が有効期限を迎えました。入札はキャンセルされました。",
+        "other": "<0>{{count}}</0>エディションの<1>{{name}}</1>の各<2/>の入札が有効期限を迎えました。入札はキャンセルされました。"
+      }
+    },
+    "offer": {
+      "expired": "{{name}}の有効期限を迎えました。新規販売を行いましょう！",
+      "purchased": {
+        "one": "おめでとうございます 🎉 <0>{{count}}</0>エディションの<1>{{name}}</1>を<2>{{account}}</2>に <3/>で販売しました",
+        "other": "おめでとうございます 🎉 <0>{{count}}</0>エディションの<1>{{name}}</1>を<2>{{account}}</2>に各 <3/>で販売しました",
+        "short": "おめでとうございます 🎉 <0>{{name}}</0>を<1/>で販売しました"
+      }
+    },
+    "referral-referee-registered": "<0>{{username}}</0> があなたのスカウト リンクに正常に登録されました"
+  },
+  "offer": {
+    "summary": {
+      "single": "シングルエディション",
+      "price": "エディションあたりの価格",
+      "quantity": "エディションの数",
+      "fees": "手数料 {{value}}%",
+      "total": "支払い総額"
+    },
+    "form": {
+      "bid": {
+        "submit": "入札する",
+        "title": "入札する",
+        "validation": {
+          "required": "必須の項目です",
+          "positive": "この項目は0より大きい必要があります"
+        },
+        "currency": {
+          "label": "通貨",
+          "hint": "入札を行う通貨を設定する",
+          "placeholder": "通貨の選択"
+        },
+        "price": {
+          "label": "価格",
+          "placeholder": "入札価格を入力してください"
+        },
+        "quantity": {
+          "label": "数量",
+          "placeholder": "数量を入力してください",
+          "suffix": "エディション"
+        },
+        "expiration": {
+          "label": "有効期限",
+          "tooltip": "入札は、選択した期間が終了するとキャンセルされます。これにより、長い期間によって入札が忘れられることを防ぎます。"
+        },
+        "supply_one": "{{count}}エディションを利用可能",
+        "supply_other": "{{count}}エディションを利用可能"
+      },
+      "checkout": {
+        "title": "コレクションを購入する",
+        "submit": "支払いに進む",
+        "validation": {
+          "required": "必須の項目です"
+        },
+        "quantity": {
+          "label": "数量",
+          "placeholder": "金額を入力してください",
+          "suffix": "エディション"
+        },
+        "ownership": {
+          "title": "所有権自動移転",
+          "description": "NFTを購入すると、所有権は自動的にあなたに移ります。特別な手続きは必要ありません。"
+        },
+        "available_one": "{{count}}エディションを利用可能",
+        "available_other": "{{count}}エディションを利用可能"
+      }
+    }
+  },
+  "referral": {
+    "form": {
+      "connect": "サインインして紹介リンクを生成する",
+      "copy": "クリップボードにコピーされたリンク"
+    }
+  },
+  "sales": {
+    "auction": {
+      "success": {
+        "ended": "オークションは成功に終わりました 🎉",
+        "highest-bid": "最高入札額",
+        "offer": "<0/> <1>入札者</1> <2/>",
+        "banner-owner": {
+          "title": "{{date}}までに販売を確認してください",
+          "description": "この日付以降、オークションと入札は取り消されます。"
+        },
+        "banner": {
+          "title": "販売者は {{date}} まで、売却を確認できます",
+          "description": "この日付以降、オークションと入札は取り消されます。"
+        }
+      },
+      "failed-no-bid": {
+        "ended": "オークションは終了しました",
+        "highest-bid": "最高入札額",
+        "no-bids": "まだ入札がありません",
+        "banner": {
+          "title": "入札は行われませんでした",
+          "description": "オークションは入札無しで終了しました。"
+        }
+      },
+      "failed-no-reserve": {
+        "ended": "オークションは終了しました",
+        "highest-bid": "最高入札額",
+        "offer": "<0/> <1>入札者</1> <2/>",
+        "banner": {
+          "title": "最低落札価格に達していません",
+          "description": "オークションは最低落札価格に到達せずに終了しました。"
+        }
+      },
+      "in-progress": {
+        "highest-bid": "最高入札額",
+        "open": "入札受付中",
+        "offer": "オファーする",
+        "ending": "オークション終了まで"
+      },
+      "action": {
+        "cancel": "キャンセル",
+        "accept": "受け入れる",
+        "new-sale": "新発売",
+        "title": "オークションに参加する"
+      },
+      "button": {
+        "place-bid": "入札する",
+        "view": "コレクションを見る"
+      },
+      "card-footer": {
+        "highest-bid": "最高入札額:",
+        "place-bid": "入札する"
+      },
+      "form": {
+        "submit": "オファーを作成",
+        "validation": {
+          "required": "必須の項目です"
+        },
+        "currency": {
+          "label": "通貨",
+          "hint": "入札可能なオークションの通貨を設定する",
+          "placeholder": "通貨の選択"
+        },
+        "price": {
+          "label": "最低落札価格",
+          "hint": "落札に必要な最低金額の設定",
+          "placeholder": "最低入札価格の入力",
+          "info": "(オプション)"
+        },
+        "start": {
+          "label": "開始日",
+          "placeholder": "今すぐ"
+        },
+        "end": {
+          "label": "終了日"
+        },
+        "banner": {
+          "title": "オークションのルール",
+          "item1": "オークションが開始すると、出品を取り消すことはできません。これによってプラットフォーム利用者が公平に利用できます。",
+          "item2": "有効期限: 長い販売期間のせいで忘れられることを防ぐために、設定した終了日である {{validity}} 過ぎると、オークションと入札はキャンセルされます。期間が終了すれば、いつでも再販売が可能です。"
+        }
+      },
+      "info": {
+        "title": "販売の確認",
+        "reserve": "最低落札価格:",
+        "no-bids": {
+          "title": "このコレクションを所有しています",
+          "action": "コレクションを販売する"
+        },
+        "no-reserve": {
+          "title": "このコレクションを所有しています",
+          "action": "コレクションを販売する"
+        },
+        "with-reserve": {
+          "title": "このコレクションを所有しています",
+          "action": "販売の確認"
+        }
+      },
+      "status": {
+        "active": "アクティブ",
+        "ended": "終了"
+      }
+    },
+    "direct": {
+      "button": {
+        "place-bid": "入札する",
+        "buy": "コレクションを購入する",
+        "view": "コレクションを見る"
+      },
+      "card-footer": {
+        "price": "価格",
+        "from": "から",
+        "purchase": "購入",
+        "offers": "{{count}} オファーが利用可能です"
+      },
+      "form": {
+        "submit": "オファーを作成",
+        "title": "販売を作成",
+        "validation": {
+          "positive": "この項目は0より大きい必要があります",
+          "required": "必須の項目です"
+        },
+        "currency": {
+          "label": "通貨",
+          "hint": "購入者が購入可能な販売通貨を設定してください",
+          "placeholder": "通貨の選択"
+        },
+        "price": {
+          "label": "価格",
+          "placeholder": "価格を入力してください"
+        },
+        "quantity": {
+          "label": "数量",
+          "placeholder": "数量を入力してください",
+          "suffix": "エディション"
+        },
+        "expiration": {
+          "label": "有効期限",
+          "tooltip": "販売は、選択した期間が終了するとキャンセルされます。これにより、長い期間によって忘れられることを防ぎます。期間の終了後はいつでも再販売が可能です。"
+        },
+        "fees": "手数料 {{value}}%",
+        "royalties": "印税 {{value}}%",
+        "total-fees": "手数料合計 {{value}}%",
+        "total-royalties": "印税合計 {{value}}%",
+        "total-receive": "受け取る総額",
+        "receive-single": "受け取る金額",
+        "receive-multiple": "エディションあたりの価格",
+        "available_one": "{{count}} エディションを利用可能",
+        "available_other": "{{count}} エディションを利用可能",
+        "quantity-for-sale": "販売数量",
+        "quantities_one": "{{count}} エディション",
+        "quantities_other": "{{count}} エディション"
+      },
+      "info": {
+        "cancel-confirmation": "このオファーをキャンセルしてよろしいですか？",
+        "price": "希望価格:",
+        "cancel": "オファーをキャンセル"
+      },
+      "modal": {
+        "title": "利用可能なオファー",
+        "button": "オファーを見る"
+      },
+      "modal-item": {
+        "cancel-confirmation": "このオファーをキャンセルしてよろしいですか？",
+        "per-edition": " エディションあたり",
+        "available_one": "{{count}}エディションを利用可能",
+        "available_other": "{{count}}エディションを利用可能",
+        "expiration": "販売有効期限: {{date}}",
+        "cancel": "オファーをキャンセル",
+        "buy": "購入する"
+      },
+      "summary": {
+        "offer_one": "{{count}} オファー",
+        "offer_other": "{{count}} オファー",
+        "per-edition": "エディションあたり",
+        "available": "利用可能",
+        "on-sale-from": "販売者",
+        "on-sale-for": "販売期間",
+        "expires": "販売有効期限"
+      }
+    },
+    "open": {
+      "button": {
+        "view": "コレクションを見る",
+        "place-bid": "入札する"
+      },
+      "card-footer": {
+        "open": "入札受付中",
+        "place-bid": "入札する"
+      },
+      "info": {
+        "owner": "このコレクションを所有しています",
+        "sell": "コレクションを販売する"
+      },
+      "summary": {
+        "open": "入札受付中",
+        "offer": "オファーする"
+      }
+    }
+  },
+  "token": {
+    "form": {
+      "create": {
+        "submit": "アイテムの作成",
+        "title": "コレクションの作成",
+        "validation": {
+          "required": "必須の項目です"
+        },
+        "file": {
+          "label": "ファイルをアップロード",
+          "heading": "ファイルをドラッグ&ドロップするか、",
+          "hint": "JPG、PNG、GIF、WEBP、WEBM、MP4、最大100 MBまで。",
+          "file": {
+            "chose": "ファイルを選択",
+            "replace": "ファイルを置き換える"
+          }
+        },
+        "preview": {
+          "label": "プレビューをアップロード",
+          "heading": "ファイルをドラッグ&ドロップするか、",
+          "hint": "JPG、PNG、GIF、WEBP、最大100 MBまで。",
+          "file": {
+            "chose": "ファイルを選択",
+            "replace": "ファイルを置き換える"
+          }
+        },
+        "name": {
+          "label": "タイトル",
+          "placeholder": "コレクションにタイトルをつけてください"
+        },
+        "description": {
+          "label": "説明",
+          "placeholder": "コレクションに説明をつけてください",
+          "info": "(オプション)"
+        },
+        "amount": {
+          "label": "コピーの数",
+          "placeholder": "例: 10"
+        },
+        "royalties": {
+          "label": "ロイヤリティ",
+          "placeholder": "各販売のロイヤリティをパーセントで追加してください",
+          "info": "(オプション)"
+        },
+        "category": {
+          "label": "カテゴリー",
+          "placeholder": "カテゴリーを選択"
+        },
+        "unlockable": {
+          "label": "ロック解除可能なコンテンツ",
+          "hint": "(オプション)",
+          "choice": "アイテムのコンテンツは、アイテムの所有者のみがロックを解除できます。"
+        }
+      }
+    },
+    "owners": {
+      "title": "所有者"
+    },
+    "modal-item": {
+      "owns_one": "{{count}} エディションを所有",
+      "owns_other": "{{count}} エディションを所有"
+    },
+    "grid": {
+      "empty": {
+        "title": "コレクションが見つかりません",
+        "description": "マーケットプレイスで、より多くのコレクションを探しましょう",
+        "action": "マーケットプレイスを見る"
+      },
+      "sort": {
+        "label": "並び替え"
+      }
+    },
+    "metadata": {
+      "creator": "作成者",
+      "owner": "所有者",
+      "owners": "所有者",
+      "edition": "エディション",
+      "single": "シングル"
+    },
+    "supply": {
+      "available": "{{total}} のうち {{current}} が利用可能です"
+    }
+  },
+  "traits": {
+    "rarity": "{{value}} レア度"
+  },
+  "user": {
+    "balance": {
+      "title": "残高",
+      "add-funds": "資金を追加する"
+    },
+    "info": {
+      "verified": "確認済",
+      "edit": "プロフィールの編集",
+      "bio": "自己紹介"
+    },
+    "referral": {
+      "title": "クリエイターをスカウトする",
+      "description": "スカウトリンクを共有して新しいクリエイターを登録し、報酬を獲得しましょう。",
+      "how": "使い方"
+    },
+    "navigation": {
+      "on-sale": "販売中",
+      "owned": "所有",
+      "created": "作成済",
+      "bids": "入札",
+      "trades": "取引",
+      "offers": "オファー"
+    },
+    "form": {
+      "edit": {
+        "submit": "変更を保存",
+        "image": {
+          "label": "プロフィール画像をアップロード",
+          "heading": "ファイルをドラッグ&ドロップするか、",
+          "hint": "推奨サイズ: 400x400px　JPG、PNG、GIF、WEBP、最大ファイルサイズ10 MBまで。",
+          "file": {
+            "chose": "ファイルを選択",
+            "replace": "ファイルを置き換える"
+          }
+        },
+        "cover": {
+          "label": "カバー画像をアップロード",
+          "heading": "ファイルをドラッグ&ドロップするか、",
+          "hint": "推奨サイズ: 1128x200px　JPG、PNG、GIF、WEBP、最大ファイルサイズ10 MBまで。",
+          "file": {
+            "chose": "ファイルを選択",
+            "replace": "ファイルを置き換える"
+          }
+        },
+        "name": {
+          "label": "表示名",
+          "placeholder": "表示する名称を入力してください"
+        },
+        "description": {
+          "label": "自己紹介",
+          "placeholder": "簡単な自己紹介を入力してください"
+        },
+        "email": {
+          "label": "Eメール通知",
+          "placeholder": "Eメールアドレスを入力",
+          "validation": {
+            "invalid": "Eメールが無効です"
+          }
+        },
+        "twitter": {
+          "label": "Twitter ユーザー名",
+          "placeholder": "@"
+        },
+        "instagram": {
+          "label": "Instagram ユーザー名",
+          "placeholder": "@"
+        },
+        "website": {
+          "label": "個人サイト",
+          "placeholder": "https://"
+        }
+      }
+    }
+  },
+  "wallet": {
+    "address": {
+      "copy": "アドレスがクリップボードにコピーされました"
+    },
+    "connectors": {
+      "email": {
+        "form": {
+          "submit": "サインイン",
+          "validation": {
+            "required": "必須の項目です",
+            "invalid": "Eメールが無効です"
+          },
+          "email": {
+            "label": "Eメールアドレス"
+          }
+        }
+      }
+    },
+    "wallet": {
+      "deposit": {
+        "title": "トークンの入金",
+        "description": "トークンの入金と送金は以下のアドレスにいつでも可能です"
+      },
+      "banner": {
+        "title": "{{networkName}} ネットワークを使う",
+        "description": "トークンを預けるネットワークが {{networkName}} ネットワークであることをご確認ください。さもなければ資産が失われる可能性があります。"
+      },
+      "balances": "残高"
+    },
+    "balances": {
+      "none": "利用可能な残高はありません。"
+    }
   }
 }
