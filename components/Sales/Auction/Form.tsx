@@ -138,7 +138,7 @@ const SalesAuctionForm: VFC<Props> = ({
           />
         )}
 
-        <FormControl>
+        <FormControl isInvalid={!!errors.price}>
           <HStack spacing={1}>
             <FormLabel htmlFor="price" m={0}>
               {t('sales.auction.form.price.label')}
@@ -154,9 +154,7 @@ const SalesAuctionForm: VFC<Props> = ({
           <InputGroup>
             <NumberInput
               clampValueOnBlur={false}
-              min={0}
               step={Math.pow(10, -currency.decimals)}
-              precision={currency.decimals}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('price', x)}
@@ -165,7 +163,21 @@ const SalesAuctionForm: VFC<Props> = ({
               <NumberInputField
                 id="price"
                 placeholder={t('sales.auction.form.price.placeholder')}
-                {...register('price')}
+                {...register('price', {
+                  validate: (value) => {
+                    const splitValue = value.split('.')
+
+                    if (parseFloat(value) <= 0)
+                      return t('sales.auction.form.validation.positive')
+                    if (
+                      splitValue[1] &&
+                      splitValue[1].length > currency.decimals
+                    )
+                      return t('sales.auction.form.validation.decimals', {
+                        nbDecimals: currency.decimals,
+                      })
+                  },
+                })}
               />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -181,6 +193,9 @@ const SalesAuctionForm: VFC<Props> = ({
               />
             </InputRightElement>
           </InputGroup>
+          {errors.price && (
+            <FormErrorMessage>{errors.price.message}</FormErrorMessage>
+          )}
         </FormControl>
       </Stack>
 

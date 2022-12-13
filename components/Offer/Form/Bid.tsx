@@ -248,9 +248,7 @@ const OfferFormBid: FC<Props> = (props) => {
         <InputGroup>
           <NumberInput
             clampValueOnBlur={false}
-            min={0}
             step={Math.pow(10, -currency.decimals)}
-            precision={currency.decimals}
             allowMouseWheel
             w="full"
             onChange={(x) => setValue('bid', x)}
@@ -261,9 +259,16 @@ const OfferFormBid: FC<Props> = (props) => {
               placeholder={t('offer.form.bid.price.placeholder')}
               {...register('bid', {
                 required: t('offer.form.bid.validation.required'),
-                validate: (value) =>
-                  parseFloat(value) > 0 ||
-                  t('offer.form.bid.validation.positive'),
+                validate: (value) => {
+                  const splitValue = value.split('.')
+
+                  if (parseFloat(value) <= 0)
+                    return t('offer.form.bid.validation.positive')
+                  if (splitValue[1] && splitValue[1].length > currency.decimals)
+                    return t('offer.form.bid.validation.decimals', {
+                      nbDecimals: currency.decimals,
+                    })
+                },
               })}
             />
             <NumberInputStepper>
@@ -298,9 +303,6 @@ const OfferFormBid: FC<Props> = (props) => {
           <InputGroup>
             <NumberInput
               clampValueOnBlur={false}
-              min={1}
-              max={parseInt(props.supply, 10)}
-              step={1}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
@@ -311,6 +313,19 @@ const OfferFormBid: FC<Props> = (props) => {
                 placeholder={t('offer.form.bid.quantity.placeholder')}
                 {...register('quantity', {
                   required: t('offer.form.bid.validation.required'),
+                  validate: (value) => {
+                    if (
+                      parseInt(value, 10) < 1 ||
+                      parseInt(value, 10) > parseInt(props.supply, 10)
+                    ) {
+                      return t('offer.form.bid.validation.in-range', {
+                        quantityAvailable: parseInt(props.supply, 10),
+                      })
+                    }
+                    if (!/^\d+$/.test(value)) {
+                      return t('offer.form.bid.validation.integer')
+                    }
+                  },
                 })}
               />
               <NumberInputStepper>

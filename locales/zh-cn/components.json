@@ -347,6 +347,9 @@
         "title": "提交出价",
         "validation": {
           "required": "此字段为必填字段",
+          "integer": "此字段必须是整数",
+          "decimals": "此字段最多支持 {{ nbDecimals }} 位小数。",
+          "in-range": "此字段必须介于 1 和 {{ availableQuantity }} 之间",
           "positive": "此字段必须大于 0"
         },
         "currency": {
@@ -374,7 +377,9 @@
         "title": "购买藏品",
         "submit": "继续付款",
         "validation": {
-          "required": "此字段为必填字段"
+          "required": "此字段为必填字段",
+          "integer": "此字段必须是整数",
+          "in-range": "此字段必须介于 1 和 {{ availableQuantity }} 之间"
         },
         "quantity": {
           "label": "数量",
@@ -452,7 +457,9 @@
       "form": {
         "submit": "创建要约",
         "validation": {
-          "required": "此字段为必填字段"
+          "required": "此字段为必填字段",
+          "decimals": "此字段最多支持 {{ nbDecimals }} 个小数",
+          "positive": "此字段必须大于 0"
         },
         "currency": {
           "label": "货币",
@@ -516,6 +523,9 @@
         "title": "创建售卖",
         "validation": {
           "positive": "此字段必须大于 0",
+          "integer": "此字段必须是整数",
+          "in-range": "此字段必须介于 1 和 {{ quantityAvailable }} 之间。",
+          "decimals": "此字段最多支持 {{ nbDecimals }} 位小数。",
           "required": "此字段为必填字段"
         },
         "currency": {
@@ -602,7 +612,10 @@
         "submit": "创建商品",
         "title": "创建藏品",
         "validation": {
-          "required": "此字段为必填字段"
+          "required": "此字段为必填字段",
+          "positive": "此字段必须大于 0",
+          "integer": "此字段必须是整数",
+          "in-range": "此字段必须介于 0 和 {{ maxRoyalties }} 之间"
         },
         "file": {
           "label": "上传文件",

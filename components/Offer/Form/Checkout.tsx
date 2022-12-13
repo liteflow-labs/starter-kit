@@ -143,9 +143,6 @@ const OfferFormCheckout: FC<Props> = ({
           <InputGroup>
             <NumberInput
               clampValueOnBlur={false}
-              min={1}
-              max={parseInt(offer.availableQuantity, 10)}
-              step={1}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
@@ -156,6 +153,20 @@ const OfferFormCheckout: FC<Props> = ({
                 placeholder={t('offer.form.checkout.quantity.placeholder')}
                 {...register('quantity', {
                   required: t('offer.form.checkout.validation.required'),
+                  validate: (value) => {
+                    if (
+                      parseInt(value, 10) < 1 ||
+                      parseInt(value, 10) >
+                        parseInt(offer.availableQuantity, 10)
+                    ) {
+                      return t('offer.form.checkout.validation.in-range', {
+                        available: parseInt(offer.availableQuantity, 10),
+                      })
+                    }
+                    if (!/^\d+$/.test(value)) {
+                      return t('offer.form.checkout.validation.integer')
+                    }
+                  },
                 })}
               />
               <NumberInputStepper>

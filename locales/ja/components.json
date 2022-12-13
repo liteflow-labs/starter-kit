@@ -347,7 +347,10 @@
         "title": "入札する",
         "validation": {
           "required": "必須の項目です",
-          "positive": "この項目は0より大きい必要があります"
+          "integer": "項目は整数でなければなりません。",
+          "decimals": "項目は、最大 {{ nbDecimals }} の小数をサポートします。",
+          "in-range": "項目は 1 から {{ availableQuantity }} の間である必要があります。",
+          "positive": "項目は0より大きい必要があります"
         },
         "currency": {
           "label": "通貨",
@@ -374,7 +377,9 @@
         "title": "コレクションを購入する",
         "submit": "支払いに進む",
         "validation": {
-          "required": "必須の項目です"
+          "required": "必須の項目です",
+          "integer": "項目は整数でなければなりません。",
+          "in-range": "項目は 1 から {{ quantityAvailable }} の間である必要があります。"
         },
         "quantity": {
           "label": "数量",
@@ -452,7 +457,9 @@
       "form": {
         "submit": "オファーを作成",
         "validation": {
-          "required": "必須の項目です"
+          "required": "必須の項目です",
+          "decimals": "項目は、最大 {{ nbDecimals }} の小数をサポートします。",
+          "positive": "項目は 0 より大きい必要があります。"
         },
         "currency": {
           "label": "通貨",
@@ -515,7 +522,10 @@
         "submit": "オファーを作成",
         "title": "販売を作成",
         "validation": {
-          "positive": "この項目は0より大きい必要があります",
+          "positive": "項目は0より大きい必要があります",
+          "integer": "項目は整数でなければなりません。",
+          "in-range": "項目は 1 から {{ quantityAvailable }} の間である必要があります。",
+          "decimals": "項目は、最大 {{ nbDecimals }} の小数をサポートします。",
           "required": "必須の項目です"
         },
         "currency": {
@@ -602,7 +612,10 @@
         "submit": "アイテムの作成",
         "title": "コレクションの作成",
         "validation": {
-          "required": "必須の項目です"
+          "required": "必須の項目です",
+          "positive": "項目は0より大きい必要があります",
+          "integer": "項目は整数でなければなりません。",
+          "in-range": "項目は 1 から {{ maxRoyalties }} の間である必要があります。"
         },
         "file": {
           "label": "ファイルをアップロード",

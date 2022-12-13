@@ -1,7 +1,7 @@
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, HTMLAttributes, useMemo } from 'react'
+import { FC, HTMLAttributes, useMemo } from 'react'
 import Price from '../Price/Price'
 
 const Summary: FC<
@@ -19,7 +19,12 @@ const Summary: FC<
   const { t } = useTranslation('components')
   const totalPrice = useMemo(() => {
     if (!quantity) return BigNumber.from(0)
-    return price.mul(quantity)
+    try {
+      return price.mul(quantity)
+    } catch {
+      console.error(`Cannot parse quantity ${price} as BigNumber`)
+      return BigNumber.from(0)
+    }
   }, [quantity, price])
 
   const totalFees = useMemo(() => {
