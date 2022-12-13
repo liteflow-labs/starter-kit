@@ -1,56 +1,75 @@
-import { Box } from '@chakra-ui/react'
-import LiteflowNFTApp, {
-  APOLLO_STATE_PROP_NAME,
-  Footer,
-  Navbar,
-} from '@nft/components'
-import { EmailConnector } from '@nft/email-connector'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import ChatWindow from 'components/ChatWindow'
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from '@apollo/client'
+import Bugsnag from '@bugsnag/js'
+import BugsnagPluginReact from '@bugsnag/plugin-react'
+import { Box, ChakraProvider } from '@chakra-ui/react'
+import { Signer } from '@ethersproject/abstract-signer'
+import { Web3Provider } from '@ethersproject/providers'
+import { LiteflowProvider, useAuthenticate } from '@nft/hooks'
+import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { useEffect, useMemo } from 'react'
+import React, {
+  ComponentType,
+  Fragment,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react'
+import { CookiesProvider, useCookies } from 'react-cookie'
 import Banner from '../components/Banner/Banner'
+import ChatWindow from '../components/ChatWindow'
+import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
+import Navbar from '../components/Navbar/Navbar'
+import connectors from '../connectors'
 import environment from '../environment'
+import useEagerConnect from '../hooks/useEagerConnect'
+import useSigner from '../hooks/useSigner'
+import { APOLLO_STATE_PROP_NAME, PropsWithUserAndState } from '../props'
+import {
+  COOKIE_JWT_TOKEN,
+  COOKIE_OPTIONS,
+  currentJWT,
+  jwtValidity,
+} from '../session'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
+require('dayjs/locale/es-mx')
 
 NProgress.configure({ showSpinner: false })
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  const router = useRouter()
-  dayjs.locale(router.locale)
-  usePageViews()
-
-  useEffect(() => {
-    const handleStart = () => NProgress.start()
-    const handleStop = () => NProgress.done()
-
-    router.events.on('routeChangeStart', handleStart)
-    router.events.on('routeChangeComplete', handleStop)
-    router.events.on('routeChangeError', handleStop)
-
-    return () => {
-      router.events.off('routeChangeStart', handleStart)
-      router.events.off('routeChangeComplete', handleStop)
-      router.events.off('routeChangeError', handleStop)
-    }
-  }, [router])
-
-  const userProfileLink = useMemo(
-    () =>
-      pageProps?.user?.address ? `/users/${pageProps.user.address}` : '/login',
-    [pageProps?.user?.address],
+function web3Provider(provider: any): Web3Provider {
+  return new Web3Provider(
+    provider,
+    typeof provider.chainId === 'number'
+      ? provider.chainId
+      : typeof provider.chainId === 'string'
+      ? parseInt(provider.chainId)
+      : 'any',
   )
+}
 
+function Layout({
+  userAddress,
+  children,
+}: PropsWithChildren<{ userAddress: string | null }>) {
+  const router = useRouter()
+  const signer = useSigner()
+  const userProfileLink = useMemo(
+    () => (userAddress ? `/users/${userAddress}` : '/login'),
+    [userAddress],
+  )
   const footerLinks = useMemo(() => {
     const texts = {
       en: {
@@ -80,6 +99,15 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         terms: '条款',
         privacy: '隐私',
       },
+      'es-mx': {
+        explore: 'Explorar',
+        create: 'Crear',
+        profile: 'Perfil',
+        referral: 'Recomendación',
+        support: 'Apoyo',
+        terms: 'Letra chica',
+        privacy: 'Privacidad',
+      },
     }
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
@@ -95,38 +123,144 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     ]
   }, [router.locale, userProfileLink])
 
-  const connectors = useMemo(
-    () => ({
-      email: new EmailConnector({
-        apiKey: environment.MAGIC_API_KEY,
-        options: {
-          network: {
-            rpcUrl: environment.PUBLIC_ETHEREUM_PROVIDER,
-            chainId: environment.CHAIN_ID,
-          },
-        },
-      }),
-      injected: new InjectedConnector({
-        supportedChainIds: [environment.CHAIN_ID],
-      }),
-      walletConnect: new WalletConnectConnector({
-        rpc: {
-          [environment.CHAIN_ID]: environment.PUBLIC_ETHEREUM_PROVIDER,
-        },
-        supportedChainIds: [environment.CHAIN_ID],
-        chainId: environment.CHAIN_ID,
-      }),
-      coinbase: new WalletLinkConnector({
-        supportedChainIds: [environment.CHAIN_ID],
-        appName: 'Acme',
-        url: 'https://demo.liteflow.com',
-      }),
-    }),
-    [],
+  return (
+    <ChatWindow>
+      <Box mt={12}>
+        <Banner />
+        <Navbar
+          allowTopUp={true}
+          router={{
+            asPath: router.asPath,
+            isReady: router.isReady,
+            push: router.push,
+            query: router.query,
+            events: router.events,
+          }}
+          login={{
+            ...connectors,
+            networkName: environment.NETWORK_NAME,
+          }}
+          multiLang={{
+            locale: router.locale,
+            pathname: router.pathname,
+            choices: [
+              { label: 'En', value: 'en' },
+              { label: '日本語', value: 'ja' },
+              { label: '中文', value: 'zh-cn' },
+              { label: 'Spanish', value: 'es-mx' },
+            ],
+          }}
+          signer={signer}
+        />
+        {children}
+        <Footer name="Acme, Inc." links={footerLinks} />
+      </Box>
+    </ChatWindow>
+  )
+}
+
+function AccountProvider(
+  props: PropsWithChildren<{
+    cache: NormalizedCacheObject
+  }>,
+) {
+  const signer = useSigner()
+  const ready = useEagerConnect()
+  const { deactivate } = useWeb3React()
+  const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
+    useAuthenticate()
+  const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
+
+  const clearAuthenticationToken = useCallback(async () => {
+    resetAuthenticationToken()
+    removeCookie(COOKIE_JWT_TOKEN, COOKIE_OPTIONS)
+  }, [removeCookie, resetAuthenticationToken])
+
+  const authenticateSigner = useCallback(
+    async (signer: Signer) => {
+      try {
+        const existingJWT = currentJWT(cookies)
+        const currentAddress = (await signer.getAddress()).toLowerCase()
+        const jwtAddress = existingJWT?.address.toLowerCase()
+        if (existingJWT && currentAddress === jwtAddress)
+          return setAuthenticationToken(existingJWT.jwt)
+        const { jwtToken } = await authenticate(signer)
+        setCookie(COOKIE_JWT_TOKEN, jwtToken, {
+          ...COOKIE_OPTIONS,
+          ...jwtValidity(jwtToken),
+        })
+      } catch {
+        deactivate()
+      }
+    },
+    [authenticate, setCookie, setAuthenticationToken, cookies, deactivate],
   )
 
+  const client = useMemo(
+    () =>
+      new ApolloClient({
+        uri: environment.GRAPHQL_URL,
+        headers: cookies[COOKIE_JWT_TOKEN]
+          ? {
+              authorization: 'Bearer ' + cookies[COOKIE_JWT_TOKEN],
+            }
+          : {},
+        cache: new InMemoryCache({
+          typePolicies: {
+            Account: {
+              keyFields: ['address'],
+            },
+          },
+        }).restore(props.cache),
+        ssrMode: typeof window === 'undefined',
+      }),
+    [cookies, props.cache],
+  )
+
+  useEffect(() => {
+    if (!ready) return
+    if (!signer) return void clearAuthenticationToken()
+    authenticateSigner(signer).catch(clearAuthenticationToken)
+  }, [signer, ready, authenticateSigner, clearAuthenticationToken])
+
+  return <ApolloProvider client={client}>{props.children}</ApolloProvider>
+}
+
+function MyApp({
+  Component,
+  pageProps,
+}: AppProps<PropsWithUserAndState>): JSX.Element {
+  const router = useRouter()
+  dayjs.locale(router.locale)
+  usePageViews()
+
+  useEffect(() => {
+    const handleStart = () => NProgress.start()
+    const handleStop = () => NProgress.done()
+
+    router.events.on('routeChangeStart', handleStart)
+    router.events.on('routeChangeComplete', handleStop)
+    router.events.on('routeChangeError', handleStop)
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart)
+      router.events.off('routeChangeComplete', handleStop)
+      router.events.off('routeChangeError', handleStop)
+    }
+  }, [router])
+
+  if (environment.BUGSNAG_API_KEY) {
+    Bugsnag.start({
+      apiKey: environment.BUGSNAG_API_KEY,
+      plugins: [new BugsnagPluginReact(React)],
+    })
+  }
+  const ErrorBoundary = environment.BUGSNAG_API_KEY
+    ? (Bugsnag.getPlugin('react')?.createErrorBoundary(React) as ComponentType)
+    : Fragment
+
   return (
-    <>
+    <ErrorBoundary>
       <Head
         title="Acme NFT Marketplace"
         description="The Web3 as a Service Company"
@@ -145,50 +279,20 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         <meta name="twitter:card" content="summary" />
       </Head>
       <GoogleAnalytics strategy="lazyOnload" />
-      <LiteflowNFTApp
-        ssr={typeof window === 'undefined'}
-        endpointUri={environment.GRAPHQL_URL}
-        cache={pageProps[APOLLO_STATE_PROP_NAME]}
-        user={pageProps.user}
-        connectors={connectors}
-        bugsnagAPIKey={environment.BUGSNAG_API_KEY}
-        theme={theme}
-      >
-        <ChatWindow>
-          <Box mt={12}>
-            <Banner />
-            <Navbar
-              allowTopUp={true}
-              router={{
-                asPath: router.asPath,
-                isReady: router.isReady,
-                push: router.push,
-                query: router.query,
-                events: router.events,
-              }}
-              login={{
-                email: true,
-                metamask: true,
-                walletConnect: true,
-                coinbase: true,
-                networkName: environment.NETWORK_NAME,
-              }}
-              multiLang={{
-                locale: router.locale,
-                pathname: router.pathname,
-                choices: [
-                  { label: 'En', value: 'en' },
-                  { label: '日本語', value: 'ja' },
-                  { label: '中文', value: 'zh-cn' },
-                ],
-              }}
-            />
-            <Component {...pageProps} />
-            <Footer name="Acme, Inc." links={footerLinks} />
-          </Box>
-        </ChatWindow>
-      </LiteflowNFTApp>
-    </>
+      <Web3ReactProvider getLibrary={web3Provider}>
+        <CookiesProvider>
+          <ChakraProvider theme={theme}>
+            <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
+              <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
+                <Layout userAddress={pageProps?.user?.address || null}>
+                  <Component {...pageProps} />
+                </Layout>
+              </AccountProvider>
+            </LiteflowProvider>
+          </ChakraProvider>
+        </CookiesProvider>
+      </Web3ReactProvider>
+    </ErrorBoundary>
   )
 }
 export default MyApp

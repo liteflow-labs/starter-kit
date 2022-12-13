@@ -1,0 +1,11 @@
+query WalletCurrencies {
+  currencies(orderBy: CREATED_AT_ASC) {
+    nodes {
+      image
+      name
+      id
+      decimals
+      symbol
+    }
+  }
+}

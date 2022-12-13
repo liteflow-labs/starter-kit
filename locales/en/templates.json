@@ -1,9 +1,407 @@
 {
-  "categories": {
-    "Category": "Category",
-    "Games": "Games",
-    "Art": "Art",
-    "Photography": "Photography",
-    "DeFi": "DeFi"
+  "error": {
+    "500": "We're sorry, something went wrong."
+  },
+  "home": {
+    "explore": "Explore All Collectibles",
+    "auctions": "Auctions",
+    "featured": "Featured Collectibles"
+  },
+  "explore": {
+    "title": "Explore Collectibles",
+    "empty": {
+      "title": "No Collectibles Found",
+      "description": "Update your filters to find more collectibles."
+    },
+    "form": {
+      "submit": "Apply Filters",
+      "clear": "Clear All",
+      "currency": {
+        "label": "Price range",
+        "placeholder": "Select a currency"
+      },
+      "min-price": {
+        "placeholder": "From"
+      },
+      "max-price": {
+        "placeholder": "To"
+      },
+      "offers": {
+        "label": "Status",
+        "values": {
+          "fixed": "Fixed price",
+          "auction": "Auction"
+        }
+      },
+      "categories": {
+        "label": "Categories"
+      },
+      "collections": {
+        "label": "Collections"
+      }
+    },
+    "orderBy": {
+      "label": "Sort by",
+      "values": {
+        "createdAtDesc": "Date: Newest",
+        "createdAtAsc": "Date: Oldest"
+      }
+    }
+  },
+  "asset": {
+    "detail": {
+      "unlockable": {
+        "title": "Unlockable content",
+        "tooltip": "The item's content can only be unlocked by the owner of the item"
+      },
+      "show-preview": "Show preview",
+      "description": "Description",
+      "traits": "Traits",
+      "tabs": {
+        "bids": "Bids",
+        "history": "History"
+      },
+      "menu": {
+        "report": {
+          "label": "Report",
+          "subject": "Report an NFT",
+          "body": "I would like to report the following NFT {{name}} (#{{id}})\nReason: "
+        }
+      },
+      "explorerLink": "View on {{name}}",
+      "ipfsLink": "View on IPFS",
+      "errors": {
+        "image": "An issue occured"
+      }
+    },
+    "form": {
+      "title": {
+        "single": "Create Single Collectible",
+        "multiple": "Create Multiple Collectible"
+      },
+      "preview": "Preview",
+      "notifications": {
+        "created": "Your collectible has been successfully created."
+      }
+    },
+    "typeSelector": {
+      "title": "Create Collectible",
+      "description": "Choose \"Single\" if you want your collectible to be one of a kind or \"Multiple\" if you want to sell one collectible multiple times",
+      "single": {
+        "title": "Single",
+        "type": "ERC721"
+      },
+      "multiple": {
+        "title": "Multiple",
+        "type": "ERC1155"
+      }
+    },
+    "restricted": {
+      "title": "Creation Restricted to Verified Users",
+      "description": "To request an account verification, please reach out to the support team at <0/> that will guide you every step of the process.",
+      "info": "Once your account is verified you will be notify and will be able to access the creation features."
+    }
+  },
+  "login": {
+    "title": "Welcome!",
+    "subtitle": "Sign in with your wallet",
+    "description": "Connect with one of the following options.",
+    "alternative": "Or sign in with",
+    "successes": {
+      "invitation": "Your invitation has been linked to your account."
+    },
+    "errors": {
+      "wrong-network": "You are connected to the wrong network. Please switch to the {{networkName}} network.",
+      "invitation": "Your invitation could not be linked to this account. Make sure this is an account that hasn't been linked to an other invitation code."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "loadMore": "Show more",
+    "empty": {
+      "title": "No Notifications Found",
+      "description": "Come back later or browse the platform in the meantime"
+    }
+  },
+  "offers": {
+    "bid": {
+      "meta": {
+        "title": "Place a bid for {{name}}",
+        "description": "Place a bid for {{name}} by {{creator}}"
+      },
+      "title": "Place a Bid",
+      "notifications": {
+        "created": "Your bid has been successfully placed."
+      },
+      "auction": "Auction ending in",
+      "highestBid": "Highest bid"
+    },
+    "checkout": {
+      "from": "From",
+      "meta": {
+        "title": "Purchase {{name}}",
+        "description": "Purchase {{name}} by {{creator}}"
+      },
+      "title": "Checkout",
+      "notifications": {
+        "purchased": "The collectible has been successfully purchased."
+      },
+      "on-sale": "On sale for",
+      "per-edition": "per edition"
+    },
+    "form": {
+      "meta": {
+        "title": "Create an offer for {{name}}",
+        "description": "Create an offer for {{name}}"
+      },
+      "title": "Collectible Offer",
+      "notifications": {
+        "created": "Your offer has been successfully created."
+      },
+      "options": {
+        "label": "Type of offer",
+        "hints": {
+          "fixed": "Enter price to allow users instantly purchase your collectible",
+          "auction": "Set a period of time for which buyers can place bids"
+        },
+        "values": {
+          "fixed": "Fixed price",
+          "auction": "Timed auction"
+        }
+      }
+    }
+  },
+  "pagination": {
+    "result": {
+      "label": "Results per page",
+      "caption": "<0>{{from}}</0> - <0>{{to}}</0> of <0>{{total}}</0> results",
+      "pages_one": "of {{count}} page",
+      "pages_other": "of {{count}} pages"
+    }
+  },
+  "referral": {
+    "title": "Refer a creator",
+    "description": "Onboard new creators on the {{platformName}} platform through your referral link and earn a percentage from the sales of the NFTs they created in perpetuity.",
+    "link": "Your referral link",
+    "how": {
+      "title": "How it works",
+      "steps": [
+        "Copy and share your referral link to the creator you want to onboard",
+        "The creator uses your referral link to sign in to the platform (only new creator can be onboarded through a referral link)",
+        "Your referral rewards is then associated with the creator’s account",
+        "Every time an NFT created by your referred creator is sold you will receive the referral rewards"
+      ]
+    },
+    "rewards": {
+      "title": "Referral rewards",
+      "primary": {
+        "title": "Primary sale",
+        "description": "You will earn {{percentage}}% from the sales.",
+        "tooltip": "A primary sale is the first sale that happens after the mint of an NFT."
+      },
+      "secondary": {
+        "title": "Secondary sales",
+        "description": "You will earn {{percentage}}% from the sales.",
+        "tooltip": "Secondary sales are all the sales that happen after the primary sale of an NFT."
+      }
+    }
+  },
+  "user": {
+    "auctions": {
+      "nav": {
+        "fixed": "Fixed price",
+        "auction": "Auction"
+      },
+      "notifications": {
+        "accepted": "Auction accepted"
+      },
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Highest bid",
+        "status": "Status",
+        "created": "Created"
+      }
+    },
+    "bid-placed": {
+      "nav": {
+        "received": "Received",
+        "placed": "Placed"
+      },
+      "notifications": {
+        "canceled": "Bid canceled"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "new": "New bid"
+      },
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Total Amount",
+        "status": "Status",
+        "created": "Placed"
+      },
+      "requested": "{{value}} requested",
+      "status": {
+        "expired": "Expired",
+        "active": "Active"
+      },
+      "cancel": {
+        "title": "Cancel Offer"
+      }
+    },
+    "bid-received": {
+      "nav": {
+        "received": "Received",
+        "placed": "Placed"
+      },
+      "notifications": {
+        "accepted": "Bid accepted"
+      },
+      "actions": {
+        "accept": "Accept"
+      },
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Total Amount",
+        "from": "Bidder",
+        "created": "Received"
+      },
+      "requested": "{{value}} requested",
+      "accept": {
+        "title": "Accept Offer"
+      }
+    },
+    "created-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest"
+        }
+      }
+    },
+    "fixed": {
+      "nav": {
+        "fixed": "Fixed price",
+        "auction": "Auction"
+      },
+      "notifications": {
+        "canceled": "Offer canceled"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "new": "New sale"
+      },
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest",
+          "unitPriceAsc": "Price: Low to high",
+          "unitPriceDesc": "Price: High to low"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Unit price",
+        "status": "Status",
+        "created": "Created"
+      },
+      "status": {
+        "active": "Active",
+        "expired": "Expired"
+      },
+      "available": "{{value}} on sale",
+      "cancel": {
+        "title": "Cancel Offer"
+      }
+    },
+    "on-sale-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "Asset: Newest",
+          "createdAtAsc": "Asset: Oldest"
+        }
+      }
+    },
+    "owned-assets": {
+      "orderBy": {
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest"
+        }
+      }
+    },
+    "trade-purchased": {
+      "nav": {
+        "sold": "Sold",
+        "purchased": "Purchased"
+      },
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "timestampDesc": "Date: Newest",
+          "timestampAsc": "Date: Oldest",
+          "amountAsc": "Amount: Low to high",
+          "amountDesc": "Amount: High to low"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Total Amount",
+        "from": "Seller",
+        "created": "Purchased"
+      },
+      "purchased": "{{value}} purchased"
+    },
+    "trade-sold": {
+      "nav": {
+        "sold": "Sold",
+        "purchased": "Purchased"
+      },
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "timestampDesc": "Date: Newest",
+          "timestampAsc": "Date: Oldest",
+          "amountAsc": "Amount: Low to high",
+          "amountDesc": "Amount: High to low"
+        }
+      },
+      "table": {
+        "item": "Item",
+        "price": "Total Amount",
+        "to": "Buyer",
+        "created": "Sold"
+      },
+      "sold": "{{value}} sold"
+    }
+  },
+  "users": {
+    "form": {
+      "notifications": {
+        "updated": "Your profile has been successfully updated."
+      }
+    }
   }
 }

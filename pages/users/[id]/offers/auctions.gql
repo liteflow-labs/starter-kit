@@ -1,0 +1,104 @@
+query FetchUserAuctions(
+  $limit: Int!
+  $offset: Int!
+  $orderBy: [AuctionsOrderBy!]
+  $address: Address!
+  $now: Datetime
+) {
+  account(address: $address) {
+    ...AccountDetail
+  }
+  created: assets(
+    filter: {
+      standard: { in: [ERC721, ERC1155] }
+      ownershipsExist: true
+      creatorAddress: { equalTo: $address }
+    }
+  ) {
+    totalCount
+  }
+  onSale: assets(
+    filter: {
+      or: [
+        {
+          sales: {
+            some: {
+              expiredAt: { greaterThan: $now }
+              makerAddress: { equalTo: $address }
+              availableQuantity: { greaterThan: "0" }
+            }
+          }
+        }
+        {
+          auctions: {
+            some: {
+              endAt: { greaterThan: $now }
+              creatorAddress: { equalTo: $address }
+            }
+          }
+        }
+      ]
+    }
+  ) {
+    totalCount
+  }
+  owned: ownerships(
+    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+  ) {
+    totalCount
+  }
+  auctions(
+    orderBy: $orderBy
+    first: $limit
+    offset: $offset
+    filter: { creatorAddress: { equalTo: $address } }
+  ) {
+    totalCount
+    nodes {
+      id
+      endAt
+      expireAt
+      createdAt
+      reserveAmount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
+      winningOffer {
+        id
+      }
+      asset {
+        id
+        image
+        name
+        ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+          aggregates {
+            sum {
+              quantity
+            }
+          }
+        }
+      }
+      bestBid: offers(
+        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+        first: 1
+        filter: { signature: { isNull: false } }
+      ) {
+        nodes {
+          unitPrice
+          amount
+          currency {
+            image
+            name
+            id
+            decimals
+            symbol
+          }
+        }
+      }
+    }
+  }
+}

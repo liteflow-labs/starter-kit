@@ -1,0 +1,8 @@
+query FetchAccountVerificationStatus($account: Address!) {
+  account(address: $account) {
+    address
+    verification {
+      status
+    }
+  }
+}

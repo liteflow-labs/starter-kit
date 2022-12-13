@@ -1,0 +1,24 @@
+schema: './node_modules/@nft/api-graphql/schema.graphql'
+documents:
+  - './pages/**/*.gql'
+  - './layouts/**/*.gql'
+generates:
+  graphql.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+    config:
+      avoidOptionals: true
+      enumsAsTypes: true
+config:
+  scalars:
+    URI: 'URI'
+    UUID: 'UUID'
+    Datetime: 'Date'
+    Cursor: 'string'
+    JSON: '{ [key: string]: any }'
+    Uint256: 'string'
+    Address: 'string'
+    TransactionHash: 'string'
+    BigFloat: 'string'

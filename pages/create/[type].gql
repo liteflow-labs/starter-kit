@@ -1,0 +1,10 @@
+query FetchAccount($account: Address!) {
+  account(address: $account) {
+    address
+    name
+    image
+    verification {
+      status
+    }
+  }
+}

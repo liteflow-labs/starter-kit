@@ -1,0 +1,104 @@
+query FeesForBid($id: String!) {
+  orderFees(assetId: $id) {
+    valuePerTenThousand
+  }
+}
+
+query BidOnAsset($id: String!, $now: Datetime!) {
+  asset(id: $id) {
+    id
+    standard
+    name
+    image
+    animationUrl
+    unlockedContent {
+      url
+      mimetype
+    }
+    creator {
+      address
+      name
+      image
+      verification {
+        status
+      }
+    }
+    auctions(
+      first: 1
+      orderBy: CREATED_AT_DESC
+      filter: { endAt: { greaterThan: $now } }
+    ) {
+      nodes {
+        id
+        endAt
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
+        bestBid: offers(
+          first: 1
+          orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+          filter: { signature: { isNull: false } }
+        ) {
+          nodes {
+            unitPrice
+            amount
+            currency {
+              image
+              decimals
+              symbol
+            }
+          }
+        }
+      }
+    }
+    firstSale: sales(
+      first: 1
+      orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
+      filter: { expiredAt: { greaterThan: $now } }
+    ) {
+      totalCount
+      nodes {
+        id
+        unitPrice
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
+      }
+    }
+    currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
+      aggregates {
+        distinctCount {
+          currencyId
+        }
+      }
+    }
+    ownerships(first: 1) {
+      nodes {
+        ownerAddress
+      }
+      aggregates {
+        sum {
+          quantity
+        }
+      }
+    }
+  }
+  currencies(orderBy: CREATED_AT_ASC, filter: { address: { isNull: false } }) {
+    # keep only non-native currency. Cannot create bid with native currency.
+    nodes {
+      image
+      name
+      id
+      decimals
+      symbol
+    }
+  }
+}

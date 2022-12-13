@@ -1,0 +1,13 @@
+query GetAccount($address: Address!) {
+  account(address: $address) {
+    address
+    image
+    cover
+    name
+    description
+    email
+    twitter
+    instagram
+    website
+  }
+}
