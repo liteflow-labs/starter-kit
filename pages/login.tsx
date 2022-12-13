@@ -1,11 +1,4 @@
 import { Box, Flex, Heading, Stack, Text, useToast } from '@chakra-ui/react'
-import {
-  BackButton,
-  CoinbaseConnector as CoinbaseComponent,
-  EmailConnector as EmailComponent,
-  MetamaskConnector as MetamaskComponent,
-  WalletConnectConnector as WalletConnectComponent,
-} from '@nft/components'
 import { useInvitation } from '@nft/hooks'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
@@ -14,6 +7,11 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Head from '../components/Head'
+import BackButton from '../components/Navbar/BackButton'
+import WalletCoinbase from '../components/Wallet/Connectors/Coinbase'
+import WalletEmail from '../components/Wallet/Connectors/Email'
+import WalletMetamask from '../components/Wallet/Connectors/Metamask'
+import WalletWalletConnect from '../components/Wallet/Connectors/WalletConnect'
 import connectors from '../connectors'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'
@@ -101,7 +99,7 @@ const LoginPage: NextPage = () => {
         justify="center"
       >
         {connectors.email && (
-          <EmailComponent
+          <WalletEmail
             connector={connectors.email}
             activate={handleAuthenticated}
           />
@@ -160,7 +158,7 @@ const LoginPage: NextPage = () => {
                 }}
                 transition="box-shadow 0.3s ease-in-out"
               >
-                <MetamaskComponent
+                <WalletMetamask
                   connector={connectors.injected}
                   onError={setErrorFromLogin}
                   activate={handleAuthenticated}
@@ -181,7 +179,7 @@ const LoginPage: NextPage = () => {
                 }}
                 transition="box-shadow 0.3s ease-in-out"
               >
-                <CoinbaseComponent
+                <WalletCoinbase
                   connector={connectors.coinbase}
                   onError={setErrorFromLogin}
                   activate={handleAuthenticated}
@@ -202,7 +200,7 @@ const LoginPage: NextPage = () => {
                 }}
                 transition="box-shadow 0.3s ease-in-out"
               >
-                <WalletConnectComponent
+                <WalletWalletConnect
                   connector={connectors.walletConnect}
                   onError={setErrorFromLogin}
                   activate={activate}

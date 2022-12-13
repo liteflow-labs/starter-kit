@@ -1,13 +1,5 @@
 import { Box, Flex, Heading, Icon, Stack, useToast } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  BackButton,
-  Countdown,
-  Image,
-  OfferFormBid,
-  Price,
-  TokenCard,
-} from '@nft/components'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
@@ -16,7 +8,13 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
+import Image from '../../../components/Image/Image'
+import BackButton from '../../../components/Navbar/BackButton'
+import OfferFormBid from '../../../components/Offer/Form/Bid'
+import Price from '../../../components/Price/Price'
+import TokenCard from '../../../components/Token/Card'
 import connectors from '../../../connectors'
 import {
   convertAsset,

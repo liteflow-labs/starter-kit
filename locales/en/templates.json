@@ -1,11 +1,4 @@
 {
-  "categories": {
-    "Category": "Category",
-    "Games": "Games",
-    "Art": "Art",
-    "Photography": "Photography",
-    "DeFi": "DeFi"
-  },
   "error": {
     "500": "We're sorry, something went wrong."
   },

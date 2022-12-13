@@ -1,11 +1,4 @@
 {
-  "categories": {
-    "Category": "类别",
-    "Games": "游戏",
-    "Art": "艺术",
-    "Photography": "摄影",
-    "DeFi": "DeFi"
-  },
   "error": {
     "500": "很抱歉，出了点问题。"
   },

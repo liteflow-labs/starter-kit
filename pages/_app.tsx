@@ -4,10 +4,11 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client'
-import { Box } from '@chakra-ui/react'
+import Bugsnag from '@bugsnag/js'
+import BugsnagPluginReact from '@bugsnag/plugin-react'
+import { Box, ChakraProvider } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { Web3Provider } from '@ethersproject/providers'
-import LiteflowNFTApp, { Footer, Navbar } from '@nft/components'
 import { LiteflowProvider, useAuthenticate } from '@nft/hooks'
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import dayjs from 'dayjs'
@@ -16,11 +17,20 @@ import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
+import React, {
+  ComponentType,
+  Fragment,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
 import Banner from '../components/Banner/Banner'
 import ChatWindow from '../components/ChatWindow'
+import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
+import Navbar from '../components/Navbar/Navbar'
 import connectors from '../connectors'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'
@@ -239,8 +249,18 @@ function MyApp({
     }
   }, [router])
 
+  if (environment.BUGSNAG_API_KEY) {
+    Bugsnag.start({
+      apiKey: environment.BUGSNAG_API_KEY,
+      plugins: [new BugsnagPluginReact(React)],
+    })
+  }
+  const ErrorBoundary = environment.BUGSNAG_API_KEY
+    ? (Bugsnag.getPlugin('react')?.createErrorBoundary(React) as ComponentType)
+    : Fragment
+
   return (
-    <>
+    <ErrorBoundary>
       <Head
         title="Acme NFT Marketplace"
         description="The Web3 as a Service Company"
@@ -261,10 +281,7 @@ function MyApp({
       <GoogleAnalytics strategy="lazyOnload" />
       <Web3ReactProvider getLibrary={web3Provider}>
         <CookiesProvider>
-          <LiteflowNFTApp
-            bugsnagAPIKey={environment.BUGSNAG_API_KEY}
-            theme={theme}
-          >
+          <ChakraProvider theme={theme}>
             <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
               <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
                 <Layout userAddress={pageProps?.user?.address || null}>
@@ -272,10 +289,10 @@ function MyApp({
                 </Layout>
               </AccountProvider>
             </LiteflowProvider>
-          </LiteflowNFTApp>
+          </ChakraProvider>
         </CookiesProvider>
       </Web3ReactProvider>
-    </>
+    </ErrorBoundary>
   )
 }
 export default MyApp

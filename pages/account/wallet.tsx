@@ -1,8 +1,9 @@
-import { Account, WalletAccount } from '@nft/components'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import { useMemo } from 'react'
+import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
+import WalletAccount from '../../components/Wallet/Account/Wallet'
 import environment from '../../environment'
 import {
   useWalletCurrenciesQuery,
@@ -40,13 +41,13 @@ const WalletPage: NextPage = () => {
   return (
     <SmallLayout>
       <Head title="Account - Wallet" />
-      <Account currentTab="wallet">
+      <AccountTemplate currentTab="wallet">
         <WalletAccount
           account={account.toLowerCase()}
           currencies={currencies}
           networkName={environment.NETWORK_NAME}
         />
-      </Account>
+      </AccountTemplate>
     </SmallLayout>
   )
 }

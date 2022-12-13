@@ -1,6 +1,6 @@
 import { Flex, Text } from '@chakra-ui/react'
-import { Link } from '@nft/components'
 import { FC } from 'react'
+import Link from '../../components/Link/Link'
 
 const Banner: FC = () => {
   const isDemo = process.env.NEXT_PUBLIC_ENVIRONMENT === 'demo'

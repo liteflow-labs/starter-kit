@@ -10,11 +10,11 @@ import {
   Text,
   Tooltip,
 } from '@chakra-ui/react'
-import { ReferralForm } from '@nft/components'
 import { AiFillInfoCircle } from '@react-icons/all-files/ai/AiFillInfoCircle'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Head from '../components/Head'
+import ReferralForm from '../components/Referral/Form'
 import connectors from '../connectors'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'

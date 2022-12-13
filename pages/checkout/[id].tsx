@@ -1,13 +1,5 @@
 import { Box, Flex, Heading, Stack, useToast } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  BackButton,
-  Image,
-  OfferFormCheckout,
-  Price,
-  TokenCard,
-  UserAvatar,
-} from '@nft/components'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
@@ -16,6 +8,12 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../components/Head'
+import Image from '../../components/Image/Image'
+import BackButton from '../../components/Navbar/BackButton'
+import OfferFormCheckout from '../../components/Offer/Form/Checkout'
+import Price from '../../components/Price/Price'
+import TokenCard from '../../components/Token/Card'
+import Avatar from '../../components/User/Avatar'
 import connectors from '../../connectors'
 import {
   convertAsset,
@@ -162,7 +160,7 @@ const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
             <Heading as="h5" variant="heading3" color="gray.500">
               {t('offers.checkout.from')}
             </Heading>
-            <UserAvatar
+            <Avatar
               address={offer.maker.address}
               image={offer.maker.image}
               name={offer.maker.name}

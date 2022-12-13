@@ -16,14 +16,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import {
-  AcceptOfferModal,
-  Image,
-  Link,
-  Pagination,
-  Price,
-  Select,
-} from '@nft/components'
-import {
   AcceptOfferStep,
   dateFromNow,
   formatAddress,
@@ -39,7 +31,13 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../../components/Head'
+import Image from '../../../../components/Image/Image'
+import Link from '../../../../components/Link/Link'
+import AcceptOfferModal from '../../../../components/Modal/AcceptOffer'
+import Pagination from '../../../../components/Pagination/Pagination'
+import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
+import Select from '../../../../components/Select/Select'
 import { convertBidFull, convertFullUser } from '../../../../convert'
 import environment from '../../../../environment'
 import {

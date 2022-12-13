@@ -9,9 +9,6 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { BackButton, Link, TokenCard, TokenFormCreate } from '@nft/components'
-import type { Props as NFTCardProps } from '@nft/components/dist/Token/Card'
-import type { FormData } from '@nft/components/dist/Token/Form/Create'
 import { useConfig } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { useWeb3React } from '@web3-react/core'
@@ -21,6 +18,12 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Head from '../../components/Head'
+import Link from '../../components/Link/Link'
+import BackButton from '../../components/Navbar/BackButton'
+import type { Props as NFTCardProps } from '../../components/Token/Card'
+import TokenCard from '../../components/Token/Card'
+import type { FormData } from '../../components/Token/Form/Create'
+import TokenFormCreate from '../../components/Token/Form/Create'
 import connectors from '../../connectors'
 import environment from '../../environment'
 import {
