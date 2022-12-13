@@ -21,10 +21,18 @@
         "placeholder": "选择货币"
       },
       "min-price": {
-        "placeholder": "从"
+        "placeholder": "从",
+        "validation": {
+          "positive": "最低价格必须大于 0",
+          "decimals": "最低价格支持最多 {{ nbDecimals }} 位小数"
+        }
       },
       "max-price": {
-        "placeholder": "到"
+        "placeholder": "到",
+        "validation": {
+          "positive": "最高价格必须大于 0",
+          "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
+        }
       },
       "offers": {
         "label": "状态",

@@ -21,10 +21,18 @@
         "placeholder": "Selecciona una moneda"
       },
       "min-price": {
-        "placeholder": "Desde"
+        "placeholder": "Desde",
+        "validation": {
+          "positive": "El precio mínimo debe ser mayor que 0.",
+          "decimals": "El precio mínimo admite un máximo de {{ nbDecimals }} decimales."
+        }
       },
       "max-price": {
-        "placeholder": "Hasta"
+        "placeholder": "Hasta",
+        "validation": {
+          "positive": "El precio máximo debe ser mayor que 0.",
+          "decimals": "El precio máximo admite un máximo de {{ nbDecimals }} decimales."
+        }
       },
       "offers": {
         "label": "Estatus",
