@@ -18,28 +18,32 @@ import {
   SimpleGrid,
   Spinner,
   Stack,
+  Tab,
+  TabList,
+  Tabs,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import { parsePrice, removeEmptyFromObject } from '@nft/hooks'
+import Link from 'components/Link/Link'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Empty from '../components/Empty/Empty'
-import Head from '../components/Head'
-import Pagination from '../components/Pagination/Pagination'
-import Select from '../components/Select/Select'
-import TokenCard from '../components/Token/Card'
+import Empty from '../../components/Empty/Empty'
+import Head from '../../components/Head'
+import Pagination from '../../components/Pagination/Pagination'
+import Select from '../../components/Select/Select'
+import TokenCard from '../../components/Token/Card'
 import {
   convertAsset,
   convertAuctionWithBestBid,
   convertSale,
   convertUser,
-} from '../convert'
-import environment from '../environment'
+} from '../../convert'
+import environment from '../../environment'
 import {
   AssetFilter,
   AssetsOrderBy,
@@ -54,13 +58,13 @@ import {
   OfferOpenSaleFilter,
   Uint256Filter,
   useFetchAllErc721And1155Query,
-} from '../graphql'
-import useEagerConnect from '../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../hooks/useExecuteOnAccountChange'
-import usePaginate from '../hooks/usePaginate'
-import LargeLayout from '../layouts/large'
-import { wrapServerSideProps } from '../props'
-import { values as traits } from '../traits'
+} from '../../graphql'
+import useEagerConnect from '../../hooks/useEagerConnect'
+import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
+import usePaginate from '../../hooks/usePaginate'
+import LargeLayout from '../../layouts/large'
+import { wrapServerSideProps } from '../../props'
+import { values as traits } from '../../traits'
 
 type Props = {
   now: string
@@ -426,7 +430,7 @@ const ExplorePage: NextPage<Props> = ({
           disabled={isSubmitting}
         >
           <Text as="span" isTruncated>
-            {t('explore.form.submit')}
+            {t('explore.nfts.form.submit')}
           </Text>
         </Button>
         {showResetFilter && (
@@ -437,7 +441,7 @@ const ExplorePage: NextPage<Props> = ({
             disabled={isSubmitting}
           >
             <Text as="span" isTruncated>
-              {t('explore.form.clear')}
+              {t('explore.nfts.form.clear')}
             </Text>
           </Button>
         )}
@@ -463,7 +467,7 @@ const ExplorePage: NextPage<Props> = ({
     <LargeLayout>
       <Head title="Explore Collectibles" />
 
-      <Flex justify="space-between" mb={{ base: 4, lg: 0 }}>
+      <Flex justify="space-between" mb={{ base: 4, lg: 0 }} align="center">
         <Heading as="h1" variant="title" color="brand.black">
           {t('explore.title')}
         </Heading>
@@ -473,8 +477,33 @@ const ExplorePage: NextPage<Props> = ({
         )}
       </Flex>
 
+      <Tabs
+        defaultIndex={0} // NFTs
+        colorScheme="brand"
+        pt={10}
+        pb={{ base: 2.5, md: 0 }}
+        overflowX="auto"
+      >
+        <TabList>
+          <Link href="/explore" whiteSpace="nowrap" mr={{ base: 0, md: 10 }}>
+            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
+              <Text as="span" variant="subtitle1">
+                {t('explore.tabs.nfts')}
+              </Text>
+            </Tab>
+          </Link>
+          <Link href="/explore/users" whiteSpace="nowrap">
+            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
+              <Text as="span" variant="subtitle1">
+                {t('explore.tabs.users')}
+              </Text>
+            </Tab>
+          </Link>
+        </TabList>
+      </Tabs>
+
       <Grid
-        mt={12}
+        mt={6}
         gap={{ base: 4, lg: 3, xl: 4 }}
         templateColumns={{ lg: 'repeat(5, 1fr)', xl: 'repeat(4, 1fr)' }}
       >
@@ -486,10 +515,10 @@ const ExplorePage: NextPage<Props> = ({
 
             <Stack spacing={3}>
               <Select
-                label={t('explore.form.currency.label')}
+                label={t('explore.nfts.form.currency.label')}
                 name="currencyId"
                 control={control as any} // TODO: fix this type
-                placeholder={t('explore.form.currency.placeholder')}
+                placeholder={t('explore.nfts.form.currency.placeholder')}
                 choices={currencies.map((x) => ({
                   value: x.id,
                   label: x.symbol || '',
@@ -517,7 +546,9 @@ const ExplorePage: NextPage<Props> = ({
                       format={(e) => e.toString()}
                     >
                       <NumberInputField
-                        placeholder={t('explore.form.min-price.placeholder')}
+                        placeholder={t(
+                          'explore.nfts.form.min-price.placeholder',
+                        )}
                         {...register('minPrice')}
                       />
                       <NumberInputStepper>
@@ -540,7 +571,9 @@ const ExplorePage: NextPage<Props> = ({
                       format={(e) => e.toString()}
                     >
                       <NumberInputField
-                        placeholder={t('explore.form.max-price.placeholder')}
+                        placeholder={t(
+                          'explore.nfts.form.max-price.placeholder',
+                        )}
                         {...register('maxPrice')}
                       />
                       <NumberInputStepper>
@@ -556,15 +589,15 @@ const ExplorePage: NextPage<Props> = ({
             <hr />
 
             <FormControl>
-              <FormLabel>{t('explore.form.offers.label')}</FormLabel>
+              <FormLabel>{t('explore.nfts.form.offers.label')}</FormLabel>
               <VStack>
                 {[
                   {
-                    label: t('explore.form.offers.values.fixed'),
+                    label: t('explore.nfts.form.offers.values.fixed'),
                     value: OfferFilter.fixed,
                   },
                   {
-                    label: t('explore.form.offers.values.auction'),
+                    label: t('explore.nfts.form.offers.values.auction'),
                     value: OfferFilter.auction,
                   },
                 ].map((x) => (
@@ -583,7 +616,7 @@ const ExplorePage: NextPage<Props> = ({
             <hr />
 
             <FormControl>
-              <FormLabel>{t('explore.form.collections.label')}</FormLabel>
+              <FormLabel>{t('explore.nfts.form.collections.label')}</FormLabel>
               <VStack>
                 {collections.map((x) => (
                   <Checkbox
@@ -601,7 +634,7 @@ const ExplorePage: NextPage<Props> = ({
             <hr />
 
             <FormControl>
-              <FormLabel>{t('explore.form.categories.label')}</FormLabel>
+              <FormLabel>{t('explore.nfts.form.categories.label')}</FormLabel>
               <VStack>
                 {categories.map((x) => (
                   <Checkbox
@@ -624,16 +657,16 @@ const ExplorePage: NextPage<Props> = ({
         <GridItem gap={6} pt={{ base: 8, lg: 0 }} colSpan={{ lg: 4, xl: 3 }}>
           <Box ml="auto" w={{ base: 'full', lg: 'min-content' }}>
             <Select<AssetsOrderBy>
-              label={t('explore.orderBy.label')}
+              label={t('explore.nfts.orderBy.label')}
               name="orderBy"
               onChange={changeOrder}
               choices={[
                 {
-                  label: t('explore.orderBy.values.createdAtDesc'),
+                  label: t('explore.nfts.orderBy.values.createdAtDesc'),
                   value: 'CREATED_AT_DESC',
                 },
                 {
-                  label: t('explore.orderBy.values.createdAtAsc'),
+                  label: t('explore.nfts.orderBy.values.createdAtAsc'),
                   value: 'CREATED_AT_ASC',
                 },
               ]}
@@ -673,8 +706,8 @@ const ExplorePage: NextPage<Props> = ({
           ) : (
             <Flex align="center" justify="center" h="full" py={12}>
               <Empty
-                title={t('explore.empty.title')}
-                description={t('explore.empty.description')}
+                title={t('explore.nfts.empty.title')}
+                description={t('explore.nfts.empty.description')}
               />
             </Flex>
           )}

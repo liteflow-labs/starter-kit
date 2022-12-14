@@ -8,43 +8,49 @@
     "featured": "注目のコレクション"
   },
   "explore": {
-    "title": "コレクションを探す",
-    "empty": {
-      "title": "コレクションが見つかりません",
-      "description": "フィルターを更新して、より多くのコレクションを探しましょう。"
+    "title": "検索",
+    "tabs": {
+      "nfts": "NFTs",
+      "users": "ユーザー"
     },
-    "form": {
-      "submit": "適用する",
-      "clear": "すべてクリア",
-      "currency": {
-        "label": "価格レンジ",
-        "placeholder": "通貨の選択"
+    "nfts": {
+      "empty": {
+        "title": "コレクションが見つかりません",
+        "description": "フィルターを更新して、より多くのコレクションを探しましょう。"
       },
-      "min-price": {
-        "placeholder": "から"
-      },
-      "max-price": {
-        "placeholder": "まで"
-      },
-      "offers": {
-        "label": "状態",
-        "values": {
-          "fixed": "固定価格",
-          "auction": "オークション"
+      "form": {
+        "submit": "適用する",
+        "clear": "すべてクリア",
+        "currency": {
+          "label": "価格レンジ",
+          "placeholder": "通貨の選択"
+        },
+        "min-price": {
+          "placeholder": "から"
+        },
+        "max-price": {
+          "placeholder": "まで"
+        },
+        "offers": {
+          "label": "状態",
+          "values": {
+            "fixed": "固定価格",
+            "auction": "オークション"
+          }
+        },
+        "categories": {
+          "label": "カテゴリー"
+        },
+        "collections": {
+          "label": "コレクション"
         }
       },
-      "categories": {
-        "label": "カテゴリー"
-      },
-      "collections": {
-        "label": "コレクション"
-      }
-    },
-    "orderBy": {
-      "label": "並び替え",
-      "values": {
-        "createdAtDesc": "日付: 最も新しい",
-        "createdAtAsc": "日付: 最も古い"
+      "orderBy": {
+        "label": "並び替え",
+        "values": {
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い"
+        }
       }
     }
   },
