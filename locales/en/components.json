@@ -349,7 +349,7 @@
           "required": "This field is required.",
           "integer": "This field must be an integer.",
           "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
-          "in-range": "This field must be between 1 and {{ availableQuantity }}.",
+          "in-range": "This field must be between 1 and {{ max }}.",
           "positive": "This field must be greater than 0."
         },
         "currency": {
@@ -379,7 +379,7 @@
         "validation": {
           "required": "This field is required.",
           "integer": "This field must be an integer.",
-          "in-range": "This field must be between 1 and {{ quantityAvailable }}."
+          "in-range": "This field must be between 1 and {{ max }}."
         },
         "quantity": {
           "label": "Quantity",
@@ -524,7 +524,7 @@
         "validation": {
           "positive": "This field must be greater than 0.",
           "integer": "This field must be an integer.",
-          "in-range": "This field must be between 1 and {{ quantityAvailable }}.",
+          "in-range": "This field must be between 1 and {{ max }}.",
           "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
           "required": "This field is required."
         },
@@ -615,7 +615,7 @@
           "required": "This field is required.",
           "positive": "This field must be greater than 0.",
           "integer": "This field must be an integer.",
-          "in-range": "This field must be between 0 and {{ maxRoyalties }}."
+          "in-range": "This field must be between 0 and {{ max }}."
         },
         "file": {
           "label": "Upload file",

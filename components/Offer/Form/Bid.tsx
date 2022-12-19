@@ -248,11 +248,11 @@ const OfferFormBid: FC<Props> = (props) => {
         <InputGroup>
           <NumberInput
             clampValueOnBlur={false}
+            min={0}
             step={Math.pow(10, -currency.decimals)}
             allowMouseWheel
             w="full"
             onChange={(x) => setValue('bid', x)}
-            format={(e) => e.toString()}
           >
             <NumberInputField
               id="bid"
@@ -303,10 +303,11 @@ const OfferFormBid: FC<Props> = (props) => {
           <InputGroup>
             <NumberInput
               clampValueOnBlur={false}
+              min={1}
+              max={parseInt(props.supply, 10)}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
-              format={(e) => e.toString()}
             >
               <NumberInputField
                 id="quantity"
@@ -319,7 +320,7 @@ const OfferFormBid: FC<Props> = (props) => {
                       parseInt(value, 10) > parseInt(props.supply, 10)
                     ) {
                       return t('offer.form.bid.validation.in-range', {
-                        quantityAvailable: parseInt(props.supply, 10),
+                        max: parseInt(props.supply, 10),
                       })
                     }
                     if (!/^\d+$/.test(value)) {

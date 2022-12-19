@@ -509,12 +509,12 @@ const ExplorePage: NextPage<Props> = ({
                     <InputGroup>
                       <NumberInput
                         clampValueOnBlur={false}
+                        min={0}
                         step={Math.pow(10, -currency.decimals)}
                         allowMouseWheel
                         w="full"
                         isDisabled={isSubmitting}
                         onChange={(x: any) => setValue('minPrice', x)}
-                        format={(e) => e.toString()}
                       >
                         <NumberInputField
                           id="minPrice"
@@ -553,12 +553,12 @@ const ExplorePage: NextPage<Props> = ({
                     <InputGroup>
                       <NumberInput
                         clampValueOnBlur={false}
+                        min={0}
                         step={Math.pow(10, -currency.decimals)}
                         allowMouseWheel
                         w="full"
                         isDisabled={isSubmitting}
                         onChange={(x: any) => setValue('maxPrice', x)}
-                        format={(e) => e.toString()}
                       >
                         <NumberInputField
                           id="maxPrice"

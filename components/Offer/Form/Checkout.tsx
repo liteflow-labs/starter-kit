@@ -143,10 +143,11 @@ const OfferFormCheckout: FC<Props> = ({
           <InputGroup>
             <NumberInput
               clampValueOnBlur={false}
+              min={1}
+              max={parseInt(offer.availableQuantity, 10)}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
-              format={(e) => e.toString()}
             >
               <NumberInputField
                 id="quantity"
@@ -160,7 +161,7 @@ const OfferFormCheckout: FC<Props> = ({
                         parseInt(offer.availableQuantity, 10)
                     ) {
                       return t('offer.form.checkout.validation.in-range', {
-                        available: parseInt(offer.availableQuantity, 10),
+                        max: parseInt(offer.availableQuantity, 10),
                       })
                     }
                     if (!/^\d+$/.test(value)) {

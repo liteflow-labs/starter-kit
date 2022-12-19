@@ -349,7 +349,7 @@
           "required": "此字段为必填字段",
           "integer": "此字段必须是整数",
           "decimals": "此字段最多支持 {{ nbDecimals }} 位小数。",
-          "in-range": "此字段必须介于 1 和 {{ availableQuantity }} 之间",
+          "in-range": "此字段必须介于 1 和 {{ max }} 之间",
           "positive": "此字段必须大于 0"
         },
         "currency": {
@@ -379,7 +379,7 @@
         "validation": {
           "required": "此字段为必填字段",
           "integer": "此字段必须是整数",
-          "in-range": "此字段必须介于 1 和 {{ availableQuantity }} 之间"
+          "in-range": "此字段必须介于 1 和 {{ max }} 之间"
         },
         "quantity": {
           "label": "数量",
@@ -524,7 +524,7 @@
         "validation": {
           "positive": "此字段必须大于 0",
           "integer": "此字段必须是整数",
-          "in-range": "此字段必须介于 1 和 {{ quantityAvailable }} 之间。",
+          "in-range": "此字段必须介于 1 和 {{ max }} 之间。",
           "decimals": "此字段最多支持 {{ nbDecimals }} 位小数。",
           "required": "此字段为必填字段"
         },
@@ -615,7 +615,7 @@
           "required": "此字段为必填字段",
           "positive": "此字段必须大于 0",
           "integer": "此字段必须是整数",
-          "in-range": "此字段必须介于 0 和 {{ maxRoyalties }} 之间"
+          "in-range": "此字段必须介于 0 和 {{ max }} 之间"
         },
         "file": {
           "label": "上传文件",

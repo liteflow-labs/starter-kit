@@ -22,7 +22,7 @@ const Summary: FC<
     try {
       return price.mul(quantity)
     } catch {
-      console.error(`Cannot parse quantity ${price} as BigNumber`)
+      console.error(`Cannot parse quantity ${quantity} as BigNumber`)
       return BigNumber.from(0)
     }
   }, [quantity, price])

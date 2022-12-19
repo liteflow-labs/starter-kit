@@ -349,7 +349,7 @@
           "required": "Este campo es obligatorio.",
           "integer": "Este campo debe ser un número entero.",
           "decimals": "Este campo admite un máximo de {{ nbDecimals }} decimales.",
-          "in-range": "Este campo debe estar entre 1 y {{ availableQuantity }}.",
+          "in-range": "Este campo debe estar entre 1 y {{ max }}.",
           "positive": "Este campo debe ser mayor a 0."
         },
         "currency": {
@@ -379,7 +379,7 @@
         "validation": {
           "required": "Este campo es obligatorio.",
           "integer": "Este campo debe ser un número entero.",
-          "in-range": "Este campo debe estar entre 1 y {{ quantityAvailable }}."
+          "in-range": "Este campo debe estar entre 1 y {{ max }}."
         },
         "quantity": {
           "label": "Cantidad",
@@ -524,7 +524,7 @@
         "validation": {
           "positive": "Este campo debe ser mayor a 0",
           "integer": "Este campo debe ser un número entero.",
-          "in-range": "Este campo debe estar entre 1 y {{ quantityAvailable }}.",
+          "in-range": "Este campo debe estar entre 1 y {{ max }}.",
           "decimals": "Este campo admite un máximo de {{ nbDecimals }} decimales.",
           "required": "Este campo es obligatorio."
         },
@@ -615,7 +615,7 @@
           "required": "Este campo es obligatorio.",
           "positive": "Este campo debe ser mayor a 0",
           "integer": "Este campo debe ser un número entero.",
-          "in-range": "Este campo debe estar entre 0 y {{ maxRoyalties }}."
+          "in-range": "Este campo debe estar entre 0 y {{ max }}."
         },
         "file": {
           "label": "Cargar archivo",

@@ -349,7 +349,7 @@
           "required": "必須の項目です",
           "integer": "項目は整数でなければなりません。",
           "decimals": "項目は、最大 {{ nbDecimals }} の小数をサポートします。",
-          "in-range": "項目は 1 から {{ availableQuantity }} の間である必要があります。",
+          "in-range": "項目は 1 から {{ max }} の間である必要があります。",
           "positive": "項目は0より大きい必要があります"
         },
         "currency": {
@@ -379,7 +379,7 @@
         "validation": {
           "required": "必須の項目です",
           "integer": "項目は整数でなければなりません。",
-          "in-range": "項目は 1 から {{ quantityAvailable }} の間である必要があります。"
+          "in-range": "項目は 1 から {{ max }} の間である必要があります。"
         },
         "quantity": {
           "label": "数量",
@@ -524,7 +524,7 @@
         "validation": {
           "positive": "項目は0より大きい必要があります",
           "integer": "項目は整数でなければなりません。",
-          "in-range": "項目は 1 から {{ quantityAvailable }} の間である必要があります。",
+          "in-range": "項目は 1 から {{ max }} の間である必要があります。",
           "decimals": "項目は、最大 {{ nbDecimals }} の小数をサポートします。",
           "required": "必須の項目です"
         },
@@ -615,7 +615,7 @@
           "required": "必須の項目です",
           "positive": "項目は0より大きい必要があります",
           "integer": "項目は整数でなければなりません。",
-          "in-range": "項目は 1 から {{ maxRoyalties }} の間である必要があります。"
+          "in-range": "項目は 1 から {{ max }} の間である必要があります。"
         },
         "file": {
           "label": "ファイルをアップロード",

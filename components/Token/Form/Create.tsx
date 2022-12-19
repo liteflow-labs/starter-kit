@@ -265,10 +265,10 @@ const TokenFormCreate: FC<Props> = ({
           <InputGroup>
             <NumberInput
               clampValueOnBlur={false}
+              min={1}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('amount', x)}
-              format={(e) => e.toString()}
             >
               <NumberInputField
                 id="amount"
@@ -308,11 +308,12 @@ const TokenFormCreate: FC<Props> = ({
         <InputGroup>
           <NumberInput
             clampValueOnBlur={false}
+            min={0}
+            max={maxRoyalties}
+            step={0.01}
             allowMouseWheel
             w="full"
-            step={0.5}
             onChange={(x) => setValue('royalties', x)}
-            format={(e) => e.toString()}
           >
             <NumberInputField
               id="royalties"
@@ -324,7 +325,7 @@ const TokenFormCreate: FC<Props> = ({
                     parseFloat(value) > maxRoyalties
                   ) {
                     return t('token.form.create.validation.in-range', {
-                      maxRoyalties,
+                      max: maxRoyalties,
                     })
                   }
                 },

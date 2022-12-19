@@ -154,11 +154,11 @@ const SalesAuctionForm: VFC<Props> = ({
           <InputGroup>
             <NumberInput
               clampValueOnBlur={false}
+              min={0}
               step={Math.pow(10, -currency.decimals)}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('price', x)}
-              format={(e) => e.toString()}
             >
               <NumberInputField
                 id="price"
