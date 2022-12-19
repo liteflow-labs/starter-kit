@@ -17,15 +17,15 @@ type Props = {
 
 const UserCard: FC<Props> = ({ user }) => {
   return (
-    <Box
-      borderRadius="2xl"
-      border="1px solid"
-      borderColor="gray.300"
-      w="full"
-      overflow="hidden"
-    >
-      <Box position="relative" height="7.5rem">
-        <Link href={`/users/${user.address}`}>
+    <Link href={`/users/${user.address}`}>
+      <Box
+        borderRadius="2xl"
+        border="1px solid"
+        borderColor="gray.300"
+        w="full"
+        overflow="hidden"
+      >
+        <Box position="relative" height="7.5rem">
           {user.cover ? (
             <Image
               src={user.cover}
@@ -36,40 +36,40 @@ const UserCard: FC<Props> = ({ user }) => {
           ) : (
             <Box bg="gray.100" height="full" />
           )}
-        </Link>
-        <Box
-          position="absolute"
-          bottom={0}
-          transform="translate(1rem, 50%)"
-          bg="black"
-          border="2px solid"
-          borderColor="white"
-          rounded="full"
-        >
-          <Avatar
-            size="lg"
-            src={user.image || undefined}
-            title={user.name || user.address}
-          />
+          <Box
+            position="absolute"
+            bottom={0}
+            transform="translate(1rem, 50%)"
+            bg="black"
+            border="2px solid"
+            borderColor="white"
+            rounded="full"
+          >
+            <Avatar
+              size="lg"
+              src={user.image || undefined}
+              title={user.name || user.address}
+            />
+          </Box>
         </Box>
+        <Flex
+          alignItems="center"
+          gap={1.5}
+          overflow="hidden"
+          mt={1}
+          pt={10}
+          px={4}
+          pb={4}
+        >
+          <Text variant="button1" title={user.name || user.address} isTruncated>
+            {user.name || formatAddress(user.address, 10)}
+          </Text>
+          {user.verified && (
+            <Icon as={HiBadgeCheck} color="brand.500" boxSize={4} />
+          )}
+        </Flex>
       </Box>
-      <Flex
-        alignItems="center"
-        gap={1.5}
-        overflow="hidden"
-        mt={1}
-        pt={10}
-        px={4}
-        pb={4}
-      >
-        <Text variant="button1" title={user.name || user.address} isTruncated>
-          {user.name || formatAddress(user.address, 10)}
-        </Text>
-        {user.verified && (
-          <Icon as={HiBadgeCheck} color="brand.500" boxSize={4} />
-        )}
-      </Flex>
-    </Box>
+    </Link>
   )
 }
 

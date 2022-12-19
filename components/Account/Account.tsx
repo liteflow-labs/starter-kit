@@ -1,6 +1,6 @@
 import { Heading, Tab, TabList, Tabs, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import Link from '../Link/Link'
 
 export type AccountTabs = 'wallet' | 'edit-profile'
@@ -45,7 +45,7 @@ const AccountTemplate: FC<{
       >
         <TabList>
           {tabs.map((tab, index) => (
-            <Link key={index} href={tab.href} whiteSpace="nowrap">
+            <Link key={index} href={tab.href} whiteSpace="nowrap" mr={4}>
               <Tab as="div">
                 <Text as="span" variant="subtitle1">
                   {tab.title}

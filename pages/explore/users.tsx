@@ -106,7 +106,7 @@ const UsersPage: NextPage<Props> = ({ offset, limit, page }) => {
         overflowX="auto"
       >
         <TabList>
-          <Link href="/explore" whiteSpace="nowrap" mr={{ base: 0, md: 10 }}>
+          <Link href="/explore" whiteSpace="nowrap" mr={4}>
             <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
               <Text as="span" variant="subtitle1">
                 NFTs
