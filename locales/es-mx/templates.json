@@ -16,7 +16,7 @@
     "nfts": {
       "empty": {
         "title": "No hemos conseguido nada",
-        "description": "Actualiza tus filtros para encontrar más NFTs."
+        "description": "Actualiza tus filtros para encontrar más coleccionables."
       },
       "form": {
         "submit": "Aplicar filtros",

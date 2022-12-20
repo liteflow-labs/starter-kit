@@ -15,8 +15,8 @@
     },
     "nfts": {
       "empty": {
-        "title": "未找到藏品",
-        "description": "请更新筛选条件来查找更多藏品。"
+        "title": "未找到NFT",
+        "description": "请更新筛选条件来查找更多NFT。"
       },
       "form": {
         "submit": "应用",

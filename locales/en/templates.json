@@ -15,8 +15,8 @@
     },
     "nfts": {
       "empty": {
-        "title": "No NFTs Found",
-        "description": "Update your filters to find more NFTs."
+        "title": "No Collectibles Found",
+        "description": "Update your filters to find more Collectibles."
       },
       "form": {
         "submit": "Apply Filters",
