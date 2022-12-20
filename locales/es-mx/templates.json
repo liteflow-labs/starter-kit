@@ -16,7 +16,7 @@
     "nfts": {
       "empty": {
         "title": "No hemos conseguido nada",
-        "description": "Actualiza tus filtros para encontrar más coleccionables."
+        "description": "Actualiza tus filtros para encontrar más NFTs."
       },
       "form": {
         "submit": "Aplicar filtros",
@@ -51,6 +51,12 @@
           "createdAtDesc": "Fecha: más recientes",
           "createdAtAsc": "Fecha: más antiguos"
         }
+      }
+    },
+    "users": {
+      "empty": {
+        "title": "No se encontraron usuarios",
+        "description": "Actualiza tus filtros para encontrar más usuarios."
       }
     }
   },

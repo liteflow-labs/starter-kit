@@ -15,8 +15,8 @@
     },
     "nfts": {
       "empty": {
-        "title": "No Collectibles Found",
-        "description": "Update your filters to find more collectibles."
+        "title": "No NFTs Found",
+        "description": "Update your filters to find more NFTs."
       },
       "form": {
         "submit": "Apply Filters",
@@ -51,6 +51,12 @@
           "createdAtDesc": "Date: Newest",
           "createdAtAsc": "Date: Oldest"
         }
+      }
+    },
+    "users": {
+      "empty": {
+        "title": "No Users Found",
+        "description": "Update your filters to find more users."
       }
     }
   },

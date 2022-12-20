@@ -15,8 +15,8 @@
     },
     "nfts": {
       "empty": {
-        "title": "コレクションが見つかりません",
-        "description": "フィルターを更新して、より多くのコレクションを探しましょう。"
+        "title": "NFTが見つかりません",
+        "description": "フィルターを更新して、より多くのNFTを探しましょう。"
       },
       "form": {
         "submit": "適用する",
@@ -51,6 +51,12 @@
           "createdAtDesc": "日付: 最も新しい",
           "createdAtAsc": "日付: 最も古い"
         }
+      }
+    },
+    "users": {
+      "empty": {
+        "title": "No Users Found",
+        "description": "Update your filters to find more users."
       }
     }
   },

@@ -52,6 +52,12 @@
           "createdAtAsc": "日期：最早"
         }
       }
+    },
+    "users": {
+      "empty": {
+        "title": "未找到用户",
+        "description": "请更新筛选条件来查找更多用户。"
+      }
     }
   },
   "asset": {

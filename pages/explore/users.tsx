@@ -137,8 +137,8 @@ const UsersPage: NextPage<Props> = ({ offset, limit, page }) => {
       ) : (
         <Flex align="center" justify="center" h="full" py={12}>
           <Empty
-            title={t('explore.empty.title')}
-            description={t('explore.empty.description')}
+            title={t('explore.users.empty.title')}
+            description={t('explore.users.empty.description')}
           />
         </Flex>
       )}
