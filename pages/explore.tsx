@@ -565,7 +565,7 @@ const ExplorePage: NextPage<Props> = ({
                           placeholder={t('explore.form.max-price.placeholder')}
                           {...register('maxPrice', {
                             validate: (value) => {
-                              if (!value) return
+                              if (value === null) return
                               const splitValue = value.toString().split('.')
 
                               if (value < 0) {

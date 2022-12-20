@@ -12,7 +12,7 @@ const Summary: FC<
     }
     isSingle: boolean
     price: BigNumber
-    quantity?: number | string
+    quantity?: number | string | BigNumber
     feesOnTopPerTenThousand?: number
   }
 > = ({ currency, price, quantity, isSingle, feesOnTopPerTenThousand }) => {

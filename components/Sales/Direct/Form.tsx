@@ -155,7 +155,7 @@ const SalesDirectForm: VFC<Props> = ({
       onOpen()
       const id = await createAndPublishOffer({
         type: 'SALE',
-        quantity: BigNumber.from(quantity),
+        quantity: BigNumber.from(quantityBN),
         unitPrice: priceUnit,
         assetId: asset.id,
         currencyId: currency.id,

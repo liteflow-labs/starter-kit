@@ -156,10 +156,19 @@ const OfferFormBid: FC<Props> = (props) => {
   const [balance] = useBalance(account, currency.id)
   const priceUnit = parsePrice(price, currency.decimals)
 
-  const totalPrice = useMemo(() => {
+  const quantityBN = useMemo(() => {
     if (!quantity) return BigNumber.from(0)
-    return priceUnit.mul(quantity)
-  }, [priceUnit, quantity])
+    try {
+      return BigNumber.from(quantity)
+    } catch {
+      console.error(`Cannot parse quantity ${quantity} as BigNumber`)
+      return BigNumber.from(0)
+    }
+  }, [quantity])
+
+  const totalPrice = useMemo(() => {
+    return priceUnit.mul(quantityBN)
+  }, [priceUnit, quantityBN])
 
   const balanceZero = useMemo(() => {
     if (!balance) return false
@@ -183,7 +192,7 @@ const OfferFormBid: FC<Props> = (props) => {
       createOfferOnOpen()
       const id = await createOffer({
         type: 'BUY',
-        quantity: BigNumber.from(quantity),
+        quantity: BigNumber.from(quantityBN),
         unitPrice: priceUnit,
         assetId: assetId,
         currencyId: currency.id,
@@ -393,7 +402,7 @@ const OfferFormBid: FC<Props> = (props) => {
         <Summary
           currency={currency}
           price={priceUnit}
-          quantity={quantity}
+          quantity={quantityBN}
           isSingle={!props.multiple}
           feesOnTopPerTenThousand={feesPerTenThousand}
         />
