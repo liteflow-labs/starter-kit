@@ -26,7 +26,6 @@ import { EmailConnector } from '@nft/email-connector'
 import {
   formatDateDatetime,
   formatError,
-  parsePrice,
   useBalance,
   useCreateOffer,
 } from '@nft/hooks'
@@ -35,6 +34,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import dayjs from 'dayjs'
+import useParseBigNumber from 'hooks/useParseBigNumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
@@ -154,17 +154,8 @@ const OfferFormBid: FC<Props> = (props) => {
   }, [currencies, currencyId])
 
   const [balance] = useBalance(account, currency.id)
-  const priceUnit = parsePrice(price, currency.decimals)
-
-  const quantityBN = useMemo(() => {
-    if (!quantity) return BigNumber.from(0)
-    try {
-      return BigNumber.from(quantity)
-    } catch {
-      console.error(`Cannot parse quantity ${quantity} as BigNumber`)
-      return BigNumber.from(0)
-    }
-  }, [quantity])
+  const priceUnit = useParseBigNumber(price, currency.decimals)
+  const quantityBN = useParseBigNumber(quantity)
 
   const totalPrice = useMemo(() => {
     return priceUnit.mul(quantityBN)

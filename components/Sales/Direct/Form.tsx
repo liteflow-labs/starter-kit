@@ -26,11 +26,11 @@ import {
   CreateOfferStep,
   formatDateDatetime,
   formatError,
-  parsePrice,
   useCreateOffer,
 } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
+import useParseBigNumber from 'hooks/useParseBigNumber'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
@@ -118,17 +118,8 @@ const SalesDirectForm: VFC<Props> = ({
     if (!c) throw new Error("Can't find currency")
     return c
   }, [currencies, currencyId])
-  const priceUnit = parsePrice(price, currency.decimals)
-
-  const quantityBN = useMemo(() => {
-    if (!quantity) return BigNumber.from(0)
-    try {
-      return BigNumber.from(quantity)
-    } catch {
-      console.error(`Cannot parse quantity ${quantity} as BigNumber`)
-      return BigNumber.from(0)
-    }
-  }, [quantity])
+  const priceUnit = useParseBigNumber(price, currency.decimals)
+  const quantityBN = useParseBigNumber(quantity)
 
   const amountFees = useMemo(() => {
     if (!price) return BigNumber.from(0)

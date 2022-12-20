@@ -26,12 +26,8 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  formatError,
-  getHumanizedDate,
-  parsePrice,
-  useCreateAuction,
-} from '@nft/hooks'
+import { formatError, getHumanizedDate, useCreateAuction } from '@nft/hooks'
+import useParseBigNumber from 'hooks/useParseBigNumber'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
@@ -91,7 +87,7 @@ const SalesAuctionForm: VFC<Props> = ({
     if (!c) throw new Error("Can't find currency")
     return c
   }, [currencies, currencyId])
-  const priceUnit = parsePrice(price, currency.decimals)
+  const priceUnit = useParseBigNumber(price, currency.decimals)
 
   // TODO: Add check for approval of maker token
   const onSubmit = handleSubmit(async (data) => {
