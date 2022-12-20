@@ -3,9 +3,9 @@
     "500": "申し訳ありません、エラーが発生しました。"
   },
   "home": {
-    "explore": "すべてのコレクションを見る",
+    "explore": "すべてのNFTを見る",
     "auctions": "オークション",
-    "featured": "注目のコレクション"
+    "featured": "注目のNFT"
   },
   "explore": {
     "title": "検索",
@@ -15,8 +15,8 @@
     },
     "nfts": {
       "empty": {
-        "title": "コレクションが見つかりません",
-        "description": "フィルターを更新して、より多くのコレクションを探しましょう。"
+        "title": "NFTが見つかりません",
+        "description": "フィルターを更新して、より多くのNFTを探しましょう。"
       },
       "form": {
         "submit": "適用する",
@@ -42,7 +42,7 @@
           "label": "カテゴリー"
         },
         "collections": {
-          "label": "コレクション"
+          "label": "NFT"
         }
       },
       "orderBy": {
@@ -88,17 +88,17 @@
     },
     "form": {
       "title": {
-        "single": "シングルコレクションの作成",
-        "multiple": "マルチコレクションの作成"
+        "single": "シングルNFTの作成",
+        "multiple": "マルチNFTの作成"
       },
       "preview": "プレビュー",
       "notifications": {
-        "created": "コレクションが無事に作成されました。"
+        "created": "NFTが無事に作成されました。"
       }
     },
     "typeSelector": {
-      "title": "コレクションの作成",
-      "description": "1点もののコレクションの場合は「シングル」、1つのコレクションを複数販売したい場合は「マルチ」を選択してください",
+      "title": "NFTの作成",
+      "description": "1点もののNFTの場合は「シングル」、1つのNFTを複数販売したい場合は「マルチ」を選択してください",
       "single": {
         "title": "シングル",
         "type": "ERC721"
@@ -156,7 +156,7 @@
       },
       "title": "チェックアウト",
       "notifications": {
-        "purchased": "コレクションが無事に購入されました。"
+        "purchased": "NFTが無事に購入されました。"
       },
       "on-sale": "販売中",
       "per-edition": "エディションあたり"
@@ -166,14 +166,14 @@
         "title": "{{name}} のオファーを作成する",
         "description": "{{name}} のオファーを作成する"
       },
-      "title": "コレクションのオファー",
+      "title": "NFTのオファー",
       "notifications": {
         "created": "オファーが無事に作成されました。"
       },
       "options": {
         "label": "オファーの種類",
         "hints": {
-          "fixed": "コレクションを即座に購入可能な価格を入力してください",
+          "fixed": "NFTを即座に購入可能な価格を入力してください",
           "auction": "購入者が入札できる期間の設定"
         },
         "values": {
