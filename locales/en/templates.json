@@ -8,43 +8,55 @@
     "featured": "Featured Collectibles"
   },
   "explore": {
-    "title": "Explore Collectibles",
-    "empty": {
-      "title": "No Collectibles Found",
-      "description": "Update your filters to find more collectibles."
+    "title": "Explore",
+    "tabs": {
+      "nfts": "NFTs",
+      "users": "Users"
     },
-    "form": {
-      "submit": "Apply Filters",
-      "clear": "Clear All",
-      "currency": {
-        "label": "Price range",
-        "placeholder": "Select a currency"
+    "nfts": {
+      "empty": {
+        "title": "No Collectibles Found",
+        "description": "Update your filters to find more Collectibles."
       },
-      "min-price": {
-        "placeholder": "From"
-      },
-      "max-price": {
-        "placeholder": "To"
-      },
-      "offers": {
-        "label": "Status",
-        "values": {
-          "fixed": "Fixed price",
-          "auction": "Auction"
+      "form": {
+        "submit": "Apply Filters",
+        "clear": "Clear All",
+        "currency": {
+          "label": "Price range",
+          "placeholder": "Select a currency"
+        },
+        "min-price": {
+          "placeholder": "From"
+        },
+        "max-price": {
+          "placeholder": "To"
+        },
+        "offers": {
+          "label": "Status",
+          "values": {
+            "fixed": "Fixed price",
+            "auction": "Auction"
+          }
+        },
+        "categories": {
+          "label": "Categories"
+        },
+        "collections": {
+          "label": "Collections"
         }
       },
-      "categories": {
-        "label": "Categories"
-      },
-      "collections": {
-        "label": "Collections"
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest"
+        }
       }
     },
-    "orderBy": {
-      "label": "Sort by",
-      "values": {
-        "createdAtDesc": "Date: Newest",
-        "createdAtAsc": "Date: Oldest"
+    "users": {
+      "empty": {
+        "title": "No Users Found",
+        "description": "Update your filters to find more users."
       }
     }
   },

@@ -1,0 +1,15 @@
+query FetchExploreUsers($limit: Int!, $offset: Int!) {
+  users: accounts(first: $limit, offset: $offset) {
+    nodes {
+      username
+      address
+      image
+      cover
+      name
+      verification {
+        status
+      }
+    }
+    totalCount
+  }
+}

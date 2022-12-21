@@ -8,43 +8,55 @@
     "featured": "精选藏品"
   },
   "explore": {
-    "title": "探索藏品",
-    "empty": {
-      "title": "未找到藏品",
-      "description": "请更新筛选条件来查找更多藏品。"
+    "title": "探讨",
+    "tabs": {
+      "nfts": "NFTs",
+      "users": "用户"
     },
-    "form": {
-      "submit": "应用",
-      "clear": "全部清空",
-      "currency": {
-        "label": "价格范围",
-        "placeholder": "选择货币"
+    "nfts": {
+      "empty": {
+        "title": "未找到NFT",
+        "description": "请更新筛选条件来查找更多NFT。"
       },
-      "min-price": {
-        "placeholder": "从"
-      },
-      "max-price": {
-        "placeholder": "到"
-      },
-      "offers": {
-        "label": "状态",
-        "values": {
-          "fixed": "固定价格",
-          "auction": "拍卖"
+      "form": {
+        "submit": "应用",
+        "clear": "全部清空",
+        "currency": {
+          "label": "价格范围",
+          "placeholder": "选择货币"
+        },
+        "min-price": {
+          "placeholder": "从"
+        },
+        "max-price": {
+          "placeholder": "到"
+        },
+        "offers": {
+          "label": "状态",
+          "values": {
+            "fixed": "固定价格",
+            "auction": "拍卖"
+          }
+        },
+        "categories": {
+          "label": "类别"
+        },
+        "collections": {
+          "label": "收藏品"
         }
       },
-      "categories": {
-        "label": "类别"
-      },
-      "collections": {
-        "label": "收藏品"
+      "orderBy": {
+        "label": "排序方式",
+        "values": {
+          "createdAtDesc": "日期：最新",
+          "createdAtAsc": "日期：最早"
+        }
       }
     },
-    "orderBy": {
-      "label": "排序方式",
-      "values": {
-        "createdAtDesc": "日期：最新",
-        "createdAtAsc": "日期：最早"
+    "users": {
+      "empty": {
+        "title": "未找到用户",
+        "description": "请更新筛选条件来查找更多用户。"
       }
     }
   },
