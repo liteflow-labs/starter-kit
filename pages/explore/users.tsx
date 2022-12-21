@@ -26,7 +26,6 @@ import {
   useFetchExploreUsersQuery,
 } from '../../graphql'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import usePaginate from '../../hooks/usePaginate'
 import LargeLayout from '../../layouts/large'
 import { wrapServerSideProps } from '../../props'
@@ -70,15 +69,14 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 )
 
 const UsersPage: NextPage<Props> = ({ offset, limit, page }) => {
-  const ready = useEagerConnect()
+  useEagerConnect()
   const { t } = useTranslation('templates')
-  const { data, refetch } = useFetchExploreUsersQuery({
+  const { data } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
 
