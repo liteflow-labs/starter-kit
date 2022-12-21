@@ -27,10 +27,10 @@ import {
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatError, getHumanizedDate, useCreateAuction } from '@nft/hooks'
-import useParseBigNumber from 'hooks/useParseBigNumber'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
+import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import Image from '../../Image/Image'
 import Select from '../../Select/Select'
 

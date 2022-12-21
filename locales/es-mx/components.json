@@ -615,7 +615,8 @@
           "required": "Este campo es obligatorio.",
           "positive": "Este campo debe ser mayor a 0",
           "integer": "Este campo debe ser un número entero.",
-          "in-range": "Este campo debe estar entre 0 y {{ max }}."
+          "in-range": "Este campo debe estar entre 0 y {{ max }}.",
+          "decimals": "Este campo admite un máximo de {{ nbDecimals }} decimales."
         },
         "file": {
           "label": "Cargar archivo",

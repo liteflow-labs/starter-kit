@@ -320,12 +320,22 @@ const TokenFormCreate: FC<Props> = ({
               placeholder={t('token.form.create.royalties.placeholder')}
               {...register('royalties', {
                 validate: (value) => {
+                  const nbDecimals = value.split('.')[1]
+                    ? value.split('.')[1].length
+                    : 0
+
                   if (
                     parseFloat(value) < 0 ||
                     parseFloat(value) > maxRoyalties
                   ) {
                     return t('token.form.create.validation.in-range', {
                       max: maxRoyalties,
+                    })
+                  }
+
+                  if (nbDecimals > 2) {
+                    return t('token.form.create.validation.decimals', {
+                      nbDecimals: 2,
                     })
                   }
                 },

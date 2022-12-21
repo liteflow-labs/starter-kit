@@ -504,8 +504,8 @@ const ExplorePage: NextPage<Props> = ({
               />
 
               {currency && (
-                <FormControl isInvalid={!!errors.minPrice || !!errors.maxPrice}>
-                  <Flex gap={3}>
+                <Flex gap={3}>
+                  <FormControl isInvalid={!!errors.minPrice}>
                     <InputGroup>
                       <NumberInput
                         clampValueOnBlur={false}
@@ -549,7 +549,13 @@ const ExplorePage: NextPage<Props> = ({
                         </NumberInputStepper>
                       </NumberInput>
                     </InputGroup>
-
+                    {errors.minPrice && (
+                      <FormErrorMessage>
+                        {errors.minPrice.message}
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+                  <FormControl isInvalid={!!errors.maxPrice}>
                     <InputGroup>
                       <NumberInput
                         clampValueOnBlur={false}
@@ -593,20 +599,13 @@ const ExplorePage: NextPage<Props> = ({
                         </NumberInputStepper>
                       </NumberInput>
                     </InputGroup>
-                  </Flex>
-                  <Stack spacing={1} w="full">
-                    {errors.minPrice && (
-                      <FormErrorMessage>
-                        {errors.minPrice.message}
-                      </FormErrorMessage>
-                    )}
                     {errors.maxPrice && (
                       <FormErrorMessage>
                         {errors.maxPrice.message}
                       </FormErrorMessage>
                     )}
-                  </Stack>
-                </FormControl>
+                  </FormControl>
+                </Flex>
               )}
             </Stack>
 

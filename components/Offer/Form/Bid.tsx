@@ -34,11 +34,11 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import dayjs from 'dayjs'
-import useParseBigNumber from 'hooks/useParseBigNumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import LoginModal from '../../Modal/Login'
@@ -183,7 +183,7 @@ const OfferFormBid: FC<Props> = (props) => {
       createOfferOnOpen()
       const id = await createOffer({
         type: 'BUY',
-        quantity: BigNumber.from(quantityBN),
+        quantity: quantityBN,
         unitPrice: priceUnit,
         assetId: assetId,
         currencyId: currency.id,

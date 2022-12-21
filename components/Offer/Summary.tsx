@@ -12,23 +12,14 @@ const Summary: FC<
     }
     isSingle: boolean
     price: BigNumber
-    quantity?: number | string | BigNumber
+    quantity: BigNumber
     feesOnTopPerTenThousand?: number
   }
 > = ({ currency, price, quantity, isSingle, feesOnTopPerTenThousand }) => {
   const { t } = useTranslation('components')
-  const totalPrice = useMemo(() => {
-    if (!quantity) return BigNumber.from(0)
-    try {
-      return price.mul(quantity)
-    } catch {
-      console.error(`Cannot parse quantity ${quantity} as BigNumber`)
-      return BigNumber.from(0)
-    }
-  }, [quantity, price])
+  const totalPrice = useMemo(() => price.mul(quantity), [quantity, price])
 
   const totalFees = useMemo(() => {
-    if (!totalPrice) return BigNumber.from(0)
     if (!feesOnTopPerTenThousand) return BigNumber.from(0)
     return totalPrice.mul(feesOnTopPerTenThousand).div(10000)
   }, [totalPrice, feesOnTopPerTenThousand])
@@ -55,7 +46,7 @@ const Summary: FC<
           <Heading as={Flex} variant="heading3" color="gray.500" mb={2}>
             {t('offer.summary.quantity')}
             <Text as="span" color="brand.black" ml={1} fontWeight="semibold">
-              {quantity}
+              {quantity.toString()}
             </Text>
           </Heading>
         </>

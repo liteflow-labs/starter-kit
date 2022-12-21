@@ -26,12 +26,12 @@ import { formatError, useAcceptOffer, useBalance } from '@nft/hooks'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import useParseBigNumber from 'hooks/useParseBigNumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Offer } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import AcceptOfferModal from '../../Modal/AcceptOffer'
 import LoginModal from '../../Modal/Login'
 import Balance from '../../User/Balance'
@@ -189,7 +189,7 @@ const OfferFormCheckout: FC<Props> = ({
       <Summary
         currency={currency}
         price={priceUnit}
-        quantity={quantity}
+        quantity={quantityBN}
         isSingle={!multiple}
       />
 

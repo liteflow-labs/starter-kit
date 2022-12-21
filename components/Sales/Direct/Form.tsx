@@ -30,12 +30,12 @@ import {
 } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
-import useParseBigNumber from 'hooks/useParseBigNumber'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
 import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import Price from '../../Price/Price'
@@ -146,7 +146,7 @@ const SalesDirectForm: VFC<Props> = ({
       onOpen()
       const id = await createAndPublishOffer({
         type: 'SALE',
-        quantity: BigNumber.from(quantityBN),
+        quantity: quantityBN,
         unitPrice: priceUnit,
         assetId: asset.id,
         currencyId: currency.id,

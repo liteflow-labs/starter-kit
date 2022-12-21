@@ -615,7 +615,8 @@
           "required": "This field is required.",
           "positive": "This field must be greater than 0.",
           "integer": "This field must be an integer.",
-          "in-range": "This field must be between 0 and {{ max }}."
+          "in-range": "This field must be between 0 and {{ max }}.",
+          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals."
         },
         "file": {
           "label": "Upload file",
