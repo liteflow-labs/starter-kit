@@ -3,9 +3,9 @@
     "500": "We're sorry, something went wrong."
   },
   "home": {
-    "explore": "Explore All Collectibles",
+    "explore": "Explore All NFTs",
     "auctions": "Auctions",
-    "featured": "Featured Collectibles"
+    "featured": "Featured NFTs"
   },
   "explore": {
     "title": "Explore",
@@ -15,8 +15,8 @@
     },
     "nfts": {
       "empty": {
-        "title": "No Collectibles Found",
-        "description": "Update your filters to find more Collectibles."
+        "title": "No NFTs Found",
+        "description": "Update your filters to find more NFTs."
       },
       "form": {
         "submit": "Apply Filters",
@@ -88,17 +88,17 @@
     },
     "form": {
       "title": {
-        "single": "Create Single Collectible",
-        "multiple": "Create Multiple Collectible"
+        "single": "Create Single NFT",
+        "multiple": "Create Multiple NFT"
       },
       "preview": "Preview",
       "notifications": {
-        "created": "Your collectible has been successfully created."
+        "created": "Your NFT has been successfully created."
       }
     },
     "typeSelector": {
-      "title": "Create Collectible",
-      "description": "Choose \"Single\" if you want your collectible to be one of a kind or \"Multiple\" if you want to sell one collectible multiple times",
+      "title": "Create NFT",
+      "description": "Choose \"Single\" if you want your NFT to be one of a kind or \"Multiple\" if you want to sell one NFT multiple times",
       "single": {
         "title": "Single",
         "type": "ERC721"
@@ -156,7 +156,7 @@
       },
       "title": "Checkout",
       "notifications": {
-        "purchased": "The collectible has been successfully purchased."
+        "purchased": "The NFT has been successfully purchased."
       },
       "on-sale": "On sale for",
       "per-edition": "per edition"
@@ -166,14 +166,14 @@
         "title": "Create an offer for {{name}}",
         "description": "Create an offer for {{name}}"
       },
-      "title": "Collectible Offer",
+      "title": "NFT Offer",
       "notifications": {
         "created": "Your offer has been successfully created."
       },
       "options": {
         "label": "Type of offer",
         "hints": {
-          "fixed": "Enter price to allow users instantly purchase your collectible",
+          "fixed": "Enter price to allow users instantly purchase your NFT",
           "auction": "Set a period of time for which buyers can place bids"
         },
         "values": {
