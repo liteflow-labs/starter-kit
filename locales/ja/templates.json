@@ -90,6 +90,11 @@
       "preview": "プレビュー",
       "notifications": {
         "created": "コレクションが無事に作成されました。"
+      },
+      "notFound": {
+        "title": "コレクションが見つかりません",
+        "description": "NFTを作成しようとしているコレクションが存在しません",
+        "link": "別のコレクションで作成"
       }
     },
     "typeSelector": {

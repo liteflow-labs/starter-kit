@@ -90,6 +90,11 @@
       "preview": "预览",
       "notifications": {
         "created": "您已成功创建藏品。"
+      },
+      "notFound": {
+        "title": "未找到集合",
+        "description": "您尝试在其上创建 NFT 的集合不存在",
+        "link": "在其他集合上创建"
       }
     },
     "typeSelector": {

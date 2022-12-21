@@ -90,6 +90,11 @@
       "preview": "Previsualizar",
       "notifications": {
         "created": "¡Tu coleccionable ha sido creado!"
+      },
+      "notFound": {
+        "title": "Colección no encontrada",
+        "description": "La colección en la que está intentando crear un NFT no existe",
+        "link": "Crear en otra colección"
       }
     },
     "typeSelector": {
