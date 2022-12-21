@@ -102,7 +102,7 @@ const UsersPage: NextPage<Props> = ({
       title={t('explore.title')}
       loading={pageLoading}
       search={search}
-      tabIndex={1}
+      selectedTabIndex={1}
     >
       <>
         {users.length > 0 ? (

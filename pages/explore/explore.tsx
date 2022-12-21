@@ -461,7 +461,7 @@ const ExplorePage: NextPage<Props> = ({
       title={t('explore.title')}
       loading={isSubmitting || pageLoading || loadingOrder}
       search={search}
-      tabIndex={0}
+      selectedTabIndex={0}
     >
       <Grid
         mt={6}

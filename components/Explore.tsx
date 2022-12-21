@@ -17,9 +17,9 @@ const ExploreTemplate: FC<{
   title: string
   loading: boolean
   search: string | null
-  tabIndex: number
+  selectedTabIndex: number
   children: JSX.Element
-}> = ({ title, loading, search, tabIndex, children }) => {
+}> = ({ title, loading, search, selectedTabIndex, children }) => {
   const { t } = useTranslation('templates')
 
   return (
@@ -35,7 +35,7 @@ const ExploreTemplate: FC<{
       </Flex>
 
       <Tabs
-        defaultIndex={tabIndex}
+        defaultIndex={selectedTabIndex}
         colorScheme="brand"
         pt={10}
         pb={{ base: 2.5, md: 0 }}
@@ -43,7 +43,7 @@ const ExploreTemplate: FC<{
       >
         <TabList>
           <Link
-            href={search ? `/explore?search=${search}` : '/explore'}
+            href={`/explore${search ? `?search=${search}` : ''}`}
             whiteSpace="nowrap"
             mr={4}
           >
@@ -54,7 +54,7 @@ const ExploreTemplate: FC<{
             </Tab>
           </Link>
           <Link
-            href={search ? `/explore/users?search=${search}` : '/explore/users'}
+            href={`/explore/users${search ? `?search=${search}` : ''}`}
             whiteSpace="nowrap"
           >
             <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
