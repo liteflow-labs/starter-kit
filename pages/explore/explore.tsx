@@ -8,7 +8,6 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  Heading,
   InputGroup,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -16,16 +15,12 @@ import {
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
-  Spinner,
   Stack,
-  Tab,
-  TabList,
-  Tabs,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import { parsePrice, removeEmptyFromObject } from '@nft/hooks'
-import Link from 'components/Link/Link'
+import ExploreTemplate from 'components/Explore'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -33,7 +28,6 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Empty from '../../components/Empty/Empty'
-import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
 import TokenCard from '../../components/Token/Card'
@@ -62,7 +56,6 @@ import {
 import useEagerConnect from '../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import usePaginate from '../../hooks/usePaginate'
-import LargeLayout from '../../layouts/large'
 import { wrapServerSideProps } from '../../props'
 import { values as traits } from '../../traits'
 
@@ -464,44 +457,12 @@ const ExplorePage: NextPage<Props> = ({
   const ChakraPagination = chakra(Pagination)
 
   return (
-    <LargeLayout>
-      <Head title="Explore Collectibles" />
-
-      <Flex justify="space-between" mb={{ base: 4, lg: 0 }} align="center">
-        <Heading as="h1" variant="title" color="brand.black">
-          {t('explore.title')}
-        </Heading>
-
-        {(isSubmitting || pageLoading || loadingOrder) && (
-          <Spinner thickness="2px" speed="0.65s" />
-        )}
-      </Flex>
-
-      <Tabs
-        defaultIndex={0} // NFTs
-        colorScheme="brand"
-        pt={10}
-        pb={{ base: 2.5, md: 0 }}
-        overflowX="auto"
-      >
-        <TabList>
-          <Link href="/explore" whiteSpace="nowrap" mr={4}>
-            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
-              <Text as="span" variant="subtitle1">
-                {t('explore.tabs.nfts')}
-              </Text>
-            </Tab>
-          </Link>
-          <Link href="/explore/users" whiteSpace="nowrap">
-            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
-              <Text as="span" variant="subtitle1">
-                {t('explore.tabs.users')}
-              </Text>
-            </Tab>
-          </Link>
-        </TabList>
-      </Tabs>
-
+    <ExploreTemplate
+      title={t('explore.title')}
+      loading={isSubmitting || pageLoading || loadingOrder}
+      search={search}
+      tabIndex={0}
+    >
       <Grid
         mt={6}
         gap={{ base: 4, lg: 3, xl: 4 }}
@@ -739,7 +700,7 @@ const ExplorePage: NextPage<Props> = ({
           />
         </GridItem>
       </Grid>
-    </LargeLayout>
+    </ExploreTemplate>
   )
 }
 

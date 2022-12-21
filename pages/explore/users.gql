@@ -1,5 +1,9 @@
-query FetchExploreUsers($limit: Int!, $offset: Int!) {
-  users: accounts(first: $limit, offset: $offset) {
+query FetchExploreUsers(
+  $limit: Int!
+  $offset: Int!
+  $filter: [AccountFilter!]
+) {
+  users: accounts(first: $limit, offset: $offset, filter: { and: $filter }) {
     nodes {
       username
       address
