@@ -29,6 +29,7 @@ import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
+import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import Dropzone from '../../Dropzone/Dropzone'
 import CreateCollectibleModal from '../../Modal/CreateCollectible'
@@ -49,7 +50,11 @@ export type FormData = {
 
 type Props = {
   signer: (Signer & TypedDataSigner) | undefined
-  multiple: boolean
+  collection: {
+    chainId: number
+    address: string
+    standard: Standard
+  }
   categories: { id: string; title: string }[]
   blockExplorer: BlockExplorer
   uploadUrl: string
@@ -69,7 +74,7 @@ type Props = {
 
 const TokenFormCreate: FC<Props> = ({
   signer,
-  multiple,
+  collection,
   categories,
   blockExplorer,
   uploadUrl,
@@ -126,14 +131,15 @@ const TokenFormCreate: FC<Props> = ({
       if (parseFloat(data.royalties) > maxRoyalties)
         throw new Error('Royalties too high')
       const assetId = await createNFT({
-        standard: multiple ? 'ERC1155' : 'ERC721',
+        chainId: collection.chainId,
+        collectionAddress: collection.address,
         name: data.name,
         description: data.description,
         content: data.content,
         preview: data.preview,
         isAnimation: data.isAnimation,
         isPrivate: data.isPrivate,
-        amount: multiple ? parseInt(data.amount) : 1,
+        amount: collection.standard === 'ERC1155' ? parseInt(data.amount) : 1,
         royalties: parseFloat(data.royalties),
         traits: [{ type: 'Category', value: data.category }],
       })
@@ -257,7 +263,7 @@ const TokenFormCreate: FC<Props> = ({
           rows={5}
         />
       </FormControl>
-      {multiple && (
+      {collection.standard === 'ERC1155' && (
         <FormControl isInvalid={!!errors.amount}>
           <FormLabel htmlFor="amount">
             {t('token.form.create.amount.label')}
