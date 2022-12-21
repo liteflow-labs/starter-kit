@@ -102,7 +102,9 @@ invariant(
 
 const MINTABLE_COLLECTIONS = (
   process.env.NEXT_PUBLIC_MINTABLE_COLLECTIONS || ''
-).split(',')
+)
+  .split(',')
+  .filter(Boolean)
 
 const environment: Environment = {
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
