@@ -347,7 +347,10 @@
         "title": "Crea una oferta",
         "validation": {
           "required": "Este campo es obligatorio.",
-          "positive": "Este campo debe ser mayor a 0"
+          "integer": "Este campo debe ser un número entero.",
+          "decimals": "Este campo admite un máximo de {{ nbDecimals }} decimales.",
+          "in-range": "Este campo debe estar entre 1 y {{ max }}.",
+          "positive": "Este campo debe ser mayor a 0."
         },
         "currency": {
           "label": "Moneda",
@@ -374,7 +377,9 @@
         "title": "Comprar Coleccionable",
         "submit": "Proceder al Pago",
         "validation": {
-          "required": "Este campo es obligatorio."
+          "required": "Este campo es obligatorio.",
+          "integer": "Este campo debe ser un número entero.",
+          "in-range": "Este campo debe estar entre 1 y {{ max }}."
         },
         "quantity": {
           "label": "Cantidad",
@@ -452,7 +457,9 @@
       "form": {
         "submit": "Crear Oferta",
         "validation": {
-          "required": "Este campo es obligatorio."
+          "required": "Este campo es obligatorio.",
+          "decimals": "Este campo admite un máximo de {{ nbDecimals }} decimales.",
+          "positive": "Este campo debe ser mayor a 0."
         },
         "currency": {
           "label": "Moneda",
@@ -516,6 +523,9 @@
         "title": "Crear una venta",
         "validation": {
           "positive": "Este campo debe ser mayor a 0",
+          "integer": "Este campo debe ser un número entero.",
+          "in-range": "Este campo debe estar entre 1 y {{ max }}.",
+          "decimals": "Este campo admite un máximo de {{ nbDecimals }} decimales.",
           "required": "Este campo es obligatorio."
         },
         "currency": {
@@ -602,7 +612,11 @@
         "submit": "Crear Item",
         "title": "Crear un Coleccionable",
         "validation": {
-          "required": "Este campo es obligatorio."
+          "required": "Este campo es obligatorio.",
+          "positive": "Este campo debe ser mayor a 0",
+          "integer": "Este campo debe ser un número entero.",
+          "in-range": "Este campo debe estar entre 0 y {{ max }}.",
+          "decimals": "Este campo admite un máximo de {{ nbDecimals }} decimales."
         },
         "file": {
           "label": "Cargar archivo",
