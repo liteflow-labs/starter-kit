@@ -21,7 +21,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { BigNumber } from '@ethersproject/bignumber'
 import { EmailConnector } from '@nft/email-connector'
 import { formatError, useAcceptOffer, useBalance } from '@nft/hooks'
 import { InjectedConnector } from '@web3-react/injected-connector'
@@ -32,6 +31,7 @@ import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Offer } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import AcceptOfferModal from '../../Modal/AcceptOffer'
 import LoginModal from '../../Modal/Login'
 import Balance from '../../User/Balance'
@@ -102,15 +102,13 @@ const OfferFormCheckout: FC<Props> = ({
 
   const [balance] = useBalance(account, currency.id)
 
-  const priceUnit = useMemo(
-    () => BigNumber.from(offer.unitPrice),
-    [offer.unitPrice],
-  )
+  const priceUnit = useParseBigNumber(offer.unitPrice)
+  const quantityBN = useParseBigNumber(quantity)
 
   const canPurchase = useMemo(() => {
-    if (!balance || !quantity) return false
-    return balance.gte(priceUnit.mul(quantity))
-  }, [balance, priceUnit, quantity])
+    if (!balance || !quantityBN) return false
+    return balance.gte(priceUnit.mul(quantityBN))
+  }, [balance, priceUnit, quantityBN])
 
   const onSubmit = handleSubmit(async ({ quantity }) => {
     if (!offer) throw new Error('offer falsy')
@@ -145,17 +143,29 @@ const OfferFormCheckout: FC<Props> = ({
               clampValueOnBlur={false}
               min={1}
               max={parseInt(offer.availableQuantity, 10)}
-              step={1}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
-              format={(e) => e.toString()}
             >
               <NumberInputField
                 id="quantity"
                 placeholder={t('offer.form.checkout.quantity.placeholder')}
                 {...register('quantity', {
                   required: t('offer.form.checkout.validation.required'),
+                  validate: (value) => {
+                    if (
+                      parseInt(value, 10) < 1 ||
+                      parseInt(value, 10) >
+                        parseInt(offer.availableQuantity, 10)
+                    ) {
+                      return t('offer.form.checkout.validation.in-range', {
+                        max: parseInt(offer.availableQuantity, 10),
+                      })
+                    }
+                    if (!/^\d+$/.test(value)) {
+                      return t('offer.form.checkout.validation.integer')
+                    }
+                  },
                 })}
               />
               <NumberInputStepper>
@@ -179,7 +189,7 @@ const OfferFormCheckout: FC<Props> = ({
       <Summary
         currency={currency}
         price={priceUnit}
-        quantity={quantity}
+        quantity={quantityBN}
         isSingle={!multiple}
       />
 

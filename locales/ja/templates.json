@@ -21,10 +21,18 @@
         "placeholder": "通貨の選択"
       },
       "min-price": {
-        "placeholder": "から"
+        "placeholder": "から",
+        "validation": {
+          "positive": "最低価格は 0 より大きくなければなりません。",
+          "decimals": "最低価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+        }
       },
       "max-price": {
-        "placeholder": "まで"
+        "placeholder": "まで",
+        "validation": {
+          "positive": "最大価格は 0 より大きくなければなりません。",
+          "decimals": "最大価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+        }
       },
       "offers": {
         "label": "状態",

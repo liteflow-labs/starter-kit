@@ -26,7 +26,6 @@ import {
   CreateOfferStep,
   formatDateDatetime,
   formatError,
-  parsePrice,
   useCreateOffer,
 } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
@@ -36,6 +35,7 @@ import { useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
 import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import Price from '../../Price/Price'
@@ -118,7 +118,8 @@ const SalesDirectForm: VFC<Props> = ({
     if (!c) throw new Error("Can't find currency")
     return c
   }, [currencies, currencyId])
-  const priceUnit = parsePrice(price, currency.decimals)
+  const priceUnit = useParseBigNumber(price, currency.decimals)
+  const quantityBN = useParseBigNumber(quantity)
 
   const amountFees = useMemo(() => {
     if (!price) return BigNumber.from(0)
@@ -145,7 +146,7 @@ const SalesDirectForm: VFC<Props> = ({
       onOpen()
       const id = await createAndPublishOffer({
         type: 'SALE',
-        quantity: BigNumber.from(quantity),
+        quantity: quantityBN,
         unitPrice: priceUnit,
         assetId: asset.id,
         currencyId: currency.id,
@@ -199,20 +200,30 @@ const SalesDirectForm: VFC<Props> = ({
             clampValueOnBlur={false}
             min={0}
             step={Math.pow(10, -currency.decimals)}
-            precision={currency.decimals}
             allowMouseWheel
             w="full"
             onChange={(x) => setValue('price', x)}
-            format={(e) => e.toString()}
           >
             <NumberInputField
               id="price"
               placeholder={t('sales.direct.form.price.placeholder')}
               {...register('price', {
                 required: t('sales.direct.form.validation.required'),
-                validate: (value) =>
-                  parseFloat(value) > 0 ||
-                  t('sales.direct.form.validation.positive'),
+                validate: (value) => {
+                  const splitValue = value.split('.')
+
+                  if (parseFloat(value) <= 0) {
+                    return t('sales.direct.form.validation.positive')
+                  }
+                  if (
+                    splitValue[1] &&
+                    splitValue[1].length > currency.decimals
+                  ) {
+                    return t('sales.direct.form.validation.decimals', {
+                      nbDecimals: currency.decimals,
+                    })
+                  }
+                },
               })}
             />
             <NumberInputStepper>
@@ -249,17 +260,28 @@ const SalesDirectForm: VFC<Props> = ({
               clampValueOnBlur={false}
               min={1}
               max={quantityAvailable?.toNumber()}
-              step={1}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
-              format={(e) => e.toString()}
             >
               <NumberInputField
                 id="quantity"
                 placeholder={t('sales.direct.form.quantity.placeholder')}
                 {...register('quantity', {
                   required: t('sales.direct.form.validation.required'),
+                  validate: (value) => {
+                    if (
+                      parseFloat(value) < 1 ||
+                      parseFloat(value) > quantityAvailable?.toNumber()
+                    ) {
+                      return t('sales.direct.form.validation.in-range', {
+                        max: quantityAvailable?.toNumber(),
+                      })
+                    }
+                    if (!/^\d+$/.test(value)) {
+                      return t('sales.direct.form.validation.integer')
+                    }
+                  },
                 })}
               />
               <NumberInputStepper>
@@ -391,7 +413,7 @@ const SalesDirectForm: VFC<Props> = ({
                 color="brand.black"
                 mx={1}
                 fontWeight="semibold"
-                amount={quantity ? amountFees.mul(quantity) : 0}
+                amount={amountFees.mul(quantityBN)}
                 currency={currency}
               />
             </Text>
@@ -405,7 +427,7 @@ const SalesDirectForm: VFC<Props> = ({
                 color="brand.black"
                 ml={1}
                 fontWeight="semibold"
-                amount={quantity ? amountRoyalties.mul(quantity) : 0}
+                amount={amountRoyalties.mul(quantityBN)}
                 currency={currency}
               />
             </Text>
@@ -417,7 +439,7 @@ const SalesDirectForm: VFC<Props> = ({
                 color="brand.black"
                 mx={1}
                 fontWeight="semibold"
-                amount={quantity ? priceWithFees.mul(quantity) : 0}
+                amount={priceWithFees.mul(quantityBN)}
                 currency={currency}
               />
             </Text>

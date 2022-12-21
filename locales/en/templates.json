@@ -21,10 +21,18 @@
         "placeholder": "Select a currency"
       },
       "min-price": {
-        "placeholder": "From"
+        "placeholder": "From",
+        "validation": {
+          "positive": "Min price must be greater than 0.",
+          "decimals": "Min price supports a maximum of {{ nbDecimals }} decimals."
+        }
       },
       "max-price": {
-        "placeholder": "To"
+        "placeholder": "To",
+        "validation": {
+          "positive": "Max price must be greater than 0.",
+          "decimals": "Max price supports a maximum of {{ nbDecimals }} decimals."
+        }
       },
       "offers": {
         "label": "Status",
