@@ -9,16 +9,16 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react'
-import Link from 'components/Link/Link'
-import UserCard from 'components/User/UserCard'
-import { convertUserCard } from 'convert'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import Head from '../../components/Head'
+import Link from '../../components/Link/Link'
 import Pagination from '../../components/Pagination/Pagination'
+import UserCard from '../../components/User/UserCard'
+import { convertUserWithCover } from '../../convert'
 import environment from '../../environment'
 import {
   FetchExploreUsersDocument,
@@ -131,7 +131,7 @@ const UsersPage: NextPage<Props> = ({ offset, limit, page }) => {
           py={6}
         >
           {users.map((user, i) => (
-            <UserCard key={i} user={convertUserCard(user, user.address)} />
+            <UserCard key={i} user={convertUserWithCover(user, user.address)} />
           ))}
         </SimpleGrid>
       ) : (

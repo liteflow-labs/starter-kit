@@ -99,7 +99,7 @@ export const convertUser = (
   verified: user?.verification?.status === 'VALIDATED',
 })
 
-export const convertUserCard = (
+export const convertUserWithCover = (
   user: Maybe<
     Pick<Account, 'address' | 'image' | 'cover' | 'name'> & {
       verification: Maybe<Pick<AccountVerification, 'status'>>
