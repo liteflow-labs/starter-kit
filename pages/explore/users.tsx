@@ -1,13 +1,13 @@
 import { chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import ExploreTemplate from 'components/Explore'
-import UserCard from 'components/User/UserCard'
-import { convertUserCard } from 'convert'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import Pagination from '../../components/Pagination/Pagination'
+import UserCard from '../../components/User/UserCard'
+import { convertUserWithCover } from '../../convert'
 import environment from '../../environment'
 import {
   AccountFilter,
@@ -16,7 +16,6 @@ import {
   useFetchExploreUsersQuery,
 } from '../../graphql'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import usePaginate from '../../hooks/usePaginate'
 import { wrapServerSideProps } from '../../props'
 
@@ -80,16 +79,15 @@ const UsersPage: NextPage<Props> = ({
   queryFilter,
   search,
 }) => {
-  const ready = useEagerConnect()
+  useEagerConnect()
   const { t } = useTranslation('templates')
-  const { data, refetch } = useFetchExploreUsersQuery({
+  const { data } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
       filter: queryFilter,
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
 
@@ -113,7 +111,10 @@ const UsersPage: NextPage<Props> = ({
             py={6}
           >
             {users.map((user, i) => (
-              <UserCard key={i} user={convertUserCard(user, user.address)} />
+              <UserCard
+                key={i}
+                user={convertUserWithCover(user, user.address)}
+              />
             ))}
           </SimpleGrid>
         ) : (
