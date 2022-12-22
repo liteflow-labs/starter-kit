@@ -10,7 +10,8 @@ import {
 } from '@chakra-ui/react'
 import LargeLayout from 'layouts/large'
 import useTranslation from 'next-translate/useTranslation'
-import { FC } from 'react'
+import { useRouter } from 'next/router'
+import { FC, useCallback } from 'react'
 import Head from './Head'
 
 const ExploreTemplate: FC<{
@@ -21,6 +22,22 @@ const ExploreTemplate: FC<{
   children: JSX.Element
 }> = ({ title, loading, search, selectedTabIndex, children }) => {
   const { t } = useTranslation('templates')
+  const { replace } = useRouter()
+
+  const handleTabClick = useCallback(
+    async (tabHref: string) => {
+      if (search) {
+        return await replace({
+          pathname: tabHref,
+          query: { search },
+        })
+      }
+      return await replace({
+        pathname: tabHref,
+      })
+    },
+    [replace, search],
+  )
 
   return (
     <LargeLayout>
@@ -43,7 +60,7 @@ const ExploreTemplate: FC<{
       >
         <TabList>
           <Link
-            href={`/explore${search ? `?search=${search}` : ''}`}
+            onClick={() => handleTabClick('/explore')}
             whiteSpace="nowrap"
             mr={4}
           >
@@ -54,7 +71,7 @@ const ExploreTemplate: FC<{
             </Tab>
           </Link>
           <Link
-            href={`/explore/users${search ? `?search=${search}` : ''}`}
+            onClick={() => handleTabClick('/explore/users')}
             whiteSpace="nowrap"
           >
             <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
