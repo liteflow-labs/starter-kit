@@ -2,12 +2,30 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  HStack,
   Icon,
+  InputGroup,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import {
   AcceptOfferStep,
   CancelOfferStep,
@@ -20,7 +38,8 @@ import {
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { SyntheticEvent, useMemo, VFC } from 'react'
+import { SyntheticEvent, useEffect, useMemo, VFC } from 'react'
+import { useForm } from 'react-hook-form'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
 import { ListItem } from '../List/List'
@@ -78,6 +97,11 @@ const Bid: VFC<Props> = ({
     onOpen: cancelOfferOnOpen,
     onClose: cancelOfferOnClose,
   } = useDisclosure()
+  const {
+    isOpen: confirmAcceptIsOpen,
+    onOpen: confirmAcceptOnOpen,
+    onClose: confirmAcceptOnClose,
+  } = useDisclosure()
 
   const [
     acceptOffer,
@@ -99,19 +123,34 @@ const Bid: VFC<Props> = ({
     return isSameAddress(account, bid.maker.address)
   }, [account, bid])
 
-  const acceptBid = async (e: SyntheticEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+  } = useForm<{ quantity: string }>({
+    defaultValues: {
+      quantity: bid.availableQuantity.toString(),
+    },
+  })
+  useEffect(
+    () => setValue('quantity', bid.availableQuantity.toString()),
+    [bid.availableQuantity, setValue],
+  )
+
+  const acceptBid = async (quantity?: BigNumberish) => {
     if (!canAccept) return
     if (activeAcceptOfferStep !== AcceptOfferStep.INITIAL) return
     try {
       acceptOfferOnOpen()
-      await acceptOffer(bid, bid.availableQuantity)
+      confirmAcceptOnClose()
+      await acceptOffer(bid, quantity || bid.availableQuantity)
       await onAccepted(bid.id)
     } finally {
       acceptOfferOnClose()
     }
   }
+  const submitAcceptBid = handleSubmit(async (data) => acceptBid(data.quantity))
 
   const cancelBid = async (e: SyntheticEvent) => {
     e.stopPropagation()
@@ -259,6 +298,90 @@ const Bid: VFC<Props> = ({
         blockExplorer={blockExplorer}
         transactionHash={cancelOfferHash}
       />
+      {/* Confirm to accept offer */}
+      <Modal onClose={confirmAcceptOnClose} isOpen={confirmAcceptIsOpen}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Accept bid</ModalHeader>
+          <ModalCloseButton />
+          <form onSubmit={submitAcceptBid}>
+            <ModalBody>
+              {bid.availableQuantity.gt(1) && (
+                <FormControl isInvalid={!!errors.quantity}>
+                  <HStack spacing={1} mb={2}>
+                    <FormLabel htmlFor="quantity" m={0}>
+                      {t('offer.form.checkout.quantity.label')}
+                    </FormLabel>
+                    <FormHelperText>
+                      {t('offer.form.checkout.quantity.suffix')}
+                    </FormHelperText>
+                  </HStack>
+                  <InputGroup>
+                    <NumberInput
+                      clampValueOnBlur={false}
+                      min={1}
+                      max={bid.availableQuantity.toNumber()}
+                      allowMouseWheel
+                      w="full"
+                      onChange={(x) => setValue('quantity', x)}
+                    >
+                      <NumberInputField
+                        id="quantity"
+                        placeholder={t(
+                          'offer.form.checkout.quantity.placeholder',
+                        )}
+                        {...register('quantity', {
+                          required: t(
+                            'offer.form.checkout.validation.required',
+                          ),
+                          validate: (value) => {
+                            if (
+                              parseInt(value, 10) < 1 ||
+                              parseInt(value, 10) >
+                                bid.availableQuantity.toNumber()
+                            ) {
+                              return t(
+                                'offer.form.checkout.validation.in-range',
+                                { max: bid.availableQuantity.toNumber() },
+                              )
+                            }
+                            if (!/^\d+$/.test(value)) {
+                              return t('offer.form.checkout.validation.integer')
+                            }
+                          },
+                        })}
+                      />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </InputGroup>
+                  {errors.quantity && (
+                    <FormErrorMessage>
+                      {errors.quantity.message}
+                    </FormErrorMessage>
+                  )}
+                  <FormHelperText>
+                    <Text as="p" variant="text" color="gray.500">
+                      {t('offer.form.checkout.available', {
+                        count: bid.availableQuantity.toNumber(),
+                      })}
+                    </Text>
+                  </FormHelperText>
+                </FormControl>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button isLoading={isSubmitting} size="lg" type="submit">
+                <Text as="span" isTruncated>
+                  {t('offer.form.checkout.submit')}
+                </Text>
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
     </>
   )
 }
