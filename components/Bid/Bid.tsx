@@ -98,6 +98,11 @@ const Bid: VFC<Props> = ({
     onClose: cancelOfferOnClose,
   } = useDisclosure()
   const {
+    isOpen: confirmCancelIsOpen,
+    onOpen: confirmCancelOnOpen,
+    onClose: confirmCancelOnClose,
+  } = useDisclosure()
+  const {
     isOpen: confirmAcceptIsOpen,
     onOpen: confirmAcceptOnOpen,
     onClose: confirmAcceptOnClose,
@@ -258,7 +263,11 @@ const Bid: VFC<Props> = ({
               <Button
                 w={{ base: 'full', md: 'auto' }}
                 isLoading={activeAcceptOfferStep !== AcceptOfferStep.INITIAL}
-                onClick={acceptBid}
+                onClick={() =>
+                  bid.availableQuantity.gt(1)
+                    ? confirmAcceptOnOpen()
+                    : acceptBid()
+                }
               >
                 <Text as="span" isTruncated>
                   {t('bid.detail.accept')}
@@ -271,7 +280,7 @@ const Bid: VFC<Props> = ({
                 colorScheme="gray"
                 w={{ base: 'full', md: 'auto' }}
                 isLoading={activeCancelOfferStep !== CancelOfferStep.INITIAL}
-                onClick={cancelBid}
+                onClick={confirmCancelOnOpen}
               >
                 <Text as="span" isTruncated>
                   {t('bid.detail.cancel')}
@@ -380,6 +389,26 @@ const Bid: VFC<Props> = ({
               </Button>
             </ModalFooter>
           </form>
+        </ModalContent>
+      </Modal>
+      {/* Confirm to cancel offer */}
+      <Modal onClose={confirmCancelOnClose} isOpen={confirmCancelIsOpen}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Confirm to cancel the offer</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>Are you sure to cancel this offer</ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="red"
+              onClick={(e) => {
+                confirmCancelOnClose()
+                void cancelBid(e)
+              }}
+            >
+              Confirm
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
