@@ -1,5 +1,6 @@
 import { chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import ExploreTemplate from 'components/Explore'
+import Head from 'components/Head'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -28,7 +29,10 @@ type Props = {
 }
 const searchFilter = (search: string): AccountFilter =>
   ({
-    or: [{ name: { includesInsensitive: search } } as AccountFilter],
+    or: [
+      { name: { includesInsensitive: search } } as AccountFilter,
+      { address: { includesInsensitive: search } } as AccountFilter,
+    ],
   } as AccountFilter)
 
 export const getServerSideProps = wrapServerSideProps<Props>(
@@ -96,61 +100,67 @@ const UsersPage: NextPage<Props> = ({
   const ChakraPagination = chakra(Pagination)
 
   return (
-    <ExploreTemplate
-      title={t('explore.title')}
-      loading={pageLoading}
-      search={search}
-      selectedTabIndex={1}
-    >
-      <>
-        {users.length > 0 ? (
-          <SimpleGrid
-            flexWrap="wrap"
-            spacing={4}
-            columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
-            py={6}
-          >
-            {users.map((user, i) => (
-              <UserCard
-                key={i}
-                user={convertUserWithCover(user, user.address)}
+    <>
+      <Head title={t('explore.title')} />
+
+      <ExploreTemplate
+        title={t('explore.title')}
+        loading={pageLoading}
+        search={search}
+        selectedTabIndex={1}
+      >
+        <>
+          {users.length > 0 ? (
+            <SimpleGrid
+              flexWrap="wrap"
+              spacing={4}
+              columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
+              py={6}
+            >
+              {users.map((user, i) => (
+                <UserCard
+                  key={i}
+                  user={convertUserWithCover(user, user.address)}
+                />
+              ))}
+            </SimpleGrid>
+          ) : (
+            <Flex align="center" justify="center" h="full" py={12}>
+              <Empty
+                title={t('explore.users.empty.title')}
+                description={t('explore.users.empty.description')}
               />
-            ))}
-          </SimpleGrid>
-        ) : (
-          <Flex align="center" justify="center" h="full" py={12}>
-            <Empty
-              title={t('explore.users.empty.title')}
-              description={t('explore.users.empty.description')}
-            />
-          </Flex>
-        )}
-        <ChakraPagination
-          py="6"
-          borderTop="1px"
-          borderColor="gray.200"
-          limit={limit}
-          limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-          page={page}
-          total={data?.users?.totalCount}
-          onPageChange={changePage}
-          onLimitChange={changeLimit}
-          result={{
-            label: t('pagination.result.label'),
-            caption: (props) => (
-              <Trans
-                ns="templates"
-                i18nKey="pagination.result.caption"
-                values={props}
-                components={[<Text as="span" color="brand.black" key="text" />]}
-              />
-            ),
-            pages: (props) =>
-              t('pagination.result.pages', { count: props.total }),
-          }}
-        />
-      </>
-    </ExploreTemplate>
+            </Flex>
+          )}
+          <ChakraPagination
+            py="6"
+            borderTop="1px"
+            borderColor="gray.200"
+            limit={limit}
+            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+            page={page}
+            total={data?.users?.totalCount}
+            onPageChange={changePage}
+            onLimitChange={changeLimit}
+            result={{
+              label: t('pagination.result.label'),
+              caption: (props) => (
+                <Trans
+                  ns="templates"
+                  i18nKey="pagination.result.caption"
+                  values={props}
+                  components={[
+                    <Text as="span" color="brand.black" key="text" />,
+                  ]}
+                />
+              ),
+              pages: (props) =>
+                t('pagination.result.pages', { count: props.total }),
+            }}
+          />
+        </>
+      </ExploreTemplate>
+    </>
   )
 }
 

@@ -12,7 +12,6 @@ import LargeLayout from 'layouts/large'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { FC, useCallback } from 'react'
-import Head from './Head'
 
 const ExploreTemplate: FC<{
   title: string
@@ -41,8 +40,6 @@ const ExploreTemplate: FC<{
 
   return (
     <LargeLayout>
-      <Head title={title} />
-
       <Flex justify="space-between" mb={{ base: 4, lg: 0 }} align="center">
         <Heading as="h1" variant="title" color="brand.black">
           {title}
