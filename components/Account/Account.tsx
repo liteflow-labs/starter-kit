@@ -1,6 +1,6 @@
 import { Heading, Tab, TabList, Tabs, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import Link from '../Link/Link'
 
 export type AccountTabs = 'wallet' | 'edit-profile'

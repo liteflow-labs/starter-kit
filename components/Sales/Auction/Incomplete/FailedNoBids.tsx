@@ -8,7 +8,7 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 
 type Props = {
   // TODO: Remove props as it is used only to put a margin, this margin should be handled in one of the parent component

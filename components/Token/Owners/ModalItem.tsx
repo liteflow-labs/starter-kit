@@ -1,7 +1,7 @@
 import { Box, Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import useTranslation from 'next-translate/useTranslation'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
 import WalletAddress from '../../Wallet/Address'

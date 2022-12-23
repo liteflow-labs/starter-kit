@@ -1,6 +1,6 @@
 import { Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC } from 'react'
+import { FC } from 'react'
 
 type TraitListProps = {
   traits: { type: string; value: string; rarity?: string }[]

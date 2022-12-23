@@ -1,6 +1,6 @@
 import { HStack, Tab, TabList, Tabs, Tag, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React, { useMemo, VFC } from 'react'
+import { useMemo, VFC } from 'react'
 import Link from '../../Link/Link'
 
 export type TabsEnum =

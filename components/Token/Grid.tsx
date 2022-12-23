@@ -1,6 +1,5 @@
 import { Box, chakra, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React from 'react'
 import { ReactElement } from 'react'
 import Empty from '../Empty/Empty'
 import type { IProp as PaginationProps } from '../Pagination/Pagination'

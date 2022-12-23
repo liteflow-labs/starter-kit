@@ -8,7 +8,7 @@
     "prebuild": "npm run graphql-codegen",
     "dev": "next dev",
     "build": "next build",
-    "lint": "next lint",
+    "lint": "next lint && prettier \"**/*.{js,ts,tsx,json,md}\" --check",
     "analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "graphql-codegen": "graphql-codegen --overwrite"

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAuctionStatus } from '@nft/hooks'
 import useTranslation from 'next-translate/useTranslation'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 
 export type Props = {
   auction: {
