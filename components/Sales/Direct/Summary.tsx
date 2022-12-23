@@ -38,7 +38,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
       case 0:
         return
       case 1: {
-        if (!sales[0] || !sales[0].currency.image) return
+        if (!sales[0]) return
         return (
           <Box
             h={8}

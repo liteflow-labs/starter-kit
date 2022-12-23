@@ -210,15 +210,12 @@ const SalesDirectForm: VFC<Props> = ({
               {...register('price', {
                 required: t('sales.direct.form.validation.required'),
                 validate: (value) => {
-                  const splitValue = value.split('.')
-
                   if (parseFloat(value) <= 0) {
                     return t('sales.direct.form.validation.positive')
                   }
-                  if (
-                    splitValue[1] &&
-                    splitValue[1].length > currency.decimals
-                  ) {
+
+                  const nbDecimals = value.split('.')[1]?.length || 0
+                  if (nbDecimals > currency.decimals) {
                     return t('sales.direct.form.validation.decimals', {
                       nbDecimals: currency.decimals,
                     })
