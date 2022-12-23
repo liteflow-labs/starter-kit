@@ -93,7 +93,7 @@
       },
       "notFound": {
         "title": "Collection Not Found",
-        "description": "The collection you are trying to create a NFT on does not exists",
+        "description": "The collection you are trying to create a NFT on does not exist",
         "link": "Create on another collection"
       }
     },
