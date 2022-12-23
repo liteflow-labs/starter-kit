@@ -22,7 +22,9 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { parsePrice, removeEmptyFromObject } from '@nft/hooks'
+import { BigNumber } from '@ethersproject/bignumber'
+import { removeEmptyFromObject } from '@nft/hooks'
+import { BigNumber as BN } from 'bignumber.js'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -62,6 +64,17 @@ import usePaginate from '../hooks/usePaginate'
 import LargeLayout from '../layouts/large'
 import { wrapServerSideProps } from '../props'
 import { values as traits } from '../traits'
+
+// TODO: find a better way to handle this, maybe with `useParseBigNumber`
+const parsePrice = (price: string | undefined, decimals: number) => {
+  if (!price) return BigNumber.from(0)
+  try {
+    return BigNumber.from(new BN(price).shiftedBy(decimals).toFixed(0))
+  } catch {
+    console.error(`Cannot parse price ${price} as BigNumber`)
+    return BigNumber.from(0)
+  }
+}
 
 type Props = {
   now: string

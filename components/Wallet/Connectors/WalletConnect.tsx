@@ -1,6 +1,6 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 import WalletBase from './_base'
 
 type Props = {

@@ -1,5 +1,5 @@
 import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/react'
-import React, { PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 
 type ListItemProps = {
   image: JSX.Element

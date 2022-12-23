@@ -1,5 +1,5 @@
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, HTMLAttributes, useEffect, useMemo, useState } from 'react'
+import { FC, HTMLAttributes, useEffect, useMemo, useState } from 'react'
 
 const refreshRate = 1000
 
