@@ -50,10 +50,10 @@ const SaleDirectButton: VFC<Props> = ({
 
   const buyNow = useMemo(() => {
     if (sales.length !== 1) return
+    if (!sales[0]) return
     if (ownAllSupply) return
-    const { id } = sales[0]
     return (
-      <Button as={Link} href={`/checkout/${id}`} size="lg" isFullWidth>
+      <Button as={Link} href={`/checkout/${sales[0].id}`} size="lg" isFullWidth>
         <Text as="span" isTruncated>
           {t('sales.direct.button.buy')}
         </Text>

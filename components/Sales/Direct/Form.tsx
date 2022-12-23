@@ -102,7 +102,7 @@ const SalesDirectForm: VFC<Props> = ({
   } = useForm<FormData>({
     defaultValues: {
       quantity: '1',
-      currencyId: currencies[0].id,
+      currencyId: currencies[0]?.id,
       expiredAt: defaultExpirationValue,
     },
   })

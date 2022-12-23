@@ -52,7 +52,7 @@ const TokenMetadata: VFC<Props> = ({
           />
         </Stack>
       )}
-      {owners.length === 1 && (
+      {owners.length === 1 && owners[0] && (
         <Stack spacing={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owner')}

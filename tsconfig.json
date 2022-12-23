@@ -16,7 +16,13 @@
     "noEmit": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "incremental": true
+    "incremental": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
   "include": ["next-env.d.ts", "type.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist"]

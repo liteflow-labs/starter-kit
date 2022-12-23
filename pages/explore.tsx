@@ -127,7 +127,7 @@ const collectionFilter = (collections: string[]): AssetFilter => {
             // split the collection string to extract chainId and address
             const [chainId, address] = collection.split('-')
             return {
-              chainId: { equalTo: parseInt(chainId, 10) },
+              chainId: { equalTo: chainId && parseInt(chainId, 10) },
               address: { equalTo: address },
             }
           }),
@@ -215,12 +215,12 @@ export const getServerSideProps = wrapServerSideProps<Props>(
   async (ctx, client) => {
     const limit = ctx.query.limit
       ? Array.isArray(ctx.query.limit)
-        ? parseInt(ctx.query.limit[0], 10)
+        ? parseInt(ctx.query.limit[0] || '0', 10)
         : parseInt(ctx.query.limit, 10)
       : environment.PAGINATION_LIMIT
     const page = ctx.query.page
       ? Array.isArray(ctx.query.page)
-        ? parseInt(ctx.query.page[0], 10)
+        ? parseInt(ctx.query.page[0] || '0', 10)
         : parseInt(ctx.query.page, 10)
       : 1
     const offset = (page - 1) * limit

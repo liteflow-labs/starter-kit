@@ -38,8 +38,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
       case 0:
         return
       case 1: {
-        const sale = sales[0]
-        if (!sale.currency.image) return
+        if (!sales[0] || !sales[0].currency.image) return
         return (
           <Box
             h={8}
@@ -50,8 +49,8 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
             borderColor="gray.200"
           >
             <Image
-              src={sale.currency.image}
-              alt={`${sale.currency.symbol} Logo`}
+              src={sales[0].currency.image}
+              alt={`${sales[0].currency.symbol} Logo`}
               width={32}
               height={32}
             />
@@ -91,10 +90,12 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
       case 0:
         return
       case 1:
+        if (!sales[0]) return
         return (
           <Price amount={sales[0].unitPrice} currency={sales[0].currency} />
         )
       default:
+        if (!sales[0]) return
         return salesWithUniqueCurrency.length === 1 ? (
           <Price amount={sales[0].unitPrice} currency={sales[0].currency} />
         ) : (
@@ -144,7 +145,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
           </Heading>
         </Flex>
       </Flex>
-      {sales.length === 1 && sales[0].expiredAt && (
+      {sales.length === 1 && sales[0]?.expiredAt && (
         <Flex direction="column" gap={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('sales.direct.summary.expires')}

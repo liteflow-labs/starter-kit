@@ -320,9 +320,7 @@ const TokenFormCreate: FC<Props> = ({
               placeholder={t('token.form.create.royalties.placeholder')}
               {...register('royalties', {
                 validate: (value) => {
-                  const nbDecimals = value.split('.')[1]
-                    ? value.split('.')[1].length
-                    : 0
+                  const nbDecimals = value.split('.')[1]?.length || 0
 
                   if (
                     parseFloat(value) < 0 ||

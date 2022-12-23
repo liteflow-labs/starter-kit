@@ -75,7 +75,7 @@ const SalesAuctionForm: VFC<Props> = ({
   } = useForm<FormData>({
     defaultValues: {
       price: '0',
-      currencyId: currencies[0].id,
+      currencyId: currencies[0]?.id,
     },
   })
 
