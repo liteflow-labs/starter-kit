@@ -137,14 +137,8 @@ const CreatePage: NextPage<Props> = ({
         image: imageUrlLocal || undefined,
         animationUrl: animationUrlLocal,
         name: formData?.name || '',
-        standard: data?.collection?.standard ? 'ERC1155' : 'ERC721',
       } as NFTCardProps['asset']),
-    [
-      imageUrlLocal,
-      animationUrlLocal,
-      formData?.name,
-      data?.collection?.standard,
-    ],
+    [imageUrlLocal, animationUrlLocal, formData?.name],
   )
 
   const creator = useMemo(
