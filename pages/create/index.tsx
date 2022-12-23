@@ -36,8 +36,8 @@ import SmallLayout from '../../layouts/small'
 import { wrapServerSideProps } from '../../props'
 
 const collectionsFilter = {
-  or: environment.MINTABLE_COLLECTIONS.map((address) => ({
-    chainId: { equalTo: environment.CHAIN_ID },
+  or: environment.MINTABLE_COLLECTIONS.map(({ chainId, address }) => ({
+    chainId: { equalTo: chainId },
     address: { equalTo: address },
   })),
 } as CollectionFilter

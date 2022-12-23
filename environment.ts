@@ -26,7 +26,10 @@ type Environment = {
   // Allow users to top up their wallet with fiat
   ALLOW_TOP_UP: boolean
   // Collections where user can mint
-  MINTABLE_COLLECTIONS: string[]
+  MINTABLE_COLLECTIONS: {
+    chainId: number
+    address: string
+  }[]
 }
 
 // magic api key
@@ -105,6 +108,7 @@ const MINTABLE_COLLECTIONS = (
 )
   .split(',')
   .filter(Boolean)
+  .map((address) => ({ address, chainId: CHAIN_ID }))
 
 const environment: Environment = {
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
