@@ -8,7 +8,6 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  Heading,
   InputGroup,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -16,16 +15,13 @@ import {
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
-  Spinner,
   Stack,
-  Tab,
-  TabList,
-  Tabs,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import { parsePrice, removeEmptyFromObject } from '@nft/hooks'
-import Link from 'components/Link/Link'
+import ExploreTemplate from 'components/Explore'
+import Head from 'components/Head'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -33,7 +29,6 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Empty from '../../components/Empty/Empty'
-import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
 import TokenCard from '../../components/Token/Card'
@@ -62,7 +57,6 @@ import {
 import useEagerConnect from '../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import usePaginate from '../../hooks/usePaginate'
-import LargeLayout from '../../layouts/large'
 import { wrapServerSideProps } from '../../props'
 import { values as traits } from '../../traits'
 
@@ -464,282 +458,256 @@ const ExplorePage: NextPage<Props> = ({
   const ChakraPagination = chakra(Pagination)
 
   return (
-    <LargeLayout>
-      <Head title="Explore Collectibles" />
+    <>
+      <Head title={t('explore.title')} />
 
-      <Flex justify="space-between" mb={{ base: 4, lg: 0 }} align="center">
-        <Heading as="h1" variant="title" color="brand.black">
-          {t('explore.title')}
-        </Heading>
-
-        {(isSubmitting || pageLoading || loadingOrder) && (
-          <Spinner thickness="2px" speed="0.65s" />
-        )}
-      </Flex>
-
-      <Tabs
-        defaultIndex={0} // NFTs
-        colorScheme="brand"
-        pt={10}
-        pb={{ base: 2.5, md: 0 }}
-        overflowX="auto"
+      <ExploreTemplate
+        title={t('explore.title')}
+        loading={isSubmitting || pageLoading || loadingOrder}
+        search={search}
+        selectedTabIndex={0}
       >
-        <TabList>
-          <Link href="/explore" whiteSpace="nowrap" mr={4}>
-            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
-              <Text as="span" variant="subtitle1">
-                {t('explore.tabs.nfts')}
-              </Text>
-            </Tab>
-          </Link>
-          <Link href="/explore/users" whiteSpace="nowrap">
-            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
-              <Text as="span" variant="subtitle1">
-                {t('explore.tabs.users')}
-              </Text>
-            </Tab>
-          </Link>
-        </TabList>
-      </Tabs>
+        <Grid
+          mt={6}
+          gap={{ base: 4, lg: 3, xl: 4 }}
+          templateColumns={{ lg: 'repeat(5, 1fr)', xl: 'repeat(4, 1fr)' }}
+        >
+          <GridItem as="aside">
+            <Stack spacing={8} as="form" onSubmit={onSubmit}>
+              {filterButtons}
 
-      <Grid
-        mt={6}
-        gap={{ base: 4, lg: 3, xl: 4 }}
-        templateColumns={{ lg: 'repeat(5, 1fr)', xl: 'repeat(4, 1fr)' }}
-      >
-        <GridItem as="aside">
-          <Stack spacing={8} as="form" onSubmit={onSubmit}>
-            {filterButtons}
+              <hr />
 
-            <hr />
-
-            <Stack spacing={3}>
-              <Select
-                label={t('explore.nfts.form.currency.label')}
-                name="currencyId"
-                control={control as any} // TODO: fix this type
-                placeholder={t('explore.nfts.form.currency.placeholder')}
-                choices={currencies.map((x) => ({
-                  value: x.id,
-                  label: x.symbol || '',
-                  image: x.image,
-                }))}
-                value={currencyId ? currencyId : undefined}
-                required
-                disabled={currencies.length <= 1 || isSubmitting}
-                error={errors.currencyId}
-                onChange={(x: any) => setValue('currencyId', x)}
-              />
-
-              {currency && (
-                <Flex gap={3}>
-                  <InputGroup>
-                    <NumberInput
-                      clampValueOnBlur={false}
-                      min={0}
-                      step={Math.pow(10, -currency.decimals)}
-                      precision={currency.decimals}
-                      allowMouseWheel
-                      w="full"
-                      isDisabled={isSubmitting}
-                      onChange={(x: any) => setValue('minPrice', x)}
-                      format={(e) => e.toString()}
-                    >
-                      <NumberInputField
-                        placeholder={t(
-                          'explore.nfts.form.min-price.placeholder',
-                        )}
-                        {...register('minPrice')}
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </InputGroup>
-
-                  <InputGroup>
-                    <NumberInput
-                      clampValueOnBlur={false}
-                      min={0}
-                      step={Math.pow(10, -currency.decimals)}
-                      precision={currency.decimals}
-                      allowMouseWheel
-                      w="full"
-                      isDisabled={isSubmitting}
-                      onChange={(x: any) => setValue('maxPrice', x)}
-                      format={(e) => e.toString()}
-                    >
-                      <NumberInputField
-                        placeholder={t(
-                          'explore.nfts.form.max-price.placeholder',
-                        )}
-                        {...register('maxPrice')}
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </InputGroup>
-                </Flex>
-              )}
-            </Stack>
-
-            <hr />
-
-            <FormControl>
-              <FormLabel>{t('explore.nfts.form.offers.label')}</FormLabel>
-              <VStack>
-                {[
-                  {
-                    label: t('explore.nfts.form.offers.values.fixed'),
-                    value: OfferFilter.fixed,
-                  },
-                  {
-                    label: t('explore.nfts.form.offers.values.auction'),
-                    value: OfferFilter.auction,
-                  },
-                ].map((x) => (
-                  <Checkbox
-                    key={x.value}
-                    {...register('offers')}
-                    value={x.value}
-                    disabled={isSubmitting}
-                  >
-                    {x.label}
-                  </Checkbox>
-                ))}
-              </VStack>
-            </FormControl>
-
-            <hr />
-
-            <FormControl>
-              <FormLabel>{t('explore.nfts.form.collections.label')}</FormLabel>
-              <VStack>
-                {collections.map((x) => (
-                  <Checkbox
-                    key={`${x.chainId}-${x.address}`}
-                    {...register('collections')}
-                    value={`${x.chainId}-${x.address}`}
-                    disabled={isSubmitting}
-                  >
-                    {x.name}
-                  </Checkbox>
-                ))}
-              </VStack>
-            </FormControl>
-
-            <hr />
-
-            <FormControl>
-              <FormLabel>{t('explore.nfts.form.categories.label')}</FormLabel>
-              <VStack>
-                {categories.map((x) => (
-                  <Checkbox
-                    key={x}
-                    {...register('categories')}
-                    value={x}
-                    disabled={isSubmitting}
-                  >
-                    {t(`categories.${x}`, null, { fallback: x })}
-                  </Checkbox>
-                ))}
-              </VStack>
-            </FormControl>
-
-            <hr />
-
-            {filterButtons}
-          </Stack>
-        </GridItem>
-        <GridItem gap={6} pt={{ base: 8, lg: 0 }} colSpan={{ lg: 4, xl: 3 }}>
-          <Box ml="auto" w={{ base: 'full', lg: 'min-content' }}>
-            <Select<AssetsOrderBy>
-              label={t('explore.nfts.orderBy.label')}
-              name="orderBy"
-              onChange={changeOrder}
-              choices={[
-                {
-                  label: t('explore.nfts.orderBy.values.createdAtDesc'),
-                  value: 'CREATED_AT_DESC',
-                },
-                {
-                  label: t('explore.nfts.orderBy.values.createdAtAsc'),
-                  value: 'CREATED_AT_ASC',
-                },
-              ]}
-              value={orderBy}
-              inlineLabel
-            />
-          </Box>
-          {assets.length > 0 ? (
-            <SimpleGrid
-              flexWrap="wrap"
-              spacing={{ base: 4, lg: 3, xl: 4 }}
-              columns={{ base: 1, sm: 2, md: 3 }}
-              py={6}
-            >
-              {assets.map((x, i) => (
-                <Flex key={i} justify="center">
-                  <TokenCard
-                    asset={convertAsset(x)}
-                    creator={convertUser(x.creator, x.creator.address)}
-                    auction={
-                      x.auctions.nodes[0]
-                        ? convertAuctionWithBestBid(x.auctions.nodes[0])
-                        : undefined
-                    }
-                    sale={convertSale(x.firstSale.nodes[0])}
-                    numberOfSales={x.firstSale.totalCount}
-                    hasMultiCurrency={
-                      parseInt(
-                        x.currencySales.aggregates?.distinctCount?.currencyId,
-                        10,
-                      ) > 1
-                    }
-                  />
-                </Flex>
-              ))}
-            </SimpleGrid>
-          ) : (
-            <Flex align="center" justify="center" h="full" py={12}>
-              <Empty
-                title={t('explore.nfts.empty.title')}
-                description={t('explore.nfts.empty.description')}
-              />
-            </Flex>
-          )}
-          <ChakraPagination
-            py="6"
-            borderTop="1px"
-            borderColor="gray.200"
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            total={data?.assets?.totalCount}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
+              <Stack spacing={3}>
+                <Select
+                  label={t('explore.nfts.form.currency.label')}
+                  name="currencyId"
+                  control={control as any} // TODO: fix this type
+                  placeholder={t('explore.nfts.form.currency.placeholder')}
+                  choices={currencies.map((x) => ({
+                    value: x.id,
+                    label: x.symbol || '',
+                    image: x.image,
+                  }))}
+                  value={currencyId ? currencyId : undefined}
+                  required
+                  disabled={currencies.length <= 1 || isSubmitting}
+                  error={errors.currencyId}
+                  onChange={(x: any) => setValue('currencyId', x)}
                 />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
-        </GridItem>
-      </Grid>
-    </LargeLayout>
+
+                {currency && (
+                  <Flex gap={3}>
+                    <InputGroup>
+                      <NumberInput
+                        clampValueOnBlur={false}
+                        min={0}
+                        step={Math.pow(10, -currency.decimals)}
+                        precision={currency.decimals}
+                        allowMouseWheel
+                        w="full"
+                        isDisabled={isSubmitting}
+                        onChange={(x: any) => setValue('minPrice', x)}
+                        format={(e) => e.toString()}
+                      >
+                        <NumberInputField
+                          placeholder={t(
+                            'explore.nfts.form.min-price.placeholder',
+                          )}
+                          {...register('minPrice')}
+                        />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </InputGroup>
+
+                    <InputGroup>
+                      <NumberInput
+                        clampValueOnBlur={false}
+                        min={0}
+                        step={Math.pow(10, -currency.decimals)}
+                        precision={currency.decimals}
+                        allowMouseWheel
+                        w="full"
+                        isDisabled={isSubmitting}
+                        onChange={(x: any) => setValue('maxPrice', x)}
+                        format={(e) => e.toString()}
+                      >
+                        <NumberInputField
+                          placeholder={t(
+                            'explore.nfts.form.max-price.placeholder',
+                          )}
+                          {...register('maxPrice')}
+                        />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </InputGroup>
+                  </Flex>
+                )}
+              </Stack>
+
+              <hr />
+
+              <FormControl>
+                <FormLabel>{t('explore.nfts.form.offers.label')}</FormLabel>
+                <VStack>
+                  {[
+                    {
+                      label: t('explore.nfts.form.offers.values.fixed'),
+                      value: OfferFilter.fixed,
+                    },
+                    {
+                      label: t('explore.nfts.form.offers.values.auction'),
+                      value: OfferFilter.auction,
+                    },
+                  ].map((x) => (
+                    <Checkbox
+                      key={x.value}
+                      {...register('offers')}
+                      value={x.value}
+                      disabled={isSubmitting}
+                    >
+                      {x.label}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </FormControl>
+
+              <hr />
+
+              <FormControl>
+                <FormLabel>
+                  {t('explore.nfts.form.collections.label')}
+                </FormLabel>
+                <VStack>
+                  {collections.map((x) => (
+                    <Checkbox
+                      key={`${x.chainId}-${x.address}`}
+                      {...register('collections')}
+                      value={`${x.chainId}-${x.address}`}
+                      disabled={isSubmitting}
+                    >
+                      {x.name}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </FormControl>
+
+              <hr />
+
+              <FormControl>
+                <FormLabel>{t('explore.nfts.form.categories.label')}</FormLabel>
+                <VStack>
+                  {categories.map((x) => (
+                    <Checkbox
+                      key={x}
+                      {...register('categories')}
+                      value={x}
+                      disabled={isSubmitting}
+                    >
+                      {t(`categories.${x}`, null, { fallback: x })}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </FormControl>
+
+              <hr />
+
+              {filterButtons}
+            </Stack>
+          </GridItem>
+          <GridItem gap={6} pt={{ base: 8, lg: 0 }} colSpan={{ lg: 4, xl: 3 }}>
+            <Box ml="auto" w={{ base: 'full', lg: 'min-content' }}>
+              <Select<AssetsOrderBy>
+                label={t('explore.nfts.orderBy.label')}
+                name="orderBy"
+                onChange={changeOrder}
+                choices={[
+                  {
+                    label: t('explore.nfts.orderBy.values.createdAtDesc'),
+                    value: 'CREATED_AT_DESC',
+                  },
+                  {
+                    label: t('explore.nfts.orderBy.values.createdAtAsc'),
+                    value: 'CREATED_AT_ASC',
+                  },
+                ]}
+                value={orderBy}
+                inlineLabel
+              />
+            </Box>
+            {assets.length > 0 ? (
+              <SimpleGrid
+                flexWrap="wrap"
+                spacing={{ base: 4, lg: 3, xl: 4 }}
+                columns={{ base: 1, sm: 2, md: 3 }}
+                py={6}
+              >
+                {assets.map((x, i) => (
+                  <Flex key={i} justify="center">
+                    <TokenCard
+                      asset={convertAsset(x)}
+                      creator={convertUser(x.creator, x.creator.address)}
+                      auction={
+                        x.auctions.nodes[0]
+                          ? convertAuctionWithBestBid(x.auctions.nodes[0])
+                          : undefined
+                      }
+                      sale={convertSale(x.firstSale.nodes[0])}
+                      numberOfSales={x.firstSale.totalCount}
+                      hasMultiCurrency={
+                        parseInt(
+                          x.currencySales.aggregates?.distinctCount?.currencyId,
+                          10,
+                        ) > 1
+                      }
+                    />
+                  </Flex>
+                ))}
+              </SimpleGrid>
+            ) : (
+              <Flex align="center" justify="center" h="full" py={12}>
+                <Empty
+                  title={t('explore.nfts.empty.title')}
+                  description={t('explore.nfts.empty.description')}
+                />
+              </Flex>
+            )}
+            <ChakraPagination
+              py="6"
+              borderTop="1px"
+              borderColor="gray.200"
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              total={data?.assets?.totalCount}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              result={{
+                label: t('pagination.result.label'),
+                caption: (props) => (
+                  <Trans
+                    ns="templates"
+                    i18nKey="pagination.result.caption"
+                    values={props}
+                    components={[
+                      <Text as="span" color="brand.black" key="text" />,
+                    ]}
+                  />
+                ),
+                pages: (props) =>
+                  t('pagination.result.pages', { count: props.total }),
+              }}
+            />
+          </GridItem>
+        </Grid>
+      </ExploreTemplate>
+    </>
   )
 }
 
