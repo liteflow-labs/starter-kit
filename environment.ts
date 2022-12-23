@@ -108,7 +108,7 @@ const MINTABLE_COLLECTIONS = (
 )
   .split(',')
   .filter(Boolean)
-  .map((address) => ({ address, chainId: CHAIN_ID }))
+  .map((address) => ({ address: address.toLowerCase(), chainId: CHAIN_ID }))
 
 const environment: Environment = {
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
