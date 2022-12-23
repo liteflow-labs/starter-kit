@@ -61,6 +61,10 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       : context.query.collectionAddress
     invariant(collectionAddress, "collectionAddress can't be falsy")
     invariant(chainId, "chainId can't be falsy")
+    invariant(
+      environment.MINTABLE_COLLECTIONS.includes(collectionAddress),
+      'collectionAddress is not mintable',
+    )
     const { data, error } = await client.query<
       FetchAccountAndCollectionQuery,
       FetchAccountAndCollectionQueryVariables

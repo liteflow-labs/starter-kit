@@ -107,6 +107,10 @@
       "multiple": {
         "title": "マルチ",
         "type": "ERC1155"
+      },
+      "empty": {
+        "title": "コレクションが見つかりません",
+        "description": "ミントに開かれたコレクションはありません"
       }
     },
     "restricted": {

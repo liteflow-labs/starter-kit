@@ -10,6 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
+import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
 import { IoImageOutline } from '@react-icons/all-files/io5/IoImageOutline'
 import { IoImagesOutline } from '@react-icons/all-files/io5/IoImagesOutline'
 import { useWeb3React } from '@web3-react/core'
@@ -18,6 +19,7 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import React from 'react'
+import Empty from '../../components/Empty/Empty'
 import Head from '../../components/Head'
 import Link from '../../components/Link/Link'
 import BackButton from '../../components/Navbar/BackButton'
@@ -51,6 +53,7 @@ export const getServerSideProps = wrapServerSideProps(
       variables: {
         account: context.user.address || '',
         collectionFilter: collectionsFilter,
+        fetchCollections: environment.MINTABLE_COLLECTIONS.length > 0,
       },
     })
     if (error) throw error
@@ -76,13 +79,16 @@ const CreatePage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back } = useRouter()
   const { account } = useWeb3React()
-  const { data } = useFetchCollectionsAndAccountVerificationStatusQuery({
-    variables: {
-      account: account?.toLowerCase() || '',
-      collectionFilter: collectionsFilter,
+  const { data, called } = useFetchCollectionsAndAccountVerificationStatusQuery(
+    {
+      variables: {
+        account: account?.toLowerCase() || '',
+        collectionFilter: collectionsFilter,
+        fetchCollections: environment.MINTABLE_COLLECTIONS.length > 0,
+      },
+      skip: !ready,
     },
-    skip: !ready,
-  })
+  )
 
   if (
     environment.RESTRICT_TO_VERIFIED_ACCOUNT &&
@@ -197,6 +203,15 @@ const CreatePage: NextPage = () => {
             </Stack>
           </Link>
         ))}
+        {called && !data?.collections && (
+          <Empty
+            title={t('asset.typeSelector.empty.title')}
+            description={t('asset.typeSelector.empty.description')}
+            icon={
+              <Icon as={HiExclamationCircle} w={8} h={8} color="gray.400" />
+            }
+          />
+        )}
       </Flex>
     </Layout>
   )

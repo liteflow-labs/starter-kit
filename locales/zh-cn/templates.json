@@ -107,6 +107,10 @@
       "multiple": {
         "title": "多份",
         "type": "ERC1155"
+      },
+      "empty": {
+        "title": "未找到集合",
+        "description": "没有收藏对铸币开放"
       }
     },
     "restricted": {

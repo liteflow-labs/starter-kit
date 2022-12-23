@@ -107,6 +107,10 @@
       "multiple": {
         "title": "Multiple",
         "type": "ERC1155"
+      },
+      "empty": {
+        "title": "No collection found",
+        "description": "No collection are open to mint"
       }
     },
     "restricted": {

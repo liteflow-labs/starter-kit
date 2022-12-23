@@ -107,6 +107,10 @@
       "multiple": {
         "title": "Multiple",
         "type": "ERC1155"
+      },
+      "empty": {
+        "title": "No se ha encontrado ninguna colección",
+        "description": "Ninguna colección está abierta a la menta"
       }
     },
     "restricted": {
