@@ -1,7 +1,6 @@
 import {
   Flex,
   Heading,
-  Link,
   Spinner,
   Tab,
   TabList,
@@ -10,8 +9,8 @@ import {
 } from '@chakra-ui/react'
 import LargeLayout from 'layouts/large'
 import useTranslation from 'next-translate/useTranslation'
-import { useRouter } from 'next/router'
-import { FC, useCallback } from 'react'
+import { FC } from 'react'
+import Link from './Link/Link'
 
 const ExploreTemplate: FC<{
   title: string
@@ -21,22 +20,7 @@ const ExploreTemplate: FC<{
   children: JSX.Element
 }> = ({ title, loading, search, selectedTabIndex, children }) => {
   const { t } = useTranslation('templates')
-  const { replace } = useRouter()
-
-  const handleTabClick = useCallback(
-    async (tabHref: string) => {
-      if (search) {
-        return await replace({
-          pathname: tabHref,
-          query: { search },
-        })
-      }
-      return await replace({
-        pathname: tabHref,
-      })
-    },
-    [replace, search],
-  )
+  const searchParam = search ? `?search=${search}` : ''
 
   return (
     <LargeLayout>
@@ -56,11 +40,7 @@ const ExploreTemplate: FC<{
         overflowX="auto"
       >
         <TabList>
-          <Link
-            onClick={() => handleTabClick('/explore')}
-            whiteSpace="nowrap"
-            mr={4}
-          >
+          <Link href={`/explore${searchParam}`} whiteSpace="nowrap" mr={4}>
             <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
               <Text as="span" variant="subtitle1">
                 {t('explore.tabs.nfts')}
@@ -68,8 +48,9 @@ const ExploreTemplate: FC<{
             </Tab>
           </Link>
           <Link
-            onClick={() => handleTabClick('/explore/users')}
+            href={`/explore/users${searchParam}`}
             whiteSpace="nowrap"
+            mr={4}
           >
             <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
               <Text as="span" variant="subtitle1">
