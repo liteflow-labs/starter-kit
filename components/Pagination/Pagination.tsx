@@ -1,7 +1,7 @@
 import { Flex, Icon, IconButton, Text } from '@chakra-ui/react'
 import { IoChevronBackSharp } from '@react-icons/all-files/io5/IoChevronBackSharp'
 import { IoChevronForward } from '@react-icons/all-files/io5/IoChevronForward'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import Select from '../Select/Select'
 
 export type IProp = {

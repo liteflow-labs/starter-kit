@@ -1,7 +1,7 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import numbro from 'numbro'
-import React, { FC, HTMLAttributes, useMemo } from 'react'
+import { FC, HTMLAttributes, useMemo } from 'react'
 
 const Price: FC<
   HTMLAttributes<any> & {

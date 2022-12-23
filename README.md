@@ -21,7 +21,7 @@ The Marketplace template includes the following features:
   - Open offer
   - Timed auction offer
 - Purchase NFTs
-- User profile 
+- User profile
   - Account
     - Profile edition
     - Wallet page
@@ -55,7 +55,6 @@ It also includes compatibility with the following features:
 - Credit card payment gateway compatibility
 - Email connection compatibility
 
-
 ## Additional Paid Features Showcased
 
 The Marketplace template showcases the following additional paid features:
@@ -65,7 +64,6 @@ The Marketplace template showcases the following additional paid features:
 - Multicurrency support
 - Advanced fee customization support
 - Referral system
-
 
 ## Libraries used
 

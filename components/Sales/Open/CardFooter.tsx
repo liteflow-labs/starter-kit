@@ -1,6 +1,6 @@
 import { Flex, Tag, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, HTMLAttributes } from 'react'
+import { FC, HTMLAttributes } from 'react'
 import Link from '../../Link/Link'
 
 type Props = {

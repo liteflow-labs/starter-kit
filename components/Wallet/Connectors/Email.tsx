@@ -1,4 +1,3 @@
-import { EmailConnector } from '@nft/email-connector'
 import {
   Button,
   FormControl,
@@ -8,10 +7,11 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import useTranslation from 'next-translate/useTranslation'
-import React, { FC } from 'react'
-import { useForm } from 'react-hook-form'
+import { EmailConnector } from '@nft/email-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import useTranslation from 'next-translate/useTranslation'
+import { FC } from 'react'
+import { useForm } from 'react-hook-form'
 
 type Props = {
   connector: EmailConnector

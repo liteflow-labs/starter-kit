@@ -19,7 +19,7 @@ import { SiInstagram } from '@react-icons/all-files/si/SiInstagram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
 import { useWeb3React } from '@web3-react/core'
 import useTranslation from 'next-translate/useTranslation'
-import React, { useCallback, useEffect, useState, VFC } from 'react'
+import { useCallback, useEffect, useState, VFC } from 'react'
 import Link from '../../Link/Link'
 import WalletAddress from '../../Wallet/Address'
 
