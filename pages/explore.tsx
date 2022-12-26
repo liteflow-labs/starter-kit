@@ -22,9 +22,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { removeEmptyFromObject } from '@nft/hooks'
-import { BigNumber as BN } from 'bignumber.js'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -61,20 +59,10 @@ import {
 import useEagerConnect from '../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../hooks/useExecuteOnAccountChange'
 import usePaginate from '../hooks/usePaginate'
+import { parseBigNumber } from '../hooks/useParseBigNumber'
 import LargeLayout from '../layouts/large'
 import { wrapServerSideProps } from '../props'
 import { values as traits } from '../traits'
-
-// TODO: find a better way to handle this, maybe with `useParseBigNumber`
-const parsePrice = (price: string | undefined, decimals: number) => {
-  if (!price) return BigNumber.from(0)
-  try {
-    return BigNumber.from(new BN(price).shiftedBy(decimals).toFixed(0))
-  } catch {
-    console.error(`Cannot parse price ${price} as BigNumber`)
-    return BigNumber.from(0)
-  }
-}
 
 type Props = {
   now: string
@@ -162,7 +150,7 @@ const minPriceFilter = (
         availableQuantity: { greaterThan: '0' },
         currencyId: { equalTo: currency.id },
         unitPrice: {
-          greaterThanOrEqualTo: parsePrice(
+          greaterThanOrEqualTo: parseBigNumber(
             minPrice.toString(),
             currency.decimals,
           ).toString(),
@@ -183,7 +171,7 @@ const maxPriceFilter = (
         availableQuantity: { greaterThan: '0' },
         currencyId: { equalTo: currency.id },
         unitPrice: {
-          lessThanOrEqualTo: parsePrice(
+          lessThanOrEqualTo: parseBigNumber(
             maxPrice.toString(),
             currency.decimals,
           ).toString(),
