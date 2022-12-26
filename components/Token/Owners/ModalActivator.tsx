@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import React, { ButtonHTMLAttributes, VFC } from 'react'
+import { ButtonHTMLAttributes, VFC } from 'react'
 import AccountImage from '../../Wallet/Image'
 
 export type Props = ButtonHTMLAttributes<any> & {

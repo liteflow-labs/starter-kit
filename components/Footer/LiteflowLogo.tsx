@@ -1,5 +1,3 @@
-import React from 'react'
-
 const LiteflowLogo = (
   <svg
     width="91"

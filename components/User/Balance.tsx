@@ -3,7 +3,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { useAddFund, useBalance } from '@nft/hooks'
 import { IoWalletOutline } from '@react-icons/all-files/io5/IoWalletOutline'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, HTMLAttributes, SyntheticEvent, useCallback } from 'react'
+import { FC, HTMLAttributes, SyntheticEvent, useCallback } from 'react'
 import Price from '../Price/Price'
 
 const Balance: FC<

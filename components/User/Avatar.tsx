@@ -1,6 +1,6 @@
 import { Box, Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 import Link from '../Link/Link'
 import WalletAddress from '../Wallet/Address'
 import AccountImage from '../Wallet/Image'

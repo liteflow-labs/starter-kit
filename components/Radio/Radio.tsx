@@ -1,5 +1,5 @@
 import { Box, Flex, RadioProps, Text, useRadio } from '@chakra-ui/react'
-import React, { FC } from 'react'
+import { FC } from 'react'
 
 type IProps<T = string> = RadioProps & {
   choice: {

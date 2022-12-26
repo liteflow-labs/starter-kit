@@ -1,7 +1,7 @@
 import { Button, Text } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 import Link from '../../Link/Link'
 
 type Props = {

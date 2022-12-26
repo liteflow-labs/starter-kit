@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
-import React, {
+import {
   FC,
   InputHTMLAttributes,
   ReactNode,
