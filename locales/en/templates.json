@@ -110,7 +110,7 @@
       },
       "empty": {
         "title": "No collection found",
-        "description": "No collection are open to mint"
+        "description": "No collections are open to mint"
       }
     },
     "restricted": {
