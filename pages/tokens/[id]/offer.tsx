@@ -156,7 +156,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
 
   const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
 
-  const saleOptions: SaleOption[] = useMemo(
+  const saleOptions: [SaleOption, SaleOption] = useMemo(
     () => [
       {
         value: SaleType.FIXED_PRICE,

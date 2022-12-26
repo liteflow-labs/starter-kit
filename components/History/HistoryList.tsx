@@ -16,7 +16,7 @@ import LazyMintListItem from './ListItem/LazyMintListItem'
 
 type IProps = {
   histories: {
-    action: AssetHistoryAction | null
+    action: AssetHistoryAction
     date: Date
     quantity: BigNumber
     unitPrice: BigNumber | null

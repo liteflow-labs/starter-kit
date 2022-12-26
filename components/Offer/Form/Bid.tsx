@@ -260,11 +260,11 @@ const OfferFormBid: FC<Props> = (props) => {
               {...register('bid', {
                 required: t('offer.form.bid.validation.required'),
                 validate: (value) => {
-                  const splitValue = value.split('.')
-
                   if (parseFloat(value) <= 0)
                     return t('offer.form.bid.validation.positive')
-                  if (splitValue[1] && splitValue[1].length > currency.decimals)
+
+                  const nbDecimals = value.split('.')[1]?.length || 0
+                  if (nbDecimals > currency.decimals)
                     return t('offer.form.bid.validation.decimals', {
                       nbDecimals: currency.decimals,
                     })

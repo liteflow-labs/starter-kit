@@ -235,13 +235,13 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
             </>
           )}
 
-          {asset.standard === 'ERC721' && (
+          {asset.standard === 'ERC721' && asset.ownerships.nodes[0] && (
             <OfferFormBid
               signer={signer}
               account={account?.toLowerCase()}
               assetId={asset.id}
               multiple={false}
-              owner={asset.ownerships.nodes[0]?.ownerAddress}
+              owner={asset.ownerships.nodes[0].ownerAddress}
               currencies={currencies}
               blockExplorer={blockExplorer}
               onCreated={onCreated}

@@ -285,9 +285,11 @@ export const convertAuctionFull = (
 }
 
 export const convertSale = (
-  sale: Pick<OfferOpenSale, 'unitPrice'> & {
-    currency: Pick<Currency, 'decimals' | 'symbol' | 'id' | 'image'>
-  },
+  sale:
+    | (Pick<OfferOpenSale, 'unitPrice'> & {
+        currency: Pick<Currency, 'decimals' | 'symbol' | 'id' | 'image'>
+      })
+    | undefined,
 ):
   | undefined
   | {
