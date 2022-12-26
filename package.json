@@ -43,7 +43,6 @@
     "nextjs-google-analytics": "^1.2.1",
     "nprogress": "^0.2.0",
     "numbro": "^2.3.6",
-    "raw-body": "^2.5.1",
     "react": "^17.0.2",
     "react-cookie": "^4.1.1",
     "react-device-detect": "^1.17.0",
