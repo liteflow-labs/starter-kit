@@ -53,7 +53,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
   async (ctx, client) => {
     const userAddress = ctx.params?.id
       ? Array.isArray(ctx.params.id)
-        ? ctx.params.id[0].toLowerCase()
+        ? ctx.params.id[0]?.toLowerCase()
         : ctx.params.id.toLowerCase()
       : null
     invariant(userAddress, 'userAddress is falsy')

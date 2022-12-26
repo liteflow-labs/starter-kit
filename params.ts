@@ -6,14 +6,14 @@ export const getLimit = (
 ): number =>
   ctx.query.limit
     ? Array.isArray(ctx.query.limit)
-      ? parseInt(ctx.query.limit[0], 10)
+      ? parseInt(ctx.query.limit[0] || '0', 10)
       : parseInt(ctx.query.limit, 10)
     : defaultLimit
 
 export const getPage = (ctx: GetServerSidePropsContext): number =>
   ctx.query.page
     ? Array.isArray(ctx.query.page)
-      ? parseInt(ctx.query.page[0], 10)
+      ? parseInt(ctx.query.page[0] || '0', 10)
       : parseInt(ctx.query.page, 10)
     : 1
 
