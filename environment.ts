@@ -25,6 +25,11 @@ type Environment = {
   MAX_ROYALTIES: number
   // Allow users to top up their wallet with fiat
   ALLOW_TOP_UP: boolean
+  // Collections where user can mint
+  MINTABLE_COLLECTIONS: {
+    chainId: number
+    address: string
+  }[]
 }
 
 // magic api key
@@ -98,6 +103,13 @@ invariant(
   'env NEXT_PUBLIC_UPLOAD_URL is not defined',
 )
 
+const MINTABLE_COLLECTIONS = (
+  process.env.NEXT_PUBLIC_MINTABLE_COLLECTIONS || ''
+)
+  .split(',')
+  .filter(Boolean)
+  .map((address) => ({ address: address.toLowerCase(), chainId: CHAIN_ID }))
+
 const environment: Environment = {
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
   PUBLIC_ETHEREUM_PROVIDER: process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
@@ -119,6 +131,7 @@ const environment: Environment = {
   RESTRICT_TO_VERIFIED_ACCOUNT: true,
   MAX_ROYALTIES: 30,
   ALLOW_TOP_UP: true,
+  MINTABLE_COLLECTIONS,
 }
 
 export default environment

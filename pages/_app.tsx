@@ -151,6 +151,7 @@ function Layout({
             ],
           }}
           signer={signer}
+          disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
         />
         {children}
         <Footer name="Acme, Inc." links={footerLinks} />

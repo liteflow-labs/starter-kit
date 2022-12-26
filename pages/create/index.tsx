@@ -10,6 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
+import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
 import { IoImageOutline } from '@react-icons/all-files/io5/IoImageOutline'
 import { IoImagesOutline } from '@react-icons/all-files/io5/IoImagesOutline'
 import { useWeb3React } from '@web3-react/core'
@@ -18,30 +19,41 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import React from 'react'
+import Empty from '../../components/Empty/Empty'
 import Head from '../../components/Head'
 import Link from '../../components/Link/Link'
 import BackButton from '../../components/Navbar/BackButton'
 import environment from '../../environment'
 import {
-  FetchAccountVerificationStatusDocument,
-  FetchAccountVerificationStatusQuery,
-  FetchAccountVerificationStatusQueryVariables,
-  useFetchAccountVerificationStatusQuery,
+  CollectionFilter,
+  FetchCollectionsAndAccountVerificationStatusDocument,
+  FetchCollectionsAndAccountVerificationStatusQuery,
+  FetchCollectionsAndAccountVerificationStatusQueryVariables,
+  useFetchCollectionsAndAccountVerificationStatusQuery,
 } from '../../graphql'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import SmallLayout from '../../layouts/small'
 import { wrapServerSideProps } from '../../props'
 
+const collectionsFilter = {
+  or: environment.MINTABLE_COLLECTIONS.map(({ chainId, address }) => ({
+    chainId: { equalTo: chainId },
+    address: { equalTo: address },
+  })),
+} as CollectionFilter
+
 export const getServerSideProps = wrapServerSideProps(
   environment.GRAPHQL_URL,
   async (context, client) => {
     const { data, error } = await client.query<
-      FetchAccountVerificationStatusQuery,
-      FetchAccountVerificationStatusQueryVariables
+      FetchCollectionsAndAccountVerificationStatusQuery,
+      FetchCollectionsAndAccountVerificationStatusQueryVariables
     >({
-      query: FetchAccountVerificationStatusDocument,
+      query: FetchCollectionsAndAccountVerificationStatusDocument,
       variables: {
         account: context.user.address || '',
+        collectionFilter: collectionsFilter,
+        fetchCollections: environment.MINTABLE_COLLECTIONS.length > 0,
       },
     })
     if (error) throw error
@@ -67,12 +79,16 @@ const CreatePage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back } = useRouter()
   const { account } = useWeb3React()
-  const { data } = useFetchAccountVerificationStatusQuery({
-    variables: {
-      account: account?.toLowerCase() || '',
+  const { data, called } = useFetchCollectionsAndAccountVerificationStatusQuery(
+    {
+      variables: {
+        account: account?.toLowerCase() || '',
+        collectionFilter: collectionsFilter,
+        fetchCollections: environment.MINTABLE_COLLECTIONS.length > 0,
+      },
+      skip: !ready,
     },
-    skip: !ready,
-  })
+  )
 
   if (
     environment.RESTRICT_TO_VERIFIED_ACCOUNT &&
@@ -135,84 +151,67 @@ const CreatePage: NextPage = () => {
         align={{ base: 'center', md: 'inherit' }}
         gap={6}
       >
-        <Link href="/create/single">
-          <Stack
-            as="a"
-            w={64}
-            align="center"
-            justify="center"
-            spacing={8}
-            rounded="xl"
-            border="1px"
-            borderColor="gray.200"
-            borderStyle="solid"
-            bg="white"
-            p={12}
-            shadow="sm"
-            _hover={{ shadow: 'md' }}
-            cursor="pointer"
+        {data?.collections?.nodes.map(({ address, chainId, standard }) => (
+          <Link
+            href={`/create/${chainId}/${address}`}
+            key={`${chainId}/${address}`}
           >
-            <Flex
+            <Stack
+              as="a"
+              w={64}
               align="center"
               justify="center"
-              mx="auto"
-              h={36}
-              w={36}
-              rounded="full"
-              bgColor="blue.50"
-              color="blue.500"
+              spacing={8}
+              rounded="xl"
+              border="1px"
+              borderColor="gray.200"
+              borderStyle="solid"
+              bg="white"
+              p={12}
+              shadow="sm"
+              _hover={{ shadow: 'md' }}
+              cursor="pointer"
             >
-              <Icon as={IoImageOutline} h={10} w={10} />
-            </Flex>
-            <Box textAlign="center">
-              <Heading as="h3" variant="heading1" color="brand.black">
-                {t('asset.typeSelector.single.title')}
-              </Heading>
-              <Heading as="h5" variant="heading3" color="gray.500" mt={2}>
-                {t('asset.typeSelector.single.type')}
-              </Heading>
-            </Box>
-          </Stack>
-        </Link>
-        <Link href="/create/multiple">
-          <Stack
-            as="a"
-            w={64}
-            align="center"
-            justify="center"
-            spacing={8}
-            rounded="xl"
-            border="1px"
-            borderColor="gray.200"
-            borderStyle="solid"
-            bg="white"
-            p={12}
-            shadow="sm"
-            _hover={{ shadow: 'md' }}
-            cursor="pointer"
-          >
-            <Flex
-              align="center"
-              justify="center"
-              mx="auto"
-              h={36}
-              w={36}
-              rounded="full"
-              bg="green.50"
-              color="green.500"
-            >
-              <Icon as={IoImagesOutline} w={10} h={10} />
-            </Flex>
-            <Box textAlign="center">
-              <Heading as="h3" variant="heading1" color="brand.black">
-                {t('asset.typeSelector.multiple.title')}
-              </Heading>
-              <Heading as="h5" variant="heading3" color="gray.500" mt={2}>
-                {t('asset.typeSelector.multiple.type')}
-              </Heading>
-            </Box>
-          </Stack>
-        </Link>
+              <Flex
+                align="center"
+                justify="center"
+                mx="auto"
+                h={36}
+                w={36}
+                rounded="full"
+                bgColor={standard === 'ERC721' ? 'blue.50' : 'green.50'}
+                color={standard === 'ERC721' ? 'blue.500' : 'green.500'}
+              >
+                {standard === 'ERC721' ? (
+                  <Icon as={IoImageOutline} h={10} w={10} />
+                ) : (
+                  <Icon as={IoImagesOutline} h={10} w={10} />
+                )}
+              </Flex>
+              <Box textAlign="center">
+                <Heading as="h3" variant="heading1" color="brand.black">
+                  {standard === 'ERC721'
+                    ? t('asset.typeSelector.single.title')
+                    : t('asset.typeSelector.multiple.title')}
+                </Heading>
+                <Heading as="h5" variant="heading3" color="gray.500" mt={2}>
+                  {standard === 'ERC721'
+                    ? t('asset.typeSelector.single.type')
+                    : t('asset.typeSelector.multiple.type')}
+                </Heading>
+              </Box>
+            </Stack>
+          </Link>
+        ))}
+        {called && !data?.collections && (
+          <Empty
+            title={t('asset.typeSelector.empty.title')}
+            description={t('asset.typeSelector.empty.description')}
+            icon={
+              <Icon as={HiExclamationCircle} w={8} h={8} color="gray.400" />
+            }
+          />
+        )}
       </Flex>
     </Layout>
   )
