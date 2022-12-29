@@ -49,10 +49,8 @@ type FormData = {
 }
 
 type Props = {
-  asset: {
-    id: string
-    standard: Standard
-  }
+  assetId: string
+  standard: Standard
   currencies: {
     name: string
     id: string
@@ -71,7 +69,8 @@ type Props = {
 }
 
 const SalesDirectForm: VFC<Props> = ({
-  asset,
+  assetId,
+  standard,
   currencies,
   feesPerTenThousand,
   royaltiesPerTenThousand,
@@ -137,9 +136,8 @@ const SalesDirectForm: VFC<Props> = ({
 
   const onSubmit = handleSubmit(async ({ expiredAt }) => {
     if (activeStep !== CreateOfferStep.INITIAL) return
-    if (!asset) throw new Error('asset falsy')
     if (!currency) throw new Error('currency falsy')
-    if (asset.standard !== 'ERC721' && asset.standard !== 'ERC1155')
+    if (standard !== 'ERC721' && standard !== 'ERC1155')
       throw new Error('invalid token')
 
     try {
@@ -148,7 +146,7 @@ const SalesDirectForm: VFC<Props> = ({
         type: 'SALE',
         quantity: quantityBN,
         unitPrice: priceUnit,
-        assetId: asset.id,
+        assetId: assetId,
         currencyId: currency.id,
         expiredAt: new Date(expiredAt),
       })
@@ -164,7 +162,7 @@ const SalesDirectForm: VFC<Props> = ({
     }
   })
 
-  const isSingle = useMemo(() => asset.standard === 'ERC721', [asset])
+  const isSingle = useMemo(() => standard === 'ERC721', [standard])
 
   return (
     <Stack as="form" spacing={8} onSubmit={onSubmit}>

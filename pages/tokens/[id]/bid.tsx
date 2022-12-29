@@ -235,28 +235,29 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
             </>
           )}
 
-          {asset.standard === 'ERC721' && asset.ownerships.nodes[0] && (
-            <OfferFormBid
-              signer={signer}
-              account={account?.toLowerCase()}
-              assetId={asset.id}
-              multiple={false}
-              owner={asset.ownerships.nodes[0].ownerAddress}
-              currencies={currencies}
-              blockExplorer={blockExplorer}
-              onCreated={onCreated}
-              auctionId={auction?.id}
-              auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
-              offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-              feesPerTenThousand={feesPerTenThousand}
-              allowTopUp={environment.ALLOW_TOP_UP}
-              login={{
-                ...connectors,
-                networkName: environment.NETWORK_NAME,
-              }}
-            />
-          )}
-          {asset.standard === 'ERC1155' && (
+          {asset.collection.standard === 'ERC721' &&
+            asset.ownerships.nodes[0] && (
+              <OfferFormBid
+                signer={signer}
+                account={account?.toLowerCase()}
+                assetId={asset.id}
+                multiple={false}
+                owner={asset.ownerships.nodes[0].ownerAddress}
+                currencies={currencies}
+                blockExplorer={blockExplorer}
+                onCreated={onCreated}
+                auctionId={auction?.id}
+                auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
+                offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+                feesPerTenThousand={feesPerTenThousand}
+                allowTopUp={environment.ALLOW_TOP_UP}
+                login={{
+                  ...connectors,
+                  networkName: environment.NETWORK_NAME,
+                }}
+              />
+            )}
+          {asset.collection.standard === 'ERC1155' && (
             <OfferFormBid
               signer={signer}
               account={account?.toLowerCase()}

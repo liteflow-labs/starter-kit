@@ -9,11 +9,7 @@ query FetchUserFixedPrice(
     ...AccountDetail
   }
   created: assets(
-    filter: {
-      standard: { in: [ERC721, ERC1155] }
-      ownershipsExist: true
-      creatorAddress: { equalTo: $address }
-    }
+    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
   ) {
     totalCount
   }
