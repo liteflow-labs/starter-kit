@@ -454,7 +454,7 @@
         "highest-bid": "Bid",
         "place-bid": "Place a bid",
         "no-bids": "No bids yet",
-        "view": "View item"
+        "view": "View my NFT"
       },
       "form": {
         "submit": "Create Offer",
@@ -518,7 +518,7 @@
         "price": "Price",
         "from": "From",
         "purchase": "Buy Now",
-        "view": "View item",
+        "view": "View my NFT",
         "offers": "{{count}} offers available"
       },
       "form": {
@@ -598,7 +598,7 @@
       "card-footer": {
         "open": "Open for bids",
         "place-bid": "Place a bid",
-        "view": "View item"
+        "view": "View my NFT"
       },
       "info": {
         "owner": "You own this Collectible",

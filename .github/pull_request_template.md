@@ -15,5 +15,4 @@
 
 ### Checklist
 
-- [ ] Update related changelogs <!-- Check [root's CHANGELOG.md](/CHANGELOG.md) to access the right changelogs -->
 - [ ] Update docs if necessary <!-- Docs in https://github.com/liteflow-labs/liteflow-js/tree/main/docs/pages/starter-kit -->
