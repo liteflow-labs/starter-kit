@@ -454,7 +454,7 @@
         "highest-bid": "出价",
         "place-bid": "提交出价",
         "no-bids": "还没有出价",
-        "view": "查看项目"
+        "view": "查看我的 NFT"
       },
       "form": {
         "submit": "创建要约",
@@ -518,7 +518,7 @@
         "price": "价格",
         "from": "从",
         "purchase": "购买",
-        "view": "查看项目",
+        "view": "查看我的 NFT",
         "offers": "有 {{count}} 份要约"
       },
       "form": {
@@ -598,7 +598,7 @@
       "card-footer": {
         "open": "开放接受出价",
         "place-bid": "提交出价",
-        "view": "查看项目"
+        "view": "查看我的 NFT"
       },
       "info": {
         "owner": "您拥有此藏品",

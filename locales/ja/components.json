@@ -454,7 +454,7 @@
         "highest-bid": "入札額",
         "place-bid": "入札する",
         "no-bids": "まだ入札はありません",
-        "view": "アイテムを見る"
+        "view": "私のNFTを見る"
       },
       "form": {
         "submit": "オファーを作成",
@@ -518,7 +518,7 @@
         "price": "価格",
         "from": "から",
         "purchase": "購入",
-        "view": "アイテムを見る",
+        "view": "私のNFTを見る",
         "offers": "{{count}} オファーが利用可能です"
       },
       "form": {
@@ -598,7 +598,7 @@
       "card-footer": {
         "open": "入札受付中",
         "place-bid": "入札する",
-        "view": "アイテムを見る"
+        "view": "私のNFTを見る"
       },
       "info": {
         "owner": "このコレクションを所有しています",

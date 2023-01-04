@@ -454,7 +454,7 @@
         "highest-bid": "Oferta",
         "place-bid": "Crear una oferta",
         "no-bids": "Aún no hay ofertas",
-        "view": "Ver ítem"
+        "view": "Ver mi NFT"
       },
       "form": {
         "submit": "Crear Oferta",
@@ -518,7 +518,7 @@
         "price": "Precio",
         "from": "De",
         "purchase": "Comprar",
-        "view": "Ver ítem",
+        "view": "Ver mi NFT",
         "offers": "{{count}} ofertas disponibles"
       },
       "form": {
@@ -598,7 +598,7 @@
       "card-footer": {
         "open": "Abierto a ofertas",
         "place-bid": "Crear una oferta",
-        "view": "Ver ítem"
+        "view": "Ver mi NFT"
       },
       "info": {
         "owner": "Eres propietario de este coleccionable",
