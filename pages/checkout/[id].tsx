@@ -42,6 +42,7 @@ type Props = {
     description: string
     image: string
   }
+  currentAccount: string | null
 }
 
 export const getServerSideProps = wrapServerSideProps<Props>(
@@ -59,6 +60,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       query: CheckoutDocument,
       variables: {
         id: offerId,
+        address: ctx.user.address || '',
         now,
       },
     })
@@ -77,12 +79,18 @@ export const getServerSideProps = wrapServerSideProps<Props>(
           }),
           image: data.offer.asset.image,
         },
+        currentAccount: ctx.user.address,
       },
     }
   },
 )
 
-const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
+const CheckoutPage: NextPage<Props> = ({
+  now,
+  offerId,
+  meta,
+  currentAccount,
+}) => {
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -101,6 +109,7 @@ const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
     variables: {
       id: offerId,
       now: date,
+      address: (ready ? account?.toLowerCase() : currentAccount) || '',
     },
   })
   useExecuteOnAccountChange(refetch, ready)

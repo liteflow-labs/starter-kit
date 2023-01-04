@@ -1,4 +1,4 @@
-query Checkout($id: UUID!, $now: Datetime!) {
+query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
   offer(id: $id) {
     id
     type
@@ -14,6 +14,10 @@ query Checkout($id: UUID!, $now: Datetime!) {
       id
       standard
       name
+      collection {
+        address
+        name
+      }
       image
       unlockedContent {
         url
@@ -26,6 +30,13 @@ query Checkout($id: UUID!, $now: Datetime!) {
         image
         verification {
           status
+        }
+      }
+      owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+        aggregates {
+          sum {
+            quantity
+          }
         }
       }
       firstSale: sales(

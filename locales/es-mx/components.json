@@ -451,8 +451,10 @@
         "view": "Ver Coleccionable"
       },
       "card-footer": {
-        "highest-bid": "Oferta más alta:",
-        "place-bid": "Crear una oferta"
+        "highest-bid": "Oferta",
+        "place-bid": "Crear una oferta",
+        "no-bids": "Aún no hay ofertas",
+        "view": "Ver ítem"
       },
       "form": {
         "submit": "Crear Oferta",
@@ -516,6 +518,7 @@
         "price": "Precio",
         "from": "De",
         "purchase": "Comprar",
+        "view": "Ver ítem",
         "offers": "{{count}} ofertas disponibles"
       },
       "form": {
@@ -594,7 +597,8 @@
       },
       "card-footer": {
         "open": "Abierto a ofertas",
-        "place-bid": "Crear una oferta"
+        "place-bid": "Crear una oferta",
+        "view": "Ver ítem"
       },
       "info": {
         "owner": "Eres propietario de este coleccionable",

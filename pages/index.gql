@@ -13,6 +13,10 @@ query FetchDefaultAssetIds($limit: Int!) {
 fragment HomeAssetDetail on Asset {
   id
   name
+  collection {
+    address
+    name
+  }
   image
   animationUrl
   unlockedContent {
@@ -140,6 +144,10 @@ fragment HomeAsset on Asset {
   id
   standard
   name
+  collection {
+    address
+    name
+  }
   image
   animationUrl
   unlockedContent {
@@ -152,6 +160,13 @@ fragment HomeAsset on Asset {
     image
     verification {
       status
+    }
+  }
+  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+    aggregates {
+      sum {
+        quantity
+      }
     }
   }
   auctions(
@@ -232,6 +247,17 @@ fragment HomeAuction on Auction {
     id
     standard
     name
+    collection {
+      address
+      name
+    }
+    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+      aggregates {
+        sum {
+          quantity
+        }
+      }
+    }
     image
     animationUrl
     unlockedContent {

@@ -1,4 +1,4 @@
-import { Flex, HStack, Tag, TagLabel, Text } from '@chakra-ui/react'
+import { Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, VFC } from 'react'
@@ -14,6 +14,8 @@ type Props = {
     symbol: string
   }
   hasMultiCurrency: boolean
+  isOwner: boolean
+  showButton?: boolean
 }
 
 const SaleDirectCardFooter: VFC<Props> = ({
@@ -22,6 +24,8 @@ const SaleDirectCardFooter: VFC<Props> = ({
   unitPrice,
   currency,
   hasMultiCurrency,
+  isOwner,
+  showButton = true,
 }) => {
   const { t } = useTranslation('components')
   const chip = useMemo(() => {
@@ -30,90 +34,62 @@ const SaleDirectCardFooter: VFC<Props> = ({
         return
       case 1:
         return (
-          <Tag
-            as="div"
-            size="lg"
-            variant="outline"
-            borderRadius="full"
-            boxShadow="none"
-            border="1px"
-            borderColor="gray.200"
-          >
-            <TagLabel as={HStack} spacing={1}>
-              <Text as="span" variant="text-sm" color="brand.black">
-                {t('sales.direct.card-footer.price')}
-              </Text>
-              <Text as="span" variant="button2" color="brand.black">
-                <Price
-                  amount={unitPrice}
-                  currency={currency}
-                  averageFrom={100000}
-                />
-              </Text>
-            </TagLabel>
-          </Tag>
+          <HStack spacing={1}>
+            <Text as="span" variant="subtitle2" color="gray.500">
+              {t('sales.direct.card-footer.price')}
+            </Text>
+            <Text as="span" variant="subtitle2" color="brand.black">
+              <Price
+                amount={unitPrice}
+                currency={currency}
+                averageFrom={100000}
+              />
+            </Text>
+          </HStack>
         )
       default:
         return hasMultiCurrency ? (
-          <Tag
-            size="lg"
-            variant="outline"
-            borderRadius="full"
-            boxShadow="none"
-            border="1px"
-            borderColor="gray.200"
-          >
-            <TagLabel>
-              <Text as="span" variant="text-sm" color="brand.black">
-                {t('sales.direct.card-footer.offers', {
-                  count: numberOfSales,
-                })}
-              </Text>
-            </TagLabel>
-          </Tag>
+          <Text as="span" variant="subtitle2" color="brand.black">
+            {t('sales.direct.card-footer.offers', {
+              count: numberOfSales,
+            })}
+          </Text>
         ) : (
-          <Tag
-            as="div"
-            size="lg"
-            variant="outline"
-            borderRadius="full"
-            boxShadow="none"
-            border="1px"
-            borderColor="gray.200"
-          >
-            <TagLabel as={HStack} spacing={1}>
-              <Text as="span" variant="text-sm" color="brand.black">
-                {t('sales.direct.card-footer.from')}
-              </Text>
-              <Text as="span" variant="button2" color="brand.black">
-                <Price
-                  amount={unitPrice}
-                  currency={currency}
-                  averageFrom={100000}
-                />
-              </Text>
-            </TagLabel>
-          </Tag>
+          <HStack spacing={1}>
+            <Text as="span" variant="subtitle2" color="gray.500">
+              {t('sales.direct.card-footer.from')}
+            </Text>
+            <Text as="span" variant="subtitle2" color="brand.black">
+              <Price
+                amount={unitPrice}
+                currency={currency}
+                averageFrom={100000}
+              />
+            </Text>
+          </HStack>
         )
     }
   }, [numberOfSales, unitPrice, currency, hasMultiCurrency, t])
 
   return (
-    <div>
-      {chip}
+    <Stack spacing={4}>
+      <Flex px={4}>{chip}</Flex>
       <Flex
         as={Link}
-        href={href}
-        mt={3.5}
-        w="full"
-        color="brand.500"
-        justify="space-between"
+        color="white"
+        bgColor="brand.500"
+        py={2}
+        px={4}
         fontSize="sm"
         fontWeight="semibold"
+        href={href}
+        visibility={showButton ? 'visible' : 'hidden'}
       >
-        {t('sales.direct.card-footer.purchase')}
+        {isOwner
+          ? t('sales.direct.card-footer.view')
+          : t('sales.direct.card-footer.purchase')}
       </Flex>
-    </div>
+    </Stack>
   )
 }
 

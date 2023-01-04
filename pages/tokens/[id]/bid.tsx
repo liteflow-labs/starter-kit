@@ -46,6 +46,7 @@ type Props = {
     description: string
     image: string
   }
+  currentAccount: string | null
 }
 
 export const getServerSideProps = wrapServerSideProps<Props>(
@@ -65,6 +66,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       variables: {
         id: assetId,
         now,
+        address: ctx.user.address || '',
       },
     })
     if (error) throw error
@@ -86,12 +88,13 @@ export const getServerSideProps = wrapServerSideProps<Props>(
           }),
           image: data.asset.image,
         },
+        currentAccount: ctx.user.address,
       },
     }
   },
 )
 
-const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
+const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -104,6 +107,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
     variables: {
       id: assetId,
       now: date,
+      address: (ready ? account?.toLowerCase() : currentAccount) || '',
     },
   })
   useExecuteOnAccountChange(refetch, ready)

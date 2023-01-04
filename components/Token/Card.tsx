@@ -1,6 +1,19 @@
-import { Flex, Heading, Stack } from '@chakra-ui/react'
+import {
+  Flex,
+  Heading,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useMemo, VFC } from 'react'
+import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
+import environment from 'environment'
+import useTranslation from 'next-translate/useTranslation'
+import { useMemo, useState, VFC } from 'react'
 import Link from '../Link/Link'
 import SaleAuctionCardFooter from '../Sales/Auction/CardFooter'
 import SaleDirectCardFooter from '../Sales/Direct/CardFooter'
@@ -12,9 +25,14 @@ export type Props = {
   asset: {
     id: string
     name: string
+    collection: {
+      address: string
+      name: string
+    }
     image: string
     unlockedContent: { url: string; mimetype: string | null } | null
     animationUrl: string | null | undefined
+    owned: BigNumber
   }
   creator: {
     address: string
@@ -46,6 +64,7 @@ export type Props = {
       }
     | undefined
   numberOfSales: number
+  displayCreator?: boolean
   hasMultiCurrency: boolean
 }
 
@@ -55,9 +74,13 @@ const TokenCard: VFC<Props> = ({
   auction,
   sale,
   numberOfSales,
+  displayCreator = false,
   hasMultiCurrency,
 }) => {
+  const { t } = useTranslation('templates')
   const href = asset.id ? `/tokens/${asset.id}` : '#'
+  const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
+  const [isHovered, setIsHovered] = useState(false)
   const footer = useMemo(() => {
     if (auction)
       return (
@@ -65,6 +88,8 @@ const TokenCard: VFC<Props> = ({
           href={href}
           endAt={auction.endAt}
           bestBid={auction.bestBid}
+          isOwner={isOwner}
+          showButton={isHovered}
         />
       )
     if (sale)
@@ -75,10 +100,18 @@ const TokenCard: VFC<Props> = ({
           currency={sale.currency}
           numberOfSales={numberOfSales}
           hasMultiCurrency={hasMultiCurrency}
+          isOwner={isOwner}
+          showButton={isHovered}
         />
       )
-    return <SaleOpenCardFooter href={href} />
-  }, [auction, sale, numberOfSales, hasMultiCurrency, href])
+    return (
+      <SaleOpenCardFooter
+        href={href}
+        isOwner={isOwner}
+        showButton={isHovered}
+      />
+    )
+  }, [auction, href, isOwner, isHovered, sale, numberOfSales, hasMultiCurrency])
 
   // TODO: is the width correct?
   return (
@@ -92,6 +125,8 @@ const TokenCard: VFC<Props> = ({
       borderWidth="1px"
       borderColor="gray.200"
       bgColor="white"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <Flex as={Link} href={href} h={72} w={72}>
         <TokenMedia
@@ -105,26 +140,50 @@ const TokenCard: VFC<Props> = ({
           layout="fixed"
         />
       </Flex>
-      <Stack spacing={3} p={6}>
-        <Link href={href}>
-          <Heading
-            as="h4"
-            variant="heading2"
-            color="brand.black"
-            title={asset.name}
-            isTruncated
-          >
-            {asset.name}
-          </Heading>
-        </Link>
-        <Avatar
-          address={creator.address}
-          image={creator.image}
-          name={creator.name}
-          verified={creator.verified}
-        />
-        {footer && footer}
-      </Stack>
+      <Flex justify="space-between" px={4} pt={4} pb={3} align="start">
+        <Stack spacing={0} w="full">
+          {displayCreator ? (
+            <Avatar
+              address={creator.address}
+              image={creator.image}
+              name={creator.name}
+              verified={creator.verified}
+              size={5}
+            />
+          ) : (
+            <Text variant="subtitle2" color="gray.500" isTruncated>
+              {asset.collection.name}
+            </Text>
+          )}
+          <Link href={href}>
+            <Heading
+              as="h4"
+              variant="heading2"
+              color="brand.black"
+              title={asset.name}
+              isTruncated
+            >
+              {asset.name}
+            </Heading>
+          </Link>
+        </Stack>
+        <Menu>
+          <MenuButton>
+            <Icon as={HiOutlineDotsHorizontal} />
+          </MenuButton>
+          <MenuList>
+            <Link
+              href={`mailto:${environment.REPORT_EMAIL}?subject=${encodeURI(
+                t('asset.detail.menu.report.subject'),
+              )}&body=${encodeURI(t('asset.detail.menu.report.body', asset))}`}
+              isExternal
+            >
+              <MenuItem>{t('asset.detail.menu.report.label')}</MenuItem>
+            </Link>
+          </MenuList>
+        </Menu>
+      </Flex>
+      {footer && footer}
     </Flex>
   )
 }

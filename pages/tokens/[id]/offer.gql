@@ -9,6 +9,10 @@ query OfferForAsset($id: String!, $address: Address, $now: Datetime!) {
     id
     standard
     name
+    collection {
+      address
+      name
+    }
     image
     animationUrl
     royalties {

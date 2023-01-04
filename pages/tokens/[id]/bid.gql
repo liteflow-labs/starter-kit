@@ -4,11 +4,15 @@ query FeesForBid($id: String!) {
   }
 }
 
-query BidOnAsset($id: String!, $now: Datetime!) {
+query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
     standard
     name
+    collection {
+      address
+      name
+    }
     image
     animationUrl
     unlockedContent {
@@ -21,6 +25,13 @@ query BidOnAsset($id: String!, $now: Datetime!) {
       image
       verification {
         status
+      }
+    }
+    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+      aggregates {
+        sum {
+          quantity
+        }
       }
     }
     auctions(

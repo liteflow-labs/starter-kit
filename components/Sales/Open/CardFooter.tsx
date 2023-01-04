@@ -1,44 +1,42 @@
-import { Flex, Tag, Text } from '@chakra-ui/react'
+import { Flex, Stack, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, HTMLAttributes } from 'react'
 import Link from '../../Link/Link'
 
 type Props = {
   href: string
+  isOwner: boolean
+  showButton?: boolean
 }
 
 const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
   href,
+  isOwner,
+  showButton = true,
   ...props
 }) => {
   const { t } = useTranslation('components')
   return (
-    <div {...props}>
-      <Tag
-        size="lg"
-        variant="outline"
-        borderRadius="full"
-        boxShadow="none"
-        border="1px"
-        borderColor="gray.200"
-      >
-        <Text as="span" variant="text-sm" color="brand.black">
-          {t('sales.open.card-footer.open')}
-        </Text>
-      </Tag>
+    <Stack spacing={4} {...props}>
+      <Text as="span" variant="subtitle2" color="gray.500" px={4}>
+        {t('sales.open.card-footer.open')}
+      </Text>
       <Flex
         as={Link}
-        color="brand.500"
-        mt={3.5}
-        w="full"
-        justify="space-between"
+        color="white"
+        bgColor="brand.500"
+        py={2}
+        px={4}
         fontSize="sm"
         fontWeight="semibold"
         href={href}
+        visibility={showButton ? 'visible' : 'hidden'}
       >
-        {t('sales.open.card-footer.place-bid')}
+        {isOwner
+          ? t('sales.open.card-footer.view')
+          : t('sales.open.card-footer.place-bid')}
       </Flex>
-    </div>
+    </Stack>
   )
 }
 

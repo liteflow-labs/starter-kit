@@ -9,6 +9,7 @@ import {
   AssetHistory,
   AssetHistoryAction,
   Auction,
+  Collection,
   Currency,
   Maybe,
   Offer,
@@ -25,12 +26,24 @@ export const convertAsset = (
   asset: Pick<
     Asset,
     'id' | 'animationUrl' | 'image' | 'name' | 'standard' | 'unlockedContent'
-  >,
+  > & {
+    collection: Pick<Collection, 'address' | 'name'>
+    owned: {
+      aggregates: Maybe<{
+        sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
+      }>
+    }
+  },
 ): {
   id: string
   animationUrl: string | null | undefined
   image: string
   name: string
+  collection: {
+    address: string
+    name: string
+  }
+  owned: BigNumber
   standard: Standard
   unlockedContent: { url: string; mimetype: string | null } | null
 } => ({
@@ -38,6 +51,11 @@ export const convertAsset = (
   animationUrl: asset.animationUrl,
   image: asset.image,
   name: asset.name,
+  collection: {
+    address: asset.collection.address,
+    name: asset.collection.name,
+  },
+  owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
   standard: asset.standard,
   unlockedContent: asset.unlockedContent,
 })
@@ -45,11 +63,6 @@ export const convertAsset = (
 export const convertAssetWithSupplies = (
   asset: Parameters<typeof convertAsset>[0] & {
     ownerships: {
-      aggregates: Maybe<{
-        sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
-      }>
-    }
-    owned: {
       aggregates: Maybe<{
         sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
       }>
@@ -70,6 +83,10 @@ export const convertAssetWithSupplies = (
   image: asset.image,
   unlockedContent: asset.unlockedContent,
   name: asset.name,
+  collection: {
+    address: asset.collection.address,
+    name: asset.collection.name,
+  },
   saleSupply: BigNumber.from(
     asset.sales.aggregates?.sum?.availableQuantity || 0,
   ),
