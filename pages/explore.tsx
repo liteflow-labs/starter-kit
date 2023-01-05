@@ -618,12 +618,12 @@ const ExplorePage: NextPage<Props> = ({
               <VStack>
                 {[
                   {
-                    label: t('explore.form.offers.values.fixed'),
-                    value: OfferFilter.fixed,
-                  },
-                  {
                     label: t('explore.form.offers.values.auction'),
                     value: OfferFilter.auction,
+                  },
+                  {
+                    label: t('explore.form.offers.values.fixed'),
+                    value: OfferFilter.fixed,
                   },
                 ].map((x) => (
                   <Checkbox
