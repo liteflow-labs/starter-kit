@@ -18,14 +18,13 @@ import {
   OfferOpenSaleSumAggregates,
   Ownership,
   OwnershipSumAggregates,
-  Standard,
   Trade,
 } from './graphql'
 
 export const convertAsset = (
   asset: Pick<
     Asset,
-    'id' | 'animationUrl' | 'image' | 'name' | 'standard' | 'unlockedContent'
+    'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
   > & {
     collection: Pick<Collection, 'address' | 'name'>
     owned: {
@@ -44,7 +43,6 @@ export const convertAsset = (
     name: string
   }
   owned: BigNumber
-  standard: Standard
   unlockedContent: { url: string; mimetype: string | null } | null
 } => ({
   id: asset.id,
@@ -56,7 +54,6 @@ export const convertAsset = (
     name: asset.collection.name,
   },
   owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
-  standard: asset.standard,
   unlockedContent: asset.unlockedContent,
 })
 
@@ -72,11 +69,13 @@ export const convertAssetWithSupplies = (
         sum: Maybe<Pick<OfferOpenSaleSumAggregates, 'availableQuantity'>>
       }>
     }
+    collection: Pick<Collection, 'standard'>
   },
 ): ReturnType<typeof convertAsset> & {
   saleSupply: BigNumber
   totalSupply: BigNumber
   owned: BigNumber
+  collection: Pick<Collection, 'standard'>
 } => ({
   id: asset.id,
   animationUrl: asset.animationUrl,
@@ -90,7 +89,7 @@ export const convertAssetWithSupplies = (
   saleSupply: BigNumber.from(
     asset.sales.aggregates?.sum?.availableQuantity || 0,
   ),
-  standard: asset.standard,
+  collection: { standard: asset.collection.standard },
   totalSupply: BigNumber.from(
     asset.ownerships.aggregates?.sum?.quantity || '0',
   ),
