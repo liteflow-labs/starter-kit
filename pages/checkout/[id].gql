@@ -12,7 +12,9 @@ query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
     }
     asset {
       id
-      standard
+      collection {
+        standard
+      }
       name
       collection {
         address

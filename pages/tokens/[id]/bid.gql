@@ -7,7 +7,9 @@ query FeesForBid($id: String!) {
 query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
-    standard
+    collection {
+      standard
+    }
     name
     collection {
       address

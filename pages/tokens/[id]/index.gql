@@ -11,7 +11,9 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
     id
     tokenId
     collectionAddress
-    standard
+    collection {
+      standard
+    }
     name
     description
     traits {
