@@ -111,7 +111,10 @@ const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
     () => (offer ? BigNumber.from(offer.unitPrice) : undefined),
     [offer],
   )
-  const isSingle = useMemo(() => asset?.standard === 'ERC721', [asset])
+  const isSingle = useMemo(
+    () => asset?.collection.standard === 'ERC721',
+    [asset],
+  )
 
   const onPurchased = useCallback(async () => {
     if (!data?.offer) return

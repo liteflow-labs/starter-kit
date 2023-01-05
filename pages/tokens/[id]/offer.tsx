@@ -167,7 +167,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
         value: SaleType.TIMED_AUCTION,
         label: t('offers.form.options.values.auction'),
         icon: HiOutlineClock,
-        disabled: asset?.standard !== 'ERC721',
+        disabled: asset?.collection.standard !== 'ERC721',
       },
     ],
     [asset, t],
@@ -194,7 +194,8 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
     if (sale === SaleType.FIXED_PRICE)
       return (
         <SalesDirectForm
-          asset={asset}
+          assetId={assetId}
+          standard={asset.collection.standard}
           currencies={currencies}
           blockExplorer={blockExplorer}
           feesPerTenThousand={feesPerTenThousand}
@@ -220,12 +221,13 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   }, [
     currencies,
     asset,
-    signer,
     sale,
+    assetId,
     blockExplorer,
     feesPerTenThousand,
     royaltiesPerTenThousand,
     quantityAvailable,
+    signer,
     isCreator,
     onCreated,
   ])

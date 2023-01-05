@@ -1,6 +1,5 @@
 fragment AssetDetail on Asset {
   id
-  standard
   name
   image
   animationUrl

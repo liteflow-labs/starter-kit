@@ -1,6 +1,6 @@
 query FetchDefaultAssetIds($limit: Int!) {
   assets(
-    filter: { standard: { in: [ERC721, ERC1155] }, ownershipsExist: true }
+    filter: { ownershipsExist: true }
     orderBy: CREATED_AT_DESC
     first: $limit
   ) {
@@ -19,7 +19,9 @@ fragment HomeAssetDetail on Asset {
     url
     mimetype
   }
-  standard
+  collection {
+    standard
+  }
   creator {
     address
     name
@@ -138,7 +140,6 @@ fragment HomeAssetDetail on Asset {
 
 fragment HomeAsset on Asset {
   id
-  standard
   name
   image
   animationUrl
@@ -230,7 +231,6 @@ fragment HomeAuction on Auction {
   }
   asset {
     id
-    standard
     name
     image
     animationUrl

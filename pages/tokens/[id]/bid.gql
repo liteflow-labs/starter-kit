@@ -7,7 +7,9 @@ query FeesForBid($id: String!) {
 query BidOnAsset($id: String!, $now: Datetime!) {
   asset(id: $id) {
     id
-    standard
+    collection {
+      standard
+    }
     name
     image
     animationUrl
