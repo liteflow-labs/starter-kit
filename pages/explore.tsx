@@ -502,6 +502,7 @@ const ExplorePage: NextPage<Props> = ({
                 disabled={currencies.length <= 1 || isSubmitting}
                 error={errors.currencyId}
                 onChange={(x: any) => setValue('currencyId', x)}
+                sortAlphabetically
               />
 
               {currency && (
