@@ -2,13 +2,7 @@ import { Box, Flex, Icon, IconButton } from '@chakra-ui/react'
 import { BiChevronLeft } from '@react-icons/all-files/bi/BiChevronLeft'
 import { BiChevronRight } from '@react-icons/all-files/bi/BiChevronRight'
 import useEmblaCarousel from 'embla-carousel-react'
-import React, {
-  FC,
-  HTMLAttributes,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
+import { FC, HTMLAttributes, useCallback, useEffect, useState } from 'react'
 
 const Slider: FC<HTMLAttributes<any>> = ({ children }) => {
   const [viewportRef, embla] = useEmblaCarousel({

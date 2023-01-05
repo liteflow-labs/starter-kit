@@ -1,4 +1,16 @@
-query FetchAccountVerificationStatus($account: Address!) {
+query FetchCollectionsAndAccountVerificationStatus(
+  $collectionFilter: CollectionFilter!
+  $account: Address!
+  $fetchCollections: Boolean!
+) {
+  collections(filter: $collectionFilter, orderBy: CREATED_AT_ASC)
+    @include(if: $fetchCollections) {
+    nodes {
+      chainId
+      address
+      standard
+    }
+  }
   account(address: $account) {
     address
     verification {

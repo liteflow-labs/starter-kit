@@ -1,7 +1,7 @@
 import { Box, Center, Icon, Stack, Text } from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
 import Image, { ImageProps } from 'next/image'
-import React, { useEffect, useState, VFC, VideoHTMLAttributes } from 'react'
+import { useEffect, useState, VFC, VideoHTMLAttributes } from 'react'
 
 const TokenMedia: VFC<
   (Omit<VideoHTMLAttributes<any>, 'src'> | Omit<ImageProps, 'src'>) & {

@@ -1,7 +1,7 @@
 import { Box, Spinner, Text } from '@chakra-ui/react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import React, { SyntheticEvent, useState, VFC } from 'react'
+import { SyntheticEvent, useState, VFC } from 'react'
 
 type Props = {
   connector: AbstractConnector

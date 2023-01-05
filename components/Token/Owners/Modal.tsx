@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 import List from '../../List/List'
 import OwnersModalActivator from './ModalActivator'
 import OwnersModalItem from './ModalItem'

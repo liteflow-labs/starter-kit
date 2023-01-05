@@ -177,7 +177,10 @@ const DetailPage: NextPage<Props> = ({
       ),
     [asset],
   )
-  const isSingle = useMemo(() => asset?.standard === 'ERC721', [asset])
+  const isSingle = useMemo(
+    () => asset?.collection.standard === 'ERC721',
+    [asset],
+  )
 
   const tabs = [
     {
@@ -391,7 +394,7 @@ const DetailPage: NextPage<Props> = ({
             saleSupply={BigNumber.from(
               asset.sales.aggregates?.sum?.availableQuantity || 0,
             )}
-            standard={asset.standard}
+            standard={asset.collection.standard}
             totalSupply={BigNumber.from(
               asset.ownerships.aggregates?.sum?.quantity || '0',
             )}

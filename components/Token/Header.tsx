@@ -20,7 +20,9 @@ export type Props = {
     animationUrl: string | null | undefined
     unlockedContent: { url: string; mimetype: string | null } | null | undefined
     saleSupply: BigNumber
-    standard: Standard
+    collection: {
+      standard: Standard
+    }
     totalSupply: BigNumber
     owned: BigNumber
   }
@@ -58,7 +60,10 @@ const TokenHeader: VFC<Props> = ({
     () => asset.owned.gte(asset.totalSupply),
     [asset],
   )
-  const isSingle = useMemo(() => asset.standard === 'ERC721', [asset])
+  const isSingle = useMemo(
+    () => asset.collection.standard === 'ERC721',
+    [asset],
+  )
 
   return (
     <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>
@@ -95,7 +100,7 @@ const TokenHeader: VFC<Props> = ({
           creator={creator}
           owners={owners}
           saleSupply={asset.saleSupply}
-          standard={asset.standard}
+          standard={asset.collection.standard}
           totalSupply={asset.totalSupply}
         />
         <SaleDetail

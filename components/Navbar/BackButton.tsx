@@ -1,7 +1,7 @@
 import { Button, Text } from '@chakra-ui/react'
 import { HiOutlineArrowLeft } from '@react-icons/all-files/hi/HiOutlineArrowLeft'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, HTMLAttributes } from 'react'
+import { FC, HTMLAttributes } from 'react'
 
 type IProps = HTMLAttributes<any> & {
   onClick: () => void

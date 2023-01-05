@@ -26,15 +26,11 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  formatError,
-  getHumanizedDate,
-  parsePrice,
-  useCreateAuction,
-} from '@nft/hooks'
+import { formatError, getHumanizedDate, useCreateAuction } from '@nft/hooks'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
+import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import Image from '../../Image/Image'
 import Select from '../../Select/Select'
 
@@ -79,7 +75,7 @@ const SalesAuctionForm: VFC<Props> = ({
   } = useForm<FormData>({
     defaultValues: {
       price: '0',
-      currencyId: currencies[0].id,
+      currencyId: currencies[0]?.id,
     },
   })
 
@@ -91,7 +87,7 @@ const SalesAuctionForm: VFC<Props> = ({
     if (!c) throw new Error("Can't find currency")
     return c
   }, [currencies, currencyId])
-  const priceUnit = parsePrice(price, currency.decimals)
+  const priceUnit = useParseBigNumber(price, currency.decimals)
 
   // TODO: Add check for approval of maker token
   const onSubmit = handleSubmit(async (data) => {
@@ -138,7 +134,7 @@ const SalesAuctionForm: VFC<Props> = ({
           />
         )}
 
-        <FormControl>
+        <FormControl isInvalid={!!errors.price}>
           <HStack spacing={1}>
             <FormLabel htmlFor="price" m={0}>
               {t('sales.auction.form.price.label')}
@@ -156,16 +152,25 @@ const SalesAuctionForm: VFC<Props> = ({
               clampValueOnBlur={false}
               min={0}
               step={Math.pow(10, -currency.decimals)}
-              precision={currency.decimals}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('price', x)}
-              format={(e) => e.toString()}
             >
               <NumberInputField
                 id="price"
                 placeholder={t('sales.auction.form.price.placeholder')}
-                {...register('price')}
+                {...register('price', {
+                  validate: (value) => {
+                    if (parseFloat(value) <= 0)
+                      return t('sales.auction.form.validation.positive')
+
+                    const nbDecimals = value.split('.')[1]?.length || 0
+                    if (nbDecimals > currency.decimals)
+                      return t('sales.auction.form.validation.decimals', {
+                        nbDecimals: currency.decimals,
+                      })
+                  },
+                })}
               />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -181,6 +186,9 @@ const SalesAuctionForm: VFC<Props> = ({
               />
             </InputRightElement>
           </InputGroup>
+          {errors.price && (
+            <FormErrorMessage>{errors.price.message}</FormErrorMessage>
+          )}
         </FormControl>
       </Stack>
 

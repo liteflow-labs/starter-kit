@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 import SaleAuctionIncompleteNoBids from './Incomplete/FailedNoBids'
 import SaleAuctionIncompleteReservePrice from './Incomplete/FailedReservePrice'
 import SaleAuctionIncompleteSuccess from './Incomplete/Successfully'

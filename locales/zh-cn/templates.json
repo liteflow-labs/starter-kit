@@ -26,10 +26,18 @@
           "placeholder": "选择货币"
         },
         "min-price": {
-          "placeholder": "从"
+          "placeholder": "从",
+          "validation": {
+            "positive": "最低价格必须大于 0",
+            "decimals": "最低价格支持最多 {{ nbDecimals }} 位小数"
+          }
         },
         "max-price": {
-          "placeholder": "到"
+          "placeholder": "到",
+          "validation": {
+            "positive": "最高价格必须大于 0",
+            "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
+          }
         },
         "offers": {
           "label": "状态",
@@ -94,6 +102,11 @@
       "preview": "预览",
       "notifications": {
         "created": "您已成功创建NFT。"
+      },
+      "notFound": {
+        "title": "未找到集合",
+        "description": "您尝试在其上创建 NFT 的集合不存在",
+        "link": "在其他集合上创建"
       }
     },
     "typeSelector": {
@@ -106,6 +119,10 @@
       "multiple": {
         "title": "多份",
         "type": "ERC1155"
+      },
+      "empty": {
+        "title": "未找到集合",
+        "description": "没有收藏对铸币开放"
       }
     },
     "restricted": {

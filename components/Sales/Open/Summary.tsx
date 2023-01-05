@@ -1,7 +1,7 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import Image from 'next/image'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 
 export type Props = {
   currencies: {

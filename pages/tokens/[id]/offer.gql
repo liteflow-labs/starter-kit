@@ -7,7 +7,9 @@ query FeesForOffer($id: String!) {
 query OfferForAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
-    standard
+    collection {
+      standard
+    }
     name
     image
     animationUrl

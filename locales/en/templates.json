@@ -26,10 +26,18 @@
           "placeholder": "Select a currency"
         },
         "min-price": {
-          "placeholder": "From"
+          "placeholder": "From",
+          "validation": {
+            "positive": "Min price must be greater than 0.",
+            "decimals": "Min price supports a maximum of {{ nbDecimals }} decimals."
+          }
         },
         "max-price": {
-          "placeholder": "To"
+          "placeholder": "To",
+          "validation": {
+            "positive": "Max price must be greater than 0.",
+            "decimals": "Max price supports a maximum of {{ nbDecimals }} decimals."
+          }
         },
         "offers": {
           "label": "Status",
@@ -94,6 +102,11 @@
       "preview": "Preview",
       "notifications": {
         "created": "Your NFT has been successfully created."
+      },
+      "notFound": {
+        "title": "Collection Not Found",
+        "description": "The collection you are trying to create a NFT on does not exist",
+        "link": "Create on another collection"
       }
     },
     "typeSelector": {
@@ -106,6 +119,10 @@
       "multiple": {
         "title": "Multiple",
         "type": "ERC1155"
+      },
+      "empty": {
+        "title": "No collection found",
+        "description": "No collections are open to mint"
       }
     },
     "restricted": {

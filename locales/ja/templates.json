@@ -26,10 +26,18 @@
           "placeholder": "通貨の選択"
         },
         "min-price": {
-          "placeholder": "から"
+          "placeholder": "から",
+          "validation": {
+            "positive": "最低価格は 0 より大きくなければなりません。",
+            "decimals": "最低価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+          }
         },
         "max-price": {
-          "placeholder": "まで"
+          "placeholder": "まで",
+          "validation": {
+            "positive": "最大価格は 0 より大きくなければなりません。",
+            "decimals": "最大価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+          }
         },
         "offers": {
           "label": "状態",
@@ -94,6 +102,11 @@
       "preview": "プレビュー",
       "notifications": {
         "created": "NFTが無事に作成されました。"
+      },
+      "notFound": {
+        "title": "コレクションが見つかりません",
+        "description": "NFTを作成しようとしているコレクションが存在しません",
+        "link": "別のコレクションで作成"
       }
     },
     "typeSelector": {
@@ -106,6 +119,10 @@
       "multiple": {
         "title": "マルチ",
         "type": "ERC1155"
+      },
+      "empty": {
+        "title": "コレクションが見つかりません",
+        "description": "ミントに開かれたコレクションはありません"
       }
     },
     "restricted": {

@@ -284,8 +284,8 @@
     "coming-soon": "Feature coming soon",
     "form": {
       "validation": {
-        "required": "This field is required",
-        "email": "Please enter a valid email address"
+        "required": "This field is required.",
+        "email": "Please enter a valid email address."
       },
       "email": {
         "placeholder": "Enter your email"
@@ -346,8 +346,11 @@
         "submit": "Place a bid",
         "title": "Place a bid",
         "validation": {
-          "required": "This field is required",
-          "positive": "This field must be greater than 0"
+          "required": "This field is required.",
+          "integer": "This field must be an integer.",
+          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
+          "in-range": "This field must be between 1 and {{ max }}.",
+          "positive": "This field must be greater than 0."
         },
         "currency": {
           "label": "Currency",
@@ -374,7 +377,9 @@
         "title": "Purchase Collectible",
         "submit": "Proceed to Payment",
         "validation": {
-          "required": "This field is required"
+          "required": "This field is required.",
+          "integer": "This field must be an integer.",
+          "in-range": "This field must be between 1 and {{ max }}."
         },
         "quantity": {
           "label": "Quantity",
@@ -452,7 +457,9 @@
       "form": {
         "submit": "Create Offer",
         "validation": {
-          "required": "This field is required"
+          "required": "This field is required.",
+          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
+          "positive": "This field must be greater than 0."
         },
         "currency": {
           "label": "Currency",
@@ -515,8 +522,11 @@
         "submit": "Create offer",
         "title": "Create a sale",
         "validation": {
-          "positive": "This field must be greater than 0",
-          "required": "This field is required"
+          "positive": "This field must be greater than 0.",
+          "integer": "This field must be an integer.",
+          "in-range": "This field must be between 1 and {{ max }}.",
+          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
+          "required": "This field is required."
         },
         "currency": {
           "label": "Currency",
@@ -602,7 +612,11 @@
         "submit": "Create Item",
         "title": "Create a Collectible",
         "validation": {
-          "required": "This field is required"
+          "required": "This field is required.",
+          "positive": "This field must be greater than 0.",
+          "integer": "This field must be an integer.",
+          "in-range": "This field must be between 0 and {{ max }}.",
+          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals."
         },
         "file": {
           "label": "Upload file",
