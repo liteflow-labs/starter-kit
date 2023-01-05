@@ -85,11 +85,11 @@ export const convertAssetWithSupplies = (
   collection: {
     address: asset.collection.address,
     name: asset.collection.name,
+    standard: asset.collection.standard,
   },
   saleSupply: BigNumber.from(
     asset.sales.aggregates?.sum?.availableQuantity || 0,
   ),
-  collection: { standard: asset.collection.standard },
   totalSupply: BigNumber.from(
     asset.ownerships.aggregates?.sum?.quantity || '0',
   ),
