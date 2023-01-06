@@ -103,7 +103,7 @@ query FetchAllERC721And1155(
       symbol
     }
   }
-  collections {
+  collections(orderBy: NAME_ASC) {
     nodes {
       chainId
       address
