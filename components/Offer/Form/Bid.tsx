@@ -236,6 +236,7 @@ const OfferFormBid: FC<Props> = (props) => {
           required
           error={errors.currencyId}
           onChange={(x: any) => setValue('currencyId', x)}
+          sortAlphabetically
         />
       )}
       <FormControl isInvalid={!!errors.bid}>

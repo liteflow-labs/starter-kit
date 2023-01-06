@@ -183,6 +183,7 @@ const SalesDirectForm: VFC<Props> = ({
           required
           error={errors.currencyId}
           onChange={(x: any) => setValue('currencyId', x)}
+          sortAlphabetically
         />
       )}
 
