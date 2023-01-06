@@ -5,6 +5,7 @@ import {
   Checkbox,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Grid,
   GridItem,
@@ -499,55 +500,112 @@ const ExplorePage: NextPage<Props> = ({
 
                 {currency && (
                   <Flex gap={3}>
-                    <InputGroup>
-                      <NumberInput
-                        clampValueOnBlur={false}
-                        min={0}
-                        step={Math.pow(10, -currency.decimals)}
-                        precision={currency.decimals}
-                        allowMouseWheel
-                        w="full"
-                        isDisabled={isSubmitting}
-                        onChange={(x: any) => setValue('minPrice', x)}
-                        format={(e) => e.toString()}
-                      >
-                        <NumberInputField
-                          placeholder={t(
-                            'explore.nfts.form.min-price.placeholder',
-                          )}
-                          {...register('minPrice')}
-                        />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    </InputGroup>
+                    <FormControl isInvalid={!!errors.minPrice}>
+                      <InputGroup>
+                        <NumberInput
+                          clampValueOnBlur={false}
+                          min={0}
+                          step={Math.pow(10, -currency.decimals)}
+                          precision={currency.decimals}
+                          allowMouseWheel
+                          w="full"
+                          isDisabled={isSubmitting}
+                          onChange={(x: any) => setValue('minPrice', x)}
+                          format={(e) => e.toString()}
+                        >
+                          <NumberInputField
+                            placeholder={t(
+                              'explore.nfts.form.min-price.placeholder',
+                            )}
+                            {...register('minPrice', {
+                              validate: (value) => {
+                                if (!value) return
+                                const splitValue = value.toString().split('.')
 
-                    <InputGroup>
-                      <NumberInput
-                        clampValueOnBlur={false}
-                        min={0}
-                        step={Math.pow(10, -currency.decimals)}
-                        precision={currency.decimals}
-                        allowMouseWheel
-                        w="full"
-                        isDisabled={isSubmitting}
-                        onChange={(x: any) => setValue('maxPrice', x)}
-                        format={(e) => e.toString()}
-                      >
-                        <NumberInputField
-                          placeholder={t(
-                            'explore.nfts.form.max-price.placeholder',
-                          )}
-                          {...register('maxPrice')}
-                        />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    </InputGroup>
+                                if (value < 0) {
+                                  return t(
+                                    'explore.nfts.form.min-price.validation.positive',
+                                  )
+                                }
+                                if (
+                                  splitValue[1] &&
+                                  splitValue[1].length > currency.decimals
+                                ) {
+                                  return t(
+                                    'explore.nfts.form.min-price.validation.decimals',
+                                    {
+                                      nbDecimals: currency.decimals,
+                                    },
+                                  )
+                                }
+                              },
+                            })}
+                          />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      </InputGroup>
+                      {errors.minPrice && (
+                        <FormErrorMessage>
+                          {errors.minPrice.message}
+                        </FormErrorMessage>
+                      )}
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.maxPrice}>
+                      <InputGroup>
+                        <NumberInput
+                          clampValueOnBlur={false}
+                          min={0}
+                          step={Math.pow(10, -currency.decimals)}
+                          precision={currency.decimals}
+                          allowMouseWheel
+                          w="full"
+                          isDisabled={isSubmitting}
+                          onChange={(x: any) => setValue('maxPrice', x)}
+                          format={(e) => e.toString()}
+                        >
+                          <NumberInputField
+                            placeholder={t(
+                              'explore.nfts.form.max-price.placeholder',
+                            )}
+                            {...register('maxPrice', {
+                              validate: (value) => {
+                                if (value === null) return
+                                const splitValue = value.toString().split('.')
+
+                                if (value < 0) {
+                                  return t(
+                                    'explore.nfts.form.max-price.validation.positive',
+                                  )
+                                }
+                                if (
+                                  splitValue[1] &&
+                                  splitValue[1].length > currency.decimals
+                                ) {
+                                  return t(
+                                    'explore.nfts.form.max-price.validation.decimals',
+                                    {
+                                      nbDecimals: currency.decimals,
+                                    },
+                                  )
+                                }
+                              },
+                            })}
+                          />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      </InputGroup>
+                      {errors.maxPrice && (
+                        <FormErrorMessage>
+                          {errors.maxPrice.message}
+                        </FormErrorMessage>
+                      )}
+                    </FormControl>
                   </Flex>
                 )}
               </Stack>

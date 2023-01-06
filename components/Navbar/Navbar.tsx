@@ -445,7 +445,7 @@ const Navbar: VFC<{
     if (data.search) query.search = data.search
     else delete query.search
     delete query.skip // reset pagination
-    if (router.asPath.indexOf('/explore') !== -1) return push({ query })
+    if (router.asPath.startsWith('/explore')) return push({ query })
     return push({ pathname: '/explore', query })
   })
 
