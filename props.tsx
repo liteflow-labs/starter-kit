@@ -1,14 +1,10 @@
 import {
   ApolloClient,
-  createHttpLink,
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
 import decode, { JwtPayload } from 'jwt-decode'
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
-import { NextApiRequestCookies } from 'next/dist/server/api-utils'
-import Cookies from 'universal-cookie'
 
 const COOKIE_JWT_TOKEN = 'jwt-token'
 
@@ -30,37 +26,11 @@ type GetServerSidePropsContextWithUser = GetServerSidePropsContext & {
 
 function getClient(
   uri: string,
-  ssrMode: boolean,
-  cookies: NextApiRequestCookies | undefined,
+  jwt: string | undefined,
 ): ApolloClient<NormalizedCacheObject> {
-  const httpLink = createHttpLink({
-    uri,
-  })
-
-  // this function is called every time apollo is making a request
-  const authLink = setContext((_, context) => {
-    const c = new Cookies(cookies)
-    console.log('Debug headers:')
-    console.log(context.headers)
-
-    const jwtToken = c.get(COOKIE_JWT_TOKEN)
-    if (!jwtToken) return context
-
-    // check expiration of jwt token
-    const res = decode<JwtPayload>(jwtToken)
-    if (res.exp && res.exp < Math.ceil(Date.now() / 1000)) return context
-
-    return {
-      ...context,
-      headers: {
-        ...context.headers,
-        authorization: 'Bearer ' + jwtToken,
-      },
-    }
-  })
-
   return new ApolloClient({
-    link: authLink.concat(httpLink),
+    uri: uri,
+    headers: jwt ? { authorization: `Bearer ${jwt}` } : {},
     cache: new InMemoryCache({
       typePolicies: {
         Account: {
@@ -68,7 +38,7 @@ function getClient(
         },
       },
     }),
-    ssrMode,
+    ssrMode: true,
   })
 }
 
@@ -83,8 +53,8 @@ export function wrapServerSideProps<T extends { [key: string]: unknown }>(
 ) => Promise<GetServerSidePropsResult<T>> {
   return async (context) => {
     console.log('Function starts')
-    const client = getClient(url, true, context.req.cookies)
     const jwt = context.req.cookies[COOKIE_JWT_TOKEN]
+    const client = getClient(url, jwt)
     const address = jwt
       ? decode<JwtPayload & { address: string }>(jwt).address
       : null
