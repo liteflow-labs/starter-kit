@@ -48,6 +48,9 @@ function getClient(
     const res = decode<JwtPayload>(jwtToken)
     if (res.exp && res.exp < Math.ceil(Date.now() / 1000)) return context
 
+    console.log('Debug headers:')
+    console.log(context.headers)
+
     return {
       ...context,
       headers: {
