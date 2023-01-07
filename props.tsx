@@ -40,6 +40,8 @@ function getClient(
   // this function is called every time apollo is making a request
   const authLink = setContext((_, context) => {
     const c = new Cookies(cookies)
+    console.log('Debug headers:')
+    console.log(context.headers)
 
     const jwtToken = c.get(COOKIE_JWT_TOKEN)
     if (!jwtToken) return context
@@ -47,9 +49,6 @@ function getClient(
     // check expiration of jwt token
     const res = decode<JwtPayload>(jwtToken)
     if (res.exp && res.exp < Math.ceil(Date.now() / 1000)) return context
-
-    console.log('Debug headers:')
-    console.log(context.headers)
 
     return {
       ...context,
@@ -83,6 +82,7 @@ export function wrapServerSideProps<T extends { [key: string]: unknown }>(
   context: GetServerSidePropsContext,
 ) => Promise<GetServerSidePropsResult<T>> {
   return async (context) => {
+    console.log('Function starts')
     const client = getClient(url, true, context.req.cookies)
     const jwt = context.req.cookies[COOKIE_JWT_TOKEN]
     const address = jwt
@@ -96,6 +96,7 @@ export function wrapServerSideProps<T extends { [key: string]: unknown }>(
       },
     }
     const result = await handler(contextWithUser, client)
+    console.log('Function ends')
     return wrapServerSidePropsResult<T>(contextWithUser, client, result)
   }
 }
