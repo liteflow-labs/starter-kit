@@ -110,7 +110,7 @@ const CreatePage: NextPage<Props> = ({
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const { account } = useWeb3React()
-  const configPromise = useConfig()
+  const configFn = useConfig()
   const [config, setConfig] = useState<Config>()
   const toast = useToast()
   const { data } = useFetchAccountAndCollectionQuery({
@@ -178,9 +178,9 @@ const CreatePage: NextPage<Props> = ({
   )
 
   useEffect(() => {
-    void configPromise.then(setConfig)
+    void configFn().then(setConfig)
     return () => setConfig(undefined)
-  }, [configPromise])
+  }, [configFn])
 
   if (environment.RESTRICT_TO_VERIFIED_ACCOUNT && !creator.verified) {
     return (
