@@ -151,9 +151,11 @@ const TokenCard: VFC<Props> = ({
               size={5}
             />
           ) : (
-            <Text variant="subtitle2" color="gray.500" isTruncated>
-              {asset.collection.name}
-            </Text>
+            <Link href={`/collection/${asset.collection.address}`}>
+              <Text variant="subtitle2" color="gray.500" isTruncated>
+                {asset.collection.name}
+              </Text>
+            </Link>
           )}
           <Link href={href}>
             <Heading
