@@ -39,6 +39,7 @@ type IProps<T extends string> = HTMLAttributes<any> & {
   control?: Control<any, object>
   labelInfo?: string | JSX.Element
   inlineLabel?: boolean
+  sortAlphabetically?: boolean
 }
 
 const Select = <T extends string>({
@@ -56,11 +57,20 @@ const Select = <T extends string>({
   control,
   labelInfo,
   inlineLabel,
+  sortAlphabetically,
   ...props
 }: IProps<T>): ReactElement => {
   const selectedChoice = useMemo(
     () => choices.find((x) => x.value === value),
     [choices, value],
+  )
+
+  const choicesList = useMemo(
+    () =>
+      sortAlphabetically
+        ? choices.sort((a, b) => a.label.localeCompare(b.label))
+        : choices,
+    [choices, sortAlphabetically],
   )
 
   const select = (hookChange?: (...event: any[]) => void) => (
@@ -158,7 +168,7 @@ const Select = <T extends string>({
               maxH={dropdownMaxHeight ? dropdownMaxHeight : 52}
               overflowY="scroll"
             >
-              {choices.map((choice, i) => (
+              {choicesList.map((choice, i) => (
                 <MenuItem
                   onClick={() => {
                     if (Array.isArray(choice.value))

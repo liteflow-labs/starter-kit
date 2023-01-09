@@ -515,6 +515,7 @@ const ExplorePage: NextPage<Props> = ({
                 disabled={currencies.length <= 1 || isSubmitting}
                 error={errors.currencyId}
                 onChange={(x: any) => setValue('currencyId', x)}
+                sortAlphabetically
               />
 
               {currency && (
@@ -630,12 +631,12 @@ const ExplorePage: NextPage<Props> = ({
               <VStack>
                 {[
                   {
-                    label: t('explore.form.offers.values.fixed'),
-                    value: OfferFilter.fixed,
-                  },
-                  {
                     label: t('explore.form.offers.values.auction'),
                     value: OfferFilter.auction,
+                  },
+                  {
+                    label: t('explore.form.offers.values.fixed'),
+                    value: OfferFilter.fixed,
                   },
                 ].map((x) => (
                   <Checkbox
