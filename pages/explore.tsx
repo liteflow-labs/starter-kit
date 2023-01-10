@@ -110,7 +110,7 @@ const traitFilter = (trait: string, values: string[]): AssetFilter =>
     or: [
       {
         traits: {
-          some: {
+          every: {
             type: { equalTo: trait },
             value: { in: values },
           },
