@@ -123,10 +123,6 @@ function Layout({
             query: router.query,
             events: router.events,
           }}
-          login={{
-            ...connectors,
-            networkName: environment.NETWORK_NAME,
-          }}
           multiLang={{
             locale: router.locale,
             pathname: router.pathname,

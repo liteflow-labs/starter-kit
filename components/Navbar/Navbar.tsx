@@ -29,16 +29,11 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { EmailConnector } from '@nft/email-connector'
 import { useAddFund } from '@nft/hooks'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
-import { useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { MittEmitter } from 'next/dist/shared/lib/mitt'
 import Image from 'next/image'
@@ -393,24 +388,9 @@ const Navbar: VFC<{
     isReady: boolean
     events: MittEmitter<'routeChangeStart'>
   }
-  login: {
-    email?: EmailConnector
-    injected?: InjectedConnector
-    walletConnect?: WalletConnectConnector
-    coinbase?: WalletLinkConnector
-    networkName: string
-  }
   signer: Signer | undefined
   multiLang?: MultiLang
-}> = ({
-  allowTopUp,
-  logo,
-  router,
-  login,
-  multiLang,
-  disableMinting,
-  signer,
-}) => {
+}> = ({ allowTopUp, logo, router, multiLang, disableMinting, signer }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { address: accountWithChecksum } = useAccount()
@@ -566,7 +546,7 @@ const Navbar: VFC<{
           />
         </Flex>
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} {...login} />
+      <LoginModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

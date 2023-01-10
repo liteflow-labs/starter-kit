@@ -2,10 +2,6 @@ import { Button, Icon, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { formatError, useInvitation } from '@nft/hooks'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
-import { useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react'
 import { useAccount } from 'wagmi'
@@ -14,16 +10,9 @@ import LoginModal from '../Modal/Login'
 type Props = {
   loginUrl: string
   signer: Signer | undefined
-  login: {
-    email?: EmailConnector
-    injected?: InjectedConnector
-    coinbase?: WalletLinkConnector
-    walletConnect?: WalletConnectConnector
-    networkName: string
-  }
 }
 
-const ReferralForm: VFC<Props> = ({ login, loginUrl, signer }) => {
+const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
   const { isConnected } = useAccount()
@@ -57,7 +46,7 @@ const ReferralForm: VFC<Props> = ({ login, loginUrl, signer }) => {
     if (!isConnected)
       return (
         <>
-          <LoginModal isOpen={isOpen} onClose={onClose} {...login} />
+          <LoginModal isOpen={isOpen} onClose={onClose} />
           <Button onClick={onOpen} width="full">
             <Text as="span" isTruncated>
               {t('referral.form.connect')}

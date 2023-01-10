@@ -15,7 +15,6 @@ import BackButton from '../../../components/Navbar/BackButton'
 import OfferFormBid from '../../../components/Offer/Form/Bid'
 import Price from '../../../components/Price/Price'
 import TokenCard from '../../../components/Token/Card'
-import connectors from '../../../connectors'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -251,10 +250,6 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
                 feesPerTenThousand={feesPerTenThousand}
                 allowTopUp={environment.ALLOW_TOP_UP}
-                login={{
-                  ...connectors,
-                  networkName: environment.NETWORK_NAME,
-                }}
               />
             )}
           {asset.collection.standard === 'ERC1155' && (
@@ -272,10 +267,6 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
               offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
               feesPerTenThousand={feesPerTenThousand}
               allowTopUp={environment.ALLOW_TOP_UP}
-              login={{
-                ...connectors,
-                networkName: environment.NETWORK_NAME,
-              }}
             />
           )}
         </Flex>

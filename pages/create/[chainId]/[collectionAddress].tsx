@@ -27,7 +27,6 @@ import type { Props as NFTCardProps } from '../../../components/Token/Card'
 import TokenCard from '../../../components/Token/Card'
 import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
-import connectors from '../../../connectors'
 import environment from '../../../environment'
 import {
   Config,
@@ -272,10 +271,6 @@ const CreatePage: NextPage<Props> = ({
           blockExplorer={blockExplorer}
           onCreated={onCreated}
           onInputChange={setFormData}
-          login={{
-            ...connectors,
-            networkName: environment.NETWORK_NAME,
-          }}
           activateUnlockableContent={config?.hasUnlockableContent || false}
           maxRoyalties={environment.MAX_ROYALTIES}
           activateLazyMint={config?.hasLazyMint || false}

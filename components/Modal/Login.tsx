@@ -12,54 +12,30 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { EmailConnector } from '@nft/email-connector'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
+import { connectors } from '../../connectors'
 import WalletCoinbase from '../Wallet/Connectors/Coinbase'
-import WalletEmail from '../Wallet/Connectors/Email'
 import WalletMetamask from '../Wallet/Connectors/Metamask'
 import WalletWalletConnect from '../Wallet/Connectors/WalletConnect'
 
 type Props = {
   isOpen: boolean
   onClose: () => void
-  email?: EmailConnector
-  injected?: InjectedConnector
-  coinbase?: WalletLinkConnector
-  walletConnect?: WalletConnectConnector
-  networkName: string
 }
 
-const LoginModal: FC<Props> = ({
-  isOpen,
-  onClose,
-  email,
-  coinbase,
-  injected,
-  walletConnect,
-  networkName,
-}) => {
+const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
   const { t } = useTranslation('components')
-  const { account, error, activate } = useWeb3React()
-  const [errorFromLogin, setErrorFromLogin] = useState<Error>()
+  const { isConnected } = useAccount()
+  const [error, setError] = useState<Error>()
 
-  const invalidNetwork = useMemo(
-    () => errorFromLogin && errorFromLogin instanceof UnsupportedChainIdError,
-    [errorFromLogin],
-  )
-
-  const hasStandardWallet = useMemo(
-    () => injected || coinbase || walletConnect,
-    [injected, coinbase, walletConnect],
-  )
+  const hasStandardWallet =
+    connectors.injected || connectors.coinbase || connectors.walletConnect
 
   useEffect(() => {
-    if (account) onClose()
-  }, [account, onClose])
+    if (isConnected) onClose()
+  }, [isConnected, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
@@ -76,8 +52,8 @@ const LoginModal: FC<Props> = ({
             {t('modal.login.description')}
           </Text>
 
-          {email && <WalletEmail connector={email} activate={activate} />}
-          {email && hasStandardWallet && (
+          {/* {email && <WalletEmail connector={email} activate={activate} />} */}
+          {connectors.email && hasStandardWallet && (
             <Box position="relative" mt={6} mb={2}>
               <Flex
                 position="absolute"
@@ -107,14 +83,10 @@ const LoginModal: FC<Props> = ({
               {error.message ? error.message : error.toString()}
             </Text>
           )}
-          {invalidNetwork && (
-            <Text as="span" role="alert" variant="error" mt={3}>
-              {t('modal.login.errors.wrong-network', { networkName })}
-            </Text>
-          )}
+
           {hasStandardWallet && (
             <Flex direction={{ base: 'column', md: 'row' }} gap={3}>
-              {injected && (
+              {connectors.injected && (
                 <Stack
                   cursor="pointer"
                   w="full"
@@ -129,13 +101,12 @@ const LoginModal: FC<Props> = ({
                   transition="box-shadow 0.3s ease-in-out"
                 >
                   <WalletMetamask
-                    connector={injected}
-                    activate={activate}
-                    onError={setErrorFromLogin}
+                    connector={connectors.injected}
+                    onError={setError}
                   />
                 </Stack>
               )}
-              {coinbase && (
+              {connectors.coinbase && (
                 <Stack
                   cursor="pointer"
                   w="full"
@@ -150,13 +121,12 @@ const LoginModal: FC<Props> = ({
                   transition="box-shadow 0.3s ease-in-out"
                 >
                   <WalletCoinbase
-                    activate={activate}
-                    connector={coinbase}
-                    onError={setErrorFromLogin}
+                    connector={connectors.coinbase}
+                    onError={setError}
                   />
                 </Stack>
               )}
-              {walletConnect && (
+              {connectors.walletConnect && (
                 <Stack
                   cursor="pointer"
                   w="full"
@@ -171,9 +141,8 @@ const LoginModal: FC<Props> = ({
                   transition="box-shadow 0.3s ease-in-out"
                 >
                   <WalletWalletConnect
-                    activate={activate}
-                    connector={walletConnect}
-                    onError={setErrorFromLogin}
+                    connector={connectors.walletConnect}
+                    onError={setError}
                   />
                 </Stack>
               )}

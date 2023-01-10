@@ -14,7 +14,6 @@ import OfferFormCheckout from '../../components/Offer/Form/Checkout'
 import Price from '../../components/Price/Price'
 import TokenCard from '../../components/Token/Card'
 import Avatar from '../../components/User/Avatar'
-import connectors from '../../connectors'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -216,10 +215,6 @@ const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
             multiple={!isSingle}
             onPurchased={onPurchased}
             allowTopUp={environment.ALLOW_TOP_UP}
-            login={{
-              ...connectors,
-              networkName: environment.NETWORK_NAME,
-            }}
           />
         </Flex>
       </Flex>
