@@ -8,9 +8,7 @@ import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import { Box, ChakraProvider } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { Web3Provider } from '@ethersproject/providers'
 import { LiteflowProvider, useAuthenticate } from '@nft/hooks'
-import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
@@ -26,14 +24,14 @@ import React, {
   useMemo,
 } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
+import { useAccount, useDisconnect, WagmiConfig } from 'wagmi'
 import Banner from '../components/Banner/Banner'
 import ChatWindow from '../components/ChatWindow'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
-import connectors from '../connectors'
+import { client } from '../connectors'
 import environment from '../environment'
-import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
 import { APOLLO_STATE_PROP_NAME, PropsWithUserAndState } from '../props'
 import {
@@ -48,17 +46,6 @@ require('dayjs/locale/zh-cn')
 require('dayjs/locale/es-mx')
 
 NProgress.configure({ showSpinner: false })
-
-function web3Provider(provider: any): Web3Provider {
-  return new Web3Provider(
-    provider,
-    typeof provider.chainId === 'number'
-      ? provider.chainId
-      : typeof provider.chainId === 'string'
-      ? parseInt(provider.chainId)
-      : 'any',
-  )
-}
 
 function Layout({
   userAddress,
@@ -166,8 +153,8 @@ function AccountProvider(
   }>,
 ) {
   const signer = useSigner()
-  const ready = useEagerConnect()
-  const { deactivate } = useWeb3React()
+  const { disconnect } = useDisconnect()
+
   const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
     useAuthenticate()
   const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
@@ -176,6 +163,12 @@ function AccountProvider(
     resetAuthenticationToken()
     removeCookie(COOKIE_JWT_TOKEN, COOKIE_OPTIONS)
   }, [removeCookie, resetAuthenticationToken])
+
+  useAccount({
+    onDisconnect() {
+      void clearAuthenticationToken()
+    },
+  })
 
   const authenticateSigner = useCallback(
     async (signer: Signer) => {
@@ -191,10 +184,10 @@ function AccountProvider(
           ...jwtValidity(jwtToken),
         })
       } catch {
-        deactivate()
+        disconnect()
       }
     },
-    [authenticate, setCookie, setAuthenticationToken, cookies, deactivate],
+    [authenticate, setCookie, setAuthenticationToken, cookies, disconnect],
   )
 
   const client = useMemo(
@@ -219,10 +212,9 @@ function AccountProvider(
   )
 
   useEffect(() => {
-    if (!ready) return
-    if (!signer) return void clearAuthenticationToken()
+    if (!signer) return
     authenticateSigner(signer).catch(clearAuthenticationToken)
-  }, [signer, ready, authenticateSigner, clearAuthenticationToken])
+  }, [signer, authenticateSigner, clearAuthenticationToken])
 
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
@@ -280,7 +272,7 @@ function MyApp({
         <meta name="twitter:card" content="summary" />
       </Head>
       <GoogleAnalytics strategy="lazyOnload" />
-      <Web3ReactProvider getLibrary={web3Provider}>
+      <WagmiConfig client={client}>
         <CookiesProvider>
           <ChakraProvider theme={theme}>
             <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
@@ -292,7 +284,7 @@ function MyApp({
             </LiteflowProvider>
           </ChakraProvider>
         </CookiesProvider>
-      </Web3ReactProvider>
+      </WagmiConfig>
     </ErrorBoundary>
   )
 }
