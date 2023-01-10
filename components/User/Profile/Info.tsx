@@ -17,9 +17,9 @@ import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard
 import { HiOutlineGlobeAlt } from '@react-icons/all-files/hi/HiOutlineGlobeAlt'
 import { SiInstagram } from '@react-icons/all-files/si/SiInstagram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
-import { useWeb3React } from '@web3-react/core'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useState, VFC } from 'react'
+import { useAccount } from 'wagmi'
 import Link from '../../Link/Link'
 import WalletAddress from '../../Wallet/Address'
 
@@ -47,7 +47,7 @@ const UserProfileInfo: VFC<{
   const { t } = useTranslation('components')
   const { create: createReferralLink, creating: creatingReferralLink } =
     useInvitation(signer)
-  const { account } = useWeb3React()
+  const { isConnected } = useAccount()
   const toast = useToast()
   const [referralUrl, setReferralUrl] = useState<string>()
 
@@ -56,7 +56,7 @@ const UserProfileInfo: VFC<{
   const ownerLoggedIn = useIsLoggedIn(address)
 
   useEffect(() => {
-    if (!account) return
+    if (!isConnected) return
     if (referralUrl) return
     if (!loginUrlForReferral) return
     createReferralLink()
@@ -67,7 +67,7 @@ const UserProfileInfo: VFC<{
           status: 'error',
         }),
       )
-  }, [referralUrl, account, createReferralLink, loginUrlForReferral, toast])
+  }, [referralUrl, isConnected, createReferralLink, loginUrlForReferral, toast])
 
   const handleReferralCopyLink = useCallback(() => {
     if (!referralUrl) return

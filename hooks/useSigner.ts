@@ -1,6 +1,5 @@
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
-import { useWeb3React } from '@web3-react/core'
-import { useMemo } from 'react'
+import { useSigner as useBaseSigner } from 'wagmi'
 
 /**
  * Hook returning the current signer logged in to the website. This signer can and should
@@ -8,11 +7,6 @@ import { useMemo } from 'react'
  * @returns (Signer & TypedDataSigner) | undefined
  */
 export default function useSigner(): (Signer & TypedDataSigner) | undefined {
-  const { library, account } = useWeb3React()
-
-  return useMemo(() => {
-    if (!library) return
-    if (!account) return
-    return library.getSigner(account)
-  }, [library, account])
+  const { data } = useBaseSigner()
+  return (data || undefined) as (Signer & TypedDataSigner) | undefined
 }

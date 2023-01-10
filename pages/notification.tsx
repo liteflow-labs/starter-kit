@@ -1,10 +1,10 @@
 import { Button, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCookies } from 'react-cookie'
+import { useAccount } from 'wagmi'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
 import NotificationDetail from '../components/Notification/Detail'
@@ -50,7 +50,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
   const ready = useEagerConnect()
   const { t } = useTranslation('templates')
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   useLoginRedirect(ready)
   const [_, setCookies] = useCookies()
   const [loading, setLoading] = useState(false)
@@ -83,9 +83,9 @@ const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
   }, [data, fetchMore])
 
   useEffect(() => {
-    if (!account) return
+    if (!address) return
     setCookies(
-      `lastNotification-${account.toLowerCase()}`,
+      `lastNotification-${address.toLowerCase()}`,
       new Date().toJSON(),
       {
         secure: true,
@@ -93,7 +93,7 @@ const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
         path: '/',
       },
     )
-  }, [account, setCookies])
+  }, [address, setCookies])
 
   return (
     <SmallLayout>

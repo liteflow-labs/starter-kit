@@ -14,13 +14,13 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import { useAccount } from 'wagmi'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -122,7 +122,7 @@ const AuctionPage: NextPage<Props> = ({
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const [changePage, changeLimit] = usePaginate()
   const blockExplorer = useBlockExplorer(
     environment.BLOCKCHAIN_EXPLORER_NAME,
@@ -191,7 +191,7 @@ const AuctionPage: NextPage<Props> = ({
 
       <UserProfileTemplate
         signer={signer}
-        currentAccount={account}
+        currentAccount={address}
         account={userAccount}
         currentTab="offers"
         totals={

@@ -10,13 +10,13 @@ import {
 import { BigNumber } from '@ethersproject/bignumber'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
+import { useAccount } from 'wagmi'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
 import Radio from '../../../components/Radio/Radio'
@@ -114,7 +114,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   useLoginRedirect(ready)
 
   const blockExplorer = useBlockExplorer(
@@ -127,7 +127,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address?.toLowerCase() : currentAccount) || '',
     },
   })
 
@@ -150,8 +150,8 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   )
 
   const isCreator =
-    asset && account
-      ? asset.creator.address.toLowerCase() === account.toLowerCase()
+    asset && address
+      ? asset.creator.address.toLowerCase() === address.toLowerCase()
       : false
 
   const currencies = useMemo(() => data?.currencies?.nodes || [], [data])

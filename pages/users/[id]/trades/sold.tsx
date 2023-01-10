@@ -15,13 +15,13 @@ import {
 } from '@chakra-ui/react'
 import { dateFromNow, formatAddress } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import { useAccount } from 'wagmi'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -117,7 +117,7 @@ const TradeSoldPage: NextPage<Props> = ({
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
   const [changePage, changeLimit] = usePaginate()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
   const { data } = useFetchUserTradeSoldQuery({
@@ -161,7 +161,7 @@ const TradeSoldPage: NextPage<Props> = ({
 
       <UserProfileTemplate
         signer={signer}
-        currentAccount={account}
+        currentAccount={address}
         account={userAccount}
         currentTab="trades"
         totals={

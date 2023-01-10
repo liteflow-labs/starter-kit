@@ -1,12 +1,12 @@
-import { useWeb3React } from '@web3-react/core'
 import { useEffect, useRef } from 'react'
+import { useAccount } from 'wagmi'
 
 // Hook to execute the `reloadFn` when the `account` from `useSession` changes.
 export default function useExecuteOnAccountChange(
   reloadFn: () => any,
   ready: boolean,
 ): void {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const ref = useRef(true)
   useEffect(() => {
     if (!ready) return
@@ -15,5 +15,5 @@ export default function useExecuteOnAccountChange(
       return
     }
     void reloadFn()
-  }, [reloadFn, account, ready])
+  }, [reloadFn, address, ready])
 }

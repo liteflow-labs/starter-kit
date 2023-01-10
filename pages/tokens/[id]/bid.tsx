@@ -1,13 +1,13 @@
 import { Box, Flex, Heading, Icon, Stack, useToast } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import { useAccount } from 'wagmi'
 import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
@@ -97,7 +97,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
   const { data, refetch } = useBidOnAssetQuery({
@@ -239,7 +239,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
             asset.ownerships.nodes[0] && (
               <OfferFormBid
                 signer={signer}
-                account={account?.toLowerCase()}
+                account={address?.toLowerCase()}
                 assetId={asset.id}
                 multiple={false}
                 owner={asset.ownerships.nodes[0].ownerAddress}
@@ -260,7 +260,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta }) => {
           {asset.collection.standard === 'ERC1155' && (
             <OfferFormBid
               signer={signer}
-              account={account?.toLowerCase()}
+              account={address?.toLowerCase()}
               assetId={asset.id}
               multiple={true}
               supply={asset.ownerships.aggregates?.sum?.quantity || '0'}

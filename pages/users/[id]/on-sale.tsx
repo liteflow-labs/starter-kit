@@ -1,11 +1,11 @@
 import { Text } from '@chakra-ui/react'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import { useAccount } from 'wagmi'
 import Head from '../../../components/Head'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
@@ -108,7 +108,7 @@ const OnSalePage: NextPage<Props> = ({
   const { t } = useTranslation('templates')
   const { pathname, replace, query } = useRouter()
   const [changePage, changeLimit] = usePaginate()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
   const { data, refetch } = useFetchOnSaleAssetsQuery({
@@ -167,7 +167,7 @@ const OnSalePage: NextPage<Props> = ({
 
       <UserProfileTemplate
         signer={signer}
-        currentAccount={account}
+        currentAccount={address}
         account={userAccount}
         currentTab="on-sale"
         totals={

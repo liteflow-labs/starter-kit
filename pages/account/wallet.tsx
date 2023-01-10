@@ -1,6 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import { useMemo } from 'react'
+import { useAccount } from 'wagmi'
 import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
 import WalletAccount from '../../components/Wallet/Account/Wallet'
@@ -31,19 +31,19 @@ export const getServerSideProps = wrapServerSideProps(
 
 const WalletPage: NextPage = () => {
   const ready = useEagerConnect()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   useLoginRedirect(ready)
   const { data } = useWalletCurrenciesQuery()
   const currencies = useMemo(() => data?.currencies?.nodes, [data])
 
   if (!currencies) return <></>
-  if (!account) return <></>
+  if (!address) return <></>
   return (
     <SmallLayout>
       <Head title="Account - Wallet" />
       <AccountTemplate currentTab="wallet">
         <WalletAccount
-          account={account.toLowerCase()}
+          account={address.toLowerCase()}
           currencies={currencies}
           networkName={environment.NETWORK_NAME}
         />

@@ -1,12 +1,12 @@
 import { Box, Flex, Heading, Stack, useToast } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import { useAccount } from 'wagmi'
 import Head from '../../components/Head'
 import Image from '../../components/Image/Image'
 import BackButton from '../../components/Navbar/BackButton'
@@ -89,7 +89,7 @@ const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
   const { back, push } = useRouter()
   const toast = useToast()
 
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const blockExplorer = useBlockExplorer(
     environment.BLOCKCHAIN_EXPLORER_NAME,
@@ -209,7 +209,7 @@ const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
 
           <OfferFormCheckout
             signer={signer}
-            account={account?.toLowerCase()}
+            account={address?.toLowerCase()}
             offer={offer}
             blockExplorer={blockExplorer}
             currency={offer.currency}

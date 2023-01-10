@@ -45,6 +45,7 @@ import Image from 'next/image'
 import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
+import { useAccount, useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
 import Link from '../Link/Link'
 import LoginModal from '../Modal/Login'
@@ -412,7 +413,8 @@ const Navbar: VFC<{
 }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { account: accountWithChecksum, deactivate } = useWeb3React()
+  const { address: accountWithChecksum } = useAccount()
+  const { disconnect } = useDisconnect()
   const account = accountWithChecksum?.toLowerCase()
   const { asPath, query, push, isReady } = router
   const { register, setValue, handleSubmit } = useForm<FormData>()
@@ -527,7 +529,7 @@ const Navbar: VFC<{
                 account={account}
                 topUp={{ allowTopUp, addFund, addingFund }}
                 user={data.account}
-                signOutFn={deactivate}
+                signOutFn={disconnect}
               />
             </>
           ) : (
@@ -560,7 +562,7 @@ const Navbar: VFC<{
             multiLang={multiLang}
             topUp={{ allowTopUp, addFund, addingFund }}
             disableMinting={disableMinting}
-            signOutFn={deactivate}
+            signOutFn={disconnect}
           />
         </Flex>
       </Flex>

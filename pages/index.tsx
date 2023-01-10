@@ -9,10 +9,10 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
+import { useAccount } from 'wagmi'
 import Link from '../components/Link/Link'
 import Slider from '../components/Slider/Slider'
 import TokenCard from '../components/Token/Card'
@@ -106,7 +106,7 @@ const HomePage: NextPage<Props> = ({
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const toast = useToast()
   const date = useMemo(() => new Date(now), [now])
   const { data, refetch, error } = useFetchHomePageQuery({
@@ -115,7 +115,7 @@ const HomePage: NextPage<Props> = ({
       now: date,
       limit,
       assetIds: tokens,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address?.toLowerCase() : currentAccount) || '',
     },
   })
 
@@ -165,12 +165,12 @@ const HomePage: NextPage<Props> = ({
           owners={asset.ownerships.nodes.map(convertOwnership)}
           isHomepage={true}
           signer={signer}
-          currentAccount={account?.toLowerCase()}
+          currentAccount={address?.toLowerCase()}
           onOfferCanceled={reloadInfo}
           onAuctionAccepted={reloadInfo}
         />
       )),
-    [featured, blockExplorer, account, signer, reloadInfo, currencies],
+    [featured, blockExplorer, address, signer, reloadInfo, currencies],
   )
   return (
     <LargeLayout>

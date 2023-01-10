@@ -12,7 +12,6 @@ import {
 import { isSameAddress, useConfig } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
-import { useWeb3React } from '@web3-react/core'
 import Empty from 'components/Empty/Empty'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
@@ -20,6 +19,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
+import { useAccount } from 'wagmi'
 import Head from '../../../components/Head'
 import Link from '../../../components/Link/Link'
 import BackButton from '../../../components/Navbar/BackButton'
@@ -109,7 +109,7 @@ const CreatePage: NextPage<Props> = ({
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const configPromise = useConfig()
   const [config, setConfig] = useState<Config>()
   const toast = useToast()
@@ -117,7 +117,7 @@ const CreatePage: NextPage<Props> = ({
     variables: {
       chainId,
       collectionAddress,
-      account: (ready ? account?.toLowerCase() : currentAccount) || '',
+      account: (ready ? address?.toLowerCase() : currentAccount) || '',
     },
   })
 

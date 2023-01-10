@@ -22,13 +22,13 @@ import {
   useCancelOffer,
   useIsLoggedIn,
 } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import { useAccount } from 'wagmi'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -124,7 +124,7 @@ const BidPlacedPage: NextPage<Props> = ({
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const [changePage, changeLimit] = usePaginate()
   const [cancel, { activeStep, transactionHash }] = useCancelOffer(signer)
   const toast = useToast()
@@ -200,7 +200,7 @@ const BidPlacedPage: NextPage<Props> = ({
       <UserProfileTemplate
         signer={signer}
         account={userAccount}
-        currentAccount={account}
+        currentAccount={address}
         currentTab="bids"
         totals={
           new Map([
