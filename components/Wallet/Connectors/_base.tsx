@@ -1,52 +1,24 @@
 import { Box, Spinner, Text } from '@chakra-ui/react'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { SyntheticEvent, useState, VFC } from 'react'
+import { VFC } from 'react'
+import { useConnect } from 'wagmi'
+import { Connector } from 'wagmi/connectors'
 
 type Props = {
-  connector: AbstractConnector
+  connector: Connector
   name: string
   icon: JSX.Element
-  activate: (
-    connector: AbstractConnector,
-    onError?: ((error: Error) => void) | undefined,
-    throwErrors?: boolean | undefined,
-  ) => Promise<void>
   onError: (error?: Error) => void
 }
 
-const WalletBase: VFC<Props> = ({
-  icon,
-  connector,
-  onError,
-  name,
-  activate,
-}) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const handle = async (e: SyntheticEvent) => {
-    setLoading(true)
-    e.stopPropagation()
-    e.preventDefault()
-    onError() // reset error
-    if (loading) return
-    try {
-      if (connector instanceof WalletConnectConnector) {
-        // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-        // from issue https://github.com/NoahZinsmeister/web3-react/issues/124#issuecomment-993923827
-        // let's remove this hack when issue is resolved
-        connector.walletConnectProvider = undefined
-      }
-      await activate(connector, undefined, true)
-    } catch (error) {
-      onError(error as Error)
-    } finally {
-      setLoading(false)
-    }
-  }
+const WalletBase: VFC<Props> = ({ icon, connector, onError, name }) => {
+  const { connect, isLoading } = useConnect({
+    onError,
+    connector,
+  })
 
   return (
-    <Box as="a" p={6} onClick={handle}>
-      {loading ? (
+    <Box as="a" p={6} onClick={() => connect()}>
+      {isLoading ? (
         <Spinner
           display="block"
           color="brand.500"

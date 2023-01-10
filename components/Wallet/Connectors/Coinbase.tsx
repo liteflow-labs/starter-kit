@@ -1,16 +1,10 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { VFC } from 'react'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import WalletBase from './_base'
 
 type Props = {
-  connector: WalletLinkConnector
+  connector: CoinbaseWalletConnector
   onError: (error?: Error) => void
-  activate: (
-    connector: AbstractConnector,
-    onError?: ((error: Error) => void) | undefined,
-    throwErrors?: boolean | undefined,
-  ) => Promise<void>
 }
 
 export const IconCoinbase = (
@@ -26,14 +20,13 @@ export const IconCoinbase = (
   </svg>
 )
 
-const WalletCoinbase: VFC<Props> = ({ connector, onError, activate }) => {
+const WalletCoinbase: VFC<Props> = ({ connector, onError }) => {
   return (
     <WalletBase
       connector={connector}
       icon={IconCoinbase}
       onError={onError}
       name="Coinbase"
-      activate={activate}
     />
   )
 }

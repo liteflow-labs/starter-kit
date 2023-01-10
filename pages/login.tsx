@@ -1,19 +1,16 @@
 import { Box, Flex, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { useInvitation } from '@nft/hooks'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 import Head from '../components/Head'
 import BackButton from '../components/Navbar/BackButton'
 import WalletCoinbase from '../components/Wallet/Connectors/Coinbase'
-import WalletEmail from '../components/Wallet/Connectors/Email'
 import WalletMetamask from '../components/Wallet/Connectors/Metamask'
 import WalletWalletConnect from '../components/Wallet/Connectors/WalletConnect'
-import connectors from '../connectors'
-import environment from '../environment'
+import { connectors } from '../connectors'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
 import SmallLayout from '../layouts/small'
@@ -24,24 +21,13 @@ const LoginPage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back, query, replace } = useRouter()
   const referral = Array.isArray(query.ref) ? query.ref[0] : query.ref
-  const { account, error, activate } = useWeb3React()
   const { accept } = useInvitation(signer)
   const toast = useToast()
-  const [errorFromLogin, setErrorFromLogin] = useState<Error>()
+  const [error, setError] = useState<Error>()
 
-  const invalidNetwork = useMemo(
-    () => errorFromLogin && errorFromLogin instanceof UnsupportedChainIdError,
-    [errorFromLogin],
-  )
-
-  const handleAuthenticated = useCallback(
-    async (
-      connector: AbstractConnector,
-      onError?: (error: Error) => void,
-      throwErrors?: boolean,
-    ) => {
+  const { isConnected } = useAccount({
+    async onConnect() {
       try {
-        await activate(connector, onError, throwErrors)
         if (!referral) return
         await accept(referral)
         toast({
@@ -56,8 +42,7 @@ const LoginPage: NextPage = () => {
         })
       }
     },
-    [accept, referral, t, toast, activate],
-  )
+  })
 
   const redirect = useCallback(() => {
     if (query.redirectTo && !Array.isArray(query.redirectTo))
@@ -67,9 +52,9 @@ const LoginPage: NextPage = () => {
 
   // redirect user if account is found
   useEffect(() => {
-    if (!account) return
+    if (!isConnected) return
     redirect()
-  }, [account, redirect])
+  }, [isConnected, redirect])
 
   const hasStandardWallet =
     connectors.injected || connectors.coinbase || connectors.walletConnect
@@ -98,12 +83,12 @@ const LoginPage: NextPage = () => {
         mb={{ base: 12, lg: 24 }}
         justify="center"
       >
-        {connectors.email && (
+        {/* {connectors.email && (
           <WalletEmail
             connector={connectors.email}
-            activate={handleAuthenticated}
+            // activate={handleAuthenticated}
           />
-        )}
+        )} */}
 
         {connectors.email && hasStandardWallet && (
           <Flex mt={12} position="relative">
@@ -130,13 +115,7 @@ const LoginPage: NextPage = () => {
             {error.message ? error.message : error.toString()}
           </Text>
         )}
-        {invalidNetwork && (
-          <Text as="span" role="alert" variant="error" mt={3}>
-            {t('login.errors.wrong-network', {
-              networkName: environment.NETWORK_NAME,
-            })}
-          </Text>
-        )}
+
         {hasStandardWallet && (
           <Flex
             as="nav"
@@ -160,8 +139,7 @@ const LoginPage: NextPage = () => {
               >
                 <WalletMetamask
                   connector={connectors.injected}
-                  onError={setErrorFromLogin}
-                  activate={handleAuthenticated}
+                  onError={setError}
                 />
               </Stack>
             )}
@@ -181,8 +159,7 @@ const LoginPage: NextPage = () => {
               >
                 <WalletCoinbase
                   connector={connectors.coinbase}
-                  onError={setErrorFromLogin}
-                  activate={handleAuthenticated}
+                  onError={setError}
                 />
               </Stack>
             )}
@@ -202,8 +179,7 @@ const LoginPage: NextPage = () => {
               >
                 <WalletWalletConnect
                   connector={connectors.walletConnect}
-                  onError={setErrorFromLogin}
-                  activate={activate}
+                  onError={setError}
                 />
               </Stack>
             )}

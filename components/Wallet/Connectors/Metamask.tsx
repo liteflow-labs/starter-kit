@@ -1,16 +1,10 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { InjectedConnector } from '@web3-react/injected-connector'
 import { VFC } from 'react'
+import { InjectedConnector } from 'wagmi/connectors/injected'
 import WalletBase from './_base'
 
 type Props = {
   connector: InjectedConnector
   onError: (error?: Error) => void
-  activate: (
-    connector: AbstractConnector,
-    onError?: ((error: Error) => void) | undefined,
-    throwErrors?: boolean | undefined,
-  ) => Promise<void>
 }
 
 export const IconMetamask = (
@@ -221,13 +215,12 @@ export const IconMetamask = (
   </svg>
 )
 
-const WalletMetamask: VFC<Props> = ({ connector, onError, activate }) => {
+const WalletMetamask: VFC<Props> = ({ connector, onError }) => {
   return (
     <WalletBase
       connector={connector}
       icon={IconMetamask}
       onError={onError}
-      activate={activate}
       name="Metamask"
     />
   )

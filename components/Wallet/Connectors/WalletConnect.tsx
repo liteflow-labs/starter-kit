@@ -1,16 +1,10 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { VFC } from 'react'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import WalletBase from './_base'
 
 type Props = {
   connector: WalletConnectConnector
   onError: (error?: Error) => void
-  activate: (
-    connector: AbstractConnector,
-    onError?: ((error: Error) => void) | undefined,
-    throwErrors?: boolean | undefined,
-  ) => Promise<void>
 }
 
 export const IconWalletConnect = (
@@ -22,14 +16,13 @@ export const IconWalletConnect = (
   </svg>
 )
 
-const WalletWalletConnect: VFC<Props> = ({ connector, onError, activate }) => {
+const WalletWalletConnect: VFC<Props> = ({ connector, onError }) => {
   return (
     <WalletBase
       connector={connector}
       icon={IconWalletConnect}
       onError={onError}
       name="WalletConnect"
-      activate={activate}
     />
   )
 }
