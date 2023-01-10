@@ -227,7 +227,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     const offset = (page - 1) * limit
     const orderBy = Array.isArray(ctx.query.orderBy)
       ? (ctx.query.orderBy[0] as AssetsOrderBy)
-      : (ctx.query.orderBy as AssetsOrderBy) || 'CREATED_AT_DESC'
+      : (ctx.query.orderBy as AssetsOrderBy) || 'TOKEN_ID_ASC'
     const search =
       ctx.query.search && !Array.isArray(ctx.query.search)
         ? ctx.query.search
@@ -686,6 +686,10 @@ const ExplorePage: NextPage<Props> = ({
               name="orderBy"
               onChange={changeOrder}
               choices={[
+                {
+                  label: 'Token ID',
+                  value: 'TOKEN_ID_ASC'
+                },
                 {
                   label: t('explore.orderBy.values.createdAtDesc'),
                   value: 'CREATED_AT_DESC',
