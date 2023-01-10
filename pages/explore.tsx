@@ -279,7 +279,11 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     const now = new Date()
     const queryFilter = []
     if (search) queryFilter.push(searchFilter(search))
-    if (categories) queryFilter.push(traitFilter('Category', categories))
+    if (categories) {
+      categories?.forEach(category => {
+        queryFilter.push(traitFilter(category.split(" - ")[0] ?? '', [category.split(" - ")[1] ?? '']))
+      })
+    }
     if (collections) queryFilter.push(collectionFilter(collections))
     if (selectedCurrency) {
       if (minPrice)
@@ -614,6 +618,24 @@ const ExplorePage: NextPage<Props> = ({
             <hr />
 
             <FormControl>
+              <FormLabel>{t('explore.form.categories.label')}</FormLabel>
+              <VStack>
+                {categories.map((x) => (
+                  <Checkbox
+                    key={x}
+                    {...register('categories')}
+                    value={x}
+                    disabled={isSubmitting}
+                  >
+                    {t(`categories.${x}`, null, { fallback: x })}
+                  </Checkbox>
+                ))}
+              </VStack>
+            </FormControl>
+
+            <hr />
+
+            <FormControl>
               <FormLabel>{t('explore.form.offers.label')}</FormLabel>
               <VStack>
                 {[
@@ -651,24 +673,6 @@ const ExplorePage: NextPage<Props> = ({
                     disabled={isSubmitting}
                   >
                     {x.name}
-                  </Checkbox>
-                ))}
-              </VStack>
-            </FormControl>
-
-            <hr />
-
-            <FormControl>
-              <FormLabel>{t('explore.form.categories.label')}</FormLabel>
-              <VStack>
-                {categories.map((x) => (
-                  <Checkbox
-                    key={x}
-                    {...register('categories')}
-                    value={x}
-                    disabled={isSubmitting}
-                  >
-                    {t(`categories.${x}`, null, { fallback: x })}
                   </Checkbox>
                 ))}
               </VStack>

@@ -147,7 +147,7 @@ const DetailPage: NextPage<Props> = ({
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { account } = useWeb3React()
-  const { query } = useRouter()
+  const { query, replace } = useRouter()
   const blockExplorer = useBlockExplorer(
     environment.BLOCKCHAIN_EXPLORER_NAME,
     environment.BLOCKCHAIN_EXPLORER_URL,
@@ -482,7 +482,9 @@ const DetailPage: NextPage<Props> = ({
               <Heading as="h4" variant="heading2" color="brand.black" pb={3}>
                 {t('asset.detail.traits')}
               </Heading>
-              <TraitList traits={traits} />
+              <TraitList traits={traits} onTraitSelected={(trait) => {
+                replace({pathname: '/explore', query: {'categories': trait}})
+              }} />
             </Box>
           )}
         </Box>

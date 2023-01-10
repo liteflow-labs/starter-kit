@@ -4,9 +4,10 @@ import { FC } from 'react'
 
 type TraitListProps = {
   traits: { type: string; value: string; rarity?: string }[]
+  onTraitSelected: (trait: string) => void
 }
 
-const TraitList: FC<TraitListProps> = ({ traits }) => {
+const TraitList: FC<TraitListProps> = ({ traits, onTraitSelected }) => {
   const { t } = useTranslation('components')
   return (
     <SimpleGrid columns={{ base: 2, sm: 3 }} gap={3}>
@@ -17,7 +18,11 @@ const TraitList: FC<TraitListProps> = ({ traits }) => {
           rounded="xl"
           border="1px"
           borderColor="gray.200"
+          style={{cursor: 'pointer'}}
           p={3}
+          onClick={() => {
+            onTraitSelected(`${trait.type} - ${trait.value}`)
+          }}
         >
           <Text
             as="span"

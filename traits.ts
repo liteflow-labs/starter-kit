@@ -5,5 +5,5 @@ enum Trait {
 export const keys = [Trait.Category]
 
 export const values = {
-  [Trait.Category]: ['All'].sort(),
+  [Trait.Category]: ['Loot Type - Raw Material', 'Loot Type - Blueprint', 'Loot Type - Drone Part'].sort(),
 }
