@@ -482,8 +482,8 @@ const DetailPage: NextPage<Props> = ({
               <Heading as="h4" variant="heading2" color="brand.black" pb={3}>
                 {t('asset.detail.traits')}
               </Heading>
-              <TraitList traits={traits} onTraitSelected={(trait) => {
-                replace({pathname: '/explore', query: {'categories': trait}})
+              <TraitList traits={traits} onTraitSelected={async (trait) => {
+                await replace({pathname: '/explore', query: {'categories': trait}})
               }} />
             </Box>
           )}
