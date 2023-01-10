@@ -6,7 +6,7 @@ import {
 } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
-import { Box, ChakraProvider } from '@chakra-ui/react'
+import { Box, Button, ChakraProvider, Flex, Link, Spacer } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { Web3Provider } from '@ethersproject/providers'
 import { LiteflowProvider, useAuthenticate } from '@nft/hooks'
@@ -26,7 +26,6 @@ import React, {
   useMemo,
 } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
-import Banner from '../components/Banner/Banner'
 import ChatWindow from '../components/ChatWindow'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
@@ -55,8 +54,8 @@ function web3Provider(provider: any): Web3Provider {
     typeof provider.chainId === 'number'
       ? provider.chainId
       : typeof provider.chainId === 'string'
-      ? parseInt(provider.chainId)
-      : 'any',
+        ? parseInt(provider.chainId)
+        : 'any',
   )
 }
 
@@ -80,6 +79,10 @@ function Layout({
         support: 'Support',
         terms: 'Terms',
         privacy: 'Privacy',
+        about: 'About',
+        bridge: 'Token Bridge',
+        twitter: 'Twitter',
+        discord: 'Discord'
       },
       ja: {
         explore: '検索',
@@ -89,6 +92,10 @@ function Layout({
         support: 'サポート',
         terms: '利用規約',
         privacy: 'プライバシーポリシー',
+        about: 'About',
+        bridge: 'Token Bridge',
+        twitter: 'Twitter',
+        discord: 'Discord',
       },
       'zh-cn': {
         explore: '探讨',
@@ -98,6 +105,10 @@ function Layout({
         support: '支持',
         terms: '条款',
         privacy: '隐私',
+        about: 'About',
+        bridge: 'Token Bridge',
+        twitter: 'Twitter',
+        discord: 'Discord',
       },
       'es-mx': {
         explore: 'Explorar',
@@ -107,26 +118,29 @@ function Layout({
         support: 'Apoyo',
         terms: 'Letra chica',
         privacy: 'Privacidad',
+        about: 'About',
+        bridge: 'Token Bridge',
+        twitter: 'Twitter',
+        discord: 'Discord'
       },
     }
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
       { href: '/explore', label: texts[locale].explore },
-      { href: '/create', label: texts[locale].create },
       { href: userProfileLink, label: texts[locale].profile },
-      { href: '/referral', label: texts[locale].referral },
-      { href: '/', label: texts[locale].support },
-      { href: '/', label: texts[locale].terms },
-      { href: '/', label: texts[locale].privacy },
-      { href: 'https://twitter.com', label: 'Twitter' },
-      { href: 'https://discord.com', label: 'Discord' },
+      { href: 'mailto:support@defylabs.xyz', label: texts[locale].support },
+      { href: 'https://defydisrupt.io/', label: texts[locale].about },
+      { href: 'https://bridge.defydisrupt.io/', label: texts[locale].bridge },
+      { href: 'https://defydisrupt.io/terms/', label: texts[locale].terms },
+      { href: 'https://defydisrupt.io/privacy/', label: texts[locale].privacy },
+      { href: 'https://twitter.com/defydisrupt/', label: texts[locale].twitter },
+      { href: 'https://discord.gg/defydisrupt', label: texts[locale].discord },
     ]
   }, [router.locale, userProfileLink])
 
   return (
     <ChatWindow>
       <Box mt={12}>
-        <Banner />
         <Navbar
           allowTopUp={true}
           router={{
@@ -153,8 +167,34 @@ function Layout({
           signer={signer}
           disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
         />
+        <Flex mx="auto" h={16} gap={6} px={{ base: 6, lg: 8 }} maxW="7xl" justifyContent={'end'}>
+          <Flex align="center" style={{ width: '100%' }}>
+            <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+            {React.createElement("coingecko-coin-price-marquee-widget", { 'coin-ids': 'defy,ethereum', 'currency': 'usd', locale: 'en', 'background-color': '#ffffff', style: { width: '100%' } })}
+          </Flex>
+        </Flex>
+        <Flex mx="auto" h={16} gap={6} px={{ base: 6, lg: 8 }} maxW="7xl" justifyContent={'end'}>
+          <Flex align="center">
+            <Spacer width={1} />
+            <Link href='https://info.quickswap.exchange/#/token/0xbf9f916bbda29a7f990f5f55c7607d94d7c3a60b' isExternal>
+              <Button>
+                Buy $DEFY on Quickswap
+              </Button>
+            </Link>
+            <Spacer width={1} />
+            <Link href='https://www.bybit.com/en-US/trade/spot/DEFY/USDT' isExternal>
+              <Button>
+                Buy $DEFY on ByBit
+              </Button>
+            </Link>
+          </Flex>
+        </Flex>
         {children}
-        <Footer name="Acme, Inc." links={footerLinks} />
+        <Flex justifyContent={"center"}>
+          <script src="https://widgets.coingecko.com/coingecko-coin-price-chart-widget.js"></script>
+          {React.createElement("coingecko-coin-price-chart-widget", { 'coin-id': 'defy', 'currency': 'usd', 'height': '300', width: '400', locale: 'en', 'background-color': '#ffffff' })}
+        </Flex>
+        <Footer name="DEFY Labs." links={footerLinks} />
       </Box>
     </ChatWindow>
   )
@@ -203,8 +243,8 @@ function AccountProvider(
         uri: environment.GRAPHQL_URL,
         headers: cookies[COOKIE_JWT_TOKEN]
           ? {
-              authorization: 'Bearer ' + cookies[COOKIE_JWT_TOKEN],
-            }
+            authorization: 'Bearer ' + cookies[COOKIE_JWT_TOKEN],
+          }
           : {},
         cache: new InMemoryCache({
           typePolicies: {
@@ -263,19 +303,19 @@ function MyApp({
   return (
     <ErrorBoundary>
       <Head
-        title="Acme NFT Marketplace"
-        description="The Web3 as a Service Company"
+        title="DEFY Black Market"
+        description="Get everything you need to bring the fight to Future Systems"
       >
         <meta
           name="keywords"
-          content="NFT, marketplace, platform, white-label, blockchain"
+          content="Get everything you need to bring the fight to Future Systems"
         />
 
-        <meta name="author" content="Acme, Inc." />
-        <meta name="application-name" content="Acme NFT Marketplace" />
+        <meta name="author" content="DEFY Labs" />
+        <meta name="application-name" content="DEFY Black Market" />
 
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://demo.liteflow.com" />
+        <meta property="og:url" content="https://blackmarket.defydisrupt.io" />
 
         <meta name="twitter:card" content="summary" />
       </Head>

@@ -566,7 +566,7 @@
       },
       "modal": {
         "title": "Available Offers",
-        "button": "View the offers"
+        "button": "Buy"
       },
       "modal-item": {
         "cancel-confirmation": "Are you sure to cancel this offer?",

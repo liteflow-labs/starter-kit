@@ -566,7 +566,7 @@
       },
       "modal": {
         "title": "Ofertas Disponibles",
-        "button": "Ver las ofertas"
+        "button": "Comprar"
       },
       "modal-item": {
         "cancel-confirmation": "¿Estás seguro que deseas cancelar la oferta?",

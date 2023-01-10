@@ -566,7 +566,7 @@
       },
       "modal": {
         "title": "可用要约",
-        "button": "查看要约"
+        "button": "买"
       },
       "modal-item": {
         "cancel-confirmation": "确定要取消要约吗？",

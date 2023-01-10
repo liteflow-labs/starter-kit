@@ -49,7 +49,8 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
         QUANTITY_DESC
         ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
         OWNER_ADDRESS_ASC
-      ]
+      ],
+      first: 100
     ) {
       nodes {
         ownerAddress
@@ -178,7 +179,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
         }
       }
     }
-    histories(orderBy: DATE_DESC) {
+    histories(orderBy: DATE_DESC, first: 100, filter: {fromAddress:{notEqualTo: "0x0000000000000000000000000000000000000000"}, toAddress:{notEqualTo:"0x0000000000000000000000000000000000000000"}}) {
       nodes {
         action
         date

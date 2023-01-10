@@ -416,7 +416,27 @@ const DetailPage: NextPage<Props> = ({
             onAuctionAccepted={refresh}
           />
         </Flex>
+      </SimpleGrid>
 
+      {asset.collectionAddress === environment.DRONE_COLLECTION_ADDRESS && (
+        <Flex width="100%" my={{ base: 12, md: 20 }}>
+          <Box width="100%">
+            <AspectRatio
+              ratio={16 / 9}
+              rounded={{ base: 'sm', md: 'xl' }}
+              overflow="hidden"
+            >
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://configurator.defydisrupt.io/drone.html?v=drone_${asset.tokenId}`}
+              />
+            </AspectRatio>
+          </Box>
+        </Flex>
+      )}
+
+      <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <Box p={6}>
           <Heading as="h4" variant="heading2" color="brand.black">
             {t('asset.detail.description')}

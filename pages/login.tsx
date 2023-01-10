@@ -9,7 +9,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Head from '../components/Head'
 import BackButton from '../components/Navbar/BackButton'
 import WalletCoinbase from '../components/Wallet/Connectors/Coinbase'
-import WalletEmail from '../components/Wallet/Connectors/Email'
 import WalletMetamask from '../components/Wallet/Connectors/Metamask'
 import WalletWalletConnect from '../components/Wallet/Connectors/WalletConnect'
 import connectors from '../connectors'
@@ -98,7 +97,7 @@ const LoginPage: NextPage = () => {
         mb={{ base: 12, lg: 24 }}
         justify="center"
       >
-        {connectors.email && (
+        {/* {connectors.email && (
           <WalletEmail
             connector={connectors.email}
             activate={handleAuthenticated}
@@ -123,7 +122,7 @@ const LoginPage: NextPage = () => {
               </Text>
             </Box>
           </Flex>
-        )}
+        )} */}
 
         {error && (
           <Text as="span" role="alert" variant="error" mt={3}>

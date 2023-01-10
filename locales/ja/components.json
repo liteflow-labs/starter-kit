@@ -566,7 +566,7 @@
       },
       "modal": {
         "title": "利用可能なオファー",
-        "button": "オファーを見る"
+        "button": "買う"
       },
       "modal-item": {
         "cancel-confirmation": "このオファーをキャンセルしてよろしいですか？",

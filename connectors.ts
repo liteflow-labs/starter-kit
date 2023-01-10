@@ -5,15 +5,15 @@ import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import environment from './environment'
 
 const connectors = {
-  email: new EmailConnector({
-    apiKey: environment.MAGIC_API_KEY,
-    options: {
-      network: {
-        rpcUrl: environment.PUBLIC_ETHEREUM_PROVIDER,
-        chainId: environment.CHAIN_ID,
-      },
-    },
-  }),
+  // email: new EmailConnector({
+  //   apiKey: environment.MAGIC_API_KEY,
+  //   options: {
+  //     network: {
+  //       rpcUrl: environment.PUBLIC_ETHEREUM_PROVIDER,
+  //       chainId: environment.CHAIN_ID,
+  //     },
+  //   },
+  // }),
   injected: new InjectedConnector({
     supportedChainIds: [environment.CHAIN_ID],
   }),
@@ -26,7 +26,7 @@ const connectors = {
   }),
   coinbase: new WalletLinkConnector({
     supportedChainIds: [environment.CHAIN_ID],
-    appName: 'Acme',
+    appName: 'Black Market',
     url: 'https://demo.liteflow.com',
   }),
 }
