@@ -630,6 +630,16 @@ const ExplorePage: NextPage<Props> = ({
                     {t(`categories.${x}`, null, { fallback: x })}
                   </Checkbox>
                 ))}
+                {filter.categories?.length === 1 && categories.indexOf(filter.categories[0] ?? '') == -1 && (
+                  <Checkbox
+                    key={filter.categories[0]}
+                    {...register('categories')}
+                    value={filter.categories[0]}
+                    disabled={isSubmitting}
+                  >
+                    {filter.categories[0]}
+                  </Checkbox>
+                )}
               </VStack>
             </FormControl>
 
