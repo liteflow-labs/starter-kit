@@ -694,7 +694,7 @@
     }
   },
   "traits": {
-    "rarity": "{{value}} レア度"
+    "rarity": "{{value}}% レア度"
   },
   "user": {
     "balance": {

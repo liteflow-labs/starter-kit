@@ -13,6 +13,14 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
     collectionAddress
     collection {
       standard
+      supply
+      traits {
+        type
+        values {
+          value
+          count
+        }
+      }
     }
     name
     description
