@@ -24,6 +24,10 @@ query FetchAllERC721And1155(
     nodes {
       id
       name
+      collection {
+        address
+        name
+      }
       image
       unlockedContent {
         url

@@ -1,6 +1,10 @@
 fragment AssetDetail on Asset {
   id
   name
+  collection {
+    name
+    address
+  }
   image
   animationUrl
   unlockedContent {

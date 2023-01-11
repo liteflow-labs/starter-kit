@@ -14,6 +14,8 @@ query Checkout($id: UUID!, $now: Datetime!) {
       id
       collection {
         standard
+        address
+        name
       }
       name
       image

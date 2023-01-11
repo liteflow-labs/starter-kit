@@ -25,18 +25,26 @@ export const convertAsset = (
   asset: Pick<
     Asset,
     'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
-  >,
+  > & { collection: Pick<Collection, 'name' | 'address'> },
 ): {
   id: string
   animationUrl: string | null | undefined
   image: string
   name: string
+  collection: {
+    name: string
+    address: string
+  }
   unlockedContent: { url: string; mimetype: string | null } | null
 } => ({
   id: asset.id,
   animationUrl: asset.animationUrl,
   image: asset.image,
   name: asset.name,
+  collection: {
+    name: asset.collection.name,
+    address: asset.collection.address,
+  },
   unlockedContent: asset.unlockedContent,
 })
 
@@ -73,7 +81,11 @@ export const convertAssetWithSupplies = (
   saleSupply: BigNumber.from(
     asset.sales.aggregates?.sum?.availableQuantity || 0,
   ),
-  collection: { standard: asset.collection.standard },
+  collection: {
+    standard: asset.collection.standard,
+    name: asset.collection.name,
+    address: asset.collection.address,
+  },
   totalSupply: BigNumber.from(
     asset.ownerships.aggregates?.sum?.quantity || '0',
   ),

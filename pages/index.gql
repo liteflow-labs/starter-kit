@@ -20,6 +20,8 @@ fragment HomeAssetDetail on Asset {
     mimetype
   }
   collection {
+    name
+    address
     standard
   }
   creator {
@@ -141,6 +143,10 @@ fragment HomeAssetDetail on Asset {
 fragment HomeAsset on Asset {
   id
   name
+  collection {
+    name
+    address
+  }
   image
   animationUrl
   unlockedContent {
@@ -232,6 +238,10 @@ fragment HomeAuction on Auction {
   asset {
     id
     name
+    collection {
+      name
+      address
+    }
     image
     animationUrl
     unlockedContent {
