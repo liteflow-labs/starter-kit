@@ -37,7 +37,7 @@ import Select from '../components/Select/Select'
 import TokenCard from '../components/Token/Card'
 import {
   convertAsset,
-  convertAuctionWithBestBid,
+  convertAuction,
   convertSale,
   convertUser,
 } from '../convert'
@@ -726,7 +726,7 @@ const ExplorePage: NextPage<Props> = ({
                     creator={convertUser(x.creator, x.creator.address)}
                     auction={
                       x.auctions.nodes[0]
-                        ? convertAuctionWithBestBid(x.auctions.nodes[0])
+                        ? convertAuction(x.auctions.nodes[0])
                         : undefined
                     }
                     sale={convertSale(x.firstSale.nodes[0])}

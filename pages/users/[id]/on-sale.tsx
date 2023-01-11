@@ -11,7 +11,7 @@ import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
 import {
   convertAsset,
-  convertAuctionWithBestBid,
+  convertAuction,
   convertFullUser,
   convertSale,
   convertUser,
@@ -146,7 +146,7 @@ const OnSalePage: NextPage<Props> = ({
         .map((x) => ({
           ...convertAsset(x),
           auction: x.auctions?.nodes[0]
-            ? convertAuctionWithBestBid(x.auctions.nodes[0])
+            ? convertAuction(x.auctions.nodes[0])
             : undefined,
           creator: convertUser(x.creator, x.creator.address),
           sale: convertSale(x.firstSale?.nodes[0]),

@@ -234,8 +234,18 @@ export const convertHistories = (
   }
 }
 
+export const convertAuction = (
+  auction: Pick<Auction, 'endAt'>,
+): {
+  endAt: Date
+} => {
+  return {
+    endAt: new Date(auction.endAt),
+  }
+}
+
 export const convertAuctionWithBestBid = (
-  auction: Pick<Auction, 'endAt'> & {
+  auction: Parameters<typeof convertAuction>[0] & {
     bestBid: Maybe<{
       nodes: Array<
         Pick<Offer, 'unitPrice' | 'amount'> & {
@@ -244,8 +254,7 @@ export const convertAuctionWithBestBid = (
       >
     }>
   },
-): {
-  endAt: Date
+): Required<ReturnType<typeof convertAuction>> & {
   bestBid:
     | {
         unitPrice: BigNumber

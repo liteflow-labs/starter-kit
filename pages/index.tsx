@@ -20,8 +20,8 @@ import TokenHeader from '../components/Token/Header'
 import {
   convertAsset,
   convertAssetWithSupplies,
+  convertAuction,
   convertAuctionFull,
-  convertAuctionWithBestBid,
   convertBid,
   convertOwnership,
   convertSale,
@@ -209,7 +209,7 @@ const HomePage: NextPage<Props> = ({
                     x.asset.creator,
                     x.asset.creator.address,
                   )}
-                  auction={convertAuctionWithBestBid(x)}
+                  auction={convertAuction(x)}
                   sale={undefined}
                   numberOfSales={0}
                   hasMultiCurrency={false}
@@ -248,7 +248,7 @@ const HomePage: NextPage<Props> = ({
                   sale={convertSale(x.firstSale.nodes[0])}
                   auction={
                     x.auctions.nodes[0]
-                      ? convertAuctionWithBestBid(x.auctions.nodes[0])
+                      ? convertAuction(x.auctions.nodes[0])
                       : undefined
                   }
                   numberOfSales={x.firstSale.totalCount}

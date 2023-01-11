@@ -1,4 +1,4 @@
-import { Flex, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, HTMLAttributes } from 'react'
 import Link from '../../Link/Link'
@@ -17,26 +17,24 @@ const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
 }) => {
   const { t } = useTranslation('components')
   return (
-    <Stack spacing={4} {...props}>
-      <Text as="span" variant="subtitle2" color="gray.500" px={4}>
-        {t('sales.open.card-footer.open')}
-      </Text>
+    <Box {...props}>
       <Flex
         as={Link}
-        color="white"
-        bgColor="brand.500"
+        color={showButton ? 'white' : 'gray.500'}
+        bgColor={showButton ? 'brand.500' : 'gray.100'}
         py={2}
         px={4}
         fontSize="sm"
         fontWeight="semibold"
         href={href}
-        visibility={showButton ? 'visible' : 'hidden'}
       >
-        {isOwner
-          ? t('sales.open.card-footer.view')
-          : t('sales.open.card-footer.place-bid')}
+        {showButton
+          ? isOwner
+            ? t('sales.open.card-footer.view')
+            : t('sales.open.card-footer.place-bid')
+          : t('sales.open.card-footer.open')}
       </Flex>
-    </Stack>
+    </Box>
   )
 }
 

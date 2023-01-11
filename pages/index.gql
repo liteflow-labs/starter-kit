@@ -178,23 +178,6 @@ fragment HomeAsset on Asset {
     nodes {
       id
       endAt
-      bestBid: offers(
-        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-        first: 1
-        filter: { signature: { isNull: false } }
-      ) {
-        nodes {
-          unitPrice
-          amount
-          currency {
-            image
-            name
-            id
-            decimals
-            symbol
-          }
-        }
-      }
     }
   }
   firstSale: sales(
@@ -227,23 +210,6 @@ fragment HomeAsset on Asset {
 fragment HomeAuction on Auction {
   id
   endAt
-  bestBid: offers(
-    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-    first: 1
-    filter: { signature: { isNull: false } }
-  ) {
-    nodes {
-      unitPrice
-      amount
-      currency {
-        image
-        name
-        id
-        decimals
-        symbol
-      }
-    }
-  }
   asset {
     id
     name
