@@ -1,9 +1,4 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from '@apollo/client'
+import { ApolloProvider } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import { Box, ChakraProvider } from '@chakra-ui/react'
@@ -26,6 +21,7 @@ import React, {
   useMemo,
 } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
+import getClient from '../apollo'
 import Banner from '../components/Banner/Banner'
 import ChatWindow from '../components/ChatWindow'
 import Footer from '../components/Footer/Footer'
@@ -35,7 +31,7 @@ import connectors from '../connectors'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
-import { APOLLO_STATE_PROP_NAME, PropsWithUserAndState } from '../props'
+import { PropsWithUser } from '../props'
 import {
   COOKIE_JWT_TOKEN,
   COOKIE_OPTIONS,
@@ -160,11 +156,7 @@ function Layout({
   )
 }
 
-function AccountProvider(
-  props: PropsWithChildren<{
-    cache: NormalizedCacheObject
-  }>,
-) {
+function AccountProvider(props: PropsWithChildren<{}>) {
   const signer = useSigner()
   const ready = useEagerConnect()
   const { deactivate } = useWeb3React()
@@ -197,26 +189,7 @@ function AccountProvider(
     [authenticate, setCookie, setAuthenticationToken, cookies, deactivate],
   )
 
-  const client = useMemo(
-    () =>
-      new ApolloClient({
-        uri: environment.GRAPHQL_URL,
-        headers: cookies[COOKIE_JWT_TOKEN]
-          ? {
-              authorization: 'Bearer ' + cookies[COOKIE_JWT_TOKEN],
-            }
-          : {},
-        cache: new InMemoryCache({
-          typePolicies: {
-            Account: {
-              keyFields: ['address'],
-            },
-          },
-        }).restore(props.cache),
-        ssrMode: typeof window === 'undefined',
-      }),
-    [cookies, props.cache],
-  )
+  const client = useMemo(() => getClient(cookies[COOKIE_JWT_TOKEN]), [cookies])
 
   useEffect(() => {
     if (!ready) return
@@ -227,10 +200,7 @@ function AccountProvider(
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
 
-function MyApp({
-  Component,
-  pageProps,
-}: AppProps<PropsWithUserAndState>): JSX.Element {
+function MyApp({ Component, pageProps }: AppProps<PropsWithUser>): JSX.Element {
   const router = useRouter()
   dayjs.locale(router.locale)
   usePageViews()
@@ -284,7 +254,7 @@ function MyApp({
         <CookiesProvider>
           <ChakraProvider theme={theme}>
             <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
-              <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
+              <AccountProvider>
                 <Layout userAddress={pageProps?.user?.address || null}>
                   <Component {...pageProps} />
                 </Layout>

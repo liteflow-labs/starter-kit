@@ -29,13 +29,7 @@ import {
   convertUser,
 } from '../convert'
 import environment from '../environment'
-import {
-  FetchDefaultAssetIdsDocument,
-  FetchDefaultAssetIdsQuery,
-  FetchHomePageDocument,
-  FetchHomePageQuery,
-  useFetchHomePageQuery,
-} from '../graphql'
+import { useFetchDefaultAssetIdsQuery, useFetchHomePageQuery } from '../graphql'
 import useBlockExplorer from '../hooks/useBlockExplorer'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useOrderById from '../hooks/useOrderById'
@@ -45,78 +39,53 @@ import { wrapServerSideProps } from '../props'
 
 type Props = {
   now: string
-  featuredTokens: string[]
-  limit: number
-  tokens: string[]
   currentAccount: string | null
 }
 
 export const getServerSideProps = wrapServerSideProps<Props>(
   environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const now = new Date()
-    let tokensToRender
-    if (environment.HOME_TOKENS) {
-      // Randomize list of assets to display
-      tokensToRender = environment.HOME_TOKENS.sort(
-        () => Math.random() - 0.5,
-      ).slice(0, environment.PAGINATION_LIMIT)
-    } else {
-      // Fallback to default list of assets
-      const res = await client.query<FetchDefaultAssetIdsQuery>({
-        query: FetchDefaultAssetIdsDocument,
-        variables: {
-          limit: environment.PAGINATION_LIMIT,
-        },
-      })
-      tokensToRender = res.data.assets?.nodes.map((x) => x.id) || []
-    }
-
-    const { data, error } = await client.query<FetchHomePageQuery>({
-      query: FetchHomePageDocument,
-      variables: {
-        featuredIds: environment.FEATURED_TOKEN,
-        now,
-        limit: environment.PAGINATION_LIMIT,
-        assetIds: tokensToRender,
-        address: ctx.user.address || '',
-      },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    return {
-      props: {
-        now: now.toJSON(),
-        limit: environment.PAGINATION_LIMIT,
-        featuredTokens: environment.FEATURED_TOKEN,
-        tokens: tokensToRender,
-        currentAccount: ctx.user.address,
-      },
-    }
-  },
+  async (ctx) => ({
+    props: {
+      now: new Date().toJSON(),
+      currentAccount: ctx.user.address,
+    },
+  }),
 )
+const skipDefaultAssets =
+  environment.HOME_TOKENS && environment.HOME_TOKENS.length > 0
 
-const HomePage: NextPage<Props> = ({
-  currentAccount,
-  featuredTokens,
-  limit,
-  now,
-  tokens,
-}) => {
+const HomePage: NextPage<Props> = ({ now, currentAccount }) => {
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { account } = useWeb3React()
   const toast = useToast()
   const date = useMemo(() => new Date(now), [now])
+  const defaultAssets = useFetchDefaultAssetIdsQuery({
+    variables: {
+      limit: environment.PAGINATION_LIMIT,
+    },
+    skip: skipDefaultAssets,
+  })
+  const tokensToRender = useMemo(() => {
+    if (environment.HOME_TOKENS)
+      // Randomize list of assets to display
+      return environment.HOME_TOKENS.sort(() => Math.random() - 0.5).slice(
+        0,
+        environment.PAGINATION_LIMIT,
+      )
+    // Fallback to default list of assets
+    return defaultAssets.data?.assets?.nodes.map((x) => x.id) || []
+  }, [defaultAssets])
   const { data, refetch, error } = useFetchHomePageQuery({
     variables: {
-      featuredIds: featuredTokens,
+      featuredIds: environment.FEATURED_TOKEN,
       now: date,
-      limit,
-      assetIds: tokens,
+      limit: environment.PAGINATION_LIMIT,
+      assetIds: tokensToRender,
       address: (ready ? account?.toLowerCase() : currentAccount) || '',
     },
+    skip: !skipDefaultAssets && !defaultAssets.data,
   })
 
   useEffect(() => {
@@ -133,8 +102,11 @@ const HomePage: NextPage<Props> = ({
     environment.BLOCKCHAIN_EXPLORER_URL,
   )
 
-  const featured = useOrderById(featuredTokens, data?.featured?.nodes)
-  const assets = useOrderById(tokens, data?.assets?.nodes)
+  const featured = useOrderById(
+    environment.FEATURED_TOKEN,
+    data?.featured?.nodes,
+  )
+  const assets = useOrderById(tokensToRender, data?.assets?.nodes)
   const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
   const auctions = useMemo(() => data?.auctions?.nodes || [], [data])
 
