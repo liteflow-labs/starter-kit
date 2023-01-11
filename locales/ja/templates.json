@@ -74,7 +74,8 @@
           "label": "通報",
           "subject": "NFTを通報する",
           "body": "以下のNFT {{name}} (#{{id}}) を通報します\n理由: "
-        }
+        },
+        "refresh-metadata": "メタデータの更新"
       },
       "explorerLink": "{{name}} で表示",
       "ipfsLink": "IPFSで表示",

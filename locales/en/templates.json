@@ -74,7 +74,8 @@
           "label": "Report",
           "subject": "Report an NFT",
           "body": "I would like to report the following NFT {{name}} (#{{id}})\nReason: "
-        }
+        },
+        "refresh-metadata": "Refresh Metadata"
       },
       "explorerLink": "View on {{name}}",
       "ipfsLink": "View on IPFS",
