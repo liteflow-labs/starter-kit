@@ -1,6 +1,6 @@
 # Marketplace template
 
-This repository is an example of an application running on the Liteflow infrastructure to showcase the uses of the infrastructure and/or be used as a starter kit to launch a product fast.
+This repository is an example of an application running on the [Liteflow](https://liteflow.com) infrastructure to showcase the uses of the infrastructure and/or be used as a starter kit to launch a product fast.
 
 ## Features included
 
