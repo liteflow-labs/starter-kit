@@ -109,7 +109,7 @@ export const convertTraits = (
       type: assetTrait.type,
       value: assetTrait.value,
       totalCount: traitValueCount,
-      rarity: traitValueCount / asset.collection.supply,
+      rarity: (traitValueCount / asset.collection.supply) * 100,
     }
   })
 

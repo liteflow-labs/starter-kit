@@ -32,7 +32,7 @@ const TraitList: FC<TraitListProps> = ({ traits }) => {
             isTruncated
             pb={1}
           >
-            {trait.type !== 'Category'
+            {trait.type === 'Category'
               ? t(`categories.${trait.type}`, null, { fallback: trait.type })
               : trait.type}
           </Text>
@@ -43,7 +43,7 @@ const TraitList: FC<TraitListProps> = ({ traits }) => {
             title={trait.value}
             isTruncated
           >
-            {trait.type !== 'Category'
+            {trait.type === 'Category'
               ? t(`categories.${trait.value}`, null, { fallback: trait.value })
               : trait.type}
           </Text>
