@@ -8,13 +8,11 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
     collection {
+      address
+      name
       standard
     }
     name
-    collection {
-      address
-      name
-    }
     image
     animationUrl
     unlockedContent {
