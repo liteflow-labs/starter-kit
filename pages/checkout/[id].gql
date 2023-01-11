@@ -12,7 +12,9 @@ query Checkout($id: UUID!, $now: Datetime!) {
     }
     asset {
       id
-      standard
+      collection {
+        standard
+      }
       name
       image
       unlockedContent {

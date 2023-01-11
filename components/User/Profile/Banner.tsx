@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 import Image from '../../Image/Image'
 import AccountImage from '../../Wallet/Image'
 

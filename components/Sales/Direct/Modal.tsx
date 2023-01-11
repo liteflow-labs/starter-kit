@@ -62,7 +62,7 @@ const SaleDirectModal: VFC<Props> = ({
             <List>
               {sales.map((sale, i) => (
                 <>
-                  {i > 0 && sales[i - 1].currency.id !== sale.currency.id && (
+                  {i > 0 && sales[i - 1]?.currency.id !== sale.currency.id && (
                     <hr />
                   )}
                   <SaleDirectModalItem

@@ -75,7 +75,7 @@ const SalesAuctionForm: VFC<Props> = ({
   } = useForm<FormData>({
     defaultValues: {
       price: '0',
-      currencyId: currencies[0].id,
+      currencyId: currencies[0]?.id,
     },
   })
 
@@ -131,6 +131,7 @@ const SalesAuctionForm: VFC<Props> = ({
             required
             error={errors.currencyId}
             onChange={(x: any) => setValue('currencyId', x)}
+            sortAlphabetically
           />
         )}
 
@@ -161,14 +162,11 @@ const SalesAuctionForm: VFC<Props> = ({
                 placeholder={t('sales.auction.form.price.placeholder')}
                 {...register('price', {
                   validate: (value) => {
-                    const splitValue = value.split('.')
-
                     if (parseFloat(value) <= 0)
                       return t('sales.auction.form.validation.positive')
-                    if (
-                      splitValue[1] &&
-                      splitValue[1].length > currency.decimals
-                    )
+
+                    const nbDecimals = value.split('.')[1]?.length || 0
+                    if (nbDecimals > currency.decimals)
                       return t('sales.auction.form.validation.decimals', {
                         nbDecimals: currency.decimals,
                       })

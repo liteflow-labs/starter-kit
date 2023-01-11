@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
 import Image from 'next/image'
-import React, { useMemo, VFC } from 'react'
+import { useMemo, VFC } from 'react'
 import Countdown from '../../../Countdown/Countdown'
 import Price from '../../../Price/Price'
 

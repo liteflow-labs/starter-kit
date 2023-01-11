@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import React, { ButtonHTMLAttributes, VFC } from 'react'
+import { ButtonHTMLAttributes, VFC } from 'react'
 import AccountImage from '../../Wallet/Image'
 
 export type Props = ButtonHTMLAttributes<any> & {
@@ -31,7 +31,7 @@ const OwnersModalActivator: VFC<Props> = ({ owners, ...props }) => {
           />
         </Flex>
       ))}
-      {owners.length === 5 && (
+      {owners.length === 5 && owners[4] && (
         <Flex ml={-3} title={owners[4].name ? owners[4].name : ''}>
           <Box
             as={AccountImage}

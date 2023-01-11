@@ -1,7 +1,3 @@
-import { EmailConnector } from '@nft/email-connector'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import {
   Box,
   Flex,
@@ -16,9 +12,13 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import { EmailConnector } from '@nft/email-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { InjectedConnector } from '@web3-react/injected-connector'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import WalletCoinbase from '../Wallet/Connectors/Coinbase'
 import WalletEmail from '../Wallet/Connectors/Email'
 import WalletMetamask from '../Wallet/Connectors/Metamask'

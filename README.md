@@ -1,6 +1,6 @@
 # Marketplace template
 
-This repository is an example of an application running on the Liteflow infrastructure to showcase the uses of the infrastructure and/or be used as a starter kit to launch a product fast.
+This repository is an example of an application running on the [Liteflow](https://liteflow.com) infrastructure to showcase the uses of the infrastructure and/or be used as a starter kit to launch a product fast.
 
 ## Features included
 
@@ -21,7 +21,7 @@ The Marketplace template includes the following features:
   - Open offer
   - Timed auction offer
 - Purchase NFTs
-- User profile 
+- User profile
   - Account
     - Profile edition
     - Wallet page
@@ -55,7 +55,6 @@ It also includes compatibility with the following features:
 - Credit card payment gateway compatibility
 - Email connection compatibility
 
-
 ## Additional Paid Features Showcased
 
 The Marketplace template showcases the following additional paid features:
@@ -65,7 +64,6 @@ The Marketplace template showcases the following additional paid features:
 - Multicurrency support
 - Advanced fee customization support
 - Referral system
-
 
 ## Libraries used
 

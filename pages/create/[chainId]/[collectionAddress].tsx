@@ -9,56 +9,80 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { useConfig } from '@nft/hooks'
+import { isSameAddress, useConfig } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
+import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
 import { useWeb3React } from '@web3-react/core'
+import Empty from 'components/Empty/Empty'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import Head from '../../components/Head'
-import Link from '../../components/Link/Link'
-import BackButton from '../../components/Navbar/BackButton'
-import type { Props as NFTCardProps } from '../../components/Token/Card'
-import TokenCard from '../../components/Token/Card'
-import type { FormData } from '../../components/Token/Form/Create'
-import TokenFormCreate from '../../components/Token/Form/Create'
-import connectors from '../../connectors'
-import environment from '../../environment'
+import React, { useCallback, useMemo, useState } from 'react'
+import invariant from 'ts-invariant'
+import Head from '../../../components/Head'
+import Link from '../../../components/Link/Link'
+import BackButton from '../../../components/Navbar/BackButton'
+import type { Props as NFTCardProps } from '../../../components/Token/Card'
+import TokenCard from '../../../components/Token/Card'
+import type { FormData } from '../../../components/Token/Form/Create'
+import TokenFormCreate from '../../../components/Token/Form/Create'
+import connectors from '../../../connectors'
+import environment from '../../../environment'
 import {
-  Config,
-  FetchAccountDocument,
-  FetchAccountQuery,
-  useFetchAccountQuery,
-} from '../../graphql'
-import useBlockExplorer from '../../hooks/useBlockExplorer'
-import useEagerConnect from '../../hooks/useEagerConnect'
-import useLocalFileURL from '../../hooks/useLocalFileURL'
-import useSigner from '../../hooks/useSigner'
-import SmallLayout from '../../layouts/small'
-import { wrapServerSideProps } from '../../props'
-import { values as traits } from '../../traits'
+  FetchAccountAndCollectionDocument,
+  FetchAccountAndCollectionQuery,
+  FetchAccountAndCollectionQueryVariables,
+  useFetchAccountAndCollectionQuery,
+} from '../../../graphql'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useEagerConnect from '../../../hooks/useEagerConnect'
+import useLocalFileURL from '../../../hooks/useLocalFileURL'
+import useSigner from '../../../hooks/useSigner'
+import SmallLayout from '../../../layouts/small'
+import { wrapServerSideProps } from '../../../props'
+import { values as traits } from '../../../traits'
 
 type Props = {
-  multiple: boolean
+  chainId: number
+  collectionAddress: string
   currentAccount: string | null
 }
 
 export const getServerSideProps = wrapServerSideProps<Props>(
   environment.GRAPHQL_URL,
   async (context, client) => {
-    const { data, error } = await client.query<FetchAccountQuery>({
-      query: FetchAccountDocument,
+    const chainId = Array.isArray(context.query.chainId)
+      ? context.query.chainId[0]
+      : context.query.chainId
+    const collectionAddress = Array.isArray(context.query.collectionAddress)
+      ? context.query.collectionAddress[0]
+      : context.query.collectionAddress
+    invariant(collectionAddress, "collectionAddress can't be falsy")
+    invariant(chainId, "chainId can't be falsy")
+    invariant(
+      environment.MINTABLE_COLLECTIONS.filter(({ address }) =>
+        isSameAddress(address, collectionAddress),
+      ).length > 0,
+      'collectionAddress is not mintable',
+    )
+    const { data, error } = await client.query<
+      FetchAccountAndCollectionQuery,
+      FetchAccountAndCollectionQueryVariables
+    >({
+      query: FetchAccountAndCollectionDocument,
       variables: {
+        chainId: parseInt(chainId, 10),
         account: context.user.address || '',
+        collectionAddress,
       },
     })
     if (error) throw error
     if (!data) throw new Error('data is falsy')
     return {
       props: {
-        multiple: context.query.type === 'multiple',
+        chainId: parseInt(chainId, 10),
+        collectionAddress,
         currentAccount: context.user.address,
       },
     }
@@ -75,17 +99,22 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
   </SmallLayout>
 )
 
-const CreatePage: NextPage<Props> = ({ currentAccount, multiple }) => {
+const CreatePage: NextPage<Props> = ({
+  currentAccount,
+  chainId,
+  collectionAddress,
+}) => {
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const { account } = useWeb3React()
-  const configPromise = useConfig()
-  const [config, setConfig] = useState<Config>()
+  const { data: config } = useConfig()
   const toast = useToast()
-  const { data } = useFetchAccountQuery({
+  const { data } = useFetchAccountAndCollectionQuery({
     variables: {
+      chainId,
+      collectionAddress,
       account: (ready ? account?.toLowerCase() : currentAccount) || '',
     },
   })
@@ -112,9 +141,8 @@ const CreatePage: NextPage<Props> = ({ currentAccount, multiple }) => {
         image: imageUrlLocal || undefined,
         animationUrl: animationUrlLocal,
         name: formData?.name || '',
-        standard: multiple ? 'ERC1155' : 'ERC721',
       } as NFTCardProps['asset']),
-    [imageUrlLocal, animationUrlLocal, formData?.name, multiple],
+    [imageUrlLocal, animationUrlLocal, formData?.name],
   )
 
   const creator = useMemo(
@@ -146,11 +174,6 @@ const CreatePage: NextPage<Props> = ({ currentAccount, multiple }) => {
     },
     [push, t, toast],
   )
-
-  useEffect(() => {
-    void configPromise.then(setConfig)
-    return () => setConfig(undefined)
-  }, [configPromise])
 
   if (environment.RESTRICT_TO_VERIFIED_ACCOUNT && !creator.verified) {
     return (
@@ -195,11 +218,21 @@ const CreatePage: NextPage<Props> = ({ currentAccount, multiple }) => {
     )
   }
 
+  if (!data?.collection)
+    return (
+      <Empty
+        title={t('asset.form.notFound.title')}
+        description={t('asset.form.notFound.description')}
+        button={t('asset.form.notFound.link')}
+        href="/create"
+        icon={<Icon as={HiExclamationCircle} w={8} h={8} color="gray.400" />}
+      />
+    )
   return (
     <Layout>
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" mt={6}>
-        {multiple
+        {data.collection.standard === 'ERC1155'
           ? t('asset.form.title.multiple')
           : t('asset.form.title.single')}
       </Heading>
@@ -226,7 +259,7 @@ const CreatePage: NextPage<Props> = ({ currentAccount, multiple }) => {
         </div>
         <TokenFormCreate
           signer={signer}
-          multiple={multiple}
+          collection={data.collection}
           categories={categories}
           uploadUrl={environment.UPLOAD_URL}
           blockExplorer={blockExplorer}

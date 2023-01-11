@@ -3,7 +3,7 @@ import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
 import Link from 'next/link'
-import React, { VFC } from 'react'
+import { VFC } from 'react'
 
 type Props = {
   assetId: string

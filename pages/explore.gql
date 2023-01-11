@@ -15,11 +15,7 @@ query FetchAllERC721And1155(
   $filter: [AssetFilter!]
 ) {
   assets(
-    filter: {
-      standard: { in: [ERC721, ERC1155] }
-      ownershipsExist: true
-      and: $filter
-    }
+    filter: { ownershipsExist: true, and: $filter }
     first: $limit
     offset: $offset
     orderBy: $orderBy
@@ -27,7 +23,6 @@ query FetchAllERC721And1155(
     totalCount
     nodes {
       id
-      standard
       name
       image
       unlockedContent {
@@ -108,7 +103,7 @@ query FetchAllERC721And1155(
       symbol
     }
   }
-  collections {
+  collections(orderBy: NAME_ASC) {
     nodes {
       chainId
       address

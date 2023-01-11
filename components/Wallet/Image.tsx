@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React, { useEffect, useRef, VFC } from 'react'
+import { useEffect, useRef, VFC } from 'react'
 
 const Jazzicon = require('@metamask/jazzicon')
 

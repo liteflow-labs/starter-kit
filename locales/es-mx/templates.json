@@ -90,6 +90,11 @@
       "preview": "Previsualizar",
       "notifications": {
         "created": "¡Tu coleccionable ha sido creado!"
+      },
+      "notFound": {
+        "title": "Colección no encontrada",
+        "description": "La colección en la que está intentando crear un NFT no existe",
+        "link": "Crear en otra colección"
       }
     },
     "typeSelector": {
@@ -102,6 +107,10 @@
       "multiple": {
         "title": "Multiple",
         "type": "ERC1155"
+      },
+      "empty": {
+        "title": "No se ha encontrado ninguna colección",
+        "description": "Ninguna colección está abierta a la menta"
       }
     },
     "restricted": {
