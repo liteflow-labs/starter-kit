@@ -281,7 +281,7 @@ const DetailPage: NextPage<Props> = ({
             p={12}
             bg="brand.50"
           >
-            <Box position="relative" h="full" w="full" zIndex={1}>
+            <Box position="relative" w="full" zIndex={1}>
               <Box
                 as={TokenMedia}
                 image={asset.image}
@@ -290,10 +290,7 @@ const DetailPage: NextPage<Props> = ({
                   showPreview ? undefined : asset.unlockedContent
                 }
                 defaultText={asset.name}
-                mx="auto"
-                maxH="full"
-                maxW="full"
-                objectFit="contain"
+                objectFit="cover"
                 layout="fill"
                 controls
               />
