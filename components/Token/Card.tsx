@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   Heading,
   HStack,
@@ -36,6 +37,15 @@ export type Props = {
     unlockedContent: { url: string; mimetype: string | null } | null
     animationUrl: string | null | undefined
     owned: BigNumber
+    bestBid:
+      | {
+          unitPrice: BigNumber
+          currency: {
+            decimals: number
+            symbol: string
+          }
+        }
+      | undefined
   }
   creator: {
     address: string
@@ -46,10 +56,20 @@ export type Props = {
   auction:
     | {
         endAt: Date
+        bestBid:
+          | {
+              unitPrice: BigNumber
+              currency: {
+                decimals: number
+                symbol: string
+              }
+            }
+          | undefined
       }
     | undefined
   sale:
     | {
+        id: string
         unitPrice: BigNumber
         currency: {
           decimals: number
@@ -79,7 +99,8 @@ const TokenCard: VFC<Props> = ({
     if (auction)
       return (
         <SaleAuctionCardFooter
-          href={href}
+          assetId={asset.id}
+          bestBid={auction.bestBid}
           isOwner={isOwner}
           showButton={isHovered}
         />
@@ -87,7 +108,7 @@ const TokenCard: VFC<Props> = ({
     if (sale)
       return (
         <SaleDirectCardFooter
-          href={href}
+          saleId={sale.id}
           unitPrice={sale.unitPrice}
           currency={sale.currency}
           numberOfSales={numberOfSales}
@@ -98,12 +119,22 @@ const TokenCard: VFC<Props> = ({
       )
     return (
       <SaleOpenCardFooter
-        href={href}
+        assetId={asset.id}
+        bestBid={asset.bestBid}
         isOwner={isOwner}
         showButton={isHovered}
       />
     )
-  }, [auction, href, isOwner, isHovered, sale, numberOfSales, hasMultiCurrency])
+  }, [
+    auction,
+    asset.id,
+    asset.bestBid,
+    isOwner,
+    isHovered,
+    sale,
+    numberOfSales,
+    hasMultiCurrency,
+  ])
 
   // TODO: is the width correct?
   return (
@@ -180,21 +211,25 @@ const TokenCard: VFC<Props> = ({
             </Heading>
           </Link>
         </Stack>
-        <Menu>
-          <MenuButton>
-            <Icon as={HiOutlineDotsHorizontal} />
-          </MenuButton>
-          <MenuList>
-            <Link
-              href={`mailto:${environment.REPORT_EMAIL}?subject=${encodeURI(
-                t('asset.detail.menu.report.subject'),
-              )}&body=${encodeURI(t('asset.detail.menu.report.body', asset))}`}
-              isExternal
-            >
-              <MenuItem>{t('asset.detail.menu.report.label')}</MenuItem>
-            </Link>
-          </MenuList>
-        </Menu>
+        <Box visibility={isHovered ? 'visible' : 'hidden'}>
+          <Menu>
+            <MenuButton>
+              <Icon as={HiOutlineDotsHorizontal} />
+            </MenuButton>
+            <MenuList>
+              <Link
+                href={`mailto:${environment.REPORT_EMAIL}?subject=${encodeURI(
+                  t('asset.detail.menu.report.subject'),
+                )}&body=${encodeURI(
+                  t('asset.detail.menu.report.body', asset),
+                )}`}
+                isExternal
+              >
+                <MenuItem>{t('asset.detail.menu.report.label')}</MenuItem>
+              </Link>
+            </MenuList>
+          </Menu>
+        </Box>
       </Flex>
       {footer && footer}
     </Flex>

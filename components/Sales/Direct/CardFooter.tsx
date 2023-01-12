@@ -6,7 +6,7 @@ import Link from '../../Link/Link'
 import Price from '../../Price/Price'
 
 type Props = {
-  href: string
+  saleId: string
   numberOfSales: number
   unitPrice: BigNumber
   currency: {
@@ -19,7 +19,7 @@ type Props = {
 }
 
 const SaleDirectCardFooter: VFC<Props> = ({
-  href,
+  saleId,
   numberOfSales,
   unitPrice,
   currency,
@@ -80,7 +80,7 @@ const SaleDirectCardFooter: VFC<Props> = ({
       px={4}
       fontSize="sm"
       fontWeight="semibold"
-      href={href}
+      href={`/checkout/${saleId}`}
     >
       {showButton
         ? isOwner

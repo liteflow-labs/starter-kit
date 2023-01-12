@@ -150,23 +150,25 @@ const CheckoutPage: NextPage<Props> = ({
       </Heading>
 
       <Flex mt={12} mb={6} direction={{ base: 'column', md: 'row' }} gap={12}>
-        <TokenCard
-          asset={convertAsset(asset)}
-          creator={convertUser(asset.creator, asset.creator.address)}
-          sale={convertSale(asset.firstSale.nodes[0])}
-          auction={
-            asset.auctions.nodes[0]
-              ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-              : undefined
-          }
-          numberOfSales={asset.firstSale.totalCount}
-          hasMultiCurrency={
-            parseInt(
-              asset.currencySales.aggregates?.distinctCount?.currencyId,
-              10,
-            ) > 1
-          }
-        />
+        <Box pointerEvents="none">
+          <TokenCard
+            asset={convertAsset(asset)}
+            creator={convertUser(asset.creator, asset.creator.address)}
+            sale={convertSale(asset.firstSale.nodes[0])}
+            auction={
+              asset.auctions.nodes[0]
+                ? convertAuctionWithBestBid(asset.auctions.nodes[0])
+                : undefined
+            }
+            numberOfSales={asset.firstSale.totalCount}
+            hasMultiCurrency={
+              parseInt(
+                asset.currencySales.aggregates?.distinctCount?.currencyId,
+                10,
+              ) > 1
+            }
+          />
+        </Box>
         <Flex direction="column" flex="1 1 0%">
           <Stack spacing={3} mb={3}>
             <Heading as="h5" variant="heading3" color="gray.500">

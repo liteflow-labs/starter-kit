@@ -19,6 +19,40 @@ fragment AssetDetail on Asset {
     nodes {
       id
       endAt
+      bestBid: offers(
+        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+        first: 1
+        filter: {
+          signature: { isNull: false }
+          expiredAt: { greaterThan: $now }
+        }
+      ) {
+        nodes {
+          unitPrice
+          amount
+          currency {
+            decimals
+            symbol
+          }
+        }
+      }
+    }
+  }
+  bestBid: bids(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+    first: 1
+  ) {
+    nodes {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
     }
   }
   firstSale: sales(
