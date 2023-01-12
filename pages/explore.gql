@@ -9,6 +9,7 @@ query FetchCurrencyDecimals {
 
 query FetchAllERC721And1155(
   $now: Datetime!
+  $address: Address
   $limit: Int!
   $offset: Int!
   $orderBy: [AssetsOrderBy!]
@@ -24,12 +25,23 @@ query FetchAllERC721And1155(
     nodes {
       id
       name
+      collection {
+        address
+        name
+      }
       image
       unlockedContent {
         url
         mimetype
       }
       animationUrl
+      owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+        aggregates {
+          sum {
+            quantity
+          }
+        }
+      }
       auctions(
         first: 1
         orderBy: CREATED_AT_DESC
@@ -54,6 +66,23 @@ query FetchAllERC721And1155(
                 symbol
               }
             }
+          }
+        }
+      }
+      bestBid: bids(
+        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+        filter: { expiredAt: { greaterThan: $now } }
+        first: 1
+      ) {
+        nodes {
+          unitPrice
+          amount
+          currency {
+            image
+            name
+            id
+            decimals
+            symbol
           }
         }
       }

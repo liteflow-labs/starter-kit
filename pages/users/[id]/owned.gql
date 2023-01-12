@@ -1,5 +1,6 @@
 query FetchOwnedAssets(
   $address: Address!
+  $currentAddress: Address!
   $now: Datetime!
   $limit: Int!
   $offset: Int!
