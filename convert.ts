@@ -10,6 +10,7 @@ import {
   AssetHistoryAction,
   Auction,
   Collection,
+  CollectionStats,
   Currency,
   Maybe,
   Offer,
@@ -79,6 +80,82 @@ export const convertAssetWithSupplies = (
   ),
   owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
 })
+
+export const convertCollection = (
+  collection: Pick<
+    Collection,
+    | 'address'
+    | 'chainId'
+    | 'name'
+    | 'description'
+    | 'image'
+    | 'cover'
+    | 'twitter'
+    | 'discord'
+    | 'website'
+    | 'deployerAddress'
+    | 'numberOfOwners'
+    | 'supply'
+  > & { floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>> } & {
+    totalVolume: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+  } & {
+    deployer: Maybe<
+      Pick<Account, 'address' | 'name' | 'username'> & {
+        verification: Maybe<Pick<AccountVerification, 'status'>>
+      }
+    >
+  },
+): {
+  address: string
+  chainId: number
+  name: string
+  description: string | null
+  image: string
+  cover: string | null
+  twitter: string | null
+  discord: string | null
+  website: string | null
+  deployerAddress: string
+  deployer: {
+    address: string
+    name: string | null
+    username: string | null
+    verified: boolean
+  } | null
+  totalVolume: string
+  totalVolumeCurrencySymbol: string
+  floorPrice: string
+  floorPriceCurrencySymbol: string
+  totalOwners: number
+  supply: number
+} => {
+  return {
+    address: collection.address,
+    chainId: collection.chainId,
+    name: collection.name,
+    description: collection.description,
+    image: collection.image || '/collection-image.jpg',
+    cover: collection.cover,
+    twitter: collection.twitter,
+    discord: collection.discord,
+    website: collection.website,
+    deployerAddress: collection.deployerAddress,
+    deployer: collection.deployer
+      ? {
+          address: collection.deployer.address,
+          name: collection.deployer.name,
+          username: collection.deployer.username,
+          verified: collection.deployer?.verification?.status === 'VALIDATED',
+        }
+      : null,
+    totalVolume: collection.totalVolume?.valueInRef || '',
+    totalVolumeCurrencySymbol: collection.totalVolume?.refCode || '',
+    floorPrice: collection.floorPrice?.valueInRef || '',
+    floorPriceCurrencySymbol: collection.floorPrice?.refCode || '',
+    totalOwners: collection.numberOfOwners,
+    supply: collection.supply,
+  }
+}
 
 export const convertUser = (
   user: Maybe<

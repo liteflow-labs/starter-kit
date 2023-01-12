@@ -1,0 +1,167 @@
+query FetchCollectionDetails($address: Address!, $chainId: Int!) {
+  collection(address: $address, chainId: $chainId) {
+    address
+    chainId
+    cover
+    image
+    name
+    description
+    discord
+    twitter
+    website
+    standard
+    deployerAddress
+    deployer {
+      address
+      name
+      username
+      verification {
+        status
+      }
+    }
+    numberOfOwners
+    supply
+    floorPrice {
+      valueInRef
+      refCode
+    }
+    totalVolume {
+      valueInRef
+      refCode
+    }
+  }
+}
+
+query FetchCollectionAssets(
+  $currentAccount: Address!
+  $now: Datetime!
+  $cursor: Cursor
+  $limit: Int!
+  $address: Address!
+  $chainId: Int!
+  $orderBy: [AssetsOrderBy!]
+  $filter: [AssetFilter!]
+) {
+  assets(
+    filter: {
+      ownershipsExist: true
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $address }
+      and: $filter
+    }
+    orderBy: $orderBy
+    first: $limit
+    after: $cursor
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      name
+      description
+      image
+      animationUrl
+      hasUnlockableContent
+      unlockedContent {
+        url
+        mimetype
+      }
+      createdAt
+      isWatched
+      creator {
+        username
+        address
+        name
+        image
+        isFollowed
+        verification {
+          status
+        }
+      }
+      collection {
+        address
+        image
+        name
+      }
+      owned: ownerships(
+        filter: { ownerAddress: { equalTo: $currentAccount } }
+      ) {
+        aggregates {
+          sum {
+            quantity
+          }
+        }
+      }
+      ownerships {
+        aggregates {
+          sum {
+            quantity
+          }
+        }
+        nodes {
+          owner {
+            address
+            name
+          }
+        }
+      }
+      auctions(
+        first: 1
+        orderBy: CREATED_AT_DESC
+        filter: { expireAt: { greaterThan: $now } } # This filter should also be applied to the root query if sorting on by auctions
+      ) {
+        nodes {
+          id
+          endAt
+          expireAt
+          reserveAmount
+          winningOffer {
+            id
+          }
+          currency {
+            image
+            symbol
+          }
+        }
+      }
+      sales(
+        first: 1
+        orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
+        filter: { expiredAt: { greaterThan: $now } } # This filter should also be applied to the root query if sorting by sales. See getExtraFilterForSort function in utils/post/sorting.ts
+      ) {
+        nodes {
+          id
+          unitPrice
+          currency {
+            id
+            image
+            symbol
+            decimals
+          }
+          maker {
+            address
+          }
+        }
+      }
+      bids(
+        first: 1
+        orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
+        filter: { expiredAt: { greaterThan: $now } } # This filter should also be applied to the root query if sorting on by bids
+      ) {
+        nodes {
+          id
+          unitPrice
+          amount
+          currency {
+            image
+            id
+            decimals
+            symbol
+          }
+        }
+      }
+    }
+  }
+}
