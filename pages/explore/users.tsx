@@ -32,6 +32,7 @@ const searchFilter = (search: string): AccountFilter =>
     or: [
       { name: { includesInsensitive: search } } as AccountFilter,
       { address: { includesInsensitive: search } } as AccountFilter,
+      { description: { includesInsensitive: search } } as AccountFilter,
     ],
   } as AccountFilter)
 
