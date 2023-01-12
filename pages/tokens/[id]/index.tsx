@@ -477,7 +477,12 @@ const DetailPage: NextPage<Props> = ({
           >
             <TabList>
               {tabs.map((tab, index) => (
-                <ChakraLink key={index} href={tab.href} whiteSpace="nowrap">
+                <ChakraLink
+                  key={index}
+                  href={tab.href}
+                  whiteSpace="nowrap"
+                  mr={4}
+                >
                   <Tab as="div">
                     <Text as="span" variant="subtitle1">
                       {tab.title}

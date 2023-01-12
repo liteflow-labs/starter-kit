@@ -1,0 +1,19 @@
+query FetchExploreUsers(
+  $limit: Int!
+  $offset: Int!
+  $filter: [AccountFilter!]
+) {
+  users: accounts(first: $limit, offset: $offset, filter: { and: $filter }) {
+    nodes {
+      username
+      address
+      image
+      cover
+      name
+      verification {
+        status
+      }
+    }
+    totalCount
+  }
+}
