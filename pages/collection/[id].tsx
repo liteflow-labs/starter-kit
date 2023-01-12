@@ -13,7 +13,7 @@ import { FC } from 'react'
 import invariant from 'ts-invariant'
 
 type Props = {
-  collection: {
+  collectionDetails: {
     address: string
     chainId: number
     name: string
@@ -49,7 +49,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       : null
     invariant(collectionId, 'Collection ID is required')
 
-    const { data: collectionDetailsData, error: collectionError } =
+    const { data: collectionDetailsData, error: collectionDetailsError } =
       await client.query<
         FetchCollectionDetailsQuery,
         FetchCollectionDetailsQueryVariables
@@ -61,25 +61,25 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         },
       })
 
-    if (collectionError) throw collectionError
+    if (collectionDetailsError) throw collectionDetailsError
     if (!collectionDetailsData)
       throw new Error('collectionDetailsData is falsy')
     if (!collectionDetailsData.collection) return { notFound: true }
 
     return {
       props: {
-        collection: convertCollection(collectionDetailsData.collection),
+        collectionDetails: convertCollection(collectionDetailsData.collection),
       },
     }
   },
 )
 
-const CollectionPage: FC<Props> = ({ collection }) => {
+const CollectionPage: FC<Props> = ({ collectionDetails }) => {
   return (
     <LargeLayout>
       <Head title="Explore collection" />
 
-      <CollectionHeader collection={collection} />
+      <CollectionHeader collection={collectionDetails} />
     </LargeLayout>
   )
 }
