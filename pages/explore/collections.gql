@@ -1,0 +1,24 @@
+query FetchExploreCollections(
+  $limit: Int!
+  $offset: Int!
+  $filter: [CollectionFilter!]
+) {
+  collections(first: $limit, offset: $offset, filter: { and: $filter }) {
+    nodes {
+      address
+      name
+      image
+      cover
+      description
+      totalVolume {
+        refCode
+        valueInRef
+      }
+      floorPrice {
+        refCode
+        valueInRef
+      }
+    }
+    totalCount
+  }
+}

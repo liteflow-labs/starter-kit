@@ -11,7 +11,8 @@
     "title": "Explorar",
     "tabs": {
       "nfts": "NFTs",
-      "users": "Usuarios"
+      "users": "Usuarios",
+      "collections": "Colecciones"
     },
     "nfts": {
       "empty": {
@@ -65,6 +66,12 @@
       "empty": {
         "title": "No se encontraron usuarios",
         "description": "Actualiza tus filtros para encontrar más usuarios."
+      }
+    },
+    "collections": {
+      "empty": {
+        "title": "No se encontraron colecciones",
+        "description": "Actualiza tus filtros para encontrar más colecciones."
       }
     }
   },

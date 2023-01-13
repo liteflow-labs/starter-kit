@@ -11,7 +11,8 @@
     "title": "探讨",
     "tabs": {
       "nfts": "NFTs",
-      "users": "用户"
+      "users": "用户",
+      "collections": "收藏品"
     },
     "nfts": {
       "empty": {
@@ -65,6 +66,12 @@
       "empty": {
         "title": "未找到用户",
         "description": "请更新筛选条件来查找更多用户。"
+      }
+    },
+    "collections": {
+      "empty": {
+        "title": "未找到收藏",
+        "description": "请更新筛选条件来查找更多收藏。"
       }
     }
   },

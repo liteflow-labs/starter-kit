@@ -11,7 +11,8 @@
     "title": "検索",
     "tabs": {
       "nfts": "NFTs",
-      "users": "ユーザー"
+      "users": "ユーザー",
+      "collections": "コレクション"
     },
     "nfts": {
       "empty": {
@@ -63,8 +64,14 @@
     },
     "users": {
       "empty": {
-        "title": "No Users Found",
-        "description": "Update your filters to find more users."
+        "title": "ユーザーが見つかりません",
+        "description": "フィルターを更新して、より多くのユーザーを見つけてください。"
+      }
+    },
+    "collections": {
+      "empty": {
+        "title": "コレクションが見つかりません",
+        "description": "フィルターを更新して、より多くのコレクションを見つけてください。"
       }
     }
   },

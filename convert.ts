@@ -10,6 +10,7 @@ import {
   AssetHistoryAction,
   Auction,
   Collection,
+  CollectionStats,
   Currency,
   Maybe,
   Offer,
@@ -79,6 +80,34 @@ export const convertAssetWithSupplies = (
   ),
   owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
 })
+
+export const convertCollection = (
+  collection: Pick<Collection, 'address' | 'name' | 'image' | 'cover'> & {
+    floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+  } & {
+    totalVolume: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+  },
+): {
+  address: string
+  name: string
+  image: string | null
+  cover: string | null
+  totalVolume: string
+  totalVolumeCurrencySymbol: string
+  floorPrice: string
+  floorPriceCurrencySymbol: string
+} => {
+  return {
+    address: collection.address,
+    name: collection.name,
+    image: collection.image,
+    cover: collection.cover,
+    totalVolume: collection.totalVolume?.valueInRef || '',
+    totalVolumeCurrencySymbol: collection.totalVolume?.refCode || '',
+    floorPrice: collection.floorPrice?.valueInRef || '',
+    floorPriceCurrencySymbol: collection.floorPrice?.refCode || '',
+  }
+}
 
 export const convertUser = (
   user: Maybe<
