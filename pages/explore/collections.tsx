@@ -108,7 +108,7 @@ const CollectionsPage: NextPage<Props> = ({
         title={t('explore.title')}
         loading={pageLoading}
         search={search}
-        selectedTabIndex={2}
+        selectedTabIndex={1}
       >
         <>
           {collections.length > 0 ? (

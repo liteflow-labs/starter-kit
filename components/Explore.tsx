@@ -48,17 +48,6 @@ const ExploreTemplate: FC<{
             </Tab>
           </Link>
           <Link
-            href={`/explore/users${searchParam}`}
-            whiteSpace="nowrap"
-            mr={4}
-          >
-            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
-              <Text as="span" variant="subtitle1">
-                {t('explore.tabs.users')}
-              </Text>
-            </Tab>
-          </Link>
-          <Link
             href={`/explore/collections${searchParam}`}
             whiteSpace="nowrap"
             mr={4}
@@ -66,6 +55,17 @@ const ExploreTemplate: FC<{
             <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
               <Text as="span" variant="subtitle1">
                 {t('explore.tabs.collections')}
+              </Text>
+            </Tab>
+          </Link>
+          <Link
+            href={`/explore/users${searchParam}`}
+            whiteSpace="nowrap"
+            mr={4}
+          >
+            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
+              <Text as="span" variant="subtitle1">
+                {t('explore.tabs.users')}
               </Text>
             </Tab>
           </Link>
