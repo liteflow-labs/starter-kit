@@ -2,25 +2,7 @@ import {
   Button,
   Divider,
   Flex,
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  HStack,
   Icon,
-  InputGroup,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -38,8 +20,7 @@ import {
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { SyntheticEvent, useEffect, useMemo, VFC } from 'react'
-import { useForm } from 'react-hook-form'
+import { SyntheticEvent, useMemo, VFC } from 'react'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
 import { ListItem } from '../List/List'
@@ -48,6 +29,7 @@ import CancelOfferModal from '../Modal/CancelOffer'
 import Price from '../Price/Price'
 import WalletAddress from '../Wallet/Address'
 import AccountImage from '../Wallet/Image'
+import BidAcceptModal from './AcceptModal'
 
 export type Props = {
   bid: {
@@ -72,6 +54,7 @@ export type Props = {
   blockExplorer: BlockExplorer
   isSingle: boolean
   preventAcceptation: boolean
+  totalOwned: BigNumber
   onAccepted: (id: string) => Promise<void>
   onCanceled: (id: string) => Promise<void>
 }
@@ -83,6 +66,7 @@ const Bid: VFC<Props> = ({
   blockExplorer,
   isSingle,
   preventAcceptation,
+  totalOwned,
   onAccepted,
   onCanceled,
 }) => {
@@ -96,11 +80,6 @@ const Bid: VFC<Props> = ({
     isOpen: cancelOfferIsOpen,
     onOpen: cancelOfferOnOpen,
     onClose: cancelOfferOnClose,
-  } = useDisclosure()
-  const {
-    isOpen: confirmCancelIsOpen,
-    onOpen: confirmCancelOnOpen,
-    onClose: confirmCancelOnClose,
   } = useDisclosure()
   const {
     isOpen: confirmAcceptIsOpen,
@@ -128,21 +107,6 @@ const Bid: VFC<Props> = ({
     return isSameAddress(account, bid.maker.address)
   }, [account, bid])
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setValue,
-  } = useForm<{ quantity: string }>({
-    defaultValues: {
-      quantity: bid.availableQuantity.toString(),
-    },
-  })
-  useEffect(
-    () => setValue('quantity', bid.availableQuantity.toString()),
-    [bid.availableQuantity, setValue],
-  )
-
   const acceptBid = async (quantity?: BigNumberish) => {
     if (!canAccept) return
     if (activeAcceptOfferStep !== AcceptOfferStep.INITIAL) return
@@ -155,7 +119,6 @@ const Bid: VFC<Props> = ({
       acceptOfferOnClose()
     }
   }
-  const submitAcceptBid = handleSubmit(async (data) => acceptBid(data.quantity))
 
   const cancelBid = async (e: SyntheticEvent) => {
     e.stopPropagation()
@@ -280,7 +243,7 @@ const Bid: VFC<Props> = ({
                 colorScheme="gray"
                 w={{ base: 'full', md: 'auto' }}
                 isLoading={activeCancelOfferStep !== CancelOfferStep.INITIAL}
-                onClick={confirmCancelOnOpen}
+                onClick={cancelBid}
               >
                 <Text as="span" isTruncated>
                   {t('bid.detail.cancel')}
@@ -307,110 +270,13 @@ const Bid: VFC<Props> = ({
         blockExplorer={blockExplorer}
         transactionHash={cancelOfferHash}
       />
-      {/* Confirm to accept offer */}
-      <Modal onClose={confirmAcceptOnClose} isOpen={confirmAcceptIsOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Accept bid</ModalHeader>
-          <ModalCloseButton />
-          <form onSubmit={submitAcceptBid}>
-            <ModalBody>
-              {bid.availableQuantity.gt(1) && (
-                <FormControl isInvalid={!!errors.quantity}>
-                  <HStack spacing={1} mb={2}>
-                    <FormLabel htmlFor="quantity" m={0}>
-                      {t('offer.form.checkout.quantity.label')}
-                    </FormLabel>
-                    <FormHelperText>
-                      {t('offer.form.checkout.quantity.suffix')}
-                    </FormHelperText>
-                  </HStack>
-                  <InputGroup>
-                    <NumberInput
-                      clampValueOnBlur={false}
-                      min={1}
-                      max={bid.availableQuantity.toNumber()}
-                      allowMouseWheel
-                      w="full"
-                      onChange={(x) => setValue('quantity', x)}
-                    >
-                      <NumberInputField
-                        id="quantity"
-                        placeholder={t(
-                          'offer.form.checkout.quantity.placeholder',
-                        )}
-                        {...register('quantity', {
-                          required: t(
-                            'offer.form.checkout.validation.required',
-                          ),
-                          validate: (value) => {
-                            if (
-                              parseInt(value, 10) < 1 ||
-                              parseInt(value, 10) >
-                                bid.availableQuantity.toNumber()
-                            ) {
-                              return t(
-                                'offer.form.checkout.validation.in-range',
-                                { max: bid.availableQuantity.toNumber() },
-                              )
-                            }
-                            if (!/^\d+$/.test(value)) {
-                              return t('offer.form.checkout.validation.integer')
-                            }
-                          },
-                        })}
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </InputGroup>
-                  {errors.quantity && (
-                    <FormErrorMessage>
-                      {errors.quantity.message}
-                    </FormErrorMessage>
-                  )}
-                  <FormHelperText>
-                    <Text as="p" variant="text" color="gray.500">
-                      {t('offer.form.checkout.available', {
-                        count: bid.availableQuantity.toNumber(),
-                      })}
-                    </Text>
-                  </FormHelperText>
-                </FormControl>
-              )}
-            </ModalBody>
-            <ModalFooter>
-              <Button isLoading={isSubmitting} size="lg" type="submit">
-                <Text as="span" isTruncated>
-                  {t('offer.form.checkout.submit')}
-                </Text>
-              </Button>
-            </ModalFooter>
-          </form>
-        </ModalContent>
-      </Modal>
-      {/* Confirm to cancel offer */}
-      <Modal onClose={confirmCancelOnClose} isOpen={confirmCancelIsOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Confirm to cancel the offer</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>Are you sure to cancel this offer</ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="red"
-              onClick={(e) => {
-                confirmCancelOnClose()
-                void cancelBid(e)
-              }}
-            >
-              Confirm
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <BidAcceptModal
+        isOpen={confirmAcceptIsOpen}
+        onClose={confirmAcceptOnClose}
+        acceptBid={acceptBid}
+        bid={bid}
+        totalOwned={totalOwned}
+      />
     </>
   )
 }

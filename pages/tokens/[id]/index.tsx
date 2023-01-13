@@ -166,16 +166,17 @@ const DetailPage: NextPage<Props> = ({
   const asset = useMemo(() => data?.asset, [data])
   const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
 
-  const isOwner = useMemo(
-    () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0').gt('0'),
+  const totalOwned = useMemo(
+    () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),
     [asset],
   )
+  const isOwner = useMemo(() => totalOwned.gt('0'), [totalOwned])
   const ownAllSupply = useMemo(
     () =>
-      BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0').gte(
+      totalOwned.gte(
         BigNumber.from(asset?.ownerships.aggregates?.sum?.quantity || '0'),
       ),
-    [asset],
+    [asset, totalOwned],
   )
   const isSingle = useMemo(
     () => asset?.collection.standard === 'ERC721',
@@ -498,6 +499,7 @@ const DetailPage: NextPage<Props> = ({
                 preventAcceptation={!isOwner || !!activeAuction}
                 onAccepted={refresh}
                 onCanceled={refresh}
+                totalOwned={totalOwned}
               />
             )}
             {query.filter === AssetTabs.history && (

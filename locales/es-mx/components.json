@@ -25,6 +25,28 @@
           "title": "Cancelar Oferta"
         }
       }
+    },
+    "modal": {
+      "accept": {
+        "title": "Aceptar una oferta",
+        "description": "Elija el número de ediciones que le gustaría vender al postor",
+        "submit": "Aceptar oferta",
+        "quantity": {
+          "label": "Cantidad",
+          "suffix": "Edición",
+          "placeholder": "Introduce la cantidad",
+          "available": "{{ count }} ediciones solicitadas por el postor"
+        },
+        "validation": {
+          "required": "Este campo es requerido.",
+          "in-range": "Este campo debe estar entre 1 y {{ max }}.",
+          "integer": "Este campo debe ser un número entero."
+        },
+        "owned": {
+          "label": "eres dueño",
+          "unit": "{{count}} edición(es)"
+        }
+      }
     }
   },
   "countdown": {

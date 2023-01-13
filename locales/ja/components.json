@@ -25,6 +25,28 @@
           "title": "オファーをキャンセル"
         }
       }
+    },
+    "modal": {
+      "accept": {
+        "title": "入札する",
+        "description": "入札者に販売したいエディションの数を選択してください",
+        "submit": "入札を受け入れる",
+        "quantity": {
+          "label": "量",
+          "suffix": "版",
+          "placeholder": "数量を入力してください",
+          "available": "入札者が要求した {{count}} つのエディション"
+        },
+        "validation": {
+          "required": "この項目は必須です。",
+          "in-range": "このフィールドは 1 から {{ max }} の間である必要があります。",
+          "integer": "このフィールドは整数でなければなりません."
+        },
+        "owned": {
+          "label": "あなたが所有しています",
+          "unit": "{{count}} 版"
+        }
+      }
     }
   },
   "countdown": {

@@ -25,6 +25,28 @@
           "title": "取消要约"
         }
       }
+    },
+    "modal": {
+      "accept": {
+        "title": "接受出价",
+        "description": "选择您要出售给投标人的版本数量",
+        "submit": "接受出价",
+        "quantity": {
+          "label": "数量",
+          "suffix": "版",
+          "placeholder": "输入数量",
+          "available": "投标人要求的 {{count}} 个版本"
+        },
+        "validation": {
+          "required": "这是必填栏",
+          "in-range": "该字段必须介于 1 和 {{ max }} 之间",
+          "integer": "该字段必须是整数"
+        },
+        "owned": {
+          "label": "你拥有",
+          "unit": "{{count}} 个版本"
+        }
+      }
     }
   },
   "countdown": {

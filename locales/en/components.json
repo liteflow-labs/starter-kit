@@ -25,6 +25,28 @@
           "title": "Cancel Offer"
         }
       }
+    },
+    "modal": {
+      "accept": {
+        "title": "Accept a bid",
+        "description": "Choose the number of editions you would like to sell to the bidder",
+        "submit": "Accept bid",
+        "quantity": {
+          "label": "Quantity",
+          "suffix": "Edition",
+          "placeholder": "Enter quantity",
+          "available": "{{ count }} editions requested by the bidder"
+        },
+        "validation": {
+          "required": "This field is required.",
+          "in-range": "This field must be between 1 and {{ max }}.",
+          "integer": "This field must be an integer."
+        },
+        "owned": {
+          "label": "You owns",
+          "unit": "{{count}} edition(s)"
+        }
+      }
     }
   },
   "countdown": {

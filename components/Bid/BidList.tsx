@@ -1,5 +1,6 @@
 import { Text } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
+import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { VFC } from 'react'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
@@ -14,6 +15,7 @@ type Props = {
   isSingle: boolean
   blockExplorer: BlockExplorer
   preventAcceptation: boolean
+  totalOwned: BigNumber
   onAccepted: (id: string) => Promise<void>
   onCanceled: (id: string) => Promise<void>
 }
@@ -25,6 +27,7 @@ const BidList: VFC<Props> = ({
   isSingle,
   blockExplorer,
   preventAcceptation,
+  totalOwned,
   onAccepted,
   onCanceled,
 }) => {
@@ -50,6 +53,7 @@ const BidList: VFC<Props> = ({
             onAccepted={onAccepted}
             onCanceled={onCanceled}
             isSingle={isSingle}
+            totalOwned={totalOwned}
           />
         </>
       ))}
