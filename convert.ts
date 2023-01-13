@@ -96,7 +96,7 @@ export const convertTraits = (
   type: string
   value: string
   totalCount: number
-  rarity: number
+  percent: number
 }[] => {
   const assetTraitsWithCounts = asset.traits.nodes.map((assetTrait) => {
     const traitInCollection = asset.collection.traits.find(
@@ -109,7 +109,7 @@ export const convertTraits = (
       type: assetTrait.type,
       value: assetTrait.value,
       totalCount: traitValueCount,
-      rarity: (traitValueCount / asset.collection.supply) * 100,
+      percent: (traitValueCount / asset.collection.supply) * 100,
     }
   })
 

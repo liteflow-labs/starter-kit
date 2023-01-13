@@ -7,7 +7,7 @@ type TraitListProps = {
     type: string
     value: string
     totalCount: number
-    rarity: number
+    percent: number
   }[]
 }
 
@@ -51,10 +51,10 @@ const TraitList: FC<TraitListProps> = ({ traits }) => {
             as="span"
             variant="caption"
             color="brand.black"
-            title={t('traits.rarity', { value: trait.rarity.toFixed(2) })}
+            title={t('traits.percent', { value: trait.percent.toFixed(2) })}
             isTruncated
           >
-            {t('traits.rarity', { value: trait.rarity.toFixed(2) })}
+            {t('traits.percent', { value: trait.percent.toFixed(2) })}
           </Text>
         </Flex>
       ))}
