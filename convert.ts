@@ -135,6 +135,20 @@ export const convertUser = (
   verified: user?.verification?.status === 'VALIDATED',
 })
 
+export const convertUserWithCover = (
+  user: Maybe<
+    Pick<Account, 'address' | 'image' | 'cover' | 'name'> & {
+      verification: Maybe<Pick<AccountVerification, 'status'>>
+    }
+  >,
+  defaultAddress: string,
+): ReturnType<typeof convertUser> & {
+  cover: string | null
+} => ({
+  ...convertUser(user, defaultAddress),
+  cover: user?.cover || null,
+})
+
 export const convertFullUser = (
   user: Maybe<
     Pick<
