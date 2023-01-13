@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertIcon,
+  Box,
   Center,
   Flex,
   Heading,
@@ -18,7 +19,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import Link from '../../../components/Link/Link'
@@ -30,7 +31,6 @@ import TokenFormCreate from '../../../components/Token/Form/Create'
 import connectors from '../../../connectors'
 import environment from '../../../environment'
 import {
-  Config,
   FetchAccountAndCollectionDocument,
   FetchAccountAndCollectionQuery,
   FetchAccountAndCollectionQueryVariables,
@@ -110,8 +110,7 @@ const CreatePage: NextPage<Props> = ({
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const { account } = useWeb3React()
-  const configPromise = useConfig()
-  const [config, setConfig] = useState<Config>()
+  const { data: config } = useConfig()
   const toast = useToast()
   const { data } = useFetchAccountAndCollectionQuery({
     variables: {
@@ -176,11 +175,6 @@ const CreatePage: NextPage<Props> = ({
     },
     [push, t, toast],
   )
-
-  useEffect(() => {
-    void configPromise.then(setConfig)
-    return () => setConfig(undefined)
-  }, [configPromise])
 
   if (environment.RESTRICT_TO_VERIFIED_ACCOUNT && !creator.verified) {
     return (
@@ -255,14 +249,16 @@ const CreatePage: NextPage<Props> = ({
           <Flex as={Text} color="brand.black" mb={3} variant="button1">
             {t('asset.form.preview')}
           </Flex>
-          <TokenCard
-            asset={asset}
-            creator={creator}
-            auction={undefined}
-            sale={undefined}
-            numberOfSales={0}
-            hasMultiCurrency={false}
-          />
+          <Box pointerEvents="none">
+            <TokenCard
+              asset={asset}
+              creator={creator}
+              auction={undefined}
+              sale={undefined}
+              numberOfSales={0}
+              hasMultiCurrency={false}
+            />
+          </Box>
         </div>
         <TokenFormCreate
           signer={signer}

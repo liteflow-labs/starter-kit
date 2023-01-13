@@ -167,19 +167,21 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
         justify="stretch"
         gap={12}
       >
-        <TokenCard
-          asset={convertAsset(asset)}
-          creator={convertUser(asset.creator, asset.creator.address)}
-          auction={auction ? convertAuctionWithBestBid(auction) : undefined}
-          sale={convertSale(asset.firstSale.nodes[0])}
-          numberOfSales={asset.firstSale.totalCount}
-          hasMultiCurrency={
-            parseInt(
-              asset.currencySales.aggregates?.distinctCount?.currencyId,
-              10,
-            ) > 1
-          }
-        />
+        <Box pointerEvents="none">
+          <TokenCard
+            asset={convertAsset(asset)}
+            creator={convertUser(asset.creator, asset.creator.address)}
+            auction={auction ? convertAuctionWithBestBid(auction) : undefined}
+            sale={convertSale(asset.firstSale.nodes[0])}
+            numberOfSales={asset.firstSale.totalCount}
+            hasMultiCurrency={
+              parseInt(
+                asset.currencySales.aggregates?.distinctCount?.currencyId,
+                10,
+              ) > 1
+            }
+          />
+        </Box>
         <Flex direction="column" flex="1 1 0%">
           {auction && (
             <>

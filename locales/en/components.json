@@ -454,7 +454,8 @@
         "highest-bid": "Bid",
         "place-bid": "Place a bid",
         "no-bids": "No bids yet",
-        "view": "View my NFT"
+        "view": "View my NFT",
+        "ongoing-auction": "Ongoing Auction"
       },
       "form": {
         "submit": "Create Offer",

@@ -69,6 +69,23 @@ query FetchAllERC721And1155(
           }
         }
       }
+      bestBid: bids(
+        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+        filter: { expiredAt: { greaterThan: $now } }
+        first: 1
+      ) {
+        nodes {
+          unitPrice
+          amount
+          currency {
+            image
+            name
+            id
+            decimals
+            symbol
+          }
+        }
+      }
       firstSale: sales(
         first: 1
         orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
@@ -115,7 +132,7 @@ query FetchAllERC721And1155(
       symbol
     }
   }
-  collections {
+  collections(orderBy: NAME_ASC) {
     nodes {
       chainId
       address

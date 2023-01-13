@@ -66,6 +66,23 @@ fragment HomeAssetDetail on Asset {
       }
     }
   }
+  bestBid: bids(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+    first: 1
+  ) {
+    nodes {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
+    }
+  }
   sales(
     orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
     filter: { expiredAt: { greaterThan: $now } }
@@ -197,6 +214,23 @@ fragment HomeAsset on Asset {
       }
     }
   }
+  bestBid: bids(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+    first: 1
+  ) {
+    nodes {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
+    }
+  }
   firstSale: sales(
     first: 1
     orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
@@ -270,6 +304,23 @@ fragment HomeAuction on Auction {
       image
       verification {
         status
+      }
+    }
+    bestBid: bids(
+      orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+      filter: { expiredAt: { greaterThan: $now } }
+      first: 1
+    ) {
+      nodes {
+        unitPrice
+        amount
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
       }
     }
   }

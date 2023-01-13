@@ -32,6 +32,13 @@ export const convertAsset = (
         sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
       }>
     }
+    bestBid: Maybe<{
+      nodes: Array<
+        Pick<Offer, 'unitPrice' | 'amount'> & {
+          currency: Pick<Currency, 'decimals' | 'symbol'>
+        }
+      >
+    }>
   },
 ): {
   id: string
@@ -44,18 +51,49 @@ export const convertAsset = (
   }
   owned: BigNumber
   unlockedContent: { url: string; mimetype: string | null } | null
-} => ({
-  id: asset.id,
-  animationUrl: asset.animationUrl,
-  image: asset.image,
-  name: asset.name,
-  collection: {
-    address: asset.collection.address,
-    name: asset.collection.name,
-  },
-  owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
-  unlockedContent: asset.unlockedContent,
-})
+  bestBid:
+    | {
+        unitPrice: BigNumber
+        currency: {
+          decimals: number
+          symbol: string
+        }
+      }
+    | undefined
+} => {
+  const bestBid = asset.bestBid?.nodes[0]
+  if (!bestBid)
+    return {
+      id: asset.id,
+      animationUrl: asset.animationUrl,
+      image: asset.image,
+      name: asset.name,
+      collection: {
+        address: asset.collection.address,
+        name: asset.collection.name,
+      },
+      owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+      unlockedContent: asset.unlockedContent,
+      bestBid: undefined,
+    }
+
+  return {
+    id: asset.id,
+    animationUrl: asset.animationUrl,
+    image: asset.image,
+    name: asset.name,
+    collection: {
+      address: asset.collection.address,
+      name: asset.collection.name,
+    },
+    owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+    unlockedContent: asset.unlockedContent,
+    bestBid: {
+      unitPrice: BigNumber.from(bestBid.unitPrice),
+      currency: bestBid.currency,
+    },
+  }
+}
 
 export const convertAssetWithSupplies = (
   asset: Parameters<typeof convertAsset>[0] & {
@@ -76,25 +114,55 @@ export const convertAssetWithSupplies = (
   totalSupply: BigNumber
   owned: BigNumber
   collection: Pick<Collection, 'standard'>
-} => ({
-  id: asset.id,
-  animationUrl: asset.animationUrl,
-  image: asset.image,
-  unlockedContent: asset.unlockedContent,
-  name: asset.name,
-  collection: {
-    address: asset.collection.address,
-    name: asset.collection.name,
-    standard: asset.collection.standard,
-  },
-  saleSupply: BigNumber.from(
-    asset.sales.aggregates?.sum?.availableQuantity || 0,
-  ),
-  totalSupply: BigNumber.from(
-    asset.ownerships.aggregates?.sum?.quantity || '0',
-  ),
-  owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
-})
+} => {
+  const bestBid = asset.bestBid?.nodes[0]
+  if (!bestBid) {
+    return {
+      id: asset.id,
+      animationUrl: asset.animationUrl,
+      image: asset.image,
+      unlockedContent: asset.unlockedContent,
+      name: asset.name,
+      collection: {
+        address: asset.collection.address,
+        name: asset.collection.name,
+        standard: asset.collection.standard,
+      },
+      saleSupply: BigNumber.from(
+        asset.sales.aggregates?.sum?.availableQuantity || 0,
+      ),
+      totalSupply: BigNumber.from(
+        asset.ownerships.aggregates?.sum?.quantity || '0',
+      ),
+      owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+      bestBid: undefined,
+    }
+  }
+
+  return {
+    id: asset.id,
+    animationUrl: asset.animationUrl,
+    image: asset.image,
+    unlockedContent: asset.unlockedContent,
+    name: asset.name,
+    collection: {
+      address: asset.collection.address,
+      name: asset.collection.name,
+      standard: asset.collection.standard,
+    },
+    saleSupply: BigNumber.from(
+      asset.sales.aggregates?.sum?.availableQuantity || 0,
+    ),
+    totalSupply: BigNumber.from(
+      asset.ownerships.aggregates?.sum?.quantity || '0',
+    ),
+    owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+    bestBid: {
+      unitPrice: BigNumber.from(bestBid.unitPrice),
+      currency: bestBid.currency,
+    },
+  }
+}
 
 export const convertUser = (
   user: Maybe<
@@ -113,6 +181,20 @@ export const convertUser = (
   image: user?.image || null,
   name: user?.name || null,
   verified: user?.verification?.status === 'VALIDATED',
+})
+
+export const convertUserWithCover = (
+  user: Maybe<
+    Pick<Account, 'address' | 'image' | 'cover' | 'name'> & {
+      verification: Maybe<Pick<AccountVerification, 'status'>>
+    }
+  >,
+  defaultAddress: string,
+): ReturnType<typeof convertUser> & {
+  cover: string | null
+} => ({
+  ...convertUser(user, defaultAddress),
+  cover: user?.cover || null,
 })
 
 export const convertFullUser = (
@@ -234,17 +316,16 @@ export const convertHistories = (
   }
 }
 
-export const convertAuctionWithBestBid = (
-  auction: Pick<Auction, 'endAt'> & {
-    bestBid: Maybe<{
-      nodes: Array<
-        Pick<Offer, 'unitPrice' | 'amount'> & {
-          currency: Pick<Currency, 'decimals' | 'symbol'>
-        }
-      >
-    }>
-  },
-): {
+export const convertAuctionWithBestBid = (auction: {
+  endAt: Date
+  bestBid: Maybe<{
+    nodes: Array<
+      Pick<Offer, 'unitPrice' | 'amount'> & {
+        currency: Pick<Currency, 'decimals' | 'symbol'>
+      }
+    >
+  }>
+}): {
   endAt: Date
   bestBid:
     | {
@@ -302,13 +383,14 @@ export const convertAuctionFull = (
 
 export const convertSale = (
   sale:
-    | (Pick<OfferOpenSale, 'unitPrice'> & {
+    | (Pick<OfferOpenSale, 'unitPrice' | 'id'> & {
         currency: Pick<Currency, 'decimals' | 'symbol' | 'id' | 'image'>
       })
     | undefined,
 ):
   | undefined
   | {
+      id: string
       unitPrice: BigNumber
       currency: {
         id: string
@@ -319,6 +401,7 @@ export const convertSale = (
     } => {
   if (!sale) return
   return {
+    id: sale.id,
     unitPrice: BigNumber.from(sale.unitPrice),
     currency: sale.currency,
   }
