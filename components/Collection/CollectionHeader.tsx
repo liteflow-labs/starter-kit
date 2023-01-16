@@ -21,6 +21,7 @@ import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Etherscan from 'components/Icons/Etherscan'
 import Image from 'components/Image/Image'
 import Link from 'components/Link/Link'
+import Truncate from 'components/Truncate/Truncate'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 
@@ -159,7 +160,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
           )}
         </Box>
       </Flex>
-      <Flex pt={24} align="flex-start" justify="space-between">
+      <Flex pt={24} align="flex-start" justify="space-between" gap={4}>
         <Box>
           <Heading variant="title">{collection.name}</Heading>
           <Heading
@@ -177,9 +178,18 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
             )}
           </Heading>
           {collection.description && (
-            <Text color="gray.500">{collection.description}</Text>
+            <Box mt={4}>
+              <Truncate size="lg" color="gray.500" length={200}>
+                {collection.description}
+              </Truncate>
+            </Box>
           )}
-          <SimpleGrid columns={{ base: 2, lg: 4 }} spacing={8} w="full">
+          <SimpleGrid
+            columns={{ base: 2, lg: 4 }}
+            spacing={8}
+            mt={4}
+            w="max-content"
+          >
             {blocks.map((block) => (
               <Flex
                 key={block.name}
@@ -207,7 +217,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
             ))}
           </SimpleGrid>
         </Box>
-        <Flex>
+        <Flex minW="280px" justify="flex-end">
           <Flex gap={4}>
             <IconButton
               as={Link}
@@ -260,7 +270,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
               />
             )}
           </Flex>
-          <Divider orientation="vertical" />
+          <Divider orientation="vertical" h="40px" mx={4} />
           <Menu placement="bottom-end" autoSelect={false}>
             <MenuButton
               as={IconButton}
