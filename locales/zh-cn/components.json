@@ -699,7 +699,7 @@
     }
   },
   "traits": {
-    "rarity": "稀有度 {{value}}"
+    "percent": "{{value}}%"
   },
   "user": {
     "balance": {

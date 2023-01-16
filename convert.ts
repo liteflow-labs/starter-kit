@@ -8,6 +8,7 @@ import {
   Asset,
   AssetHistory,
   AssetHistoryAction,
+  AssetTrait,
   Auction,
   Collection,
   Currency,
@@ -19,6 +20,7 @@ import {
   Ownership,
   OwnershipSumAggregates,
   Trade,
+  Trait,
 } from './graphql'
 
 export const convertAsset = (
@@ -162,6 +164,40 @@ export const convertAssetWithSupplies = (
       currency: bestBid.currency,
     },
   }
+}
+
+export const convertTraits = (
+  asset: Parameters<typeof convertAsset>[0] & {
+    traits: {
+      nodes: Array<Pick<AssetTrait, 'type' | 'value'>>
+    }
+    collection: {
+      supply: number
+      traits: Array<Pick<Trait, 'type' | 'values'>>
+    }
+  },
+): {
+  type: string
+  value: string
+  totalCount: number
+  percent: number
+}[] => {
+  const assetTraitsWithCounts = asset.traits.nodes.map((assetTrait) => {
+    const traitInCollection = asset.collection.traits.find(
+      ({ type }) => type === assetTrait.type,
+    )
+    const traitValueCount =
+      traitInCollection?.values?.find(({ value }) => value === assetTrait.value)
+        ?.count || 0
+    return {
+      type: assetTrait.type,
+      value: assetTrait.value,
+      totalCount: traitValueCount,
+      percent: (traitValueCount / asset.collection.supply) * 100,
+    }
+  })
+
+  return assetTraitsWithCounts
 }
 
 export const convertUser = (
