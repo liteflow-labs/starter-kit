@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   FormControl,
   FormHelperText,
@@ -252,23 +253,25 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
         align={{ base: 'center', md: 'flex-start' }}
         gap={{ base: 12, md: 6 }}
       >
-        <TokenCard
-          asset={convertAsset(asset)}
-          creator={convertUser(asset.creator, asset.creator.address)}
-          sale={convertSale(asset.firstSale.nodes[0])}
-          auction={
-            asset.auctions.nodes[0]
-              ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-              : undefined
-          }
-          numberOfSales={asset.firstSale.totalCount}
-          hasMultiCurrency={
-            parseInt(
-              asset.currencySales.aggregates?.distinctCount?.currencyId,
-              10,
-            ) > 1
-          }
-        />
+        <Box pointerEvents="none">
+          <TokenCard
+            asset={convertAsset(asset)}
+            creator={convertUser(asset.creator, asset.creator.address)}
+            sale={convertSale(asset.firstSale.nodes[0])}
+            auction={
+              asset.auctions.nodes[0]
+                ? convertAuctionWithBestBid(asset.auctions.nodes[0])
+                : undefined
+            }
+            numberOfSales={asset.firstSale.totalCount}
+            hasMultiCurrency={
+              parseInt(
+                asset.currencySales.aggregates?.distinctCount?.currencyId,
+                10,
+              ) > 1
+            }
+          />
+        </Box>
         <Flex direction="column" gap={8} grow={1} shrink={1} basis="0%">
           <FormControl>
             <FormLabel>{t('offers.form.options.label')}</FormLabel>

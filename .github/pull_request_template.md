@@ -15,4 +15,5 @@
 
 ### Checklist
 
+- [ ] Base branch of the PR is `dev`
 - [ ] Update docs if necessary <!-- Docs in https://github.com/liteflow-labs/liteflow-js/tree/main/docs/pages/starter-kit -->

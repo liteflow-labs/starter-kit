@@ -1,44 +1,69 @@
-import { Flex, Tag, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
+import Price from 'components/Price/Price'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, HTMLAttributes } from 'react'
 import Link from '../../Link/Link'
 
 type Props = {
-  href: string
+  assetId: string
+  bestBid:
+    | {
+        unitPrice: BigNumber
+        currency: {
+          decimals: number
+          symbol: string
+        }
+      }
+    | undefined
+  isOwner: boolean
+  showButton?: boolean
 }
 
 const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
-  href,
+  assetId,
+  bestBid,
+  isOwner,
+  showButton = true,
   ...props
 }) => {
   const { t } = useTranslation('components')
   return (
-    <div {...props}>
-      <Tag
-        size="lg"
-        variant="outline"
-        borderRadius="full"
-        boxShadow="none"
-        border="1px"
-        borderColor="gray.200"
-      >
-        <Text as="span" variant="text-sm" color="brand.black">
-          {t('sales.open.card-footer.open')}
-        </Text>
-      </Tag>
+    <Box {...props}>
       <Flex
         as={Link}
-        color="brand.500"
-        mt={3.5}
-        w="full"
-        justify="space-between"
+        color={showButton ? 'white' : 'gray.500'}
+        bgColor={showButton ? 'brand.500' : 'gray.100'}
+        py={2}
+        px={4}
         fontSize="sm"
         fontWeight="semibold"
-        href={href}
+        href={`/tokens/${assetId}${!isOwner ? '/bid' : ''}`}
       >
-        {t('sales.open.card-footer.place-bid')}
+        {showButton ? (
+          isOwner ? (
+            t('sales.open.card-footer.view')
+          ) : (
+            t('sales.open.card-footer.place-bid')
+          )
+        ) : bestBid ? (
+          <Flex gap={1}>
+            <Text variant="subtitle2">
+              {t('sales.auction.card-footer.highest-bid')}
+            </Text>
+            <Text
+              as={Price}
+              variant="subtitle2"
+              amount={bestBid.unitPrice}
+              currency={bestBid.currency}
+              color="brand.black"
+            />
+          </Flex>
+        ) : (
+          t('sales.open.card-footer.open')
+        )}
       </Flex>
-    </div>
+    </Box>
   )
 }
 

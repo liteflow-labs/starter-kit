@@ -1,6 +1,10 @@
 fragment AssetDetail on Asset {
   id
   name
+  collection {
+    address
+    name
+  }
   image
   animationUrl
   unlockedContent {
@@ -34,6 +38,23 @@ fragment AssetDetail on Asset {
       }
     }
   }
+  bestBid: bids(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+    first: 1
+  ) {
+    nodes {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
+    }
+  }
   firstSale: sales(
     first: 1
     orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
@@ -64,6 +85,13 @@ fragment AssetDetail on Asset {
     image
     verification {
       status
+    }
+  }
+  owned: ownerships(filter: { ownerAddress: { equalTo: $currentAddress } }) {
+    aggregates {
+      sum {
+        quantity
+      }
     }
   }
 }

@@ -1,15 +1,12 @@
-import { Avatar, Flex, HStack, Icon, Tag, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
+import Price from 'components/Price/Price'
 import useTranslation from 'next-translate/useTranslation'
 import { VFC } from 'react'
-import Countdown from '../../Countdown/Countdown'
 import Link from '../../Link/Link'
-import Price from '../../Price/Price'
 
 type Props = {
-  href: string
-  endAt: Date
+  assetId: string
   bestBid:
     | {
         unitPrice: BigNumber
@@ -19,57 +16,51 @@ type Props = {
         }
       }
     | undefined
+  isOwner: boolean
+  showButton?: boolean
 }
 
-const SaleAuctionCardFooter: VFC<Props> = ({ href, endAt, bestBid }) => {
+const SaleAuctionCardFooter: VFC<Props> = ({
+  assetId,
+  bestBid,
+  isOwner,
+  showButton = true,
+}) => {
   const { t } = useTranslation('components')
   return (
-    <div>
-      <Tag
-        as={HStack}
-        spacing={2}
-        size="lg"
-        variant="outline"
-        borderRadius="full"
-        boxShadow="none"
-        border="1px"
-        borderColor="gray.200"
-      >
-        <Avatar
-          icon={<Icon as={HiOutlineClock} h={4} w={4} color="white" />}
-          size="sm"
-          bg="brand.500"
-          ml={-3}
-        />
-        <Text as="span" variant="button2" color="brand.black">
-          <Countdown date={endAt} />
-        </Text>
-      </Tag>
-      <Flex
-        as={Link}
-        justify="space-between"
-        color="brand.500"
-        mt={3.5}
-        w="full"
-        fontSize="sm"
-        fontWeight="semibold"
-        href={href}
-      >
-        {bestBid ? (
-          <>
-            {t('sales.auction.card-footer.highest-bid')}
-            <Text
-              as={Price}
-              ml={1}
-              amount={bestBid.unitPrice}
-              currency={bestBid.currency}
-            />
-          </>
+    <Flex
+      as={Link}
+      color={showButton ? 'white' : 'gray.500'}
+      bgColor={showButton ? 'brand.500' : 'gray.100'}
+      py={2}
+      px={4}
+      fontSize="sm"
+      fontWeight="semibold"
+      href={`/tokens/${assetId}${!isOwner ? '/bid' : ''}`}
+    >
+      {showButton ? (
+        isOwner ? (
+          t('sales.auction.card-footer.view')
         ) : (
           t('sales.auction.card-footer.place-bid')
-        )}
-      </Flex>
-    </div>
+        )
+      ) : bestBid ? (
+        <Flex gap={1}>
+          <Text variant="subtitle2">
+            {t('sales.auction.card-footer.highest-bid')}
+          </Text>
+          <Text
+            as={Price}
+            variant="subtitle2"
+            amount={bestBid.unitPrice}
+            currency={bestBid.currency}
+            color="brand.black"
+          />
+        </Flex>
+      ) : (
+        t('sales.auction.card-footer.ongoing-auction')
+      )}
+    </Flex>
   )
 }
 
