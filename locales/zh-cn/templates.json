@@ -72,6 +72,15 @@
       "empty": {
         "title": "未找到收藏",
         "description": "请更新筛选条件来查找更多收藏。"
+      },
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "ボリューム: オールタイム",
+          "24hVolDesc": "ボリューム: 24時間",
+          "7dVolDesc": "ボリューム: 7時間",
+          "14dVolDesc": "ボリューム: 14時間",
+          "28dVolDesc": "ボリューム: 28時間"
+        }
       }
     }
   },

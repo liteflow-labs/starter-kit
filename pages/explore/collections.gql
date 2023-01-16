@@ -1,9 +1,15 @@
 query FetchExploreCollections(
   $limit: Int!
   $offset: Int!
+  $orderBy: [CollectionsOrderBy!]
   $filter: [CollectionFilter!]
 ) {
-  collections(first: $limit, offset: $offset, filter: { and: $filter }) {
+  collections(
+    first: $limit
+    offset: $offset
+    orderBy: $orderBy
+    filter: { and: $filter }
+  ) {
     nodes {
       address
       name

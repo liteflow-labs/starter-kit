@@ -72,6 +72,15 @@
       "empty": {
         "title": "No Collections Found",
         "description": "Update your filters to find more collections."
+      },
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "交易量: 全时",
+          "24hVolDesc": "交易量: 24小时",
+          "7dVolDesc": "交易量: 7天",
+          "14dVolDesc": "交易量: 7天",
+          "28dVolDesc": "交易量: 7天"
+        }
       }
     }
   },

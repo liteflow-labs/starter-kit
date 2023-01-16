@@ -72,6 +72,15 @@
       "empty": {
         "title": "No se encontraron colecciones",
         "description": "Actualiza tus filtros para encontrar más colecciones."
+      },
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "Volumen: Todo el tiempo",
+          "24hVolDesc": "Volumen: 24h",
+          "7dVolDesc": "Volumen: 7d",
+          "14dVolDesc": "Volumen: 14d",
+          "28dVolDesc": "Volumen: 28d"
+        }
       }
     }
   },

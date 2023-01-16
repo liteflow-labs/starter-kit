@@ -1,4 +1,4 @@
-import { chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import CollectionCard from 'components/Collection/CollectionCard'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
@@ -6,12 +6,15 @@ import { convertCollection } from 'convert'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo } from 'react'
+import { useRouter } from 'next/router'
+import { useCallback, useMemo, useState } from 'react'
 import Empty from '../../components/Empty/Empty'
 import Pagination from '../../components/Pagination/Pagination'
+import Select from '../../components/Select/Select'
 import environment from '../../environment'
 import {
   CollectionFilter,
+  CollectionsOrderBy,
   FetchExploreCollectionsDocument,
   FetchExploreCollectionsQuery,
   useFetchExploreCollectionsQuery,
@@ -24,6 +27,7 @@ type Props = {
   limit: number
   page: number
   offset: number
+  orderBy: CollectionsOrderBy
   queryFilter: CollectionFilter[]
   search: string | null
 }
@@ -50,6 +54,9 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         : parseInt(ctx.query.page, 10)
       : 1
     const offset = (page - 1) * limit
+    const orderBy = Array.isArray(ctx.query.orderBy)
+      ? (ctx.query.orderBy[0] as CollectionsOrderBy)
+      : (ctx.query.orderBy as CollectionsOrderBy) || 'TOTAL_VOLUME_DESC'
     const search =
       ctx.query.search && !Array.isArray(ctx.query.search)
         ? ctx.query.search
@@ -70,6 +77,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         limit,
         page,
         offset,
+        orderBy,
         queryFilter,
         search,
       },
@@ -80,21 +88,40 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 const CollectionsPage: NextPage<Props> = ({
   offset,
   limit,
+  orderBy,
   page,
   queryFilter,
   search,
 }) => {
   useEagerConnect()
+  const { pathname, query, replace } = useRouter()
   const { t } = useTranslation('templates')
+  const [loadingOrder, setLoadingOrder] = useState(false)
   const { data } = useFetchExploreCollectionsQuery({
     variables: {
       limit,
       offset,
+      orderBy,
       filter: queryFilter,
     },
   })
 
   const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
+
+  const changeOrder = useCallback(
+    async (orderBy: any) => {
+      setLoadingOrder(true)
+      try {
+        await replace({
+          pathname,
+          query: { ...query, orderBy, page: undefined },
+        })
+      } finally {
+        setLoadingOrder(false)
+      }
+    },
+    [replace, pathname, query],
+  )
 
   const collections = useMemo(() => data?.collections?.nodes || [], [data])
 
@@ -106,11 +133,40 @@ const CollectionsPage: NextPage<Props> = ({
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading}
+        loading={pageLoading || loadingOrder}
         search={search}
         selectedTabIndex={1}
       >
         <>
+          <Box ml="auto" w={{ base: 'full', lg: 'min-content' }} pt={4}>
+            <Select<CollectionsOrderBy>
+              name="orderBy"
+              onChange={changeOrder}
+              choices={[
+                {
+                  label: t('explore.collections.orderBy.values.totalVolDesc'),
+                  value: 'TOTAL_VOLUME_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.24hVolDesc'),
+                  value: 'TOTAL_VOLUME_LAST_24H_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.7dVolDesc'),
+                  value: 'TOTAL_VOLUME_LAST_7D_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.14dVolDesc'),
+                  value: 'TOTAL_VOLUME_LAST_14D_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.28dVolDesc'),
+                  value: 'TOTAL_VOLUME_LAST_28D_DESC',
+                },
+              ]}
+              value={orderBy}
+            />
+          </Box>
           {collections.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
