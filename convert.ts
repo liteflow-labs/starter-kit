@@ -109,7 +109,8 @@ export const convertCollection = (
     floorPrice: collection.floorPrice?.valueInRef || '',
     floorPriceCurrencySymbol: collection.floorPrice?.refCode || '',
   }
-  
+}
+
 export const convertTraits = (
   asset: Parameters<typeof convertAsset>[0] & {
     traits: {
