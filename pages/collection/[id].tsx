@@ -2,15 +2,15 @@ import CollectionHeader from 'components/Collection/CollectionHeader'
 import Head from 'components/Head'
 import { convertCollection } from 'convert'
 import environment from 'environment'
-import {
-  FetchCollectionDetailsDocument,
-  FetchCollectionDetailsQuery,
-  FetchCollectionDetailsQueryVariables,
-} from 'graphql'
 import LargeLayout from 'layouts/large'
 import { wrapServerSideProps } from 'props'
 import { FC } from 'react'
 import invariant from 'ts-invariant'
+import {
+  FetchCollectionDetailsDocument,
+  FetchCollectionDetailsQuery,
+  FetchCollectionDetailsQueryVariables,
+} from '../../graphql'
 
 type Props = {
   collectionDetails: {
@@ -79,7 +79,15 @@ const CollectionPage: FC<Props> = ({ collectionDetails }) => {
     <LargeLayout>
       <Head title="Explore collection" />
 
-      <CollectionHeader collection={collectionDetails} />
+      <CollectionHeader
+        collection={collectionDetails}
+        baseURL={environment.BASE_URL}
+        reportEmail={environment.REPORT_EMAIL}
+        explorer={{
+          name: environment.BLOCKCHAIN_EXPLORER_NAME,
+          url: environment.BLOCKCHAIN_EXPLORER_URL,
+        }}
+      />
     </LargeLayout>
   )
 }
