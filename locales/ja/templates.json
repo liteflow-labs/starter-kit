@@ -3,56 +3,68 @@
     "500": "申し訳ありません、エラーが発生しました。"
   },
   "home": {
-    "explore": "すべてのコレクションを見る",
+    "explore": "すべてのNFTを見る",
     "auctions": "オークション",
-    "featured": "注目のコレクション"
+    "featured": "注目のNFT"
   },
   "explore": {
-    "title": "コレクションを探す",
-    "empty": {
-      "title": "コレクションが見つかりません",
-      "description": "フィルターを更新して、より多くのコレクションを探しましょう。"
+    "title": "検索",
+    "tabs": {
+      "nfts": "NFTs",
+      "users": "ユーザー"
     },
-    "form": {
-      "submit": "適用する",
-      "clear": "すべてクリア",
-      "currency": {
-        "label": "価格レンジ",
-        "placeholder": "通貨の選択"
+    "nfts": {
+      "empty": {
+        "title": "NFTが見つかりません",
+        "description": "フィルターを更新して、より多くのNFTを探しましょう。"
       },
-      "min-price": {
-        "placeholder": "から",
-        "validation": {
-          "positive": "最低価格は 0 より大きくなければなりません。",
-          "decimals": "最低価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+      "form": {
+        "submit": "適用する",
+        "clear": "すべてクリア",
+        "currency": {
+          "label": "価格レンジ",
+          "placeholder": "通貨の選択"
+        },
+        "min-price": {
+          "placeholder": "から",
+          "validation": {
+            "positive": "最低価格は 0 より大きくなければなりません。",
+            "decimals": "最低価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+          }
+        },
+        "max-price": {
+          "placeholder": "まで",
+          "validation": {
+            "positive": "最大価格は 0 より大きくなければなりません。",
+            "decimals": "最大価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+          }
+        },
+        "offers": {
+          "label": "状態",
+          "values": {
+            "fixed": "固定価格",
+            "auction": "オークション"
+          }
+        },
+        "categories": {
+          "label": "カテゴリー"
+        },
+        "collections": {
+          "label": "NFT"
         }
       },
-      "max-price": {
-        "placeholder": "まで",
-        "validation": {
-          "positive": "最大価格は 0 より大きくなければなりません。",
-          "decimals": "最大価格は、最大 {{ nbDecimals }} の小数をサポートします。"
-        }
-      },
-      "offers": {
-        "label": "状態",
+      "orderBy": {
+        "label": "並び替え",
         "values": {
-          "fixed": "固定価格",
-          "auction": "オークション"
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い"
         }
-      },
-      "categories": {
-        "label": "カテゴリー"
-      },
-      "collections": {
-        "label": "コレクション"
       }
     },
-    "orderBy": {
-      "label": "並び替え",
-      "values": {
-        "createdAtDesc": "日付: 最も新しい",
-        "createdAtAsc": "日付: 最も古い"
+    "users": {
+      "empty": {
+        "title": "No Users Found",
+        "description": "Update your filters to find more users."
       }
     }
   },
@@ -85,12 +97,12 @@
     },
     "form": {
       "title": {
-        "single": "シングルコレクションの作成",
-        "multiple": "マルチコレクションの作成"
+        "single": "シングルNFTの作成",
+        "multiple": "マルチNFTの作成"
       },
       "preview": "プレビュー",
       "notifications": {
-        "created": "コレクションが無事に作成されました。"
+        "created": "NFTが無事に作成されました。"
       },
       "notFound": {
         "title": "コレクションが見つかりません",
@@ -99,8 +111,8 @@
       }
     },
     "typeSelector": {
-      "title": "コレクションの作成",
-      "description": "1点もののコレクションの場合は「シングル」、1つのコレクションを複数販売したい場合は「マルチ」を選択してください",
+      "title": "NFTの作成",
+      "description": "1点もののNFTの場合は「シングル」、1つのNFTを複数販売したい場合は「マルチ」を選択してください",
       "single": {
         "title": "シングル",
         "type": "ERC721"
@@ -162,7 +174,7 @@
       },
       "title": "チェックアウト",
       "notifications": {
-        "purchased": "コレクションが無事に購入されました。"
+        "purchased": "NFTが無事に購入されました。"
       },
       "on-sale": "販売中",
       "per-edition": "エディションあたり"
@@ -172,14 +184,14 @@
         "title": "{{name}} のオファーを作成する",
         "description": "{{name}} のオファーを作成する"
       },
-      "title": "コレクションのオファー",
+      "title": "NFTのオファー",
       "notifications": {
         "created": "オファーが無事に作成されました。"
       },
       "options": {
         "label": "オファーの種類",
         "hints": {
-          "fixed": "コレクションを即座に購入可能な価格を入力してください",
+          "fixed": "NFTを即座に購入可能な価格を入力してください",
           "auction": "購入者が入札できる期間の設定"
         },
         "values": {

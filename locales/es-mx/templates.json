@@ -3,56 +3,68 @@
     "500": "Lo sentimos, algo salió mal."
   },
   "home": {
-    "explore": "Explorar Todos los Coleccionables",
+    "explore": "Explorar Todos los NFTs",
     "auctions": "Subastas",
-    "featured": "Coleccionables Destacados"
+    "featured": "NFTs Destacados"
   },
   "explore": {
-    "title": "Explorar Coleccionables",
-    "empty": {
-      "title": "No hemos conseguido nada",
-      "description": "Actualiza tus filtros para encontrar más coleccionables."
+    "title": "Explorar",
+    "tabs": {
+      "nfts": "NFTs",
+      "users": "Usuarios"
     },
-    "form": {
-      "submit": "Aplicar filtros",
-      "clear": "Limpiar filtros",
-      "currency": {
-        "label": "Rango de precios",
-        "placeholder": "Selecciona una moneda"
+    "nfts": {
+      "empty": {
+        "title": "No hemos conseguido nada",
+        "description": "Actualiza tus filtros para encontrar más NFTs."
       },
-      "min-price": {
-        "placeholder": "Desde",
-        "validation": {
-          "positive": "El precio mínimo debe ser mayor que 0.",
-          "decimals": "El precio mínimo admite un máximo de {{ nbDecimals }} decimales."
+      "form": {
+        "submit": "Aplicar filtros",
+        "clear": "Limpiar filtros",
+        "currency": {
+          "label": "Rango de precios",
+          "placeholder": "Selecciona una moneda"
+        },
+        "min-price": {
+          "placeholder": "Desde",
+          "validation": {
+            "positive": "El precio mínimo debe ser mayor que 0.",
+            "decimals": "El precio mínimo admite un máximo de {{ nbDecimals }} decimales."
+          }
+        },
+        "max-price": {
+          "placeholder": "Hasta",
+          "validation": {
+            "positive": "El precio máximo debe ser mayor que 0.",
+            "decimals": "El precio máximo admite un máximo de {{ nbDecimals }} decimales."
+          }
+        },
+        "offers": {
+          "label": "Estatus",
+          "values": {
+            "fixed": "Precio Fijo",
+            "auction": "Subasta"
+          }
+        },
+        "categories": {
+          "label": "Categorías"
+        },
+        "collections": {
+          "label": "Colecciones"
         }
       },
-      "max-price": {
-        "placeholder": "Hasta",
-        "validation": {
-          "positive": "El precio máximo debe ser mayor que 0.",
-          "decimals": "El precio máximo admite un máximo de {{ nbDecimals }} decimales."
-        }
-      },
-      "offers": {
-        "label": "Estatus",
+      "orderBy": {
+        "label": "Ordenar por",
         "values": {
-          "fixed": "Precio Fijo",
-          "auction": "Subasta"
+          "createdAtDesc": "Fecha: más recientes",
+          "createdAtAsc": "Fecha: más antiguos"
         }
-      },
-      "categories": {
-        "label": "Categorías"
-      },
-      "collections": {
-        "label": "Colecciones"
       }
     },
-    "orderBy": {
-      "label": "Ordenar por",
-      "values": {
-        "createdAtDesc": "Fecha: más recientes",
-        "createdAtAsc": "Fecha: más antiguos"
+    "users": {
+      "empty": {
+        "title": "No se encontraron usuarios",
+        "description": "Actualiza tus filtros para encontrar más usuarios."
       }
     }
   },
@@ -85,12 +97,12 @@
     },
     "form": {
       "title": {
-        "single": "Crear Coleccionable Individual",
-        "multiple": "Crear Multiples Coleccionables"
+        "single": "Crear NFT Individual",
+        "multiple": "Crear Multiples NFTs"
       },
       "preview": "Previsualizar",
       "notifications": {
-        "created": "¡Tu coleccionable ha sido creado!"
+        "created": "¡Tu NFT ha sido creado!"
       },
       "notFound": {
         "title": "Colección no encontrada",
@@ -99,8 +111,8 @@
       }
     },
     "typeSelector": {
-      "title": "Crear Coleccionable",
-      "description": "Elige \"Individual\" si quieres que tu coleccionable sea único, ó \"Multiple\" si quieres que existan multiples copias de un mismo coleccionable.",
+      "title": "Crear NFT",
+      "description": "Elige \"Individual\" si quieres que tu NFT sea único, ó \"Multiple\" si quieres que existan multiples copias de un mismo NFT.",
       "single": {
         "title": "Individual",
         "type": "ERC721"
@@ -172,14 +184,14 @@
         "title": "Crea una oferta por {{name}}",
         "description": "Crea una oferta por {{name}}"
       },
-      "title": "Oferta por el Coleccionable",
+      "title": "Oferta por el NFT",
       "notifications": {
         "created": "Tu oferta ha sido creada."
       },
       "options": {
         "label": "Tipo de Oferta",
         "hints": {
-          "fixed": "Ingresa un precio para permitir a los usuarios comprar instantáneamente el coleccionable",
+          "fixed": "Ingresa un precio para permitir a los usuarios comprar instantáneamente el NFT",
           "auction": "Define un período de tiempo por el cual los usuarios podrán hacer ofertas"
         },
         "values": {

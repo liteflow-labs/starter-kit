@@ -15,6 +15,14 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
       standard
       name
       address
+      supply
+      traits {
+        type
+        values {
+          value
+          count
+        }
+      }
     }
     name
     description

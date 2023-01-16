@@ -50,6 +50,7 @@ import {
   convertHistories,
   convertOwnership,
   convertSaleFull,
+  convertTraits,
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
@@ -200,7 +201,11 @@ const DetailPage: NextPage<Props> = ({
   ]
 
   const traits = useMemo(
-    () => asset && asset.traits.nodes.length > 0 && asset.traits.nodes,
+    () =>
+      asset &&
+      asset.traits.nodes.length > 0 &&
+      asset.collection.traits &&
+      convertTraits(asset),
     [asset],
   )
 
@@ -513,7 +518,12 @@ const DetailPage: NextPage<Props> = ({
           >
             <TabList>
               {tabs.map((tab, index) => (
-                <ChakraLink key={index} href={tab.href} whiteSpace="nowrap">
+                <ChakraLink
+                  key={index}
+                  href={tab.href}
+                  whiteSpace="nowrap"
+                  mr={4}
+                >
                   <Tab as="div">
                     <Text as="span" variant="subtitle1">
                       {tab.title}
