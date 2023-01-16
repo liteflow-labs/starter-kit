@@ -56,7 +56,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     const offset = (page - 1) * limit
     const orderBy = Array.isArray(ctx.query.orderBy)
       ? (ctx.query.orderBy[0] as CollectionsOrderBy)
-      : (ctx.query.orderBy as CollectionsOrderBy) || 'TOTAL_VOLUME_DESC'
+      : (ctx.query.orderBy as CollectionsOrderBy) ||
+        'TOTAL_VOLUME_LAST_24H_DESC'
     const search =
       ctx.query.search && !Array.isArray(ctx.query.search)
         ? ctx.query.search
@@ -144,10 +145,6 @@ const CollectionsPage: NextPage<Props> = ({
               onChange={changeOrder}
               choices={[
                 {
-                  label: t('explore.collections.orderBy.values.totalVolDesc'),
-                  value: 'TOTAL_VOLUME_DESC',
-                },
-                {
                   label: t('explore.collections.orderBy.values.24hVolDesc'),
                   value: 'TOTAL_VOLUME_LAST_24H_DESC',
                 },
@@ -162,6 +159,10 @@ const CollectionsPage: NextPage<Props> = ({
                 {
                   label: t('explore.collections.orderBy.values.28dVolDesc'),
                   value: 'TOTAL_VOLUME_LAST_28D_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.totalVolDesc'),
+                  value: 'TOTAL_VOLUME_DESC',
                 },
               ]}
               value={orderBy}
