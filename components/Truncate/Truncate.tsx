@@ -1,4 +1,5 @@
 import { chakra, Text, TextProps } from '@chakra-ui/react'
+import useTranslation from 'next-translate/useTranslation'
 import { useMemo, useState } from 'react'
 
 type Props = {
@@ -14,6 +15,7 @@ export default function Truncate({
   size,
   color = 'gray.500',
 }: Props): JSX.Element {
+  const { t } = useTranslation('components')
   const [isOpen, setIsOpen] = useState(false)
   const truncate = useMemo(
     () =>
@@ -37,7 +39,7 @@ export default function Truncate({
               variant={size === 'lg' ? 'button1' : 'button2'}
               color="brand.black"
             >
-              Show more
+              {t('truncate.show-more')}
             </Text>
           </chakra.button>
         )}

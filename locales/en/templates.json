@@ -68,6 +68,20 @@
       }
     }
   },
+  "collection": {
+    "orderBy": {
+      "values": {
+        "salesMinUnitPriceInRefAsc": "Price: Low - High",
+        "salesMinUnitPriceInRefDesc": "Price: High - Low",
+        "createdAtDesc": "Date: Newest",
+        "createdAtAsc": "Date: Oldest"
+      }
+    },
+    "empty": {
+      "title": "No NFTs Found",
+      "description": "Update your filters to find more NFTs."
+    }
+  },
   "asset": {
     "detail": {
       "unlockable": {

@@ -31,7 +31,7 @@ type Props = {
     chainId: number
     name: string
     description: string | null
-    image: string
+    image: string | null
     cover: string | null
     twitter: string | null
     discord: string | null

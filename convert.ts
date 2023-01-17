@@ -230,7 +230,7 @@ export const convertCollection = (
   chainId: number
   name: string
   description: string | null
-  image: string
+  image: string | null
   cover: string | null
   twitter: string | null
   discord: string | null
@@ -254,7 +254,7 @@ export const convertCollection = (
     chainId: collection.chainId,
     name: collection.name,
     description: collection.description,
-    image: collection.image || '/collection-image.jpg',
+    image: collection.image,
     cover: collection.cover,
     twitter: collection.twitter,
     discord: collection.discord,

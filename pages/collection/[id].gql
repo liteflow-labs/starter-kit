@@ -35,24 +35,23 @@ query FetchCollectionDetails($address: Address!, $chainId: Int!) {
 query FetchCollectionAssets(
   $currentAccount: Address!
   $now: Datetime!
-  $cursor: Cursor
+  $offset: Int!
   $limit: Int!
   $address: Address!
   $chainId: Int!
   $orderBy: [AssetsOrderBy!]
-  $filter: [AssetFilter!]
 ) {
   assets(
     filter: {
       ownershipsExist: true
       chainId: { equalTo: $chainId }
       collectionAddress: { equalTo: $address }
-      and: $filter
     }
     orderBy: $orderBy
     first: $limit
-    after: $cursor
+    offset: $offset
   ) {
+    totalCount
     pageInfo {
       hasNextPage
       endCursor
@@ -69,13 +68,11 @@ query FetchCollectionAssets(
         mimetype
       }
       createdAt
-      isWatched
       creator {
         username
         address
         name
         image
-        isFollowed
         verification {
           status
         }
@@ -107,6 +104,47 @@ query FetchCollectionAssets(
           }
         }
       }
+      bestBid: bids(
+        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+        filter: { expiredAt: { greaterThan: $now } }
+        first: 1
+      ) {
+        nodes {
+          unitPrice
+          amount
+          currency {
+            image
+            name
+            id
+            decimals
+            symbol
+          }
+        }
+      }
+      firstSale: sales(
+        first: 1
+        orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
+        filter: { expiredAt: { greaterThan: $now } }
+      ) {
+        totalCount
+        nodes {
+          id
+          unitPrice
+          currency {
+            image
+            id
+            decimals
+            symbol
+          }
+        }
+      }
+      currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
+        aggregates {
+          distinctCount {
+            currencyId
+          }
+        }
+      }
       auctions(
         first: 1
         orderBy: CREATED_AT_DESC
@@ -116,6 +154,23 @@ query FetchCollectionAssets(
           id
           endAt
           expireAt
+          bestBid: offers(
+            orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+            first: 1
+            filter: { signature: { isNull: false } }
+          ) {
+            nodes {
+              unitPrice
+              amount
+              currency {
+                image
+                name
+                id
+                decimals
+                symbol
+              }
+            }
+          }
           reserveAmount
           winningOffer {
             id
