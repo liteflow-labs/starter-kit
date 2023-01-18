@@ -56,8 +56,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     const offset = (page - 1) * limit
     const orderBy = Array.isArray(ctx.query.orderBy)
       ? (ctx.query.orderBy[0] as CollectionsOrderBy)
-      : (ctx.query.orderBy as CollectionsOrderBy) ||
-        'TOTAL_VOLUME_LAST_24H_DESC'
+      : (ctx.query.orderBy as CollectionsOrderBy) || 'TOTAL_VOLUME_DESC'
     const search =
       ctx.query.search && !Array.isArray(ctx.query.search)
         ? ctx.query.search

@@ -98,15 +98,21 @@ const CollectionCard: FC<Props> = ({ collection }) => {
             <Text
               variant="subtitle2"
               isTruncated
-              title={convertTitle(
-                collection.floorPrice,
-                collection.floorPriceCurrencySymbol,
-              )}
+              title={
+                collection.floorPrice
+                  ? convertTitle(
+                      collection.floorPrice,
+                      collection.floorPriceCurrencySymbol,
+                    )
+                  : '-'
+              }
             >
-              {convertValue(
-                collection.floorPrice,
-                collection.floorPriceCurrencySymbol,
-              )}
+              {collection.floorPrice
+                ? convertValue(
+                    collection.floorPrice,
+                    collection.floorPriceCurrencySymbol,
+                  )
+                : '-'}
             </Text>
           </Box>
         </SimpleGrid>

@@ -78,8 +78,8 @@
           "totalVolDesc": "Volume: All-time",
           "24hVolDesc": "Volume: 24h",
           "7dVolDesc": "Volume: 7d",
-          "14dVolDesc": "Volume: 7d",
-          "28dVolDesc": "Volume: 7d"
+          "14dVolDesc": "Volume: 14d",
+          "28dVolDesc": "Volume: 28d"
         }
       }
     }
