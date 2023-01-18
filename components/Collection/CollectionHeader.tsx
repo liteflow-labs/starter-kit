@@ -22,6 +22,7 @@ import Etherscan from 'components/Icons/Etherscan'
 import Image from 'components/Image/Image'
 import Link from 'components/Link/Link'
 import Truncate from 'components/Truncate/Truncate'
+import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 
@@ -59,6 +60,7 @@ type Props = {
 }
 
 const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
+  const { t } = useTranslation('templates')
   const getDeployerNamer = (collection: Props['collection']) => {
     if (!collection.deployer)
       return formatAddress(collection.deployerAddress, 10)
@@ -74,7 +76,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
   const blocks = useMemo(
     () => [
       {
-        name: 'Total vol.',
+        name: t('collection.header.data-labels.total-volume'),
         value:
           numbro(collection.totalVolume).format({
             thousandSeparated: true,
@@ -86,7 +88,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
         title: `${collection.totalVolume} ${collection.totalVolumeCurrencySymbol}`,
       },
       {
-        name: 'Floor price',
+        name: t('collection.header.data-labels.floor-price'),
         value:
           numbro(collection.floorPrice).format({
             thousandSeparated: true,
@@ -98,14 +100,14 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
         title: `${collection.floorPrice} ${collection.floorPriceCurrencySymbol}`,
       },
       {
-        name: 'Owners',
+        name: t('collection.header.data-labels.owners'),
         value: numbro(collection.totalOwners).format({
           thousandSeparated: true,
         }),
         title: collection.totalOwners.toString(),
       },
       {
-        name: 'Items',
+        name: t('collection.header.data-labels.items'),
         value: numbro(collection.supply).format({ thousandSeparated: true }),
         title: collection.supply.toString(),
       },
@@ -117,6 +119,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
       collection.totalOwners,
       collection.totalVolume,
       collection.totalVolumeCurrencySymbol,
+      t,
     ],
   )
 
@@ -162,20 +165,19 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
       </Flex>
       <Flex pt={24} align="flex-start" justify="space-between" gap={4}>
         <Box>
-          <Heading variant="title">{collection.name}</Heading>
-          <Heading
-            as={Link}
-            href={deployerHref}
-            variant="heading1"
-            color="gray.500"
-          >
+          <Heading variant="title" pb={1}>
+            {collection.name}
+          </Heading>
+          <Heading color="gray.500" variant="heading1">
             By{' '}
-            <Text as="span" color="">
-              {getDeployerNamer(collection)}
+            <Text as={Link} href={deployerHref} color="brand.black">
+              <Text as="span" color="">
+                {getDeployerNamer(collection)}
+              </Text>
+              {collection.deployer?.verified && (
+                <Icon as={HiBadgeCheck} color="brand.500" boxSize={5} />
+              )}
             </Text>
-            {collection.deployer?.verified && (
-              <Icon as={HiBadgeCheck} color="brand.500" boxSize={5} />
-            )}
           </Heading>
           {collection.description && (
             <Box mt={4}>
@@ -199,19 +201,19 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
               >
                 <Text
                   variant="button1"
+                  title={block.title}
                   color="brand.black"
-                  title={block.name}
                   isTruncated
                 >
-                  {block.name}
+                  {block.value}
                 </Text>
                 <Text
                   variant="subtitle2"
-                  title={block.title}
+                  title={block.name}
                   isTruncated
                   color="gray.500"
                 >
-                  {block.value}
+                  {block.name}
                 </Text>
               </Flex>
             ))}

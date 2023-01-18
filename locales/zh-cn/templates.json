@@ -68,6 +68,28 @@
       }
     }
   },
+  "collection": {
+    "header": {
+      "data-labels": {
+        "floor-price": "底价",
+        "total-volume": "总体积",
+        "owners": "所有者",
+        "items": "物品"
+      }
+    },
+    "orderBy": {
+      "values": {
+        "salesMinUnitPriceInRefAsc": "价格：低 - 高",
+        "salesMinUnitPriceInRefDesc": "价格：高 - 低",
+        "createdAtDesc": "日期：最新",
+        "createdAtAsc": "日期：最早"
+      }
+    },
+    "empty": {
+      "title": "未找到 NFT",
+      "description": "更新您的过滤器以查找更多 NFT"
+    }
+  },
   "asset": {
     "detail": {
       "unlockable": {

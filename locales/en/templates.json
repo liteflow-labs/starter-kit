@@ -69,6 +69,14 @@
     }
   },
   "collection": {
+    "header": {
+      "data-labels": {
+        "floor-price": "Floor price",
+        "total-volume": "Total Volume",
+        "owners": "Owners",
+        "items": "Items"
+      }
+    },
     "orderBy": {
       "values": {
         "salesMinUnitPriceInRefAsc": "Price: Low - High",
