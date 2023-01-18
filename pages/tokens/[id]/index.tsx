@@ -409,6 +409,9 @@ const DetailPage: NextPage<Props> = ({
                   icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
                 />
                 <MenuList>
+                  <MenuItem onClick={() => refreshMetadata(asset.id)}>
+                    {t('asset.detail.menu.refresh-metadata')}
+                  </MenuItem>
                   <ChakraLink
                     href={`mailto:${
                       environment.REPORT_EMAIL
@@ -421,9 +424,6 @@ const DetailPage: NextPage<Props> = ({
                   >
                     <MenuItem>{t('asset.detail.menu.report.label')}</MenuItem>
                   </ChakraLink>
-                  <MenuItem onClick={() => refreshMetadata(asset.id)}>
-                    {t('asset.detail.menu.refresh-metadata')}
-                  </MenuItem>
                 </MenuList>
               </Menu>
             </Flex>
