@@ -10,15 +10,18 @@ type Props = {
 }
 
 const CollectionCard: FC<Props> = ({ collection }) => {
-  const convertTitle = (value: string, symbol: string) => `${value} ${symbol}`
-  const convertValue = (value: string, symbol: string) =>
-    numbro(value).format({
-      thousandSeparated: true,
-      trimMantissa: true,
-      mantissa: 4,
-    }) +
-    ' ' +
-    symbol
+  const convertTitle = (value: string | null, symbol: string | null) =>
+    `${value ? value : '-'} ${symbol ? symbol : ''}`
+  const convertValue = (value: string | null, symbol: string | null) => {
+    const formattedValue = value
+      ? numbro(value).format({
+          thousandSeparated: true,
+          trimMantissa: true,
+          mantissa: 4,
+        })
+      : '-'
+    return `${value ? formattedValue : '-'} ${symbol ? symbol : ''}`
+  }
   return (
     <Box
       as={Link}
@@ -98,21 +101,15 @@ const CollectionCard: FC<Props> = ({ collection }) => {
             <Text
               variant="subtitle2"
               isTruncated
-              title={
-                collection.floorPrice
-                  ? convertTitle(
-                      collection.floorPrice,
-                      collection.floorPriceCurrencySymbol,
-                    )
-                  : '-'
-              }
+              title={convertTitle(
+                collection.floorPrice,
+                collection.floorPriceCurrencySymbol,
+              )}
             >
-              {collection.floorPrice
-                ? convertValue(
-                    collection.floorPrice,
-                    collection.floorPriceCurrencySymbol,
-                  )
-                : '-'}
+              {convertValue(
+                collection.floorPrice,
+                collection.floorPriceCurrencySymbol,
+              )}
             </Text>
           </Box>
         </SimpleGrid>
