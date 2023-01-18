@@ -1,9 +1,9 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import Price from 'components/Price/Price'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, HTMLAttributes } from 'react'
 import Link from '../../Link/Link'
+import Price from '../../Price/Price'
 
 type Props = {
   assetId: string
