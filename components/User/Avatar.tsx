@@ -10,9 +10,10 @@ type Props = {
   name: string | null | undefined
   image: string | null | undefined
   verified: boolean
+  size?: number
 }
 
-const Avatar: VFC<Props> = ({ address, name, image, verified }) => {
+const Avatar: VFC<Props> = ({ address, name, image, verified, size = 8 }) => {
   return (
     <Link display="block" flexShrink={0} href={`/users/${address}`}>
       <Flex align="center" gap={2}>
@@ -21,9 +22,9 @@ const Avatar: VFC<Props> = ({ address, name, image, verified }) => {
           rounded="full"
           address={address}
           image={image}
-          size={32}
-          w={8}
-          h={8}
+          size={size * 4}
+          w={size}
+          h={size}
         />
         <Text as="span" variant="subtitle2" color="gray.500">
           {name || <WalletAddress address={address} isShort />}
