@@ -33,6 +33,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
+import Linkify from 'linkify-react';
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
@@ -442,7 +443,7 @@ const DetailPage: NextPage<Props> = ({
             {t('asset.detail.description')}
           </Heading>
           <Text as="p" variant="text-sm" color="gray.500" mt={3} style={{whiteSpace: 'pre-wrap'}}>
-            {asset.description}
+            <Linkify>{asset.description}</Linkify>
           </Text>
 
           <Stack as="nav" mt={8} align="flex-start" spacing={3}>
