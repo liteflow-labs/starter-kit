@@ -124,7 +124,8 @@
           "label": "Reportar",
           "subject": "Reportar un NFT",
           "body": "Quisiera reportar el siguiente NFT: {{name}} (#{{id}})\nReason: "
-        }
+        },
+        "refresh-metadata": "Actualizar metadatos"
       },
       "explorerLink": "Ver en {{name}}",
       "ipfsLink": "Ver en IPFS",

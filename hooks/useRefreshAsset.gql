@@ -1,0 +1,15 @@
+query GetAssetDataForRefresh($assetId: String!) {
+  asset(id: $assetId) {
+    updatedAt
+    # fetch transfer from histories to know if the asset is minted
+    histories(condition: { action: TRANSFER }) {
+      totalCount
+    }
+  }
+}
+
+mutation RefreshAsset($assetId: String!) {
+  refreshAsset(input: { assetId: $assetId }) {
+    clientMutationId
+  }
+}

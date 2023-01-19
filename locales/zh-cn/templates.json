@@ -124,7 +124,8 @@
           "label": "举报",
           "subject": "举报 NFT",
           "body": "我要举报下列 NFT {{name}} (#{{id}})\n原因如下： "
-        }
+        },
+        "refresh-metadata": "刷新元数据"
       },
       "explorerLink": "在 {{name}} 上查看",
       "ipfsLink": "在 IPFS 上查看",
