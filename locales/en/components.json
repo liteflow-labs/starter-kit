@@ -451,8 +451,11 @@
         "view": "View Collectible"
       },
       "card-footer": {
-        "highest-bid": "Highest bid:",
-        "place-bid": "Place a bid"
+        "highest-bid": "Bid",
+        "place-bid": "Place a bid",
+        "no-bids": "No bids yet",
+        "view": "View my NFT",
+        "ongoing-auction": "Ongoing Auction"
       },
       "form": {
         "submit": "Create Offer",
@@ -515,7 +518,8 @@
       "card-footer": {
         "price": "Price",
         "from": "From",
-        "purchase": "Purchase",
+        "purchase": "Buy Now",
+        "view": "View my NFT",
         "offers": "{{count}} offers available"
       },
       "form": {
@@ -594,7 +598,8 @@
       },
       "card-footer": {
         "open": "Open for bids",
-        "place-bid": "Place a bid"
+        "place-bid": "Place a bid",
+        "view": "View my NFT"
       },
       "info": {
         "owner": "You own this Collectible",

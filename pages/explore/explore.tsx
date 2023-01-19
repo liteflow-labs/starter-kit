@@ -21,6 +21,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
+import { useWeb3React } from '@web3-react/core'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
 import { NextPage } from 'next'
@@ -63,6 +64,7 @@ import { wrapServerSideProps } from '../../props'
 import { values as traits } from '../../traits'
 
 type Props = {
+  currentAccount: string | null
   now: string
   traits: { [key: string]: string[] }
   // Pagination
@@ -289,12 +291,20 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 
     const { data, error } = await client.query<FetchAllErc721And1155Query>({
       query: FetchAllErc721And1155Document,
-      variables: { now, limit, offset, orderBy, filter: queryFilter },
+      variables: {
+        now,
+        address: ctx.user.address || '',
+        limit,
+        offset,
+        orderBy,
+        filter: queryFilter,
+      },
     })
     if (error) throw error
     if (!data) throw new Error('data is falsy')
     return {
       props: {
+        currentAccount: ctx.user.address,
         now: now.toJSON(),
         traits,
         limit,
@@ -317,6 +327,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 )
 
 const ExplorePage: NextPage<Props> = ({
+  currentAccount,
   now,
   offset,
   traits,
@@ -330,9 +341,11 @@ const ExplorePage: NextPage<Props> = ({
   const ready = useEagerConnect()
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
+  const { account } = useWeb3React()
   const { data, refetch } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
+      address: (ready ? account?.toLowerCase() : currentAccount) || '',
       limit,
       offset,
       orderBy,
