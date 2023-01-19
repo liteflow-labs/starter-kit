@@ -65,21 +65,6 @@ export const convertAsset = (
     | undefined
 } => {
   const bestBid = asset.bestBid?.nodes[0]
-  if (!bestBid)
-    return {
-      id: asset.id,
-      animationUrl: asset.animationUrl,
-      image: asset.image,
-      name: asset.name,
-      collection: {
-        address: asset.collection.address,
-        name: asset.collection.name,
-      },
-      owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
-      unlockedContent: asset.unlockedContent,
-      bestBid: undefined,
-    }
-
   return {
     id: asset.id,
     animationUrl: asset.animationUrl,
@@ -91,10 +76,12 @@ export const convertAsset = (
     },
     owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
     unlockedContent: asset.unlockedContent,
-    bestBid: {
-      unitPrice: BigNumber.from(bestBid.unitPrice),
-      currency: bestBid.currency,
-    },
+    bestBid: bestBid
+      ? {
+          unitPrice: BigNumber.from(bestBid.unitPrice),
+          currency: bestBid.currency,
+        }
+      : undefined,
   }
 }
 
@@ -119,29 +106,6 @@ export const convertAssetWithSupplies = (
   collection: Pick<Collection, 'standard'>
 } => {
   const bestBid = asset.bestBid?.nodes[0]
-  if (!bestBid) {
-    return {
-      id: asset.id,
-      animationUrl: asset.animationUrl,
-      image: asset.image,
-      unlockedContent: asset.unlockedContent,
-      name: asset.name,
-      collection: {
-        address: asset.collection.address,
-        name: asset.collection.name,
-        standard: asset.collection.standard,
-      },
-      saleSupply: BigNumber.from(
-        asset.sales.aggregates?.sum?.availableQuantity || 0,
-      ),
-      totalSupply: BigNumber.from(
-        asset.ownerships.aggregates?.sum?.quantity || '0',
-      ),
-      owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
-      bestBid: undefined,
-    }
-  }
-
   return {
     id: asset.id,
     animationUrl: asset.animationUrl,
@@ -160,10 +124,40 @@ export const convertAssetWithSupplies = (
       asset.ownerships.aggregates?.sum?.quantity || '0',
     ),
     owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
-    bestBid: {
-      unitPrice: BigNumber.from(bestBid.unitPrice),
-      currency: bestBid.currency,
-    },
+    bestBid: bestBid
+      ? {
+          unitPrice: BigNumber.from(bestBid.unitPrice),
+          currency: bestBid.currency,
+        }
+      : undefined,
+  }
+}
+
+export const convertCollection = (
+  collection: Pick<Collection, 'address' | 'name' | 'image' | 'cover'> & {
+    floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+  } & {
+    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
+  },
+): {
+  address: string
+  name: string
+  image: string | null
+  cover: string | null
+  totalVolume: string
+  totalVolumeCurrencySymbol: string
+  floorPrice: string | null
+  floorPriceCurrencySymbol: string | null
+} => {
+  return {
+    address: collection.address,
+    name: collection.name,
+    image: collection.image,
+    cover: collection.cover,
+    totalVolume: collection.totalVolume?.valueInRef,
+    totalVolumeCurrencySymbol: collection.totalVolume?.refCode,
+    floorPrice: collection.floorPrice?.valueInRef || null,
+    floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
   }
 }
 
