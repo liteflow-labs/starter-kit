@@ -195,7 +195,7 @@ export const convertTraits = (
   return assetTraitsWithCounts
 }
 
-export const convertCollection = (
+export const convertCollectionFull = (
   collection: Pick<
     Collection,
     | 'address'

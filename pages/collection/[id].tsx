@@ -9,7 +9,7 @@ import TokenCard from 'components/Token/Card'
 import {
   convertAsset,
   convertAuctionWithBestBid,
-  convertCollection,
+  convertCollectionFull,
   convertSale,
   convertUser,
 } from 'convert'
@@ -142,7 +142,9 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         page,
         offset,
         orderBy,
-        collectionDetails: convertCollection(collectionDetailsData.collection),
+        collectionDetails: convertCollectionFull(
+          collectionDetailsData.collection,
+        ),
       },
     }
   },
