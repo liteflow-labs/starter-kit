@@ -174,7 +174,7 @@ const TokenCard: VFC<Props> = ({
           >
             <Icon as={HiClock} h={5} w={5} color="gray.500" />
             <Text as="span" variant="subtitle2" color="gray.500">
-              <Countdown date={auction.endAt} showSeconds={false} />
+              <Countdown date={auction.endAt} hideSeconds />
             </Text>
           </HStack>
         )}

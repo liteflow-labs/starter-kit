@@ -1,9 +1,9 @@
 import { Flex, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import Price from 'components/Price/Price'
 import useTranslation from 'next-translate/useTranslation'
 import { VFC } from 'react'
 import Link from '../../Link/Link'
+import Price from '../../Price/Price'
 
 type Props = {
   assetId: string
@@ -36,7 +36,7 @@ const SaleAuctionCardFooter: VFC<Props> = ({
       px={4}
       fontSize="sm"
       fontWeight="semibold"
-      href={`/tokens/${assetId}${!isOwner && '/bid'}`}
+      href={`/tokens/${assetId}${!isOwner ? '/bid' : ''}`}
     >
       {showButton ? (
         isOwner ? (
