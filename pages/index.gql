@@ -24,6 +24,8 @@ fragment HomeAssetDetail on Asset {
     mimetype
   }
   collection {
+    name
+    address
     standard
   }
   creator {

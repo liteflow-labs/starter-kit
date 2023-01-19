@@ -22,12 +22,15 @@ import {
   Tabs,
   Text,
   Tooltip,
+  useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
+import { formatError } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import { useWeb3React } from '@web3-react/core'
+import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -147,6 +150,7 @@ const DetailPage: NextPage<Props> = ({
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
+  const toast = useToast()
   const { account } = useWeb3React()
   const { query } = useRouter()
   const blockExplorer = useBlockExplorer(
@@ -270,6 +274,26 @@ const DetailPage: NextPage<Props> = ({
     await refetch()
   }, [refetch])
 
+  const refreshAsset = useRefreshAsset()
+  const refreshMetadata = useCallback(
+    async (assetId: string) => {
+      try {
+        await refreshAsset(assetId)
+        await refetch()
+        toast({
+          title: 'Successfully refreshed metadata',
+          status: 'success',
+        })
+      } catch (e) {
+        toast({
+          title: formatError(e),
+          status: 'error',
+        })
+      }
+    },
+    [refetch, refreshAsset, toast],
+  )
+
   if (!asset) return <></>
   return (
     <LargeLayout>
@@ -359,9 +383,18 @@ const DetailPage: NextPage<Props> = ({
         </AspectRatio>
         <Flex direction="column" my="auto" gap={8} p={{ base: 6, md: 0 }}>
           <Flex justify="space-between">
-            <Heading as="h1" variant="title" color="brand.black">
-              {asset.name}
-            </Heading>
+            <Stack spacing={1}>
+              {asset.collection.name && (
+                <Heading as="p" variant="heading1" color="gray.500">
+                  <Link href={`/collection/${asset.collection.address}`}>
+                    {asset.collection.name}
+                  </Link>
+                </Heading>
+              )}
+              <Heading as="h1" variant="title" color="brand.black">
+                {asset.name}
+              </Heading>
+            </Stack>
             <Flex direction="row" align="flex-start" gap={3}>
               <Menu>
                 <MenuButton
@@ -373,6 +406,9 @@ const DetailPage: NextPage<Props> = ({
                   icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
                 />
                 <MenuList>
+                  <MenuItem onClick={() => refreshMetadata(asset.id)}>
+                    {t('asset.detail.menu.refresh-metadata')}
+                  </MenuItem>
                   <ChakraLink
                     href={`mailto:${
                       environment.REPORT_EMAIL
