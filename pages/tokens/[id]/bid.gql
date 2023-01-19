@@ -8,6 +8,7 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
     collection {
+      chainId
       address
       name
       standard

@@ -84,6 +84,32 @@
       }
     }
   },
+  "collection": {
+    "header": {
+      "data-labels": {
+        "floor-price": "最低価格",
+        "total-volume": "総ボリューム",
+        "owners": "所有者",
+        "items": "アイテム"
+      },
+      "by": "によって",
+      "menu": {
+        "report": "報告"
+      }
+    },
+    "orderBy": {
+      "values": {
+        "salesMinUnitPriceInRefAsc": "価格: 低 - 高",
+        "salesMinUnitPriceInRefDesc": "価格: 高 - 低",
+        "createdAtDesc": "日付: 最新",
+        "createdAtAsc": "日付: 最も古い"
+      }
+    },
+    "empty": {
+      "title": "NFTが見つかりません",
+      "description": "フィルターを更新して、より多くの NFT を見つけてください。"
+    }
+  },
   "asset": {
     "detail": {
       "unlockable": {

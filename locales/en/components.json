@@ -701,6 +701,9 @@
   "traits": {
     "percent": "{{value}}%"
   },
+  "truncate": {
+    "show-more": "Show more"
+  },
   "user": {
     "balance": {
       "title": "Your balance",

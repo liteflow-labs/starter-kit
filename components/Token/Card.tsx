@@ -32,6 +32,7 @@ export type Props = {
     collection: {
       address: string
       name: string
+      chainId: number
     }
     image: string
     unlockedContent: { url: string; mimetype: string | null } | null
@@ -190,7 +191,9 @@ const TokenCard: VFC<Props> = ({
               size={5}
             />
           ) : (
-            <Link href={`/collection/${asset.collection.address}`}>
+            <Link
+              href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}
+            >
               <Text variant="subtitle2" color="gray.500" isTruncated>
                 {asset.collection.name}
               </Text>

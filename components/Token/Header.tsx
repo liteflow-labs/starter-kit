@@ -24,6 +24,7 @@ export type Props = {
       name: string
       address: string
       standard: Standard
+      chainId: number
     }
     totalSupply: BigNumber
     owned: BigNumber
@@ -97,7 +98,9 @@ const TokenHeader: VFC<Props> = ({
         <Stack spacing={1}>
           {asset.collection.name && (
             <Heading as="p" variant="heading1" color="gray.500">
-              <Link href={`/collection/${asset.collection.address}`}>
+              <Link
+                href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}
+              >
                 {asset.collection.name}
               </Link>
             </Heading>
