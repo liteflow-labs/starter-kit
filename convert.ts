@@ -211,7 +211,7 @@ export const convertCollectionFull = (
     | 'numberOfOwners'
     | 'supply'
   > & { floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>> } & {
-    totalVolume: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
   } & {
     deployer: Maybe<
       Pick<Account, 'address' | 'name' | 'username'> & {
@@ -238,8 +238,8 @@ export const convertCollectionFull = (
   } | null
   totalVolume: string
   totalVolumeCurrencySymbol: string
-  floorPrice: string
-  floorPriceCurrencySymbol: string
+  floorPrice: string | null
+  floorPriceCurrencySymbol: string | null
   totalOwners: number
   supply: number
 } => {
@@ -262,10 +262,10 @@ export const convertCollectionFull = (
           verified: collection.deployer?.verification?.status === 'VALIDATED',
         }
       : null,
-    totalVolume: collection.totalVolume?.valueInRef || '',
-    totalVolumeCurrencySymbol: collection.totalVolume?.refCode || '',
-    floorPrice: collection.floorPrice?.valueInRef || '',
-    floorPriceCurrencySymbol: collection.floorPrice?.refCode || '',
+    totalVolume: collection.totalVolume?.valueInRef,
+    totalVolumeCurrencySymbol: collection.totalVolume.refCode,
+    floorPrice: collection.floorPrice?.valueInRef || null,
+    floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
     totalOwners: collection.numberOfOwners,
     supply: collection.supply,
   }

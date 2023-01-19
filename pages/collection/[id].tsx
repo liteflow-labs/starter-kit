@@ -64,8 +64,8 @@ type Props = {
     } | null
     totalVolume: string
     totalVolumeCurrencySymbol: string
-    floorPrice: string
-    floorPriceCurrencySymbol: string
+    floorPrice: string | null
+    floorPriceCurrencySymbol: string | null
     totalOwners: number
     supply: number
   }

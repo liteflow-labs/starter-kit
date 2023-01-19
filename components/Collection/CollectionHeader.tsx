@@ -46,8 +46,8 @@ type Props = {
     } | null
     totalVolume: string
     totalVolumeCurrencySymbol: string
-    floorPrice: string
-    floorPriceCurrencySymbol: string
+    floorPrice: string | null
+    floorPriceCurrencySymbol: string | null
     totalOwners: number
     supply: number
   }
@@ -61,17 +61,6 @@ type Props = {
 
 const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
   const { t } = useTranslation('templates')
-  const getDeployerNamer = (collection: Props['collection']) => {
-    if (!collection.deployer)
-      return formatAddress(collection.deployerAddress, 10)
-    return (
-      collection.deployer?.name ||
-      formatAddress(collection.deployer.address, 10)
-    )
-  }
-  const deployerHref = `/users${
-    collection.deployer?.username || collection.deployerAddress
-  }`
 
   const blocks = useMemo(
     () => [
@@ -89,15 +78,18 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
       },
       {
         name: t('collection.header.data-labels.floor-price'),
-        value:
-          numbro(collection.floorPrice).format({
-            thousandSeparated: true,
-            trimMantissa: true,
-            mantissa: 4,
-          }) +
-          ' ' +
-          collection.floorPriceCurrencySymbol,
-        title: `${collection.floorPrice} ${collection.floorPriceCurrencySymbol}`,
+        value: collection.floorPrice
+          ? numbro(collection.floorPrice).format({
+              thousandSeparated: true,
+              trimMantissa: true,
+              mantissa: 4,
+            }) +
+            ' ' +
+            collection.floorPriceCurrencySymbol
+          : '-',
+        title: `${collection.floorPrice || '-'} ${
+          collection.floorPriceCurrencySymbol
+        }`,
       },
       {
         name: t('collection.header.data-labels.owners'),
@@ -170,9 +162,14 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
           </Heading>
           <Heading color="gray.500" variant="heading1">
             By{' '}
-            <Text as={Link} href={deployerHref} color="brand.black">
+            <Text
+              as={Link}
+              href={`/users/${collection.deployerAddress}`}
+              color="brand.black"
+            >
               <Text as="span" color="">
-                {getDeployerNamer(collection)}
+                {collection.deployer?.name ||
+                  formatAddress(collection.deployerAddress, 10)}
               </Text>
               {collection.deployer?.verified && (
                 <Icon as={HiBadgeCheck} color="brand.500" boxSize={5} />
