@@ -11,6 +11,7 @@ import {
   AssetTrait,
   Auction,
   Collection,
+  CollectionStats,
   Currency,
   Maybe,
   Offer,
@@ -27,37 +28,66 @@ export const convertAsset = (
   asset: Pick<
     Asset,
     'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
-  > & { collection: Pick<Collection, 'name' | 'address'> },
+  > & {
+    collection: Pick<Collection, 'address' | 'name'>
+    owned: {
+      aggregates: Maybe<{
+        sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
+      }>
+    }
+    bestBid: Maybe<{
+      nodes: Array<
+        Pick<Offer, 'unitPrice' | 'amount'> & {
+          currency: Pick<Currency, 'decimals' | 'symbol'>
+        }
+      >
+    }>
+  },
 ): {
   id: string
   animationUrl: string | null | undefined
   image: string
   name: string
   collection: {
-    name: string
     address: string
+    name: string
   }
+  owned: BigNumber
   unlockedContent: { url: string; mimetype: string | null } | null
-} => ({
-  id: asset.id,
-  animationUrl: asset.animationUrl,
-  image: asset.image,
-  name: asset.name,
-  collection: {
-    name: asset.collection.name,
-    address: asset.collection.address,
-  },
-  unlockedContent: asset.unlockedContent,
-})
+  bestBid:
+    | {
+        unitPrice: BigNumber
+        currency: {
+          decimals: number
+          symbol: string
+        }
+      }
+    | undefined
+} => {
+  const bestBid = asset.bestBid?.nodes[0]
+  return {
+    id: asset.id,
+    animationUrl: asset.animationUrl,
+    image: asset.image,
+    name: asset.name,
+    collection: {
+      address: asset.collection.address,
+      name: asset.collection.name,
+    },
+    owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+    unlockedContent: asset.unlockedContent,
+    bestBid: bestBid
+      ? {
+          unitPrice: BigNumber.from(bestBid.unitPrice),
+          currency: bestBid.currency,
+        }
+      : undefined,
+  }
+}
 
 export const convertAssetWithSupplies = (
   asset: Parameters<typeof convertAsset>[0] & {
     ownerships: {
-      aggregates: Maybe<{
-        sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
-      }>
-    }
-    owned: {
       aggregates: Maybe<{
         sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
       }>
@@ -74,25 +104,62 @@ export const convertAssetWithSupplies = (
   totalSupply: BigNumber
   owned: BigNumber
   collection: Pick<Collection, 'standard'>
-} => ({
-  id: asset.id,
-  animationUrl: asset.animationUrl,
-  image: asset.image,
-  unlockedContent: asset.unlockedContent,
-  name: asset.name,
-  saleSupply: BigNumber.from(
-    asset.sales.aggregates?.sum?.availableQuantity || 0,
-  ),
-  collection: {
-    standard: asset.collection.standard,
-    name: asset.collection.name,
-    address: asset.collection.address,
+} => {
+  const bestBid = asset.bestBid?.nodes[0]
+  return {
+    id: asset.id,
+    animationUrl: asset.animationUrl,
+    image: asset.image,
+    unlockedContent: asset.unlockedContent,
+    name: asset.name,
+    collection: {
+      address: asset.collection.address,
+      name: asset.collection.name,
+      standard: asset.collection.standard,
+    },
+    saleSupply: BigNumber.from(
+      asset.sales.aggregates?.sum?.availableQuantity || 0,
+    ),
+    totalSupply: BigNumber.from(
+      asset.ownerships.aggregates?.sum?.quantity || '0',
+    ),
+    owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+    bestBid: bestBid
+      ? {
+          unitPrice: BigNumber.from(bestBid.unitPrice),
+          currency: bestBid.currency,
+        }
+      : undefined,
+  }
+}
+
+export const convertCollection = (
+  collection: Pick<Collection, 'address' | 'name' | 'image' | 'cover'> & {
+    floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+  } & {
+    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
   },
-  totalSupply: BigNumber.from(
-    asset.ownerships.aggregates?.sum?.quantity || '0',
-  ),
-  owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
-})
+): {
+  address: string
+  name: string
+  image: string | null
+  cover: string | null
+  totalVolume: string
+  totalVolumeCurrencySymbol: string
+  floorPrice: string | null
+  floorPriceCurrencySymbol: string | null
+} => {
+  return {
+    address: collection.address,
+    name: collection.name,
+    image: collection.image,
+    cover: collection.cover,
+    totalVolume: collection.totalVolume?.valueInRef,
+    totalVolumeCurrencySymbol: collection.totalVolume?.refCode,
+    floorPrice: collection.floorPrice?.valueInRef || null,
+    floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
+  }
+}
 
 export const convertTraits = (
   asset: Parameters<typeof convertAsset>[0] & {
@@ -280,17 +347,16 @@ export const convertHistories = (
   }
 }
 
-export const convertAuctionWithBestBid = (
-  auction: Pick<Auction, 'endAt'> & {
-    bestBid: Maybe<{
-      nodes: Array<
-        Pick<Offer, 'unitPrice' | 'amount'> & {
-          currency: Pick<Currency, 'decimals' | 'symbol'>
-        }
-      >
-    }>
-  },
-): {
+export const convertAuctionWithBestBid = (auction: {
+  endAt: Date
+  bestBid: Maybe<{
+    nodes: Array<
+      Pick<Offer, 'unitPrice' | 'amount'> & {
+        currency: Pick<Currency, 'decimals' | 'symbol'>
+      }
+    >
+  }>
+}): {
   endAt: Date
   bestBid:
     | {
@@ -348,13 +414,14 @@ export const convertAuctionFull = (
 
 export const convertSale = (
   sale:
-    | (Pick<OfferOpenSale, 'unitPrice'> & {
+    | (Pick<OfferOpenSale, 'unitPrice' | 'id'> & {
         currency: Pick<Currency, 'decimals' | 'symbol' | 'id' | 'image'>
       })
     | undefined,
 ):
   | undefined
   | {
+      id: string
       unitPrice: BigNumber
       currency: {
         id: string
@@ -365,6 +432,7 @@ export const convertSale = (
     } => {
   if (!sale) return
   return {
+    id: sale.id,
     unitPrice: BigNumber.from(sale.unitPrice),
     currency: sale.currency,
   }

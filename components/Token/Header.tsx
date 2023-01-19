@@ -89,8 +89,7 @@ const TokenHeader: VFC<Props> = ({
             unlockedContent={asset.unlockedContent}
             defaultText={asset.name}
             objectFit="cover"
-            width={384}
-            height={384}
+            layout="fill"
           />
         </Flex>
       </Box>

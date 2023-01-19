@@ -13,6 +13,10 @@ query FetchDefaultAssetIds($limit: Int!) {
 fragment HomeAssetDetail on Asset {
   id
   name
+  collection {
+    address
+    name
+  }
   image
   animationUrl
   unlockedContent {
@@ -61,6 +65,23 @@ fragment HomeAssetDetail on Asset {
     aggregates {
       sum {
         quantity
+      }
+    }
+  }
+  bestBid: bids(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+    first: 1
+  ) {
+    nodes {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
       }
     }
   }
@@ -144,8 +165,8 @@ fragment HomeAsset on Asset {
   id
   name
   collection {
-    name
     address
+    name
   }
   image
   animationUrl
@@ -159,6 +180,13 @@ fragment HomeAsset on Asset {
     image
     verification {
       status
+    }
+  }
+  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+    aggregates {
+      sum {
+        quantity
+      }
     }
   }
   auctions(
@@ -185,6 +213,23 @@ fragment HomeAsset on Asset {
             symbol
           }
         }
+      }
+    }
+  }
+  bestBid: bids(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+    first: 1
+  ) {
+    nodes {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
       }
     }
   }
@@ -239,8 +284,15 @@ fragment HomeAuction on Auction {
     id
     name
     collection {
-      name
       address
+      name
+    }
+    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+      aggregates {
+        sum {
+          quantity
+        }
+      }
     }
     image
     animationUrl
@@ -254,6 +306,23 @@ fragment HomeAuction on Auction {
       image
       verification {
         status
+      }
+    }
+    bestBid: bids(
+      orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+      filter: { expiredAt: { greaterThan: $now } }
+      first: 1
+    ) {
+      nodes {
+        unitPrice
+        amount
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
       }
     }
   }
