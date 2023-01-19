@@ -33,6 +33,7 @@ import {
   FetchCollectionDetailsQuery,
   FetchCollectionDetailsQueryVariables,
   useFetchCollectionAssetsQuery,
+  useFetchCollectionDetailsQuery,
 } from '../../graphql'
 
 type Props = {
@@ -45,30 +46,6 @@ type Props = {
   offset: number
   // OrderBy
   orderBy: AssetsOrderBy
-  collectionDetails: {
-    address: string
-    chainId: number
-    name: string
-    description: string | null
-    image: string | null
-    cover: string | null
-    twitter: string | null
-    discord: string | null
-    website: string | null
-    deployerAddress: string
-    deployer: {
-      address: string
-      name: string | null
-      username: string | null
-      verified: boolean
-    } | null
-    totalVolume: string
-    totalVolumeCurrencySymbol: string
-    floorPrice: string | null
-    floorPriceCurrencySymbol: string | null
-    totalOwners: number
-    supply: number
-  }
 }
 
 export const getServerSideProps = wrapServerSideProps<Props>(
@@ -142,9 +119,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         page,
         offset,
         orderBy,
-        collectionDetails: convertCollectionFull(
-          collectionDetailsData.collection,
-        ),
       },
     }
   },
@@ -152,7 +126,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 
 const CollectionPage: FC<Props> = ({
   address,
-  collectionDetails,
   now,
   currentAccount,
   limit,
@@ -165,6 +138,12 @@ const CollectionPage: FC<Props> = ({
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { account } = useWeb3React()
+  const { data: collectionData } = useFetchCollectionDetailsQuery({
+    variables: {
+      address: address,
+      chainId: environment.CHAIN_ID,
+    },
+  })
   const { data, refetch } = useFetchCollectionAssetsQuery({
     variables: {
       address,
@@ -177,6 +156,14 @@ const CollectionPage: FC<Props> = ({
     },
   })
   useExecuteOnAccountChange(refetch, ready)
+
+  const collectionDetails = useMemo(
+    () =>
+      collectionData?.collection
+        ? convertCollectionFull(collectionData.collection)
+        : null,
+    [collectionData],
+  )
 
   const [changePage, changeLimit] = usePaginate()
 
@@ -194,6 +181,7 @@ const CollectionPage: FC<Props> = ({
 
   const ChakraPagination = chakra(Pagination)
 
+  if (!collectionDetails) return null
   return (
     <LargeLayout>
       <Head title="Explore collection" />
