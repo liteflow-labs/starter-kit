@@ -91,6 +91,10 @@
         "total-volume": "Volumen total",
         "owners": "Propietarios",
         "items": "Elementos"
+      },
+      "by": "Por",
+      "menu": {
+        "report": "Informe"
       }
     },
     "orderBy": {

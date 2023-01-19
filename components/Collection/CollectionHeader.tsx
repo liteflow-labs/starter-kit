@@ -164,7 +164,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
             {collection.name}
           </Heading>
           <Heading color="gray.500" variant="heading1">
-            By{' '}
+            {t('collection.header.by')}{' '}
             <Text
               as={Link}
               href={`/users/${collection.deployerAddress}`}
@@ -248,7 +248,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
                 )}`}
                 isExternal
               >
-                <MenuItem>Report</MenuItem>
+                <MenuItem>{t('collection.header.menu.report')}</MenuItem>
               </ChakraLink>
             </MenuList>
           </Menu>

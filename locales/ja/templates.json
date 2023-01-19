@@ -91,6 +91,10 @@
         "total-volume": "総ボリューム",
         "owners": "所有者",
         "items": "アイテム"
+      },
+      "by": "によって",
+      "menu": {
+        "report": "報告"
       }
     },
     "orderBy": {

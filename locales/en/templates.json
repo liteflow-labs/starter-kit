@@ -91,6 +91,10 @@
         "total-volume": "Total Volume",
         "owners": "Owners",
         "items": "Items"
+      },
+      "by": "By",
+      "menu": {
+        "report": "Report"
       }
     },
     "orderBy": {
