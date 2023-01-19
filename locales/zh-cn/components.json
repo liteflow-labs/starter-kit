@@ -701,6 +701,9 @@
   "traits": {
     "percent": "{{value}}%"
   },
+  "truncate": {
+    "show-more": "显示更多"
+  },
   "user": {
     "balance": {
       "title": "您的余额",
