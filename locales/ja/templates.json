@@ -11,7 +11,8 @@
     "title": "検索",
     "tabs": {
       "nfts": "NFTs",
-      "users": "ユーザー"
+      "users": "ユーザー",
+      "collections": "コレクション"
     },
     "nfts": {
       "empty": {
@@ -63,9 +64,50 @@
     },
     "users": {
       "empty": {
-        "title": "No Users Found",
-        "description": "Update your filters to find more users."
+        "title": "ユーザーが見つかりません",
+        "description": "フィルターを更新して、より多くのユーザーを見つけてください。"
       }
+    },
+    "collections": {
+      "empty": {
+        "title": "コレクションが見つかりません",
+        "description": "フィルターを更新して、より多くのコレクションを見つけてください。"
+      },
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "ボリューム: オールタイム",
+          "24hVolDesc": "ボリューム: 24時間",
+          "7dVolDesc": "ボリューム: 7時間",
+          "14dVolDesc": "ボリューム: 14時間",
+          "28dVolDesc": "ボリューム: 28時間"
+        }
+      }
+    }
+  },
+  "collection": {
+    "header": {
+      "data-labels": {
+        "floor-price": "最低価格",
+        "total-volume": "総ボリューム",
+        "owners": "所有者",
+        "items": "アイテム"
+      },
+      "by": "によって",
+      "menu": {
+        "report": "報告"
+      }
+    },
+    "orderBy": {
+      "values": {
+        "salesMinUnitPriceInRefAsc": "価格: 低 - 高",
+        "salesMinUnitPriceInRefDesc": "価格: 高 - 低",
+        "createdAtDesc": "日付: 最新",
+        "createdAtAsc": "日付: 最も古い"
+      }
+    },
+    "empty": {
+      "title": "NFTが見つかりません",
+      "description": "フィルターを更新して、より多くの NFT を見つけてください。"
     }
   },
   "asset": {
@@ -86,7 +128,8 @@
           "label": "通報",
           "subject": "NFTを通報する",
           "body": "以下のNFT {{name}} (#{{id}}) を通報します\n理由: "
-        }
+        },
+        "refresh-metadata": "メタデータの更新"
       },
       "explorerLink": "{{name}} で表示",
       "ipfsLink": "IPFSで表示",

@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 export type BlockExplorer = {
   name: string
   token: (address: string, id: string) => string
+  address: (address: string) => string
   transaction: (hash: string | undefined) => string | null
 }
 
@@ -20,5 +21,10 @@ export default function useBlockExplorer(
     [url],
   )
 
-  return { name, token, transaction }
+  const address = useCallback(
+    (address: string) => `${url}/address/${address}`,
+    [url],
+  )
+
+  return { name, token, transaction, address }
 }

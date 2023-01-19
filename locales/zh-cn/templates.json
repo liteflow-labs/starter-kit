@@ -11,7 +11,8 @@
     "title": "探讨",
     "tabs": {
       "nfts": "NFTs",
-      "users": "用户"
+      "users": "用户",
+      "collections": "收藏品"
     },
     "nfts": {
       "empty": {
@@ -66,6 +67,47 @@
         "title": "未找到用户",
         "description": "请更新筛选条件来查找更多用户。"
       }
+    },
+    "collections": {
+      "empty": {
+        "title": "未找到收藏",
+        "description": "请更新筛选条件来查找更多收藏。"
+      },
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "交易量: 全时",
+          "24hVolDesc": "交易量: 24小时",
+          "7dVolDesc": "交易量: 7天",
+          "14dVolDesc": "交易量: 14天",
+          "28dVolDesc": "交易量: 28天"
+        }
+      }
+    }
+  },
+  "collection": {
+    "header": {
+      "data-labels": {
+        "floor-price": "底价",
+        "total-volume": "总体积",
+        "owners": "所有者",
+        "items": "物品"
+      },
+      "by": "由",
+      "menu": {
+        "report": "报告"
+      }
+    },
+    "orderBy": {
+      "values": {
+        "salesMinUnitPriceInRefAsc": "价格：低 - 高",
+        "salesMinUnitPriceInRefDesc": "价格：高 - 低",
+        "createdAtDesc": "日期：最新",
+        "createdAtAsc": "日期：最早"
+      }
+    },
+    "empty": {
+      "title": "未找到 NFT",
+      "description": "更新您的过滤器以查找更多 NFT"
     }
   },
   "asset": {
@@ -86,7 +128,8 @@
           "label": "举报",
           "subject": "举报 NFT",
           "body": "我要举报下列 NFT {{name}} (#{{id}})\n原因如下： "
-        }
+        },
+        "refresh-metadata": "刷新元数据"
       },
       "explorerLink": "在 {{name}} 上查看",
       "ipfsLink": "在 IPFS 上查看",

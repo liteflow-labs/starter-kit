@@ -21,7 +21,10 @@ export type Props = {
     unlockedContent: { url: string; mimetype: string | null } | null | undefined
     saleSupply: BigNumber
     collection: {
+      name: string
+      address: string
       standard: Standard
+      chainId: number
     }
     totalSupply: BigNumber
     owned: BigNumber
@@ -87,15 +90,25 @@ const TokenHeader: VFC<Props> = ({
             unlockedContent={asset.unlockedContent}
             defaultText={asset.name}
             objectFit="cover"
-            width={384}
-            height={384}
+            layout="fill"
           />
         </Flex>
       </Box>
       <Stack spacing={8} p={{ base: 6, md: 12 }}>
-        <Heading as="h1" variant="title" color="brand.black">
-          {asset.name}
-        </Heading>
+        <Stack spacing={1}>
+          {asset.collection.name && (
+            <Heading as="p" variant="heading1" color="gray.500">
+              <Link
+                href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}
+              >
+                {asset.collection.name}
+              </Link>
+            </Heading>
+          )}
+          <Heading as="h1" variant="title" color="brand.black">
+            {asset.name}
+          </Heading>
+        </Stack>
         <TokenAsset
           creator={creator}
           owners={owners}

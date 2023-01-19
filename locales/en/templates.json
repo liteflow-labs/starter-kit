@@ -11,7 +11,8 @@
     "title": "Explore",
     "tabs": {
       "nfts": "NFTs",
-      "users": "Users"
+      "users": "Users",
+      "collections": "Collections"
     },
     "nfts": {
       "empty": {
@@ -66,6 +67,47 @@
         "title": "No Users Found",
         "description": "Update your filters to find more users."
       }
+    },
+    "collections": {
+      "empty": {
+        "title": "No Collections Found",
+        "description": "Update your filters to find more collections."
+      },
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "Volume: All-time",
+          "24hVolDesc": "Volume: 24h",
+          "7dVolDesc": "Volume: 7d",
+          "14dVolDesc": "Volume: 14d",
+          "28dVolDesc": "Volume: 28d"
+        }
+      }
+    }
+  },
+  "collection": {
+    "header": {
+      "data-labels": {
+        "floor-price": "Floor price",
+        "total-volume": "Total Volume",
+        "owners": "Owners",
+        "items": "Items"
+      },
+      "by": "By",
+      "menu": {
+        "report": "Report"
+      }
+    },
+    "orderBy": {
+      "values": {
+        "salesMinUnitPriceInRefAsc": "Price: Low - High",
+        "salesMinUnitPriceInRefDesc": "Price: High - Low",
+        "createdAtDesc": "Date: Newest",
+        "createdAtAsc": "Date: Oldest"
+      }
+    },
+    "empty": {
+      "title": "No NFTs Found",
+      "description": "Update your filters to find more NFTs."
     }
   },
   "asset": {
@@ -86,7 +128,8 @@
           "label": "Report",
           "subject": "Report an NFT",
           "body": "I would like to report the following NFT {{name}} (#{{id}})\nReason: "
-        }
+        },
+        "refresh-metadata": "Refresh Metadata"
       },
       "explorerLink": "View on {{name}}",
       "ipfsLink": "View on IPFS",
