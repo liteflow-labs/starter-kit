@@ -22,6 +22,7 @@ import Etherscan from 'components/Icons/Etherscan'
 import Image from 'components/Image/Image'
 import Link from 'components/Link/Link'
 import Truncate from 'components/Truncate/Truncate'
+import useBlockExplorer from 'hooks/useBlockExplorer'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
@@ -61,6 +62,7 @@ type Props = {
 
 const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
   const { t } = useTranslation('templates')
+  const blockExplorer = useBlockExplorer(explorer.name, explorer.url)
 
   const blocks = useMemo(
     () => [
@@ -220,13 +222,13 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
           <Flex gap={4}>
             <IconButton
               as={Link}
-              aria-label={`Visit ${explorer.name}`}
+              aria-label={`Visit ${blockExplorer.name}`}
               icon={<Etherscan boxSize={5} />}
               rounded="full"
               variant="outline"
               borderColor="gray.200"
               color="brand.black"
-              href={explorer.url + '/address/' + collection.address}
+              href={blockExplorer.address(collection.address)}
               isExternal
             />
             {collection.website && (
