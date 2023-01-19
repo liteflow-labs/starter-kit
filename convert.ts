@@ -11,6 +11,7 @@ import {
   AssetTrait,
   Auction,
   Collection,
+  CollectionStats,
   Currency,
   Maybe,
   Offer,
@@ -129,6 +130,34 @@ export const convertAssetWithSupplies = (
           currency: bestBid.currency,
         }
       : undefined,
+  }
+}
+
+export const convertCollection = (
+  collection: Pick<Collection, 'address' | 'name' | 'image' | 'cover'> & {
+    floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+  } & {
+    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
+  },
+): {
+  address: string
+  name: string
+  image: string | null
+  cover: string | null
+  totalVolume: string
+  totalVolumeCurrencySymbol: string
+  floorPrice: string | null
+  floorPriceCurrencySymbol: string | null
+} => {
+  return {
+    address: collection.address,
+    name: collection.name,
+    image: collection.image,
+    cover: collection.cover,
+    totalVolume: collection.totalVolume?.valueInRef,
+    totalVolumeCurrencySymbol: collection.totalVolume?.refCode,
+    floorPrice: collection.floorPrice?.valueInRef || null,
+    floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
   }
 }
 

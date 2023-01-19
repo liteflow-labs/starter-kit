@@ -11,7 +11,8 @@
     "title": "Explore",
     "tabs": {
       "nfts": "NFTs",
-      "users": "Users"
+      "users": "Users",
+      "collections": "Collections"
     },
     "nfts": {
       "empty": {
@@ -65,6 +66,21 @@
       "empty": {
         "title": "No Users Found",
         "description": "Update your filters to find more users."
+      }
+    },
+    "collections": {
+      "empty": {
+        "title": "No Collections Found",
+        "description": "Update your filters to find more collections."
+      },
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "Volume: All-time",
+          "24hVolDesc": "Volume: 24h",
+          "7dVolDesc": "Volume: 7d",
+          "14dVolDesc": "Volume: 14d",
+          "28dVolDesc": "Volume: 28d"
+        }
       }
     }
   },

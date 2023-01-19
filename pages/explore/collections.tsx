@@ -1,20 +1,23 @@
-import { chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import CollectionCard from 'components/Collection/CollectionCard'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
+import { convertCollection } from 'convert'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo } from 'react'
+import { useRouter } from 'next/router'
+import { useCallback, useMemo, useState } from 'react'
 import Empty from '../../components/Empty/Empty'
 import Pagination from '../../components/Pagination/Pagination'
-import UserCard from '../../components/User/UserCard'
-import { convertUserWithCover } from '../../convert'
+import Select from '../../components/Select/Select'
 import environment from '../../environment'
 import {
-  AccountFilter,
-  FetchExploreUsersDocument,
-  FetchExploreUsersQuery,
-  useFetchExploreUsersQuery,
+  CollectionFilter,
+  CollectionsOrderBy,
+  FetchExploreCollectionsDocument,
+  FetchExploreCollectionsQuery,
+  useFetchExploreCollectionsQuery,
 } from '../../graphql'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import usePaginate from '../../hooks/usePaginate'
@@ -24,17 +27,18 @@ type Props = {
   limit: number
   page: number
   offset: number
-  queryFilter: AccountFilter[]
+  orderBy: CollectionsOrderBy
+  queryFilter: CollectionFilter[]
   search: string | null
 }
-const searchFilter = (search: string): AccountFilter =>
+const searchFilter = (search: string): CollectionFilter =>
   ({
     or: [
-      { name: { includesInsensitive: search } } as AccountFilter,
-      { address: { includesInsensitive: search } } as AccountFilter,
-      { description: { includesInsensitive: search } } as AccountFilter,
+      { name: { includesInsensitive: search } } as CollectionFilter,
+      { address: { includesInsensitive: search } } as CollectionFilter,
+      { description: { includesInsensitive: search } } as CollectionFilter,
     ],
-  } as AccountFilter)
+  } as CollectionFilter)
 
 export const getServerSideProps = wrapServerSideProps<Props>(
   environment.GRAPHQL_URL,
@@ -50,6 +54,9 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         : parseInt(ctx.query.page, 10)
       : 1
     const offset = (page - 1) * limit
+    const orderBy = Array.isArray(ctx.query.orderBy)
+      ? (ctx.query.orderBy[0] as CollectionsOrderBy)
+      : (ctx.query.orderBy as CollectionsOrderBy) || 'TOTAL_VOLUME_DESC'
     const search =
       ctx.query.search && !Array.isArray(ctx.query.search)
         ? ctx.query.search
@@ -58,8 +65,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     const queryFilter = []
     if (search) queryFilter.push(searchFilter(search))
 
-    const { data, error } = await client.query<FetchExploreUsersQuery>({
-      query: FetchExploreUsersDocument,
+    const { data, error } = await client.query<FetchExploreCollectionsQuery>({
+      query: FetchExploreCollectionsDocument,
       variables: { limit, offset, filter: queryFilter },
     })
     if (error) throw error
@@ -70,6 +77,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         limit,
         page,
         offset,
+        orderBy,
         queryFilter,
         search,
       },
@@ -77,26 +85,45 @@ export const getServerSideProps = wrapServerSideProps<Props>(
   },
 )
 
-const UsersPage: NextPage<Props> = ({
+const CollectionsPage: NextPage<Props> = ({
   offset,
   limit,
+  orderBy,
   page,
   queryFilter,
   search,
 }) => {
   useEagerConnect()
+  const { pathname, query, replace } = useRouter()
   const { t } = useTranslation('templates')
-  const { data } = useFetchExploreUsersQuery({
+  const [loadingOrder, setLoadingOrder] = useState(false)
+  const { data } = useFetchExploreCollectionsQuery({
     variables: {
       limit,
       offset,
+      orderBy,
       filter: queryFilter,
     },
   })
 
   const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
 
-  const users = useMemo(() => data?.users?.nodes || [], [data])
+  const changeOrder = useCallback(
+    async (orderBy: any) => {
+      setLoadingOrder(true)
+      try {
+        await replace({
+          pathname,
+          query: { ...query, orderBy, page: undefined },
+        })
+      } finally {
+        setLoadingOrder(false)
+      }
+    },
+    [replace, pathname, query],
+  )
+
+  const collections = useMemo(() => data?.collections?.nodes || [], [data])
 
   const ChakraPagination = chakra(Pagination)
 
@@ -106,30 +133,59 @@ const UsersPage: NextPage<Props> = ({
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading}
+        loading={pageLoading || loadingOrder}
         search={search}
-        selectedTabIndex={2}
+        selectedTabIndex={1}
       >
         <>
-          {users.length > 0 ? (
+          <Box ml="auto" w={{ base: 'full', lg: 'min-content' }} pt={4}>
+            <Select<CollectionsOrderBy>
+              name="orderBy"
+              onChange={changeOrder}
+              choices={[
+                {
+                  label: t('explore.collections.orderBy.values.24hVolDesc'),
+                  value: 'TOTAL_VOLUME_LAST_24H_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.7dVolDesc'),
+                  value: 'TOTAL_VOLUME_LAST_7D_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.14dVolDesc'),
+                  value: 'TOTAL_VOLUME_LAST_14D_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.28dVolDesc'),
+                  value: 'TOTAL_VOLUME_LAST_28D_DESC',
+                },
+                {
+                  label: t('explore.collections.orderBy.values.totalVolDesc'),
+                  value: 'TOTAL_VOLUME_DESC',
+                },
+              ]}
+              value={orderBy}
+            />
+          </Box>
+          {collections.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}
               columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
               py={6}
             >
-              {users.map((user, i) => (
-                <UserCard
+              {collections.map((collection, i) => (
+                <CollectionCard
+                  collection={convertCollection(collection)}
                   key={i}
-                  user={convertUserWithCover(user, user.address)}
                 />
               ))}
             </SimpleGrid>
           ) : (
             <Flex align="center" justify="center" h="full" py={12}>
               <Empty
-                title={t('explore.users.empty.title')}
-                description={t('explore.users.empty.description')}
+                title={t('explore.collections.empty.title')}
+                description={t('explore.collections.empty.description')}
               />
             </Flex>
           )}
@@ -140,7 +196,7 @@ const UsersPage: NextPage<Props> = ({
             limit={limit}
             limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
             page={page}
-            total={data?.users?.totalCount}
+            total={data?.collections?.totalCount}
             onPageChange={changePage}
             onLimitChange={changeLimit}
             result={{
@@ -165,4 +221,4 @@ const UsersPage: NextPage<Props> = ({
   )
 }
 
-export default UsersPage
+export default CollectionsPage
