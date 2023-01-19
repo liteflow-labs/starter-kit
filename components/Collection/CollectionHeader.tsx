@@ -14,10 +14,10 @@ import {
 } from '@chakra-ui/react'
 import { formatAddress } from '@nft/hooks'
 import { FaDiscord } from '@react-icons/all-files/fa/FaDiscord'
-import { FaEllipsisH } from '@react-icons/all-files/fa/FaEllipsisH'
 import { FaGlobe } from '@react-icons/all-files/fa/FaGlobe'
 import { FaTwitter } from '@react-icons/all-files/fa/FaTwitter'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
+import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import Etherscan from 'components/Icons/Etherscan'
 import Image from 'components/Image/Image'
 import Link from 'components/Link/Link'
@@ -26,6 +26,7 @@ import useBlockExplorer from 'hooks/useBlockExplorer'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
+import ChakraLink from '../../components/Link/Link'
 
 type Props = {
   collection: {
@@ -187,8 +188,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
               icon={<Etherscan boxSize={5} />}
               rounded="full"
               variant="outline"
-              borderColor="gray.200"
-              color="brand.black"
+              colorScheme="gray"
               href={blockExplorer.address(collection.address)}
               isExternal
             />
@@ -199,8 +199,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
                 icon={<FaGlobe />}
                 rounded="full"
                 variant="outline"
-                borderColor="gray.200"
-                color="brand.black"
+                colorScheme="gray"
                 href={collection.website}
                 isExternal
               />
@@ -212,8 +211,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
                 icon={<FaDiscord />}
                 rounded="full"
                 variant="outline"
-                borderColor="gray.200"
-                color="brand.black"
+                colorScheme="gray"
                 href={collection.discord}
                 isExternal
               />
@@ -225,27 +223,24 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
                 icon={<FaTwitter />}
                 rounded="full"
                 variant="outline"
-                borderColor="gray.200"
-                color="brand.black"
+                colorScheme="gray"
                 href={collection.twitter}
                 isExternal
               />
             )}
           </Flex>
           <Divider orientation="vertical" h="40px" mx={4} />
-          <Menu placement="bottom-end" autoSelect={false}>
+          <Menu autoSelect={false}>
             <MenuButton
               as={IconButton}
-              aria-label="options"
-              rounded="full"
               variant="outline"
-              borderColor="gray.200"
-              color="brand.black"
-              icon={<FaEllipsisH />}
+              colorScheme="gray"
+              rounded="full"
+              aria-label="activator"
+              icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
             />
             <MenuList>
-              <MenuItem
-                as={Link}
+              <ChakraLink
                 href={`mailto:${reportEmail}?subject=${encodeURI(
                   'Report a collection',
                 )}&body=${encodeURI(
@@ -253,8 +248,8 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
                 )}`}
                 isExternal
               >
-                Report
-              </MenuItem>
+                <MenuItem>Report</MenuItem>
+              </ChakraLink>
             </MenuList>
           </Menu>
         </Flex>
