@@ -140,8 +140,7 @@ const TokenCard: VFC<Props> = ({
   return (
     <Flex
       direction="column"
-      h="min-content"
-      maxW={72}
+      w="full"
       align="stretch"
       overflow="hidden"
       rounded="xl"
@@ -151,16 +150,14 @@ const TokenCard: VFC<Props> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Flex as={Link} href={href} h={72} w={72} position="relative">
+      <Flex as={Link} href={href} w="full" position="relative">
         <TokenMedia
           image={asset.image}
           animationUrl={asset.animationUrl}
           unlockedContent={asset.unlockedContent}
           defaultText={asset.name}
           objectFit="cover"
-          width={288}
-          height={288}
-          layout="fixed"
+          layout="fill"
         />
         {auction && (
           <HStack
