@@ -441,7 +441,7 @@ const DetailPage: NextPage<Props> = ({
           <Heading as="h4" variant="heading2" color="brand.black">
             {t('asset.detail.description')}
           </Heading>
-          <Text as="p" variant="text-sm" color="gray.500" mt={3}>
+          <Text as="p" variant="text-sm" color="gray.500" mt={3} style={{whiteSpace: 'pre-wrap'}}>
             {asset.description}
           </Text>
 
