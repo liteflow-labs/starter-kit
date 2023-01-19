@@ -13,15 +13,12 @@ query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
     asset {
       id
       collection {
-        standard
+        chainId
         address
         name
+        standard
       }
       name
-      collection {
-        address
-        name
-      }
       image
       unlockedContent {
         url

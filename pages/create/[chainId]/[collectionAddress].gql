@@ -14,6 +14,7 @@ query FetchAccountAndCollection(
   collection(chainId: $chainId, address: $collectionAddress) {
     chainId
     address
+    name
     standard
   }
 }

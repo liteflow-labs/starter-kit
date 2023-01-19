@@ -25,7 +25,7 @@ const CollectionCard: FC<Props> = ({ collection }) => {
   return (
     <Box
       as={Link}
-      href={`/collection/${collection.address}`}
+      href={`/collection/${collection.chainId}/${collection.address}`}
       bg="white"
       border="1px"
       borderColor="gray.200"

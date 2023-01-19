@@ -34,10 +34,11 @@ import {
   FetchCollectionDetailsQueryVariables,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
-} from '../../graphql'
+} from '../../../graphql'
 
 type Props = {
-  address: string
+  chainId: number
+  collectionAddress: string
   currentAccount: string | null
   now: string
   // Pagination
@@ -52,6 +53,13 @@ export const getServerSideProps = wrapServerSideProps<Props>(
   environment.GRAPHQL_URL,
   async (ctx, client) => {
     const now = new Date()
+    const chainIdStr = ctx.params?.chainId
+      ? Array.isArray(ctx.params.chainId)
+        ? ctx.params.chainId[0]
+        : ctx.params.chainId
+      : null
+    invariant(chainIdStr, 'chainId is required')
+    const chainId = parseInt(chainIdStr, 10)
     const collectionAddress = ctx.params?.id
       ? Array.isArray(ctx.params.id)
         ? ctx.params.id[0]
@@ -81,8 +89,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       >({
         query: FetchCollectionDetailsDocument,
         variables: {
-          address: collectionAddress,
-          chainId: environment.CHAIN_ID,
+          collectionAddress: collectionAddress,
+          chainId: chainId,
         },
       })
 
@@ -97,8 +105,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
           now,
           offset,
           limit,
-          address: collectionAddress,
-          chainId: environment.CHAIN_ID,
+          collectionAddress: collectionAddress,
+          chainId: chainId,
           orderBy,
         },
       })
@@ -112,7 +120,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 
     return {
       props: {
-        address: collectionAddress,
+        chainId,
+        collectionAddress: collectionAddress,
         currentAccount: ctx.user.address,
         now: now.toJSON(),
         limit,
@@ -125,7 +134,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 )
 
 const CollectionPage: FC<Props> = ({
-  address,
+  chainId,
+  collectionAddress,
   now,
   currentAccount,
   limit,
@@ -140,19 +150,19 @@ const CollectionPage: FC<Props> = ({
   const { account } = useWeb3React()
   const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
-      address: address,
-      chainId: environment.CHAIN_ID,
+      collectionAddress: collectionAddress,
+      chainId: chainId,
     },
   })
   const { data, refetch } = useFetchCollectionAssetsQuery({
     variables: {
-      address,
+      collectionAddress,
       now: date,
       currentAccount: (ready ? account?.toLowerCase() : currentAccount) || '',
       limit,
       offset,
       orderBy,
-      chainId: environment.CHAIN_ID,
+      chainId: chainId,
     },
   })
   useExecuteOnAccountChange(refetch, ready)

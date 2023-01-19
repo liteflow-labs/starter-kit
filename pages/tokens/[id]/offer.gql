@@ -8,15 +8,12 @@ query OfferForAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
     collection {
-      name
+      chainId
       address
+      name
       standard
     }
     name
-    collection {
-      address
-      name
-    }
     image
     animationUrl
     royalties {

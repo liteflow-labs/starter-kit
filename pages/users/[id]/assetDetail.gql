@@ -2,6 +2,7 @@ fragment AssetDetail on Asset {
   id
   name
   collection {
+    chainId
     address
     name
   }

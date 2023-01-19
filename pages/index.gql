@@ -14,19 +14,16 @@ fragment HomeAssetDetail on Asset {
   id
   name
   collection {
+    chainId
     address
     name
+    standard
   }
   image
   animationUrl
   unlockedContent {
     url
     mimetype
-  }
-  collection {
-    name
-    address
-    standard
   }
   creator {
     address
@@ -165,6 +162,7 @@ fragment HomeAsset on Asset {
   id
   name
   collection {
+    chainId
     address
     name
   }
@@ -284,6 +282,7 @@ fragment HomeAuction on Auction {
     id
     name
     collection {
+      chainId
       address
       name
     }

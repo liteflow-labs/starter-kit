@@ -29,7 +29,7 @@ export const convertAsset = (
     Asset,
     'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
   > & {
-    collection: Pick<Collection, 'address' | 'name'>
+    collection: Pick<Collection, 'address' | 'name' | 'chainId'>
     owned: {
       aggregates: Maybe<{
         sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
@@ -49,6 +49,7 @@ export const convertAsset = (
   image: string
   name: string
   collection: {
+    chainId: number
     address: string
     name: string
   }
@@ -71,6 +72,7 @@ export const convertAsset = (
     image: asset.image,
     name: asset.name,
     collection: {
+      chainId: asset.collection.chainId,
       address: asset.collection.address,
       name: asset.collection.name,
     },
@@ -113,6 +115,7 @@ export const convertAssetWithSupplies = (
     unlockedContent: asset.unlockedContent,
     name: asset.name,
     collection: {
+      chainId: asset.collection.chainId,
       address: asset.collection.address,
       name: asset.collection.name,
       standard: asset.collection.standard,
@@ -134,12 +137,16 @@ export const convertAssetWithSupplies = (
 }
 
 export const convertCollection = (
-  collection: Pick<Collection, 'address' | 'name' | 'image' | 'cover'> & {
+  collection: Pick<
+    Collection,
+    'address' | 'name' | 'image' | 'cover' | 'chainId'
+  > & {
     floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
   } & {
     totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
   },
 ): {
+  chainId: number
   address: string
   name: string
   image: string | null
@@ -150,6 +157,7 @@ export const convertCollection = (
   floorPriceCurrencySymbol: string | null
 } => {
   return {
+    chainId: collection.chainId,
     address: collection.address,
     name: collection.name,
     image: collection.image,

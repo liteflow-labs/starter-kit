@@ -1,5 +1,5 @@
-query FetchCollectionDetails($address: Address!, $chainId: Int!) {
-  collection(address: $address, chainId: $chainId) {
+query FetchCollectionDetails($collectionAddress: Address!, $chainId: Int!) {
+  collection(address: $collectionAddress, chainId: $chainId) {
     address
     chainId
     cover
@@ -37,15 +37,15 @@ query FetchCollectionAssets(
   $now: Datetime!
   $offset: Int!
   $limit: Int!
-  $address: Address!
   $chainId: Int!
+  $collectionAddress: Address!
   $orderBy: [AssetsOrderBy!]
 ) {
   assets(
     filter: {
       ownershipsExist: true
       chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $address }
+      collectionAddress: { equalTo: $collectionAddress }
     }
     orderBy: $orderBy
     first: $limit
@@ -78,6 +78,7 @@ query FetchCollectionAssets(
         }
       }
       collection {
+        chainId
         address
         image
         name
