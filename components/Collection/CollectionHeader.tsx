@@ -178,47 +178,8 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
               )}
             </Text>
           </Heading>
-          {collection.description && (
-            <Box mt={4}>
-              <Truncate size="lg" color="gray.500" length={200}>
-                {collection.description}
-              </Truncate>
-            </Box>
-          )}
-          <SimpleGrid
-            columns={{ base: 2, lg: 4 }}
-            spacing={8}
-            mt={4}
-            w="max-content"
-          >
-            {blocks.map((block) => (
-              <Flex
-                key={block.name}
-                flexDirection="column"
-                justifyContent="center"
-                py={2}
-              >
-                <Text
-                  variant="button1"
-                  title={block.title}
-                  color="brand.black"
-                  isTruncated
-                >
-                  {block.value}
-                </Text>
-                <Text
-                  variant="subtitle2"
-                  title={block.name}
-                  isTruncated
-                  color="gray.500"
-                >
-                  {block.name}
-                </Text>
-              </Flex>
-            ))}
-          </SimpleGrid>
         </Box>
-        <Flex minW="280px" justify="flex-end">
+        <Flex justify="flex-end">
           <Flex gap={4}>
             <IconButton
               as={Link}
@@ -298,6 +259,45 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
           </Menu>
         </Flex>
       </Flex>
+      {collection.description && (
+        <Box mt={4}>
+          <Truncate size="lg" color="gray.500" length={200}>
+            {collection.description}
+          </Truncate>
+        </Box>
+      )}
+      <SimpleGrid
+        columns={{ base: 2, sm: 4 }}
+        spacing={8}
+        mt={4}
+        w={{ base: 'full', sm: 'max-content' }}
+      >
+        {blocks.map((block) => (
+          <Flex
+            key={block.name}
+            flexDirection="column"
+            justifyContent="center"
+            py={2}
+          >
+            <Text
+              variant="button1"
+              title={block.title}
+              color="brand.black"
+              isTruncated
+            >
+              {block.value}
+            </Text>
+            <Text
+              variant="subtitle2"
+              title={block.name}
+              isTruncated
+              color="gray.500"
+            >
+              {block.name}
+            </Text>
+          </Flex>
+        ))}
+      </SimpleGrid>
     </>
   )
 }
