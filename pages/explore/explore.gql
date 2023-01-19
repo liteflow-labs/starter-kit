@@ -26,6 +26,7 @@ query FetchAllERC721And1155(
       id
       name
       collection {
+        chainId
         address
         name
       }

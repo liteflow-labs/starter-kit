@@ -11,6 +11,7 @@ query FetchExploreCollections(
     filter: { and: $filter }
   ) {
     nodes {
+      chainId
       address
       name
       image

@@ -29,7 +29,7 @@ export const convertAsset = (
     Asset,
     'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
   > & {
-    collection: Pick<Collection, 'address' | 'name'>
+    collection: Pick<Collection, 'address' | 'name' | 'chainId'>
     owned: {
       aggregates: Maybe<{
         sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
@@ -49,6 +49,7 @@ export const convertAsset = (
   image: string
   name: string
   collection: {
+    chainId: number
     address: string
     name: string
   }
@@ -71,6 +72,7 @@ export const convertAsset = (
     image: asset.image,
     name: asset.name,
     collection: {
+      chainId: asset.collection.chainId,
       address: asset.collection.address,
       name: asset.collection.name,
     },
@@ -113,6 +115,7 @@ export const convertAssetWithSupplies = (
     unlockedContent: asset.unlockedContent,
     name: asset.name,
     collection: {
+      chainId: asset.collection.chainId,
       address: asset.collection.address,
       name: asset.collection.name,
       standard: asset.collection.standard,
@@ -134,12 +137,16 @@ export const convertAssetWithSupplies = (
 }
 
 export const convertCollection = (
-  collection: Pick<Collection, 'address' | 'name' | 'image' | 'cover'> & {
+  collection: Pick<
+    Collection,
+    'address' | 'name' | 'image' | 'cover' | 'chainId'
+  > & {
     floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
   } & {
     totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
   },
 ): {
+  chainId: number
   address: string
   name: string
   image: string | null
@@ -150,6 +157,7 @@ export const convertCollection = (
   floorPriceCurrencySymbol: string | null
 } => {
   return {
+    chainId: collection.chainId,
     address: collection.address,
     name: collection.name,
     image: collection.image,
@@ -193,6 +201,82 @@ export const convertTraits = (
   })
 
   return assetTraitsWithCounts
+}
+
+export const convertCollectionFull = (
+  collection: Pick<
+    Collection,
+    | 'address'
+    | 'chainId'
+    | 'name'
+    | 'description'
+    | 'image'
+    | 'cover'
+    | 'twitter'
+    | 'discord'
+    | 'website'
+    | 'deployerAddress'
+    | 'numberOfOwners'
+    | 'supply'
+  > & { floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>> } & {
+    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
+  } & {
+    deployer: Maybe<
+      Pick<Account, 'address' | 'name' | 'username'> & {
+        verification: Maybe<Pick<AccountVerification, 'status'>>
+      }
+    >
+  },
+): {
+  address: string
+  chainId: number
+  name: string
+  description: string | null
+  image: string | null
+  cover: string | null
+  twitter: string | null
+  discord: string | null
+  website: string | null
+  deployerAddress: string
+  deployer: {
+    address: string
+    name: string | null
+    username: string | null
+    verified: boolean
+  } | null
+  totalVolume: string
+  totalVolumeCurrencySymbol: string
+  floorPrice: string | null
+  floorPriceCurrencySymbol: string | null
+  totalOwners: number
+  supply: number
+} => {
+  return {
+    address: collection.address,
+    chainId: collection.chainId,
+    name: collection.name,
+    description: collection.description,
+    image: collection.image,
+    cover: collection.cover,
+    twitter: collection.twitter,
+    discord: collection.discord,
+    website: collection.website,
+    deployerAddress: collection.deployerAddress,
+    deployer: collection.deployer
+      ? {
+          address: collection.deployer.address,
+          name: collection.deployer.name,
+          username: collection.deployer.username,
+          verified: collection.deployer?.verification?.status === 'VALIDATED',
+        }
+      : null,
+    totalVolume: collection.totalVolume?.valueInRef,
+    totalVolumeCurrencySymbol: collection.totalVolume.refCode,
+    floorPrice: collection.floorPrice?.valueInRef || null,
+    floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
+    totalOwners: collection.numberOfOwners,
+    supply: collection.supply,
+  }
 }
 
 export const convertUser = (

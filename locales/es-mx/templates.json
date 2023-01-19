@@ -84,6 +84,32 @@
       }
     }
   },
+  "collection": {
+    "header": {
+      "data-labels": {
+        "floor-price": "Precio piso",
+        "total-volume": "Volumen total",
+        "owners": "Propietarios",
+        "items": "Elementos"
+      },
+      "by": "Por",
+      "menu": {
+        "report": "Informe"
+      }
+    },
+    "orderBy": {
+      "values": {
+        "salesMinUnitPriceInRefAsc": "Precio: Bajo - Alto",
+        "salesMinUnitPriceInRefDesc": "Precio: Alto - Bajo",
+        "createdAtDesc": "Fecha: Más reciente",
+        "createdAtAsc": "Fecha: Más antiguo"
+      }
+    },
+    "empty": {
+      "title": "No se encontraron NFT",
+      "description": "Actualiza tus filtros para encontrar más NFT"
+    }
+  },
   "asset": {
     "detail": {
       "unlockable": {

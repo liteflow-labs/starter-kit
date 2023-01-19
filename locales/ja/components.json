@@ -701,6 +701,9 @@
   "traits": {
     "percent": "{{value}}%"
   },
+  "truncate": {
+    "show-more": "続きを表示する"
+  },
   "user": {
     "balance": {
       "title": "残高",

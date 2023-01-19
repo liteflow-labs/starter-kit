@@ -12,6 +12,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
     tokenId
     collectionAddress
     collection {
+      chainId
       name
       address
       standard
