@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import {
   AcceptOfferStep,
   CancelOfferStep,
@@ -29,6 +29,7 @@ import CancelOfferModal from '../Modal/CancelOffer'
 import Price from '../Price/Price'
 import WalletAddress from '../Wallet/Address'
 import AccountImage from '../Wallet/Image'
+import BidAcceptModal from './AcceptModal'
 
 export type Props = {
   bid: {
@@ -53,6 +54,7 @@ export type Props = {
   blockExplorer: BlockExplorer
   isSingle: boolean
   preventAcceptation: boolean
+  totalOwned: BigNumber
   onAccepted: (id: string) => Promise<void>
   onCanceled: (id: string) => Promise<void>
 }
@@ -64,6 +66,7 @@ const Bid: VFC<Props> = ({
   blockExplorer,
   isSingle,
   preventAcceptation,
+  totalOwned,
   onAccepted,
   onCanceled,
 }) => {
@@ -77,6 +80,11 @@ const Bid: VFC<Props> = ({
     isOpen: cancelOfferIsOpen,
     onOpen: cancelOfferOnOpen,
     onClose: cancelOfferOnClose,
+  } = useDisclosure()
+  const {
+    isOpen: confirmAcceptIsOpen,
+    onOpen: confirmAcceptOnOpen,
+    onClose: confirmAcceptOnClose,
   } = useDisclosure()
 
   const [
@@ -99,14 +107,13 @@ const Bid: VFC<Props> = ({
     return isSameAddress(account, bid.maker.address)
   }, [account, bid])
 
-  const acceptBid = async (e: SyntheticEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
+  const acceptBid = async (quantity?: BigNumberish) => {
     if (!canAccept) return
     if (activeAcceptOfferStep !== AcceptOfferStep.INITIAL) return
     try {
       acceptOfferOnOpen()
-      await acceptOffer(bid, bid.availableQuantity)
+      confirmAcceptOnClose()
+      await acceptOffer(bid, quantity || bid.availableQuantity)
       await onAccepted(bid.id)
     } finally {
       acceptOfferOnClose()
@@ -219,7 +226,11 @@ const Bid: VFC<Props> = ({
               <Button
                 w={{ base: 'full', md: 'auto' }}
                 isLoading={activeAcceptOfferStep !== AcceptOfferStep.INITIAL}
-                onClick={acceptBid}
+                onClick={() =>
+                  bid.availableQuantity.gt(1)
+                    ? confirmAcceptOnOpen()
+                    : acceptBid()
+                }
               >
                 <Text as="span" isTruncated>
                   {t('bid.detail.accept')}
@@ -258,6 +269,13 @@ const Bid: VFC<Props> = ({
         step={activeCancelOfferStep}
         blockExplorer={blockExplorer}
         transactionHash={cancelOfferHash}
+      />
+      <BidAcceptModal
+        isOpen={confirmAcceptIsOpen}
+        onClose={confirmAcceptOnClose}
+        acceptBid={acceptBid}
+        bid={bid}
+        totalOwned={totalOwned}
       />
     </>
   )
