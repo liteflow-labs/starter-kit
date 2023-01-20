@@ -26,7 +26,6 @@ import {
 } from '@chakra-ui/react'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { FaImages } from '@react-icons/all-files/fa/FaImages'
-import { parseBigNumber } from 'hooks/useParseBigNumber'
 import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
@@ -55,26 +54,24 @@ const BidAcceptModal: VFC<Props> = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
     setValue,
   } = useForm<{ quantity: string }>({
     defaultValues: {
       quantity: bid.availableQuantity.toString(),
     },
   })
-  const quantity = watch('quantity')
-  useEffect(
-    () => setValue('quantity', bid.availableQuantity.toString()),
-    [bid.availableQuantity, setValue],
+  const maxQuantity = useMemo(
+    () =>
+      totalOwned.lt(bid.availableQuantity)
+        ? totalOwned.toNumber()
+        : bid.availableQuantity.toNumber(),
+    [bid, totalOwned],
   )
 
-  const canAccept = useMemo(() => {
-    const q = parseBigNumber(quantity)
-    if (q.isZero()) return false
-    if (q.gt(bid.availableQuantity)) return false
-    if (q.gt(totalOwned)) return false
-    return true
-  }, [bid.availableQuantity, quantity, totalOwned])
+  useEffect(
+    () => setValue('quantity', maxQuantity.toString()),
+    [maxQuantity, setValue],
+  )
 
   const submitAcceptBid = handleSubmit(async (data) => acceptBid(data.quantity))
 
@@ -102,11 +99,7 @@ const BidAcceptModal: VFC<Props> = ({
                     <NumberInput
                       clampValueOnBlur={false}
                       min={1}
-                      max={
-                        totalOwned.lt(bid.availableQuantity)
-                          ? totalOwned.toNumber()
-                          : bid.availableQuantity.toNumber()
-                      }
+                      max={maxQuantity}
                       allowMouseWheel
                       w="full"
                       onChange={(x) => setValue('quantity', x)}
@@ -119,11 +112,10 @@ const BidAcceptModal: VFC<Props> = ({
                           validate: (value) => {
                             if (
                               parseInt(value, 10) < 1 ||
-                              parseInt(value, 10) >
-                                bid.availableQuantity.toNumber()
+                              parseInt(value, 10) > maxQuantity
                             ) {
                               return t('bid.modal.accept.validation.in-range', {
-                                max: bid.availableQuantity.toNumber(),
+                                max: maxQuantity,
                               })
                             }
                             if (!/^\d+$/.test(value)) {
@@ -177,12 +169,7 @@ const BidAcceptModal: VFC<Props> = ({
             </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button
-              isLoading={isSubmitting}
-              size="lg"
-              type="submit"
-              disabled={!canAccept}
-            >
+            <Button isLoading={isSubmitting} size="lg" type="submit">
               <Text as="span" isTruncated>
                 {t('bid.modal.accept.submit')}
               </Text>
