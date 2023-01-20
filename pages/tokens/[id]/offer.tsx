@@ -4,6 +4,8 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Grid,
+  GridItem,
   Heading,
   useRadioGroup,
   useToast,
@@ -247,50 +249,54 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
         {t('offers.form.title')}
       </Heading>
 
-      <Flex
+      <Grid
         mt={12}
-        direction={{ base: 'column', md: 'row' }}
-        align={{ base: 'center', md: 'flex-start' }}
-        gap={{ base: 12, md: 6 }}
+        mb={6}
+        gap={12}
+        templateColumns={{ base: '1fr', md: '1fr 2fr' }}
       >
-        <Box pointerEvents="none">
-          <TokenCard
-            asset={convertAsset(asset)}
-            creator={convertUser(asset.creator, asset.creator.address)}
-            sale={convertSale(asset.firstSale.nodes[0])}
-            auction={
-              asset.auctions.nodes[0]
-                ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-                : undefined
-            }
-            numberOfSales={asset.firstSale.totalCount}
-            hasMultiCurrency={
-              parseInt(
-                asset.currencySales.aggregates?.distinctCount?.currencyId,
-                10,
-              ) > 1
-            }
-          />
-        </Box>
-        <Flex direction="column" gap={8} grow={1} shrink={1} basis="0%">
-          <FormControl>
-            <FormLabel>{t('offers.form.options.label')}</FormLabel>
-            <FormHelperText mb={2}>
-              {sale === SaleType.FIXED_PRICE
-                ? t('offers.form.options.hints.fixed')
-                : t('offers.form.options.hints.auction')}
-            </FormHelperText>
-            <Flex mt={3} flexWrap="wrap" gap={4} {...getRootProps()}>
-              {saleOptions.map((choice, i) => {
-                const radio = getRadioProps({ value: choice.value })
-                return <Radio key={i} choice={choice} {...radio} />
-              })}
-            </Flex>
-          </FormControl>
+        <GridItem>
+          <Box pointerEvents="none">
+            <TokenCard
+              asset={convertAsset(asset)}
+              creator={convertUser(asset.creator, asset.creator.address)}
+              sale={convertSale(asset.firstSale.nodes[0])}
+              auction={
+                asset.auctions.nodes[0]
+                  ? convertAuctionWithBestBid(asset.auctions.nodes[0])
+                  : undefined
+              }
+              numberOfSales={asset.firstSale.totalCount}
+              hasMultiCurrency={
+                parseInt(
+                  asset.currencySales.aggregates?.distinctCount?.currencyId,
+                  10,
+                ) > 1
+              }
+            />
+          </Box>
+        </GridItem>
+        <GridItem>
+          <Flex direction="column" gap={8} grow={1} shrink={1} basis="0%">
+            <FormControl>
+              <FormLabel>{t('offers.form.options.label')}</FormLabel>
+              <FormHelperText mb={2}>
+                {sale === SaleType.FIXED_PRICE
+                  ? t('offers.form.options.hints.fixed')
+                  : t('offers.form.options.hints.auction')}
+              </FormHelperText>
+              <Flex mt={3} flexWrap="wrap" gap={4} {...getRootProps()}>
+                {saleOptions.map((choice, i) => {
+                  const radio = getRadioProps({ value: choice.value })
+                  return <Radio key={i} choice={choice} {...radio} />
+                })}
+              </Flex>
+            </FormControl>
 
-          {saleForm && saleForm}
-        </Flex>
-      </Flex>
+            {saleForm && saleForm}
+          </Flex>
+        </GridItem>
+      </Grid>
     </SmallLayout>
   )
 }

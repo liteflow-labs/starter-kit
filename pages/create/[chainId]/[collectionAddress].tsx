@@ -4,6 +4,8 @@ import {
   Box,
   Center,
   Flex,
+  Grid,
+  GridItem,
   Heading,
   Icon,
   Stack,
@@ -246,14 +248,13 @@ const CreatePage: NextPage<Props> = ({
           : t('asset.form.title.single')}
       </Heading>
 
-      <Flex
+      <Grid
         mt={12}
-        w="full"
-        gap={6}
-        direction={{ base: 'column', md: 'row' }}
-        align={{ base: 'center', md: 'flex-start' }}
+        mb={6}
+        gap={12}
+        templateColumns={{ base: '1fr', md: '1fr 2fr' }}
       >
-        <div>
+        <GridItem>
           <Flex as={Text} color="brand.black" mb={3} variant="button1">
             {t('asset.form.preview')}
           </Flex>
@@ -269,24 +270,26 @@ const CreatePage: NextPage<Props> = ({
               />
             )}
           </Box>
-        </div>
-        <TokenFormCreate
-          signer={signer}
-          collection={data.collection}
-          categories={categories}
-          uploadUrl={environment.UPLOAD_URL}
-          blockExplorer={blockExplorer}
-          onCreated={onCreated}
-          onInputChange={setFormData}
-          login={{
-            ...connectors,
-            networkName: environment.NETWORK_NAME,
-          }}
-          activateUnlockableContent={config?.hasUnlockableContent || false}
-          maxRoyalties={environment.MAX_ROYALTIES}
-          activateLazyMint={config?.hasLazyMint || false}
-        />
-      </Flex>
+        </GridItem>
+        <GridItem>
+          <TokenFormCreate
+            signer={signer}
+            collection={data.collection}
+            categories={categories}
+            uploadUrl={environment.UPLOAD_URL}
+            blockExplorer={blockExplorer}
+            onCreated={onCreated}
+            onInputChange={setFormData}
+            login={{
+              ...connectors,
+              networkName: environment.NETWORK_NAME,
+            }}
+            activateUnlockableContent={config?.hasUnlockableContent || false}
+            maxRoyalties={environment.MAX_ROYALTIES}
+            activateLazyMint={config?.hasLazyMint || false}
+          />
+        </GridItem>
+      </Grid>
     </Layout>
   )
 }
