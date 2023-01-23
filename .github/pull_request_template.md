@@ -1,6 +1,5 @@
 ### Project organization
 
-- Trello card: <!-- add link to trello card if any -->
 - Closes <!-- add link to issue that this PR fixes if any -->
 - Related <!-- add link to related issue if any -->
 - Dependant on <!-- add link to dependant PR if any -->
@@ -15,4 +14,5 @@
 
 ### Checklist
 
+- [ ] Base branch of the PR is `dev`
 - [ ] Update docs if necessary <!-- Docs in https://github.com/liteflow-labs/liteflow-js/tree/main/docs/pages/starter-kit -->
