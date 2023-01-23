@@ -48,6 +48,7 @@
     "react-device-detect": "^1.17.0",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.4.0",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.17.2",
     "ts-invariant": "^0.9.4",
     "universal-cookie": "^4.0.4"
@@ -61,6 +62,7 @@
     "@nft/api-graphql": "^1.0.0-beta.10",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^17.0.11",
+    "@types/react-helmet": "^6.1.6",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.31.1",
     "eslint": "^7.29.0",

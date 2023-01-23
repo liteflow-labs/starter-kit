@@ -6,7 +6,6 @@ import { Standard } from '../../graphql'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
 import type { Props as SaleDetailProps } from '../Sales/Detail'
-import SaleDetail from '../Sales/Detail'
 import TokenMedia from '../Token/Media'
 import type { Props as TokenAssetProps } from '../Token/Metadata'
 import TokenAsset from '../Token/Metadata'
@@ -92,7 +91,7 @@ const TokenHeader: VFC<Props> = ({
           />
         </Flex>
       </Box>
-      <Stack spacing={8} p={{ base: 6, md: 12 }}>
+      <Stack justify="center" spacing={8} p={{ base: 6, md: 12 }}>
         <Heading as="h1" variant="title" color="brand.black">
           {asset.name}
         </Heading>
@@ -103,7 +102,7 @@ const TokenHeader: VFC<Props> = ({
           standard={asset.collection.standard}
           totalSupply={asset.totalSupply}
         />
-        <SaleDetail
+        {/* <SaleDetail
           blockExplorer={blockExplorer}
           assetId={asset.id}
           currencies={currencies}
@@ -118,7 +117,7 @@ const TokenHeader: VFC<Props> = ({
           currentAccount={currentAccount}
           onOfferCanceled={onOfferCanceled}
           onAuctionAccepted={onAuctionAccepted}
-        />
+        /> */}
       </Stack>
     </SimpleGrid>
   )
