@@ -21,6 +21,24 @@ const email = <T extends keyof Webhooks>(
   type: T,
   data: Webhooks[T],
 ): SendMailOptions[] => {
+  if (type === 'BID_CREATED') {
+    const payload = data as Webhooks['BID_CREATED']
+    if (!payload.taker?.email) return []
+    return [
+      {
+        to: payload.taker.email,
+        subject: `New bid received for ${payload.quantity} edition${
+          BigNumber.from(payload.quantity).gt(1) ? 's' : ''
+        } of ${payload.asset.name} for ${formatUnits(
+          payload.unitPrice.amount,
+          payload.unitPrice.currency.decimals,
+        )} ${payload.unitPrice.currency.symbol}${
+          BigNumber.from(payload.quantity).gt(1) ? ' each' : ''
+        }`,
+        html: render(<BidCreated {...data} />),
+      },
+    ]
+  }
   throw new Error("Email doesn't exist")
 }
 
