@@ -6,6 +6,7 @@ import { Img } from '@react-email/img'
 import { Preview } from '@react-email/preview'
 import { Section } from '@react-email/section'
 import { PropsWithChildren } from 'react'
+import environment from '../../environment'
 import Link from './Link'
 import Text from './Text'
 
@@ -47,7 +48,11 @@ export default function Layout({ preview, children }: Props): JSX.Element {
         <Container style={container}>
           {children}
           <Hr style={hr} />
-          <Img src="/logo.svg" height="32" alt="Logo" />
+          <Img
+            src={`${environment.BASE_URL}/logo.svg`}
+            height="32"
+            alt="Logo"
+          />
           <Text style={footer}>
             <Link href="https://liteflow.com" target="_blank" secondary>
               Liteflow
