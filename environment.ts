@@ -7,7 +7,6 @@ type Environment = {
   BLOCKCHAIN_EXPLORER_NAME: string
   DRONE_COLLECTION_ADDRESS: string
   GRAPHQL_URL: string
-  FEATURED_TOKEN: string[]
   PAGINATION_LIMIT: number
   CHAIN_ID: number
   NETWORK_NAME: string
@@ -31,6 +30,9 @@ type Environment = {
     chainId: number
     address: string
   }[]
+  CONTENTFUL_ACCESS_TOKEN: string
+  CONTENTFUL_ENVIRONMENT_ID: string
+  CONTENTFUL_SPACE_ID: string
 }
 
 // magic api key
@@ -54,12 +56,6 @@ invariant(
 
 // graphql
 invariant(process.env.NEXT_PUBLIC_GRAPHQL_URL, 'Missing GraphQL URL')
-
-// featured token
-invariant(
-  process.env.NEXT_PUBLIC_FEATURED_TOKEN,
-  'Featured token is not defined',
-)
 
 // chain id
 invariant(process.env.NEXT_PUBLIC_CHAIN_ID, 'missing env NEXT_PUBLIC_CHAIN_ID')
@@ -105,8 +101,23 @@ invariant(
 )
 
 invariant(
-	process.env.NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS,
-	'env NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS is not defined'
+  process.env.NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS,
+  'env NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS is not defined',
+)
+
+invariant(
+  process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
+  'env NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN is not defined',
+)
+
+invariant(
+  process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID,
+  'env NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID is not defined',
+)
+
+invariant(
+  process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
+  'env NEXT_PUBLIC_CONTENTFUL_SPACE_ID is not defined',
 )
 
 const MINTABLE_COLLECTIONS = (
@@ -123,7 +134,6 @@ const environment: Environment = {
   BLOCKCHAIN_EXPLORER_NAME: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
   DRONE_COLLECTION_ADDRESS: process.env.NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS,
   GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
-  FEATURED_TOKEN: process.env.NEXT_PUBLIC_FEATURED_TOKEN.split(','),
   PAGINATION_LIMIT: 12,
   CHAIN_ID: CHAIN_ID,
   NETWORK_NAME: process.env.NEXT_PUBLIC_NETWORK_NAME,
@@ -139,6 +149,9 @@ const environment: Environment = {
   MAX_ROYALTIES: 30,
   ALLOW_TOP_UP: true,
   MINTABLE_COLLECTIONS,
+  CONTENTFUL_ACCESS_TOKEN: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
+  CONTENTFUL_ENVIRONMENT_ID: process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID,
+  CONTENTFUL_SPACE_ID: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
 }
 
 export default environment

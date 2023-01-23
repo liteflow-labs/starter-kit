@@ -10,6 +10,12 @@ import {
 } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import { useWeb3React } from '@web3-react/core'
+import CollectionCard from 'components/Collection/Card'
+import {
+  ContentfulHomePageDocument,
+  ContentfulHomePageQuery,
+  TokenCollection,
+} from 'contentful-graphql'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -46,6 +52,7 @@ import { wrapServerSideProps } from '../props'
 type Props = {
   now: string
   featuredTokens: string[]
+  featuredCollections: TokenCollection[]
   limit: number
   tokens: string[]
   currentAccount: string | null
@@ -53,7 +60,7 @@ type Props = {
 
 export const getServerSideProps = wrapServerSideProps<Props>(
   environment.GRAPHQL_URL,
-  async (ctx, client) => {
+  async (ctx, client, contentfulClient) => {
     const now = new Date()
     let tokensToRender
     if (environment.HOME_TOKENS) {
@@ -72,23 +79,34 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       tokensToRender = res.data.assets?.nodes.map((x) => x.id) || []
     }
 
+    const contentfulResponse =
+      await contentfulClient?.query<ContentfulHomePageQuery>({
+        query: ContentfulHomePageDocument,
+      })
+
     const { data, error } = await client.query<FetchHomePageQuery>({
       query: FetchHomePageDocument,
       variables: {
-        featuredIds: environment.FEATURED_TOKEN,
+        featuredIds: contentfulResponse?.data?.homePage?.featuredTokens,
         now,
         limit: environment.PAGINATION_LIMIT,
         assetIds: tokensToRender,
         address: ctx.user.address || '',
       },
     })
+
     if (error) throw error
     if (!data) throw new Error('data is falsy')
+
     return {
       props: {
         now: now.toJSON(),
         limit: environment.PAGINATION_LIMIT,
-        featuredTokens: environment.FEATURED_TOKEN,
+        featuredTokens: contentfulResponse?.data.homePage
+          ?.featuredTokens as string[],
+        featuredCollections:
+          (contentfulResponse?.data?.homePage?.featuredCollectionsCollection
+            ?.items as TokenCollection[]) || [],
         tokens: tokensToRender,
         currentAccount: ctx.user.address,
       },
@@ -99,6 +117,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 const HomePage: NextPage<Props> = ({
   currentAccount,
   featuredTokens,
+  featuredCollections,
   limit,
   now,
   tokens,
@@ -172,6 +191,7 @@ const HomePage: NextPage<Props> = ({
       )),
     [featured, blockExplorer, account, signer, reloadInfo, currencies],
   )
+
   return (
     <LargeLayout>
       {featuredAssets && featuredAssets.length > 0 && (
@@ -179,9 +199,35 @@ const HomePage: NextPage<Props> = ({
           {featuredAssets.length === 1 ? (
             featuredAssets
           ) : (
-            <Flex as={Slider}>{featuredAssets}</Flex>
+            <Flex as={Slider} showNavigation>
+              {featuredAssets}
+            </Flex>
           )}
         </header>
+      )}
+
+      {featuredCollections.length > 0 && (
+        <Stack spacing={6} mt={12}>
+          <Flex flexWrap="wrap" justify="space-between" gap={4}>
+            <Heading as="h2" variant="subtitle" color="brand.black">
+              {t('home.collections')}
+            </Heading>
+          </Flex>
+
+          <SimpleGrid spacing={6} columns={{ sm: 2, md: 3 }}>
+            {featuredCollections
+              .filter((c) => c)
+              .map((collection, i) => (
+                <Flex key={i} justify="center">
+                  <CollectionCard
+                    image={collection.featureImage?.url || ''}
+                    title={collection.name || ''}
+                    collectionAddress={collection.collectionAddress || ''}
+                  />
+                </Flex>
+              ))}
+          </SimpleGrid>
+        </Stack>
       )}
 
       {auctions.length > 0 && (

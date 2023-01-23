@@ -5,6 +5,7 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import environment from 'environment'
 import decode, { JwtPayload } from 'jwt-decode'
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
@@ -70,17 +71,35 @@ function getClient(
   })
 }
 
+function getContentfulClient(): ApolloClient<NormalizedCacheObject> {
+  const httpLink = createHttpLink({
+    uri: `https://graphql.contentful.com/content/v1/spaces/${environment.CONTENTFUL_SPACE_ID}/environments/${environment.CONTENTFUL_ENVIRONMENT_ID}`,
+    headers: {
+      authorization: `Bearer ${environment.CONTENTFUL_ACCESS_TOKEN}`,
+      'Content-Language': 'en-us',
+    },
+  })
+
+  return new ApolloClient({
+    link: httpLink,
+    cache: new InMemoryCache(),
+    ssrMode: true,
+  })
+}
+
 export function wrapServerSideProps<T extends { [key: string]: unknown }>(
   url: string,
   handler: (
     context: GetServerSidePropsContextWithUser,
     client: ApolloClient<NormalizedCacheObject>,
+    contentfulClient?: ApolloClient<NormalizedCacheObject>,
   ) => Promise<GetServerSidePropsResult<T>>,
 ): (
   context: GetServerSidePropsContext,
 ) => Promise<GetServerSidePropsResult<T>> {
   return async (context) => {
     const client = getClient(url, true, context.req.cookies)
+    const contentfulClient = getContentfulClient()
     const jwt = context.req.cookies[COOKIE_JWT_TOKEN]
     const address = jwt
       ? decode<JwtPayload & { address: string }>(jwt).address
@@ -92,7 +111,7 @@ export function wrapServerSideProps<T extends { [key: string]: unknown }>(
         token: jwt || null,
       },
     }
-    const result = await handler(contextWithUser, client)
+    const result = await handler(contextWithUser, client, contentfulClient)
     return wrapServerSidePropsResult<T>(contextWithUser, client, result)
   }
 }

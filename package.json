@@ -11,7 +11,7 @@
     "lint": "next lint && prettier \"**/*.{js,ts,tsx,json,md}\" --check",
     "analyze": "ANALYZE=true npm run build",
     "start": "next start",
-    "graphql-codegen": "graphql-codegen --overwrite"
+    "graphql-codegen": "graphql-codegen --overwrite --require dotenv/config --config codegen.ts dotenv_config_path=.env.local"
   },
   "dependencies": {
     "@apollo/client": "^3.5.9",
