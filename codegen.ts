@@ -11,8 +11,6 @@ const contentfulAccessToken =
 const contentfulSchema =
   `https://graphql.contentful.com/content/v1/spaces/${contentfulSpaceId}/environments/${contentfulEnvironment}` as string
 
-console.log(contentfulAccessToken)
-
 const config: CodegenConfig = {
   generates: {
     './graphql.ts': {
@@ -60,30 +58,3 @@ const config: CodegenConfig = {
 }
 
 export default config
-
-// generates:
-//   graphql.ts:
-//     config:
-//       avoidOptionals: true
-//       enumsAsTypes: true
-//       scalars:
-//         URI: 'URI'
-//         UUID: 'UUID'
-//         Datetime: 'Date'
-//         Cursor: 'string'
-//         JSON: '{ [key: string]: any }'
-//         Uint256: 'string'
-//         Address: 'string'
-//         TransactionHash: 'string'
-//         BigFloat: 'string'
-//   content-graphql.ts:
-//     schema:
-//       - 'https://graphql.contentful.com/content/v1/spaces/${NEXT_PUBLIC_CONTENTFUL_SPACE_ID}/environments/${NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID}':
-//           headers:
-//             Authorization: 'Bearer ${NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN}'
-//     documents:
-//       - './content/**/*.gql'
-//     plugins:
-//       - 'typescript'
-//       - 'typescript-operations'
-//       - 'typescript-react-apollo'

@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "clean": "rimraf .next",
-    "predev": "npm run graphql-codegen",
+    "predev": "DOTENV_CONFIG_PATH=.env.local npm run graphql-codegen",
     "prebuild": "npm run graphql-codegen",
     "dev": "next dev",
     "build": "next build",
     "lint": "next lint && prettier \"**/*.{js,ts,tsx,json,md}\" --check",
     "analyze": "ANALYZE=true npm run build",
     "start": "next start",
-    "graphql-codegen": "graphql-codegen --overwrite --require dotenv/config --config codegen.ts dotenv_config_path=.env.local"
+    "graphql-codegen": "graphql-codegen --overwrite --require dotenv/config"
   },
   "dependencies": {
     "@apollo/client": "^3.5.9",
