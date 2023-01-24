@@ -145,7 +145,10 @@ function Layout({
   return (
     <ChatWindow>
       <Helmet>
-        <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+        <script
+          async
+          src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"
+        ></script>
       </Helmet>
 
       <Box mt={6}>
@@ -220,7 +223,10 @@ function Layout({
         {children}
 
         <Flex justifyContent={'center'}>
-          <script src="https://widgets.coingecko.com/coingecko-coin-price-chart-widget.js"></script>
+          <script
+            async
+            src="https://widgets.coingecko.com/coingecko-coin-price-chart-widget.js"
+          ></script>
           {React.createElement('coingecko-coin-price-chart-widget', {
             'coin-id': 'defy',
             currency: 'usd',
