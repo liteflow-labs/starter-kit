@@ -188,7 +188,7 @@ function Layout({
           maxW="7xl"
           alignItems="center"
         >
-          <Flex overflow="hidden">
+          <Flex maxW="100%" overflow="hidden">
             {React.createElement('coingecko-coin-price-marquee-widget', {
               'coin-ids': 'defy,ethereum',
               currency: 'usd',
