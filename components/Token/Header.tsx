@@ -1,12 +1,11 @@
 import { Box, Flex, Heading, SimpleGrid, Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useMemo, VFC } from 'react'
+import { VFC } from 'react'
 import { Standard } from '../../graphql'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
 import type { Props as SaleDetailProps } from '../Sales/Detail'
-import SaleDetail from '../Sales/Detail'
 import TokenMedia from '../Token/Media'
 import type { Props as TokenAssetProps } from '../Token/Metadata'
 import TokenAsset from '../Token/Metadata'
@@ -40,30 +39,30 @@ export type Props = {
 }
 
 const TokenHeader: VFC<Props> = ({
-  blockExplorer,
+  // blockExplorer,
   asset,
-  currencies,
+  // currencies,
   creator,
   owners,
-  auction,
-  bestBid,
-  sales,
-  isHomepage,
-  signer,
-  currentAccount,
-  onOfferCanceled,
-  onAuctionAccepted,
+  // auction,
+  // bestBid,
+  // sales,
+  // isHomepage,
+  // signer,
+  // currentAccount,
+  // onOfferCanceled,
+  // onAuctionAccepted,
 }) => {
-  const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
+  // const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
 
-  const ownAllSupply = useMemo(
-    () => asset.owned.gte(asset.totalSupply),
-    [asset],
-  )
-  const isSingle = useMemo(
-    () => asset.collection.standard === 'ERC721',
-    [asset],
-  )
+  // const ownAllSupply = useMemo(
+  //   () => asset.owned.gte(asset.totalSupply),
+  //   [asset],
+  // )
+  // const isSingle = useMemo(
+  //   () => asset.collection.standard === 'ERC721',
+  //   [asset],
+  // )
 
   return (
     <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>
@@ -92,7 +91,7 @@ const TokenHeader: VFC<Props> = ({
           />
         </Flex>
       </Box>
-      <Stack spacing={8} p={{ base: 6, md: 12 }}>
+      <Stack justify="center" spacing={8} p={{ base: 6, md: 12 }}>
         <Heading as="h1" variant="title" color="brand.black">
           {asset.name}
         </Heading>
@@ -103,7 +102,7 @@ const TokenHeader: VFC<Props> = ({
           standard={asset.collection.standard}
           totalSupply={asset.totalSupply}
         />
-        <SaleDetail
+        {/* <SaleDetail
           blockExplorer={blockExplorer}
           assetId={asset.id}
           currencies={currencies}
@@ -118,7 +117,7 @@ const TokenHeader: VFC<Props> = ({
           currentAccount={currentAccount}
           onOfferCanceled={onOfferCanceled}
           onAuctionAccepted={onAuctionAccepted}
-        />
+        /> */}
       </Stack>
     </SimpleGrid>
   )

@@ -4,8 +4,9 @@
   },
   "home": {
     "explore": "すべてのコレクションを見る",
+    "collections": "コレクション",
     "auctions": "オークション",
-    "featured": "注目のコレクション"
+    "featured": "注目のグッズ"
   },
   "explore": {
     "title": "コレクションを探す",

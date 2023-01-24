@@ -1,0 +1,16 @@
+query ContentfulHomePage {
+  homePage(id: "79V23p1EvX3emMjQCVJ75Z") {
+    name
+    featuredTokens
+    featuredCollectionsCollection {
+      items {
+        name
+        collectionAddress
+        featureImage {
+          title
+          url
+        }
+      }
+    }
+  }
+}

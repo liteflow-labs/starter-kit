@@ -6,7 +6,7 @@ import {
 } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
-import { Box, Button, ChakraProvider, Flex, Link, Spacer } from '@chakra-ui/react'
+import { Box, Button, ChakraProvider, Flex, Link } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { Web3Provider } from '@ethersproject/providers'
 import { LiteflowProvider, useAuthenticate } from '@nft/hooks'
@@ -26,6 +26,7 @@ import React, {
   useMemo,
 } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
+import { Helmet } from 'react-helmet'
 import ChatWindow from '../components/ChatWindow'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
@@ -54,8 +55,8 @@ function web3Provider(provider: any): Web3Provider {
     typeof provider.chainId === 'number'
       ? provider.chainId
       : typeof provider.chainId === 'string'
-        ? parseInt(provider.chainId)
-        : 'any',
+      ? parseInt(provider.chainId)
+      : 'any',
   )
 }
 
@@ -82,7 +83,7 @@ function Layout({
         about: 'About',
         bridge: 'Token Bridge',
         twitter: 'Twitter',
-        discord: 'Discord'
+        discord: 'Discord',
       },
       ja: {
         explore: '検索',
@@ -121,7 +122,7 @@ function Layout({
         about: 'About',
         bridge: 'Token Bridge',
         twitter: 'Twitter',
-        discord: 'Discord'
+        discord: 'Discord',
       },
     }
     const locale = (router.locale || 'en') as keyof typeof texts
@@ -133,14 +134,21 @@ function Layout({
       { href: 'https://bridge.defydisrupt.io/', label: texts[locale].bridge },
       { href: 'https://defydisrupt.io/terms/', label: texts[locale].terms },
       { href: 'https://defydisrupt.io/privacy/', label: texts[locale].privacy },
-      { href: 'https://twitter.com/defydisrupt/', label: texts[locale].twitter },
+      {
+        href: 'https://twitter.com/defydisrupt/',
+        label: texts[locale].twitter,
+      },
       { href: 'https://discord.gg/defydisrupt', label: texts[locale].discord },
     ]
   }, [router.locale, userProfileLink])
 
   return (
     <ChatWindow>
-      <Box mt={12}>
+      <Helmet>
+        <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
+      </Helmet>
+
+      <Box mt={6}>
         <Navbar
           allowTopUp={true}
           router={{
@@ -167,32 +175,60 @@ function Layout({
           signer={signer}
           disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
         />
-        <Flex mx="auto" h={16} gap={6} px={{ base: 6, lg: 8 }} maxW="7xl" justifyContent={'end'}>
-          <Flex align="center" style={{ width: '100%' }}>
-            <script src="https://widgets.coingecko.com/coingecko-coin-price-marquee-widget.js"></script>
-            {React.createElement("coingecko-coin-price-marquee-widget", { 'coin-ids': 'defy,ethereum', 'currency': 'usd', locale: 'en', 'background-color': '#ffffff', style: { width: '100%' } })}
+
+        <Flex
+          mx="auto"
+          mt={4}
+          gap={{ base: 3, lg: 6 }}
+          direction={{ base: 'column', md: 'row' }}
+          px={{ base: 6, lg: 8 }}
+          maxW="7xl"
+          alignItems="center"
+        >
+          <Flex overflow="hidden">
+            {React.createElement('coingecko-coin-price-marquee-widget', {
+              'coin-ids': 'defy,ethereum',
+              currency: 'usd',
+              locale: 'en',
+              'background-color': '#ffffff',
+              style: { width: '100%' },
+            })}
+          </Flex>
+
+          <Flex
+            align="center"
+            flexWrap={{ base: 'wrap', md: 'nowrap' }}
+            gap={{ base: 3, lg: 6 }}
+            justifyContent="flex-end"
+          >
+            <Link
+              href="https://info.quickswap.exchange/#/token/0xbf9f916bbda29a7f990f5f55c7607d94d7c3a60b"
+              isExternal
+            >
+              <Button>Buy $DEFY on Quickswap</Button>
+            </Link>
+
+            <Link
+              href="https://www.bybit.com/en-US/trade/spot/DEFY/USDT"
+              isExternal
+            >
+              <Button>Buy $DEFY on ByBit</Button>
+            </Link>
           </Flex>
         </Flex>
-        <Flex mx="auto" h={16} gap={6} px={{ base: 6, lg: 8 }} maxW="7xl" justifyContent={'end'}>
-          <Flex align="center">
-            <Spacer width={1} />
-            <Link href='https://info.quickswap.exchange/#/token/0xbf9f916bbda29a7f990f5f55c7607d94d7c3a60b' isExternal>
-              <Button>
-                Buy $DEFY on Quickswap
-              </Button>
-            </Link>
-            <Spacer width={1} />
-            <Link href='https://www.bybit.com/en-US/trade/spot/DEFY/USDT' isExternal>
-              <Button>
-                Buy $DEFY on ByBit
-              </Button>
-            </Link>
-          </Flex>
-        </Flex>
+
         {children}
-        <Flex justifyContent={"center"}>
+
+        <Flex justifyContent={'center'}>
           <script src="https://widgets.coingecko.com/coingecko-coin-price-chart-widget.js"></script>
-          {React.createElement("coingecko-coin-price-chart-widget", { 'coin-id': 'defy', 'currency': 'usd', 'height': '300', width: '400', locale: 'en', 'background-color': '#ffffff' })}
+          {React.createElement('coingecko-coin-price-chart-widget', {
+            'coin-id': 'defy',
+            currency: 'usd',
+            height: '300',
+            width: '400',
+            locale: 'en',
+            'background-color': '#ffffff',
+          })}
         </Flex>
         <Footer name="DEFY Labs." links={footerLinks} />
       </Box>
@@ -243,8 +279,8 @@ function AccountProvider(
         uri: environment.GRAPHQL_URL,
         headers: cookies[COOKIE_JWT_TOKEN]
           ? {
-            authorization: 'Bearer ' + cookies[COOKIE_JWT_TOKEN],
-          }
+              authorization: 'Bearer ' + cookies[COOKIE_JWT_TOKEN],
+            }
           : {},
         cache: new InMemoryCache({
           typePolicies: {

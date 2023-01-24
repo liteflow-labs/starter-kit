@@ -32,4 +32,6 @@ yarn-error.log*
 # vercel
 .vercel
 
+# GraphQL
 graphql.ts
+contentful-graphql.ts
