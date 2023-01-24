@@ -39,30 +39,30 @@ export type Props = {
 }
 
 const TokenHeader: VFC<Props> = ({
-  blockExplorer,
+  // blockExplorer,
   asset,
-  currencies,
+  // currencies,
   creator,
   owners,
-  auction,
-  bestBid,
-  sales,
-  isHomepage,
-  signer,
-  currentAccount,
-  onOfferCanceled,
-  onAuctionAccepted,
+  // auction,
+  // bestBid,
+  // sales,
+  // isHomepage,
+  // signer,
+  // currentAccount,
+  // onOfferCanceled,
+  // onAuctionAccepted,
 }) => {
-  const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
+  // const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
 
-  const ownAllSupply = useMemo(
-    () => asset.owned.gte(asset.totalSupply),
-    [asset],
-  )
-  const isSingle = useMemo(
-    () => asset.collection.standard === 'ERC721',
-    [asset],
-  )
+  // const ownAllSupply = useMemo(
+  //   () => asset.owned.gte(asset.totalSupply),
+  //   [asset],
+  // )
+  // const isSingle = useMemo(
+  //   () => asset.collection.standard === 'ERC721',
+  //   [asset],
+  // )
 
   return (
     <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>
