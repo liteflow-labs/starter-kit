@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, SimpleGrid, Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useMemo, VFC } from 'react'
+import { VFC } from 'react'
 import { Standard } from '../../graphql'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
