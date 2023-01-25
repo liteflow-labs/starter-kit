@@ -29,11 +29,13 @@ export default async function notification(
   const liteflowSecret = process.env.LITEFLOW_WEBHOOK_SECRET
   invariant(liteflowSecret, 'LITEFLOW_WEBHOOK_SECRET is required')
 
-  const { data, type } = await parseAndVerifyRequest(req, liteflowSecret)
+  const { data, type } = await parseAndVerifyRequest<
+    'BID_CREATED' | 'AUCTION_BID_CREATED'
+  >(req, liteflowSecret)
   const emailTemplates = emails.get(type as keyof Webhooks)
   if (!emailTemplates) throw new Error("Email doesn't exist")
   const emailsToSend = emailTemplates
-    .map((template) => template(data as Webhooks[keyof Webhooks]))
+    .map((template) => template(data))
     .filter(Boolean)
 
   await Promise.all(
