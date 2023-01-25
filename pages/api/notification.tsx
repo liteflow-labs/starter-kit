@@ -1,7 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { formatUnits } from '@ethersproject/units'
 import { parseAndVerifyRequest, Webhooks } from '@nft/webhook'
-import { render } from '@react-email/render'
 import { NextApiRequest, NextApiResponse } from 'next'
 import nodemailer, { SendMailOptions } from 'nodemailer'
 import invariant from 'ts-invariant'
@@ -22,38 +19,12 @@ const email = <T extends keyof Webhooks>(
   data: Webhooks[T],
 ): SendMailOptions[] => {
   if (type === 'BID_CREATED') {
-    const payload = data as Webhooks['BID_CREATED']
-    if (!payload.taker?.email) return []
-    return [
-      {
-        to: payload.taker.email,
-        subject: `New bid received for ${payload.quantity} edition${
-          BigNumber.from(payload.quantity).gt(1) ? 's' : ''
-        } of ${payload.asset.name} for ${formatUnits(
-          payload.unitPrice.amount,
-          payload.unitPrice.currency.decimals,
-        )} ${payload.unitPrice.currency.symbol}${
-          BigNumber.from(payload.quantity).gt(1) ? ' each' : ''
-        }`,
-        html: render(<BidCreated {...data} />),
-      },
-    ]
+    const email = BidCreated(data as Webhooks['BID_CREATED'])
+    return email ? [email] : []
   }
   if (type === 'AUCTION_BID_CREATED') {
-    const payload = data as Webhooks['AUCTION_BID_CREATED']
-    if (!payload.taker?.email) return []
-    return [
-      {
-        to: payload.taker.email,
-        subject: `New bid of ${formatUnits(
-          BigNumber.from(payload.unitPrice.amount).mul(payload.quantity),
-          payload.unitPrice.currency.decimals,
-        )} ${payload.unitPrice.currency.symbol} received for your auction on ${
-          payload.asset.name
-        }`,
-        html: render(<AuctionBidCreated {...data} />),
-      },
-    ]
+    const email = AuctionBidCreated(data as Webhooks['AUCTION_BID_CREATED'])
+    return email ? [email] : []
   }
   throw new Error("Email doesn't exist")
 }
@@ -69,8 +40,8 @@ export default async function notification(
   const liteflowSecret = process.env.LITEFLOW_WEBHOOK_SECRET
   invariant(liteflowSecret, 'LITEFLOW_WEBHOOK_SECRET is required')
 
-  const data = await parseAndVerifyRequest(req, liteflowSecret)
-  const emails = email(data.type as keyof Webhooks, data.payload)
+  const { data, type } = await parseAndVerifyRequest(req, liteflowSecret)
+  const emails = email(type as keyof Webhooks, data as Webhooks[keyof Webhooks])
 
   await Promise.all(
     emails.map((email) =>
