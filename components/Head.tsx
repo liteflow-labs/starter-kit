@@ -16,7 +16,7 @@ const Head: FC<PropsWithChildren<Props>> = ({
 }) => {
   return (
     <NextHead>
-      <title>{title} - Acme NFT Marketplace</title>
+      <title>{title} - Cooltopia NFT Marketplace</title>
       <meta property="og:title" content={title} />
       <meta name="twitter:title" content={title} />
       {description && (

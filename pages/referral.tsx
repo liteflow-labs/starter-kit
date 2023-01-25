@@ -30,7 +30,7 @@ const LoginPage: NextPage = () => {
     secondary: environment.REFERRAL_PERCENTAGE.secondary,
   }
   const loginUrl = environment.BASE_URL + '/login'
-  const platformName = 'Demo'
+  const platformName = 'Cooltopia'
   return (
     <SmallLayout>
       <Head title="Referral" />
