@@ -66,8 +66,8 @@ export default async function notification(
     res.status(200).end()
     return
   }
-  const liteflowSecret = process.env.LITEFLOW_SECRET
-  invariant(liteflowSecret, 'LITEFLOW_SECRET is required')
+  const liteflowSecret = process.env.LITEFLOW_WEBHOOK_SECRET
+  invariant(liteflowSecret, 'LITEFLOW_WEBHOOK_SECRET is required')
 
   const data = await parseAndVerifyRequest(req, liteflowSecret)
   const emails = email(data.type as keyof Webhooks, data.payload)
