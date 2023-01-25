@@ -6,10 +6,10 @@ import AuctionBidCreated from '../../emails/AuctionBidCreated'
 import BidCreated from '../../emails/BidCreated'
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.sendgrid.net',
-  port: 587,
+  host: process.env.EMAIL_HOST,
+  port: Number(process.env.EMAIL_PORT),
   auth: {
-    user: 'apikey',
+    user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD,
   },
 })
@@ -26,10 +26,6 @@ export default async function notification(
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<void> {
-  if (!process.env.EMAIL_PASSWORD) {
-    res.status(200).end()
-    return
-  }
   const liteflowSecret = process.env.LITEFLOW_WEBHOOK_SECRET
   invariant(liteflowSecret, 'LITEFLOW_WEBHOOK_SECRET is required')
 
