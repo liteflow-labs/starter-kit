@@ -14,20 +14,13 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-const email = <T extends keyof Webhooks>(
-  type: T,
-  data: Webhooks[T],
-): SendMailOptions[] => {
-  if (type === 'BID_CREATED') {
-    const email = BidCreated(data as Webhooks['BID_CREATED'])
-    return email ? [email] : []
-  }
-  if (type === 'AUCTION_BID_CREATED') {
-    const email = AuctionBidCreated(data as Webhooks['AUCTION_BID_CREATED'])
-    return email ? [email] : []
-  }
-  throw new Error("Email doesn't exist")
-}
+const emails = new Map<
+  keyof Webhooks,
+  ((data: Webhooks[keyof Webhooks]) => SendMailOptions | null)[]
+>([
+  ['BID_CREATED', [BidCreated]],
+  ['AUCTION_BID_CREATED', [AuctionBidCreated]],
+])
 
 export default async function notification(
   req: NextApiRequest,
@@ -41,10 +34,14 @@ export default async function notification(
   invariant(liteflowSecret, 'LITEFLOW_WEBHOOK_SECRET is required')
 
   const { data, type } = await parseAndVerifyRequest(req, liteflowSecret)
-  const emails = email(type as keyof Webhooks, data as Webhooks[keyof Webhooks])
+  const emailTemplates = emails.get(type as keyof Webhooks)
+  if (!emailTemplates) throw new Error("Email doesn't exist")
+  const emailsToSend = emailTemplates
+    .map((template) => template(data as Webhooks[keyof Webhooks]))
+    .filter(Boolean)
 
   await Promise.all(
-    emails.map((email) =>
+    emailsToSend.map((email) =>
       transporter.sendMail({
         ...email,
         from: process.env.EMAIL_FROM,
