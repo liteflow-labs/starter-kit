@@ -152,6 +152,11 @@ function Layout({
           }}
           signer={signer}
           disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
+          logo={{
+            path: '/coolcats-logo.png',
+            width: 140,
+            height: 53,
+          }}
         />
         {children}
         <Footer name="Cooltopia" links={footerLinks} />
