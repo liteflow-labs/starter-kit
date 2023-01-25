@@ -112,7 +112,9 @@ function Layout({
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
       { href: '/explore', label: texts[locale].explore },
-      { href: '/create', label: texts[locale].create },
+      environment.MINTABLE_COLLECTIONS.length > 0
+        ? { href: '/create', label: texts[locale].create }
+        : undefined,
       { href: userProfileLink, label: texts[locale].profile },
       { href: '/referral', label: texts[locale].referral },
       { href: '/', label: texts[locale].support },
@@ -120,7 +122,7 @@ function Layout({
       { href: '/', label: texts[locale].privacy },
       { href: 'https://twitter.com', label: 'Twitter' },
       { href: 'https://discord.com', label: 'Discord' },
-    ]
+    ].filter(Boolean)
   }, [router.locale, userProfileLink])
 
   return (
