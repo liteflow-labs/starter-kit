@@ -154,8 +154,8 @@ function Layout({
           disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
           logo={{
             path: '/coolcats-logo.png',
-            width: 140,
-            height: 53,
+            width: 84,
+            height: 32,
           }}
         />
         {children}
