@@ -163,6 +163,10 @@ const HomePage: NextPage<Props> = ({
           sales={asset.sales.nodes.map(convertSaleFull)}
           creator={convertUser(asset.creator, asset.creator.address)}
           owners={asset.ownerships.nodes.map(convertOwnership)}
+          ownerCount={parseInt(
+            asset.ownerships.aggregates?.sum?.quantity || '0',
+            10,
+          )}
           isHomepage={true}
           signer={signer}
           currentAccount={account?.toLowerCase()}

@@ -17,21 +17,26 @@ import OwnersModalActivator from './ModalActivator'
 import OwnersModalItem from './ModalItem'
 
 export type Props = {
-  owners: {
+  ownersPreview: {
     address: string
     image: string | null | undefined
     name: string | null | undefined
     verified: boolean
     quantity: string
   }[]
+  ownerCount: number
 }
 
-const OwnersModal: VFC<Props> = ({ owners }) => {
+const OwnersModal: VFC<Props> = ({ assetId, ownersPreview, ownerCount }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
-      <OwnersModalActivator owners={owners} onClick={onOpen} />
+      <OwnersModalActivator
+        owners={ownersPreview}
+        ownerCount={ownerCount}
+        onClick={onOpen}
+      />
       <Modal
         isOpen={isOpen}
         onClose={onClose}

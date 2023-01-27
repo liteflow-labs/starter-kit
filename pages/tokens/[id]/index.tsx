@@ -432,6 +432,10 @@ const DetailPage: NextPage<Props> = ({
           <TokenMetadata
             creator={creator}
             owners={owners}
+            ownerCount={parseInt(
+              asset.ownerships.aggregates?.sum?.quantity || '0',
+              10,
+            )}
             saleSupply={BigNumber.from(
               asset.sales.aggregates?.sum?.availableQuantity || 0,
             )}
