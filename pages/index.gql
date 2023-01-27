@@ -46,6 +46,7 @@ fragment HomeAssetDetail on Asset {
       ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
       OWNER_ADDRESS_ASC
     ]
+    first: 5
   ) {
     nodes {
       ownerAddress
