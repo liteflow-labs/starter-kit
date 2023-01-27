@@ -112,6 +112,7 @@ const TokenHeader: VFC<Props> = ({
           </Heading>
         </Stack>
         <TokenMetadata
+          assetId={asset.id}
           creator={creator}
           owners={owners}
           ownerCount={ownerCount}

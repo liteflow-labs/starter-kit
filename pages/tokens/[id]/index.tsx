@@ -430,6 +430,7 @@ const DetailPage: NextPage<Props> = ({
           </Flex>
 
           <TokenMetadata
+            assetId={asset.id}
             creator={creator}
             owners={owners}
             ownerCount={parseInt(

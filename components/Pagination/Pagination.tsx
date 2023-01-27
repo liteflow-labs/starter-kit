@@ -20,6 +20,7 @@ export type IProp = {
     }) => string | JSX.Element
     pages: (context: { total: number }) => string | JSX.Element
   }
+  simple?: boolean
 }
 
 export default function Pagination({
@@ -30,6 +31,7 @@ export default function Pagination({
   limits,
   limit,
   result,
+  simple,
   ...props
 }: IProp): JSX.Element {
   const goTo = (newPage: number) => {
@@ -49,7 +51,7 @@ export default function Pagination({
   if (!total) return <></>
   return (
     <Flex
-      direction={{ base: 'column', md: 'row' }}
+      direction={{ base: simple ? 'row' : 'column', md: 'row' }}
       align="center"
       justify={{ base: 'center', sm: 'space-between' }}
       w="full"
@@ -62,18 +64,20 @@ export default function Pagination({
         w={{ base: 'full', sm: 'auto' }}
         direction={{ base: 'column', sm: 'row' }}
       >
-        <Select
-          selectWidth={24}
-          label={result.label}
-          name="limit"
-          onChange={(e: any) => onLimitChange(e)}
-          choices={limits.map((x) => ({
-            value: x.toString(),
-            label: x.toString(),
-          }))}
-          value={limit.toString()}
-          inlineLabel
-        />
+        {!simple && (
+          <Select
+            selectWidth={24}
+            label={result.label}
+            name="limit"
+            onChange={(e: any) => onLimitChange(e)}
+            choices={limits.map((x) => ({
+              value: x.toString(),
+              label: x.toString(),
+            }))}
+            value={limit.toString()}
+            inlineLabel
+          />
+        )}
         <Text
           as="span"
           variant="text-sm"
@@ -95,23 +99,25 @@ export default function Pagination({
         gap={6}
         aria-label="Pagination"
       >
-        <Flex align="center" gap={3}>
-          <Select
-            selectWidth={24}
-            name="page"
-            onChange={(e: any) => goTo(parseInt(e.toString(), 10))}
-            choices={Array.from({ length: totalPage }, (_, i) => i + 1).map(
-              (x) => ({
-                value: x.toString(),
-                label: x.toString(),
-              }),
-            )}
-            value={page.toString()}
-          />
-          <Text as="p" variant="text-sm" color="gray.500" w="full">
-            {result.pages({ total: totalPage })}
-          </Text>
-        </Flex>
+        {!simple && (
+          <Flex align="center" gap={3}>
+            <Select
+              selectWidth={24}
+              name="page"
+              onChange={(e: any) => goTo(parseInt(e.toString(), 10))}
+              choices={Array.from({ length: totalPage }, (_, i) => i + 1).map(
+                (x) => ({
+                  value: x.toString(),
+                  label: x.toString(),
+                }),
+              )}
+              value={page.toString()}
+            />
+            <Text as="p" variant="text-sm" color="gray.500" w="full">
+              {result.pages({ total: totalPage })}
+            </Text>
+          </Flex>
+        )}
         <Flex align="center" gap={4}>
           <IconButton
             variant="outline"

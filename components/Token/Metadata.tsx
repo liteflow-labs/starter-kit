@@ -9,6 +9,7 @@ import OwnersModal from './Owners/Modal'
 import Supply from './Supply'
 
 export type Props = {
+  assetId: string
   standard: Standard
   creator:
     | {
@@ -31,6 +32,7 @@ export type Props = {
 }
 
 const TokenMetadata: VFC<Props> = ({
+  assetId,
   standard,
   creator,
   owners,
@@ -73,6 +75,7 @@ const TokenMetadata: VFC<Props> = ({
             {t('token.metadata.owners')}
           </Heading>
           <OwnersModal
+            assetId={assetId}
             ownersPreview={owners}
             ownerCount={ownerCount}
           />
