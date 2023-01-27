@@ -32,6 +32,24 @@ export const theme = extendTheme({
         colorScheme: 'brand',
       },
     },
+    Accordion: {
+      baseStyle: {
+        button: {
+          px: 0,
+          py: 4,
+          _hover: {
+            bg: 'transparent',
+          },
+          _focus: {
+            boxShadow: 'none',
+          },
+        },
+        panel: {
+          px: 0,
+          pb: 4,
+        },
+      },
+    },
     Link: {
       baseStyle: {
         textDecoration: 'none',

@@ -43,8 +43,9 @@
         "offers": {
           "label": "Status",
           "values": {
-            "fixed": "Fixed price",
-            "auction": "Auction"
+            "all": "All",
+            "fixed": "Buy now",
+            "auction": "Timed auction"
           }
         },
         "categories": {

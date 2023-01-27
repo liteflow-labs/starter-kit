@@ -1,12 +1,3 @@
-query FetchCurrencyDecimals {
-  currencies(orderBy: CREATED_AT_ASC) {
-    nodes {
-      id
-      decimals
-    }
-  }
-}
-
 query FetchAllERC721And1155(
   $now: Datetime!
   $address: Address
@@ -123,21 +114,6 @@ query FetchAllERC721And1155(
           status
         }
       }
-    }
-  }
-  currencies(orderBy: CREATED_AT_ASC) {
-    nodes {
-      image
-      id
-      decimals
-      symbol
-    }
-  }
-  collections(orderBy: NAME_ASC) {
-    nodes {
-      chainId
-      address
-      name
     }
   }
 }

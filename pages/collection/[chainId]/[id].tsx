@@ -1,40 +1,61 @@
-import { Box, chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
-import { useWeb3React } from '@web3-react/core'
-import CollectionHeader from 'components/Collection/CollectionHeader'
-import Empty from 'components/Empty/Empty'
-import Head from 'components/Head'
-import Pagination from 'components/Pagination/Pagination'
-import Select from 'components/Select/Select'
-import TokenCard from 'components/Token/Card'
 import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertCollectionFull,
-  convertSale,
-  convertUser,
-} from 'convert'
-import environment from 'environment'
-import useEagerConnect from 'hooks/useEagerConnect'
-import useExecuteOnAccountChange from 'hooks/useExecuteOnAccountChange'
-import usePaginate from 'hooks/usePaginate'
-import LargeLayout from 'layouts/large'
+  Box,
+  chakra,
+  Flex,
+  Grid,
+  GridItem,
+  SimpleGrid,
+  Text,
+} from '@chakra-ui/react'
+import { removeEmptyFromObject } from '@nft/hooks'
+import { useWeb3React } from '@web3-react/core'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { wrapServerSideProps } from 'props'
 import { FC, useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import CollectionHeader from '../../../components/Collection/CollectionHeader'
+import Empty from '../../../components/Empty/Empty'
+import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
+import FilterNav from '../../../components/Filter/FilterNav'
+import Head from '../../../components/Head'
+import Pagination from '../../../components/Pagination/Pagination'
+import Select from '../../../components/Select/Select'
+import TokenCard from '../../../components/Token/Card'
+import {
+  convertAsset,
+  convertAuctionWithBestBid,
+  convertCollectionFull,
+  convertSale,
+  convertUser,
+} from '../../../convert'
+import environment from '../../../environment'
 import {
   AssetsOrderBy,
+  Currency,
   FetchCollectionAssetsDocument,
   FetchCollectionAssetsQuery,
   FetchCollectionAssetsQueryVariables,
   FetchCollectionDetailsDocument,
   FetchCollectionDetailsQuery,
   FetchCollectionDetailsQueryVariables,
+  FetchCurrenciesDocument,
+  FetchCurrenciesQuery,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
 } from '../../../graphql'
+import useAssetFilterFromQuery, {
+  convertFilterToAssetFilter,
+  extractTraitsFromQuery,
+  Filter,
+  OfferFilter,
+} from '../../../hooks/useAssetFilterFromQuery'
+import useEagerConnect from '../../../hooks/useEagerConnect'
+import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
+import useFilterState from '../../../hooks/useFilterState'
+import usePaginate from '../../../hooks/usePaginate'
+import LargeLayout from '../../../layouts/large'
 
 type Props = {
   chainId: number
@@ -47,6 +68,8 @@ type Props = {
   offset: number
   // OrderBy
   orderBy: AssetsOrderBy
+  // Currencies
+  currencies: Pick<Currency, 'id' | 'image' | 'decimals'>[]
 }
 
 export const getServerSideProps = wrapServerSideProps<Props>(
@@ -82,6 +105,31 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       : (ctx.query.orderBy as AssetsOrderBy) ||
         'SALES_MIN_UNIT_PRICE_IN_REF_ASC'
 
+    const currencyId =
+      ctx.query.currencyId && !Array.isArray(ctx.query.currencyId)
+        ? ctx.query.currencyId
+        : null
+    const minPrice =
+      ctx.query.minPrice && !Array.isArray(ctx.query.minPrice)
+        ? parseFloat(ctx.query.minPrice)
+        : null
+    const maxPrice =
+      ctx.query.maxPrice && !Array.isArray(ctx.query.maxPrice)
+        ? parseFloat(ctx.query.maxPrice)
+        : null
+    const offers = ctx.query.offers
+      ? Array.isArray(ctx.query.offers)
+        ? ((ctx.query.offers[0] || null) as OfferFilter | null)
+        : (ctx.query.offers as OfferFilter)
+      : null
+    const traits = extractTraitsFromQuery(ctx.query)
+
+    const {
+      data: { currencies },
+    } = await client.query<FetchCurrenciesQuery>({
+      query: FetchCurrenciesDocument,
+    })
+
     const { data: collectionDetailsData, error: collectionDetailsError } =
       await client.query<
         FetchCollectionDetailsQuery,
@@ -93,6 +141,20 @@ export const getServerSideProps = wrapServerSideProps<Props>(
           chainId: chainId,
         },
       })
+
+    const filter = convertFilterToAssetFilter(
+      {
+        currencyId,
+        maxPrice,
+        minPrice,
+        offers,
+        traits,
+        collection: null,
+        search: null,
+      },
+      currencies?.nodes || [],
+      now,
+    )
 
     const { data: collectionAssetsData, error: collectionAssetsError } =
       await client.query<
@@ -108,6 +170,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
           collectionAddress: collectionAddress,
           chainId: chainId,
           orderBy,
+          filter,
         },
       })
 
@@ -128,6 +191,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         page,
         offset,
         orderBy,
+        currencies: currencies?.nodes || [],
       },
     }
   },
@@ -142,9 +206,10 @@ const CollectionPage: FC<Props> = ({
   page,
   offset,
   orderBy,
+  currencies,
 }) => {
   const ready = useEagerConnect()
-  const { query, replace, pathname } = useRouter()
+  const { query, push, pathname } = useRouter()
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { account } = useWeb3React()
@@ -154,6 +219,7 @@ const CollectionPage: FC<Props> = ({
       chainId: chainId,
     },
   })
+  const filter = useAssetFilterFromQuery(currencies)
   const { data, refetch } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
@@ -163,9 +229,34 @@ const CollectionPage: FC<Props> = ({
       offset,
       orderBy,
       chainId: chainId,
+      filter: convertFilterToAssetFilter(filter, currencies, date),
     },
   })
   useExecuteOnAccountChange(refetch, ready)
+
+  const { showFilters, toggleFilters, count } = useFilterState(filter)
+  const updateFilter = useCallback(
+    async (filter: Filter) => {
+      const { traits, ...otherFilters } = filter
+      const cleanData = removeEmptyFromObject({
+        ...Object.keys(query).reduce((acc, value) => {
+          if (value.startsWith('trait')) return acc
+          return { ...acc, [value]: query[value] }
+        }, {}),
+        ...otherFilters,
+        page: undefined,
+        ...traits.reduce(
+          (acc, { type, values }) => ({
+            ...acc,
+            [`traits[${type}]`]: values,
+          }),
+          {},
+        ),
+      })
+      await push({ pathname, query: cleanData }, undefined, { shallow: true })
+    },
+    [push, pathname, query],
+  )
 
   const collectionDetails = useMemo(
     () =>
@@ -175,20 +266,18 @@ const CollectionPage: FC<Props> = ({
     [collectionData],
   )
 
-  const [changePage, changeLimit] = usePaginate()
-
   const changeOrder = useCallback(
     async (orderBy: any) => {
-      await replace({
-        pathname,
-        query: { ...query, orderBy, page: undefined },
-      })
+      await push(
+        { pathname, query: { ...query, orderBy, page: undefined } },
+        undefined,
+        { shallow: true },
+      )
     },
-    [replace, pathname, query],
+    [push, pathname, query],
   )
 
-  const assets = useMemo(() => data?.assets?.nodes || [], [data])
-
+  const [changePage, changeLimit] = usePaginate()
   const ChakraPagination = chakra(Pagination)
 
   if (!collectionDetails) return null
@@ -206,8 +295,14 @@ const CollectionPage: FC<Props> = ({
         }}
       />
 
-      <Box pt={4}>
-        <Box ml="auto" w={{ base: 'full', lg: 'min-content' }}>
+      <Flex py="6" justifyContent="space-between">
+        <FilterNav
+          showFilters={showFilters}
+          toggleFilters={toggleFilters}
+          count={count}
+          onClear={() => updateFilter(NoFilter)}
+        />
+        <Box>
           <Select<AssetsOrderBy>
             name="orderBy"
             onChange={changeOrder}
@@ -235,69 +330,87 @@ const CollectionPage: FC<Props> = ({
             inlineLabel
           />
         </Box>
-        {assets.length > 0 ? (
-          <SimpleGrid
-            flexWrap="wrap"
-            spacing={{ base: 4, lg: 3, xl: 4 }}
-            columns={{ base: 1, sm: 2, md: 4, xl: 5, '2xl': 6 }}
-            py={6}
-          >
-            {assets.map((x, i) => (
-              <Flex key={i} justify="center">
-                <TokenCard
-                  asset={convertAsset(x)}
-                  creator={convertUser(x.creator, x.creator.address)}
-                  auction={
-                    x.auctions.nodes[0]
-                      ? convertAuctionWithBestBid(x.auctions.nodes[0])
-                      : undefined
-                  }
-                  sale={convertSale(x.firstSale.nodes[0])}
-                  numberOfSales={x.firstSale.totalCount}
-                  hasMultiCurrency={
-                    parseInt(
-                      x.currencySales.aggregates?.distinctCount?.currencyId,
-                      10,
-                    ) > 1
-                  }
-                />
-              </Flex>
-            ))}
-          </SimpleGrid>
-        ) : (
-          <Flex align="center" justify="center" h="full" py={12}>
-            <Empty
-              title={t('collection.empty.title')}
-              description={t('collection.empty.description')}
-            />
-          </Flex>
-        )}
+      </Flex>
 
-        <ChakraPagination
-          py="6"
-          borderTop="1px"
-          borderColor="gray.200"
-          limit={limit}
-          limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-          page={page}
-          total={data?.assets?.totalCount}
-          onPageChange={changePage}
-          onLimitChange={changeLimit}
-          result={{
-            label: t('pagination.result.label'),
-            caption: (props) => (
-              <Trans
-                ns="templates"
-                i18nKey="pagination.result.caption"
-                values={props}
-                components={[<Text as="span" color="brand.black" key="text" />]}
+      <Grid gap="6" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
+        {showFilters && (
+          <GridItem as="aside">
+            <FilterAsset
+              currencies={currencies}
+              selectedCollection={collectionDetails}
+              onFilterChange={updateFilter}
+              filter={filter}
+            />
+          </GridItem>
+        )}
+        <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
+          {data?.assets?.totalCount && data?.assets?.totalCount > 0 ? (
+            <SimpleGrid
+              flexWrap="wrap"
+              spacing="4"
+              columns={
+                showFilters
+                  ? { base: 1, sm: 2, md: 3, lg: 4 }
+                  : { base: 1, sm: 2, md: 4, lg: 6 }
+              }
+            >
+              {data.assets.nodes.map((x, i) => (
+                <Flex key={i} justify="center">
+                  <TokenCard
+                    asset={convertAsset(x)}
+                    creator={convertUser(x.creator, x.creator.address)}
+                    auction={
+                      x.auctions.nodes[0]
+                        ? convertAuctionWithBestBid(x.auctions.nodes[0])
+                        : undefined
+                    }
+                    sale={convertSale(x.firstSale.nodes[0])}
+                    numberOfSales={x.firstSale.totalCount}
+                    hasMultiCurrency={
+                      parseInt(
+                        x.currencySales.aggregates?.distinctCount?.currencyId,
+                        10,
+                      ) > 1
+                    }
+                  />
+                </Flex>
+              ))}
+            </SimpleGrid>
+          ) : (
+            <Flex align="center" justify="center" h="full" py={12}>
+              <Empty
+                title={t('collection.empty.title')}
+                description={t('collection.empty.description')}
               />
-            ),
-            pages: (props) =>
-              t('pagination.result.pages', { count: props.total }),
-          }}
-        />
-      </Box>
+            </Flex>
+          )}
+        </GridItem>
+      </Grid>
+
+      <ChakraPagination
+        py="6"
+        borderTop="1px"
+        borderColor="gray.200"
+        limit={limit}
+        limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+        page={page}
+        total={data?.assets?.totalCount}
+        onPageChange={changePage}
+        onLimitChange={changeLimit}
+        result={{
+          label: t('pagination.result.label'),
+          caption: (props) => (
+            <Trans
+              ns="templates"
+              i18nKey="pagination.result.caption"
+              values={props}
+              components={[<Text as="span" color="brand.black" key="text" />]}
+            />
+          ),
+          pages: (props) =>
+            t('pagination.result.pages', { count: props.total }),
+        }}
+      />
     </LargeLayout>
   )
 }

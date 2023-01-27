@@ -1,13 +1,24 @@
-import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Divider,
+  Flex,
+  Icon,
+  Stack,
+  StackProps,
+  Text,
+} from '@chakra-ui/react'
+import { HiXCircle } from '@react-icons/all-files/hi/HiXCircle'
 import { PropsWithChildren } from 'react'
 
-type ListItemProps = {
+export type ListItemProps = StackProps & {
   image: JSX.Element
+  imageRounded?: string
   label: JSX.Element | string
   subtitle?: JSX.Element | string
   caption?: JSX.Element | string
   action?: JSX.Element
   withSeparator?: boolean
+  closable?: boolean
 }
 
 export function ListItem({
@@ -15,8 +26,10 @@ export function ListItem({
   action,
   caption,
   image,
+  imageRounded,
   subtitle,
   withSeparator,
+  closable,
   ...props
 }: ListItemProps): JSX.Element {
   return (
@@ -30,7 +43,7 @@ export function ListItem({
           align="center"
           justify="center"
           overflow="hidden"
-          rounded="full"
+          rounded={imageRounded || 'full'}
           bgColor="gray.100"
         >
           {image}
@@ -61,6 +74,7 @@ export function ListItem({
               {action}
             </Box>
           )}
+          {closable && <Icon as={HiXCircle} h={4} w={4} />}
         </Flex>
       </Flex>
       {withSeparator && <Divider pt={1} />}
