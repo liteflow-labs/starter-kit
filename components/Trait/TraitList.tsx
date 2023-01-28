@@ -45,7 +45,7 @@ const TraitList: FC<TraitListProps> = ({ traits }) => {
           >
             {trait.type === 'Category'
               ? t(`categories.${trait.value}`, null, { fallback: trait.value })
-              : trait.type}
+              : trait.value}
           </Text>
           <Text
             as="span"
