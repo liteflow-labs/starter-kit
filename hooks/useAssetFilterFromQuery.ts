@@ -172,15 +172,15 @@ export const convertFilterToAssetFilter = (
   return queryFilter
 }
 
-const convertToFloat = (value?: string) => (value ? parseFloat(value) : null)
+const parseToFloat = (value?: string) => (value ? parseFloat(value) : null)
 
 export default function useAssetFilterFromQuery(
   currencies: { id: string }[],
 ): Filter {
   const { query } = useRouter()
   const search = useQueryParamSingle('search')
-  const minPrice = useQueryParamSingle('minPrice', { convert: convertToFloat })
-  const maxPrice = useQueryParamSingle('maxPrice', { convert: convertToFloat })
+  const minPrice = useQueryParamSingle('minPrice', { parse: parseToFloat })
+  const maxPrice = useQueryParamSingle('maxPrice', { parse: parseToFloat })
   const collection = useQueryParamSingle('collection')
   const offers = useQueryParamSingle<OfferFilter>('offers')
   const paramCurrencyId = useQueryParamSingle('currencyId')

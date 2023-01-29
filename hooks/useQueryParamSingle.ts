@@ -19,7 +19,7 @@ export default function useQueryParamSingle<T = string>(
   key: string,
   options: {
     defaultValue?: T
-    convert?: (value?: string) => T
+    parse?: (value?: string) => T
   } = {},
 ): T | null {
   const { query } = useRouter()

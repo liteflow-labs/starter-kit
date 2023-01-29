@@ -6,22 +6,20 @@ export function multiQueryParam<T = string>(
   key: string,
   options: {
     defaultValue?: T[]
-    convert?: (value?: string) => T
+    parse?: (value?: string) => T
   } = {},
 ): T[] {
   const value = query[key]
   if (value === undefined) return options.defaultValue || []
   const result = Array.isArray(value) ? value : [value]
-  return options.convert
-    ? result.map(options.convert)
-    : (result as unknown as T[])
+  return options.parse ? result.map(options.parse) : (result as unknown as T[])
 }
 
 export default function useQueryParamMulti<T = string>(
   key: string,
   options: {
     defaultValue?: T[]
-    convert?: (value?: string) => T
+    parse?: (value?: string) => T
   } = {},
 ): T[] {
   const { query } = useRouter()
