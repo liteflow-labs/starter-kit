@@ -26,7 +26,7 @@ export type Props = {
     verified: boolean
     quantity: string
   }[]
-  ownerCount: number
+  numberOfOwners: number
   saleSupply: BigNumber
   totalSupply: BigNumber | null | undefined
 }
@@ -36,7 +36,7 @@ const TokenMetadata: VFC<Props> = ({
   standard,
   creator,
   owners,
-  ownerCount,
+  numberOfOwners,
   saleSupply,
   totalSupply,
 }) => {
@@ -56,7 +56,7 @@ const TokenMetadata: VFC<Props> = ({
           />
         </Stack>
       )}
-      {ownerCount === 1 && owners[0] && (
+      {numberOfOwners === 1 && owners[0] && (
         <Stack spacing={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owner')}
@@ -69,7 +69,7 @@ const TokenMetadata: VFC<Props> = ({
           />
         </Stack>
       )}
-      {ownerCount > 1 && (
+      {numberOfOwners > 1 && (
         <Stack spacing={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owners')}
@@ -77,7 +77,7 @@ const TokenMetadata: VFC<Props> = ({
           <OwnersModal
             assetId={assetId}
             ownersPreview={owners}
-            ownerCount={ownerCount}
+            numberOfOwners={numberOfOwners}
           />
         </Stack>
       )}

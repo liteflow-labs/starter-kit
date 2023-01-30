@@ -32,7 +32,7 @@ export type Props = {
   currencies: SaleDetailProps['currencies']
   creator: TokenAssetProps['creator']
   owners: TokenAssetProps['owners']
-  ownerCount: TokenAssetProps['ownerCount']
+  numberOfOwners: TokenAssetProps['numberOfOwners']
   auction: SaleDetailProps['auction']
   bestBid: SaleDetailProps['bestBid']
   sales: SaleDetailProps['directSales']
@@ -49,7 +49,7 @@ const TokenHeader: VFC<Props> = ({
   currencies,
   creator,
   owners,
-  ownerCount,
+  numberOfOwners,
   auction,
   bestBid,
   sales,
@@ -115,7 +115,7 @@ const TokenHeader: VFC<Props> = ({
           assetId={asset.id}
           creator={creator}
           owners={owners}
-          ownerCount={ownerCount}
+          numberOfOwners={numberOfOwners}
           saleSupply={asset.saleSupply}
           standard={asset.collection.standard}
           totalSupply={asset.totalSupply}

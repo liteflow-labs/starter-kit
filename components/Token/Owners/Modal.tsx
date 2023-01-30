@@ -33,10 +33,14 @@ export type Props = {
     verified: boolean
     quantity: string
   }[]
-  ownerCount: number
+  numberOfOwners: number
 }
 
-const OwnersModal: VFC<Props> = ({ assetId, ownersPreview, ownerCount }) => {
+const OwnersModal: VFC<Props> = ({
+  assetId,
+  ownersPreview,
+  numberOfOwners,
+}) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
@@ -55,7 +59,7 @@ const OwnersModal: VFC<Props> = ({ assetId, ownersPreview, ownerCount }) => {
     <>
       <OwnersModalActivator
         owners={ownersPreview}
-        ownerCount={ownerCount}
+        numberOfOwners={numberOfOwners}
         onClick={onOpen}
       />
       <Modal
@@ -81,7 +85,7 @@ const OwnersModal: VFC<Props> = ({ assetId, ownersPreview, ownerCount }) => {
                 px={2.5}
               >
                 <Text as="span" variant="caption" color="brand.500">
-                  {ownerCount}
+                  {numberOfOwners}
                 </Text>
               </Flex>
             </Flex>
