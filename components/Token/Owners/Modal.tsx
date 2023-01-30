@@ -45,7 +45,7 @@ const OwnersModal: VFC<Props> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(environment.PAGINATION_LIMIT)
-  const { data, loading } = useFetchOwnersQuery({
+  const { data, loading, previousData } = useFetchOwnersQuery({
     variables: {
       assetId,
       limit,
@@ -119,7 +119,10 @@ const OwnersModal: VFC<Props> = ({
               limit={environment.PAGINATION_LIMIT}
               limits={[environment.PAGINATION_LIMIT]} //, 24, 36, 48]}
               page={page}
-              total={data?.ownerships?.totalCount}
+              total={
+                data?.ownerships?.totalCount ||
+                previousData?.ownerships?.totalCount
+              }
               onPageChange={setPage}
               simple
               onLimitChange={(limit) => setLimit(parseInt(limit, 10))}
