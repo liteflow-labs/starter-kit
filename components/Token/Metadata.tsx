@@ -9,6 +9,7 @@ import OwnersModal from './Owners/Modal'
 import Supply from './Supply'
 
 export type Props = {
+  assetId: string
   standard: Standard
   creator:
     | {
@@ -25,14 +26,17 @@ export type Props = {
     verified: boolean
     quantity: string
   }[]
+  numberOfOwners: number
   saleSupply: BigNumber
   totalSupply: BigNumber | null | undefined
 }
 
 const TokenMetadata: VFC<Props> = ({
+  assetId,
   standard,
   creator,
   owners,
+  numberOfOwners,
   saleSupply,
   totalSupply,
 }) => {
@@ -52,7 +56,7 @@ const TokenMetadata: VFC<Props> = ({
           />
         </Stack>
       )}
-      {owners.length === 1 && owners[0] && (
+      {numberOfOwners === 1 && owners[0] && (
         <Stack spacing={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owner')}
@@ -65,12 +69,16 @@ const TokenMetadata: VFC<Props> = ({
           />
         </Stack>
       )}
-      {owners.length > 1 && (
+      {numberOfOwners > 1 && (
         <Stack spacing={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owners')}
           </Heading>
-          <OwnersModal owners={owners} />
+          <OwnersModal
+            assetId={assetId}
+            ownersPreview={owners}
+            numberOfOwners={numberOfOwners}
+          />
         </Stack>
       )}
       {standard === 'ERC721' && (

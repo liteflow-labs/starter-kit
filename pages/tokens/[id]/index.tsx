@@ -430,8 +430,10 @@ const DetailPage: NextPage<Props> = ({
           </Flex>
 
           <TokenMetadata
+            assetId={asset.id}
             creator={creator}
             owners={owners}
+            numberOfOwners={asset.ownerships.totalCount}
             saleSupply={BigNumber.from(
               asset.sales.aggregates?.sum?.availableQuantity || 0,
             )}

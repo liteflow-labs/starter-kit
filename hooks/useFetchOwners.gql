@@ -1,0 +1,26 @@
+query FetchOwners($assetId: String!, $offset: Int!, $limit: Int!) {
+  ownerships(
+    filter: { assetId: { equalTo: $assetId } }
+    offset: $offset
+    first: $limit
+    orderBy: [
+      QUANTITY_DESC
+      ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
+      OWNER_ADDRESS_ASC
+    ]
+  ) {
+    totalCount
+    nodes {
+      quantity
+      ownerAddress
+      owner {
+        address
+        name
+        image
+        verification {
+          status
+        }
+      }
+    }
+  }
+}
