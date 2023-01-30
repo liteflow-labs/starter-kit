@@ -4,13 +4,23 @@ import { IoChevronForward } from '@react-icons/all-files/io5/IoChevronForward'
 import { useMemo } from 'react'
 import Select from '../Select/Select'
 
-export type IProp = {
+type PropWithSelector = {
+  hideSelectors?: false | undefined
   limits: number[]
+  onLimitChange: (limit: string) => void
+}
+
+type PropWithoutSelector = {
+  hideSelectors: true
+  limits?: never
+  onLimitChange?: never
+}
+
+export type IProp = {
   limit: number
   page: number
   total?: number
   onPageChange: (page: number) => void
-  onLimitChange: (limit: string) => void
   result: {
     label: string
     caption: (context: {
@@ -20,18 +30,14 @@ export type IProp = {
     }) => string | JSX.Element
     pages: (context: { total: number }) => string | JSX.Element
   }
-  simple?: boolean
-}
+} & (PropWithSelector | PropWithoutSelector)
 
 export default function Pagination({
-  onPageChange,
-  onLimitChange,
-  total,
-  page = 1,
-  limits,
   limit,
+  onPageChange,
+  page,
   result,
-  simple,
+  total,
   ...props
 }: IProp): JSX.Element {
   const goTo = (newPage: number) => {
@@ -51,7 +57,7 @@ export default function Pagination({
   if (!total) return <></>
   return (
     <Flex
-      direction={{ base: simple ? 'row' : 'column', md: 'row' }}
+      direction={{ base: props.hideSelectors ? 'row' : 'column', md: 'row' }}
       align="center"
       justify={{ base: 'center', sm: 'space-between' }}
       w="full"
@@ -64,13 +70,13 @@ export default function Pagination({
         w={{ base: 'full', sm: 'auto' }}
         direction={{ base: 'column', sm: 'row' }}
       >
-        {!simple && (
+        {!props.hideSelectors && (
           <Select
             selectWidth={24}
             label={result.label}
             name="limit"
-            onChange={(e: any) => onLimitChange(e)}
-            choices={limits.map((x) => ({
+            onChange={(e: any) => props.onLimitChange(e)}
+            choices={props.limits.map((x) => ({
               value: x.toString(),
               label: x.toString(),
             }))}
@@ -99,7 +105,7 @@ export default function Pagination({
         gap={6}
         aria-label="Pagination"
       >
-        {!simple && (
+        {!props.hideSelectors && (
           <Flex align="center" gap={3}>
             <Select
               selectWidth={24}

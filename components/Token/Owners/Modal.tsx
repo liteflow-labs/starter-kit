@@ -17,7 +17,6 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useState, VFC } from 'react'
 import { convertOwnership } from '../../../convert'
-import environment from '../../../environment'
 import { useFetchOwnersQuery } from '../../../graphql'
 import List, { ListItem } from '../../List/List'
 import Pagination from '../../Pagination/Pagination'
@@ -36,6 +35,8 @@ export type Props = {
   numberOfOwners: number
 }
 
+const OwnerPaginationLimit = 8
+
 const OwnersModal: VFC<Props> = ({
   assetId,
   ownersPreview,
@@ -44,16 +45,15 @@ const OwnersModal: VFC<Props> = ({
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(environment.PAGINATION_LIMIT)
   const { data, loading, previousData } = useFetchOwnersQuery({
     variables: {
       assetId,
-      limit,
-      offset: (page - 1) * limit,
+      limit: OwnerPaginationLimit,
+      offset: (page - 1) * OwnerPaginationLimit,
     },
   })
   // Reset pagination when the limit change or the modal visibility changes
-  useEffect(() => setPage(1), [limit, isOpen])
+  useEffect(() => setPage(1), [isOpen])
   const ChakraPagination = chakra(Pagination)
   return (
     <>
@@ -97,7 +97,7 @@ const OwnersModal: VFC<Props> = ({
           >
             <List>
               {loading
-                ? new Array(limit)
+                ? new Array(OwnerPaginationLimit)
                     .fill(0)
                     .map((_, index) => (
                       <ListItem
@@ -116,16 +116,14 @@ const OwnersModal: VFC<Props> = ({
           <ModalFooter>
             <ChakraPagination
               pt="4"
-              limit={environment.PAGINATION_LIMIT}
-              limits={[environment.PAGINATION_LIMIT]} //, 24, 36, 48]}
+              limit={OwnerPaginationLimit}
               page={page}
               total={
                 data?.ownerships?.totalCount ||
                 previousData?.ownerships?.totalCount
               }
               onPageChange={setPage}
-              simple
-              onLimitChange={(limit) => setLimit(parseInt(limit, 10))}
+              hideSelectors
               result={{
                 label: t('pagination.result.label'),
                 caption: (props) => (
