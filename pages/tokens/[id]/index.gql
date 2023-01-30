@@ -82,6 +82,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
       ]
       first: 5
     ) {
+      totalCount
       nodes {
         ownerAddress
         quantity

@@ -433,10 +433,7 @@ const DetailPage: NextPage<Props> = ({
             assetId={asset.id}
             creator={creator}
             owners={owners}
-            ownerCount={parseInt(
-              asset.ownerships.aggregates?.sum?.quantity || '0',
-              10,
-            )}
+            numberOfOwners={asset.ownerships.totalCount}
             saleSupply={BigNumber.from(
               asset.sales.aggregates?.sum?.availableQuantity || 0,
             )}
