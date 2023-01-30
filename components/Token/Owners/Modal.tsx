@@ -103,7 +103,7 @@ const OwnersModal: VFC<Props> = ({
                       <ListItem
                         key={index}
                         image={<SkeletonCircle />}
-                        label={<SkeletonText noOfLines={2} />}
+                        label={<SkeletonText noOfLines={2} width="32" />}
                       />
                     ))
                 : data?.ownerships?.nodes
