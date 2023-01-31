@@ -9,9 +9,6 @@ export const theme = extendTheme({
   },
   components: {
     Button: {
-      baseStyle: {
-        rounded: 'xl',
-      },
       defaultProps: {
         colorScheme: 'brand',
       },
@@ -131,6 +128,8 @@ export const theme = extendTheme({
   },
   fonts: {
     banner: 'Poppins',
+    heading: 'Inter',
+    body: 'Inter',
   },
   colors: {
     white: '#FFFFFF',
@@ -143,17 +142,17 @@ export const theme = extendTheme({
       600: '#2563EB',
     },
     brand: {
-      50: '#F5F7FF',
-      100: '#D3E2FF',
-      200: '#A7C4FF',
-      300: '#7BA3FF',
-      400: '#5A88FF',
-      500: '#245BFF',
-      600: '#1A45DB',
-      700: '#1233B7',
-      800: '#0B2393',
-      900: '#06177A',
-      black: '#060F27',
+      50: '#f2f2f2',
+      100: '#d9d9d9',
+      200: '#bfbfbf',
+      300: '#8c8c8c',
+      400: '#595959',
+      500: '#000000',
+      600: '#262626',
+      700: '#000000',
+      800: '#000000',
+      900: '#000000',
+      black: '#000000',
     },
     secondary: {
       100: '#C9FBCB',
@@ -191,13 +190,13 @@ export const theme = extendTheme({
   },
   radii: {
     none: '0',
-    sm: '12px',
-    base: '12px',
-    md: '12px',
-    lg: '12px',
-    xl: '12px',
-    '2xl': '12px',
-    '3xl': '12px',
+    sm: '0px',
+    base: '0px',
+    md: '0px',
+    lg: '0px',
+    xl: '0px',
+    '2xl': '0px',
+    '3xl': '0px',
     full: '9999px',
   },
 })

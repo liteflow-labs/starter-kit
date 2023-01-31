@@ -155,9 +155,9 @@ const DrawerMenu: VFC<{
           <DrawerHeader>
             <Link href="/" onClick={onClose}>
               <Image
-                src={logo?.path || '/logo.svg'}
+                src={logo?.path || '/logo.png'}
                 alt="Logo"
-                width={logo?.width || 139}
+                width={logo?.width || 187}
                 height={logo?.height || 32}
               />
             </Link>
@@ -454,9 +454,9 @@ const Navbar: VFC<{
         <Flex align="center">
           <Flex as={Link} href="/">
             <Image
-              src={logo?.path || '/logo.svg'}
+              src={logo?.path || '/logo.png'}
               alt="Logo"
-              width={logo?.width || 139}
+              width={logo?.width || 187}
               height={logo?.height || 32}
             />
           </Flex>
