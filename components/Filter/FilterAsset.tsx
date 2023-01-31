@@ -97,6 +97,7 @@ const FilterAsset: NextPage<Props> = ({
   )
 
   const [collectionSearch, setCollectionSearch] = useState('')
+  const [propertySearch, setPropertySearch] = useState('')
   const collectionResult = useSearchCollectionQuery({
     variables: {
       limit: 8,
@@ -119,13 +120,21 @@ const FilterAsset: NextPage<Props> = ({
     )
   }, [collectionResult.data, filterResult.collection, selectedCollection])
 
-  const traitResult = useFetchCollectionTraitsQuery({
+  const { data: traitsData } = useFetchCollectionTraitsQuery({
     variables: {
       address: (collection && collection.address) || '',
       chainId: (collection && collection.chainId) || 0,
     },
     skip: !collection,
   })
+
+  const traits = useMemo(() => {
+    if (!traitsData?.collection?.traits) return []
+    if (!propertySearch) return traitsData.collection.traits
+    return traitsData.collection.traits.filter(({ type }) =>
+      type.toLowerCase().includes(propertySearch.toLowerCase()),
+    )
+  }, [propertySearch, traitsData])
 
   const addTrait = useCallback(
     (type, value) => {
@@ -369,7 +378,49 @@ const FilterAsset: NextPage<Props> = ({
           </AccordionPanel>
         </AccordionItem>
 
-        {!selectedCollection && (
+        {collection ? (
+          <AccordionItem>
+            <AccordionButton>
+              <Heading variant="heading2" flex="1" textAlign="left">
+                {selectedCollection
+                  ? 'Properties'
+                  : 'Collection and properties'}
+              </Heading>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel>
+              <Stack spacing={3}>
+                {!selectedCollection && (
+                  <CollectionListItem
+                    as={Link}
+                    width="full"
+                    borderColor="brand.500"
+                    bgColor="brand.50"
+                    borderWidth="1px"
+                    borderRadius="md"
+                    padding={2}
+                    textAlign="left"
+                    onClick={() =>
+                      propagateFilter({ collection: null, traits: [] })
+                    }
+                    collection={convertCollection(collection as any)}
+                    closable
+                  />
+                )}
+                <InputGroup>
+                  <InputLeftElement pointerEvents="none">
+                    <Icon as={HiOutlineSearch} w={6} h={6} color="gray.400" />
+                  </InputLeftElement>
+                  <Input
+                    placeholder="Filter properties"
+                    type="search"
+                    onChange={(e) => setPropertySearch(e.target.value)}
+                  />
+                </InputGroup>
+              </Stack>
+            </AccordionPanel>
+          </AccordionItem>
+        ) : (
           <AccordionItem>
             <AccordionButton>
               <Heading variant="heading2" flex="1" textAlign="left">
@@ -378,60 +429,42 @@ const FilterAsset: NextPage<Props> = ({
               <AccordionIcon />
             </AccordionButton>
             <AccordionPanel>
-              {collection ? (
-                <CollectionListItem
-                  as={Link}
-                  width="full"
-                  borderColor="brand.500"
-                  bgColor="brand.50"
-                  borderWidth="1px"
-                  borderRadius="md"
-                  padding={2}
-                  textAlign="left"
-                  onClick={() =>
-                    propagateFilter({ collection: null, traits: [] })
-                  }
-                  collection={convertCollection(collection as any)}
-                  closable
-                />
-              ) : (
-                <Stack spacing={4}>
-                  <InputGroup>
-                    <InputLeftElement pointerEvents="none">
-                      <Icon as={HiOutlineSearch} w={6} h={6} color="gray.400" />
-                    </InputLeftElement>
-                    <Input
-                      placeholder="Search by collection"
-                      type="search"
-                      onChange={(e) => setCollectionSearch(e.target.value)}
+              <Stack spacing={4}>
+                <InputGroup>
+                  <InputLeftElement pointerEvents="none">
+                    <Icon as={HiOutlineSearch} w={6} h={6} color="gray.400" />
+                  </InputLeftElement>
+                  <Input
+                    placeholder="Search by collection"
+                    type="search"
+                    onChange={(e) => setCollectionSearch(e.target.value)}
+                  />
+                </InputGroup>
+                <List>
+                  {collectionResult.data?.collections?.nodes.map((x) => (
+                    <CollectionListItem
+                      key={`${x.chainId}-${x.address}`}
+                      as={Link}
+                      onClick={() =>
+                        propagateFilter({
+                          collection: `${x.chainId}-${x.address}`,
+                          traits: [],
+                        })
+                      }
+                      collection={convertCollection(x)}
                     />
-                  </InputGroup>
-                  <List>
-                    {collectionResult.data?.collections?.nodes.map((x) => (
-                      <CollectionListItem
-                        key={`${x.chainId}-${x.address}`}
-                        as={Link}
-                        onClick={() =>
-                          propagateFilter({
-                            collection: `${x.chainId}-${x.address}`,
-                            traits: [],
-                          })
-                        }
-                        collection={convertCollection(x)}
-                      />
-                    ))}
-                  </List>
-                </Stack>
-              )}
+                  ))}
+                </List>
+              </Stack>
             </AccordionPanel>
           </AccordionItem>
         )}
 
-        {traitResult.data?.collection?.traits.map(({ type, values }, i) => (
+        {traits.map(({ type, values }, i) => (
           <AccordionItem key={i}>
             <AccordionButton>
               <Heading variant="heading2" flex="1" textAlign="left">
-                {type}
+                {type} - {values.length}
               </Heading>
               <AccordionIcon />
             </AccordionButton>
