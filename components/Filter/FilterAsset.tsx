@@ -179,7 +179,7 @@ const FilterAsset: NextPage<Props> = ({
 
   return (
     <Stack spacing={8} as="form" onSubmit={handleSubmit(onFilterChange)}>
-      <Accordion allowMultiple>
+      <Accordion allowMultiple defaultIndex={[2]}>
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
