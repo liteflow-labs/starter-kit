@@ -130,7 +130,7 @@ const environment: Environment = {
   REFERRAL_PERCENTAGE: { base: 20 * 0.025, secondary: 20 * 0.01 },
   RESTRICT_TO_VERIFIED_ACCOUNT: true,
   MAX_ROYALTIES: 30,
-  ALLOW_TOP_UP: true,
+  ALLOW_TOP_UP: false,
   MINTABLE_COLLECTIONS,
 }
 
