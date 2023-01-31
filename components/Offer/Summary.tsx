@@ -51,7 +51,7 @@ const Summary: FC<
           </Heading>
         </>
       )}
-      {feesOnTopPerTenThousand && (
+      {feesOnTopPerTenThousand !== undefined && (
         <Heading as={Flex} variant="heading3" color="gray.500" mb={2}>
           {t('offer.summary.fees', { value: feesOnTopPerTenThousand / 100 })}
           <Text
