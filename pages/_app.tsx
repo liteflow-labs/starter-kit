@@ -154,7 +154,7 @@ function Layout({
           disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
         />
         {children}
-        <Footer name="Acme, Inc." links={footerLinks} />
+        <Footer name="MemeLand" links={footerLinks} />
       </Box>
     </ChatWindow>
   )
@@ -263,19 +263,19 @@ function MyApp({
   return (
     <ErrorBoundary>
       <Head
-        title="Acme NFT Marketplace"
-        description="The Web3 as a Service Company"
+        title="MemeLand NFT Marketplace"
+        description="Bring Ownership to Every Community in the World."
       >
         <meta
           name="keywords"
           content="NFT, marketplace, platform, white-label, blockchain"
         />
 
-        <meta name="author" content="Acme, Inc." />
-        <meta name="application-name" content="Acme NFT Marketplace" />
+        <meta name="author" content="MemeLand" />
+        <meta name="application-name" content="MemeLand NFT Marketplace" />
 
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://demo.liteflow.com" />
+        <meta property="og:url" content="https://memeland.liteflow.com" />
 
         <meta name="twitter:card" content="summary" />
       </Head>

@@ -26,8 +26,8 @@ const connectors = {
   }),
   coinbase: new WalletLinkConnector({
     supportedChainIds: [environment.CHAIN_ID],
-    appName: 'Acme',
-    url: 'https://demo.liteflow.com',
+    appName: 'MemeLand',
+    url: 'https://memeland.liteflow.com',
   }),
 }
 

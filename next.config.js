@@ -9,7 +9,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  */
 const nextConfig = {
   images: {
-    domains: [process.env.PINATA_GATEWAY || ''],
+    domains: [
+      process.env.PINATA_GATEWAY || '',
+      'api.memeland.com',
+      'grow-api.memeland.com',
+    ],
   },
   webpack: (config, options) => {
     if (!options.isServer) {
