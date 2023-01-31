@@ -384,33 +384,35 @@ const CollectionPage: FC<Props> = ({
               />
             </Flex>
           )}
+          <ChakraPagination
+            mt="6"
+            py="6"
+            borderTop="1px"
+            borderColor="gray.200"
+            limit={limit}
+            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+            page={page}
+            total={data?.assets?.totalCount}
+            onPageChange={changePage}
+            onLimitChange={changeLimit}
+            result={{
+              label: t('pagination.result.label'),
+              caption: (props) => (
+                <Trans
+                  ns="templates"
+                  i18nKey="pagination.result.caption"
+                  values={props}
+                  components={[
+                    <Text as="span" color="brand.black" key="text" />,
+                  ]}
+                />
+              ),
+              pages: (props) =>
+                t('pagination.result.pages', { count: props.total }),
+            }}
+          />
         </GridItem>
       </Grid>
-
-      <ChakraPagination
-        py="6"
-        borderTop="1px"
-        borderColor="gray.200"
-        limit={limit}
-        limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-        page={page}
-        total={data?.assets?.totalCount}
-        onPageChange={changePage}
-        onLimitChange={changeLimit}
-        result={{
-          label: t('pagination.result.label'),
-          caption: (props) => (
-            <Trans
-              ns="templates"
-              i18nKey="pagination.result.caption"
-              values={props}
-              components={[<Text as="span" color="brand.black" key="text" />]}
-            />
-          ),
-          pages: (props) =>
-            t('pagination.result.pages', { count: props.total }),
-        }}
-      />
     </LargeLayout>
   )
 }
