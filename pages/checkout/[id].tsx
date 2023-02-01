@@ -1,4 +1,12 @@
-import { Box, Flex, Heading, Stack, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Stack,
+  useToast,
+} from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
@@ -42,6 +50,7 @@ type Props = {
     description: string
     image: string
   }
+  currentAccount: string | null
 }
 
 export const getServerSideProps = wrapServerSideProps<Props>(
@@ -59,6 +68,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       query: CheckoutDocument,
       variables: {
         id: offerId,
+        address: ctx.user.address || '',
         now,
       },
     })
@@ -77,12 +87,18 @@ export const getServerSideProps = wrapServerSideProps<Props>(
           }),
           image: data.offer.asset.image,
         },
+        currentAccount: ctx.user.address,
       },
     }
   },
 )
 
-const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
+const CheckoutPage: NextPage<Props> = ({
+  now,
+  offerId,
+  meta,
+  currentAccount,
+}) => {
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -101,6 +117,7 @@ const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
     variables: {
       id: offerId,
       now: date,
+      address: (ready ? account?.toLowerCase() : currentAccount) || '',
     },
   })
   useExecuteOnAccountChange(refetch, ready)
@@ -140,89 +157,100 @@ const CheckoutPage: NextPage<Props> = ({ now, offerId, meta }) => {
         {t('offers.checkout.title')}
       </Heading>
 
-      <Flex mt={12} mb={6} direction={{ base: 'column', md: 'row' }} gap={12}>
-        <TokenCard
-          asset={convertAsset(asset)}
-          creator={convertUser(asset.creator, asset.creator.address)}
-          sale={convertSale(asset.firstSale.nodes[0])}
-          auction={
-            asset.auctions.nodes[0]
-              ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-              : undefined
-          }
-          numberOfSales={asset.firstSale.totalCount}
-          hasMultiCurrency={
-            parseInt(
-              asset.currencySales.aggregates?.distinctCount?.currencyId,
-              10,
-            ) > 1
-          }
-        />
-        <Flex direction="column" flex="1 1 0%">
-          <Stack spacing={3} mb={3}>
-            <Heading as="h5" variant="heading3" color="gray.500">
-              {t('offers.checkout.from')}
-            </Heading>
-            <Avatar
-              address={offer.maker.address}
-              image={offer.maker.image}
-              name={offer.maker.name}
-              verified={offer.maker.verification?.status === 'VALIDATED'}
+      <Grid
+        mt={12}
+        mb={6}
+        gap={12}
+        templateColumns={{ base: '1fr', md: '1fr 2fr' }}
+      >
+        <GridItem>
+          <Box pointerEvents="none">
+            <TokenCard
+              asset={convertAsset(asset)}
+              creator={convertUser(asset.creator, asset.creator.address)}
+              sale={convertSale(asset.firstSale.nodes[0])}
+              auction={
+                asset.auctions.nodes[0]
+                  ? convertAuctionWithBestBid(asset.auctions.nodes[0])
+                  : undefined
+              }
+              numberOfSales={asset.firstSale.totalCount}
+              hasMultiCurrency={
+                parseInt(
+                  asset.currencySales.aggregates?.distinctCount?.currencyId,
+                  10,
+                ) > 1
+              }
             />
-          </Stack>
+          </Box>
+        </GridItem>
+        <GridItem>
+          <Flex direction="column" flex="1 1 0%">
+            <Stack spacing={3} mb={3}>
+              <Heading as="h5" variant="heading3" color="gray.500">
+                {t('offers.checkout.from')}
+              </Heading>
+              <Avatar
+                address={offer.maker.address}
+                image={offer.maker.image}
+                name={offer.maker.name}
+                verified={offer.maker.verification?.status === 'VALIDATED'}
+              />
+            </Stack>
 
-          <Stack spacing={3}>
-            <Heading as="h5" variant="heading3" color="gray.500">
-              {t('offers.checkout.on-sale')}
-            </Heading>
-            <Flex align="center" gap={3}>
-              <Flex
-                as="span"
-                border="1px"
-                borderColor="gray.200"
-                h={8}
-                w={8}
-                align="center"
-                justify="center"
-                rounded="full"
-              >
-                <Image
-                  src={offer.currency.image}
-                  alt={`${offer.currency.symbol} Logo`}
-                  width={32}
-                  height={32}
-                />
+            <Stack spacing={3}>
+              <Heading as="h5" variant="heading3" color="gray.500">
+                {t('offers.checkout.on-sale')}
+              </Heading>
+              <Flex align="center" gap={3}>
+                <Flex
+                  as="span"
+                  border="1px"
+                  borderColor="gray.200"
+                  h={8}
+                  w={8}
+                  align="center"
+                  justify="center"
+                  rounded="full"
+                >
+                  <Image
+                    src={offer.currency.image}
+                    alt={`${offer.currency.symbol} Logo`}
+                    width={32}
+                    height={32}
+                  />
+                </Flex>
+                {priceUnit && (
+                  <Heading as="h2" variant="subtitle" color="brand.black">
+                    <Price amount={priceUnit} currency={offer.currency} />
+                  </Heading>
+                )}
+                {!isSingle && (
+                  <Heading as="h5" variant="heading3" color="gray.500" ml={2}>
+                    {t('offers.checkout.per-edition')}
+                  </Heading>
+                )}
               </Flex>
-              {priceUnit && (
-                <Heading as="h2" variant="subtitle" color="brand.black">
-                  <Price amount={priceUnit} currency={offer.currency} />
-                </Heading>
-              )}
-              {!isSingle && (
-                <Heading as="h5" variant="heading3" color="gray.500" ml={2}>
-                  {t('offers.checkout.per-edition')}
-                </Heading>
-              )}
-            </Flex>
-          </Stack>
-          <Box as="hr" my={8} />
+            </Stack>
+            <Box as="hr" my={8} />
 
-          <OfferFormCheckout
-            signer={signer}
-            account={account?.toLowerCase()}
-            offer={offer}
-            blockExplorer={blockExplorer}
-            currency={offer.currency}
-            multiple={!isSingle}
-            onPurchased={onPurchased}
-            allowTopUp={environment.ALLOW_TOP_UP}
-            login={{
-              ...connectors,
-              networkName: environment.NETWORK_NAME,
-            }}
-          />
-        </Flex>
-      </Flex>
+            <OfferFormCheckout
+              signer={signer}
+              account={account?.toLowerCase()}
+              offer={offer}
+              blockExplorer={blockExplorer}
+              currency={offer.currency}
+              multiple={!isSingle}
+              onPurchased={onPurchased}
+              allowTopUp={environment.ALLOW_TOP_UP}
+              login={{
+                ...connectors,
+                networkName: environment.NETWORK_NAME,
+              }}
+            />
+          </Flex>
+        </GridItem>
+      </Grid>
     </SmallLayout>
   )
 }

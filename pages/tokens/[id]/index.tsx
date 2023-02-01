@@ -22,12 +22,15 @@ import {
   Tabs,
   Text,
   Tooltip,
+  useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
+import { formatError } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import { useWeb3React } from '@web3-react/core'
+import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -47,6 +50,7 @@ import {
   convertHistories,
   convertOwnership,
   convertSaleFull,
+  convertTraits,
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
@@ -146,6 +150,7 @@ const DetailPage: NextPage<Props> = ({
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
+  const toast = useToast()
   const { account } = useWeb3React()
   const { query } = useRouter()
   const blockExplorer = useBlockExplorer(
@@ -166,16 +171,17 @@ const DetailPage: NextPage<Props> = ({
   const asset = useMemo(() => data?.asset, [data])
   const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
 
-  const isOwner = useMemo(
-    () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0').gt('0'),
+  const totalOwned = useMemo(
+    () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),
     [asset],
   )
+  const isOwner = useMemo(() => totalOwned.gt('0'), [totalOwned])
   const ownAllSupply = useMemo(
     () =>
-      BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0').gte(
+      totalOwned.gte(
         BigNumber.from(asset?.ownerships.aggregates?.sum?.quantity || '0'),
       ),
-    [asset],
+    [asset, totalOwned],
   )
   const isSingle = useMemo(
     () => asset?.collection.standard === 'ERC721',
@@ -196,7 +202,11 @@ const DetailPage: NextPage<Props> = ({
   ]
 
   const traits = useMemo(
-    () => asset && asset.traits.nodes.length > 0 && asset.traits.nodes,
+    () =>
+      asset &&
+      asset.traits.nodes.length > 0 &&
+      asset.collection.traits &&
+      convertTraits(asset),
     [asset],
   )
 
@@ -265,6 +275,26 @@ const DetailPage: NextPage<Props> = ({
     await refetch()
   }, [refetch])
 
+  const refreshAsset = useRefreshAsset()
+  const refreshMetadata = useCallback(
+    async (assetId: string) => {
+      try {
+        await refreshAsset(assetId)
+        await refetch()
+        toast({
+          title: 'Successfully refreshed metadata',
+          status: 'success',
+        })
+      } catch (e) {
+        toast({
+          title: formatError(e),
+          status: 'error',
+        })
+      }
+    },
+    [refetch, refreshAsset, toast],
+  )
+
   if (!asset) return <></>
   return (
     <LargeLayout>
@@ -281,7 +311,7 @@ const DetailPage: NextPage<Props> = ({
             p={12}
             bg="brand.50"
           >
-            <Box position="relative" h="full" w="full" zIndex={1}>
+            <Box position="relative" w="full" zIndex={1}>
               <Box
                 as={TokenMedia}
                 image={asset.image}
@@ -290,10 +320,7 @@ const DetailPage: NextPage<Props> = ({
                   showPreview ? undefined : asset.unlockedContent
                 }
                 defaultText={asset.name}
-                mx="auto"
-                maxH="full"
-                maxW="full"
-                objectFit="contain"
+                objectFit="cover"
                 layout="fill"
                 controls
               />
@@ -357,9 +384,20 @@ const DetailPage: NextPage<Props> = ({
         </AspectRatio>
         <Flex direction="column" my="auto" gap={8} p={{ base: 6, md: 0 }}>
           <Flex justify="space-between">
-            <Heading as="h1" variant="title" color="brand.black">
-              {asset.name}
-            </Heading>
+            <Stack spacing={1}>
+              {asset.collection.name && (
+                <Heading as="p" variant="heading1" color="gray.500">
+                  <Link
+                    href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}
+                  >
+                    {asset.collection.name}
+                  </Link>
+                </Heading>
+              )}
+              <Heading as="h1" variant="title" color="brand.black">
+                {asset.name}
+              </Heading>
+            </Stack>
             <Flex direction="row" align="flex-start" gap={3}>
               <Menu>
                 <MenuButton
@@ -371,6 +409,9 @@ const DetailPage: NextPage<Props> = ({
                   icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
                 />
                 <MenuList>
+                  <MenuItem onClick={() => refreshMetadata(asset.id)}>
+                    {t('asset.detail.menu.refresh-metadata')}
+                  </MenuItem>
                   <ChakraLink
                     href={`mailto:${
                       environment.REPORT_EMAIL
@@ -389,8 +430,10 @@ const DetailPage: NextPage<Props> = ({
           </Flex>
 
           <TokenMetadata
+            assetId={asset.id}
             creator={creator}
             owners={owners}
+            numberOfOwners={asset.ownerships.totalCount}
             saleSupply={BigNumber.from(
               asset.sales.aggregates?.sum?.availableQuantity || 0,
             )}
@@ -477,7 +520,12 @@ const DetailPage: NextPage<Props> = ({
           >
             <TabList>
               {tabs.map((tab, index) => (
-                <ChakraLink key={index} href={tab.href} whiteSpace="nowrap">
+                <ChakraLink
+                  key={index}
+                  href={tab.href}
+                  whiteSpace="nowrap"
+                  mr={4}
+                >
                   <Tab as="div">
                     <Text as="span" variant="subtitle1">
                       {tab.title}
@@ -498,6 +546,7 @@ const DetailPage: NextPage<Props> = ({
                 preventAcceptation={!isOwner || !!activeAuction}
                 onAccepted={refresh}
                 onCanceled={refresh}
+                totalOwned={totalOwned}
               />
             )}
             {query.filter === AssetTabs.history && (

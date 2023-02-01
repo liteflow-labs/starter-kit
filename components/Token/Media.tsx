@@ -1,4 +1,4 @@
-import { Box, Center, Icon, Stack, Text } from '@chakra-ui/react'
+import { Box, Center, Icon, Stack, Text, useTheme } from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
 import Image, { ImageProps } from 'next/image'
 import { useEffect, useState, VFC, VideoHTMLAttributes } from 'react'
@@ -21,6 +21,7 @@ const TokenMedia: VFC<
   controls,
   ...props
 }) => {
+  const { colors } = useTheme()
   // prioritize unlockedContent
   if (unlockedContent) {
     if (unlockedContent.mimetype?.startsWith('video/'))
@@ -52,27 +53,39 @@ const TokenMedia: VFC<
     const rest = props as Omit<ImageProps, 'src'>
     if (imageError)
       return (
-        <Center width="100%" height="100%" bg="brand.100">
-          <Stack align="center" spacing={3}>
-            <Icon as={FaImage} color="gray.500" w="5em" h="4em" />
-            <Text color="gray.500" fontWeight="600">
-              An issue occurred
-            </Text>
-          </Stack>
-        </Center>
+        <>
+          <svg viewBox="0 0 1 1">
+            <rect width="1" height="1" fill={colors.brand[100]} />
+          </svg>
+          <Center width="100%" height="100%" position="absolute">
+            <Stack align="center" spacing={3}>
+              <Icon as={FaImage} color="gray.500" w="5em" h="4em" />
+              <Text color="gray.500" fontWeight="600">
+                An issue occurred
+              </Text>
+            </Stack>
+          </Center>
+        </>
       )
+
     const customTag = { Image: Image as any }
     return (
-      <customTag.Image
-        src={image}
-        alt={defaultText}
-        onError={() => setImageError(true)}
-        layout={layout}
-        {...rest}
-      />
+      <Box position="relative" w="full" pt="100%">
+        <customTag.Image
+          src={image}
+          alt={defaultText}
+          onError={() => setImageError(true)}
+          layout={layout}
+          {...rest}
+        />
+      </Box>
     )
   }
-  return <Box bgColor="brand.50" h="full" w="full" />
+  return (
+    <svg viewBox="0 0 1 1">
+      <rect width="1" height="1" fill={colors.brand[50]} />
+    </svg>
+  )
 }
 
 export default TokenMedia

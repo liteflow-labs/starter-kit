@@ -34,6 +34,7 @@ import { wrapServerSideProps } from '../../../props'
 
 type Props = {
   userAddress: string
+  currentAccount: string | null
   now: string
   // Pagination
   limit: number
@@ -68,6 +69,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       query: FetchOwnedAssetsDocument,
       variables: {
         address: userAddress.toLowerCase(),
+        currentAddress: ctx.user.address || '',
         now,
         limit,
         offset,
@@ -79,6 +81,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     return {
       props: {
         userAddress,
+        currentAccount: ctx.user.address,
         now: now.toJSON(),
         limit,
         page,
@@ -102,6 +105,7 @@ const OwnedPage: NextPage<Props> = ({
   offset,
   orderBy,
   userAddress,
+  currentAccount,
 }) => {
   const ready = useEagerConnect()
   const signer = useSigner()
@@ -114,6 +118,7 @@ const OwnedPage: NextPage<Props> = ({
   const { data, refetch } = useFetchOwnedAssetsQuery({
     variables: {
       address: userAddress,
+      currentAddress: (ready ? account?.toLowerCase() : currentAccount) || '',
       limit,
       offset,
       orderBy,

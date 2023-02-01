@@ -3,7 +3,12 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 
 type TraitListProps = {
-  traits: { type: string; value: string; rarity?: string }[]
+  traits: {
+    type: string
+    value: string
+    totalCount: number
+    percent: number
+  }[]
 }
 
 const TraitList: FC<TraitListProps> = ({ traits }) => {
@@ -27,7 +32,9 @@ const TraitList: FC<TraitListProps> = ({ traits }) => {
             isTruncated
             pb={1}
           >
-            {t(`categories.${trait.type}`, null, { fallback: trait.type })}
+            {trait.type === 'Category'
+              ? t(`categories.${trait.type}`, null, { fallback: trait.type })
+              : trait.type}
           </Text>
           <Text
             as="span"
@@ -36,19 +43,19 @@ const TraitList: FC<TraitListProps> = ({ traits }) => {
             title={trait.value}
             isTruncated
           >
-            {t(`categories.${trait.value}`, null, { fallback: trait.value })}
+            {trait.type === 'Category'
+              ? t(`categories.${trait.value}`, null, { fallback: trait.value })
+              : trait.value}
           </Text>
-          {trait.rarity && (
-            <Text
-              as="span"
-              variant="caption"
-              color="brand.black"
-              title={t('traits.rarity', { value: trait.rarity })}
-              isTruncated
-            >
-              {t('traits.rarity', { value: trait.rarity })}
-            </Text>
-          )}
+          <Text
+            as="span"
+            variant="caption"
+            color="brand.black"
+            title={t('traits.percent', { value: trait.percent.toFixed(2) })}
+            isTruncated
+          >
+            {t('traits.percent', { value: trait.percent.toFixed(2) })}
+          </Text>
         </Flex>
       ))}
     </SimpleGrid>

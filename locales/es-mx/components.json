@@ -25,6 +25,28 @@
           "title": "Cancelar Oferta"
         }
       }
+    },
+    "modal": {
+      "accept": {
+        "title": "Aceptar una oferta",
+        "description": "Elija el número de ediciones que le gustaría vender al postor",
+        "submit": "Aceptar oferta",
+        "quantity": {
+          "label": "Cantidad",
+          "suffix": "Edición",
+          "placeholder": "Introduce la cantidad",
+          "available": "{{ count }} ediciones solicitadas por el postor"
+        },
+        "validation": {
+          "required": "Este campo es requerido.",
+          "in-range": "Este campo debe estar entre 1 y {{ max }}.",
+          "integer": "Este campo debe ser un número entero."
+        },
+        "owned": {
+          "label": "eres dueño",
+          "unit": "{{count}} edición(es)"
+        }
+      }
     }
   },
   "countdown": {
@@ -451,8 +473,11 @@
         "view": "Ver Coleccionable"
       },
       "card-footer": {
-        "highest-bid": "Oferta más alta:",
-        "place-bid": "Crear una oferta"
+        "highest-bid": "Oferta",
+        "place-bid": "Crear una oferta",
+        "no-bids": "Aún no hay ofertas",
+        "view": "Ver mi NFT",
+        "ongoing-auction": "Subasta en curso"
       },
       "form": {
         "submit": "Crear Oferta",
@@ -516,6 +541,7 @@
         "price": "Precio",
         "from": "De",
         "purchase": "Comprar",
+        "view": "Ver mi NFT",
         "offers": "{{count}} ofertas disponibles"
       },
       "form": {
@@ -594,7 +620,8 @@
       },
       "card-footer": {
         "open": "Abierto a ofertas",
-        "place-bid": "Crear una oferta"
+        "place-bid": "Crear una oferta",
+        "view": "Ver mi NFT"
       },
       "info": {
         "owner": "Eres propietario de este coleccionable",
@@ -694,7 +721,10 @@
     }
   },
   "traits": {
-    "rarity": "{{value}} rareza"
+    "percent": "{{value}}%"
+  },
+  "truncate": {
+    "show-more": "Mostrar más"
   },
   "user": {
     "balance": {
