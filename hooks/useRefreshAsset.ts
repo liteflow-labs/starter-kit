@@ -50,12 +50,7 @@ export default function useRefreshAsset(
   const refreshAsset = useCallback(
     async (assetId: string) => {
       // fetch the last updated date of this asset
-      const { updatedAt: initialUpdatedAt, histories } = await getAssetData(
-        assetId,
-      )
-
-      // check if asset is minted, if not minted, cannot refresh asset
-      if (histories.totalCount === 0) return
+      const { updatedAt: initialUpdatedAt } = await getAssetData(assetId)
 
       // ask backend to refresh asset
       await refreshAssetMutation({
