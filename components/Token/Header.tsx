@@ -9,7 +9,7 @@ import type { Props as SaleDetailProps } from '../Sales/Detail'
 import SaleDetail from '../Sales/Detail'
 import TokenMedia from '../Token/Media'
 import type { Props as TokenAssetProps } from '../Token/Metadata'
-import TokenAsset from '../Token/Metadata'
+import TokenMetadata from '../Token/Metadata'
 
 export type Props = {
   blockExplorer: BlockExplorer
@@ -32,6 +32,7 @@ export type Props = {
   currencies: SaleDetailProps['currencies']
   creator: TokenAssetProps['creator']
   owners: TokenAssetProps['owners']
+  numberOfOwners: TokenAssetProps['numberOfOwners']
   auction: SaleDetailProps['auction']
   bestBid: SaleDetailProps['bestBid']
   sales: SaleDetailProps['directSales']
@@ -48,6 +49,7 @@ const TokenHeader: VFC<Props> = ({
   currencies,
   creator,
   owners,
+  numberOfOwners,
   auction,
   bestBid,
   sales,
@@ -109,9 +111,11 @@ const TokenHeader: VFC<Props> = ({
             {asset.name}
           </Heading>
         </Stack>
-        <TokenAsset
+        <TokenMetadata
+          assetId={asset.id}
           creator={creator}
           owners={owners}
+          numberOfOwners={numberOfOwners}
           saleSupply={asset.saleSupply}
           standard={asset.collection.standard}
           totalSupply={asset.totalSupply}

@@ -130,7 +130,7 @@ function Layout({
       <Box mt={12}>
         <Banner />
         <Navbar
-          allowTopUp={true}
+          allowTopUp={environment.ALLOW_TOP_UP}
           router={{
             asPath: router.asPath,
             isReady: router.isReady,
