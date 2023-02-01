@@ -1,4 +1,4 @@
-import { parseAndVerifyRequest, Webhooks } from '@nft/webhook'
+import { Events, parseAndVerifyRequest } from '@nft/webhook'
 import { NextApiRequest, NextApiResponse } from 'next'
 import nodemailer, { SendMailOptions } from 'nodemailer'
 import invariant from 'ts-invariant'
@@ -15,8 +15,8 @@ const transporter = nodemailer.createTransport({
 })
 
 const emails = new Map<
-  keyof Webhooks,
-  ((data: Webhooks[keyof Webhooks]) => SendMailOptions | null)[]
+  keyof Events,
+  ((data: Events[keyof Events]) => SendMailOptions | null)[]
 >([
   ['BID_CREATED', [BidCreated]],
   ['AUCTION_BID_CREATED', [AuctionBidCreated]],
@@ -32,7 +32,7 @@ export default async function notification(
   const { data, type } = await parseAndVerifyRequest<
     'BID_CREATED' | 'AUCTION_BID_CREATED'
   >(req, liteflowSecret)
-  const emailTemplates = emails.get(type as keyof Webhooks)
+  const emailTemplates = emails.get(type)
   if (!emailTemplates) throw new Error("Email doesn't exist")
   const emailsToSend = emailTemplates
     .map((template) => template(data))
