@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
-import { Webhooks } from '@nft/webhook'
+import { Events } from '@nft/webhook'
 import environment from '../environment'
 
 export default function AuctionBidCreated({
@@ -10,7 +10,7 @@ export default function AuctionBidCreated({
   unitPrice,
   currency,
   quantity,
-}: Webhooks['AUCTION_BID_CREATED']): {
+}: Events['AUCTION_BID_CREATED']): {
   html: string
   subject: string
   to: string

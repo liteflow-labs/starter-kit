@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { formatDate } from '@nft/hooks'
-import { Webhooks } from '@nft/webhook'
+import { Events } from '@nft/webhook'
 import environment from '../environment'
 
 export default function BidCreated({
@@ -12,7 +12,7 @@ export default function BidCreated({
   currency,
   quantity,
   expiredAt,
-}: Webhooks['BID_CREATED']): {
+}: Events['BID_CREATED']): {
   html: string
   subject: string
   to: string
