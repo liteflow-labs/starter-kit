@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Button,
-  ButtonGroup,
   Checkbox,
   Flex,
   FormControl,
@@ -197,20 +196,26 @@ const FilterAsset: NextPage<Props> = ({
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel>
-            <ButtonGroup>
+            <Flex gap={2}>
               {offerTypes.map(({ key, value }) => (
                 <Button
                   key={key}
                   disabled={isSubmitting}
                   variant="outline"
                   size="sm"
+                  px={4}
+                  py={2.5}
+                  height={10}
                   colorScheme={filterResult.offers === value ? 'brand' : 'gray'}
+                  bgColor={
+                    filterResult.offers === value ? 'brand.50' : undefined
+                  }
                   onClick={() => propagateFilter({ offers: value })}
                 >
                   {t(`explore.nfts.form.offers.values.${key}`)}
                 </Button>
               ))}
-            </ButtonGroup>
+            </Flex>
           </AccordionPanel>
         </AccordionItem>
 
