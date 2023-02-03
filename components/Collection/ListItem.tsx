@@ -25,7 +25,7 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
     <ListItem
       key={`${collection.chainId}-${collection.address}`}
       label={
-        <Text variant="subtitle2" noOfLines={1} color="gray.800">
+        <Text variant="subtitle2" color="gray.800">
           {collection.name}
         </Text>
       }
@@ -40,7 +40,11 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
       }
       action={
         <VStack textAlign="right" alignItems="end" spacing="0.5">
-          <Text variant="subtitle2">{`${numbro(collection.totalVolume).format({
+          <Text
+            variant="subtitle2"
+            noOfLines={1}
+            wordBreak="break-all"
+          >{`${numbro(collection.totalVolume).format({
             thousandSeparated: true,
             trimMantissa: true,
             mantissa: 2,

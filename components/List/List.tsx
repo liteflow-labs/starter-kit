@@ -55,16 +55,34 @@ export function ListItem({
           gap={3}
         >
           <Box w="full" overflow="hidden">
-            <Text as="p" variant="text-sm" color="gray.500">
+            <Text
+              as="p"
+              variant="text-sm"
+              color="gray.500"
+              noOfLines={1}
+              wordBreak="break-all"
+            >
               {label}
             </Text>
             {subtitle && (
-              <Text as="p" variant="text-sm" color="gray.500">
+              <Text
+                as="p"
+                variant="text-sm"
+                color="gray.500"
+                noOfLines={1}
+                wordBreak="break-all"
+              >
                 {subtitle}
               </Text>
             )}
             {caption && (
-              <Text as="p" variant="text-sm" color="gray.500">
+              <Text
+                as="p"
+                variant="text-sm"
+                color="gray.500"
+                noOfLines={1}
+                wordBreak="break-all"
+              >
                 {caption}
               </Text>
             )}
