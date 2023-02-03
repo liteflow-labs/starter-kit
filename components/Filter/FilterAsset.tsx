@@ -449,7 +449,12 @@ const FilterAsset: NextPage<Props> = ({
                   {collectionResult.data?.collections?.nodes.map((x) => (
                     <CollectionListItem
                       key={`${x.chainId}-${x.address}`}
-                      as={Link}
+                      cursor={'pointer'}
+                      rounded="xl"
+                      transition={'background-color 0.3s ease-in-out'}
+                      _hover={{
+                        bgColor: 'brand.50',
+                      }}
                       onClick={() =>
                         propagateFilter({
                           collection: `${x.chainId}-${x.address}`,

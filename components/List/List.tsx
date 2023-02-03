@@ -33,7 +33,7 @@ export function ListItem({
   ...props
 }: ListItemProps): JSX.Element {
   return (
-    <Stack as="li" {...props}>
+    <Stack as="li" padding={2} {...props}>
       <Flex align="center" gap={3}>
         <Flex
           mb="auto"
@@ -105,7 +105,7 @@ export default function List({
   ...props
 }: PropsWithChildren<{}>): JSX.Element {
   return (
-    <Stack as="ul" position="relative" spacing={6} {...props}>
+    <Stack as="ul" position="relative" {...props}>
       {children}
     </Stack>
   )
