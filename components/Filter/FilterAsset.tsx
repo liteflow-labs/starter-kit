@@ -20,6 +20,7 @@ import {
   NumberInputField,
   Stack,
   Text,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { convertCollection } from 'convert'
@@ -69,6 +70,7 @@ const FilterAsset: NextPage<Props> = ({
   onFilterChange,
 }) => {
   const { t } = useTranslation('templates')
+  const isSmall = useBreakpointValue({ base: true, sm: false })
 
   const {
     register,
@@ -187,7 +189,7 @@ const FilterAsset: NextPage<Props> = ({
 
   return (
     <Stack spacing={8} as="form" onSubmit={handleSubmit(onFilterChange)}>
-      <Accordion allowMultiple defaultIndex={[2]}>
+      <Accordion allowMultiple defaultIndex={isSmall ? [] : [2]}>
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
@@ -196,7 +198,11 @@ const FilterAsset: NextPage<Props> = ({
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel>
-            <Flex gap={2} direction={{ base: 'column', sm: 'row' }}>
+            <Flex
+              gap={2}
+              direction={{ base: 'column', sm: 'row' }}
+              flexWrap="wrap"
+            >
               {offerTypes.map(({ key, value }) => (
                 <Button
                   key={key}

@@ -4,8 +4,14 @@ import {
   Flex,
   Grid,
   GridItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
   SimpleGrid,
   Text,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
 import { useWeb3React } from '@web3-react/core'
@@ -210,6 +216,7 @@ const CollectionPage: FC<Props> = ({
 }) => {
   const ready = useEagerConnect()
   const { query, push, pathname } = useRouter()
+  const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { account } = useWeb3React()
@@ -234,7 +241,7 @@ const CollectionPage: FC<Props> = ({
   })
   useExecuteOnAccountChange(refetch, ready)
 
-  const { showFilters, toggleFilters, count } = useFilterState(filter)
+  const { showFilters, toggleFilters, close, count } = useFilterState(filter)
   const updateFilter = useCallback(
     async (filter: Filter) => {
       const { traits, ...otherFilters } = filter
@@ -332,6 +339,21 @@ const CollectionPage: FC<Props> = ({
         </Box>
       </Flex>
 
+      {isSmall && (
+        <Modal isOpen={showFilters} onClose={close} size="full">
+          <ModalContent rounded="none">
+            <ModalHeader>Filters</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FilterAsset
+                currencies={currencies}
+                onFilterChange={updateFilter}
+                filter={filter}
+              />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
       <Grid gap="6" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
         {showFilters && (
           <GridItem as="aside">

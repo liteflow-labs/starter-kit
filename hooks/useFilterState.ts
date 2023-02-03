@@ -1,12 +1,15 @@
-import { useMemo, useState } from 'react'
+import { useBreakpointValue } from '@chakra-ui/react'
+import { useEffect, useMemo, useState } from 'react'
 import { Filter } from './useAssetFilterFromQuery'
 
 export default function useFilterState(filter: Filter): {
   showFilters: boolean
   toggleFilters: () => void
+  close: () => void
   count: number
 } {
-  const [showFilters, setShowFilters] = useState(true)
+  const display = useBreakpointValue({ base: false, md: true }) || false
+  const [showFilters, setShowFilters] = useState(display)
   const filterCount = useMemo(() => {
     let count = filter.traits.length
     if (filter.collection) count += 1
@@ -16,9 +19,12 @@ export default function useFilterState(filter: Filter): {
     return count
   }, [filter])
 
+  useEffect(() => setShowFilters(display), [display, setShowFilters])
+
   return {
     showFilters: showFilters,
     toggleFilters: () => setShowFilters((x) => !x),
+    close: () => setShowFilters(false),
     count: filterCount,
   }
 }
