@@ -342,7 +342,7 @@ const CollectionPage: FC<Props> = ({
       {isSmall && (
         <Modal isOpen={showFilters} onClose={close} size="full">
           <ModalContent rounded="none">
-            <ModalHeader>Filters</ModalHeader>
+            <ModalHeader>{t('collection.filter')}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <FilterAsset

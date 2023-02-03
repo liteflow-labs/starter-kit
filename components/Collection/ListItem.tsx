@@ -1,4 +1,5 @@
 import { Text, useBreakpointValue, VStack } from '@chakra-ui/react'
+import useTranslation from 'next-translate/useTranslation'
 import Image from 'next/image'
 import numbro from 'numbro'
 import { FC } from 'react'
@@ -21,6 +22,7 @@ type Props = Omit<
 }
 
 const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
+  const { t } = useTranslation('components')
   const isSmall = useBreakpointValue({ base: true, sm: false })
   return (
     <ListItem
@@ -30,15 +32,15 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
           {collection.name}
         </Text>
       }
-      subtitle={
-        collection.floorPrice
-          ? `Floor: ${numbro(collection.floorPrice).format({
+      subtitle={t('collection.listItem.floor', {
+        price: collection.floorPrice
+          ? `${numbro(collection.floorPrice).format({
               thousandSeparated: true,
               trimMantissa: true,
               mantissa: 2,
             })} ${collection.floorPriceCurrencySymbol}`
-          : 'Floor: -'
-      }
+          : '-',
+      })}
       action={
         <VStack textAlign="right" alignItems="end" spacing="0.5">
           <Text
@@ -51,7 +53,7 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
             mantissa: 2,
           })} ${collection.totalVolumeCurrencySymbol}`}</Text>
           <Text variant="caption" color="gray.500">
-            All time
+            {t('collection.listItem.allTime')}
           </Text>
         </VStack>
       }

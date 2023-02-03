@@ -49,6 +49,12 @@
       }
     }
   },
+  "collection": {
+    "listItem": {
+      "allTime": "全期間",
+      "floor": "フロア: {{price}}"
+    }
+  },
   "countdown": {
     "day": "{{value}}日",
     "hour": "{{value}}時間",
@@ -57,6 +63,58 @@
   },
   "dropzone": {
     "required": "必須の項目です"
+  },
+  "filters": {
+    "nav": {
+      "title": "フィルター",
+      "clear": "フィルターをクリアする"
+    },
+    "assets": {
+      "submit": "適用する",
+      "clear": "すべてクリア",
+      "currency": {
+        "label": "価格レンジ",
+        "placeholder": "通貨の選択"
+      },
+      "min-price": {
+        "placeholder": "から",
+        "validation": {
+          "positive": "最低価格は 0 より大きくなければなりません。",
+          "decimals": "最低価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+        }
+      },
+      "max-price": {
+        "placeholder": "まで",
+        "validation": {
+          "positive": "最大価格は 0 より大きくなければなりません。",
+          "decimals": "最大価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+        }
+      },
+      "offers": {
+        "label": "状態",
+        "values": {
+          "all": "すべての",
+          "fixed": "固定価格",
+          "auction": "オークション"
+        }
+      },
+      "categories": {
+        "label": "カテゴリー"
+      },
+      "collections": {
+        "label": "NFT",
+        "search": {
+          "placeholder": "コレクションから探す"
+        }
+      },
+      "properties": {
+        "label": "プロパティ",
+        "labelWithCollection": "コレクションとプロパティ",
+        "search": {
+          "placeholder": "フィルターのプロパティ"
+        }
+      }
+    }
   },
   "footer": {
     "copyright": "© {{date}} {{name}} 無断転載を禁じます。"

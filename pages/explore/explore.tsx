@@ -266,7 +266,7 @@ const ExplorePage: NextPage<Props> = ({
           {isSmall && (
             <Modal isOpen={showFilters} onClose={close} size="full">
               <ModalContent rounded="none">
-                <ModalHeader>Filters</ModalHeader>
+                <ModalHeader>{t('explore.nfts.filter')}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                   <FilterAsset

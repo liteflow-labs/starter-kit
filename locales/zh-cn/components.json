@@ -49,6 +49,12 @@
       }
     }
   },
+  "collection": {
+    "listItem": {
+      "allTime": "所有时间",
+      "floor": "底价: {{price}}"
+    }
+  },
   "countdown": {
     "day": "{{value}} 天",
     "hour": "{{value}} 小时",
@@ -57,6 +63,58 @@
   },
   "dropzone": {
     "required": "此字段为必填字段"
+  },
+  "filters": {
+    "nav": {
+      "title": "过滤 器",
+      "clear": "清除过滤器"
+    },
+    "assets": {
+      "submit": "应用",
+      "clear": "全部清空",
+      "currency": {
+        "label": "价格范围",
+        "placeholder": "选择货币"
+      },
+      "min-price": {
+        "placeholder": "从",
+        "validation": {
+          "positive": "最低价格必须大于 0",
+          "decimals": "最低价格支持最多 {{ nbDecimals }} 位小数"
+        }
+      },
+      "max-price": {
+        "placeholder": "到",
+        "validation": {
+          "positive": "最高价格必须大于 0",
+          "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
+        }
+      },
+      "offers": {
+        "label": "状态",
+        "values": {
+          "all": "都",
+          "fixed": "固定价格",
+          "auction": "拍卖"
+        }
+      },
+      "categories": {
+        "label": "类别"
+      },
+      "collections": {
+        "label": "收NFT",
+        "search": {
+          "placeholder": "按产品系列搜索"
+        }
+      },
+      "properties": {
+        "label": "性能",
+        "labelWithCollection": "集合和属性",
+        "search": {
+          "placeholder": "筛选器属性"
+        }
+      }
+    }
   },
   "footer": {
     "copyright": "© {{date}} {{name}} 保留所有权利。"

@@ -69,7 +69,7 @@ const FilterAsset: NextPage<Props> = ({
   selectedCollection,
   onFilterChange,
 }) => {
-  const { t } = useTranslation('templates')
+  const { t } = useTranslation('components')
   const isSmall = useBreakpointValue({ base: true, sm: false })
 
   const {
@@ -193,7 +193,7 @@ const FilterAsset: NextPage<Props> = ({
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
-              {t('explore.nfts.form.offers.label')}
+              {t('filters.assets.offers.label')}
             </Heading>
             <AccordionIcon />
           </AccordionButton>
@@ -218,7 +218,7 @@ const FilterAsset: NextPage<Props> = ({
                   }
                   onClick={() => propagateFilter({ offers: value })}
                 >
-                  {t(`explore.nfts.form.offers.values.${key}`)}
+                  {t(`filters.assets.offers.values.${key}`)}
                 </Button>
               ))}
             </Flex>
@@ -228,7 +228,7 @@ const FilterAsset: NextPage<Props> = ({
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
-              {t('explore.nfts.form.currency.label')}
+              {t('filters.assets.currency.label')}
             </Heading>
             <AccordionIcon />
           </AccordionButton>
@@ -248,7 +248,7 @@ const FilterAsset: NextPage<Props> = ({
                 <Select
                   name="currencyId"
                   control={control as any} // TODO: fix this type
-                  placeholder={t('explore.nfts.form.currency.placeholder')}
+                  placeholder={t('filters.assets.currency.placeholder')}
                   choices={currencies.map((x) => ({
                     value: x.id,
                     label: x.symbol || '',
@@ -279,7 +279,7 @@ const FilterAsset: NextPage<Props> = ({
                       >
                         <NumberInputField
                           placeholder={t(
-                            'explore.nfts.form.min-price.placeholder',
+                            'filters.assets.min-price.placeholder',
                           )}
                           {...register('minPrice', {
                             validate: (value) => {
@@ -288,7 +288,7 @@ const FilterAsset: NextPage<Props> = ({
 
                               if (value < 0) {
                                 return t(
-                                  'explore.nfts.form.min-price.validation.positive',
+                                  'filters.assets.min-price.validation.positive',
                                 )
                               }
                               if (
@@ -296,7 +296,7 @@ const FilterAsset: NextPage<Props> = ({
                                 splitValue[1].length > currency.decimals
                               ) {
                                 return t(
-                                  'explore.nfts.form.min-price.validation.decimals',
+                                  'filters.assets.min-price.validation.decimals',
                                   {
                                     nbDecimals: currency.decimals,
                                   },
@@ -335,7 +335,7 @@ const FilterAsset: NextPage<Props> = ({
                       >
                         <NumberInputField
                           placeholder={t(
-                            'explore.nfts.form.max-price.placeholder',
+                            'filters.assets.max-price.placeholder',
                           )}
                           {...register('maxPrice', {
                             validate: (value) => {
@@ -344,7 +344,7 @@ const FilterAsset: NextPage<Props> = ({
 
                               if (value < 0) {
                                 return t(
-                                  'explore.nfts.form.max-price.validation.positive',
+                                  'filters.assets.max-price.validation.positive',
                                 )
                               }
                               if (
@@ -352,7 +352,7 @@ const FilterAsset: NextPage<Props> = ({
                                 splitValue[1].length > currency.decimals
                               ) {
                                 return t(
-                                  'explore.nfts.form.max-price.validation.decimals',
+                                  'filters.assets.max-price.validation.decimals',
                                   {
                                     nbDecimals: currency.decimals,
                                   },
@@ -382,7 +382,7 @@ const FilterAsset: NextPage<Props> = ({
 
               <Button disabled={isSubmitting} onClick={() => propagateFilter()}>
                 <Text as="span" isTruncated>
-                  Apply
+                  {t('filters.assets.submit')}
                 </Text>
               </Button>
             </Stack>
@@ -394,8 +394,8 @@ const FilterAsset: NextPage<Props> = ({
             <AccordionButton>
               <Heading variant="heading2" flex="1" textAlign="left">
                 {selectedCollection
-                  ? 'Properties'
-                  : 'Collection and properties'}
+                  ? t('filters.assets.properties.label')
+                  : t('filters.assets.properties.labelWithCollection')}
               </Heading>
               <AccordionIcon />
             </AccordionButton>
@@ -423,7 +423,9 @@ const FilterAsset: NextPage<Props> = ({
                     <Icon as={HiOutlineSearch} w={6} h={6} color="gray.400" />
                   </InputLeftElement>
                   <Input
-                    placeholder="Filter properties"
+                    placeholder={t(
+                      'filters.assets.properties.search.placeholder',
+                    )}
                     type="search"
                     onChange={(e) => setPropertySearch(e.target.value)}
                   />
@@ -435,7 +437,7 @@ const FilterAsset: NextPage<Props> = ({
           <AccordionItem>
             <AccordionButton>
               <Heading variant="heading2" flex="1" textAlign="left">
-                {t('explore.nfts.form.collections.label')}
+                {t('filters.assets.collections.label')}
               </Heading>
               <AccordionIcon />
             </AccordionButton>
@@ -446,7 +448,9 @@ const FilterAsset: NextPage<Props> = ({
                     <Icon as={HiOutlineSearch} w={6} h={6} color="gray.400" />
                   </InputLeftElement>
                   <Input
-                    placeholder="Search by collection"
+                    placeholder={t(
+                      'filters.assets.collections.search.placeholder',
+                    )}
                     type="search"
                     onChange={(e) => setCollectionSearch(e.target.value)}
                   />

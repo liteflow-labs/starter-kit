@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { HiChevronLeft } from '@react-icons/all-files/hi/HiChevronLeft'
 import { HiOutlineAdjustments } from '@react-icons/all-files/hi/HiOutlineAdjustments'
+import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 
 type Props = {
@@ -23,6 +24,7 @@ const FilterNav: FC<Props> = ({
   toggleFilters,
   onClear,
 }) => {
+  const { t } = useTranslation('components')
   const isSmall = useBreakpointValue({ base: true, md: false })
   return (
     <HStack spacing={4}>
@@ -32,7 +34,7 @@ const FilterNav: FC<Props> = ({
         ) : (
           <Icon as={HiOutlineAdjustments} />
         )}
-        <Text ml="2">Filters</Text>
+        <Text ml="2">{t('filters.nav.title')}</Text>
       </Button>
       {count > 0 && !isSmall && (
         <Button
@@ -53,7 +55,7 @@ const FilterNav: FC<Props> = ({
             </Box>
           }
         >
-          Clear filters
+          {t('filters.nav.clear')}
         </Button>
       )}
     </HStack>
