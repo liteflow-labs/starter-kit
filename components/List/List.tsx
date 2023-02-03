@@ -11,7 +11,7 @@ import { HiXCircle } from '@react-icons/all-files/hi/HiXCircle'
 import { PropsWithChildren } from 'react'
 
 export type ListItemProps = StackProps & {
-  image: JSX.Element
+  image?: JSX.Element
   imageRounded?: string
   label: JSX.Element | string
   subtitle?: JSX.Element | string
@@ -35,25 +35,22 @@ export function ListItem({
   return (
     <Stack as="li" padding={2} {...props}>
       <Flex align="center" gap={3}>
-        <Flex
-          mb="auto"
-          h={10}
-          w={10}
-          minW="max-content"
-          align="center"
-          justify="center"
-          overflow="hidden"
-          rounded={imageRounded || 'full'}
-          bgColor="gray.100"
-        >
-          {image}
-        </Flex>
-        <Flex
-          flex={1}
-          direction={{ base: 'column', md: 'row' }}
-          align="center"
-          gap={3}
-        >
+        {image && (
+          <Flex
+            mb="auto"
+            h={10}
+            w={10}
+            minW="max-content"
+            align="center"
+            justify="center"
+            overflow="hidden"
+            rounded={imageRounded || 'full'}
+            bgColor="gray.100"
+          >
+            {image}
+          </Flex>
+        )}
+        <Flex flex={1} align="center" gap={3}>
           <Box w="full" overflow="hidden">
             <Text
               as="p"

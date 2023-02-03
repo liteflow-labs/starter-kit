@@ -1,4 +1,4 @@
-import { Text, VStack } from '@chakra-ui/react'
+import { Text, useBreakpointValue, VStack } from '@chakra-ui/react'
 import Image from 'next/image'
 import numbro from 'numbro'
 import { FC } from 'react'
@@ -21,6 +21,7 @@ type Props = Omit<
 }
 
 const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
+  const isSmall = useBreakpointValue({ base: true, sm: false })
   return (
     <ListItem
       key={`${collection.chainId}-${collection.address}`}
@@ -55,7 +56,7 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
         </VStack>
       }
       image={
-        collection.image ? (
+        isSmall ? undefined : collection.image ? (
           <Image
             src={collection.image}
             alt={collection.name}
