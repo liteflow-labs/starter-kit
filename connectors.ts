@@ -4,7 +4,12 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import environment from './environment'
 
-const connectors = {
+const connectors: {
+  email?: EmailConnector
+  injected?: InjectedConnector
+  walletConnect?: WalletConnectConnector
+  coinbase?: WalletLinkConnector
+} = {
   email: new EmailConnector({
     apiKey: environment.MAGIC_API_KEY,
     options: {
