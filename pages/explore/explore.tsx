@@ -258,9 +258,9 @@ const ExplorePage: NextPage<Props> = ({
               />
             </Box>
           </Flex>
-          <Grid gap="6" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
+          <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
             {showFilters && (
-              <GridItem as="aside">
+              <GridItem as="aside" maxWidth="300px">
                 <FilterAsset
                   currencies={currencies}
                   onFilterChange={updateFilter}
