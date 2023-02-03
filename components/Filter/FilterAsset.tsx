@@ -196,7 +196,7 @@ const FilterAsset: NextPage<Props> = ({
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel>
-            <Flex gap={2}>
+            <Flex gap={2} direction={{ base: 'column', sm: 'row' }}>
               {offerTypes.map(({ key, value }) => (
                 <Button
                   key={key}
@@ -258,7 +258,7 @@ const FilterAsset: NextPage<Props> = ({
               )}
 
               {currency && (
-                <Flex gap={3}>
+                <Flex gap={3} direction={{ base: 'column', sm: 'row' }}>
                   <FormControl isInvalid={!!errors.minPrice}>
                     <InputGroup>
                       <NumberInput
