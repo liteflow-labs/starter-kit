@@ -1,3 +1,15 @@
 .chakra-collapse {
   overflow: visible !important;
 }
+
+.chakra-checkbox__label {
+  width: 100%;
+}
+
+.chakra-accordion > .chakra-accordion__item:first-child {
+  border-top-width: 0px;
+}
+
+.chakra-accordion > .chakra-accordion__item:last-child {
+  border-bottom-width: 0px;
+}

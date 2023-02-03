@@ -474,9 +474,12 @@ const FilterAsset: NextPage<Props> = ({
           <AccordionItem key={i}>
             <AccordionButton>
               <Heading variant="heading2" flex="1" textAlign="left">
-                {type} - {values.length}
+                {type}
               </Heading>
-              <AccordionIcon />
+              <Flex gap="4" alignItems="center">
+                <Heading variant="heading2">{values.length}</Heading>
+                <AccordionIcon />
+              </Flex>
             </AccordionButton>
             <AccordionPanel maxHeight="400px" overflow="scroll">
               <Stack spacing={2}>

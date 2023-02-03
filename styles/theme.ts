@@ -20,12 +20,17 @@ export const theme = extendTheme({
       baseStyle: {
         container: {
           w: 'full',
-          shadow: 'sm',
           rounded: 'xl',
-          border: '1px',
-          borderColor: 'gray.200',
-          py: 2.5,
-          px: 4,
+          p: 2.5,
+          _hover: {
+            bg: 'brand.50',
+          },
+          _selected: {
+            bg: 'brand.50',
+          },
+          _checked: {
+            bg: 'brand.50',
+          },
         },
       },
       defaultProps: {
