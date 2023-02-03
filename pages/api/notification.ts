@@ -5,6 +5,16 @@ import invariant from 'ts-invariant'
 import AuctionBidCreated from '../../emails/AuctionBidCreated'
 import BidCreated from '../../emails/BidCreated'
 
+invariant(process.env.EMAIL_HOST, 'env EMAIL_HOST is required')
+invariant(process.env.EMAIL_PORT, 'env EMAIL_PORT is required')
+invariant(process.env.EMAIL_USERNAME, 'env EMAIL_USERNAME is required')
+invariant(process.env.EMAIL_PASSWORD, 'env EMAIL_PASSWORD is required')
+invariant(
+  process.env.LITEFLOW_WEBHOOK_SECRET,
+  'env LITEFLOW_WEBHOOK_SECRET is required',
+)
+const liteflowSecret = process.env.LITEFLOW_WEBHOOK_SECRET
+
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: Number(process.env.EMAIL_PORT),
@@ -26,14 +36,12 @@ export default async function notification(
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<void> {
-  const liteflowSecret = process.env.LITEFLOW_WEBHOOK_SECRET
-  invariant(liteflowSecret, 'LITEFLOW_WEBHOOK_SECRET is required')
-
   const { data, type } = await parseAndVerifyRequest<
     'BID_CREATED' | 'AUCTION_BID_CREATED'
   >(req, liteflowSecret)
   const emailTemplates = emails.get(type)
-  if (!emailTemplates) throw new Error("Email doesn't exist")
+  if (!emailTemplates)
+    throw new Error(`Email template for event ${type} does not exist`)
   const emailsToSend = emailTemplates
     .map((template) => template(data))
     .filter(Boolean)
