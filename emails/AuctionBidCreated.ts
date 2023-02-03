@@ -23,7 +23,7 @@ export default function AuctionBidCreated({
   return {
     to: taker.email,
     subject: `New bid of ${amount} ${currency.symbol} received for your auction on ${asset.name}`,
-    html: `Hi <strong>${taker?.username || taker?.address}</strong>,
+    html: `Hi <strong>${taker.username || taker.address}</strong>,
 <br/>
 <br/>
 We are pleased to let you know that you have received a new bid of <strong>${amount} ${

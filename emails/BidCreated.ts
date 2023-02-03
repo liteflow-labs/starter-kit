@@ -27,7 +27,7 @@ export default function BidCreated({
     } of ${asset.name} for ${price} ${currency.symbol}${
       multiple ? ' each' : ''
     }`,
-    html: `Hi <strong>${taker?.username || taker?.address}</strong>,
+    html: `Hi <strong>${taker.username || taker.address}</strong>,
 <br/>
 <br/>
 We are pleased to let you know that you have received a new bid from <strong>${
