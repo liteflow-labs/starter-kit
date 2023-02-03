@@ -42,6 +42,7 @@ import {
   currentJWT,
   jwtValidity,
 } from '../session'
+import '../styles/style.css'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
