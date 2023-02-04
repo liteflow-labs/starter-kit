@@ -4,19 +4,18 @@ import { useEffect, useState, VFC } from 'react'
 import Image from '../Image/Image'
 
 const TokenMedia: VFC<{
-    image: string | null | undefined
-    animationUrl: string | null | undefined
-    unlockedContent: { url: string; mimetype: string | null } | null | undefined
-    defaultText?: string
-    controls?: boolean | undefined
-    layout?: string | undefined
-  }
-> = ({
+  image: string | null | undefined
+  animationUrl: string | null | undefined
+  unlockedContent: { url: string; mimetype: string | null } | null | undefined
+  defaultText?: string
+  controls?: boolean
+  fill?: boolean
+}> = ({
   image,
   animationUrl,
   unlockedContent,
   defaultText,
-  layout,
+  fill,
   controls,
 }) => {
   const { colors } = useTheme()
@@ -35,13 +34,16 @@ const TokenMedia: VFC<{
 
   if (animationUrl) {
     return (
-      <video
+      <Box
+        as="video"
         src={animationUrl}
         autoPlay
         playsInline
         muted
         loop
         controls={controls}
+        w={fill ? 'auto' : 'full'}
+        h={fill ? 'auto' : 'full'}
       />
     )
   }
@@ -69,7 +71,8 @@ const TokenMedia: VFC<{
           src={image}
           alt={defaultText}
           onError={() => setImageError(true)}
-          layout={layout}
+          layout="fill"
+          objectFit={fill ? 'cover' : 'scale-down'}
         />
       </Box>
     )

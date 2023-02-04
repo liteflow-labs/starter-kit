@@ -1,4 +1,11 @@
-import { Box, Flex, Heading, SimpleGrid, Stack } from '@chakra-ui/react'
+import {
+  AspectRatio,
+  Box,
+  Flex,
+  Heading,
+  SimpleGrid,
+  Stack,
+} from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMemo, VFC } from 'react'
@@ -77,8 +84,9 @@ const TokenHeader: VFC<Props> = ({
           as={Link}
           href={`/tokens/${asset.id}`}
           mx="auto"
-          maxH={96}
+          maxH="sm"
           w="full"
+          h="full"
           maxW="sm"
           align="center"
           justify="center"
@@ -86,14 +94,15 @@ const TokenHeader: VFC<Props> = ({
           rounded="lg"
           shadow="md"
         >
-          <TokenMedia
-            image={asset.image}
-            animationUrl={asset.animationUrl}
-            unlockedContent={asset.unlockedContent}
-            defaultText={asset.name}
-            objectFit="cover"
-            layout="fill"
-          />
+          <AspectRatio w="full" ratio={1}>
+            <TokenMedia
+              image={asset.image}
+              animationUrl={asset.animationUrl}
+              unlockedContent={asset.unlockedContent}
+              defaultText={asset.name}
+              fill={true}
+            />
+          </AspectRatio>
         </Flex>
       </Box>
       <Stack spacing={8} p={{ base: 6, md: 12 }}>

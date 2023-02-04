@@ -311,20 +311,13 @@ const DetailPage: NextPage<Props> = ({
             p={12}
             bg="brand.50"
           >
-            <Box position="relative" w="full" zIndex={1}>
-              <Box
-                as={TokenMedia}
-                image={asset.image}
-                animationUrl={asset.animationUrl}
-                unlockedContent={
-                  showPreview ? undefined : asset.unlockedContent
-                }
-                defaultText={asset.name}
-                objectFit="cover"
-                layout="fill"
-                controls
-              />
-            </Box>
+            <TokenMedia
+              image={asset.image}
+              animationUrl={asset.animationUrl}
+              unlockedContent={showPreview ? undefined : asset.unlockedContent}
+              defaultText={asset.name}
+              controls
+            />
             {asset.hasUnlockableContent && (
               <Flex
                 w="full"
