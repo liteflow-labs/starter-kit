@@ -56,7 +56,9 @@
     "sec": "{{value}} 秒"
   },
   "dropzone": {
-    "required": "此字段为必填字段"
+    "required": "此字段为必填字段",
+    "gifTooLarge": "GIF 文件太大。最大大小为 5MB。",
+    "gifLimit": "GIF。最大 5 MB。"
   },
   "footer": {
     "copyright": "© {{date}} {{name}} 保留所有权利。"
@@ -648,7 +650,7 @@
         "file": {
           "label": "上传文件",
           "heading": "拖放文件或",
-          "hint": "JPG、PNG、GIF、WEBP、WEBM 或 MP4。大小不得超过 100 MB。",
+          "hint": "JPG、PNG、WEBP、WEBM 或 MP4。大小不得超过 100 MB。",
           "file": {
             "chose": "选择文件",
             "replace": "替换文件"
@@ -657,7 +659,7 @@
         "preview": {
           "label": "上传预览",
           "heading": "拖放文件或",
-          "hint": "JPG、PNG、GIF、WEBP。大小不得超过 100 MB。",
+          "hint": "JPG、PNG、WEBP。大小不得超过 100 MB。",
           "file": {
             "chose": "选择文件",
             "replace": "替换文件"
@@ -755,7 +757,7 @@
         "image": {
           "label": "上传个人资料图片",
           "heading": "拖放文件或",
-          "hint": "推荐分辨率：400x400 像素。JPG、PNG、GIF、WEBP。文件大小不得超过 10 MB。",
+          "hint": "推荐分辨率：400x400 像素。JPG、PNG、WEBP。文件大小不得超过 10 MB。",
           "file": {
             "chose": "选择文件",
             "replace": "替换文件"
@@ -764,7 +766,7 @@
         "cover": {
           "label": "上传封面图片",
           "heading": "拖放文件或",
-          "hint": "推荐分辨率：1128x200 像素。JPG、PNG、GIF、WEBP。文件大小不得超过 10 MB。",
+          "hint": "推荐分辨率：1128x200 像素。JPG、PNG、WEBP。文件大小不得超过 10 MB。",
           "file": {
             "chose": "选择文件",
             "replace": "替换文件"
