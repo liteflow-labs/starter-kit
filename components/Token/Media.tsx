@@ -66,7 +66,7 @@ const TokenMedia: VFC<{
       )
 
     return (
-      <Box position="relative" w="full" pt="100%">
+      <Box position="relative" w="full" h="full">
         <Image
           src={image}
           alt={defaultText}
