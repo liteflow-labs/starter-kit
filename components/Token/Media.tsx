@@ -42,8 +42,8 @@ const TokenMedia: VFC<{
         muted
         loop
         controls={controls}
-        w={fill ? 'auto' : 'full'}
-        h={fill ? 'auto' : 'full'}
+        maxW="full"
+        maxH="full"
       />
     )
   }
