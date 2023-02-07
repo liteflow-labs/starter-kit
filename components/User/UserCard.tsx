@@ -1,9 +1,10 @@
-import { Avatar, Box, Flex, Icon, Text } from '@chakra-ui/react'
+import { Box, Flex, Icon, Text } from '@chakra-ui/react'
 import { formatAddress } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Image from 'components/Image/Image'
 import Link from 'components/Link/Link'
 import { FC } from 'react'
+import AccountImage from '../Wallet/Image'
 
 type Props = {
   user: {
@@ -40,15 +41,18 @@ const UserCard: FC<Props> = ({ user }) => {
             position="absolute"
             bottom={0}
             transform="translate(1rem, 50%)"
-            bg="black"
             border="2px solid"
             borderColor="white"
             rounded="full"
+            w={16}
+            h={16}
           >
-            <Avatar
-              size="lg"
-              src={user.image || undefined}
-              title={user.name || user.address}
+            <Box
+              as={AccountImage}
+              address={user.address}
+              image={user.image}
+              size={60}
+              rounded="full"
             />
           </Box>
         </Box>
