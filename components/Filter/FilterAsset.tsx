@@ -212,13 +212,18 @@ const FilterAsset: NextPage<Props> = ({
                   px={4}
                   py={2.5}
                   height={10}
-                  colorScheme={filterResult.offers === value ? 'brand' : 'gray'}
+                  color="black"
+                  borderColor={
+                    filterResult.offers === value ? 'brand.500' : 'gray.200'
+                  }
                   bgColor={
                     filterResult.offers === value ? 'brand.50' : undefined
                   }
                   onClick={() => propagateFilter({ offers: value })}
                 >
-                  {t(`filters.assets.offers.values.${key}`)}
+                  <Text variant="subtitle2">
+                    {t(`filters.assets.offers.values.${key}`)}
+                  </Text>
                 </Button>
               ))}
             </Flex>
