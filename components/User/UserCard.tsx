@@ -32,6 +32,12 @@ const UserCard: FC<Props> = ({ user }) => {
               alt={user.name || 'User cover image'}
               layout="fill"
               objectFit="cover"
+              sizes="
+              (max-width: 479px) 100vw,
+              (max-width: 767px) 50vw,
+              (max-width: 991px) 33vw,
+              (max-width: 1279px) 25vw,
+              290px"
             />
           ) : (
             <Box bg="gray.100" height="full" />

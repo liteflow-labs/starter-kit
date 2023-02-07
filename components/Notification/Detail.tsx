@@ -181,8 +181,10 @@ export default function NotificationDetail({
               <Image
                 src={content.image}
                 alt="Square Image"
-                layout="fill"
+                layout="fixed"
                 objectFit="cover"
+                width={56}
+                height={56}
               />
             </Box>
           </div>
