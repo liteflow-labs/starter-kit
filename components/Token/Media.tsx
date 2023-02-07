@@ -1,25 +1,22 @@
 import { Box, Center, Icon, Stack, Text, useTheme } from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
-import Image, { ImageProps } from 'next/image'
-import { useEffect, useState, VFC, VideoHTMLAttributes } from 'react'
+import { useEffect, useState, VFC } from 'react'
+import Image from '../Image/Image'
 
-const TokenMedia: VFC<
-  (Omit<VideoHTMLAttributes<any>, 'src'> | Omit<ImageProps, 'src'>) & {
-    image: string | null | undefined
-    animationUrl: string | null | undefined
-    unlockedContent: { url: string; mimetype: string | null } | null | undefined
-    defaultText?: string
-    controls?: boolean | undefined
-    layout?: string | undefined
-  }
-> = ({
+const TokenMedia: VFC<{
+  image: string | null | undefined
+  animationUrl: string | null | undefined
+  unlockedContent: { url: string; mimetype: string | null } | null | undefined
+  defaultText?: string
+  controls?: boolean
+  fill?: boolean
+}> = ({
   image,
   animationUrl,
   unlockedContent,
   defaultText,
-  layout,
+  fill,
   controls,
-  ...props
 }) => {
   const { colors } = useTheme()
   // prioritize unlockedContent
@@ -36,21 +33,21 @@ const TokenMedia: VFC<
   }, [image])
 
   if (animationUrl) {
-    const { objectFit, src, ...videoProps } = props as ImageProps
     return (
-      <video
+      <Box
+        as="video"
         src={animationUrl}
         autoPlay
         playsInline
         muted
         loop
         controls={controls}
-        {...(videoProps as Omit<VideoHTMLAttributes<any>, 'src'>)}
+        maxW="full"
+        maxH="full"
       />
     )
   }
   if (image) {
-    const rest = props as Omit<ImageProps, 'src'>
     if (imageError)
       return (
         <>
@@ -68,15 +65,14 @@ const TokenMedia: VFC<
         </>
       )
 
-    const customTag = { Image: Image as any }
     return (
-      <Box position="relative" w="full" pt="100%">
-        <customTag.Image
+      <Box position="relative" w="full" h="full">
+        <Image
           src={image}
           alt={defaultText}
           onError={() => setImageError(true)}
-          layout={layout}
-          {...rest}
+          layout="fill"
+          objectFit={fill ? 'cover' : 'scale-down'}
         />
       </Box>
     )
