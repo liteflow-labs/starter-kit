@@ -12,13 +12,10 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { EmailConnector } from '@nft/email-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo, useState } from 'react'
+import connectors from '../../connectors'
 import WalletCoinbase from '../Wallet/Connectors/Coinbase'
 import WalletEmail from '../Wallet/Connectors/Email'
 import WalletMetamask from '../Wallet/Connectors/Metamask'
@@ -27,22 +24,10 @@ import WalletWalletConnect from '../Wallet/Connectors/WalletConnect'
 type Props = {
   isOpen: boolean
   onClose: () => void
-  email?: EmailConnector
-  injected?: InjectedConnector
-  coinbase?: WalletLinkConnector
-  walletConnect?: WalletConnectConnector
   networkName: string
 }
 
-const LoginModal: FC<Props> = ({
-  isOpen,
-  onClose,
-  email,
-  coinbase,
-  injected,
-  walletConnect,
-  networkName,
-}) => {
+const LoginModal: FC<Props> = ({ isOpen, onClose, networkName }) => {
   const { t } = useTranslation('components')
   const { account, error, activate } = useWeb3React()
   const [errorFromLogin, setErrorFromLogin] = useState<Error>()
@@ -53,8 +38,9 @@ const LoginModal: FC<Props> = ({
   )
 
   const hasStandardWallet = useMemo(
-    () => injected || coinbase || walletConnect,
-    [injected, coinbase, walletConnect],
+    () =>
+      connectors.injected || connectors.coinbase || connectors.walletConnect,
+    [],
   )
 
   useEffect(() => {
@@ -76,8 +62,8 @@ const LoginModal: FC<Props> = ({
             {t('modal.login.description')}
           </Text>
 
-          {email && <WalletEmail connector={email} activate={activate} />}
-          {email && hasStandardWallet && (
+          {connectors.email && <WalletEmail activate={activate} />}
+          {connectors.email && hasStandardWallet && (
             <Box position="relative" mt={6} mb={2}>
               <Flex
                 position="absolute"
@@ -114,7 +100,7 @@ const LoginModal: FC<Props> = ({
           )}
           {hasStandardWallet && (
             <Flex direction={{ base: 'column', md: 'row' }} gap={3}>
-              {injected && (
+              {connectors.injected && (
                 <Stack
                   cursor="pointer"
                   w="full"
@@ -129,13 +115,12 @@ const LoginModal: FC<Props> = ({
                   transition="box-shadow 0.3s ease-in-out"
                 >
                   <WalletMetamask
-                    connector={injected}
                     activate={activate}
                     onError={setErrorFromLogin}
                   />
                 </Stack>
               )}
-              {coinbase && (
+              {connectors.coinbase && (
                 <Stack
                   cursor="pointer"
                   w="full"
@@ -151,12 +136,11 @@ const LoginModal: FC<Props> = ({
                 >
                   <WalletCoinbase
                     activate={activate}
-                    connector={coinbase}
                     onError={setErrorFromLogin}
                   />
                 </Stack>
               )}
-              {walletConnect && (
+              {connectors.walletConnect && (
                 <Stack
                   cursor="pointer"
                   w="full"
@@ -172,7 +156,6 @@ const LoginModal: FC<Props> = ({
                 >
                   <WalletWalletConnect
                     activate={activate}
-                    connector={walletConnect}
                     onError={setErrorFromLogin}
                   />
                 </Stack>

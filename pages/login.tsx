@@ -98,12 +98,7 @@ const LoginPage: NextPage = () => {
         mb={{ base: 12, lg: 24 }}
         justify="center"
       >
-        {connectors.email && (
-          <WalletEmail
-            connector={connectors.email}
-            activate={handleAuthenticated}
-          />
-        )}
+        {connectors.email && <WalletEmail activate={handleAuthenticated} />}
 
         {connectors.email && hasStandardWallet && (
           <Flex mt={12} position="relative">
@@ -159,7 +154,6 @@ const LoginPage: NextPage = () => {
                 transition="box-shadow 0.3s ease-in-out"
               >
                 <WalletMetamask
-                  connector={connectors.injected}
                   onError={setErrorFromLogin}
                   activate={handleAuthenticated}
                 />
@@ -180,7 +174,6 @@ const LoginPage: NextPage = () => {
                 transition="box-shadow 0.3s ease-in-out"
               >
                 <WalletCoinbase
-                  connector={connectors.coinbase}
                   onError={setErrorFromLogin}
                   activate={handleAuthenticated}
                 />
@@ -201,7 +194,6 @@ const LoginPage: NextPage = () => {
                 transition="box-shadow 0.3s ease-in-out"
               >
                 <WalletWalletConnect
-                  connector={connectors.walletConnect}
                   onError={setErrorFromLogin}
                   activate={activate}
                 />
