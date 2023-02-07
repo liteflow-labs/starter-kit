@@ -1,4 +1,5 @@
 import {
+  AspectRatio,
   Box,
   Flex,
   Heading,
@@ -152,14 +153,15 @@ const TokenCard: VFC<Props> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <Flex as={Link} href={href} w="full" position="relative">
-        <TokenMedia
-          image={asset.image}
-          animationUrl={asset.animationUrl}
-          unlockedContent={asset.unlockedContent}
-          defaultText={asset.name}
-          objectFit="cover"
-          layout="fill"
-        />
+        <AspectRatio w="full" ratio={1}>
+          <TokenMedia
+            image={asset.image}
+            animationUrl={asset.animationUrl}
+            unlockedContent={asset.unlockedContent}
+            defaultText={asset.name}
+            fill={true}
+          />
+        </AspectRatio>
         {auction && (
           <HStack
             position="absolute"
