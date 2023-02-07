@@ -1,8 +1,8 @@
-import { Text, useBreakpointValue, VStack } from '@chakra-ui/react'
+import { Text, VStack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import Image from 'next/image'
 import numbro from 'numbro'
 import { FC } from 'react'
+import Image from '../Image/Image'
 import { ListItem, ListItemProps } from '../List/List'
 
 type Props = Omit<
@@ -23,7 +23,6 @@ type Props = Omit<
 
 const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
   const { t } = useTranslation('components')
-  const isSmall = useBreakpointValue({ base: true, sm: false })
   return (
     <ListItem
       key={`${collection.chainId}-${collection.address}`}
@@ -32,17 +31,21 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
           {collection.name}
         </Text>
       }
-      subtitle={t('collection.listItem.floor', {
-        price: collection.floorPrice
-          ? `${numbro(collection.floorPrice).format({
-              thousandSeparated: true,
-              trimMantissa: true,
-              mantissa: 2,
-            })} ${collection.floorPriceCurrencySymbol}`
-          : '-',
-      })}
+      subtitle={
+        <Text variant="caption">
+          {t('collection.listItem.floor', {
+            price: collection.floorPrice
+              ? `${numbro(collection.floorPrice).format({
+                  thousandSeparated: true,
+                  trimMantissa: true,
+                  mantissa: 2,
+                })} ${collection.floorPriceCurrencySymbol}`
+              : '-',
+          })}
+        </Text>
+      }
       action={
-        <VStack textAlign="right" alignItems="end" spacing="0.5">
+        <VStack textAlign="right" alignItems="end" spacing="0">
           <Text
             variant="subtitle2"
             noOfLines={1}
@@ -58,7 +61,7 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
         </VStack>
       }
       image={
-        isSmall ? undefined : collection.image ? (
+        collection.image ? (
           <Image
             src={collection.image}
             alt={collection.name}
@@ -69,6 +72,7 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
           <span />
         )
       }
+      imageSize={8}
       imageRounded="sm"
       {...props}
     />

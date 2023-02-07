@@ -13,6 +13,7 @@ import { PropsWithChildren } from 'react'
 export type ListItemProps = StackProps & {
   image?: JSX.Element
   imageRounded?: string
+  imageSize?: number
   label: JSX.Element | string
   subtitle?: JSX.Element | string
   caption?: JSX.Element | string
@@ -27,6 +28,7 @@ export function ListItem({
   caption,
   image,
   imageRounded,
+  imageSize,
   subtitle,
   withSeparator,
   closable,
@@ -37,9 +39,9 @@ export function ListItem({
       <Flex align="center" gap={3}>
         {image && (
           <Flex
-            mb="auto"
-            h={10}
-            w={10}
+            mb={imageSize ? '0' : 'auto'}
+            h={imageSize ? imageSize : 10}
+            w={imageSize ? imageSize : 10}
             minW="max-content"
             align="center"
             justify="center"
@@ -50,7 +52,7 @@ export function ListItem({
             {image}
           </Flex>
         )}
-        <Flex flex={1} align="center" gap={3}>
+        <Flex flex={1} align="center" gap={4}>
           <Box w="full" overflow="hidden">
             <Text
               as="p"
