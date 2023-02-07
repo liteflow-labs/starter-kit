@@ -21,7 +21,7 @@ export const theme = extendTheme({
         container: {
           w: 'full',
           rounded: 'xl',
-          p: 2.5,
+          p: 2,
           _hover: {
             bg: 'brand.50',
           },
@@ -32,6 +32,60 @@ export const theme = extendTheme({
             bg: 'brand.50',
           },
         },
+        control: {
+          bg: 'white',
+          border: '1px solid',
+          borderRadius: '4px',
+          borderColor: 'gray.200',
+          color: 'white',
+
+          _checked: {
+            bg: 'brand.500',
+            borderColor: 'brand.500',
+            color: 'white',
+
+            _hover: {
+              bg: 'brand.600',
+              borderColor: 'brand.600',
+              color: 'white',
+            },
+
+            _disabled: {
+              bg: 'brand.700',
+              borderColor: 'brand.700',
+              color: 'white',
+              opacity: 0.3,
+            },
+          },
+
+          _indeterminate: {
+            bg: 'brand.500',
+            borderColor: 'brand.500',
+            color: 'white',
+          },
+
+          _disabled: {
+            bg: 'brand.700',
+            borderColor: 'brand.700',
+            opacity: 0.3,
+          },
+
+          _focus: {
+            borderColor: 'brand.500',
+            boxShadow: 'none',
+          },
+
+          _focusVisible: {
+            boxShadow: 'none',
+          },
+
+          _invalid: {
+            borderColor: 'red.500',
+          },
+        },
+        label: {
+          width: 'full',
+        },
       },
       defaultProps: {
         colorScheme: 'brand',
@@ -39,6 +93,14 @@ export const theme = extendTheme({
     },
     Accordion: {
       baseStyle: {
+        container: {
+          _first: {
+            borderTopWidth: '0px',
+          },
+          _last: {
+            borderBottomWidth: '0px',
+          },
+        },
         button: {
           px: 0,
           py: 4,

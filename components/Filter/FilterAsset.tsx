@@ -482,17 +482,26 @@ const FilterAsset: NextPage<Props> = ({
 
         {traits.map(({ type, values }, i) => (
           <AccordionItem key={i}>
-            <AccordionButton>
-              <Heading variant="heading2" flex="1" textAlign="left">
+            <AccordionButton gap={4}>
+              <Heading
+                variant="heading2"
+                flex="1"
+                textAlign="left"
+                noOfLines={1}
+                wordBreak="break-all"
+                title={type}
+              >
                 {type}
               </Heading>
               <Flex gap="4" alignItems="center">
-                <Heading variant="heading2">{values.length}</Heading>
+                <Heading variant="heading2" color="gray.500">
+                  {values.length}
+                </Heading>
                 <AccordionIcon />
               </Flex>
             </AccordionButton>
-            <AccordionPanel maxHeight="400px" overflow="scroll">
-              <Stack spacing={2}>
+            <AccordionPanel maxHeight="400px" overflow="auto">
+              <Stack spacing={1}>
                 {values.map(({ value, count }, i) => (
                   <Checkbox
                     key={i}
@@ -505,9 +514,19 @@ const FilterAsset: NextPage<Props> = ({
                         : removeTrait(type, value)
                     }
                   >
-                    <Flex justifyContent="space-between">
-                      <Text>{value}</Text>
-                      <Text color="gray.500">{count}</Text>
+                    <Flex justifyContent="space-between" gap={3}>
+                      <Text
+                        variant="subtitle2"
+                        color="black"
+                        noOfLines={1}
+                        wordBreak="break-all"
+                        title={value}
+                      >
+                        {value}
+                      </Text>
+                      <Text variant="subtitle2" color="black">
+                        {count}
+                      </Text>
                     </Flex>
                   </Checkbox>
                 ))}
