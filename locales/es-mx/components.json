@@ -56,7 +56,9 @@
     "sec": "{{value}}s"
   },
   "dropzone": {
-    "required": "Este campo es obligatorio."
+    "required": "Este campo es obligatorio.",
+    "gifTooLarge": "El archivo GIF es demasiado grande. El tamaño máximo es de 5 MB.",
+    "gifLimit": "GIF. Máx. 5 MB."
   },
   "footer": {
     "copyright": "© {{date}} {{name}} Todos los derechos reservados."
@@ -648,7 +650,7 @@
         "file": {
           "label": "Cargar archivo",
           "heading": "Arrastra y suelta un archivo o",
-          "hint": "JPG, PNG, GIF, WEBP, WEBM o MP4. Máximo 100 MB.",
+          "hint": "JPG, PNG, WEBP, WEBM o MP4. Máximo 100 MB.",
           "file": {
             "chose": "Elegir Archivo",
             "replace": "Reemplazar Archivo"
@@ -657,7 +659,7 @@
         "preview": {
           "label": "Previsualizar carga",
           "heading": "Arrastra y suelta un archivo o",
-          "hint": "JPG, PNG, GIF o WEBP. Máximo 100 MB.",
+          "hint": "JPG, PNG o WEBP. Máximo 100 MB.",
           "file": {
             "chose": "Elegir Archivo",
             "replace": "Reemplazar Archivo"
@@ -755,7 +757,7 @@
         "image": {
           "label": "Cargar una imagen de perfil",
           "heading": "Arrastra y suelta un archivo o",
-          "hint": "Tamaño recomendado: 400x400px. JPG, PNG, GIF o WEBP. Máximo 10 MB.",
+          "hint": "Tamaño recomendado: 400x400px. JPG, PNG o WEBP. Máximo 10 MB.",
           "file": {
             "chose": "Elegir Archivo",
             "replace": "Reemplazar Archivo"
@@ -764,7 +766,7 @@
         "cover": {
           "label": "Cargar una imagen de fondo",
           "heading": "Arrastra y suelta un archivo o",
-          "hint": "Tamaño recomendado: 1128x200px. JPG, PNG, GIF o WEBP. Máximo 10 MB.",
+          "hint": "Tamaño recomendado: 1128x200px. JPG, PNG o WEBP. Máximo 10 MB.",
           "file": {
             "chose": "Elegir Archivo",
             "replace": "Reemplazar Archivo"

@@ -11,7 +11,6 @@ import {
   Text,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import numbro from 'numbro'
 import {
   FC,
   InputHTMLAttributes,
@@ -22,8 +21,10 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { useDropzone } from 'react-dropzone'
+import { ErrorCode, useDropzone } from 'react-dropzone'
 import { Control, FieldError, useController } from 'react-hook-form'
+
+const GIF_SIZE_LIMIT = 5_000_000
 
 type IProps = InputHTMLAttributes<any> & {
   name: string
@@ -106,6 +107,15 @@ const Dropzone: FC<IProps> = ({
     maxFiles: 1,
     maxSize,
     onDrop,
+    validator: (file) => {
+      if (file.type.startsWith('image/gif') && file.size > GIF_SIZE_LIMIT) {
+        return {
+          code: ErrorCode.FileTooLarge,
+          message: t('dropzone.gifTooLarge'),
+        }
+      }
+      return null
+    },
   })
 
   const dropzoneError = useMemo(
@@ -193,12 +203,6 @@ const Dropzone: FC<IProps> = ({
             isTruncated
           >
             {dropzoneError.message}
-            {dropzoneError.code === 'file-too-large' &&
-              ` (${numbro(maxSize).format({
-                output: 'byte',
-                base: 'decimal',
-                spaceSeparated: true,
-              })})`}
           </Heading>
         ) : (
           <Heading
@@ -219,9 +223,17 @@ const Dropzone: FC<IProps> = ({
             {children({ hasPreview: !!preview })}
           </Text>
         </Button>
-        <Text as="p" variant="text-sm" color="gray.500">
-          {hint}
-        </Text>
+        <Box textAlign="center">
+          <Text as="p" variant="text-sm" color="gray.500">
+            {hint}
+          </Text>
+          {acceptTypes?.includes('image/gif') ||
+          acceptTypes?.includes('image/*') ? (
+            <Text as="p" variant="text-sm" color="gray.500">
+              {t('dropzone.gifLimit')}
+            </Text>
+          ) : undefined}
+        </Box>
       </Stack>
       {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
     </Stack>
