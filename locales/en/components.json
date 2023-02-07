@@ -56,7 +56,9 @@
     "sec": "{{value}}s"
   },
   "dropzone": {
-    "required": "This field is required."
+    "required": "This field is required.",
+    "gifTooLarge": "GIF file is too large. Max size is 5MB.",
+    "gifLimit": "GIF. Max 5 MB."
   },
   "footer": {
     "copyright": "© {{date}} {{name}} All rights reserved."
@@ -648,7 +650,7 @@
         "file": {
           "label": "Upload file",
           "heading": "Drag & drop file or",
-          "hint": "JPG, PNG, GIF, WEBP, WEBM or MP4. Max 100 MB.",
+          "hint": "JPG, PNG, WEBP, WEBM or MP4. Max 100 MB.",
           "file": {
             "chose": "Choose File",
             "replace": "Replace File"
@@ -657,7 +659,7 @@
         "preview": {
           "label": "Upload preview",
           "heading": "Drag & drop file or",
-          "hint": "JPG, PNG, GIF or WEBP. Max 100 MB.",
+          "hint": "JPG, PNG or WEBP. Max 100 MB.",
           "file": {
             "chose": "Choose File",
             "replace": "Replace File"
@@ -755,7 +757,7 @@
         "image": {
           "label": "Upload a Profile Image",
           "heading": "Drag & drop file or",
-          "hint": "Recommended size: 400x400px. JPG, PNG, GIF OR WEBP. Max file size 10 MB.",
+          "hint": "Recommended size: 400x400px. JPG, PNG OR WEBP. Max file size 10 MB.",
           "file": {
             "chose": "Choose File",
             "replace": "Replace File"
@@ -764,7 +766,7 @@
         "cover": {
           "label": "Upload a Cover Image",
           "heading": "Drag & drop file or",
-          "hint": "Recommended size: 1128x200px. JPG, PNG, GIF OR WEBP. Max file size 10 MB.",
+          "hint": "Recommended size: 1128x200px. JPG, PNG OR WEBP. Max file size 10 MB.",
           "file": {
             "chose": "Choose File",
             "replace": "Replace File"

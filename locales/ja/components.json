@@ -56,7 +56,9 @@
     "sec": "{{value}}秒"
   },
   "dropzone": {
-    "required": "必須の項目です"
+    "required": "必須の項目です",
+    "gifTooLarge": "GIFファイルが大きすぎます。最大サイズは5MBです。",
+    "gifLimit": "GIF。最大 5 MB"
   },
   "footer": {
     "copyright": "© {{date}} {{name}} 無断転載を禁じます。"
@@ -648,7 +650,7 @@
         "file": {
           "label": "ファイルをアップロード",
           "heading": "ファイルをドラッグ&ドロップするか、",
-          "hint": "JPG、PNG、GIF、WEBP、WEBM、MP4、最大100 MBまで。",
+          "hint": "JPG、PNG、WEBP、WEBM、MP4、最大100 MBまで。",
           "file": {
             "chose": "ファイルを選択",
             "replace": "ファイルを置き換える"
@@ -657,7 +659,7 @@
         "preview": {
           "label": "プレビューをアップロード",
           "heading": "ファイルをドラッグ&ドロップするか、",
-          "hint": "JPG、PNG、GIF、WEBP、最大100 MBまで。",
+          "hint": "JPG、PNG、WEBP、最大100 MBまで。",
           "file": {
             "chose": "ファイルを選択",
             "replace": "ファイルを置き換える"
@@ -755,7 +757,7 @@
         "image": {
           "label": "プロフィール画像をアップロード",
           "heading": "ファイルをドラッグ&ドロップするか、",
-          "hint": "推奨サイズ: 400x400px　JPG、PNG、GIF、WEBP、最大ファイルサイズ10 MBまで。",
+          "hint": "推奨サイズ: 400x400px　JPG、PNG、WEBP、最大ファイルサイズ10 MBまで。",
           "file": {
             "chose": "ファイルを選択",
             "replace": "ファイルを置き換える"
@@ -764,7 +766,7 @@
         "cover": {
           "label": "カバー画像をアップロード",
           "heading": "ファイルをドラッグ&ドロップするか、",
-          "hint": "推奨サイズ: 1128x200px　JPG、PNG、GIF、WEBP、最大ファイルサイズ10 MBまで。",
+          "hint": "推奨サイズ: 1128x200px　JPG、PNG、WEBP、最大ファイルサイズ10 MBまで。",
           "file": {
             "chose": "ファイルを選択",
             "replace": "ファイルを置き換える"

@@ -44,8 +44,8 @@ const TokenMedia: VFC<{
         muted
         loop
         controls={controls}
-        w={fill ? 'auto' : 'full'}
-        h={fill ? 'auto' : 'full'}
+        maxW="full"
+        maxH="full"
       />
     )
   }
@@ -68,7 +68,7 @@ const TokenMedia: VFC<{
       )
 
     return (
-      <Box position="relative" w="full" pt="100%">
+      <Box position="relative" w="full" h="full">
         <Image
           src={image}
           alt={defaultText}
