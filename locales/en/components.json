@@ -51,7 +51,7 @@
   },
   "collection": {
     "listItem": {
-      "allTime": "All time",
+      "allTime": "All-time",
       "floor": "Floor: {{price}}"
     }
   },
