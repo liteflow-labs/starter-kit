@@ -19,6 +19,7 @@ const TokenMedia: VFC<{
   controls,
 }) => {
   const { colors } = useTheme()
+
   // prioritize unlockedContent
   if (unlockedContent) {
     if (unlockedContent.mimetype?.startsWith('video/'))
@@ -73,6 +74,7 @@ const TokenMedia: VFC<{
           onError={() => setImageError(true)}
           layout="fill"
           objectFit={fill ? 'cover' : 'scale-down'}
+          unoptimized={unlockedContent?.mimetype === 'image/gif'}
         />
       </Box>
     )
