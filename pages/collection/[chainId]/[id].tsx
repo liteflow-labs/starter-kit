@@ -60,7 +60,9 @@ import useAssetFilterFromQuery, {
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useFilterState from '../../../hooks/useFilterState'
+import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
+import usePaginateQuery from '../../../hooks/usePaginateQuery'
 import LargeLayout from '../../../layouts/large'
 
 type Props = {
@@ -68,12 +70,6 @@ type Props = {
   collectionAddress: string
   currentAccount: string | null
   now: string
-  // Pagination
-  limit: number
-  page: number
-  offset: number
-  // OrderBy
-  orderBy: AssetsOrderBy
   // Currencies
   currencies: Pick<Currency, 'id' | 'image' | 'decimals'>[]
 }
@@ -193,10 +189,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         collectionAddress: collectionAddress,
         currentAccount: ctx.user.address,
         now: now.toJSON(),
-        limit,
-        page,
-        offset,
-        orderBy,
         currencies: currencies?.nodes || [],
       },
     }
@@ -208,10 +200,6 @@ const CollectionPage: FC<Props> = ({
   collectionAddress,
   now,
   currentAccount,
-  limit,
-  page,
-  offset,
-  orderBy,
   currencies,
 }) => {
   const ready = useEagerConnect()
@@ -226,6 +214,10 @@ const CollectionPage: FC<Props> = ({
       chainId: chainId,
     },
   })
+  const { limit, offset, page } = usePaginateQuery()
+  const orderBy = useOrderByQuery<AssetsOrderBy>(
+    'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
+  )
   const filter = useAssetFilterFromQuery(currencies)
   const { data, refetch } = useFetchCollectionAssetsQuery({
     variables: {
@@ -251,7 +243,7 @@ const CollectionPage: FC<Props> = ({
           return { ...acc, [value]: query[value] }
         }, {}),
         ...otherFilters,
-        page: undefined,
+        page: 1,
         ...traits.reduce(
           (acc, { type, values }) => ({
             ...acc,
