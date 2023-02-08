@@ -47,19 +47,17 @@ import {
 } from '../../../../graphql'
 import useBlockExplorer from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
+import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
+import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
-import { getLimit, getOffset, getOrder, getPage } from '../../../../params'
+import { getLimit, getOffset, getOrder } from '../../../../params'
 import { wrapServerSideProps } from '../../../../props'
 
 type Props = {
   userAddress: string
   now: string
-  page: number
-  limit: number
-  offset: number
-  orderBy: OffersOrderBy
   meta: {
     title: string
     description: string
@@ -77,7 +75,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       : null
     invariant(userAddress, 'userAddress is falsy')
     const limit = getLimit(context, environment.PAGINATION_LIMIT)
-    const page = getPage(context)
     const orderBy = getOrder<OffersOrderBy>(context, 'CREATED_AT_DESC')
     const offset = getOffset(context, environment.PAGINATION_LIMIT)
     const now = new Date()
@@ -95,10 +92,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     if (!data) throw new Error('data is falsy')
     return {
       props: {
-        page,
-        limit,
-        offset,
-        orderBy,
         userAddress,
         now: now.toJSON(),
         meta: {
@@ -111,20 +104,14 @@ export const getServerSideProps = wrapServerSideProps<Props>(
   },
 )
 
-const FixedPricePage: NextPage<Props> = ({
-  meta,
-  now,
-  limit,
-  page,
-  offset,
-  orderBy,
-  userAddress,
-}) => {
+const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
   useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
   const { account } = useWeb3React()
+  const { limit, offset, page } = usePaginateQuery()
+  const orderBy = useOrderByQuery<OffersOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
   const [cancel, { activeStep, transactionHash }] = useCancelOffer(signer)
   const toast = useToast()
