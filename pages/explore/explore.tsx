@@ -1,36 +1,30 @@
 import {
   Box,
-  Button,
   chakra,
-  Checkbox,
   Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   Grid,
   GridItem,
-  InputGroup,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
   SimpleGrid,
-  Stack,
   Text,
-  VStack,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
 import { useWeb3React } from '@web3-react/core'
-import ExploreTemplate from 'components/Explore'
-import Head from 'components/Head'
+import FilterNav from 'components/Filter/FilterNav'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useCallback, useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
+import ExploreTemplate from '../../components/Explore'
+import FilterAsset, { NoFilter } from '../../components/Filter/FilterAsset'
+import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
 import TokenCard from '../../components/Token/Card'
@@ -42,173 +36,39 @@ import {
 } from '../../convert'
 import environment from '../../environment'
 import {
-  AssetFilter,
   AssetsOrderBy,
-  AssetToManyAuctionFilter,
-  AssetToManyOfferOpenSaleFilter,
-  AuctionFilter,
-  DatetimeFilter,
+  Currency,
   FetchAllErc721And1155Document,
   FetchAllErc721And1155Query,
-  FetchCurrencyDecimalsDocument,
-  FetchCurrencyDecimalsQuery,
-  OfferOpenSaleFilter,
-  Uint256Filter,
+  FetchCurrenciesDocument,
+  FetchCurrenciesQuery,
   useFetchAllErc721And1155Query,
 } from '../../graphql'
+import useAssetFilterFromQuery, {
+  convertFilterToAssetFilter,
+  extractTraitsFromQuery,
+  Filter,
+  OfferFilter,
+} from '../../hooks/useAssetFilterFromQuery'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
+import useFilterState from '../../hooks/useFilterState'
 import usePaginate from '../../hooks/usePaginate'
-import { parseBigNumber } from '../../hooks/useParseBigNumber'
 import { wrapServerSideProps } from '../../props'
-import { values as traits } from '../../traits'
 
 type Props = {
   currentAccount: string | null
   now: string
-  traits: { [key: string]: string[] }
   // Pagination
   limit: number
   page: number
   offset: number
-  // Filters
-  queryFilter: AssetFilter[]
-  filter: {
-    minPrice: number | null
-    maxPrice: number | null
-    categories: string[] | null
-    collections: string[] | null
-    offers: OfferFilter[] | null
-    currencyId: string | null
-  }
   // OrderBy
   orderBy: AssetsOrderBy
   // Search
   search: string | null
-}
-
-type FormData = {
-  categories: string[] | null
-  collections: string[] | null
-  offers: string[] | null
-  minPrice: number | null
-  maxPrice: number | null
-  currencyId: string | null
-}
-
-const searchFilter = (search: string): AssetFilter =>
-  ({
-    or: [
-      { name: { includesInsensitive: search } } as AssetFilter,
-      { description: { includesInsensitive: search } } as AssetFilter,
-      { creatorAddress: { includesInsensitive: search } } as AssetFilter,
-    ],
-  } as AssetFilter)
-
-const traitFilter = (trait: string, values: string[]): AssetFilter =>
-  ({
-    or: [
-      {
-        traits: {
-          some: {
-            type: { equalTo: trait },
-            value: { in: values },
-          },
-        },
-      } as AssetFilter,
-    ],
-  } as AssetFilter)
-
-const collectionFilter = (collections: string[]): AssetFilter => {
-  return {
-    or: [
-      {
-        collection: {
-          or: collections.map((collection) => {
-            // split the collection string to extract chainId and address
-            const [chainId, address] = collection.split('-')
-            return {
-              chainId: { equalTo: chainId && parseInt(chainId, 10) },
-              address: { equalTo: address },
-            }
-          }),
-        },
-      },
-    ],
-  } as AssetFilter
-}
-
-const minPriceFilter = (
-  minPrice: number,
-  currency: { id: string; decimals: number },
-  date: Date,
-): AssetFilter =>
-  ({
-    sales: {
-      some: {
-        expiredAt: { greaterThan: date },
-        availableQuantity: { greaterThan: '0' },
-        currencyId: { equalTo: currency.id },
-        unitPrice: {
-          greaterThanOrEqualTo: parseBigNumber(
-            minPrice.toString(),
-            currency.decimals,
-          ).toString(),
-        } as Uint256Filter,
-      } as OfferOpenSaleFilter,
-    } as AssetToManyOfferOpenSaleFilter,
-  } as AssetFilter)
-
-const maxPriceFilter = (
-  maxPrice: number,
-  currency: { id: string; decimals: number },
-  date: Date,
-): AssetFilter =>
-  ({
-    sales: {
-      some: {
-        expiredAt: { greaterThan: date },
-        availableQuantity: { greaterThan: '0' },
-        currencyId: { equalTo: currency.id },
-        unitPrice: {
-          lessThanOrEqualTo: parseBigNumber(
-            maxPrice.toString(),
-            currency.decimals,
-          ).toString(),
-        } as Uint256Filter,
-      } as OfferOpenSaleFilter,
-    } as AssetToManyOfferOpenSaleFilter,
-  } as AssetFilter)
-
-const offersFilter = (offers: OfferFilter[], date: Date): AssetFilter => {
-  const filter: AssetFilter = {
-    or: [] as AssetFilter[],
-  } as AssetFilter
-  if (offers.includes(OfferFilter.auction)) {
-    filter.or?.push({
-      auctions: {
-        some: {
-          endAt: { greaterThan: date } as DatetimeFilter,
-        } as AuctionFilter,
-      } as AssetToManyAuctionFilter,
-    } as AssetFilter)
-  }
-  if (offers.includes(OfferFilter.fixed)) {
-    filter.or?.push({
-      sales: {
-        some: {
-          expiredAt: { greaterThan: date },
-          availableQuantity: { greaterThan: '0' },
-        },
-      },
-    } as AssetFilter)
-  }
-  return filter
-}
-
-enum OfferFilter {
-  fixed = 'fixed',
-  auction = 'auction',
+  // Currencies
+  currencies: Pick<Currency, 'id' | 'image' | 'decimals'>[]
 }
 
 export const getServerSideProps = wrapServerSideProps<Props>(
@@ -244,50 +104,29 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       ctx.query.maxPrice && !Array.isArray(ctx.query.maxPrice)
         ? parseFloat(ctx.query.maxPrice)
         : null
-    const categories = ctx.query.categories
-      ? !Array.isArray(ctx.query.categories)
-        ? [ctx.query.categories]
-        : ctx.query.categories
-      : null
-    const collections = ctx.query.collections
-      ? !Array.isArray(ctx.query.collections)
-        ? [ctx.query.collections]
-        : ctx.query.collections
+    const collection = ctx.query.collection
+      ? Array.isArray(ctx.query.collection)
+        ? ctx.query.collection[0] || null
+        : ctx.query.collection || null
       : null
     const offers = ctx.query.offers
-      ? (!Array.isArray(ctx.query.offers)
-          ? [ctx.query.offers]
-          : ctx.query.offers
-        )
-          .filter((offer) => offer in OfferFilter)
-          .map((x) => {
-            if (x === OfferFilter.fixed) return OfferFilter.fixed
-            if (x === OfferFilter.auction) return OfferFilter.auction
-            throw new Error('invalid filter')
-          })
-          .filter(Boolean)
+      ? Array.isArray(ctx.query.offers)
+        ? ((ctx.query.offers[0] || null) as OfferFilter | null)
+        : (ctx.query.offers as OfferFilter)
       : null
+    const traits = extractTraitsFromQuery(ctx.query)
 
     const {
       data: { currencies },
-    } = await client.query<FetchCurrencyDecimalsQuery>({
-      query: FetchCurrencyDecimalsDocument,
+    } = await client.query<FetchCurrenciesQuery>({
+      query: FetchCurrenciesDocument,
     })
-    const selectedCurrency =
-      currencies?.nodes?.find((x) => x.id === currencyId) ||
-      currencies?.nodes[0]
     const now = new Date()
-    const queryFilter = []
-    if (search) queryFilter.push(searchFilter(search))
-    if (categories) queryFilter.push(traitFilter('Category', categories))
-    if (collections) queryFilter.push(collectionFilter(collections))
-    if (selectedCurrency) {
-      if (minPrice)
-        queryFilter.push(minPriceFilter(minPrice, selectedCurrency, now))
-      if (maxPrice)
-        queryFilter.push(maxPriceFilter(maxPrice, selectedCurrency, now))
-    }
-    if (offers) queryFilter.push(offersFilter(offers, now))
+    const filter = convertFilterToAssetFilter(
+      { search, collection, currencyId, maxPrice, minPrice, offers, traits },
+      currencies?.nodes || [],
+      now,
+    )
 
     const { data, error } = await client.query<FetchAllErc721And1155Query>({
       query: FetchAllErc721And1155Document,
@@ -297,7 +136,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         limit,
         offset,
         orderBy,
-        filter: queryFilter,
+        filter,
       },
     })
     if (error) throw error
@@ -306,21 +145,12 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       props: {
         currentAccount: ctx.user.address,
         now: now.toJSON(),
-        traits,
         limit,
         page,
         offset,
         orderBy,
-        queryFilter,
-        filter: {
-          minPrice,
-          categories,
-          collections,
-          maxPrice,
-          offers,
-          currencyId: selectedCurrency?.id || null,
-        },
         search,
+        currencies: currencies?.nodes || [],
       },
     }
   },
@@ -330,18 +160,19 @@ const ExplorePage: NextPage<Props> = ({
   currentAccount,
   now,
   offset,
-  traits,
   limit,
-  queryFilter,
-  filter,
   search,
   page,
   orderBy,
+  currencies,
 }) => {
   const ready = useEagerConnect()
+  const { query, pathname, push } = useRouter()
+  const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { account } = useWeb3React()
+  const filter = useAssetFilterFromQuery(currencies)
   const { data, refetch } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
@@ -349,127 +180,49 @@ const ExplorePage: NextPage<Props> = ({
       limit,
       offset,
       orderBy,
-      filter: queryFilter,
+      filter: convertFilterToAssetFilter(filter, currencies, date),
     },
   })
   useExecuteOnAccountChange(refetch, ready)
 
-  const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
+  const { showFilters, toggleFilters, close, count } = useFilterState(filter)
 
-  const { events, query, replace, pathname } = useRouter()
-
-  const {
-    register,
-    formState: { isSubmitting, errors },
-    handleSubmit,
-    reset,
-    setValue,
-    control,
-    watch,
-  } = useForm<FormData>({
-    defaultValues: filter,
-  })
-
-  const [loadingOrder, setLoadingOrder] = useState(false)
-
-  const currencyId = watch('currencyId')
-
-  const assets = useMemo(() => data?.assets?.nodes || [], [data])
-  const categories = useMemo(() => traits['Category'] || [], [traits])
-  const collections = useMemo(() => data?.collections?.nodes || [], [data])
-  const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
-  const currency = useMemo(
-    () => currencies.find((x) => x.id === currencyId),
-    [currencies, currencyId],
+  const updateFilter = useCallback(
+    async (filter: Filter) => {
+      const { traits, ...otherFilters } = filter
+      const cleanData = removeEmptyFromObject({
+        ...Object.keys(query).reduce((acc, value) => {
+          if (value.startsWith('trait')) return acc
+          return { ...acc, [value]: query[value] }
+        }, {}),
+        ...otherFilters,
+        search,
+        page: undefined,
+        ...traits.reduce(
+          (acc, { type, values }) => ({
+            ...acc,
+            [`traits[${type}]`]: values,
+          }),
+          {},
+        ),
+      })
+      await push({ pathname, query: cleanData }, undefined, { shallow: true })
+    },
+    [push, pathname, query, search],
   )
-
-  const onSubmit = handleSubmit(async (data) => {
-    const cleanData = removeEmptyFromObject({
-      ...query,
-      ...data,
-      search,
-      page: undefined,
-    })
-    await replace({ pathname, query: cleanData })
-  })
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
-      setLoadingOrder(true)
-      try {
-        await replace({
-          pathname,
-          query: { ...query, orderBy, page: undefined },
-        })
-      } finally {
-        setLoadingOrder(false)
-      }
+      await push(
+        { pathname, query: { ...query, orderBy, page: undefined } },
+        undefined,
+        { shallow: true },
+      )
     },
-    [replace, pathname, query],
+    [push, pathname, query],
   )
 
-  const clearFilters = useCallback(async () => {
-    reset()
-    const cleanData = removeEmptyFromObject({
-      ...query,
-      search,
-      page: undefined,
-      categories: null,
-      collections: null,
-      offers: null,
-      minPrice: null,
-      maxPrice: null,
-      currencyId: null,
-    })
-    await replace({ pathname, query: cleanData })
-  }, [reset, query, search, replace, pathname])
-
-  const filterButtons = useMemo(() => {
-    // TODO: remove the check for currencyId, we need to pass currencyId with a 'null' value when there is only 1 currency or its default
-    const showResetFilter = Object.entries(filter).some(([key, value]) =>
-      key !== 'currencyId' ? (value ? true : false) : false,
-    )
-
-    return (
-      <SimpleGrid columns={2} spacingX={3}>
-        <Button
-          variant="outline"
-          colorScheme="gray"
-          type="submit"
-          disabled={isSubmitting}
-        >
-          <Text as="span" isTruncated>
-            {t('explore.nfts.form.submit')}
-          </Text>
-        </Button>
-        {showResetFilter && (
-          <Button
-            variant="ghost"
-            colorScheme="gray"
-            onClick={clearFilters}
-            disabled={isSubmitting}
-          >
-            <Text as="span" isTruncated>
-              {t('explore.nfts.form.clear')}
-            </Text>
-          </Button>
-        )}
-      </SimpleGrid>
-    )
-  }, [clearFilters, filter, isSubmitting, t])
-
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      if (url === '/explore') {
-        reset()
-      }
-    }
-    events.on('routeChangeStart', handleRouteChange)
-    return () => {
-      events.off('routeChangeStart', handleRouteChange)
-    }
-  }, [events, reset])
-
+  const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
   const ChakraPagination = chakra(Pagination)
 
   return (
@@ -478,226 +231,21 @@ const ExplorePage: NextPage<Props> = ({
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={isSubmitting || pageLoading || loadingOrder}
+        loading={pageLoading}
         search={search}
         selectedTabIndex={0}
       >
-        <Grid
-          mt={6}
-          gap={{ base: 4, lg: 3, xl: 4 }}
-          templateColumns={{ lg: 'repeat(5, 1fr)', xl: 'repeat(4, 1fr)' }}
-        >
-          <GridItem as="aside">
-            <Stack spacing={8} as="form" onSubmit={onSubmit}>
-              {filterButtons}
-
-              <hr />
-
-              <Stack spacing={3}>
-                <Select
-                  label={t('explore.nfts.form.currency.label')}
-                  name="currencyId"
-                  control={control as any} // TODO: fix this type
-                  placeholder={t('explore.nfts.form.currency.placeholder')}
-                  choices={currencies.map((x) => ({
-                    value: x.id,
-                    label: x.symbol || '',
-                    image: x.image,
-                  }))}
-                  value={currencyId ? currencyId : undefined}
-                  required
-                  disabled={currencies.length <= 1 || isSubmitting}
-                  error={errors.currencyId}
-                  onChange={(x: any) => setValue('currencyId', x)}
-                  sortAlphabetically
-                />
-
-                {currency && (
-                  <Flex gap={3}>
-                    <FormControl isInvalid={!!errors.minPrice}>
-                      <InputGroup>
-                        <NumberInput
-                          clampValueOnBlur={false}
-                          min={0}
-                          step={Math.pow(10, -currency.decimals)}
-                          precision={currency.decimals}
-                          allowMouseWheel
-                          w="full"
-                          isDisabled={isSubmitting}
-                          onChange={(x: any) => setValue('minPrice', x)}
-                          format={(e) => e.toString()}
-                        >
-                          <NumberInputField
-                            placeholder={t(
-                              'explore.nfts.form.min-price.placeholder',
-                            )}
-                            {...register('minPrice', {
-                              validate: (value) => {
-                                if (!value) return
-                                const splitValue = value.toString().split('.')
-
-                                if (value < 0) {
-                                  return t(
-                                    'explore.nfts.form.min-price.validation.positive',
-                                  )
-                                }
-                                if (
-                                  splitValue[1] &&
-                                  splitValue[1].length > currency.decimals
-                                ) {
-                                  return t(
-                                    'explore.nfts.form.min-price.validation.decimals',
-                                    {
-                                      nbDecimals: currency.decimals,
-                                    },
-                                  )
-                                }
-                              },
-                            })}
-                          />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </InputGroup>
-                      {errors.minPrice && (
-                        <FormErrorMessage>
-                          {errors.minPrice.message}
-                        </FormErrorMessage>
-                      )}
-                    </FormControl>
-                    <FormControl isInvalid={!!errors.maxPrice}>
-                      <InputGroup>
-                        <NumberInput
-                          clampValueOnBlur={false}
-                          min={0}
-                          step={Math.pow(10, -currency.decimals)}
-                          precision={currency.decimals}
-                          allowMouseWheel
-                          w="full"
-                          isDisabled={isSubmitting}
-                          onChange={(x: any) => setValue('maxPrice', x)}
-                          format={(e) => e.toString()}
-                        >
-                          <NumberInputField
-                            placeholder={t(
-                              'explore.nfts.form.max-price.placeholder',
-                            )}
-                            {...register('maxPrice', {
-                              validate: (value) => {
-                                if (value === null) return
-                                const splitValue = value.toString().split('.')
-
-                                if (value < 0) {
-                                  return t(
-                                    'explore.nfts.form.max-price.validation.positive',
-                                  )
-                                }
-                                if (
-                                  splitValue[1] &&
-                                  splitValue[1].length > currency.decimals
-                                ) {
-                                  return t(
-                                    'explore.nfts.form.max-price.validation.decimals',
-                                    {
-                                      nbDecimals: currency.decimals,
-                                    },
-                                  )
-                                }
-                              },
-                            })}
-                          />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </InputGroup>
-                      {errors.maxPrice && (
-                        <FormErrorMessage>
-                          {errors.maxPrice.message}
-                        </FormErrorMessage>
-                      )}
-                    </FormControl>
-                  </Flex>
-                )}
-              </Stack>
-
-              <hr />
-
-              <FormControl>
-                <FormLabel>{t('explore.nfts.form.offers.label')}</FormLabel>
-                <VStack>
-                  {[
-                    {
-                      label: t('explore.nfts.form.offers.values.auction'),
-                      value: OfferFilter.auction,
-                    },
-                    {
-                      label: t('explore.nfts.form.offers.values.fixed'),
-                      value: OfferFilter.fixed,
-                    },
-                  ].map((x) => (
-                    <Checkbox
-                      key={x.value}
-                      {...register('offers')}
-                      value={x.value}
-                      disabled={isSubmitting}
-                    >
-                      {x.label}
-                    </Checkbox>
-                  ))}
-                </VStack>
-              </FormControl>
-
-              <hr />
-
-              <FormControl>
-                <FormLabel>
-                  {t('explore.nfts.form.collections.label')}
-                </FormLabel>
-                <VStack>
-                  {collections.map((x) => (
-                    <Checkbox
-                      key={`${x.chainId}-${x.address}`}
-                      {...register('collections')}
-                      value={`${x.chainId}-${x.address}`}
-                      disabled={isSubmitting}
-                    >
-                      {x.name}
-                    </Checkbox>
-                  ))}
-                </VStack>
-              </FormControl>
-
-              <hr />
-
-              <FormControl>
-                <FormLabel>{t('explore.nfts.form.categories.label')}</FormLabel>
-                <VStack>
-                  {categories.map((x) => (
-                    <Checkbox
-                      key={x}
-                      {...register('categories')}
-                      value={x}
-                      disabled={isSubmitting}
-                    >
-                      {t(`categories.${x}`, null, { fallback: x })}
-                    </Checkbox>
-                  ))}
-                </VStack>
-              </FormControl>
-
-              <hr />
-
-              {filterButtons}
-            </Stack>
-          </GridItem>
-          <GridItem gap={6} pt={{ base: 8, lg: 0 }} colSpan={{ lg: 4, xl: 3 }}>
-            <Box ml="auto" w={{ base: 'full', lg: 'min-content' }}>
+        <>
+          <Flex py="6" justifyContent="space-between">
+            <FilterNav
+              showFilters={showFilters}
+              toggleFilters={toggleFilters}
+              count={count}
+              onClear={() => updateFilter(NoFilter)}
+            />
+            <Box>
               <Select<AssetsOrderBy>
-                label={t('explore.nfts.orderBy.label')}
+                label={isSmall ? undefined : t('explore.nfts.orderBy.label')}
                 name="orderBy"
                 onChange={changeOrder}
                 choices={[
@@ -714,71 +262,104 @@ const ExplorePage: NextPage<Props> = ({
                 inlineLabel
               />
             </Box>
-            {assets.length > 0 ? (
-              <SimpleGrid
-                flexWrap="wrap"
-                spacing={{ base: 4, lg: 3, xl: 4 }}
-                columns={{ base: 1, sm: 2, md: 3 }}
-                py={6}
-              >
-                {assets.map((x, i) => (
-                  <Flex key={i} justify="center">
-                    <TokenCard
-                      asset={convertAsset(x)}
-                      creator={convertUser(x.creator, x.creator.address)}
-                      auction={
-                        x.auctions.nodes[0]
-                          ? convertAuctionWithBestBid(x.auctions.nodes[0])
-                          : undefined
-                      }
-                      sale={convertSale(x.firstSale.nodes[0])}
-                      numberOfSales={x.firstSale.totalCount}
-                      hasMultiCurrency={
-                        parseInt(
-                          x.currencySales.aggregates?.distinctCount?.currencyId,
-                          10,
-                        ) > 1
-                      }
-                    />
-                  </Flex>
-                ))}
-              </SimpleGrid>
-            ) : (
-              <Flex align="center" justify="center" h="full" py={12}>
-                <Empty
-                  title={t('explore.nfts.empty.title')}
-                  description={t('explore.nfts.empty.description')}
-                />
-              </Flex>
-            )}
-            <ChakraPagination
-              py="6"
-              borderTop="1px"
-              borderColor="gray.200"
-              limit={limit}
-              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-              page={page}
-              total={data?.assets?.totalCount}
-              onPageChange={changePage}
-              onLimitChange={changeLimit}
-              result={{
-                label: t('pagination.result.label'),
-                caption: (props) => (
-                  <Trans
-                    ns="templates"
-                    i18nKey="pagination.result.caption"
-                    values={props}
-                    components={[
-                      <Text as="span" color="brand.black" key="text" />,
-                    ]}
+          </Flex>
+          {isSmall && (
+            <Modal isOpen={showFilters} onClose={close} size="full">
+              <ModalContent rounded="none">
+                <ModalHeader>{t('explore.nfts.filter')}</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <FilterAsset
+                    currencies={currencies}
+                    onFilterChange={updateFilter}
+                    filter={filter}
                   />
-                ),
-                pages: (props) =>
-                  t('pagination.result.pages', { count: props.total }),
-              }}
-            />
-          </GridItem>
-        </Grid>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
+          )}
+          <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
+            {showFilters && !isSmall && (
+              <GridItem as="aside">
+                <FilterAsset
+                  currencies={currencies}
+                  onFilterChange={updateFilter}
+                  filter={filter}
+                />
+              </GridItem>
+            )}
+            <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
+              {data?.assets?.totalCount && data?.assets?.totalCount > 0 ? (
+                <SimpleGrid
+                  flexWrap="wrap"
+                  spacing="4"
+                  columns={
+                    showFilters
+                      ? { base: 1, sm: 2, md: 3, lg: 4 }
+                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                  }
+                >
+                  {data.assets.nodes.map((x, i) => (
+                    <Flex key={i} justify="center">
+                      <TokenCard
+                        asset={convertAsset(x)}
+                        creator={convertUser(x.creator, x.creator.address)}
+                        auction={
+                          x.auctions.nodes[0]
+                            ? convertAuctionWithBestBid(x.auctions.nodes[0])
+                            : undefined
+                        }
+                        sale={convertSale(x.firstSale.nodes[0])}
+                        numberOfSales={x.firstSale.totalCount}
+                        hasMultiCurrency={
+                          parseInt(
+                            x.currencySales.aggregates?.distinctCount
+                              ?.currencyId,
+                            10,
+                          ) > 1
+                        }
+                      />
+                    </Flex>
+                  ))}
+                </SimpleGrid>
+              ) : (
+                <Flex align="center" justify="center" h="full" py={12}>
+                  <Empty
+                    title={t('explore.nfts.empty.title')}
+                    description={t('explore.nfts.empty.description')}
+                  />
+                </Flex>
+              )}
+              <ChakraPagination
+                mt="6"
+                py="6"
+                borderTop="1px"
+                borderColor="gray.200"
+                limit={limit}
+                limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+                page={page}
+                total={data?.assets?.totalCount}
+                onPageChange={changePage}
+                onLimitChange={changeLimit}
+                result={{
+                  label: t('pagination.result.label'),
+                  caption: (props) => (
+                    <Trans
+                      ns="templates"
+                      i18nKey="pagination.result.caption"
+                      values={props}
+                      components={[
+                        <Text as="span" color="brand.black" key="text" />,
+                      ]}
+                    />
+                  ),
+                  pages: (props) =>
+                    t('pagination.result.pages', { count: props.total }),
+                }}
+              />
+            </GridItem>
+          </Grid>
+        </>
       </ExploreTemplate>
     </>
   )

@@ -1,0 +1,29 @@
+query SearchCollection(
+  $filter: CollectionFilter!
+  $orderBy: [CollectionsOrderBy!]
+  $limit: Int!
+  $offset: Int!
+) {
+  collections(
+    orderBy: $orderBy
+    first: $limit
+    offset: $offset
+    filter: $filter
+  ) {
+    nodes {
+      chainId
+      address
+      name
+      cover
+      image
+      totalVolume {
+        refCode
+        valueInRef
+      }
+      floorPrice {
+        refCode
+        valueInRef
+      }
+    }
+  }
+}
