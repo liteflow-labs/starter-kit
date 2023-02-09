@@ -161,11 +161,11 @@ const TokenCard: VFC<Props> = ({
             defaultText={asset.name}
             fill={true}
             // sizes determined from the explorer page
-            sizes="
-            (max-width: 479px) 100vw,
-            (max-width: 767px) 50vw,
-            (max-width: 991px) 33vw,
-            290px"
+            sizes="100vw,
+            (min-width: 30em) 50vw,
+            (min-width: 48em) 33vw,
+            (min-width: 62em) 25vw,
+            (min-width: 80em) 292px"
           />
         </AspectRatio>
         {auction && (
