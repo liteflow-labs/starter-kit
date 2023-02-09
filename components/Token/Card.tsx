@@ -160,6 +160,12 @@ const TokenCard: VFC<Props> = ({
             unlockedContent={asset.unlockedContent}
             defaultText={asset.name}
             fill={true}
+            // sizes determined from the explorer page
+            sizes="100vw,
+            (min-width: 30em) 50vw,
+            (min-width: 48em) 33vw,
+            (min-width: 62em) 25vw,
+            (min-width: 80em) 292px"
           />
         </AspectRatio>
         {auction && (

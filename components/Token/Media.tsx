@@ -10,6 +10,7 @@ const TokenMedia: VFC<{
   defaultText?: string
   controls?: boolean
   fill?: boolean
+  sizes: string
 }> = ({
   image,
   animationUrl,
@@ -17,6 +18,7 @@ const TokenMedia: VFC<{
   defaultText,
   fill,
   controls,
+  sizes,
 }) => {
   const { colors } = useTheme()
 
@@ -74,13 +76,8 @@ const TokenMedia: VFC<{
           onError={() => setImageError(true)}
           layout="fill"
           objectFit={fill ? 'cover' : 'scale-down'}
+          sizes={sizes}
           unoptimized={unlockedContent?.mimetype === 'image/gif'}
-          sizes="
-            100vw,
-            (min-width: 30em) 50vw,
-            (min-width: 48em) 33vw,
-            (min-width: 62em) 25vw,
-            (min-width: 80em) 292px"
         />
       </Box>
     )
