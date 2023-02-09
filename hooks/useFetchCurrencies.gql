@@ -1,0 +1,10 @@
+query FetchCurrencies {
+  currencies(orderBy: CREATED_AT_ASC) {
+    nodes {
+      image
+      id
+      decimals
+      symbol
+    }
+  }
+}

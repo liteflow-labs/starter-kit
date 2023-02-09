@@ -33,11 +33,11 @@ const UserCard: FC<Props> = ({ user }) => {
               layout="fill"
               objectFit="cover"
               sizes="
-              (max-width: 479px) 100vw,
-              (max-width: 767px) 50vw,
-              (max-width: 991px) 33vw,
-              (max-width: 1279px) 25vw,
-              290px"
+                100vw,
+                (min-width: 30em) 50vw,
+                (min-width: 48em) 33vw,
+                (min-width: 62em) 25vw,
+                (min-width: 80em) 292px"
             />
           ) : (
             <Box bg="gray.100" height="full" />

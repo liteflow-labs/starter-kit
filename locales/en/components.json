@@ -49,6 +49,12 @@
       }
     }
   },
+  "collection": {
+    "listItem": {
+      "allTime": "All-time",
+      "floor": "Floor: {{price}}"
+    }
+  },
   "countdown": {
     "day": "{{value}}d",
     "hour": "{{value}}h",
@@ -59,6 +65,58 @@
     "required": "This field is required.",
     "gifTooLarge": "GIF file is too large. Max size is 5MB.",
     "gifLimit": "GIF. Max 5 MB."
+  },
+  "filters": {
+    "nav": {
+      "title": "Filters",
+      "clear": "Clear filters"
+    },
+    "assets": {
+      "submit": "Apply",
+      "clear": "Clear All",
+      "currency": {
+        "label": "Price range",
+        "placeholder": "Select a currency"
+      },
+      "min-price": {
+        "placeholder": "Min",
+        "validation": {
+          "positive": "Min price must be greater than 0.",
+          "decimals": "Min price supports a maximum of {{ nbDecimals }} decimals."
+        }
+      },
+      "max-price": {
+        "placeholder": "Max",
+        "validation": {
+          "positive": "Max price must be greater than 0.",
+          "decimals": "Max price supports a maximum of {{ nbDecimals }} decimals."
+        }
+      },
+      "offers": {
+        "label": "Status",
+        "values": {
+          "all": "All",
+          "fixed": "Buy now",
+          "auction": "Timed auction"
+        }
+      },
+      "categories": {
+        "label": "Categories"
+      },
+      "collections": {
+        "label": "Collections",
+        "search": {
+          "placeholder": "Search by collections"
+        }
+      },
+      "properties": {
+        "label": "Properties",
+        "labelWithCollection": "Collection & properties",
+        "search": {
+          "placeholder": "Filter properties"
+        }
+      }
+    }
   },
   "footer": {
     "copyright": "© {{date}} {{name}} All rights reserved."
