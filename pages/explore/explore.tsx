@@ -15,7 +15,6 @@ import {
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
 import { useWeb3React } from '@web3-react/core'
-import FilterNav from 'components/Filter/FilterNav'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -24,6 +23,7 @@ import { useCallback, useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import FilterAsset, { NoFilter } from '../../components/Filter/FilterAsset'
+import FilterNav from '../../components/Filter/FilterNav'
 import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
@@ -53,20 +53,14 @@ import useAssetFilterFromQuery, {
 import useEagerConnect from '../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import useFilterState from '../../hooks/useFilterState'
+import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
+import usePaginateQuery from '../../hooks/usePaginateQuery'
 import { wrapServerSideProps } from '../../props'
 
 type Props = {
   currentAccount: string | null
   now: string
-  // Pagination
-  limit: number
-  page: number
-  offset: number
-  // OrderBy
-  orderBy: AssetsOrderBy
-  // Search
-  search: string | null
   // Currencies
   currencies: Pick<Currency, 'id' | 'image' | 'decimals'>[]
 }
@@ -145,27 +139,13 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       props: {
         currentAccount: ctx.user.address,
         now: now.toJSON(),
-        limit,
-        page,
-        offset,
-        orderBy,
-        search,
         currencies: currencies?.nodes || [],
       },
     }
   },
 )
 
-const ExplorePage: NextPage<Props> = ({
-  currentAccount,
-  now,
-  offset,
-  limit,
-  search,
-  page,
-  orderBy,
-  currencies,
-}) => {
+const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
   const ready = useEagerConnect()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
@@ -173,6 +153,8 @@ const ExplorePage: NextPage<Props> = ({
   const date = useMemo(() => new Date(now), [now])
   const { account } = useWeb3React()
   const filter = useAssetFilterFromQuery(currencies)
+  const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
+  const { page, limit, offset } = usePaginateQuery()
   const { data, refetch } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
@@ -196,8 +178,8 @@ const ExplorePage: NextPage<Props> = ({
           return { ...acc, [value]: query[value] }
         }, {}),
         ...otherFilters,
-        search,
-        page: undefined,
+        search: filter.search,
+        page: 1,
         ...traits.reduce(
           (acc, { type, values }) => ({
             ...acc,
@@ -208,7 +190,7 @@ const ExplorePage: NextPage<Props> = ({
       })
       await push({ pathname, query: cleanData }, undefined, { shallow: true })
     },
-    [push, pathname, query, search],
+    [push, pathname, query],
   )
 
   const changeOrder = useCallback(
@@ -232,7 +214,7 @@ const ExplorePage: NextPage<Props> = ({
       <ExploreTemplate
         title={t('explore.title')}
         loading={pageLoading}
-        search={search}
+        search={filter.search}
         selectedTabIndex={0}
       >
         <>
