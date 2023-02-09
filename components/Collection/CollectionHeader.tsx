@@ -153,9 +153,8 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
             <Image
               src={collection.image}
               alt={collection.name}
-              // Twice the image size for better quality
-              width={248}
-              height={248}
+              width={128}
+              height={128}
               objectFit="cover"
             />
           )}
