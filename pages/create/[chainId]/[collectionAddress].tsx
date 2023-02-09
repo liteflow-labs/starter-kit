@@ -1,14 +1,18 @@
 import {
   Alert,
   AlertIcon,
+  Box,
   Center,
   Flex,
+  Grid,
+  GridItem,
   Heading,
   Icon,
   Stack,
   Text,
   useToast,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { isSameAddress, useConfig } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
@@ -134,16 +138,23 @@ const CreatePage: NextPage<Props> = ({
     formData?.isAnimation && !formData.isPrivate ? formData.content : undefined,
   )
 
-  const asset: NFTCardProps['asset'] = useMemo(
-    () =>
-      ({
-        id: '',
-        image: imageUrlLocal || undefined,
-        animationUrl: animationUrlLocal,
-        name: formData?.name || '',
-      } as NFTCardProps['asset']),
-    [imageUrlLocal, animationUrlLocal, formData?.name],
-  )
+  const asset: NFTCardProps['asset'] | undefined = useMemo(() => {
+    if (!data?.collection) return
+    return {
+      id: '',
+      image: imageUrlLocal || '',
+      animationUrl: animationUrlLocal,
+      name: formData?.name || '',
+      bestBid: undefined,
+      collection: {
+        address: data.collection.address,
+        chainId: data.collection.chainId,
+        name: data.collection.name,
+      },
+      owned: BigNumber.from(0),
+      unlockedContent: null,
+    } as NFTCardProps['asset'] // TODO: use satisfies to ensure proper type
+  }, [imageUrlLocal, animationUrlLocal, formData?.name, data?.collection])
 
   const creator = useMemo(
     () => ({
@@ -237,43 +248,48 @@ const CreatePage: NextPage<Props> = ({
           : t('asset.form.title.single')}
       </Heading>
 
-      <Flex
+      <Grid
         mt={12}
-        w="full"
-        gap={6}
-        direction={{ base: 'column', md: 'row' }}
-        align={{ base: 'center', md: 'flex-start' }}
+        mb={6}
+        gap={12}
+        templateColumns={{ base: '1fr', md: '1fr 2fr' }}
       >
-        <div>
+        <GridItem>
           <Flex as={Text} color="brand.black" mb={3} variant="button1">
             {t('asset.form.preview')}
           </Flex>
-          <TokenCard
-            asset={asset}
-            creator={creator}
-            auction={undefined}
-            sale={undefined}
-            numberOfSales={0}
-            hasMultiCurrency={false}
+          <Box pointerEvents="none">
+            {asset && (
+              <TokenCard
+                asset={asset}
+                creator={creator}
+                auction={undefined}
+                sale={undefined}
+                numberOfSales={0}
+                hasMultiCurrency={false}
+              />
+            )}
+          </Box>
+        </GridItem>
+        <GridItem>
+          <TokenFormCreate
+            signer={signer}
+            collection={data.collection}
+            categories={categories}
+            uploadUrl={environment.UPLOAD_URL}
+            blockExplorer={blockExplorer}
+            onCreated={onCreated}
+            onInputChange={setFormData}
+            login={{
+              ...connectors,
+              networkName: environment.NETWORK_NAME,
+            }}
+            activateUnlockableContent={config?.hasUnlockableContent || false}
+            maxRoyalties={environment.MAX_ROYALTIES}
+            activateLazyMint={config?.hasLazyMint || false}
           />
-        </div>
-        <TokenFormCreate
-          signer={signer}
-          collection={data.collection}
-          categories={categories}
-          uploadUrl={environment.UPLOAD_URL}
-          blockExplorer={blockExplorer}
-          onCreated={onCreated}
-          onInputChange={setFormData}
-          login={{
-            ...connectors,
-            networkName: environment.NETWORK_NAME,
-          }}
-          activateUnlockableContent={config?.hasUnlockableContent || false}
-          maxRoyalties={environment.MAX_ROYALTIES}
-          activateLazyMint={config?.hasLazyMint || false}
-        />
-      </Flex>
+        </GridItem>
+      </Grid>
     </Layout>
   )
 }

@@ -23,3 +23,12 @@ declare module '@pinata/ipfs-gateway-tools/dist/node' {
 type IPFS = string
 type UUID = string
 type URI = string
+
+type Falsy = false | 0 | '' | null | undefined
+interface Array<T> {
+  // Ensure mapping like `array.filter(Boolean)` actually return a type with no falsy value
+  filter<S extends T>(
+    predicate: BooleanConstructor,
+    thisArg?: any,
+  ): Exclude<S, Falsy>[]
+}

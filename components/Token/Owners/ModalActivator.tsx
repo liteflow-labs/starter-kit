@@ -8,9 +8,14 @@ export type Props = ButtonHTMLAttributes<any> & {
     image: string | null | undefined
     name: string | null | undefined
   }[]
+  numberOfOwners: number
 }
 
-const OwnersModalActivator: VFC<Props> = ({ owners, ...props }) => {
+const OwnersModalActivator: VFC<Props> = ({
+  owners,
+  numberOfOwners,
+  ...props
+}) => {
   return (
     <Flex as="button" {...props}>
       {owners.slice(0, 4).map(({ address, image, name }, index) => (
@@ -31,7 +36,7 @@ const OwnersModalActivator: VFC<Props> = ({ owners, ...props }) => {
           />
         </Flex>
       ))}
-      {owners.length === 5 && owners[4] && (
+      {numberOfOwners === 5 && owners[4] && (
         <Flex ml={-3} title={owners[4].name ? owners[4].name : ''}>
           <Box
             as={AccountImage}
@@ -43,7 +48,7 @@ const OwnersModalActivator: VFC<Props> = ({ owners, ...props }) => {
           />
         </Flex>
       )}
-      {owners.length > 5 && (
+      {numberOfOwners > 5 && (
         <Flex ml={-3} zIndex={10}>
           <Flex
             h={8}
@@ -54,7 +59,7 @@ const OwnersModalActivator: VFC<Props> = ({ owners, ...props }) => {
             bgColor="brand.50"
           >
             <Text as="span" variant="caption" color="brand.500">
-              {`+${owners.length >= 103 ? 99 : owners.length - 4}`}
+              {`+${numberOfOwners >= 103 ? 99 : owners.length - 4}`}
             </Text>
           </Flex>
         </Flex>

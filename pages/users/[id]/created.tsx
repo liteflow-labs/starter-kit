@@ -26,21 +26,18 @@ import {
 } from '../../../graphql'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
+import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
+import usePaginateQuery from '../../../hooks/usePaginateQuery'
 import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
-import { getLimit, getOffset, getOrder, getPage } from '../../../params'
+import { getLimit, getOffset, getOrder } from '../../../params'
 import { wrapServerSideProps } from '../../../props'
 
 type Props = {
   userAddress: string
+  currentAccount: string | null
   now: string
-  // Pagination
-  limit: number
-  page: number
-  offset: number
-  // OrderBy
-  orderBy: AssetsOrderBy
   meta: {
     title: string
     description: string
@@ -59,7 +56,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     invariant(userAddress, 'userAddress is falsy')
 
     const limit = getLimit(ctx, environment.PAGINATION_LIMIT)
-    const page = getPage(ctx)
     const orderBy = getOrder<AssetsOrderBy>(ctx, 'CREATED_AT_DESC')
     const offset = getOffset(ctx, environment.PAGINATION_LIMIT)
 
@@ -68,6 +64,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       query: FetchCreatedAssetsDocument,
       variables: {
         address: userAddress.toLowerCase(),
+        currentAddress: ctx.user.address || '',
         now,
         limit,
         offset,
@@ -79,11 +76,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     return {
       props: {
         userAddress,
+        currentAccount: ctx.user.address,
         now: now.toJSON(),
-        limit,
-        page,
-        offset,
-        orderBy,
         meta: {
           title: data.account?.name || userAddress,
           description: data.account?.description || '',
@@ -97,16 +91,15 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 const CreatedPage: NextPage<Props> = ({
   meta,
   now,
-  limit,
-  page,
-  offset,
-  orderBy,
   userAddress,
+  currentAccount,
 }) => {
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { pathname, replace, query } = useRouter()
+  const { limit, offset, page } = usePaginateQuery()
+  const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
   const { account } = useWeb3React()
 
@@ -114,6 +107,7 @@ const CreatedPage: NextPage<Props> = ({
   const { data, refetch } = useFetchCreatedAssetsQuery({
     variables: {
       address: userAddress,
+      currentAddress: (ready ? account?.toLowerCase() : currentAccount) || '',
       limit,
       offset,
       orderBy,

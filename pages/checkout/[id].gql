@@ -1,4 +1,4 @@
-query Checkout($id: UUID!, $now: Datetime!) {
+query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
   offer(id: $id) {
     id
     type
@@ -13,6 +13,9 @@ query Checkout($id: UUID!, $now: Datetime!) {
     asset {
       id
       collection {
+        chainId
+        address
+        name
         standard
       }
       name
@@ -28,6 +31,30 @@ query Checkout($id: UUID!, $now: Datetime!) {
         image
         verification {
           status
+        }
+      }
+      owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+        aggregates {
+          sum {
+            quantity
+          }
+        }
+      }
+      bestBid: bids(
+        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+        filter: { expiredAt: { greaterThan: $now } }
+        first: 1
+      ) {
+        nodes {
+          unitPrice
+          amount
+          currency {
+            image
+            name
+            id
+            decimals
+            symbol
+          }
         }
       }
       firstSale: sales(

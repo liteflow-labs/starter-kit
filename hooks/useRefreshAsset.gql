@@ -1,0 +1,11 @@
+query GetAssetDataForRefresh($assetId: String!) {
+  asset(id: $assetId) {
+    updatedAt
+  }
+}
+
+mutation RefreshAsset($assetId: String!) {
+  refreshAsset(input: { assetId: $assetId }) {
+    clientMutationId
+  }
+}

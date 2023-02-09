@@ -25,6 +25,34 @@
           "title": "オファーをキャンセル"
         }
       }
+    },
+    "modal": {
+      "accept": {
+        "title": "入札する",
+        "description": "入札者に販売したいエディションの数を選択してください",
+        "submit": "入札を受け入れる",
+        "quantity": {
+          "label": "量",
+          "suffix": "版",
+          "placeholder": "数量を入力してください",
+          "available": "入札者が要求した {{count}} つのエディション"
+        },
+        "validation": {
+          "required": "この項目は必須です。",
+          "in-range": "このフィールドは 1 から {{ max }} の間である必要があります。",
+          "integer": "このフィールドは整数でなければなりません."
+        },
+        "owned": {
+          "label": "あなたが所有しています",
+          "unit": "{{count}} 版"
+        }
+      }
+    }
+  },
+  "collection": {
+    "listItem": {
+      "allTime": "全期間",
+      "floor": "フロア: {{price}}"
     }
   },
   "countdown": {
@@ -34,7 +62,61 @@
     "sec": "{{value}}秒"
   },
   "dropzone": {
-    "required": "必須の項目です"
+    "required": "必須の項目です",
+    "gifTooLarge": "GIFファイルが大きすぎます。最大サイズは5MBです。",
+    "gifLimit": "GIF。最大 5 MB"
+  },
+  "filters": {
+    "nav": {
+      "title": "フィルター",
+      "clear": "フィルターをクリアする"
+    },
+    "assets": {
+      "submit": "適用する",
+      "clear": "すべてクリア",
+      "currency": {
+        "label": "価格レンジ",
+        "placeholder": "通貨の選択"
+      },
+      "min-price": {
+        "placeholder": "から",
+        "validation": {
+          "positive": "最低価格は 0 より大きくなければなりません。",
+          "decimals": "最低価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+        }
+      },
+      "max-price": {
+        "placeholder": "まで",
+        "validation": {
+          "positive": "最大価格は 0 より大きくなければなりません。",
+          "decimals": "最大価格は、最大 {{ nbDecimals }} の小数をサポートします。"
+        }
+      },
+      "offers": {
+        "label": "状態",
+        "values": {
+          "all": "すべての",
+          "fixed": "固定価格",
+          "auction": "オークション"
+        }
+      },
+      "categories": {
+        "label": "カテゴリー"
+      },
+      "collections": {
+        "label": "NFT",
+        "search": {
+          "placeholder": "コレクションから探す"
+        }
+      },
+      "properties": {
+        "label": "プロパティ",
+        "labelWithCollection": "コレクションとプロパティ",
+        "search": {
+          "placeholder": "フィルターのプロパティ"
+        }
+      }
+    }
   },
   "footer": {
     "copyright": "© {{date}} {{name}} 無断転載を禁じます。"
@@ -451,8 +533,11 @@
         "view": "コレクションを見る"
       },
       "card-footer": {
-        "highest-bid": "最高入札額:",
-        "place-bid": "入札する"
+        "highest-bid": "入札額",
+        "place-bid": "入札する",
+        "no-bids": "まだ入札はありません",
+        "view": "私のNFTを見る",
+        "ongoing-auction": "進行中のオークション"
       },
       "form": {
         "submit": "オファーを作成",
@@ -516,6 +601,7 @@
         "price": "価格",
         "from": "から",
         "purchase": "購入",
+        "view": "私のNFTを見る",
         "offers": "{{count}} オファーが利用可能です"
       },
       "form": {
@@ -594,7 +680,8 @@
       },
       "card-footer": {
         "open": "入札受付中",
-        "place-bid": "入札する"
+        "place-bid": "入札する",
+        "view": "私のNFTを見る"
       },
       "info": {
         "owner": "このコレクションを所有しています",
@@ -621,7 +708,7 @@
         "file": {
           "label": "ファイルをアップロード",
           "heading": "ファイルをドラッグ&ドロップするか、",
-          "hint": "JPG、PNG、GIF、WEBP、WEBM、MP4、最大100 MBまで。",
+          "hint": "JPG、PNG、WEBP、WEBM、MP4、最大100 MBまで。",
           "file": {
             "chose": "ファイルを選択",
             "replace": "ファイルを置き換える"
@@ -630,7 +717,7 @@
         "preview": {
           "label": "プレビューをアップロード",
           "heading": "ファイルをドラッグ&ドロップするか、",
-          "hint": "JPG、PNG、GIF、WEBP、最大100 MBまで。",
+          "hint": "JPG、PNG、WEBP、最大100 MBまで。",
           "file": {
             "chose": "ファイルを選択",
             "replace": "ファイルを置き換える"
@@ -694,7 +781,10 @@
     }
   },
   "traits": {
-    "rarity": "{{value}} レア度"
+    "percent": "{{value}}%"
+  },
+  "truncate": {
+    "show-more": "続きを表示する"
   },
   "user": {
     "balance": {
@@ -725,7 +815,7 @@
         "image": {
           "label": "プロフィール画像をアップロード",
           "heading": "ファイルをドラッグ&ドロップするか、",
-          "hint": "推奨サイズ: 400x400px　JPG、PNG、GIF、WEBP、最大ファイルサイズ10 MBまで。",
+          "hint": "推奨サイズ: 400x400px　JPG、PNG、WEBP、最大ファイルサイズ10 MBまで。",
           "file": {
             "chose": "ファイルを選択",
             "replace": "ファイルを置き換える"
@@ -734,7 +824,7 @@
         "cover": {
           "label": "カバー画像をアップロード",
           "heading": "ファイルをドラッグ&ドロップするか、",
-          "hint": "推奨サイズ: 1128x200px　JPG、PNG、GIF、WEBP、最大ファイルサイズ10 MBまで。",
+          "hint": "推奨サイズ: 1128x200px　JPG、PNG、WEBP、最大ファイルサイズ10 MBまで。",
           "file": {
             "chose": "ファイルを選択",
             "replace": "ファイルを置き換える"

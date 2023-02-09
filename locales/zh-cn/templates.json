@@ -3,57 +3,78 @@
     "500": "很抱歉，出了点问题。"
   },
   "home": {
-    "explore": "浏览所有藏品",
+    "explore": "浏览所有NFT",
     "auctions": "拍卖",
-    "featured": "精选藏品"
+    "featured": "精选NFT"
   },
   "explore": {
-    "title": "探索藏品",
-    "empty": {
-      "title": "未找到藏品",
-      "description": "请更新筛选条件来查找更多藏品。"
+    "title": "探讨",
+    "tabs": {
+      "nfts": "NFTs",
+      "users": "用户",
+      "collections": "收藏品"
     },
-    "form": {
-      "submit": "应用",
-      "clear": "全部清空",
-      "currency": {
-        "label": "价格范围",
-        "placeholder": "选择货币"
+    "nfts": {
+      "filter": "过滤 器",
+      "empty": {
+        "title": "未找到NFT",
+        "description": "请更新筛选条件来查找更多NFT。"
       },
-      "min-price": {
-        "placeholder": "从",
-        "validation": {
-          "positive": "最低价格必须大于 0",
-          "decimals": "最低价格支持最多 {{ nbDecimals }} 位小数"
-        }
-      },
-      "max-price": {
-        "placeholder": "到",
-        "validation": {
-          "positive": "最高价格必须大于 0",
-          "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
-        }
-      },
-      "offers": {
-        "label": "状态",
+      "orderBy": {
+        "label": "排序方式",
         "values": {
-          "fixed": "固定价格",
-          "auction": "拍卖"
+          "createdAtDesc": "日期：最新",
+          "createdAtAsc": "日期：最早"
         }
+      }
+    },
+    "users": {
+      "empty": {
+        "title": "未找到用户",
+        "description": "请更新筛选条件来查找更多用户。"
+      }
+    },
+    "collections": {
+      "empty": {
+        "title": "未找到收藏",
+        "description": "请更新筛选条件来查找更多收藏。"
       },
-      "categories": {
-        "label": "类别"
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "交易量: 全时",
+          "24hVolDesc": "交易量: 24小时",
+          "7dVolDesc": "交易量: 7天",
+          "14dVolDesc": "交易量: 14天",
+          "28dVolDesc": "交易量: 28天"
+        }
+      }
+    }
+  },
+  "collection": {
+    "filter": "过滤 器",
+    "header": {
+      "data-labels": {
+        "floor-price": "底价",
+        "total-volume": "总体积",
+        "owners": "所有者",
+        "items": "物品"
       },
-      "collections": {
-        "label": "收藏品"
+      "by": "由",
+      "menu": {
+        "report": "报告"
       }
     },
     "orderBy": {
-      "label": "排序方式",
       "values": {
+        "salesMinUnitPriceInRefAsc": "价格：低 - 高",
+        "salesMinUnitPriceInRefDesc": "价格：高 - 低",
         "createdAtDesc": "日期：最新",
         "createdAtAsc": "日期：最早"
       }
+    },
+    "empty": {
+      "title": "未找到 NFT",
+      "description": "更新您的过滤器以查找更多 NFT"
     }
   },
   "asset": {
@@ -74,7 +95,8 @@
           "label": "举报",
           "subject": "举报 NFT",
           "body": "我要举报下列 NFT {{name}} (#{{id}})\n原因如下： "
-        }
+        },
+        "refresh-metadata": "刷新元数据"
       },
       "explorerLink": "在 {{name}} 上查看",
       "ipfsLink": "在 IPFS 上查看",
@@ -84,12 +106,12 @@
     },
     "form": {
       "title": {
-        "single": "创建单个藏品",
-        "multiple": "创建多个藏品"
+        "single": "创建单个NFT",
+        "multiple": "创建多个NFT"
       },
       "preview": "预览",
       "notifications": {
-        "created": "您已成功创建藏品。"
+        "created": "您已成功创建NFT。"
       },
       "notFound": {
         "title": "未找到集合",
@@ -98,8 +120,8 @@
       }
     },
     "typeSelector": {
-      "title": "创建藏品",
-      "description": "如果您希望自己的藏品独一无二，请选择“单份”，如想要多次售卖一件藏品，请选择“多份”",
+      "title": "创建NFT",
+      "description": "如果您希望自己的NFT独一无二，请选择“单份”，如想要多次售卖一件NFT，请选择“多份”",
       "single": {
         "title": "单份",
         "type": "ERC721"
@@ -161,7 +183,7 @@
       },
       "title": "结账",
       "notifications": {
-        "purchased": "已成功购买藏品。"
+        "purchased": "已成功购买NFT。"
       },
       "on-sale": "售卖时长为",
       "per-edition": "每版"
@@ -171,14 +193,14 @@
         "title": "为 {{name}} 创建要约",
         "description": "为 {{name}} 创建要约"
       },
-      "title": "藏品要约",
+      "title": "NFT要约",
       "notifications": {
         "created": "您已成功创建要约。"
       },
       "options": {
         "label": "要约类型",
         "hints": {
-          "fixed": "为您的藏品输入价格，方便用户立即购买",
+          "fixed": "为您的NFT输入价格，方便用户立即购买",
           "auction": "为买家设置提交出价的时间期限"
         },
         "values": {

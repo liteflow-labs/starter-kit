@@ -3,10 +3,9 @@ import { FC, HTMLAttributes, useEffect, useMemo, useState } from 'react'
 
 const refreshRate = 1000
 
-const Countdown: FC<HTMLAttributes<any> & { date: Date }> = ({
-  date,
-  ...props
-}) => {
+const Countdown: FC<
+  HTMLAttributes<any> & { date: Date; hideSeconds?: boolean }
+> = ({ date, hideSeconds = false, ...props }) => {
   const { t } = useTranslation('components')
   const [diff, setDiff] = useState(+new Date(date) - +new Date())
   const d = useMemo(() => Math.floor(diff / (1000 * 60 * 60 * 24)), [diff])
@@ -28,7 +27,9 @@ const Countdown: FC<HTMLAttributes<any> & { date: Date }> = ({
       {d > 0 && <span>{t('countdown.day', { value: d })}</span>}{' '}
       <span>{t('countdown.hour', { value: `0${h}`.slice(-2) })}</span>{' '}
       <span>{t('countdown.min', { value: `0${m}`.slice(-2) })}</span>{' '}
-      <span>{t('countdown.sec', { value: `0${s}`.slice(-2) })}</span>
+      {!hideSeconds && (
+        <span>{t('countdown.sec', { value: `0${s}`.slice(-2) })}</span>
+      )}
     </div>
   )
 }

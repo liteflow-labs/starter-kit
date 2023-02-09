@@ -25,6 +25,34 @@
           "title": "取消要约"
         }
       }
+    },
+    "modal": {
+      "accept": {
+        "title": "接受出价",
+        "description": "选择您要出售给投标人的版本数量",
+        "submit": "接受出价",
+        "quantity": {
+          "label": "数量",
+          "suffix": "版",
+          "placeholder": "输入数量",
+          "available": "投标人要求的 {{count}} 个版本"
+        },
+        "validation": {
+          "required": "这是必填栏",
+          "in-range": "该字段必须介于 1 和 {{ max }} 之间",
+          "integer": "该字段必须是整数"
+        },
+        "owned": {
+          "label": "你拥有",
+          "unit": "{{count}} 个版本"
+        }
+      }
+    }
+  },
+  "collection": {
+    "listItem": {
+      "allTime": "所有时间",
+      "floor": "底价: {{price}}"
     }
   },
   "countdown": {
@@ -34,7 +62,61 @@
     "sec": "{{value}} 秒"
   },
   "dropzone": {
-    "required": "此字段为必填字段"
+    "required": "此字段为必填字段",
+    "gifTooLarge": "GIF 文件太大。最大大小为 5MB。",
+    "gifLimit": "GIF。最大 5 MB。"
+  },
+  "filters": {
+    "nav": {
+      "title": "过滤 器",
+      "clear": "清除过滤器"
+    },
+    "assets": {
+      "submit": "应用",
+      "clear": "全部清空",
+      "currency": {
+        "label": "价格范围",
+        "placeholder": "选择货币"
+      },
+      "min-price": {
+        "placeholder": "从",
+        "validation": {
+          "positive": "最低价格必须大于 0",
+          "decimals": "最低价格支持最多 {{ nbDecimals }} 位小数"
+        }
+      },
+      "max-price": {
+        "placeholder": "到",
+        "validation": {
+          "positive": "最高价格必须大于 0",
+          "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
+        }
+      },
+      "offers": {
+        "label": "状态",
+        "values": {
+          "all": "都",
+          "fixed": "固定价格",
+          "auction": "拍卖"
+        }
+      },
+      "categories": {
+        "label": "类别"
+      },
+      "collections": {
+        "label": "收NFT",
+        "search": {
+          "placeholder": "按产品系列搜索"
+        }
+      },
+      "properties": {
+        "label": "性能",
+        "labelWithCollection": "集合和属性",
+        "search": {
+          "placeholder": "筛选器属性"
+        }
+      }
+    }
   },
   "footer": {
     "copyright": "© {{date}} {{name}} 保留所有权利。"
@@ -451,8 +533,11 @@
         "view": "查看藏品"
       },
       "card-footer": {
-        "highest-bid": "最高出价：",
-        "place-bid": "提交出价"
+        "highest-bid": "出价",
+        "place-bid": "提交出价",
+        "no-bids": "还没有出价",
+        "view": "查看我的 NFT",
+        "ongoing-auction": "正在进行的拍卖"
       },
       "form": {
         "submit": "创建要约",
@@ -516,6 +601,7 @@
         "price": "价格",
         "from": "从",
         "purchase": "购买",
+        "view": "查看我的 NFT",
         "offers": "有 {{count}} 份要约"
       },
       "form": {
@@ -594,7 +680,8 @@
       },
       "card-footer": {
         "open": "开放接受出价",
-        "place-bid": "提交出价"
+        "place-bid": "提交出价",
+        "view": "查看我的 NFT"
       },
       "info": {
         "owner": "您拥有此藏品",
@@ -621,7 +708,7 @@
         "file": {
           "label": "上传文件",
           "heading": "拖放文件或",
-          "hint": "JPG、PNG、GIF、WEBP、WEBM 或 MP4。大小不得超过 100 MB。",
+          "hint": "JPG、PNG、WEBP、WEBM 或 MP4。大小不得超过 100 MB。",
           "file": {
             "chose": "选择文件",
             "replace": "替换文件"
@@ -630,7 +717,7 @@
         "preview": {
           "label": "上传预览",
           "heading": "拖放文件或",
-          "hint": "JPG、PNG、GIF、WEBP。大小不得超过 100 MB。",
+          "hint": "JPG、PNG、WEBP。大小不得超过 100 MB。",
           "file": {
             "chose": "选择文件",
             "replace": "替换文件"
@@ -694,7 +781,10 @@
     }
   },
   "traits": {
-    "rarity": "稀有度 {{value}}"
+    "percent": "{{value}}%"
+  },
+  "truncate": {
+    "show-more": "显示更多"
   },
   "user": {
     "balance": {
@@ -725,7 +815,7 @@
         "image": {
           "label": "上传个人资料图片",
           "heading": "拖放文件或",
-          "hint": "推荐分辨率：400x400 像素。JPG、PNG、GIF、WEBP。文件大小不得超过 10 MB。",
+          "hint": "推荐分辨率：400x400 像素。JPG、PNG、WEBP。文件大小不得超过 10 MB。",
           "file": {
             "chose": "选择文件",
             "replace": "替换文件"
@@ -734,7 +824,7 @@
         "cover": {
           "label": "上传封面图片",
           "heading": "拖放文件或",
-          "hint": "推荐分辨率：1128x200 像素。JPG、PNG、GIF、WEBP。文件大小不得超过 10 MB。",
+          "hint": "推荐分辨率：1128x200 像素。JPG、PNG、WEBP。文件大小不得超过 10 MB。",
           "file": {
             "chose": "选择文件",
             "replace": "替换文件"

@@ -41,11 +41,11 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { MittEmitter } from 'next/dist/shared/lib/mitt'
-import Image from 'next/image'
 import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
 import { useNavbarAccountQuery } from '../../graphql'
+import Image from '../Image/Image'
 import Link from '../Link/Link'
 import LoginModal from '../Modal/Login'
 import Select from '../Select/Select'
@@ -445,6 +445,8 @@ const Navbar: VFC<{
     if (data.search) query.search = data.search
     else delete query.search
     delete query.skip // reset pagination
+    delete query.page // reset pagination
+    if (router.asPath.startsWith('/explore')) return push({ query })
     return push({ pathname: '/explore', query })
   })
 

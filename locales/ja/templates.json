@@ -3,57 +3,78 @@
     "500": "申し訳ありません、エラーが発生しました。"
   },
   "home": {
-    "explore": "すべてのコレクションを見る",
+    "explore": "すべてのNFTを見る",
     "auctions": "オークション",
-    "featured": "注目のコレクション"
+    "featured": "注目のNFT"
   },
   "explore": {
-    "title": "コレクションを探す",
-    "empty": {
-      "title": "コレクションが見つかりません",
-      "description": "フィルターを更新して、より多くのコレクションを探しましょう。"
+    "title": "検索",
+    "tabs": {
+      "nfts": "NFTs",
+      "users": "ユーザー",
+      "collections": "コレクション"
     },
-    "form": {
-      "submit": "適用する",
-      "clear": "すべてクリア",
-      "currency": {
-        "label": "価格レンジ",
-        "placeholder": "通貨の選択"
+    "nfts": {
+      "filter": "フィルター",
+      "empty": {
+        "title": "NFTが見つかりません",
+        "description": "フィルターを更新して、より多くのNFTを探しましょう。"
       },
-      "min-price": {
-        "placeholder": "から",
-        "validation": {
-          "positive": "最低価格は 0 より大きくなければなりません。",
-          "decimals": "最低価格は、最大 {{ nbDecimals }} の小数をサポートします。"
-        }
-      },
-      "max-price": {
-        "placeholder": "まで",
-        "validation": {
-          "positive": "最大価格は 0 より大きくなければなりません。",
-          "decimals": "最大価格は、最大 {{ nbDecimals }} の小数をサポートします。"
-        }
-      },
-      "offers": {
-        "label": "状態",
+      "orderBy": {
+        "label": "並び替え",
         "values": {
-          "fixed": "固定価格",
-          "auction": "オークション"
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い"
         }
+      }
+    },
+    "users": {
+      "empty": {
+        "title": "ユーザーが見つかりません",
+        "description": "フィルターを更新して、より多くのユーザーを見つけてください。"
+      }
+    },
+    "collections": {
+      "empty": {
+        "title": "コレクションが見つかりません",
+        "description": "フィルターを更新して、より多くのコレクションを見つけてください。"
       },
-      "categories": {
-        "label": "カテゴリー"
+      "orderBy": {
+        "values": {
+          "totalVolDesc": "ボリューム: オールタイム",
+          "24hVolDesc": "ボリューム: 24時間",
+          "7dVolDesc": "ボリューム: 7時間",
+          "14dVolDesc": "ボリューム: 14時間",
+          "28dVolDesc": "ボリューム: 28時間"
+        }
+      }
+    }
+  },
+  "collection": {
+    "filter": "フィルター",
+    "header": {
+      "data-labels": {
+        "floor-price": "最低価格",
+        "total-volume": "総ボリューム",
+        "owners": "所有者",
+        "items": "アイテム"
       },
-      "collections": {
-        "label": "コレクション"
+      "by": "によって",
+      "menu": {
+        "report": "報告"
       }
     },
     "orderBy": {
-      "label": "並び替え",
       "values": {
-        "createdAtDesc": "日付: 最も新しい",
+        "salesMinUnitPriceInRefAsc": "価格: 低 - 高",
+        "salesMinUnitPriceInRefDesc": "価格: 高 - 低",
+        "createdAtDesc": "日付: 最新",
         "createdAtAsc": "日付: 最も古い"
       }
+    },
+    "empty": {
+      "title": "NFTが見つかりません",
+      "description": "フィルターを更新して、より多くの NFT を見つけてください。"
     }
   },
   "asset": {
@@ -74,7 +95,8 @@
           "label": "通報",
           "subject": "NFTを通報する",
           "body": "以下のNFT {{name}} (#{{id}}) を通報します\n理由: "
-        }
+        },
+        "refresh-metadata": "メタデータの更新"
       },
       "explorerLink": "{{name}} で表示",
       "ipfsLink": "IPFSで表示",
@@ -84,12 +106,12 @@
     },
     "form": {
       "title": {
-        "single": "シングルコレクションの作成",
-        "multiple": "マルチコレクションの作成"
+        "single": "シングルNFTの作成",
+        "multiple": "マルチNFTの作成"
       },
       "preview": "プレビュー",
       "notifications": {
-        "created": "コレクションが無事に作成されました。"
+        "created": "NFTが無事に作成されました。"
       },
       "notFound": {
         "title": "コレクションが見つかりません",
@@ -98,8 +120,8 @@
       }
     },
     "typeSelector": {
-      "title": "コレクションの作成",
-      "description": "1点もののコレクションの場合は「シングル」、1つのコレクションを複数販売したい場合は「マルチ」を選択してください",
+      "title": "NFTの作成",
+      "description": "1点もののNFTの場合は「シングル」、1つのNFTを複数販売したい場合は「マルチ」を選択してください",
       "single": {
         "title": "シングル",
         "type": "ERC721"
@@ -161,7 +183,7 @@
       },
       "title": "チェックアウト",
       "notifications": {
-        "purchased": "コレクションが無事に購入されました。"
+        "purchased": "NFTが無事に購入されました。"
       },
       "on-sale": "販売中",
       "per-edition": "エディションあたり"
@@ -171,14 +193,14 @@
         "title": "{{name}} のオファーを作成する",
         "description": "{{name}} のオファーを作成する"
       },
-      "title": "コレクションのオファー",
+      "title": "NFTのオファー",
       "notifications": {
         "created": "オファーが無事に作成されました。"
       },
       "options": {
         "label": "オファーの種類",
         "hints": {
-          "fixed": "コレクションを即座に購入可能な価格を入力してください",
+          "fixed": "NFTを即座に購入可能な価格を入力してください",
           "auction": "購入者が入札できる期間の設定"
         },
         "values": {

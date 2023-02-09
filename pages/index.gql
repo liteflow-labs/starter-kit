@@ -13,14 +13,17 @@ query FetchDefaultAssetIds($limit: Int!) {
 fragment HomeAssetDetail on Asset {
   id
   name
+  collection {
+    chainId
+    address
+    name
+    standard
+  }
   image
   animationUrl
   unlockedContent {
     url
     mimetype
-  }
-  collection {
-    standard
   }
   creator {
     address
@@ -43,7 +46,9 @@ fragment HomeAssetDetail on Asset {
       ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
       OWNER_ADDRESS_ASC
     ]
+    first: 5
   ) {
+    totalCount
     nodes {
       ownerAddress
       quantity
@@ -59,6 +64,23 @@ fragment HomeAssetDetail on Asset {
     aggregates {
       sum {
         quantity
+      }
+    }
+  }
+  bestBid: bids(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+    first: 1
+  ) {
+    nodes {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
       }
     }
   }
@@ -141,6 +163,11 @@ fragment HomeAssetDetail on Asset {
 fragment HomeAsset on Asset {
   id
   name
+  collection {
+    chainId
+    address
+    name
+  }
   image
   animationUrl
   unlockedContent {
@@ -153,6 +180,13 @@ fragment HomeAsset on Asset {
     image
     verification {
       status
+    }
+  }
+  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+    aggregates {
+      sum {
+        quantity
+      }
     }
   }
   auctions(
@@ -179,6 +213,23 @@ fragment HomeAsset on Asset {
             symbol
           }
         }
+      }
+    }
+  }
+  bestBid: bids(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: { expiredAt: { greaterThan: $now } }
+    first: 1
+  ) {
+    nodes {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
       }
     }
   }
@@ -232,6 +283,18 @@ fragment HomeAuction on Auction {
   asset {
     id
     name
+    collection {
+      chainId
+      address
+      name
+    }
+    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+      aggregates {
+        sum {
+          quantity
+        }
+      }
+    }
     image
     animationUrl
     unlockedContent {
@@ -244,6 +307,23 @@ fragment HomeAuction on Auction {
       image
       verification {
         status
+      }
+    }
+    bestBid: bids(
+      orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+      filter: { expiredAt: { greaterThan: $now } }
+      first: 1
+    ) {
+      nodes {
+        unitPrice
+        amount
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
       }
     }
   }

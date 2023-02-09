@@ -25,6 +25,34 @@
           "title": "Cancelar Oferta"
         }
       }
+    },
+    "modal": {
+      "accept": {
+        "title": "Aceptar una oferta",
+        "description": "Elija el número de ediciones que le gustaría vender al postor",
+        "submit": "Aceptar oferta",
+        "quantity": {
+          "label": "Cantidad",
+          "suffix": "Edición",
+          "placeholder": "Introduce la cantidad",
+          "available": "{{ count }} ediciones solicitadas por el postor"
+        },
+        "validation": {
+          "required": "Este campo es requerido.",
+          "in-range": "Este campo debe estar entre 1 y {{ max }}.",
+          "integer": "Este campo debe ser un número entero."
+        },
+        "owned": {
+          "label": "eres dueño",
+          "unit": "{{count}} edición(es)"
+        }
+      }
+    }
+  },
+  "collection": {
+    "listItem": {
+      "allTime": "Todo el tiempo",
+      "floor": "Piso: {{price}}"
     }
   },
   "countdown": {
@@ -34,7 +62,61 @@
     "sec": "{{value}}s"
   },
   "dropzone": {
-    "required": "Este campo es obligatorio."
+    "required": "Este campo es obligatorio.",
+    "gifTooLarge": "El archivo GIF es demasiado grande. El tamaño máximo es de 5 MB.",
+    "gifLimit": "GIF. Máx. 5 MB."
+  },
+  "filters": {
+    "nav": {
+      "title": "Filtros",
+      "clear": "Borrar filtros"
+    },
+    "assets": {
+      "submit": "Aplicar",
+      "clear": "Limpiar filtros",
+      "currency": {
+        "label": "Rango de precios",
+        "placeholder": "Selecciona una moneda"
+      },
+      "min-price": {
+        "placeholder": "Desde",
+        "validation": {
+          "positive": "El precio mínimo debe ser mayor que 0.",
+          "decimals": "El precio mínimo admite un máximo de {{ nbDecimals }} decimales."
+        }
+      },
+      "max-price": {
+        "placeholder": "Hasta",
+        "validation": {
+          "positive": "El precio máximo debe ser mayor que 0.",
+          "decimals": "El precio máximo admite un máximo de {{ nbDecimals }} decimales."
+        }
+      },
+      "offers": {
+        "label": "Estatus",
+        "values": {
+          "all": "Todo",
+          "fixed": "Precio Fijo",
+          "auction": "Subasta"
+        }
+      },
+      "categories": {
+        "label": "Categorías"
+      },
+      "collections": {
+        "label": "Colecciones",
+        "search": {
+          "placeholder": "Buscar por colección"
+        }
+      },
+      "properties": {
+        "label": "Propiedades",
+        "labelWithCollection": "Colección y propiedades",
+        "search": {
+          "placeholder": "Propiedades del filtro"
+        }
+      }
+    }
   },
   "footer": {
     "copyright": "© {{date}} {{name}} Todos los derechos reservados."
@@ -451,8 +533,11 @@
         "view": "Ver Coleccionable"
       },
       "card-footer": {
-        "highest-bid": "Oferta más alta:",
-        "place-bid": "Crear una oferta"
+        "highest-bid": "Oferta",
+        "place-bid": "Crear una oferta",
+        "no-bids": "Aún no hay ofertas",
+        "view": "Ver mi NFT",
+        "ongoing-auction": "Subasta en curso"
       },
       "form": {
         "submit": "Crear Oferta",
@@ -516,6 +601,7 @@
         "price": "Precio",
         "from": "De",
         "purchase": "Comprar",
+        "view": "Ver mi NFT",
         "offers": "{{count}} ofertas disponibles"
       },
       "form": {
@@ -594,7 +680,8 @@
       },
       "card-footer": {
         "open": "Abierto a ofertas",
-        "place-bid": "Crear una oferta"
+        "place-bid": "Crear una oferta",
+        "view": "Ver mi NFT"
       },
       "info": {
         "owner": "Eres propietario de este coleccionable",
@@ -621,7 +708,7 @@
         "file": {
           "label": "Cargar archivo",
           "heading": "Arrastra y suelta un archivo o",
-          "hint": "JPG, PNG, GIF, WEBP, WEBM o MP4. Máximo 100 MB.",
+          "hint": "JPG, PNG, WEBP, WEBM o MP4. Máximo 100 MB.",
           "file": {
             "chose": "Elegir Archivo",
             "replace": "Reemplazar Archivo"
@@ -630,7 +717,7 @@
         "preview": {
           "label": "Previsualizar carga",
           "heading": "Arrastra y suelta un archivo o",
-          "hint": "JPG, PNG, GIF o WEBP. Máximo 100 MB.",
+          "hint": "JPG, PNG o WEBP. Máximo 100 MB.",
           "file": {
             "chose": "Elegir Archivo",
             "replace": "Reemplazar Archivo"
@@ -694,7 +781,10 @@
     }
   },
   "traits": {
-    "rarity": "{{value}} rareza"
+    "percent": "{{value}}%"
+  },
+  "truncate": {
+    "show-more": "Mostrar más"
   },
   "user": {
     "balance": {
@@ -725,7 +815,7 @@
         "image": {
           "label": "Cargar una imagen de perfil",
           "heading": "Arrastra y suelta un archivo o",
-          "hint": "Tamaño recomendado: 400x400px. JPG, PNG, GIF o WEBP. Máximo 10 MB.",
+          "hint": "Tamaño recomendado: 400x400px. JPG, PNG o WEBP. Máximo 10 MB.",
           "file": {
             "chose": "Elegir Archivo",
             "replace": "Reemplazar Archivo"
@@ -734,7 +824,7 @@
         "cover": {
           "label": "Cargar una imagen de fondo",
           "heading": "Arrastra y suelta un archivo o",
-          "hint": "Tamaño recomendado: 1128x200px. JPG, PNG, GIF o WEBP. Máximo 10 MB.",
+          "hint": "Tamaño recomendado: 1128x200px. JPG, PNG o WEBP. Máximo 10 MB.",
           "file": {
             "chose": "Elegir Archivo",
             "replace": "Reemplazar Archivo"
