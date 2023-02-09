@@ -80,7 +80,7 @@ const TokenMedia: VFC<{
             (min-width: 30em) 50vw,
             (min-width: 48em) 33vw,
             (min-width: 62em) 25vw,
-            (min-width: 80em) 290px"
+            (min-width: 80em) 292px"
         />
       </Box>
     )
