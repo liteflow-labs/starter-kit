@@ -53,6 +53,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
               alt={`${sales[0].currency.symbol} Logo`}
               width={32}
               height={32}
+              objectFit="cover"
             />
           </Box>
         )
@@ -76,6 +77,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
                   alt={`${x.currency.symbol} Logo`}
                   width={32}
                   height={32}
+                  objectFit="cover"
                 />
               </Box>
             ))}

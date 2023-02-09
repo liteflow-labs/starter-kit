@@ -36,6 +36,7 @@ const SaleOpenSummary: VFC<Props> = ({ currencies }) => {
               alt="Currency Logo"
               width={32}
               height={32}
+              objectFit="cover"
             />
           </Flex>
         ))}
