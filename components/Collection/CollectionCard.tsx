@@ -58,7 +58,9 @@ const CollectionCard: FC<Props> = ({ collection }) => {
             <Image
               src={collection.image}
               alt={collection.name}
-              layout="fill"
+              // Twice the image size for better quality
+              width={104}
+              height={104}
               objectFit="cover"
             />
           )}
