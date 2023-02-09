@@ -1,13 +1,25 @@
-import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Divider,
+  Flex,
+  Icon,
+  Stack,
+  StackProps,
+  Text,
+} from '@chakra-ui/react'
+import { HiXCircle } from '@react-icons/all-files/hi/HiXCircle'
 import { PropsWithChildren } from 'react'
 
-type ListItemProps = {
-  image: JSX.Element
+export type ListItemProps = StackProps & {
+  image?: JSX.Element
+  imageRounded?: string
+  imageSize?: number
   label: JSX.Element | string
   subtitle?: JSX.Element | string
   caption?: JSX.Element | string
   action?: JSX.Element
   withSeparator?: boolean
+  closable?: boolean
 }
 
 export function ListItem({
@@ -15,43 +27,61 @@ export function ListItem({
   action,
   caption,
   image,
+  imageRounded,
+  imageSize,
   subtitle,
   withSeparator,
+  closable,
   ...props
 }: ListItemProps): JSX.Element {
   return (
-    <Stack as="li" {...props}>
+    <Stack as="li" padding={2} {...props}>
       <Flex align="center" gap={3}>
-        <Flex
-          mb="auto"
-          h={10}
-          w={10}
-          minW="max-content"
-          align="center"
-          justify="center"
-          overflow="hidden"
-          rounded="full"
-          bgColor="gray.100"
-        >
-          {image}
-        </Flex>
-        <Flex
-          flex={1}
-          direction={{ base: 'column', md: 'row' }}
-          align="center"
-          gap={3}
-        >
+        {image && (
+          <Flex
+            mb={imageSize ? '0' : 'auto'}
+            h={imageSize ? imageSize : 10}
+            w={imageSize ? imageSize : 10}
+            minW="max-content"
+            align="center"
+            justify="center"
+            overflow="hidden"
+            rounded={imageRounded || 'full'}
+            bgColor="gray.100"
+          >
+            {image}
+          </Flex>
+        )}
+        <Flex flex={1} align="center" gap={4}>
           <Box w="full" overflow="hidden">
-            <Text as="p" variant="text-sm" color="gray.500">
+            <Text
+              as="p"
+              variant="text-sm"
+              color="gray.500"
+              noOfLines={1}
+              wordBreak="break-all"
+            >
               {label}
             </Text>
             {subtitle && (
-              <Text as="p" variant="text-sm" color="gray.500">
+              <Text
+                as="p"
+                variant="text-sm"
+                color="gray.500"
+                noOfLines={1}
+                wordBreak="break-all"
+              >
                 {subtitle}
               </Text>
             )}
             {caption && (
-              <Text as="p" variant="text-sm" color="gray.500">
+              <Text
+                as="p"
+                variant="text-sm"
+                color="gray.500"
+                noOfLines={1}
+                wordBreak="break-all"
+              >
                 {caption}
               </Text>
             )}
@@ -61,6 +91,7 @@ export function ListItem({
               {action}
             </Box>
           )}
+          {closable && <Icon as={HiXCircle} h={4} w={4} />}
         </Flex>
       </Flex>
       {withSeparator && <Divider pt={1} />}
@@ -73,7 +104,7 @@ export default function List({
   ...props
 }: PropsWithChildren<{}>): JSX.Element {
   return (
-    <Stack as="ul" position="relative" spacing={6} {...props}>
+    <Stack as="ul" position="relative" {...props}>
       {children}
     </Stack>
   )

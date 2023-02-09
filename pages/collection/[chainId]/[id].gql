@@ -40,12 +40,14 @@ query FetchCollectionAssets(
   $chainId: Int!
   $collectionAddress: Address!
   $orderBy: [AssetsOrderBy!]
+  $filter: [AssetFilter!]
 ) {
   assets(
     filter: {
       ownershipsExist: true
       chainId: { equalTo: $chainId }
       collectionAddress: { equalTo: $collectionAddress }
+      and: $filter
     }
     orderBy: $orderBy
     first: $limit

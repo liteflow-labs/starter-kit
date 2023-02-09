@@ -15,44 +15,10 @@
       "collections": "Colecciones"
     },
     "nfts": {
+      "filter": "Filtros",
       "empty": {
         "title": "No hemos conseguido nada",
         "description": "Actualiza tus filtros para encontrar más NFTs."
-      },
-      "form": {
-        "submit": "Aplicar filtros",
-        "clear": "Limpiar filtros",
-        "currency": {
-          "label": "Rango de precios",
-          "placeholder": "Selecciona una moneda"
-        },
-        "min-price": {
-          "placeholder": "Desde",
-          "validation": {
-            "positive": "El precio mínimo debe ser mayor que 0.",
-            "decimals": "El precio mínimo admite un máximo de {{ nbDecimals }} decimales."
-          }
-        },
-        "max-price": {
-          "placeholder": "Hasta",
-          "validation": {
-            "positive": "El precio máximo debe ser mayor que 0.",
-            "decimals": "El precio máximo admite un máximo de {{ nbDecimals }} decimales."
-          }
-        },
-        "offers": {
-          "label": "Estatus",
-          "values": {
-            "fixed": "Precio Fijo",
-            "auction": "Subasta"
-          }
-        },
-        "categories": {
-          "label": "Categorías"
-        },
-        "collections": {
-          "label": "Colecciones"
-        }
       },
       "orderBy": {
         "label": "Ordenar por",
@@ -85,6 +51,7 @@
     }
   },
   "collection": {
+    "filter": "Filtros",
     "header": {
       "data-labels": {
         "floor-price": "Precio piso",
