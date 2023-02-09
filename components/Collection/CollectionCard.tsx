@@ -41,11 +41,11 @@ const CollectionCard: FC<Props> = ({ collection }) => {
             layout="fill"
             objectFit="cover"
             sizes="
-            100vw,
-            (min-width: 30em) 50vw,
-            (min-width: 48em) 33vw,
+            (min-width: 80em) 292px,
             (min-width: 62em) 25vw,
-            (min-width: 80em) 292px"
+            (min-width: 48em) 33vw,
+            (min-width: 30em) 50vw,
+            100vw"
           />
         )}
         <Box

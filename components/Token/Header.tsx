@@ -102,7 +102,9 @@ const TokenHeader: VFC<Props> = ({
               defaultText={asset.name}
               fill={true}
               // sizes determined from the homepage
-              sizes="100vw, (min-width: 30em) 384px"
+              sizes="
+              (min-width: 30em) 384px,
+              100vw"
             />
           </AspectRatio>
         </Flex>
