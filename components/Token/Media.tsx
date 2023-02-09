@@ -76,7 +76,7 @@ const TokenMedia: VFC<{
           objectFit={fill ? 'cover' : 'scale-down'}
           unoptimized={unlockedContent?.mimetype === 'image/gif'}
           sizes="
-            429px,
+            100vw,
             (min-width: 30em) 50vw,
             (min-width: 48em) 33vw,
             (min-width: 62em) 25vw,

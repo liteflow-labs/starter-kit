@@ -33,7 +33,7 @@ const UserCard: FC<Props> = ({ user }) => {
               layout="fill"
               objectFit="cover"
               sizes="
-                429px,
+                100vw,
                 (min-width: 30em) 50vw,
                 (min-width: 48em) 33vw,
                 (min-width: 62em) 25vw,
