@@ -20,16 +20,105 @@ export const theme = extendTheme({
       baseStyle: {
         container: {
           w: 'full',
-          shadow: 'sm',
           rounded: 'xl',
-          border: '1px',
+          p: 2,
+          _hover: {
+            bg: 'brand.50',
+          },
+          _selected: {
+            bg: 'brand.50',
+          },
+          _checked: {
+            bg: 'brand.50',
+          },
+        },
+        control: {
+          bg: 'white',
+          border: '1px solid',
+          borderRadius: '4px',
           borderColor: 'gray.200',
-          py: 2.5,
-          px: 4,
+          color: 'white',
+
+          _checked: {
+            bg: 'brand.500',
+            borderColor: 'brand.500',
+            color: 'white',
+
+            _hover: {
+              bg: 'brand.600',
+              borderColor: 'brand.600',
+              color: 'white',
+            },
+
+            _disabled: {
+              bg: 'brand.700',
+              borderColor: 'brand.700',
+              color: 'white',
+              opacity: 0.3,
+            },
+          },
+
+          _indeterminate: {
+            bg: 'brand.500',
+            borderColor: 'brand.500',
+            color: 'white',
+          },
+
+          _disabled: {
+            bg: 'brand.700',
+            borderColor: 'brand.700',
+            opacity: 0.3,
+          },
+
+          _focus: {
+            borderColor: 'brand.500',
+            boxShadow: 'none',
+          },
+
+          _focusVisible: {
+            boxShadow: 'none',
+          },
+
+          _invalid: {
+            borderColor: 'red.500',
+          },
+        },
+        label: {
+          width: 'full',
         },
       },
       defaultProps: {
         colorScheme: 'brand',
+      },
+    },
+    Accordion: {
+      baseStyle: {
+        container: {
+          py: 4,
+          _first: {
+            borderTopWidth: '0px',
+            pt: 0,
+          },
+          _last: {
+            borderBottomWidth: '0px',
+            pb: 0,
+          },
+        },
+        button: {
+          px: 0,
+          py: 0,
+          _hover: {
+            bg: 'transparent',
+          },
+          _focus: {
+            boxShadow: 'none',
+          },
+        },
+        panel: {
+          px: 0,
+          pb: 0,
+          pt: 3,
+        },
       },
     },
     Link: {

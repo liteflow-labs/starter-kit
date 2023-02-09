@@ -1,11 +1,11 @@
 import { chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
-import ExploreTemplate from 'components/Explore'
-import Head from 'components/Head'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
+import ExploreTemplate from '../../components/Explore'
+import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
 import UserCard from '../../components/User/UserCard'
 import { convertUserWithCover } from '../../convert'
@@ -18,15 +18,12 @@ import {
 } from '../../graphql'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import usePaginate from '../../hooks/usePaginate'
+import usePaginateQuery from '../../hooks/usePaginateQuery'
+import useQueryParamSingle from '../../hooks/useQueryParamSingle'
 import { wrapServerSideProps } from '../../props'
 
-type Props = {
-  limit: number
-  page: number
-  offset: number
-  queryFilter: AccountFilter[]
-  search: string | null
-}
+type Props = {}
+
 const searchFilter = (search: string): AccountFilter =>
   ({
     or: [
@@ -66,31 +63,21 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     if (!data) throw new Error('data is falsy')
 
     return {
-      props: {
-        limit,
-        page,
-        offset,
-        queryFilter,
-        search,
-      },
+      props: {},
     }
   },
 )
 
-const UsersPage: NextPage<Props> = ({
-  offset,
-  limit,
-  page,
-  queryFilter,
-  search,
-}) => {
+const UsersPage: NextPage<Props> = () => {
   useEagerConnect()
   const { t } = useTranslation('templates')
+  const { limit, offset, page } = usePaginateQuery()
+  const search = useQueryParamSingle('search')
   const { data } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
-      filter: queryFilter,
+      filter: search ? searchFilter(search) : [],
     },
   })
 

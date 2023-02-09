@@ -15,44 +15,10 @@
       "collections": "收藏品"
     },
     "nfts": {
+      "filter": "过滤 器",
       "empty": {
         "title": "未找到NFT",
         "description": "请更新筛选条件来查找更多NFT。"
-      },
-      "form": {
-        "submit": "应用",
-        "clear": "全部清空",
-        "currency": {
-          "label": "价格范围",
-          "placeholder": "选择货币"
-        },
-        "min-price": {
-          "placeholder": "从",
-          "validation": {
-            "positive": "最低价格必须大于 0",
-            "decimals": "最低价格支持最多 {{ nbDecimals }} 位小数"
-          }
-        },
-        "max-price": {
-          "placeholder": "到",
-          "validation": {
-            "positive": "最高价格必须大于 0",
-            "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
-          }
-        },
-        "offers": {
-          "label": "状态",
-          "values": {
-            "fixed": "固定价格",
-            "auction": "拍卖"
-          }
-        },
-        "categories": {
-          "label": "类别"
-        },
-        "collections": {
-          "label": "收NFT"
-        }
       },
       "orderBy": {
         "label": "排序方式",
@@ -85,6 +51,7 @@
     }
   },
   "collection": {
+    "filter": "过滤 器",
     "header": {
       "data-labels": {
         "floor-price": "底价",
