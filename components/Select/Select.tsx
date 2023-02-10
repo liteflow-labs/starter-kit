@@ -12,6 +12,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Portal,
   Text,
 } from '@chakra-ui/react'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
@@ -162,62 +163,64 @@ const Select = <T extends string>({
                 )}
               </Flex>
             </MenuButton>
-            <MenuList
-              zIndex={10}
-              minW={0}
-              maxH={dropdownMaxHeight ? dropdownMaxHeight : 52}
-              overflowY="scroll"
-            >
-              {choicesList.map((choice, i) => (
-                <MenuItem
-                  onClick={() => {
-                    if (Array.isArray(choice.value))
-                      throw new Error(
-                        'not compatible with selection of multiple value',
-                      )
-                    hookChange && hookChange(choice.value)
-                    onChange && onChange(choice.value)
-                  }}
-                  key={i}
-                >
-                  <Flex align="center" gap={2}>
-                    {choice.image && (
-                      <Box
-                        h={6}
-                        w={6}
-                        overflow="hidden"
-                        rounded="full"
-                        borderWidth="1px"
-                        borderColor="gray.200"
+            <Portal>
+              <MenuList
+                zIndex="popover"
+                minW={0}
+                maxH={dropdownMaxHeight ? dropdownMaxHeight : 52}
+                overflowY="scroll"
+              >
+                {choicesList.map((choice, i) => (
+                  <MenuItem
+                    onClick={() => {
+                      if (Array.isArray(choice.value))
+                        throw new Error(
+                          'not compatible with selection of multiple value',
+                        )
+                      hookChange && hookChange(choice.value)
+                      onChange && onChange(choice.value)
+                    }}
+                    key={i}
+                  >
+                    <Flex align="center" gap={2}>
+                      {choice.image && (
+                        <Box
+                          h={6}
+                          w={6}
+                          overflow="hidden"
+                          rounded="full"
+                          borderWidth="1px"
+                          borderColor="gray.200"
+                        >
+                          <Image
+                            src={choice.image}
+                            width={24}
+                            height={24}
+                            alt={choice.value}
+                          />
+                        </Box>
+                      )}
+                      <Text
+                        as="span"
+                        fontSize="sm"
+                        fontWeight={
+                          selectedChoice?.value === choice.value
+                            ? 'semibold'
+                            : 'normal'
+                        }
                       >
-                        <Image
-                          src={choice.image}
-                          width={24}
-                          height={24}
-                          alt={choice.value}
-                        />
-                      </Box>
-                    )}
-                    <Text
-                      as="span"
-                      fontSize="sm"
-                      fontWeight={
-                        selectedChoice?.value === choice.value
-                          ? 'semibold'
-                          : 'normal'
-                      }
-                    >
-                      {choice.label}
-                    </Text>
-                    {choice.caption && (
-                      <Text as="span" variant="text-sm" color="gray.500">
-                        {choice.caption}
+                        {choice.label}
                       </Text>
-                    )}
-                  </Flex>
-                </MenuItem>
-              ))}
-            </MenuList>
+                      {choice.caption && (
+                        <Text as="span" variant="text-sm" color="gray.500">
+                          {choice.caption}
+                        </Text>
+                      )}
+                    </Flex>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Portal>
           </Menu>
         </Box>
       </Flex>

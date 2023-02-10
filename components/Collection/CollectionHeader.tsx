@@ -134,6 +134,7 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
             layout="fill"
             objectFit="cover"
             borderRadius={{ base: 0, sm: '2xl' }}
+            sizes="100vw, (min-width: 80em) 1216px"
           />
         )}
         <Box
@@ -152,7 +153,8 @@ const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
             <Image
               src={collection.image}
               alt={collection.name}
-              layout="fill"
+              width={128}
+              height={128}
               objectFit="cover"
             />
           )}

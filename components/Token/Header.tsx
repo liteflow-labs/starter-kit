@@ -101,6 +101,8 @@ const TokenHeader: VFC<Props> = ({
               unlockedContent={asset.unlockedContent}
               defaultText={asset.name}
               fill={true}
+              // sizes determined from the homepage
+              sizes="100vw, (min-width: 30em) 384px"
             />
           </AspectRatio>
         </Flex>

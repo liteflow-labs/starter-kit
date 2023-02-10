@@ -20,17 +20,14 @@ import {
   useFetchExploreCollectionsQuery,
 } from '../../graphql'
 import useEagerConnect from '../../hooks/useEagerConnect'
+import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
+import usePaginateQuery from '../../hooks/usePaginateQuery'
+import useQueryParamSingle from '../../hooks/useQueryParamSingle'
 import { wrapServerSideProps } from '../../props'
 
-type Props = {
-  limit: number
-  page: number
-  offset: number
-  orderBy: CollectionsOrderBy
-  queryFilter: CollectionFilter[]
-  search: string | null
-}
+type Props = {}
+
 const searchFilter = (search: string): CollectionFilter =>
   ({
     or: [
@@ -67,42 +64,31 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 
     const { data, error } = await client.query<FetchExploreCollectionsQuery>({
       query: FetchExploreCollectionsDocument,
-      variables: { limit, offset, filter: queryFilter },
+      variables: { limit, offset, filter: queryFilter, orderBy },
     })
     if (error) throw error
     if (!data) throw new Error('data is falsy')
 
     return {
-      props: {
-        limit,
-        page,
-        offset,
-        orderBy,
-        queryFilter,
-        search,
-      },
+      props: {},
     }
   },
 )
 
-const CollectionsPage: NextPage<Props> = ({
-  offset,
-  limit,
-  orderBy,
-  page,
-  queryFilter,
-  search,
-}) => {
+const CollectionsPage: NextPage<Props> = ({}) => {
   useEagerConnect()
   const { pathname, query, replace } = useRouter()
   const { t } = useTranslation('templates')
   const [loadingOrder, setLoadingOrder] = useState(false)
+  const { limit, offset, page } = usePaginateQuery()
+  const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
+  const search = useQueryParamSingle('search')
   const { data } = useFetchExploreCollectionsQuery({
     variables: {
       limit,
       offset,
       orderBy,
-      filter: queryFilter,
+      filter: search ? searchFilter(search) : [],
     },
   })
 
