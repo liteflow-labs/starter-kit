@@ -318,9 +318,9 @@ const DetailPage: NextPage<Props> = ({
               defaultText={asset.name}
               controls
               sizes="
-              100vw,
+              (min-width: 80em) 500px,
               (min-width: 48em) 50vw,
-              (min-width: 80em) 500px"
+              100vw"
             />
             {asset.hasUnlockableContent && (
               <Flex
