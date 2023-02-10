@@ -85,6 +85,7 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
             alt={collection.name}
             width={32}
             height={32}
+            objectFit="cover"
           />
         ) : (
           <span />

@@ -75,6 +75,7 @@ const SaleAuctionInProgress: VFC<Props> = ({ auction, bestBid }) => {
                 alt={currency.symbol}
                 width={32}
                 height={32}
+                objectFit="cover"
               />
             )}
           </Flex>

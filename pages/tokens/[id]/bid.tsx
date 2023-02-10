@@ -236,6 +236,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
                           alt={`${highestBid.currency.symbol} Logo`}
                           width={32}
                           height={32}
+                          objectFit="cover"
                         />
                       </Flex>
                       <Heading as="h2" variant="subtitle" color="brand.black">

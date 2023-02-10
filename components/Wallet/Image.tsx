@@ -29,6 +29,7 @@ const AccountImage: VFC<{
       alt={address}
       width={size || defaultSize}
       height={size || defaultSize}
+      objectFit="cover"
       {...props}
     />
   )
