@@ -28,10 +28,12 @@ const UserProfileBanner: VFC<Props> = ({ cover, image, address, name }) => {
         <Image
           src={cover}
           alt={name || address}
-          height={200}
-          width={1440}
+          layout="fill"
           objectFit="cover"
           rounded="xl"
+          sizes="
+          (min-width: 80em) 1216px,
+          100vw"
         />
       )}
       <Box

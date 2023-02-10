@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import { useEffect, useRef, VFC } from 'react'
+import Image from '../Image/Image'
 
 const Jazzicon = require('@metamask/jazzicon')
 
@@ -23,13 +23,13 @@ const AccountImage: VFC<{
   }, [image, address, size])
 
   if (!image) return <div ref={ref as any} {...props} />
-  const customTag = { Image: Image as any }
   return (
-    <customTag.Image
+    <Image
       src={image}
       alt={address}
       width={size || defaultSize}
       height={size || defaultSize}
+      objectFit="cover"
       {...props}
     />
   )

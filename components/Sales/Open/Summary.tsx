@@ -1,7 +1,7 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import Image from 'next/image'
 import { VFC } from 'react'
+import Image from '../../Image/Image'
 
 export type Props = {
   currencies: {
@@ -36,6 +36,7 @@ const SaleOpenSummary: VFC<Props> = ({ currencies }) => {
               alt="Currency Logo"
               width={32}
               height={32}
+              objectFit="cover"
             />
           </Flex>
         ))}

@@ -40,6 +40,12 @@ const CollectionCard: FC<Props> = ({ collection }) => {
             alt={collection.name}
             layout="fill"
             objectFit="cover"
+            sizes="
+            (min-width: 80em) 292px,
+            (min-width: 62em) 25vw,
+            (min-width: 48em) 33vw,
+            (min-width: 30em) 50vw,
+            100vw"
           />
         )}
         <Box
@@ -58,7 +64,8 @@ const CollectionCard: FC<Props> = ({ collection }) => {
             <Image
               src={collection.image}
               alt={collection.name}
-              layout="fill"
+              width={52}
+              height={52}
               objectFit="cover"
             />
           )}

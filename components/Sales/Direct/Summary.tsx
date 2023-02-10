@@ -3,8 +3,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatDate } from '@nft/hooks'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
-import Image from 'next/image'
 import { useMemo, VFC } from 'react'
+import Image from '../../Image/Image'
 import Price from '../../Price/Price'
 
 type Props = {
@@ -53,6 +53,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
               alt={`${sales[0].currency.symbol} Logo`}
               width={32}
               height={32}
+              objectFit="cover"
             />
           </Box>
         )
@@ -76,6 +77,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
                   alt={`${x.currency.symbol} Logo`}
                   width={32}
                   height={32}
+                  objectFit="cover"
                 />
               </Box>
             ))}

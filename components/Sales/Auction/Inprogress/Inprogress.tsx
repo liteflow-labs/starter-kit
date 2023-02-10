@@ -2,9 +2,9 @@ import { Flex, Heading, Icon } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
-import Image from 'next/image'
 import { useMemo, VFC } from 'react'
 import Countdown from '../../../Countdown/Countdown'
+import Image from '../../../Image/Image'
 import Price from '../../../Price/Price'
 
 type Props = {
@@ -75,6 +75,7 @@ const SaleAuctionInProgress: VFC<Props> = ({ auction, bestBid }) => {
                 alt={currency.symbol}
                 width={32}
                 height={32}
+                objectFit="cover"
               />
             )}
           </Flex>

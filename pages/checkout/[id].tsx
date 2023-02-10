@@ -218,6 +218,7 @@ const CheckoutPage: NextPage<Props> = ({
                     alt={`${offer.currency.symbol} Logo`}
                     width={32}
                     height={32}
+                    objectFit="cover"
                   />
                 </Flex>
                 {priceUnit && (

@@ -144,6 +144,7 @@ const Select = <T extends string>({
                           width={24}
                           height={24}
                           alt={selectedChoice.value}
+                          objectFit="cover"
                         />
                       </Box>
                     )}
@@ -197,6 +198,7 @@ const Select = <T extends string>({
                             width={24}
                             height={24}
                             alt={choice.value}
+                            objectFit="cover"
                           />
                         </Box>
                       )}

@@ -31,7 +31,15 @@ const WalletBalanceList: VFC<IProps> = ({ account, currencies }) => {
           as={ListItem}
           key={x.id}
           withSeparator={i < currenciesArr.length - 1}
-          image={<Image src={x.image} width={40} height={40} alt={x.symbol} />}
+          image={
+            <Image
+              src={x.image}
+              width={40}
+              height={40}
+              alt={x.symbol}
+              objectFit="cover"
+            />
+          }
           label={x.name}
           action={
             <Text as="span" color="brand.black" fontWeight="medium">
