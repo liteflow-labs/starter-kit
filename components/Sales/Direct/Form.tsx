@@ -233,6 +233,7 @@ const SalesDirectForm: VFC<Props> = ({
               alt={currency.symbol}
               width={24}
               height={24}
+              objectFit="cover"
             />
           </InputRightElement>
         </InputGroup>
