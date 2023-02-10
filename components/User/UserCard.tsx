@@ -52,6 +52,7 @@ const UserCard: FC<Props> = ({ user }) => {
               address={user.address}
               image={user.image}
               size={60}
+              objectFit="cover"
               rounded="full"
             />
           </Box>
