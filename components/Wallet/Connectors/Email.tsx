@@ -7,14 +7,14 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { EmailConnector } from '@nft/email-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
+import invariant from 'ts-invariant'
+import conectors from '../../../connectors'
 
 type Props = {
-  connector: EmailConnector
   activate: (
     connector: AbstractConnector,
     onError?: ((error: Error) => void) | undefined,
@@ -26,7 +26,7 @@ type FormData = {
   email: string
 }
 
-const WalletEmail: FC<Props> = ({ connector, activate }) => {
+const WalletEmail: FC<Props> = ({ activate }) => {
   const { t } = useTranslation('components')
 
   const {
@@ -36,7 +36,8 @@ const WalletEmail: FC<Props> = ({ connector, activate }) => {
   } = useForm<FormData>()
 
   const handle = handleSubmit(async (data) => {
-    await activate(connector.withEmail(data.email), undefined, true)
+    invariant(conectors.email, 'Email connector not found')
+    await activate(conectors.email.withEmail(data.email), undefined, true)
   })
 
   return (

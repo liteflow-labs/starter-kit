@@ -21,11 +21,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
-import { EmailConnector } from '@nft/email-connector'
 import { CreateNftStep, formatError, useCreateNFT } from '@nft/hooks'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -59,10 +55,6 @@ type Props = {
   blockExplorer: BlockExplorer
   uploadUrl: string
   login: {
-    email?: EmailConnector
-    injected?: InjectedConnector
-    coinbase?: WalletLinkConnector
-    walletConnect?: WalletConnectConnector
     networkName: string
   }
   activateUnlockableContent: boolean

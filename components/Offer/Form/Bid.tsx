@@ -22,7 +22,6 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { EmailConnector } from '@nft/email-connector'
 import {
   formatDateDatetime,
   formatError,
@@ -30,9 +29,6 @@ import {
   useCreateOffer,
 } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
@@ -73,10 +69,6 @@ type Props = {
   feesPerTenThousand: number
   allowTopUp: boolean
   login: {
-    email?: EmailConnector
-    injected?: InjectedConnector
-    walletConnect?: WalletConnectConnector
-    coinbase?: WalletLinkConnector
     networkName: string
   }
 } & (
