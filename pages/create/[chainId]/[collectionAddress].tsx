@@ -258,7 +258,7 @@ const CreatePage: NextPage<Props> = ({
           <Flex as={Text} color="brand.black" mb={3} variant="button1">
             {t('asset.form.preview')}
           </Flex>
-          <Box pointerEvents="none">
+          <Box overflow="hidden" pointerEvents="none">
             {asset && (
               <TokenCard
                 asset={asset}

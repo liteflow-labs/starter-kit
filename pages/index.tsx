@@ -242,7 +242,7 @@ const HomePage: NextPage<Props> = ({
           </Flex>
           <SimpleGrid spacing={6} columns={{ sm: 2, md: 3, lg: 4 }}>
             {assets.map((x, i) => (
-              <Flex key={i} justify="center">
+              <Flex key={i} justify="center" overflow="hidden">
                 <TokenCard
                   asset={convertAsset(x)}
                   creator={convertUser(x.creator, x.creator.address)}
