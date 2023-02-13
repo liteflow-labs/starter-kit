@@ -20,7 +20,6 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { wrapServerSideProps } from 'props'
 import { FC, useCallback, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
 import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
@@ -83,14 +82,14 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? ctx.params.chainId[0]
         : ctx.params.chainId
       : null
-    invariant(chainIdStr, 'chainId is required')
+    if (!chainIdStr) return { notFound: true }
     const chainId = parseInt(chainIdStr, 10)
     const collectionAddress = ctx.params?.id
       ? Array.isArray(ctx.params.id)
         ? ctx.params.id[0]
         : ctx.params.id
       : null
-    invariant(collectionAddress, 'Collection Address is required')
+    if (!collectionAddress) return { notFound: true }
     const limit = ctx.query.limit
       ? Array.isArray(ctx.query.limit)
         ? parseInt(ctx.query.limit[0] || '0', 10)
@@ -176,6 +175,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         },
       })
 
+    if (!collectionDetailsData.collection) return { notFound: true }
+    if (!collectionDetailsData.collection) return { notFound: true }
     if (collectionDetailsError) throw collectionDetailsError
     if (!collectionDetailsData)
       throw new Error('collectionDetailsData is falsy')

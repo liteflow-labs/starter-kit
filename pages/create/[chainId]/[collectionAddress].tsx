@@ -59,11 +59,11 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     const chainId = Array.isArray(context.query.chainId)
       ? context.query.chainId[0]
       : context.query.chainId
+    if (!chainId) return { notFound: true }
     const collectionAddress = Array.isArray(context.query.collectionAddress)
       ? context.query.collectionAddress[0]
       : context.query.collectionAddress
-    invariant(collectionAddress, "collectionAddress can't be falsy")
-    invariant(chainId, "chainId can't be falsy")
+    if (!collectionAddress) return { notFound: true }
     invariant(
       environment.MINTABLE_COLLECTIONS.filter(({ address }) =>
         isSameAddress(address, collectionAddress),

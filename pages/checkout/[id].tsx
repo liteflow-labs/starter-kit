@@ -14,7 +14,6 @@ import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import Head from '../../components/Head'
 import Image from '../../components/Image/Image'
 import BackButton from '../../components/Navbar/BackButton'
@@ -62,7 +61,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? ctx.params.id[0]
         : ctx.params.id
       : null
-    invariant(offerId, 'offerId is falsy')
+    if (!offerId) return { notFound: true }
     const now = new Date()
     const { data, error } = await client.query<CheckoutQuery>({
       query: CheckoutDocument,

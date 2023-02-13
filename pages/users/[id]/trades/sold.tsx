@@ -21,7 +21,6 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -65,7 +64,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? context.params.id[0]?.toLowerCase()
         : context.params.id.toLowerCase()
       : null
-    invariant(userAddress, 'userAddress is falsy')
+    if (!userAddress) return { notFound: true }
     const limit = getLimit(context, environment.PAGINATION_LIMIT)
     const orderBy = getOrder<TradesOrderBy>(context, 'TIMESTAMP_DESC')
     const offset = getOffset(context, environment.PAGINATION_LIMIT)

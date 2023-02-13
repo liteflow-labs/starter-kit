@@ -19,7 +19,6 @@ import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
-import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
 import Radio from '../../../components/Radio/Radio'
@@ -79,7 +78,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? ctx.params.id[0]
         : ctx.params.id
       : null
-    invariant(assetId, 'assetId is falsy')
+    if (!assetId) return { notFound: true }
     const now = new Date()
     const { data, error } = await client.query<OfferForAssetQuery>({
       query: OfferForAssetDocument,

@@ -35,7 +35,6 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
-import invariant from 'ts-invariant'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
@@ -94,7 +93,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? ctx.params.id[0]
         : ctx.params.id
       : null
-    invariant(assetId, 'assetId is falsy')
+    if (!assetId) return { notFound: true }
 
     // check if assetId is only a tokenId
     if (!assetId.includes('-')) {

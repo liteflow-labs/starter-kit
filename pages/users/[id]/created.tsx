@@ -5,7 +5,6 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
@@ -53,7 +52,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? ctx.params.id[0]?.toLowerCase()
         : ctx.params.id.toLowerCase()
       : null
-    invariant(userAddress, 'userAddress is falsy')
+    if (!userAddress) return { notFound: true }
 
     const limit = getLimit(ctx, environment.PAGINATION_LIMIT)
     const orderBy = getOrder<AssetsOrderBy>(ctx, 'CREATED_AT_DESC')
