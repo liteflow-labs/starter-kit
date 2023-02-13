@@ -176,11 +176,9 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       })
 
     if (collectionDetailsError) throw collectionDetailsError
-    if (!collectionDetailsData)
-      throw new Error('collectionDetailsData is falsy')
-    if (!collectionDetailsData.collection) return { notFound: true }
+    if (!collectionDetailsData?.collection) return { notFound: true }
     if (collectionAssetsError) throw collectionAssetsError
-    if (!collectionAssetsData) throw new Error('collectionAssetsData is falsy')
+    if (!collectionAssetsData?.assets) return { notFound: true }
 
     return {
       props: {
