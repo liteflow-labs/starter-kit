@@ -175,8 +175,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         },
       })
 
-    if (!collectionDetailsData.collection) return { notFound: true }
-    if (!collectionDetailsData.collection) return { notFound: true }
     if (collectionDetailsError) throw collectionDetailsError
     if (!collectionDetailsData)
       throw new Error('collectionDetailsData is falsy')
