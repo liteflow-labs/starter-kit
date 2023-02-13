@@ -325,10 +325,7 @@
     "login": {
       "title": "Inicia sesión con tu Wallet",
       "description": "Conéctate con alguna de las siguientes opciones:",
-      "alternative": "O inicia sesión con:",
-      "errors": {
-        "wrong-network": "Estás en la red incorrecta. Por favor, conéctate a la red {{networkName}}."
-      }
+      "alternative": "O inicia sesión con:"
     }
   },
   "back": "Volver",
@@ -866,16 +863,7 @@
     },
     "connectors": {
       "email": {
-        "form": {
-          "submit": "Inicia Sesión",
-          "validation": {
-            "required": "Este campo es obligatorio.",
-            "invalid": "Ingresa un correo electrónico válido"
-          },
-          "email": {
-            "label": "Correo Electrónico"
-          }
-        }
+        "label": "Iniciar sesión con correo electrónico"
       }
     },
     "wallet": {
