@@ -196,7 +196,13 @@ function AccountProvider(
               authorization: `Bearer ${jwtToken}`,
             }
           : {},
-        cache: new InMemoryCache({}).restore(props.cache),
+        cache: new InMemoryCache({
+          typePolicies: {
+            Account: {
+              keyFields: ['address'],
+            },
+          },
+        }).restore(props.cache),
         ssrMode: typeof window === 'undefined',
       }),
     [jwtToken, props.cache],
