@@ -1,5 +1,5 @@
 import {
-  chakra,
+  Box,
   Flex,
   Modal,
   ModalBody,
@@ -54,7 +54,6 @@ const OwnersModal: VFC<Props> = ({
   })
   // Reset pagination when the limit change or the modal visibility changes
   useEffect(() => setPage(1), [isOpen])
-  const ChakraPagination = chakra(Pagination)
   return (
     <>
       <OwnersModalActivator
@@ -114,32 +113,33 @@ const OwnersModal: VFC<Props> = ({
             </List>
           </ModalBody>
           <ModalFooter>
-            <ChakraPagination
-              pt="4"
-              limit={OwnerPaginationLimit}
-              page={page}
-              total={
-                data?.ownerships?.totalCount ||
-                previousData?.ownerships?.totalCount
-              }
-              onPageChange={setPage}
-              hideSelectors
-              result={{
-                label: t('pagination.result.label'),
-                caption: (props) => (
-                  <Trans
-                    ns="templates"
-                    i18nKey="pagination.result.caption"
-                    values={props}
-                    components={[
-                      <Text as="span" color="brand.black" key="text" />,
-                    ]}
-                  />
-                ),
-                pages: (props) =>
-                  t('pagination.result.pages', { count: props.total }),
-              }}
-            />
+            <Box pt="4">
+              <Pagination
+                limit={OwnerPaginationLimit}
+                page={page}
+                total={
+                  data?.ownerships?.totalCount ||
+                  previousData?.ownerships?.totalCount
+                }
+                onPageChange={setPage}
+                hideSelectors
+                result={{
+                  label: t('pagination.result.label'),
+                  caption: (props) => (
+                    <Trans
+                      ns="templates"
+                      i18nKey="pagination.result.caption"
+                      values={props}
+                      components={[
+                        <Text as="span" color="brand.black" key="text" />,
+                      ]}
+                    />
+                  ),
+                  pages: (props) =>
+                    t('pagination.result.pages', { count: props.total }),
+                }}
+              />
+            </Box>
           </ModalFooter>
         </ModalContent>
       </Modal>
