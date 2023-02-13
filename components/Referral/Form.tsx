@@ -1,12 +1,8 @@
 import { Button, Icon, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { EmailConnector } from '@nft/email-connector'
 import { formatError, useInvitation } from '@nft/hooks'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
 import { useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react'
 import LoginModal from '../Modal/Login'
@@ -15,10 +11,6 @@ type Props = {
   loginUrl: string
   signer: Signer | undefined
   login: {
-    email?: EmailConnector
-    injected?: InjectedConnector
-    coinbase?: WalletLinkConnector
-    walletConnect?: WalletConnectConnector
     networkName: string
   }
 }
