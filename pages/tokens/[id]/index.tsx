@@ -523,7 +523,7 @@ const DetailPage: NextPage<Props> = ({
                   whiteSpace="nowrap"
                   mr={4}
                 >
-                  <Tab as="div">
+                  <Tab>
                     <Text as="span" variant="subtitle1">
                       {tab.title}
                     </Text>

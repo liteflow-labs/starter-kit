@@ -46,7 +46,7 @@ const AccountTemplate: FC<{
         <TabList>
           {tabs.map((tab, index) => (
             <Link key={index} href={tab.href} whiteSpace="nowrap" mr={4}>
-              <Tab as="div">
+              <Tab>
                 <Text as="span" variant="subtitle1">
                   {tab.title}
                 </Text>
