@@ -280,10 +280,6 @@ const CreatePage: NextPage<Props> = ({
             blockExplorer={blockExplorer}
             onCreated={onCreated}
             onInputChange={setFormData}
-            login={{
-              ...connectors,
-              networkName: environment.NETWORK_NAME,
-            }}
             activateUnlockableContent={config?.hasUnlockableContent || false}
             maxRoyalties={environment.MAX_ROYALTIES}
             activateLazyMint={config?.hasLazyMint || false}

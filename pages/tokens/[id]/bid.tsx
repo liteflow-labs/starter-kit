@@ -268,10 +268,6 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
                   offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
                   feesPerTenThousand={feesPerTenThousand}
                   allowTopUp={environment.ALLOW_TOP_UP}
-                  login={{
-                    ...connectors,
-                    networkName: environment.NETWORK_NAME,
-                  }}
                 />
               )}
             {asset.collection.standard === 'ERC1155' && (
@@ -289,10 +285,6 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
                 feesPerTenThousand={feesPerTenThousand}
                 allowTopUp={environment.ALLOW_TOP_UP}
-                login={{
-                  ...connectors,
-                  networkName: environment.NETWORK_NAME,
-                }}
               />
             )}
           </Flex>

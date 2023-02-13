@@ -558,7 +558,7 @@ const Navbar: VFC<{
           />
         </Flex>
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} {...login} />
+      <LoginModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

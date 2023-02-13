@@ -1,16 +1,11 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
 import { VFC } from 'react'
 import invariant from 'ts-invariant'
-import connectors from '../../../connectors'
+import { connectors } from '../../../connectors'
 import WalletBase from './_base'
 
 type Props = {
-  onError: (error?: Error) => void
-  activate: (
-    connector: AbstractConnector,
-    onError?: ((error: Error) => void) | undefined,
-    throwErrors?: boolean | undefined,
-  ) => Promise<void>
+  onError?: (error?: Error) => void
+  onActivate?: () => void
 }
 
 export const IconCoinbase = (
@@ -26,7 +21,7 @@ export const IconCoinbase = (
   </svg>
 )
 
-const WalletCoinbase: VFC<Props> = ({ onError, activate }) => {
+const WalletCoinbase: VFC<Props> = ({ onError, onActivate }) => {
   invariant(connectors.coinbase, 'Coinbase connector not found')
   return (
     <WalletBase
@@ -34,7 +29,7 @@ const WalletCoinbase: VFC<Props> = ({ onError, activate }) => {
       icon={IconCoinbase}
       onError={onError}
       name="Coinbase"
-      activate={activate}
+      onActivate={onActivate}
     />
   )
 }

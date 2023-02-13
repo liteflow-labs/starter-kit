@@ -10,12 +10,9 @@ import LoginModal from '../Modal/Login'
 type Props = {
   loginUrl: string
   signer: Signer | undefined
-  login: {
-    networkName: string
-  }
 }
 
-const ReferralForm: VFC<Props> = ({ login, loginUrl, signer }) => {
+const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
   const { account } = useWeb3React()
@@ -49,7 +46,7 @@ const ReferralForm: VFC<Props> = ({ login, loginUrl, signer }) => {
     if (!account)
       return (
         <>
-          <LoginModal isOpen={isOpen} onClose={onClose} {...login} />
+          <LoginModal isOpen={isOpen} onClose={onClose} />
           <Button onClick={onOpen} width="full">
             <Text as="span" isTruncated>
               {t('referral.form.connect')}
