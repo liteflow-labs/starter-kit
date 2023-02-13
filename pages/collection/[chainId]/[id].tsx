@@ -14,7 +14,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -51,6 +50,7 @@ import {
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
   extractTraitsFromQuery,
@@ -207,7 +207,7 @@ const CollectionPage: FC<Props> = ({
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
       collectionAddress: collectionAddress,
@@ -223,7 +223,7 @@ const CollectionPage: FC<Props> = ({
     variables: {
       collectionAddress,
       now: date,
-      currentAccount: (ready ? account?.toLowerCase() : currentAccount) || '',
+      currentAccount: (ready ? address : currentAccount) || '',
       limit,
       offset,
       orderBy,

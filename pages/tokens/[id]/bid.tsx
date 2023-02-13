@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
@@ -24,7 +23,6 @@ import BackButton from '../../../components/Navbar/BackButton'
 import OfferFormBid from '../../../components/Offer/Form/Bid'
 import Price from '../../../components/Price/Price'
 import TokenCard from '../../../components/Token/Card'
-import connectors from '../../../connectors'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -40,6 +38,7 @@ import {
   useBidOnAssetQuery,
   useFeesForBidQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
@@ -109,14 +108,14 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
   const { data, refetch } = useBidOnAssetQuery({
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
   useExecuteOnAccountChange(refetch, ready)
@@ -256,7 +255,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
               asset.ownerships.nodes[0] && (
                 <OfferFormBid
                   signer={signer}
-                  account={account?.toLowerCase()}
+                  account={address}
                   assetId={asset.id}
                   multiple={false}
                   owner={asset.ownerships.nodes[0].ownerAddress}
@@ -273,7 +272,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
             {asset.collection.standard === 'ERC1155' && (
               <OfferFormBid
                 signer={signer}
-                account={account?.toLowerCase()}
+                account={address}
                 assetId={asset.id}
                 multiple={true}
                 supply={asset.ownerships.aggregates?.sum?.quantity || '0'}

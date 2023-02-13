@@ -1,5 +1,4 @@
 import { useToast } from '@chakra-ui/react'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -9,6 +8,7 @@ import Head from '../../components/Head'
 import UserFormEdit from '../../components/User/Form/Edit'
 import environment from '../../environment'
 import { useGetAccountQuery } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import useLoginRedirect from '../../hooks/useLoginRedirect'
 import useSigner from '../../hooks/useSigner'
@@ -19,16 +19,16 @@ const EditPage: NextPage = () => {
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { push } = useRouter()
-  const { account } = useWeb3React()
+  const { address, isLoggedIn } = useAccount()
   useLoginRedirect(ready)
 
   const toast = useToast()
 
   const { data } = useGetAccountQuery({
     variables: {
-      address: account?.toLowerCase() || '',
+      address: address || '',
     },
-    skip: !account,
+    skip: !isLoggedIn,
   })
 
   const onSubmit = useCallback(

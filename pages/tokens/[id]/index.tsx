@@ -29,7 +29,6 @@ import { formatError } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
-import { useWeb3React } from '@web3-react/core'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
@@ -62,6 +61,7 @@ import {
   FetchAssetQuery,
   useFetchAssetQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useNow from '../../../hooks/useNow'
@@ -151,7 +151,7 @@ const DetailPage: NextPage<Props> = ({
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { query } = useRouter()
   const blockExplorer = useBlockExplorer(
     environment.BLOCKCHAIN_EXPLORER_NAME,
@@ -164,7 +164,7 @@ const DetailPage: NextPage<Props> = ({
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
 
@@ -444,7 +444,7 @@ const DetailPage: NextPage<Props> = ({
             blockExplorer={blockExplorer}
             currencies={currencies}
             signer={signer}
-            currentAccount={account?.toLowerCase()}
+            currentAccount={address}
             isSingle={isSingle}
             isHomepage={false}
             isOwner={isOwner}
@@ -537,7 +537,7 @@ const DetailPage: NextPage<Props> = ({
               <BidList
                 bids={bids}
                 signer={signer}
-                account={account?.toLowerCase()}
+                account={address}
                 isSingle={isSingle}
                 blockExplorer={blockExplorer}
                 preventAcceptation={!isOwner || !!activeAuction}

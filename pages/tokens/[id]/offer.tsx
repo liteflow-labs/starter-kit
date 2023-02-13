@@ -11,9 +11,9 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
+import { isSameAddress } from '@nft/hooks'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
@@ -41,6 +41,7 @@ import {
   useFeesForOfferQuery,
   useOfferForAssetQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
@@ -117,7 +118,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   useLoginRedirect(ready)
 
   const blockExplorer = useBlockExplorer(
@@ -130,7 +131,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
 
@@ -153,8 +154,8 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   )
 
   const isCreator =
-    asset && account
-      ? asset.creator.address.toLowerCase() === account.toLowerCase()
+    asset && address
+      ? isSameAddress(asset.creator.address.toLowerCase(), address)
       : false
 
   const currencies = useMemo(() => data?.currencies?.nodes || [], [data])

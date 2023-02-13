@@ -14,7 +14,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -42,6 +41,7 @@ import {
   FetchUserAuctionsQuery,
   useFetchUserAuctionsQuery,
 } from '../../../../graphql'
+import useAccount from '../../../../hooks/useAccount'
 import useBlockExplorer from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
@@ -107,7 +107,7 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AuctionsOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
@@ -178,7 +178,7 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
 
       <UserProfileTemplate
         signer={signer}
-        currentAccount={account}
+        currentAccount={address}
         account={userAccount}
         currentTab="offers"
         totals={

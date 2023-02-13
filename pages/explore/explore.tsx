@@ -14,7 +14,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -44,6 +43,7 @@ import {
   FetchCurrenciesQuery,
   useFetchAllErc721And1155Query,
 } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
   extractTraitsFromQuery,
@@ -151,14 +151,14 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const filter = useAssetFilterFromQuery(currencies)
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
   const { data, refetch } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
       limit,
       offset,
       orderBy,
