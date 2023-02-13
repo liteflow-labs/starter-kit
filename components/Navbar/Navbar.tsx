@@ -39,6 +39,7 @@ import { MittEmitter } from 'next/dist/shared/lib/mitt'
 import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
+import { useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import Image from '../Image/Image'
@@ -394,7 +395,7 @@ const Navbar: VFC<{
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { address, isLoggedIn, logout } = useAccount()
-  const account = accountWithChecksum?.toLowerCase()
+  const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady } = router
   const { register, setValue, handleSubmit } = useForm<FormData>()
   const [addFund, { loading: addingFund }] = useAddFund(signer)
@@ -510,7 +511,7 @@ const Navbar: VFC<{
                 account={data.account.address}
                 topUp={{ allowTopUp, addFund, addingFund }}
                 user={data.account}
-                signOutFn={deactivate}
+                signOutFn={() => logout().then(disconnect)}
               />
             </>
           ) : (
@@ -543,7 +544,7 @@ const Navbar: VFC<{
             multiLang={multiLang}
             topUp={{ allowTopUp, addFund, addingFund }}
             disableMinting={disableMinting}
-            signOutFn={deactivate}
+            signOutFn={() => logout().then(disconnect)}
           />
         </Flex>
       </Flex>
