@@ -11,7 +11,7 @@ import {
   Text,
   Th,
   Thead,
-  Tr
+  Tr,
 } from '@chakra-ui/react'
 import { dateFromNow, formatAddress } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
@@ -34,7 +34,7 @@ import {
   FetchUserTradePurchasedDocument,
   FetchUserTradePurchasedQuery,
   TradesOrderBy,
-  useFetchUserTradePurchasedQuery
+  useFetchUserTradePurchasedQuery,
 } from '../../../../graphql'
 import useBlockExplorer from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
