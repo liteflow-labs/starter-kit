@@ -18,6 +18,5 @@ export default function useEagerConnect(): boolean {
     if (ready) setHasBeenReady(true)
   }, [ready, setHasBeenReady])
 
-  console.log({ ready: hasBeenReady || ready })
   return hasBeenReady || ready
 }
