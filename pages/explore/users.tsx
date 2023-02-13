@@ -1,4 +1,4 @@
-import { Box, chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -84,8 +84,6 @@ const UsersPage: NextPage<Props> = () => {
   const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
 
   const users = useMemo(() => data?.users?.nodes || [], [data])
-
-  const ChakraPagination = chakra(Pagination)
 
   return (
     <>
