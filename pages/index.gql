@@ -354,6 +354,7 @@ query FetchHomePage(
   currencies(orderBy: CREATED_AT_ASC, filter: { address: { isNull: false } }) {
     # keep only non-native currency. Cannot create bid with native currency.
     nodes {
+      chainId
       image
     }
   }
