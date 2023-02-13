@@ -14,7 +14,7 @@ type AccountDetail = {
   login: (connector: Connector) => Promise<void>
 }
 
-const COOKIE_JWT_TOKEN = 'jwt-token'
+export const COOKIE_JWT_TOKEN = 'jwt-token'
 const COOKIE_OPTIONS = {
   secure: true,
   sameSite: true,
@@ -63,6 +63,18 @@ export default function useAccount(): AccountDetail {
     },
     [jwt, authenticate, setAuthenticationToken, setCookie],
   )
+
+  // Server side
+  if (typeof window === 'undefined') {
+    return {
+      address: jwt?.address?.toLowerCase(),
+      jwtToken: jwt?.token,
+      isLoggedIn: !!jwt,
+      isConnected: !!jwt,
+      logout,
+      login,
+    }
+  }
 
   return {
     address: isLoggedIn ? address?.toLowerCase() : undefined,

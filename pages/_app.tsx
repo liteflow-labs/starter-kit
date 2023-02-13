@@ -21,7 +21,7 @@ import React, {
   useEffect,
   useMemo,
 } from 'react'
-import { CookiesProvider } from 'react-cookie'
+import { Cookies, CookiesProvider } from 'react-cookie'
 import {
   useAccount as useWagmiAccount,
   useChainId,
@@ -36,7 +36,7 @@ import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
 import { client } from '../connectors'
 import environment from '../environment'
-import useAccount from '../hooks/useAccount'
+import useAccount, { COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import useSigner from '../hooks/useSigner'
 import { APOLLO_STATE_PROP_NAME, PropsWithUserAndState } from '../props'
 import { theme } from '../styles/theme'
@@ -238,6 +238,11 @@ function MyApp({
     ? (Bugsnag.getPlugin('react')?.createErrorBoundary(React) as ComponentType)
     : Fragment
 
+  const cookies =
+    typeof window === 'undefined'
+      ? new Cookies({ [COOKIE_JWT_TOKEN]: pageProps.user?.token })
+      : undefined
+
   return (
     <ErrorBoundary>
       <Head
@@ -259,7 +264,7 @@ function MyApp({
       </Head>
       <GoogleAnalytics strategy="lazyOnload" />
       <WagmiConfig client={client}>
-        <CookiesProvider>
+        <CookiesProvider cookies={cookies}>
           <ChakraProvider theme={theme}>
             <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
               <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
