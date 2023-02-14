@@ -242,10 +242,4 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
       }
     }
   }
-  currencies(orderBy: CREATED_AT_ASC, filter: { address: { isNull: false } }) {
-    # keep only non-native currency. Cannot create bid with native currency.
-    nodes {
-      image
-    }
-  }
 }

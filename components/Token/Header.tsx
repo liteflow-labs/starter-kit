@@ -36,7 +36,10 @@ export type Props = {
     totalSupply: BigNumber
     owned: BigNumber
   }
-  currencies: SaleDetailProps['currencies']
+  currencies: {
+    chainId: number
+    image: string
+  }[]
   creator: TokenAssetProps['creator']
   owners: TokenAssetProps['owners']
   numberOfOwners: TokenAssetProps['numberOfOwners']
@@ -75,6 +78,14 @@ const TokenHeader: VFC<Props> = ({
   const isSingle = useMemo(
     () => asset.collection.standard === 'ERC721',
     [asset],
+  )
+
+  const chainCurrencies = useMemo(
+    () =>
+      currencies.filter(
+        (currency) => currency.chainId === asset.collection.chainId,
+      ),
+    [currencies, asset],
   )
 
   return (
@@ -136,7 +147,7 @@ const TokenHeader: VFC<Props> = ({
         <SaleDetail
           blockExplorer={blockExplorer}
           assetId={asset.id}
-          currencies={currencies}
+          currencies={chainCurrencies}
           isHomepage={isHomepage}
           isOwner={isOwner}
           isSingle={isSingle}

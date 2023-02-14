@@ -34,8 +34,13 @@ import {
 } from '../../../convert'
 import environment from '../../../environment'
 import {
+  ChainCurrenciesDocument,
+  ChainCurrenciesQuery,
+  ChainCurrenciesQueryVariables,
+  CurrencyFilter,
   FeesForOfferDocument,
   FeesForOfferQuery,
+  IntFilter,
   OfferForAssetDocument,
   OfferForAssetQuery,
   useFeesForOfferQuery,
@@ -43,6 +48,7 @@ import {
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useSigner from '../../../hooks/useSigner'
@@ -97,6 +103,18 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       variables: { id: assetId },
     })
     if (feeQuery.error) throw error
+    const chainCurrency = await client.query<
+      ChainCurrenciesQuery,
+      ChainCurrenciesQueryVariables
+    >({
+      query: ChainCurrenciesDocument,
+      variables: {
+        filter: {
+          chainId: { equalTo: data.asset.chainId } as IntFilter,
+        } as CurrencyFilter,
+      },
+    })
+    if (chainCurrency.error) throw chainCurrency.error
     return {
       props: {
         assetId,
@@ -135,6 +153,8 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
     },
   })
 
+  const currencyRes = useChainCurrencies(data?.asset?.chainId)
+
   const fees = useFeesForOfferQuery({
     variables: {
       id: assetId,
@@ -158,7 +178,10 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
       ? isSameAddress(asset.creator.address.toLowerCase(), address)
       : false
 
-  const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
+  const currencies = useMemo(
+    () => currencyRes.data?.currencies?.nodes || [],
+    [currencyRes],
+  )
 
   const saleOptions: [SaleOption, SaleOption] = useMemo(
     () => [
