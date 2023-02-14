@@ -32,7 +32,7 @@ const WalletBase: VFC<Props> = ({
       await connectAsync({ connector })
       onActivate && onActivate()
     } catch (e) {
-      onError && onError(e as Error)
+      onError(e as Error)
     } finally {
       setIsLoading(false)
     }
