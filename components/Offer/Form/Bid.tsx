@@ -68,9 +68,6 @@ type Props = {
   offerValidity: number
   feesPerTenThousand: number
   allowTopUp: boolean
-  login: {
-    networkName: string
-  }
 } & (
   | {
       multiple: true
@@ -96,7 +93,6 @@ const OfferFormBid: FC<Props> = (props) => {
     offerValidity,
     feesPerTenThousand,
     allowTopUp,
-    login,
   } = props
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
   const toast = useToast()
@@ -420,7 +416,7 @@ const OfferFormBid: FC<Props> = (props) => {
         </Button>
       )}
 
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} {...login} />
+      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} />
       <CreateOfferModal
         isOpen={createOfferIsOpen}
         onClose={createOfferOnClose}

@@ -325,10 +325,7 @@
     "login": {
       "title": "ウォレットでサインインする",
       "description": "次のいずれかのオプションを使用して接続します。",
-      "alternative": "または、",
-      "errors": {
-        "wrong-network": "間違ったネットワークに接続しています。{{networkName}}ネットワークに切り替えてください。"
-      }
+      "alternative": "または、"
     }
   },
   "back": "戻る",
@@ -866,16 +863,7 @@
     },
     "connectors": {
       "email": {
-        "form": {
-          "submit": "サインイン",
-          "validation": {
-            "required": "必須の項目です",
-            "invalid": "Eメールが無効です"
-          },
-          "email": {
-            "label": "Eメールアドレス"
-          }
-        }
+        "label": "メールでサインインする"
       }
     },
     "wallet": {

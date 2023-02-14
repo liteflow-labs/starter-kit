@@ -16,7 +16,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { isSameAddress, useConfig } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
-import { useWeb3React } from '@web3-react/core'
 import Empty from 'components/Empty/Empty'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
@@ -31,7 +30,6 @@ import type { Props as NFTCardProps } from '../../../components/Token/Card'
 import TokenCard from '../../../components/Token/Card'
 import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
-import connectors from '../../../connectors'
 import environment from '../../../environment'
 import {
   FetchAccountAndCollectionDocument,
@@ -39,6 +37,7 @@ import {
   FetchAccountAndCollectionQueryVariables,
   useFetchAccountAndCollectionQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLocalFileURL from '../../../hooks/useLocalFileURL'
@@ -112,14 +111,14 @@ const CreatePage: NextPage<Props> = ({
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { data: config } = useConfig()
   const toast = useToast()
   const { data } = useFetchAccountAndCollectionQuery({
     variables: {
       chainId,
       collectionAddress,
-      account: (ready ? account?.toLowerCase() : currentAccount) || '',
+      account: (ready ? address : currentAccount) || '',
     },
   })
 
@@ -280,10 +279,6 @@ const CreatePage: NextPage<Props> = ({
             blockExplorer={blockExplorer}
             onCreated={onCreated}
             onInputChange={setFormData}
-            login={{
-              ...connectors,
-              networkName: environment.NETWORK_NAME,
-            }}
             activateUnlockableContent={config?.hasUnlockableContent || false}
             maxRoyalties={environment.MAX_ROYALTIES}
             activateLazyMint={config?.hasLazyMint || false}

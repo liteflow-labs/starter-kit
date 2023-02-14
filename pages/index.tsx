@@ -9,7 +9,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -36,6 +35,7 @@ import {
   FetchHomePageQuery,
   useFetchHomePageQuery,
 } from '../graphql'
+import useAccount from '../hooks/useAccount'
 import useBlockExplorer from '../hooks/useBlockExplorer'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useOrderById from '../hooks/useOrderById'
@@ -106,7 +106,7 @@ const HomePage: NextPage<Props> = ({
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const toast = useToast()
   const date = useMemo(() => new Date(now), [now])
   const { data, refetch, error } = useFetchHomePageQuery({
@@ -115,7 +115,7 @@ const HomePage: NextPage<Props> = ({
       now: date,
       limit,
       assetIds: tokens,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
 
@@ -166,12 +166,12 @@ const HomePage: NextPage<Props> = ({
           numberOfOwners={asset.ownerships.totalCount}
           isHomepage={true}
           signer={signer}
-          currentAccount={account?.toLowerCase()}
+          currentAccount={address}
           onOfferCanceled={reloadInfo}
           onAuctionAccepted={reloadInfo}
         />
       )),
-    [featured, blockExplorer, account, signer, reloadInfo, currencies],
+    [featured, blockExplorer, address, signer, reloadInfo, currencies],
   )
   return (
     <LargeLayout>

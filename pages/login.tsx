@@ -1,7 +1,5 @@
 import { Box, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import { useInvitation } from '@nft/hooks'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -9,7 +7,7 @@ import { useCallback, useEffect } from 'react'
 import Head from '../components/Head'
 import LoginForm from '../components/Login/Form'
 import BackButton from '../components/Navbar/BackButton'
-import environment from '../environment'
+import useAccount from '../hooks/useAccount'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
 import SmallLayout from '../layouts/small'
@@ -20,34 +18,26 @@ const LoginPage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back, query, replace } = useRouter()
   const referral = Array.isArray(query.ref) ? query.ref[0] : query.ref
-  const { account, activate } = useWeb3React()
+  const { isLoggedIn } = useAccount()
   const { accept } = useInvitation(signer)
   const toast = useToast()
 
-  const handleAuthenticated = useCallback(
-    async (
-      connector: AbstractConnector,
-      onError?: (error: Error) => void,
-      throwErrors?: boolean,
-    ) => {
-      try {
-        await activate(connector, onError, throwErrors)
-        if (!referral) return
-        await accept(referral)
-        toast({
-          title: t('login.successes.invitation'),
-          status: 'success',
-        })
-      } catch (error) {
-        console.warn(error)
-        toast({
-          title: t('login.errors.invitation'),
-          status: 'warning',
-        })
-      }
-    },
-    [accept, referral, t, toast, activate],
-  )
+  const handleAuthenticated = useCallback(async () => {
+    try {
+      if (!referral) return
+      await accept(referral)
+      toast({
+        title: t('login.successes.invitation'),
+        status: 'success',
+      })
+    } catch (error) {
+      console.warn(error)
+      toast({
+        title: t('login.errors.invitation'),
+        status: 'warning',
+      })
+    }
+  }, [accept, referral, t, toast])
 
   const redirect = useCallback(() => {
     if (query.redirectTo && !Array.isArray(query.redirectTo))
@@ -57,9 +47,9 @@ const LoginPage: NextPage = () => {
 
   // redirect user if account is found
   useEffect(() => {
-    if (!account) return
+    if (!isLoggedIn) return
     redirect()
-  }, [account, redirect])
+  }, [isLoggedIn, redirect])
 
   return (
     <SmallLayout>
@@ -86,10 +76,7 @@ const LoginPage: NextPage = () => {
         mb={{ base: 12, lg: 24 }}
         justify="center"
       >
-        <LoginForm
-          activate={handleAuthenticated}
-          networkName={environment.NETWORK_NAME}
-        />
+        <LoginForm onActivate={handleAuthenticated} />
       </Flex>
     </SmallLayout>
   )

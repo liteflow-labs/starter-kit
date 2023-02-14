@@ -8,7 +8,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
@@ -22,7 +21,6 @@ import OfferFormCheckout from '../../components/Offer/Form/Checkout'
 import Price from '../../components/Price/Price'
 import TokenCard from '../../components/Token/Card'
 import Avatar from '../../components/User/Avatar'
-import connectors from '../../connectors'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -35,6 +33,7 @@ import {
   CheckoutQuery,
   useCheckoutQuery,
 } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
@@ -105,7 +104,7 @@ const CheckoutPage: NextPage<Props> = ({
   const { back, push } = useRouter()
   const toast = useToast()
 
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const blockExplorer = useBlockExplorer(
     environment.BLOCKCHAIN_EXPLORER_NAME,
@@ -117,7 +116,7 @@ const CheckoutPage: NextPage<Props> = ({
     variables: {
       id: offerId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
   useExecuteOnAccountChange(refetch, ready)
@@ -237,17 +236,13 @@ const CheckoutPage: NextPage<Props> = ({
 
             <OfferFormCheckout
               signer={signer}
-              account={account?.toLowerCase()}
+              account={address}
               offer={offer}
               blockExplorer={blockExplorer}
               currency={offer.currency}
               multiple={!isSingle}
               onPurchased={onPurchased}
               allowTopUp={environment.ALLOW_TOP_UP}
-              login={{
-                ...connectors,
-                networkName: environment.NETWORK_NAME,
-              }}
             />
           </Flex>
         </GridItem>

@@ -54,9 +54,6 @@ type Props = {
   categories: { id: string; title: string }[]
   blockExplorer: BlockExplorer
   uploadUrl: string
-  login: {
-    networkName: string
-  }
   activateUnlockableContent: boolean
   maxRoyalties: number
   onCreated: (id: string) => void
@@ -70,7 +67,6 @@ const TokenFormCreate: FC<Props> = ({
   categories,
   blockExplorer,
   uploadUrl,
-  login,
   activateUnlockableContent,
   maxRoyalties,
   onCreated,
@@ -375,7 +371,7 @@ const TokenFormCreate: FC<Props> = ({
           </Text>
         </Button>
       )}
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} {...login} />
+      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} />
       <CreateCollectibleModal
         isOpen={createCollectibleIsOpen}
         onClose={createCollectibleOnClose}

@@ -50,9 +50,6 @@ type Props = {
   onPurchased: () => void
   multiple?: boolean
   allowTopUp: boolean
-  login: {
-    networkName: string
-  }
 }
 
 const OfferFormCheckout: FC<Props> = ({
@@ -64,7 +61,6 @@ const OfferFormCheckout: FC<Props> = ({
   offer,
   blockExplorer,
   allowTopUp,
-  login,
 }) => {
   const { t } = useTranslation('components')
   const [acceptOffer, { activeStep, transactionHash }] = useAcceptOffer(signer)
@@ -226,7 +222,7 @@ const OfferFormCheckout: FC<Props> = ({
           </Text>
         </Button>
       )}
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} {...login} />
+      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} />
       <AcceptOfferModal
         isOpen={acceptOfferIsOpen}
         onClose={acceptOfferOnClose}

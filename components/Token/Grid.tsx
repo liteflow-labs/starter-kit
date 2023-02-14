@@ -1,4 +1,4 @@
-import { Box, chakra, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
+import { Box, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { ReactElement } from 'react'
 import Empty from '../Empty/Empty'
@@ -43,8 +43,6 @@ const TokenGrid = <Order extends string>({
       />
     )
 
-  const ChakraPagination = chakra(Pagination)
-
   return (
     <Stack spacing={6}>
       <Box ml="auto" w={{ base: 'full', md: 'min-content' }}>
@@ -88,12 +86,9 @@ const TokenGrid = <Order extends string>({
           ),
         )}
       </SimpleGrid>
-      <ChakraPagination
-        py="6"
-        borderTop="1px"
-        borderColor="gray.200"
-        {...pagination}
-      />
+      <Box py="6" borderTop="1px" borderColor="gray.200">
+        <Pagination {...pagination} />
+      </Box>
     </Stack>
   )
 }

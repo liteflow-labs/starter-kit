@@ -6,11 +6,8 @@ import {
 } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
-import { Box, ChakraProvider } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
-import { Web3Provider } from '@ethersproject/providers'
-import { LiteflowProvider, useAuthenticate } from '@nft/hooks'
-import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
+import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
+import { LiteflowProvider } from '@nft/hooks'
 import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
@@ -21,27 +18,27 @@ import React, {
   ComponentType,
   Fragment,
   PropsWithChildren,
-  useCallback,
   useEffect,
   useMemo,
 } from 'react'
-import { CookiesProvider, useCookies } from 'react-cookie'
+import { Cookies, CookiesProvider } from 'react-cookie'
+import {
+  useAccount as useWagmiAccount,
+  useChainId,
+  useDisconnect,
+  useSwitchNetwork,
+  WagmiConfig,
+} from 'wagmi'
 import Banner from '../components/Banner/Banner'
 import ChatWindow from '../components/ChatWindow'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
-import connectors from '../connectors'
+import { client } from '../connectors'
 import environment from '../environment'
-import useEagerConnect from '../hooks/useEagerConnect'
+import useAccount, { COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import useSigner from '../hooks/useSigner'
 import { APOLLO_STATE_PROP_NAME, PropsWithUserAndState } from '../props'
-import {
-  COOKIE_JWT_TOKEN,
-  COOKIE_OPTIONS,
-  currentJWT,
-  jwtValidity,
-} from '../session'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
@@ -49,23 +46,14 @@ require('dayjs/locale/es-mx')
 
 NProgress.configure({ showSpinner: false })
 
-function web3Provider(provider: any): Web3Provider {
-  return new Web3Provider(
-    provider,
-    typeof provider.chainId === 'number'
-      ? provider.chainId
-      : typeof provider.chainId === 'string'
-      ? parseInt(provider.chainId)
-      : 'any',
-  )
-}
-
 function Layout({
   userAddress,
   children,
 }: PropsWithChildren<{ userAddress: string | null }>) {
   const router = useRouter()
   const signer = useSigner()
+  const chainId = useChainId()
+  const { switchNetwork } = useSwitchNetwork({ chainId: environment.CHAIN_ID })
   const userProfileLink = useMemo(
     () => (userAddress ? `/users/${userAddress}` : '/login'),
     [userAddress],
@@ -125,6 +113,13 @@ function Layout({
     ].filter(Boolean)
   }, [router.locale, userProfileLink])
 
+  // Automatically switch to the right network
+  useEffect(() => {
+    if (chainId === environment.CHAIN_ID) return
+    if (!switchNetwork) return
+    void switchNetwork()
+  }, [chainId, switchNetwork])
+
   return (
     <ChatWindow>
       <Box mt={12}>
@@ -137,10 +132,6 @@ function Layout({
             push: router.push,
             query: router.query,
             events: router.events,
-          }}
-          login={{
-            ...connectors,
-            networkName: environment.NETWORK_NAME,
           }}
           multiLang={{
             locale: router.locale,
@@ -167,45 +158,42 @@ function AccountProvider(
     cache: NormalizedCacheObject
   }>,
 ) {
-  const signer = useSigner()
-  const ready = useEagerConnect()
-  const { deactivate } = useWeb3React()
-  const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
-    useAuthenticate()
-  const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
+  const { login, jwtToken } = useAccount()
+  const { disconnect } = useDisconnect()
+  const toast = useToast()
 
-  const clearAuthenticationToken = useCallback(async () => {
-    resetAuthenticationToken()
-    removeCookie(COOKIE_JWT_TOKEN, COOKIE_OPTIONS)
-  }, [removeCookie, resetAuthenticationToken])
-
-  const authenticateSigner = useCallback(
-    async (signer: Signer) => {
+  const { connector } = useWagmiAccount({
+    async onConnect({ connector }) {
+      if (!connector) return
       try {
-        const existingJWT = currentJWT(cookies)
-        const currentAddress = (await signer.getAddress()).toLowerCase()
-        const jwtAddress = existingJWT?.address.toLowerCase()
-        if (existingJWT && currentAddress === jwtAddress)
-          return setAuthenticationToken(existingJWT.jwt)
-        const { jwtToken } = await authenticate(signer)
-        setCookie(COOKIE_JWT_TOKEN, jwtToken, {
-          ...COOKIE_OPTIONS,
-          ...jwtValidity(jwtToken),
+        await login(connector)
+      } catch (e: any) {
+        toast({
+          title: e.reason || e.message || e.toString(),
+          status: 'warning',
         })
-      } catch {
-        deactivate()
+        disconnect()
       }
     },
-    [authenticate, setCookie, setAuthenticationToken, cookies, deactivate],
-  )
+  })
+
+  // handle change of account
+  useEffect(() => {
+    if (!connector) return
+    const handleLogin = () => login(connector)
+    connector.on('change', handleLogin)
+    return () => {
+      connector.off('change', handleLogin)
+    }
+  }, [connector, login])
 
   const client = useMemo(
     () =>
       new ApolloClient({
         uri: environment.GRAPHQL_URL,
-        headers: cookies[COOKIE_JWT_TOKEN]
+        headers: jwtToken
           ? {
-              authorization: 'Bearer ' + cookies[COOKIE_JWT_TOKEN],
+              authorization: `Bearer ${jwtToken}`,
             }
           : {},
         cache: new InMemoryCache({
@@ -217,14 +205,8 @@ function AccountProvider(
         }).restore(props.cache),
         ssrMode: typeof window === 'undefined',
       }),
-    [cookies, props.cache],
+    [jwtToken, props.cache],
   )
-
-  useEffect(() => {
-    if (!ready) return
-    if (!signer) return void clearAuthenticationToken()
-    authenticateSigner(signer).catch(clearAuthenticationToken)
-  }, [signer, ready, authenticateSigner, clearAuthenticationToken])
 
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
@@ -262,6 +244,11 @@ function MyApp({
     ? (Bugsnag.getPlugin('react')?.createErrorBoundary(React) as ComponentType)
     : Fragment
 
+  const cookies =
+    typeof window === 'undefined'
+      ? new Cookies({ [COOKIE_JWT_TOKEN]: pageProps.user?.token })
+      : undefined
+
   return (
     <ErrorBoundary>
       <Head
@@ -282,8 +269,8 @@ function MyApp({
         <meta name="twitter:card" content="summary" />
       </Head>
       <GoogleAnalytics strategy="lazyOnload" />
-      <Web3ReactProvider getLibrary={web3Provider}>
-        <CookiesProvider>
+      <WagmiConfig client={client}>
+        <CookiesProvider cookies={cookies}>
           <ChakraProvider theme={theme}>
             <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
               <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
@@ -294,7 +281,7 @@ function MyApp({
             </LiteflowProvider>
           </ChakraProvider>
         </CookiesProvider>
-      </Web3ReactProvider>
+      </WagmiConfig>
     </ErrorBoundary>
   )
 }

@@ -34,13 +34,14 @@ import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
-import { useWeb3React } from '@web3-react/core'
 import useTranslation from 'next-translate/useTranslation'
 import { MittEmitter } from 'next/dist/shared/lib/mitt'
 import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
+import { useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
 import LoginModal from '../Modal/Login'
@@ -388,35 +389,24 @@ const Navbar: VFC<{
     isReady: boolean
     events: MittEmitter<'routeChangeStart'>
   }
-  login: {
-    networkName: string
-  }
   signer: Signer | undefined
   multiLang?: MultiLang
-}> = ({
-  allowTopUp,
-  logo,
-  router,
-  login,
-  multiLang,
-  disableMinting,
-  signer,
-}) => {
+}> = ({ allowTopUp, logo, router, multiLang, disableMinting, signer }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { account: accountWithChecksum, deactivate } = useWeb3React()
-  const account = accountWithChecksum?.toLowerCase()
+  const { address, isLoggedIn, logout } = useAccount()
+  const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady } = router
   const { register, setValue, handleSubmit } = useForm<FormData>()
   const [addFund, { loading: addingFund }] = useAddFund(signer)
   const [cookies] = useCookies()
-  const lastNotification = cookies[`lastNotification-${account}`]
+  const lastNotification = cookies[`lastNotification-${address}`]
   const { data, refetch } = useNavbarAccountQuery({
     variables: {
-      account: account?.toLowerCase() || '',
+      account: address?.toLowerCase() || '',
       lastNotification: new Date(lastNotification || 0),
     },
-    skip: !account,
+    skip: !isLoggedIn,
   })
 
   useEffect(() => {
@@ -488,9 +478,9 @@ const Navbar: VFC<{
               </Text>
             </Flex>
           )}
-          {account && data?.account ? (
+          {data?.account ? (
             <>
-              <ActivityMenu account={account} />
+              <ActivityMenu account={data.account.address} />
               <Link href="/notification">
                 <IconButton
                   aria-label="Notifications"
@@ -518,10 +508,10 @@ const Navbar: VFC<{
                 </IconButton>
               </Link>
               <UserMenu
-                account={account}
+                account={data.account.address}
                 topUp={{ allowTopUp, addFund, addingFund }}
                 user={data.account}
-                signOutFn={deactivate}
+                signOutFn={() => logout().then(disconnect)}
               />
             </>
           ) : (
@@ -548,17 +538,17 @@ const Navbar: VFC<{
         </Flex>
         <Flex display={{ base: 'flex', lg: 'none' }} align="center">
           <DrawerMenu
-            account={account}
+            account={data?.account?.address}
             logo={logo}
             router={router}
             multiLang={multiLang}
             topUp={{ allowTopUp, addFund, addingFund }}
             disableMinting={disableMinting}
-            signOutFn={deactivate}
+            signOutFn={() => logout().then(disconnect)}
           />
         </Flex>
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} {...login} />
+      <LoginModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

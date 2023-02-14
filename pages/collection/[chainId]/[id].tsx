@@ -1,6 +1,5 @@
 import {
   Box,
-  chakra,
   Flex,
   Grid,
   GridItem,
@@ -14,7 +13,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -51,6 +49,7 @@ import {
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
   extractTraitsFromQuery,
@@ -207,7 +206,7 @@ const CollectionPage: FC<Props> = ({
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
       collectionAddress: collectionAddress,
@@ -223,7 +222,7 @@ const CollectionPage: FC<Props> = ({
     variables: {
       collectionAddress,
       now: date,
-      currentAccount: (ready ? account?.toLowerCase() : currentAccount) || '',
+      currentAccount: (ready ? address : currentAccount) || '',
       limit,
       offset,
       orderBy,
@@ -277,7 +276,6 @@ const CollectionPage: FC<Props> = ({
   )
 
   const [changePage, changeLimit] = usePaginate()
-  const ChakraPagination = chakra(Pagination)
 
   if (!collectionDetails) return null
   return (
@@ -398,33 +396,31 @@ const CollectionPage: FC<Props> = ({
               />
             </Flex>
           )}
-          <ChakraPagination
-            mt="6"
-            py="6"
-            borderTop="1px"
-            borderColor="gray.200"
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            total={data?.assets?.totalCount}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              total={data?.assets?.totalCount}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              result={{
+                label: t('pagination.result.label'),
+                caption: (props) => (
+                  <Trans
+                    ns="templates"
+                    i18nKey="pagination.result.caption"
+                    values={props}
+                    components={[
+                      <Text as="span" color="brand.black" key="text" />,
+                    ]}
+                  />
+                ),
+                pages: (props) =>
+                  t('pagination.result.pages', { count: props.total }),
+              }}
+            />
+          </Box>
         </GridItem>
       </Grid>
     </LargeLayout>

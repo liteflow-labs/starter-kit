@@ -1,39 +1,53 @@
-import { EmailConnector } from '@nft/email-connector'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
+import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector'
+import {
+  configureChains,
+  Connector,
+  createClient,
+  goerli,
+  mainnet,
+} from 'wagmi'
+import { bsc, bscTestnet, polygon, polygonMumbai } from 'wagmi/chains'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
+import { theme } from './styles/theme'
 
-const connectors: {
-  email?: EmailConnector
+export const { chains, provider } = configureChains(
+  [mainnet, goerli, bscTestnet, bsc, polygon, polygonMumbai],
+  [publicProvider()],
+)
+
+export const connectors: {
   injected?: InjectedConnector
   walletConnect?: WalletConnectConnector
-  coinbase?: WalletLinkConnector
+  coinbase?: CoinbaseWalletConnector
+  email?: Connector
 } = {
-  email: new EmailConnector({
-    apiKey: environment.MAGIC_API_KEY,
+  email: new MagicConnectConnector({
     options: {
-      network: {
-        rpcUrl: environment.PUBLIC_ETHEREUM_PROVIDER,
-        chainId: environment.CHAIN_ID,
-      },
+      apiKey: environment.MAGIC_API_KEY,
+      accentColor: theme.colors.brand[500],
+      customHeaderText: 'Acme',
     },
-  }),
-  injected: new InjectedConnector({
-    supportedChainIds: [environment.CHAIN_ID],
-  }),
+  }) as unknown as Connector,
+  injected: new InjectedConnector({}),
   walletConnect: new WalletConnectConnector({
-    rpc: {
-      [environment.CHAIN_ID]: environment.PUBLIC_ETHEREUM_PROVIDER,
-    },
-    supportedChainIds: [environment.CHAIN_ID],
-    chainId: environment.CHAIN_ID,
+    options: { version: '1' },
   }),
-  coinbase: new WalletLinkConnector({
-    supportedChainIds: [environment.CHAIN_ID],
-    appName: 'Acme',
-    url: 'https://demo.liteflow.com',
+  coinbase: new CoinbaseWalletConnector({
+    options: { appName: 'Acme' },
   }),
 }
 
-export default connectors
+export const client = createClient({
+  autoConnect: true,
+  provider,
+  connectors: [
+    connectors.email,
+    connectors.injected,
+    connectors.coinbase,
+    connectors.walletConnect,
+  ].filter(Boolean),
+})

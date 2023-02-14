@@ -9,27 +9,32 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react'
-import { useWeb3React } from '@web3-react/core'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
+import useAccount from '../../hooks/useAccount'
 import LoginForm from '../Login/Form'
 
 type Props = {
   isOpen: boolean
   onClose: () => void
-  networkName: string
 }
 
-const LoginModal: FC<Props> = ({ isOpen, onClose, networkName }) => {
+const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
   const { t } = useTranslation('components')
-  const { account, activate } = useWeb3React()
+  const { isLoggedIn } = useAccount()
 
   useEffect(() => {
-    if (account) onClose()
-  }, [account, onClose])
+    if (isLoggedIn) onClose()
+  }, [isLoggedIn, onClose])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      size="xl"
+      trapFocus={false} // Allow to have a focusable element outside the modal (for the email modal)
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -43,7 +48,7 @@ const LoginModal: FC<Props> = ({ isOpen, onClose, networkName }) => {
             {t('modal.login.description')}
           </Text>
 
-          <LoginForm activate={activate} networkName={networkName} />
+          <LoginForm />
         </ModalBody>
         <ModalFooter as="div" />
       </ModalContent>
