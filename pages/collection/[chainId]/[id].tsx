@@ -57,7 +57,6 @@ import useAssetFilterFromQuery, {
   OfferFilter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useEagerConnect from '../../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useFilterState from '../../../hooks/useFilterState'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
@@ -218,7 +217,7 @@ const CollectionPage: FC<Props> = ({
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery(currencies)
-  const { data, refetch } = useFetchCollectionAssetsQuery({
+  const { data } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
       now: date,
@@ -230,7 +229,6 @@ const CollectionPage: FC<Props> = ({
       filter: convertFilterToAssetFilter(filter, currencies, date),
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const { showFilters, toggleFilters, close, count } = useFilterState(filter)
   const updateFilter = useCallback(

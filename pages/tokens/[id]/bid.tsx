@@ -48,7 +48,6 @@ import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
 import { wrapServerSideProps } from '../../../props'
@@ -131,14 +130,13 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
   const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch } = useBidOnAssetQuery({
+  const { data } = useBidOnAssetQuery({
     variables: {
       id: assetId,
       now: date,
       address: (ready ? address : currentAccount) || '',
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const currencyRes = useChainCurrencies(data?.asset?.chainId, {
     onlyERC20: true,
