@@ -7,8 +7,8 @@ type Props = Omit<BoxProps, 'onError'> & {
   connector: Connector
   name: string
   icon: JSX.Element
-  onActivate?: () => void
-  onError?: (error?: Error) => void
+  onActivate: (() => void) | undefined
+  onError: (error: Error) => void
 }
 
 const WalletBase: VFC<Props> = ({
