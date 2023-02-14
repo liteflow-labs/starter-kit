@@ -401,12 +401,13 @@ const Navbar: VFC<{
   const [addFund, { loading: addingFund }] = useAddFund(signer)
   const [cookies] = useCookies()
   const lastNotification = cookies[`lastNotification-${address}`]
-  const { data, refetch } = useNavbarAccountQuery({
+  const { data } = useNavbarAccountQuery({
     variables: {
       account: address?.toLowerCase() || '',
       lastNotification: new Date(lastNotification || 0),
     },
     skip: !isLoggedIn,
+    pollInterval: 30_000, // 30 sec
   })
 
   useEffect(() => {
@@ -415,13 +416,6 @@ const Navbar: VFC<{
     if (Array.isArray(query.search)) return setValue('search', '')
     setValue('search', query.search)
   }, [isReady, setValue, query.search])
-
-  useEffect(() => {
-    router.events.on('routeChangeStart', refetch)
-    return () => {
-      router.events.off('routeChangeStart', refetch)
-    }
-  }, [router.events, refetch])
 
   const onSubmit = handleSubmit((data) => {
     if (data.search) query.search = data.search
