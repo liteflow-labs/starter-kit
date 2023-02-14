@@ -404,8 +404,8 @@ const Navbar: VFC<{
   const {
     data: accountData,
     refetch,
-    previousData: previousAccountData,
-  } = useNavbarAccountQuery({
+  const { data: accountData, previousData: previousAccountData } =
+    useNavbarAccountQuery({
     variables: {
       account: address?.toLowerCase() || '',
       lastNotification: new Date(lastNotification || 0),
@@ -422,13 +422,6 @@ const Navbar: VFC<{
     if (Array.isArray(query.search)) return setValue('search', '')
     setValue('search', query.search)
   }, [isReady, setValue, query.search])
-
-  useEffect(() => {
-    router.events.on('routeChangeStart', refetch)
-    return () => {
-      router.events.off('routeChangeStart', refetch)
-    }
-  }, [router.events, refetch])
 
   const onSubmit = handleSubmit((data) => {
     if (data.search) query.search = data.search
