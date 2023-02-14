@@ -54,22 +54,18 @@ import {
 } from '../../../convert'
 import environment from '../../../environment'
 import {
-  AddressFilter,
-  ChainCurrenciesDocument,
-  ChainCurrenciesQuery,
-  ChainCurrenciesQueryVariables,
-  CurrencyFilter,
   FetchAssetDocument,
   FetchAssetIdFromTokenIdDocument,
   FetchAssetIdFromTokenIdQuery,
   FetchAssetIdFromTokenIdQueryVariables,
   FetchAssetQuery,
-  IntFilter,
   useFetchAssetQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useChainCurrencies from '../../../hooks/useChainCurrencies'
+import useChainCurrencies, {
+  prefetchChainCurrencies,
+} from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useNow from '../../../hooks/useNow'
 import useSigner from '../../../hooks/useSigner'
@@ -133,19 +129,11 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     })
     if (error) throw error
     if (!data.asset) return { notFound: true }
-    const chainCurrency = await client.query<
-      ChainCurrenciesQuery,
-      ChainCurrenciesQueryVariables
-    >({
-      query: ChainCurrenciesDocument,
-      variables: {
-        filter: {
-          chainId: { equalTo: data.asset.collection.chainId } as IntFilter,
-          address: { isNull: false } as AddressFilter,
-        } as CurrencyFilter,
-      },
+
+    await prefetchChainCurrencies(client, data.asset.collection.chainId, {
+      onlyERC20: true,
     })
-    if (chainCurrency.error) throw chainCurrency.error
+
     return {
       props: {
         now: now.toJSON(),
@@ -187,15 +175,11 @@ const DetailPage: NextPage<Props> = ({
       address: (ready ? address : currentAccount) || '',
     },
   })
-  const chainCurrency = useChainCurrencies(data?.asset?.collection.chainId, {
+  const [currencies] = useChainCurrencies(data?.asset?.collection.chainId, {
     onlyERC20: true,
   })
 
   const asset = useMemo(() => data?.asset, [data])
-  const currencies = useMemo(
-    () => chainCurrency.data?.currencies?.nodes || [],
-    [chainCurrency],
-  )
 
   const totalOwned = useMemo(
     () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),

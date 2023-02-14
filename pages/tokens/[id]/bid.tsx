@@ -31,22 +31,18 @@ import {
 } from '../../../convert'
 import environment from '../../../environment'
 import {
-  AddressFilter,
   BidOnAssetDocument,
   BidOnAssetQuery,
-  ChainCurrenciesDocument,
-  ChainCurrenciesQuery,
-  ChainCurrenciesQueryVariables,
-  CurrencyFilter,
   FeesForBidDocument,
   FeesForBidQuery,
-  IntFilter,
   useBidOnAssetQuery,
   useFeesForBidQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useChainCurrencies from '../../../hooks/useChainCurrencies'
+import useChainCurrencies, {
+  prefetchChainCurrencies,
+} from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useSigner from '../../../hooks/useSigner'
@@ -91,19 +87,11 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       variables: { id: assetId },
     })
     if (feeQuery.error) throw error
-    const chainCurrency = await client.query<
-      ChainCurrenciesQuery,
-      ChainCurrenciesQueryVariables
-    >({
-      query: ChainCurrenciesDocument,
-      variables: {
-        filter: {
-          chainId: { equalTo: data.asset.chainId } as IntFilter,
-          address: { isNull: false } as AddressFilter,
-        } as CurrencyFilter,
-      },
+
+    await prefetchChainCurrencies(client, data.asset.chainId, {
+      onlyERC20: true,
     })
-    if (chainCurrency.error) throw chainCurrency.error
+
     return {
       props: {
         assetId,
@@ -140,7 +128,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
   })
   useExecuteOnAccountChange(refetch, ready)
 
-  const currencyRes = useChainCurrencies(data?.asset?.chainId, {
+  const [currencyRes] = useChainCurrencies(data?.asset?.chainId, {
     onlyERC20: true,
   })
 
@@ -164,8 +152,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
     [asset],
   )
   const currencies = useMemo(
-    () =>
-      auction ? [auction.currency] : currencyRes.data?.currencies?.nodes || [],
+    () => (auction ? [auction.currency] : currencyRes),
     [auction, currencyRes],
   )
 
