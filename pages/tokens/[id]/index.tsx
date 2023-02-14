@@ -467,7 +467,6 @@ const DetailPage: NextPage<Props> = ({
           />
           <SaleDetail
             assetId={asset.id}
-            chainId={asset.collection.chainId}
             blockExplorer={blockExplorer}
             currencies={currencies}
             signer={signer}
