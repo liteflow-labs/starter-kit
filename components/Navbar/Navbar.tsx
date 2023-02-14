@@ -36,7 +36,7 @@ import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import useTranslation from 'next-translate/useTranslation'
 import { MittEmitter } from 'next/dist/shared/lib/mitt'
-import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
+import { FC, HTMLAttributes, useEffect, useMemo, useRef, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
 import { useDisconnect } from 'wagmi'
@@ -400,18 +400,18 @@ const Navbar: VFC<{
   const { register, setValue, handleSubmit } = useForm<FormData>()
   const [addFund, { loading: addingFund }] = useAddFund(signer)
   const [cookies] = useCookies()
-  const lastNotification = cookies[`lastNotification-${address}`]
-  const {
-    data: accountData,
-    refetch,
+  const lastNotification = useMemo(
+    () => new Date(cookies[`lastNotification-${address}`] || 0),
+    [address, cookies],
+  )
   const { data: accountData, previousData: previousAccountData } =
     useNavbarAccountQuery({
-    variables: {
-      account: address?.toLowerCase() || '',
-      lastNotification: new Date(lastNotification || 0),
-    },
-    skip: !isLoggedIn,
-  })
+      variables: {
+        account: address?.toLowerCase() || '',
+        lastNotification: lastNotification,
+      },
+      skip: !isLoggedIn,
+    })
   const account = isLoggedIn
     ? accountData?.account || previousAccountData?.account
     : undefined
