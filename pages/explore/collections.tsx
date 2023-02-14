@@ -1,4 +1,4 @@
-import { Box, chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import CollectionCard from 'components/Collection/CollectionCard'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
@@ -111,8 +111,6 @@ const CollectionsPage: NextPage<Props> = ({}) => {
 
   const collections = useMemo(() => data?.collections?.nodes || [], [data])
 
-  const ChakraPagination = chakra(Pagination)
-
   return (
     <>
       <Head title={t('explore.title')} />
@@ -175,32 +173,31 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               />
             </Flex>
           )}
-          <ChakraPagination
-            py="6"
-            borderTop="1px"
-            borderColor="gray.200"
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            total={data?.collections?.totalCount}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          <Box py="6" borderTop="1px" borderColor="gray.200">
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              total={data?.collections?.totalCount}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              result={{
+                label: t('pagination.result.label'),
+                caption: (props) => (
+                  <Trans
+                    ns="templates"
+                    i18nKey="pagination.result.caption"
+                    values={props}
+                    components={[
+                      <Text as="span" color="brand.black" key="text" />,
+                    ]}
+                  />
+                ),
+                pages: (props) =>
+                  t('pagination.result.pages', { count: props.total }),
+              }}
+            />
+          </Box>
         </>
       </ExploreTemplate>
     </>

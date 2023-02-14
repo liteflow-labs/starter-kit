@@ -41,7 +41,7 @@ const ExploreTemplate: FC<{
       >
         <TabList>
           <Link href={`/explore${searchParam}`} whiteSpace="nowrap" mr={4}>
-            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
+            <Tab borderColor="gray.200" pb={4} color="gray.500">
               <Text as="span" variant="subtitle1">
                 {t('explore.tabs.nfts')}
               </Text>
@@ -52,7 +52,7 @@ const ExploreTemplate: FC<{
             whiteSpace="nowrap"
             mr={4}
           >
-            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
+            <Tab borderColor="gray.200" pb={4} color="gray.500">
               <Text as="span" variant="subtitle1">
                 {t('explore.tabs.collections')}
               </Text>
@@ -63,7 +63,7 @@ const ExploreTemplate: FC<{
             whiteSpace="nowrap"
             mr={4}
           >
-            <Tab as="div" borderColor="gray.200" pb={4} color="gray.500">
+            <Tab borderColor="gray.200" pb={4} color="gray.500">
               <Text as="span" variant="subtitle1">
                 {t('explore.tabs.users')}
               </Text>
