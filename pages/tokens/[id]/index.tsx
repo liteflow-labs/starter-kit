@@ -187,10 +187,9 @@ const DetailPage: NextPage<Props> = ({
       address: (ready ? address : currentAccount) || '',
     },
   })
-  const chainCurrency = useChainCurrencies(
-    data?.asset?.collection.chainId,
-    true,
-  )
+  const chainCurrency = useChainCurrencies(data?.asset?.collection.chainId, {
+    onlyERC20: true,
+  })
 
   const asset = useMemo(() => data?.asset, [data])
   const currencies = useMemo(
@@ -468,6 +467,7 @@ const DetailPage: NextPage<Props> = ({
           />
           <SaleDetail
             assetId={asset.id}
+            chainId={asset.collection.chainId}
             blockExplorer={blockExplorer}
             currencies={currencies}
             signer={signer}

@@ -140,7 +140,9 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
   })
   useExecuteOnAccountChange(refetch, ready)
 
-  const currencyRes = useChainCurrencies(data?.asset?.chainId, true)
+  const currencyRes = useChainCurrencies(data?.asset?.chainId, {
+    onlyERC20: true,
+  })
 
   const fees = useFeesForBidQuery({
     variables: {

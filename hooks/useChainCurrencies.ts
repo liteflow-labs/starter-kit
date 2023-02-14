@@ -7,7 +7,7 @@ import {
 
 export default function useChainCurrencies(
   chainId?: number,
-  onlyERC20 = false,
+  { onlyERC20 }: { onlyERC20?: boolean } = {},
 ): ReturnType<typeof useChainCurrenciesQuery> {
   const filter = {
     chainId: { equalTo: chainId } as IntFilter,
