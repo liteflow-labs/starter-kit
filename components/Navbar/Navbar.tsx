@@ -412,7 +412,9 @@ const Navbar: VFC<{
     },
     skip: !isLoggedIn,
   })
-  const account = accountData?.account || previousAccountData?.account
+  const account = isLoggedIn
+    ? accountData?.account || previousAccountData?.account
+    : undefined
 
   useEffect(() => {
     if (!isReady) return
