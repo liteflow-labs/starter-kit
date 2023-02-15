@@ -9,6 +9,7 @@ type Props = Omit<BoxProps, 'onError'> & {
   icon: JSX.Element
   onActivate: (() => void) | undefined
   onError: (error: Error) => void
+  chainId: number | undefined
 }
 
 const WalletBase: VFC<Props> = ({
@@ -17,11 +18,12 @@ const WalletBase: VFC<Props> = ({
   name,
   onError,
   onActivate,
+  chainId,
   ...props
 }) => {
   const { isConnected, isLoggedIn } = useAccount()
   const { connector: connectedConnector } = useWagmiAccount()
-  const { connectAsync } = useConnect()
+  const { connectAsync } = useConnect({ chainId })
   const [isLoading, setIsLoading] = useState(false)
 
   const handle = async (e: SyntheticEvent) => {

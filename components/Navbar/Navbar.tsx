@@ -548,7 +548,7 @@ const Navbar: VFC<{
           />
         </Flex>
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} />
+      <LoginModal isOpen={isOpen} onClose={onClose} chainId={undefined} />
     </>
   )
 }

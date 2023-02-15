@@ -6,6 +6,7 @@ import WalletBase from './_base'
 type Props = {
   onError: (error: Error) => void
   onActivate: (() => void) | undefined
+  chainId: number | undefined
 }
 
 export const IconWalletConnect = (
@@ -17,7 +18,7 @@ export const IconWalletConnect = (
   </svg>
 )
 
-const WalletWalletConnect: VFC<Props> = ({ onError, onActivate }) => {
+const WalletWalletConnect: VFC<Props> = ({ onError, onActivate, chainId }) => {
   invariant(connectors.walletConnect, 'WalletConnect connector not found')
   return (
     <WalletBase
@@ -26,6 +27,7 @@ const WalletWalletConnect: VFC<Props> = ({ onError, onActivate }) => {
       onError={onError}
       name="WalletConnect"
       onActivate={onActivate}
+      chainId={chainId}
     />
   )
 }

@@ -226,7 +226,11 @@ const OfferFormCheckout: FC<Props> = ({
           </Text>
         </Button>
       )}
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} />
+      <LoginModal
+        isOpen={loginIsOpen}
+        onClose={loginOnClose}
+        chainId={chainId}
+      />
       <AcceptOfferModal
         isOpen={acceptOfferIsOpen}
         onClose={acceptOfferOnClose}
