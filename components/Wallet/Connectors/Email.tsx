@@ -5,8 +5,8 @@ import { connectors } from '../../../connectors'
 import WalletBase from './_base'
 
 type Props = {
-  onError?: (error?: Error) => void
-  onActivate?: () => void
+  onError: (error: Error) => void
+  onActivate: (() => void) | undefined
 }
 
 const IconMagic = (
