@@ -65,15 +65,16 @@ export default function Pagination({
   return (
     <Flex
       direction={{ base: props.hideSelectors ? 'row' : 'column', md: 'row' }}
-      align="center"
+      align={{ base: 'center', sm: 'flex-start' }}
       justify={{ base: 'center', sm: 'space-between' }}
       w="full"
       gap={{ base: 6, md: 3 }}
+      flexWrap="wrap"
       {...props}
     >
       <Flex
-        align="center"
-        gap={{ base: 6, md: 6 }}
+        align={{ base: 'flex-start', sm: 'center' }}
+        gap={6}
         w={{ base: 'full', sm: 'auto' }}
         direction={{ base: 'column', sm: 'row' }}
       >
