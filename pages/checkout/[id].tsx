@@ -36,7 +36,6 @@ import {
 import useAccount from '../../hooks/useAccount'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
 import { wrapServerSideProps } from '../../props'
@@ -112,14 +111,13 @@ const CheckoutPage: NextPage<Props> = ({
   )
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch } = useCheckoutQuery({
+  const { data } = useCheckoutQuery({
     variables: {
       id: offerId,
       now: date,
       address: (ready ? address : currentAccount) || '',
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const offer = useMemo(() => data?.offer, [data])
   const asset = useMemo(() => offer?.asset, [offer])
