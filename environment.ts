@@ -9,7 +9,6 @@ type Environment = {
   FEATURED_TOKEN: string[]
   PAGINATION_LIMIT: number
   CHAIN_ID: number
-  NETWORK_NAME: string
   REPORT_EMAIL: string
   HOME_TOKENS?: string[]
   OFFER_VALIDITY_IN_SECONDS: number
@@ -65,9 +64,6 @@ invariant(process.env.NEXT_PUBLIC_CHAIN_ID, 'missing env NEXT_PUBLIC_CHAIN_ID')
 const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID, 10)
 invariant(!isNaN(CHAIN_ID), 'env NEXT_PUBLIC_CHAIN_ID must be an integer')
 
-// network name
-invariant(process.env.NEXT_PUBLIC_NETWORK_NAME, 'missing env NETWORK_NAME')
-
 invariant(process.env.NEXT_PUBLIC_REPORT_EMAIL, 'missing env REPORT_EMAIL')
 
 invariant(
@@ -119,7 +115,6 @@ const environment: Environment = {
   FEATURED_TOKEN: process.env.NEXT_PUBLIC_FEATURED_TOKEN.split(','),
   PAGINATION_LIMIT: 12,
   CHAIN_ID: CHAIN_ID,
-  NETWORK_NAME: process.env.NEXT_PUBLIC_NETWORK_NAME,
   REPORT_EMAIL: process.env.NEXT_PUBLIC_REPORT_EMAIL,
   HOME_TOKENS: process.env.NEXT_PUBLIC_HOME_TOKENS?.split(','),
   OFFER_VALIDITY_IN_SECONDS: OFFER_VALIDITY_IN_SECONDS,
