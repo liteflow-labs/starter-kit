@@ -1,6 +1,6 @@
 import { Box, BoxProps, Spinner, Text } from '@chakra-ui/react'
 import { SyntheticEvent, useMemo, useState, VFC } from 'react'
-import { Connector, useAccount as useOriginalAccount, useConnect } from 'wagmi'
+import { Connector, useAccount as useWagmiAccount, useConnect } from 'wagmi'
 import useAccount from '../../../hooks/useAccount'
 
 type Props = Omit<BoxProps, 'onError'> & {
@@ -20,7 +20,7 @@ const WalletBase: VFC<Props> = ({
   ...props
 }) => {
   const { isConnected, isLoggedIn } = useAccount()
-  const { connector: connectedConnector } = useOriginalAccount()
+  const { connector: connectedConnector } = useWagmiAccount()
   const { connectAsync } = useConnect()
   const [isLoading, setIsLoading] = useState(false)
 
