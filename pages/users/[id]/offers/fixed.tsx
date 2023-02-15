@@ -28,6 +28,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import ButtonWithNetworkSwitch from '../../../../components/Button/SwitchNetwork'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -331,7 +332,8 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
                       {ownerLoggedIn && (
                         <>
                           {!item.expiredAt || item.expiredAt > new Date() ? (
-                            <Button
+                            <ButtonWithNetworkSwitch
+                              chainId={item.asset.chainId}
                               variant="outline"
                               colorScheme="gray"
                               disabled={activeStep !== CancelOfferStep.INITIAL}
@@ -340,7 +342,7 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
                               <Text as="span" isTruncated>
                                 {t('user.fixed.actions.cancel')}
                               </Text>
-                            </Button>
+                            </ButtonWithNetworkSwitch>
                           ) : item.ownAsset ? (
                             <Button
                               as={Link}

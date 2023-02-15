@@ -33,7 +33,7 @@ const LoginForm: FC<Props> = ({ onActivate }) => {
           _hover={{ shadow: 'md' }}
           transition="box-shadow 0.3s ease-in-out"
         >
-          <WalletEmail onActivate={onActivate} />
+          <WalletEmail onActivate={onActivate} onError={setErrorFromLogin} />
         </Stack>
       )}
       {connectors.email && hasStandardWallet && (

@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -36,6 +35,7 @@ import { useForm } from 'react-hook-form'
 import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import Price from '../../Price/Price'
@@ -50,6 +50,7 @@ type FormData = {
 
 type Props = {
   assetId: string
+  chainId: number
   standard: Standard
   currencies: {
     name: string
@@ -70,6 +71,7 @@ type Props = {
 
 const SalesDirectForm: VFC<Props> = ({
   assetId,
+  chainId,
   standard,
   currencies,
   feesPerTenThousand,
@@ -444,7 +446,8 @@ const SalesDirectForm: VFC<Props> = ({
         )}
       </Stack>
 
-      <Button
+      <ButtonWithNetworkSwitch
+        chainId={chainId}
         isLoading={activeStep !== CreateOfferStep.INITIAL}
         size="lg"
         type="submit"
@@ -453,7 +456,7 @@ const SalesDirectForm: VFC<Props> = ({
         <Text as="span" isTruncated>
           {t('sales.direct.form.submit')}
         </Text>
-      </Button>
+      </ButtonWithNetworkSwitch>
 
       <CreateOfferModal
         isOpen={isOpen}

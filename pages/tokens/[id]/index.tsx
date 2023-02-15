@@ -467,6 +467,7 @@ const DetailPage: NextPage<Props> = ({
           />
           <SaleDetail
             assetId={asset.id}
+            chainId={asset.collection.chainId}
             blockExplorer={blockExplorer}
             currencies={currencies}
             signer={signer}
@@ -562,6 +563,7 @@ const DetailPage: NextPage<Props> = ({
             {(!query.filter || query.filter === AssetTabs.bids) && (
               <BidList
                 bids={bids}
+                chainId={asset.collection.chainId}
                 signer={signer}
                 account={address}
                 isSingle={isSingle}

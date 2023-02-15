@@ -222,6 +222,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
       return (
         <SalesDirectForm
           assetId={assetId}
+          chainId={asset.chainId}
           standard={asset.collection.standard}
           currencies={currencies}
           blockExplorer={blockExplorer}

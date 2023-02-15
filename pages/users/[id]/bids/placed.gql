@@ -76,6 +76,7 @@ query FetchUserBidsPlaced(
         id
         name
         image
+        chainId
       }
     }
   }

@@ -280,6 +280,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
                   signer={signer}
                   account={address}
                   assetId={asset.id}
+                  chainId={asset.chainId}
                   multiple={false}
                   owner={asset.ownerships.nodes[0].ownerAddress}
                   currencies={currencies}
@@ -297,6 +298,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
                 signer={signer}
                 account={address}
                 assetId={asset.id}
+                chainId={asset.chainId}
                 multiple={true}
                 supply={asset.ownerships.aggregates?.sum?.quantity || '0'}
                 currencies={currencies}

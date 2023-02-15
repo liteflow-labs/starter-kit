@@ -1,11 +1,4 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Icon,
-  Text,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import {
@@ -22,6 +15,7 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { SyntheticEvent, useMemo, VFC } from 'react'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
+import ButtonWithNetworkSwitch from '../Button/SwitchNetwork'
 import Link from '../Link/Link'
 import { ListItem } from '../List/List'
 import AcceptOfferModal from '../Modal/AcceptOffer'
@@ -49,6 +43,7 @@ export type Props = {
       verified: boolean
     }
   }
+  chainId: number
   signer: Signer | undefined
   account: string | null | undefined
   blockExplorer: BlockExplorer
@@ -61,6 +56,7 @@ export type Props = {
 
 const Bid: VFC<Props> = ({
   bid,
+  chainId,
   signer,
   account,
   blockExplorer,
@@ -223,7 +219,8 @@ const Bid: VFC<Props> = ({
         action={
           <>
             {canAccept && (
-              <Button
+              <ButtonWithNetworkSwitch
+                chainId={chainId}
                 w={{ base: 'full', md: 'auto' }}
                 isLoading={activeAcceptOfferStep !== AcceptOfferStep.INITIAL}
                 onClick={() =>
@@ -235,10 +232,11 @@ const Bid: VFC<Props> = ({
                 <Text as="span" isTruncated>
                   {t('bid.detail.accept')}
                 </Text>
-              </Button>
+              </ButtonWithNetworkSwitch>
             )}
             {canCancel && (
-              <Button
+              <ButtonWithNetworkSwitch
+                chainId={chainId}
                 variant="outline"
                 colorScheme="gray"
                 w={{ base: 'full', md: 'auto' }}
@@ -248,7 +246,7 @@ const Bid: VFC<Props> = ({
                 <Text as="span" isTruncated>
                   {t('bid.detail.cancel')}
                 </Text>
-              </Button>
+              </ButtonWithNetworkSwitch>
             )}
           </>
         }
