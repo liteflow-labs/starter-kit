@@ -1,6 +1,6 @@
 import { Button, ButtonProps, useToast } from '@chakra-ui/react'
 import { formatError } from '@nft/hooks'
-import { PropsWithChildren, useCallback, useEffect } from 'react'
+import { PropsWithChildren, useCallback } from 'react'
 import { useChainId, useSwitchNetwork } from 'wagmi'
 
 const ButtonWithNetworkSwitch = ({
@@ -13,23 +13,22 @@ const ButtonWithNetworkSwitch = ({
   }
 >): JSX.Element => {
   const currentChainId = useChainId()
-  const { switchNetwork, isLoading, error } = useSwitchNetwork({
+  const { switchNetwork, isLoading } = useSwitchNetwork({
+    chainId,
     throwForSwitchChainNotSupported: true,
+    onError(error) {
+      toast({
+        title: formatError(error),
+        status: 'error',
+      })
+    },
   })
   const toast = useToast()
 
   const handleSwitchNetwork = useCallback(() => {
     if (!switchNetwork) return
-    switchNetwork(chainId)
-  }, [chainId, switchNetwork])
-
-  useEffect(() => {
-    if (error)
-      toast({
-        title: formatError(error),
-        status: 'error',
-      })
-  }, [error, toast])
+    switchNetwork()
+  }, [switchNetwork])
 
   if (currentChainId !== chainId)
     return (
