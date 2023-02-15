@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useAccount as useOriginalAccount } from 'wagmi'
+import { useAccount as useWagmiAccount } from 'wagmi'
 import useAccount from './useAccount'
 
 export default function useEagerConnect(): boolean {
-  const { isReconnecting } = useOriginalAccount()
+  const { isReconnecting } = useWagmiAccount()
   const { isConnected, isLoggedIn } = useAccount()
   const [hasBeenReady, setHasBeenReady] = useState(false)
 
