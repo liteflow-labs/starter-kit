@@ -2,6 +2,7 @@ import { Button, ButtonProps, useToast } from '@chakra-ui/react'
 import { formatError } from '@nft/hooks'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
 import { useChainId, useSwitchNetwork } from 'wagmi'
+import { chains } from '../../connectors'
 
 const ButtonWithNetworkSwitch = ({
   children,
@@ -41,7 +42,9 @@ const ButtonWithNetworkSwitch = ({
         rightIcon={undefined}
         isLoading={isLoading}
       >
-        Switch Network
+        Switch to{' '}
+        {chains.find((chain) => chain.id === chainId)?.name ||
+          `network with id ${chainId}`}
       </Button>
     )
 
