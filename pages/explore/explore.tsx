@@ -50,7 +50,6 @@ import useAssetFilterFromQuery, {
   OfferFilter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import useFilterState from '../../hooks/useFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
@@ -154,7 +153,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
   const filter = useAssetFilterFromQuery(currencies)
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
-  const { data, refetch } = useFetchAllErc721And1155Query({
+  const { data } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
       address: (ready ? address : currentAccount) || '',
@@ -164,7 +163,6 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
       filter: convertFilterToAssetFilter(filter, currencies, date),
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const { showFilters, toggleFilters, close, count } = useFilterState(filter)
 

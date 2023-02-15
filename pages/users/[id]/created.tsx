@@ -25,7 +25,6 @@ import {
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useEagerConnect from '../../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
@@ -104,7 +103,7 @@ const CreatedPage: NextPage<Props> = ({
   const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch } = useFetchCreatedAssetsQuery({
+  const { data } = useFetchCreatedAssetsQuery({
     variables: {
       address: userAddress,
       currentAddress: (ready ? address : currentAccount) || '',
@@ -114,7 +113,6 @@ const CreatedPage: NextPage<Props> = ({
       now: date,
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const userAccount = useMemo(
     () => convertFullUser(data?.account || null, userAddress),
