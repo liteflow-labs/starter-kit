@@ -57,7 +57,7 @@ export default function Pagination({
   }
 
   const totalPage = useMemo(
-    () => (total ? Math.ceil(total / limit) : 0),
+    () => (total ? Math.ceil(total / limit) : 1),
     [limit, total],
   )
 
