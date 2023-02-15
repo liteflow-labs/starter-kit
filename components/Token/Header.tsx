@@ -147,6 +147,7 @@ const TokenHeader: VFC<Props> = ({
         <SaleDetail
           blockExplorer={blockExplorer}
           assetId={asset.id}
+          chainId={asset.collection.chainId}
           currencies={chainCurrencies}
           isHomepage={isHomepage}
           isOwner={isOwner}
