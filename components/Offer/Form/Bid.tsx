@@ -420,7 +420,11 @@ const OfferFormBid: FC<Props> = (props) => {
         </Button>
       )}
 
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} />
+      <LoginModal
+        isOpen={loginIsOpen}
+        onClose={loginOnClose}
+        chainId={chainId}
+      />
       <CreateOfferModal
         isOpen={createOfferIsOpen}
         onClose={createOfferOnClose}

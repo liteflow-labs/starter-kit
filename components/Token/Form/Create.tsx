@@ -376,7 +376,11 @@ const TokenFormCreate: FC<Props> = ({
           </Text>
         </Button>
       )}
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} />
+      <LoginModal
+        isOpen={loginIsOpen}
+        onClose={loginOnClose}
+        chainId={collection.chainId}
+      />
       <CreateCollectibleModal
         isOpen={createCollectibleIsOpen}
         onClose={createCollectibleOnClose}

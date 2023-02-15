@@ -6,6 +6,7 @@ import WalletBase from './_base'
 type Props = {
   onError: (error: Error) => void
   onActivate: (() => void) | undefined
+  chainId: number | undefined
 }
 
 export const IconMetamask = (
@@ -216,7 +217,7 @@ export const IconMetamask = (
   </svg>
 )
 
-const WalletMetamask: VFC<Props> = ({ onError, onActivate }) => {
+const WalletMetamask: VFC<Props> = ({ onError, onActivate, chainId }) => {
   invariant(connectors.injected, 'Injected connector is not supported')
   return (
     <WalletBase
@@ -225,6 +226,7 @@ const WalletMetamask: VFC<Props> = ({ onError, onActivate }) => {
       onError={onError}
       onActivate={onActivate}
       name="Metamask"
+      chainId={chainId}
     />
   )
 }

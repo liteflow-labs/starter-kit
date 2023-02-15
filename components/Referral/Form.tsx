@@ -46,7 +46,7 @@ const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
     if (!isLoggedIn)
       return (
         <>
-          <LoginModal isOpen={isOpen} onClose={onClose} />
+          <LoginModal isOpen={isOpen} onClose={onClose} chainId={undefined} />
           <Button onClick={onOpen} width="full">
             <Text as="span" isTruncated>
               {t('referral.form.connect')}
