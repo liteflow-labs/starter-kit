@@ -80,6 +80,7 @@ query FetchUserBidsReceived(
         id
         name
         image
+        chainId
       }
     }
   }

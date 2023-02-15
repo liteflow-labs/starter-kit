@@ -28,6 +28,7 @@ import { useForm } from 'react-hook-form'
 import { Offer } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import AcceptOfferModal from '../../Modal/AcceptOffer'
 import LoginModal from '../../Modal/Login'
 import Balance from '../../User/Balance'
@@ -41,6 +42,7 @@ type Props = {
   signer: Signer | undefined
   account: string | null | undefined
   offer: Pick<Offer, 'id' | 'unitPrice' | 'availableQuantity'>
+  chainId: number
   blockExplorer: BlockExplorer
   currency: {
     id: string
@@ -59,6 +61,7 @@ const OfferFormCheckout: FC<Props> = ({
   onPurchased,
   multiple,
   offer,
+  chainId,
   blockExplorer,
   allowTopUp,
 }) => {
@@ -205,7 +208,8 @@ const OfferFormCheckout: FC<Props> = ({
         </Box>
       </Alert>
       {account ? (
-        <Button
+        <ButtonWithNetworkSwitch
+          chainId={chainId}
           disabled={!!account && !canPurchase}
           isLoading={isSubmitting}
           size="lg"
@@ -214,7 +218,7 @@ const OfferFormCheckout: FC<Props> = ({
           <Text as="span" isTruncated>
             {t('offer.form.checkout.submit')}
           </Text>
-        </Button>
+        </ButtonWithNetworkSwitch>
       ) : (
         <Button size="lg" type="button" onClick={loginOnOpen}>
           <Text as="span" isTruncated>

@@ -236,6 +236,7 @@ const CheckoutPage: NextPage<Props> = ({
 
             <OfferFormCheckout
               signer={signer}
+              chainId={asset.collection.chainId}
               account={address}
               offer={offer}
               blockExplorer={blockExplorer}

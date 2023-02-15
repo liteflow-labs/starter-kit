@@ -28,6 +28,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import ButtonWithNetworkSwitch from '../../../../components/Button/SwitchNetwork'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -321,7 +322,8 @@ const BidPlacedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                       {ownerLoggedIn && (
                         <>
                           {!item.expiredAt || item.expiredAt > new Date() ? (
-                            <Button
+                            <ButtonWithNetworkSwitch
+                              chainId={item.asset.chainId}
                               variant="outline"
                               colorScheme="gray"
                               disabled={activeStep !== CancelOfferStep.INITIAL}
@@ -330,7 +332,7 @@ const BidPlacedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                               <Text as="span" isTruncated>
                                 {t('user.bid-placed.actions.cancel')}
                               </Text>
-                            </Button>
+                            </ButtonWithNetworkSwitch>
                           ) : (
                             <Button
                               as={Link}
