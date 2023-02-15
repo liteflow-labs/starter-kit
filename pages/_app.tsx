@@ -24,9 +24,7 @@ import React, {
 import { Cookies, CookiesProvider } from 'react-cookie'
 import {
   useAccount as useWagmiAccount,
-  useChainId,
   useDisconnect,
-  useSwitchNetwork,
   WagmiConfig,
 } from 'wagmi'
 import Banner from '../components/Banner/Banner'
@@ -52,8 +50,6 @@ function Layout({
 }: PropsWithChildren<{ userAddress: string | null }>) {
   const router = useRouter()
   const signer = useSigner()
-  const chainId = useChainId()
-  const { switchNetwork } = useSwitchNetwork({ chainId: environment.CHAIN_ID })
   const userProfileLink = useMemo(
     () => (userAddress ? `/users/${userAddress}` : '/login'),
     [userAddress],
@@ -112,13 +108,6 @@ function Layout({
       { href: 'https://discord.com', label: 'Discord' },
     ].filter(Boolean)
   }, [router.locale, userProfileLink])
-
-  // Automatically switch to the right network
-  useEffect(() => {
-    if (chainId === environment.CHAIN_ID) return
-    if (!switchNetwork) return
-    void switchNetwork()
-  }, [chainId, switchNetwork])
 
   return (
     <ChatWindow>
