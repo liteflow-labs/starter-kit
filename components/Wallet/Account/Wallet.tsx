@@ -40,7 +40,7 @@ const WalletAccount: FC<{
         </div>
         <Button variant="outline" colorScheme="gray" isFullWidth>
           <Text as="span" isTruncated>
-            <WalletAddress address={account} isCopyable isShort />
+            <WalletAddress address={account} isCopyable />
           </Text>
         </Button>
         <Alert status="warning" borderRadius="xl">
