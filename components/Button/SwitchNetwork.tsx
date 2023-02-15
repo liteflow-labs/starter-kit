@@ -16,8 +16,8 @@ const ButtonWithNetworkSwitch = ({
 
   const handleSwitchNetwork = useCallback(() => {
     if (!switchNetwork) return
-    switchNetwork()
-  }, [switchNetwork])
+    switchNetwork(chainId)
+  }, [chainId, switchNetwork])
 
   if (currentChainId !== chainId)
     return (
