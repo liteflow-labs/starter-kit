@@ -77,7 +77,6 @@ const SaleAuctionAction: VFC<Props> = ({
       return (
         <Button
           isLoading={activeStep !== AcceptAuctionStep.INITIAL}
-          disabled={activeStep !== AcceptAuctionStep.INITIAL}
           onClick={() => handleAcceptAuction(auction.id)}
         >
           <Text as="span" isTruncated>

@@ -206,7 +206,7 @@ const FilterAsset: NextPage<Props> = ({
               {offerTypes.map(({ key, value }) => (
                 <Button
                   key={key}
-                  disabled={isSubmitting}
+                  isDisabled={isSubmitting}
                   variant="outline"
                   size="sm"
                   px={4}
@@ -262,7 +262,7 @@ const FilterAsset: NextPage<Props> = ({
                   }))}
                   value={currency?.id}
                   required
-                  disabled={isSubmitting}
+                  isDisabled={isSubmitting}
                   error={errors.currencyId}
                   onChange={(x: any) => setValue('currencyId', x)}
                   sortAlphabetically
@@ -388,7 +388,10 @@ const FilterAsset: NextPage<Props> = ({
                 </Flex>
               )}
 
-              <Button disabled={isSubmitting} onClick={() => propagateFilter()}>
+              <Button
+                isDisabled={isSubmitting}
+                onClick={() => propagateFilter()}
+              >
                 <Text as="span" isTruncated>
                   {t('filters.assets.submit')}
                 </Text>

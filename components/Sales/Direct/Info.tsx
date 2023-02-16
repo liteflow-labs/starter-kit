@@ -6,7 +6,7 @@ import {
   Stack,
   Text,
   useDisclosure,
-  useToast,
+  useToast
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -14,7 +14,7 @@ import {
   CancelOfferStep,
   formatError,
   isSameAddress,
-  useCancelOffer,
+  useCancelOffer
 } from '@nft/hooks'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
@@ -144,7 +144,6 @@ const SaleDirectInfo: VFC<Props> = ({
           onClick={() => handleCancel(currentAccountFirstSale)}
           rightIcon={<HiArrowNarrowRight />}
           isLoading={activeStep !== CancelOfferStep.INITIAL}
-          disabled={activeStep !== CancelOfferStep.INITIAL}
         >
           <Text as="span" isTruncated>
             {t('sales.direct.info.cancel')}

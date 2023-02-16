@@ -402,7 +402,7 @@ const OfferFormBid: FC<Props> = (props) => {
           />
           <ButtonWithNetworkSwitch
             chainId={chainId}
-            disabled={!canBid}
+            isDisabled={!canBid}
             isLoading={isSubmitting}
             size="lg"
             type="submit"
