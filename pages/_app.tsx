@@ -191,11 +191,15 @@ function AccountProvider(
               keyFields: ['address'],
             },
           },
-        }).restore(props.cache),
+        }),
         ssrMode: typeof window === 'undefined',
       }),
-    [jwtToken, props.cache],
+    [jwtToken],
   )
+
+  useEffect(() => {
+    client.restore(props.cache)
+  }, [client, props.cache])
 
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
