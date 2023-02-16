@@ -67,6 +67,7 @@ query FetchUserTradeSold(
       asset {
         name
         image
+        chainId
       }
     }
   }

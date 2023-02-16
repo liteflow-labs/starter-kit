@@ -105,11 +105,6 @@ const CheckoutPage: NextPage<Props> = ({
 
   const { address } = useAccount()
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
-
   const date = useMemo(() => new Date(now), [now])
   const { data } = useCheckoutQuery({
     variables: {
@@ -129,6 +124,8 @@ const CheckoutPage: NextPage<Props> = ({
     () => asset?.collection.standard === 'ERC721',
     [asset],
   )
+
+  const blockExplorer = useBlockExplorer(asset?.collection.chainId)
 
   const onPurchased = useCallback(async () => {
     if (!data?.offer) return

@@ -37,7 +37,7 @@ import {
   useFetchUserTradeSoldQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
-import useBlockExplorer from '../../../../hooks/useBlockExplorer'
+import { blockExplorer } from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -120,11 +120,6 @@ const TradeSoldPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const userAccount = useMemo(
     () => convertFullUser(data?.account || null, userAddress),
     [data, userAddress],
-  )
-
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
   )
 
   const changeOrder = useCallback(
@@ -300,7 +295,9 @@ const TradeSoldPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                         aria-label="external link"
                         as={Link}
                         href={
-                          blockExplorer.transaction(item.transactionHash) || '#'
+                          blockExplorer(item.asset?.chainId).transaction(
+                            item.transactionHash,
+                          ) || '#'
                         }
                         isExternal
                         variant="outline"

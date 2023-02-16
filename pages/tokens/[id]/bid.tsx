@@ -150,10 +150,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
 
   const feesPerTenThousand = fees.data?.orderFees.valuePerTenThousand || 0
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
+  const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
   const asset = useMemo(() => data?.asset, [data])
 
