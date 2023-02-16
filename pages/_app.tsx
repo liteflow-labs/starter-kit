@@ -197,9 +197,10 @@ function AccountProvider(
     [jwtToken],
   )
 
-  useEffect(() => {
-    client.restore(props.cache)
-  }, [client, props.cache])
+  // Restore cache on when the cache prop changes
+  useEffect(() => void client.restore(props.cache), [client, props.cache])
+  // Reset the store when the jwtToken changes
+  useEffect(() => void client.resetStore(), [client, jwtToken])
 
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
