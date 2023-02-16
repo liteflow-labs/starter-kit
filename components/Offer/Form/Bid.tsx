@@ -35,6 +35,7 @@ import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import LoginModal from '../../Modal/Login'
@@ -61,6 +62,7 @@ type Props = {
     name: string
   }[]
   assetId: string
+  chainId: number
   blockExplorer: BlockExplorer
   onCreated: (offerId: string) => void
   auctionId: string | undefined
@@ -86,6 +88,7 @@ const OfferFormBid: FC<Props> = (props) => {
     account,
     currencies,
     assetId,
+    chainId,
     blockExplorer,
     onCreated,
     auctionId,
@@ -397,7 +400,8 @@ const OfferFormBid: FC<Props> = (props) => {
             currency={currency}
             allowTopUp={allowTopUp && ((price && !canBid) || balanceZero)}
           />
-          <Button
+          <ButtonWithNetworkSwitch
+            chainId={chainId}
             disabled={!canBid}
             isLoading={isSubmitting}
             size="lg"
@@ -406,7 +410,7 @@ const OfferFormBid: FC<Props> = (props) => {
             <Text as="span" isTruncated>
               {t('offer.form.bid.submit')}
             </Text>
-          </Button>
+          </ButtonWithNetworkSwitch>
         </>
       ) : (
         <Button size="lg" type="button" onClick={loginOnOpen}>
@@ -416,7 +420,11 @@ const OfferFormBid: FC<Props> = (props) => {
         </Button>
       )}
 
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} />
+      <LoginModal
+        isOpen={loginIsOpen}
+        onClose={loginOnClose}
+        chainId={chainId}
+      />
       <CreateOfferModal
         isOpen={createOfferIsOpen}
         onClose={createOfferOnClose}

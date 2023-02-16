@@ -4,8 +4,9 @@ import { connectors } from '../../../connectors'
 import WalletBase from './_base'
 
 type Props = {
-  onError?: (error?: Error) => void
-  onActivate?: () => void
+  onError: (error: Error) => void
+  onActivate: (() => void) | undefined
+  chainId: number | undefined
 }
 
 export const IconCoinbase = (
@@ -21,7 +22,7 @@ export const IconCoinbase = (
   </svg>
 )
 
-const WalletCoinbase: VFC<Props> = ({ onError, onActivate }) => {
+const WalletCoinbase: VFC<Props> = ({ onError, onActivate, chainId }) => {
   invariant(connectors.coinbase, 'Coinbase connector not found')
   return (
     <WalletBase
@@ -30,6 +31,7 @@ const WalletCoinbase: VFC<Props> = ({ onError, onActivate }) => {
       onError={onError}
       name="Coinbase"
       onActivate={onActivate}
+      chainId={chainId}
     />
   )
 }

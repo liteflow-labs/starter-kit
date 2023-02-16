@@ -1,14 +1,15 @@
 import { Box, BoxProps, Spinner, Text } from '@chakra-ui/react'
 import { SyntheticEvent, useMemo, useState, VFC } from 'react'
-import { Connector, useAccount as useOriginalAccount, useConnect } from 'wagmi'
+import { Connector, useAccount as useWagmiAccount, useConnect } from 'wagmi'
 import useAccount from '../../../hooks/useAccount'
 
 type Props = Omit<BoxProps, 'onError'> & {
   connector: Connector
   name: string
   icon: JSX.Element
-  onActivate?: () => void
-  onError?: (error?: Error) => void
+  onActivate: (() => void) | undefined
+  onError: (error: Error) => void
+  chainId: number | undefined
 }
 
 const WalletBase: VFC<Props> = ({
@@ -17,11 +18,12 @@ const WalletBase: VFC<Props> = ({
   name,
   onError,
   onActivate,
+  chainId,
   ...props
 }) => {
   const { isConnected, isLoggedIn } = useAccount()
-  const { connector: connectedConnector } = useOriginalAccount()
-  const { connectAsync } = useConnect()
+  const { connector: connectedConnector } = useWagmiAccount()
+  const { connectAsync } = useConnect({ chainId })
   const [isLoading, setIsLoading] = useState(false)
 
   const handle = async (e: SyntheticEvent) => {
@@ -32,7 +34,7 @@ const WalletBase: VFC<Props> = ({
       await connectAsync({ connector })
       onActivate && onActivate()
     } catch (e) {
-      onError && onError(e as Error)
+      onError(e as Error)
     } finally {
       setIsLoading(false)
     }

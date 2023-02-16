@@ -9,9 +9,10 @@ import WalletWalletConnect from '../Wallet/Connectors/WalletConnect'
 
 type Props = {
   onActivate?: () => void
+  chainId: number | undefined
 }
 
-const LoginForm: FC<Props> = ({ onActivate }) => {
+const LoginForm: FC<Props> = ({ onActivate, chainId }) => {
   const { t } = useTranslation('components')
 
   const [errorFromLogin, setErrorFromLogin] = useState<Error>()
@@ -33,7 +34,11 @@ const LoginForm: FC<Props> = ({ onActivate }) => {
           _hover={{ shadow: 'md' }}
           transition="box-shadow 0.3s ease-in-out"
         >
-          <WalletEmail onActivate={onActivate} />
+          <WalletEmail
+            onActivate={onActivate}
+            onError={setErrorFromLogin}
+            chainId={chainId}
+          />
         </Stack>
       )}
       {connectors.email && hasStandardWallet && (
@@ -82,6 +87,7 @@ const LoginForm: FC<Props> = ({ onActivate }) => {
               <WalletMetamask
                 onActivate={onActivate}
                 onError={setErrorFromLogin}
+                chainId={chainId}
               />
             </Stack>
           )}
@@ -102,6 +108,7 @@ const LoginForm: FC<Props> = ({ onActivate }) => {
               <WalletCoinbase
                 onActivate={onActivate}
                 onError={setErrorFromLogin}
+                chainId={chainId}
               />
             </Stack>
           )}
@@ -122,6 +129,7 @@ const LoginForm: FC<Props> = ({ onActivate }) => {
               <WalletWalletConnect
                 onActivate={onActivate}
                 onError={setErrorFromLogin}
+                chainId={chainId}
               />
             </Stack>
           )}

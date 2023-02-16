@@ -9,7 +9,12 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  */
 const nextConfig = {
   images: {
-    domains: [process.env.PINATA_GATEWAY || ''],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   webpack: (config, options) => {
     if (!options.isServer) {

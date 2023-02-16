@@ -23,6 +23,7 @@ import SaleOpenSummary from './Open/Summary'
 export type Props = {
   // Asset related props
   assetId: string
+  chainId: number
   blockExplorer: BlockExplorer
   isSingle: boolean
   currencies: SaleOpenSummaryProps['currencies']
@@ -59,6 +60,7 @@ export type Props = {
 
 const SaleDetail: VFC<Props> = ({
   assetId,
+  chainId,
   blockExplorer,
   currencies,
   directSales,
@@ -90,6 +92,7 @@ const SaleDetail: VFC<Props> = ({
           <SaleDirectSummary sales={directSales} isSingle={isSingle} />
           <SaleDirectButton
             assetId={assetId}
+            chainId={chainId}
             sales={directSales}
             blockExplorer={blockExplorer}
             isHomepage={isHomepage}
@@ -100,6 +103,7 @@ const SaleDetail: VFC<Props> = ({
           />
           <SaleDirectInfo
             assetId={assetId}
+            chainId={chainId}
             blockExplorer={blockExplorer}
             signer={signer}
             currentAccount={currentAccount}
@@ -130,6 +134,7 @@ const SaleDetail: VFC<Props> = ({
           />
           <SaleAuctionInfo
             assetId={assetId}
+            chainId={chainId}
             auction={auction}
             signer={signer}
             isOwner={isOwner}

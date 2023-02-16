@@ -42,7 +42,6 @@ import {
   useFetchUserAuctionsQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
-import useBlockExplorer from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -111,10 +110,6 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AuctionsOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
   const toast = useToast()
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
@@ -313,7 +308,6 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                           signer={signer}
                           auction={item}
                           bestBid={item.bestBid}
-                          blockExplorer={blockExplorer}
                           onAuctionAccepted={onAuctionAccepted}
                         />
                       )}

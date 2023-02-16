@@ -5,8 +5,9 @@ import { connectors } from '../../../connectors'
 import WalletBase from './_base'
 
 type Props = {
-  onError?: (error?: Error) => void
-  onActivate?: () => void
+  onError: (error: Error) => void
+  onActivate: (() => void) | undefined
+  chainId: number | undefined
 }
 
 const IconMagic = (
@@ -32,7 +33,7 @@ const IconMagic = (
   </svg>
 )
 
-const WalletEmail: FC<Props> = ({ onActivate, onError }) => {
+const WalletEmail: FC<Props> = ({ onActivate, onError, chainId }) => {
   const { t } = useTranslation('components')
   invariant(connectors.email, 'Email connector is not supported')
   return (
@@ -45,6 +46,7 @@ const WalletEmail: FC<Props> = ({ onActivate, onError }) => {
       display="flex"
       gap={4}
       alignItems="center"
+      chainId={chainId}
     />
   )
 }
