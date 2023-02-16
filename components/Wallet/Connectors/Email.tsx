@@ -1,73 +1,53 @@
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
-import { AbstractConnector } from '@web3-react/abstract-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
-import { useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
-import conectors from '../../../connectors'
+import { connectors } from '../../../connectors'
+import WalletBase from './_base'
 
 type Props = {
-  activate: (
-    connector: AbstractConnector,
-    onError?: ((error: Error) => void) | undefined,
-    throwErrors?: boolean | undefined,
-  ) => Promise<void>
+  onError: (error: Error) => void
+  onActivate: (() => void) | undefined
+  chainId: number | undefined
 }
 
-type FormData = {
-  email: string
-}
+const IconMagic = (
+  <svg
+    width="32"
+    height="32"
+    viewBox="0 0 400 400"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M200 0C218.262 21.2014 238.404 40.8906 260.185 58.8391C245.672 103.459 237.858 150.865 237.858 200C237.858 249.135 245.672 296.541 260.185 341.161C238.404 359.109 218.262 378.799 200 400C181.738 378.799 161.596 359.109 139.815 341.161C154.328 296.541 162.142 249.135 162.142 200C162.142 150.865 154.328 103.459 139.815 58.8392C161.596 40.8907 181.738 21.2015 200 0Z"
+      fill="#6851FF"
+    />
+    <path
+      d="M98.183 310.312C75.1276 294.994 50.6592 281.457 25 269.911C32.1177 247.797 35.9467 224.322 35.9467 200C35.9467 175.678 32.1177 152.204 25 130.089C50.6591 118.543 75.1275 105.006 98.183 89.6885C106.999 125.102 111.664 162.034 111.664 200C111.664 237.966 106.999 274.898 98.183 310.312Z"
+      fill="#6851FF"
+    />
+    <path
+      d="M288.336 200C288.336 237.966 293.001 274.898 301.817 310.312C324.872 294.994 349.341 281.457 375 269.911C367.882 247.797 364.053 224.322 364.053 200C364.053 175.678 367.882 152.204 375 130.089C349.341 118.543 324.872 105.006 301.817 89.6884C293.001 125.102 288.336 162.034 288.336 200Z"
+      fill="#6851FF"
+    />
+  </svg>
+)
 
-const WalletEmail: FC<Props> = ({ activate }) => {
+const WalletEmail: FC<Props> = ({ onActivate, onError, chainId }) => {
   const { t } = useTranslation('components')
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>()
-
-  const handle = handleSubmit(async (data) => {
-    invariant(conectors.email, 'Email connector not found')
-    await activate(conectors.email.withEmail(data.email), undefined, true)
-  })
-
+  invariant(connectors.email, 'Email connector is not supported')
   return (
-    <Stack as="form" spacing={6} onSubmit={handle}>
-      <FormControl isInvalid={!!errors.email}>
-        <FormLabel htmlFor="email">
-          {t('wallet.connectors.email.form.email.label')}
-        </FormLabel>
-        <Input
-          id="email"
-          type="email"
-          placeholder={t('user.form.edit.email.placeholder')}
-          {...register('email', {
-            required: t('wallet.connectors.email.form.validation.required'),
-            pattern: {
-              value: /^[\w%+.-]+@[\d.a-z-]+\.[a-z]{2,}$/i,
-              message: t('wallet.connectors.email.form.validation.invalid'),
-            },
-          })}
-        />
-        {errors.email && (
-          <FormErrorMessage>{errors.email.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <Button isLoading={isSubmitting} size="lg" type="submit" isFullWidth>
-        <Text as="span" isTruncated>
-          {t('wallet.connectors.email.form.submit')}
-        </Text>
-      </Button>
-    </Stack>
+    <WalletBase
+      connector={connectors.email}
+      icon={IconMagic}
+      onError={onError}
+      name={t('wallet.connectors.email.label')}
+      onActivate={onActivate}
+      display="flex"
+      gap={4}
+      alignItems="center"
+      chainId={chainId}
+    />
   )
 }
 export default WalletEmail

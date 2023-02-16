@@ -2,29 +2,26 @@ import { Button, Icon, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { formatError, useInvitation } from '@nft/hooks'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
-import { useWeb3React } from '@web3-react/core'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react'
+import useAccount from '../../hooks/useAccount'
 import LoginModal from '../Modal/Login'
 
 type Props = {
   loginUrl: string
   signer: Signer | undefined
-  login: {
-    networkName: string
-  }
 }
 
-const ReferralForm: VFC<Props> = ({ login, loginUrl, signer }) => {
+const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { isLoggedIn } = useAccount()
   const { create, creating } = useInvitation(signer)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [url, setUrl] = useState<string>()
 
   useEffect(() => {
-    if (!account) return // make sure the user is fully logged in
+    if (!isLoggedIn) return // make sure the user is fully logged in
     if (url) return
     create()
       .then((id) => setUrl(`${loginUrl}?ref=${id}`))
@@ -34,7 +31,7 @@ const ReferralForm: VFC<Props> = ({ login, loginUrl, signer }) => {
           status: 'error',
         }),
       )
-  }, [url, create, loginUrl, toast, account])
+  }, [url, create, loginUrl, toast, isLoggedIn])
 
   const handleClick = useCallback(() => {
     if (!url) return
@@ -46,10 +43,10 @@ const ReferralForm: VFC<Props> = ({ login, loginUrl, signer }) => {
   }, [url, t, toast])
 
   const action = useMemo(() => {
-    if (!account)
+    if (!isLoggedIn)
       return (
         <>
-          <LoginModal isOpen={isOpen} onClose={onClose} {...login} />
+          <LoginModal isOpen={isOpen} onClose={onClose} chainId={undefined} />
           <Button onClick={onOpen} width="full">
             <Text as="span" isTruncated>
               {t('referral.form.connect')}
@@ -71,7 +68,7 @@ const ReferralForm: VFC<Props> = ({ login, loginUrl, signer }) => {
         </Text>
       </Button>
     )
-  }, [account, handleClick, login, t, creating, url, isOpen, onClose, onOpen])
+  }, [isLoggedIn, handleClick, t, creating, url, isOpen, onClose, onOpen])
 
   return action
 }

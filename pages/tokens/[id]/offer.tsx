@@ -11,9 +11,9 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
+import { isSameAddress } from '@nft/hooks'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
@@ -34,14 +34,21 @@ import {
 } from '../../../convert'
 import environment from '../../../environment'
 import {
+  ChainCurrenciesDocument,
+  ChainCurrenciesQuery,
+  ChainCurrenciesQueryVariables,
+  CurrencyFilter,
   FeesForOfferDocument,
   FeesForOfferQuery,
+  IntFilter,
   OfferForAssetDocument,
   OfferForAssetQuery,
   useFeesForOfferQuery,
   useOfferForAssetQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useSigner from '../../../hooks/useSigner'
@@ -96,6 +103,18 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       variables: { id: assetId },
     })
     if (feeQuery.error) throw error
+    const chainCurrency = await client.query<
+      ChainCurrenciesQuery,
+      ChainCurrenciesQueryVariables
+    >({
+      query: ChainCurrenciesDocument,
+      variables: {
+        filter: {
+          chainId: { equalTo: data.asset.chainId } as IntFilter,
+        } as CurrencyFilter,
+      },
+    })
+    if (chainCurrency.error) throw chainCurrency.error
     return {
       props: {
         assetId,
@@ -117,22 +136,21 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   useLoginRedirect(ready)
-
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
 
   const date = useMemo(() => new Date(now), [now])
   const { data } = useOfferForAssetQuery({
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
+
+  const blockExplorer = useBlockExplorer(data?.asset?.chainId)
+
+  const currencyRes = useChainCurrencies(data?.asset?.chainId)
 
   const fees = useFeesForOfferQuery({
     variables: {
@@ -153,11 +171,14 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   )
 
   const isCreator =
-    asset && account
-      ? asset.creator.address.toLowerCase() === account.toLowerCase()
+    asset && address
+      ? isSameAddress(asset.creator.address.toLowerCase(), address)
       : false
 
-  const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
+  const currencies = useMemo(
+    () => currencyRes.data?.currencies?.nodes || [],
+    [currencyRes],
+  )
 
   const saleOptions: [SaleOption, SaleOption] = useMemo(
     () => [
@@ -198,6 +219,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
       return (
         <SalesDirectForm
           assetId={assetId}
+          chainId={asset.chainId}
           standard={asset.collection.standard}
           currencies={currencies}
           blockExplorer={blockExplorer}

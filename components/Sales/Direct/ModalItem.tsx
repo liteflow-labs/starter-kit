@@ -20,6 +20,7 @@ import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, VFC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
 import CancelOfferModal from '../../Modal/CancelOffer'
@@ -31,6 +32,7 @@ export type Props = {
   blockExplorer: BlockExplorer
   signer: Signer | undefined
   currentAccount: string | null | undefined
+  chainId: number
   sale: {
     id: string
     expiredAt: Date | null | undefined
@@ -53,6 +55,7 @@ export type Props = {
 const SaleDirectModalItem: VFC<Props> = ({
   blockExplorer,
   sale,
+  chainId,
   signer,
   currentAccount,
   onOfferCanceled,
@@ -147,7 +150,8 @@ const SaleDirectModalItem: VFC<Props> = ({
         action={
           !!currentAccount &&
           isSameAddress(sale.maker.address, currentAccount) ? (
-            <Button
+            <ButtonWithNetworkSwitch
+              chainId={chainId}
               variant="outline"
               colorScheme="gray"
               w={{ base: 'full', md: 'auto' }}
@@ -158,7 +162,7 @@ const SaleDirectModalItem: VFC<Props> = ({
               <Text as="span" isTruncated>
                 {t('sales.direct.modal-item.cancel')}
               </Text>
-            </Button>
+            </ButtonWithNetworkSwitch>
           ) : (
             <Button as={Link} href={`/checkout/${sale.id}`}>
               <Text as="span" isTruncated>

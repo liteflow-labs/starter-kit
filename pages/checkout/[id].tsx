@@ -8,7 +8,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
@@ -22,7 +21,6 @@ import OfferFormCheckout from '../../components/Offer/Form/Checkout'
 import Price from '../../components/Price/Price'
 import TokenCard from '../../components/Token/Card'
 import Avatar from '../../components/User/Avatar'
-import connectors from '../../connectors'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -35,9 +33,9 @@ import {
   CheckoutQuery,
   useCheckoutQuery,
 } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
 import { wrapServerSideProps } from '../../props'
@@ -105,22 +103,16 @@ const CheckoutPage: NextPage<Props> = ({
   const { back, push } = useRouter()
   const toast = useToast()
 
-  const { account } = useWeb3React()
-
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
+  const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch } = useCheckoutQuery({
+  const { data } = useCheckoutQuery({
     variables: {
       id: offerId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const offer = useMemo(() => data?.offer, [data])
   const asset = useMemo(() => offer?.asset, [offer])
@@ -132,6 +124,8 @@ const CheckoutPage: NextPage<Props> = ({
     () => asset?.collection.standard === 'ERC721',
     [asset],
   )
+
+  const blockExplorer = useBlockExplorer(asset?.collection.chainId)
 
   const onPurchased = useCallback(async () => {
     if (!data?.offer) return
@@ -237,17 +231,14 @@ const CheckoutPage: NextPage<Props> = ({
 
             <OfferFormCheckout
               signer={signer}
-              account={account?.toLowerCase()}
+              chainId={asset.collection.chainId}
+              account={address}
               offer={offer}
               blockExplorer={blockExplorer}
               currency={offer.currency}
               multiple={!isSingle}
               onPurchased={onPurchased}
               allowTopUp={environment.ALLOW_TOP_UP}
-              login={{
-                ...connectors,
-                networkName: environment.NETWORK_NAME,
-              }}
             />
           </Flex>
         </GridItem>

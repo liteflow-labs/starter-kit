@@ -10,7 +10,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMemo, VFC } from 'react'
 import { Standard } from '../../graphql'
-import { BlockExplorer } from '../../hooks/useBlockExplorer'
+import useBlockExplorer from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
 import type { Props as SaleDetailProps } from '../Sales/Detail'
 import SaleDetail from '../Sales/Detail'
@@ -19,7 +19,6 @@ import type { Props as TokenAssetProps } from '../Token/Metadata'
 import TokenMetadata from '../Token/Metadata'
 
 export type Props = {
-  blockExplorer: BlockExplorer
   asset: {
     id: string
     name: string
@@ -36,7 +35,10 @@ export type Props = {
     totalSupply: BigNumber
     owned: BigNumber
   }
-  currencies: SaleDetailProps['currencies']
+  currencies: {
+    chainId: number
+    image: string
+  }[]
   creator: TokenAssetProps['creator']
   owners: TokenAssetProps['owners']
   numberOfOwners: TokenAssetProps['numberOfOwners']
@@ -51,7 +53,6 @@ export type Props = {
 }
 
 const TokenHeader: VFC<Props> = ({
-  blockExplorer,
   asset,
   currencies,
   creator,
@@ -66,6 +67,7 @@ const TokenHeader: VFC<Props> = ({
   onOfferCanceled,
   onAuctionAccepted,
 }) => {
+  const blockExplorer = useBlockExplorer(asset.collection.chainId)
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
 
   const ownAllSupply = useMemo(
@@ -75,6 +77,14 @@ const TokenHeader: VFC<Props> = ({
   const isSingle = useMemo(
     () => asset.collection.standard === 'ERC721',
     [asset],
+  )
+
+  const chainCurrencies = useMemo(
+    () =>
+      currencies.filter(
+        (currency) => currency.chainId === asset.collection.chainId,
+      ),
+    [currencies, asset],
   )
 
   return (
@@ -136,7 +146,8 @@ const TokenHeader: VFC<Props> = ({
         <SaleDetail
           blockExplorer={blockExplorer}
           assetId={asset.id}
-          currencies={currencies}
+          chainId={asset.collection.chainId}
+          currencies={chainCurrencies}
           isHomepage={isHomepage}
           isOwner={isOwner}
           isSingle={isSingle}

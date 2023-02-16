@@ -74,7 +74,7 @@ The Marketplace template is based on the following tech stack
 - [Typescript](https://www.typescriptlang.org/)
 - [Liteflow](https://liteflow.com/)
 - [ChakraUI](https://chakra-ui.com/)
-- [Web3React](https://github.com/Uniswap/web3-react)
+- [Wagmi](https://wagmi.sh/)
 - [Next translate](https://github.com/aralroca/next-translate)
 
 ## Get started

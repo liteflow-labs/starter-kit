@@ -29,7 +29,6 @@ import { formatError } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
-import { useWeb3React } from '@web3-react/core'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
@@ -55,14 +54,22 @@ import {
 } from '../../../convert'
 import environment from '../../../environment'
 import {
+  AddressFilter,
+  ChainCurrenciesDocument,
+  ChainCurrenciesQuery,
+  ChainCurrenciesQueryVariables,
+  CurrencyFilter,
   FetchAssetDocument,
   FetchAssetIdFromTokenIdDocument,
   FetchAssetIdFromTokenIdQuery,
   FetchAssetIdFromTokenIdQueryVariables,
   FetchAssetQuery,
+  IntFilter,
   useFetchAssetQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useNow from '../../../hooks/useNow'
 import useSigner from '../../../hooks/useSigner'
@@ -126,6 +133,19 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     })
     if (error) throw error
     if (!data.asset) return { notFound: true }
+    const chainCurrency = await client.query<
+      ChainCurrenciesQuery,
+      ChainCurrenciesQueryVariables
+    >({
+      query: ChainCurrenciesDocument,
+      variables: {
+        filter: {
+          chainId: { equalTo: data.asset.collection.chainId } as IntFilter,
+          address: { isNull: false } as AddressFilter,
+        } as CurrencyFilter,
+      },
+    })
+    if (chainCurrency.error) throw chainCurrency.error
     return {
       props: {
         now: now.toJSON(),
@@ -151,12 +171,8 @@ const DetailPage: NextPage<Props> = ({
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { query } = useRouter()
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
   const [showPreview, setShowPreview] = useState(false)
 
   const date = useMemo(() => new Date(nowProp), [nowProp])
@@ -164,12 +180,20 @@ const DetailPage: NextPage<Props> = ({
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
+  })
+  const chainCurrency = useChainCurrencies(data?.asset?.collection.chainId, {
+    onlyERC20: true,
   })
 
   const asset = useMemo(() => data?.asset, [data])
-  const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
+  const currencies = useMemo(
+    () => chainCurrency.data?.currencies?.nodes || [],
+    [chainCurrency],
+  )
+
+  const blockExplorer = useBlockExplorer(asset?.collection.chainId)
 
   const totalOwned = useMemo(
     () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),
@@ -441,10 +465,11 @@ const DetailPage: NextPage<Props> = ({
           />
           <SaleDetail
             assetId={asset.id}
+            chainId={asset.collection.chainId}
             blockExplorer={blockExplorer}
             currencies={currencies}
             signer={signer}
-            currentAccount={account?.toLowerCase()}
+            currentAccount={address}
             isSingle={isSingle}
             isHomepage={false}
             isOwner={isOwner}
@@ -523,7 +548,7 @@ const DetailPage: NextPage<Props> = ({
                   whiteSpace="nowrap"
                   mr={4}
                 >
-                  <Tab as="div">
+                  <Tab>
                     <Text as="span" variant="subtitle1">
                       {tab.title}
                     </Text>
@@ -536,8 +561,9 @@ const DetailPage: NextPage<Props> = ({
             {(!query.filter || query.filter === AssetTabs.bids) && (
               <BidList
                 bids={bids}
+                chainId={asset.collection.chainId}
                 signer={signer}
-                account={account?.toLowerCase()}
+                account={address}
                 isSingle={isSingle}
                 blockExplorer={blockExplorer}
                 preventAcceptation={!isOwner || !!activeAuction}

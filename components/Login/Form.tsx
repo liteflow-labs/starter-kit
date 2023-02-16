@@ -1,39 +1,46 @@
 import { Box, Flex, Stack, Text } from '@chakra-ui/react'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo, useState } from 'react'
-import connectors from '../../connectors'
+import { FC, useState } from 'react'
+import { connectors } from '../../connectors'
 import WalletCoinbase from '../Wallet/Connectors/Coinbase'
 import WalletEmail from '../Wallet/Connectors/Email'
 import WalletMetamask from '../Wallet/Connectors/Metamask'
 import WalletWalletConnect from '../Wallet/Connectors/WalletConnect'
 
 type Props = {
-  activate: (
-    connector: AbstractConnector,
-    onError?: (error: Error) => void,
-    throwErrors?: boolean,
-  ) => Promise<void>
-  networkName: string
+  onActivate?: () => void
+  chainId: number | undefined
 }
 
-const LoginForm: FC<Props> = ({ activate, networkName }) => {
+const LoginForm: FC<Props> = ({ onActivate, chainId }) => {
   const { t } = useTranslation('components')
 
-  const { error } = useWeb3React()
   const [errorFromLogin, setErrorFromLogin] = useState<Error>()
-  const invalidNetwork = useMemo(
-    () => errorFromLogin && errorFromLogin instanceof UnsupportedChainIdError,
-    [errorFromLogin],
-  )
 
   const hasStandardWallet =
     connectors.injected || connectors.coinbase || connectors.walletConnect
 
   return (
     <>
-      {connectors.email && <WalletEmail activate={activate} />}
+      {connectors.email && (
+        <Stack
+          cursor="pointer"
+          w="full"
+          spacing={3}
+          rounded="xl"
+          borderWidth={1}
+          borderColor="gray.200"
+          shadow="sm"
+          _hover={{ shadow: 'md' }}
+          transition="box-shadow 0.3s ease-in-out"
+        >
+          <WalletEmail
+            onActivate={onActivate}
+            onError={setErrorFromLogin}
+            chainId={chainId}
+          />
+        </Stack>
+      )}
       {connectors.email && hasStandardWallet && (
         <Box position="relative" mt={6} mb={2}>
           <Flex
@@ -54,14 +61,11 @@ const LoginForm: FC<Props> = ({ activate, networkName }) => {
         </Box>
       )}
 
-      {error && (
+      {errorFromLogin && (
         <Text as="span" role="alert" variant="error" mt={3}>
-          {error.message ? error.message : error.toString()}
-        </Text>
-      )}
-      {invalidNetwork && (
-        <Text as="span" role="alert" variant="error" mt={3}>
-          {t('modal.login.errors.wrong-network', { networkName })}
+          {errorFromLogin.message
+            ? errorFromLogin.message
+            : errorFromLogin.toString()}
         </Text>
       )}
       {hasStandardWallet && (
@@ -80,7 +84,11 @@ const LoginForm: FC<Props> = ({ activate, networkName }) => {
               }}
               transition="box-shadow 0.3s ease-in-out"
             >
-              <WalletMetamask activate={activate} onError={setErrorFromLogin} />
+              <WalletMetamask
+                onActivate={onActivate}
+                onError={setErrorFromLogin}
+                chainId={chainId}
+              />
             </Stack>
           )}
           {connectors.coinbase && (
@@ -97,7 +105,11 @@ const LoginForm: FC<Props> = ({ activate, networkName }) => {
               }}
               transition="box-shadow 0.3s ease-in-out"
             >
-              <WalletCoinbase activate={activate} onError={setErrorFromLogin} />
+              <WalletCoinbase
+                onActivate={onActivate}
+                onError={setErrorFromLogin}
+                chainId={chainId}
+              />
             </Stack>
           )}
           {connectors.walletConnect && (
@@ -115,8 +127,9 @@ const LoginForm: FC<Props> = ({ activate, networkName }) => {
               transition="box-shadow 0.3s ease-in-out"
             >
               <WalletWalletConnect
-                activate={activate}
+                onActivate={onActivate}
                 onError={setErrorFromLogin}
+                chainId={chainId}
               />
             </Stack>
           )}

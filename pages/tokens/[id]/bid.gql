@@ -7,6 +7,7 @@ query FeesForBid($id: String!) {
 query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
+    chainId
     collection {
       chainId
       address
@@ -118,16 +119,6 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
           quantity
         }
       }
-    }
-  }
-  currencies(orderBy: CREATED_AT_ASC, filter: { address: { isNull: false } }) {
-    # keep only non-native currency. Cannot create bid with native currency.
-    nodes {
-      image
-      name
-      id
-      decimals
-      symbol
     }
   }
 }
