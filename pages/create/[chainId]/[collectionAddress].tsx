@@ -250,7 +250,7 @@ const CreatePage: NextPage<Props> = ({
         gap={12}
         templateColumns={{ base: '1fr', md: '1fr 2fr' }}
       >
-        <GridItem>
+        <GridItem overflow="hidden">
           <Flex as={Text} color="brand.black" mb={3} variant="button1">
             {t('asset.form.preview')}
           </Flex>
@@ -267,7 +267,7 @@ const CreatePage: NextPage<Props> = ({
             )}
           </Box>
         </GridItem>
-        <GridItem>
+        <GridItem overflow="hidden">
           <TokenFormCreate
             signer={signer}
             collection={data.collection}

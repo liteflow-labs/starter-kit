@@ -415,7 +415,12 @@ const DetailPage: NextPage<Props> = ({
                   </Link>
                 </Heading>
               )}
-              <Heading as="h1" variant="title" color="brand.black">
+              <Heading
+                as="h1"
+                variant="title"
+                color="brand.black"
+                wordBreak="break-word"
+              >
                 {asset.name}
               </Heading>
             </Stack>
