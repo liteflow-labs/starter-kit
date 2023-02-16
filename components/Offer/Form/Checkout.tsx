@@ -210,7 +210,7 @@ const OfferFormCheckout: FC<Props> = ({
       {account ? (
         <ButtonWithNetworkSwitch
           chainId={chainId}
-          disabled={!!account && !canPurchase}
+          isDisabled={!!account && !canPurchase}
           isLoading={isSubmitting}
           size="lg"
           type="submit"

@@ -157,7 +157,6 @@ const SaleDirectModalItem: VFC<Props> = ({
               w={{ base: 'full', md: 'auto' }}
               onClick={() => handleCancel()}
               isLoading={activeStep !== CancelOfferStep.INITIAL}
-              disabled={activeStep !== CancelOfferStep.INITIAL}
             >
               <Text as="span" isTruncated>
                 {t('sales.direct.modal-item.cancel')}

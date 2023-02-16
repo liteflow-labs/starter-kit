@@ -52,7 +52,6 @@ export default function AcceptOfferButton({
       <ButtonWithNetworkSwitch
         chainId={chainId}
         {...props}
-        disabled={activeStep !== AcceptOfferStep.INITIAL}
         isLoading={activeStep !== AcceptOfferStep.INITIAL}
         onClick={handleAcceptOffer}
       >

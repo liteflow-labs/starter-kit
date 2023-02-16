@@ -46,7 +46,6 @@ export default function CancelOfferButton({
       <ButtonWithNetworkSwitch
         chainId={chainId}
         {...props}
-        disabled={activeStep !== CancelOfferStep.INITIAL}
         isLoading={activeStep !== CancelOfferStep.INITIAL}
         onClick={handleCancelOffer}
       >
