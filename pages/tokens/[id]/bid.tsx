@@ -193,7 +193,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
         gap={12}
         templateColumns={{ base: '1fr', md: '1fr 2fr' }}
       >
-        <GridItem>
+        <GridItem overflow="hidden">
           <Box pointerEvents="none">
             <TokenCard
               asset={convertAsset(asset)}
