@@ -5,7 +5,7 @@ import {
   Icon,
   Text,
   useDisclosure,
-  useToast,
+  useToast
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -14,7 +14,7 @@ import {
   formatDate,
   formatError,
   isSameAddress,
-  useCancelOffer,
+  useCancelOffer
 } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import useTranslation from 'next-translate/useTranslation'
