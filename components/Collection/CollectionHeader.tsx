@@ -55,15 +55,11 @@ type Props = {
   }
   baseURL: string
   reportEmail: string
-  explorer: {
-    name: string
-    url: string
-  }
 }
 
-const CollectionHeader: FC<Props> = ({ collection, explorer, reportEmail }) => {
+const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
   const { t } = useTranslation('templates')
-  const blockExplorer = useBlockExplorer(explorer.name, explorer.url)
+  const blockExplorer = useBlockExplorer(collection.chainId)
 
   const blocks = useMemo(
     () => [

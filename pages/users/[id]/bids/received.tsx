@@ -11,15 +11,12 @@ import {
   Th,
   Thead,
   Tr,
-  useDisclosure,
   useToast,
 } from '@chakra-ui/react'
 import {
-  AcceptOfferStep,
   dateFromNow,
   formatAddress,
   formatError,
-  useAcceptOffer,
   useIsLoggedIn,
 } from '@nft/hooks'
 import { NextPage } from 'next'
@@ -28,11 +25,10 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
-import ButtonWithNetworkSwitch from '../../../../components/Button/SwitchNetwork'
+import AcceptOfferButton from '../../../../components/Button/AcceptOffer'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
-import AcceptOfferModal from '../../../../components/Modal/AcceptOffer'
 import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
@@ -46,7 +42,6 @@ import {
   useFetchUserBidsReceivedQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
-import useBlockExplorer from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -114,9 +109,7 @@ const BidReceivedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OfferOpenBuysOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
-  const [accept, { activeStep, transactionHash }] = useAcceptOffer(signer)
   const toast = useToast()
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
@@ -134,11 +127,7 @@ const BidReceivedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
     () =>
       (data?.bids?.nodes || []).map((x) => ({
         ...convertBidFull(x),
-        asset: {
-          image: x.asset.image,
-          name: x.asset.name,
-          chainId: x.asset.chainId,
-        },
+        asset: x.asset,
       })),
     [data],
   )
@@ -148,32 +137,13 @@ const BidReceivedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
     [data, userAddress],
   )
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
-
-  const handleAcceptOffer = useCallback(
-    async (bid: typeof bids[0]) => {
-      try {
-        onOpen()
-        await accept(bid, bid.availableQuantity)
-        toast({
-          title: t('user.bid-received.notifications.accepted'),
-          status: 'success',
-        })
-        await refetch()
-      } catch (e) {
-        toast({
-          title: formatError(e),
-          status: 'error',
-        })
-      } finally {
-        onClose()
-      }
-    },
-    [accept, onClose, onOpen, refetch, t, toast],
-  )
+  const onAccepted = useCallback(async () => {
+    toast({
+      title: t('user.bid-received.notifications.accepted'),
+      status: 'success',
+    })
+    await refetch()
+  }, [refetch, t, toast])
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -320,17 +290,26 @@ const BidReceivedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                     <Td>{dateFromNow(item.createdAt)}</Td>
                     <Td isNumeric>
                       {ownerLoggedIn && (
-                        <ButtonWithNetworkSwitch
-                          chainId={item.asset.chainId}
+                        <AcceptOfferButton
                           variant="outline"
                           colorScheme="gray"
-                          disabled={activeStep !== AcceptOfferStep.INITIAL}
-                          onClick={() => handleAcceptOffer(item)}
+                          signer={signer}
+                          chainId={item.asset.chainId}
+                          offer={item}
+                          quantity={item.availableQuantity}
+                          onAccepted={onAccepted}
+                          onError={(e) =>
+                            toast({
+                              status: 'error',
+                              title: formatError(e),
+                            })
+                          }
+                          title={t('user.bid-received.accept.title')}
                         >
                           <Text as="span" isTruncated>
                             {t('user.bid-received.actions.accept')}
                           </Text>
-                        </ButtonWithNetworkSwitch>
+                        </AcceptOfferButton>
                       )}
                     </Td>
                   </Tr>
@@ -361,15 +340,6 @@ const BidReceivedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
               pages: (props) =>
                 t('pagination.result.pages', { count: props.total }),
             }}
-          />
-
-          <AcceptOfferModal
-            isOpen={isOpen}
-            onClose={onClose}
-            title={t('user.bid-received.accept.title')}
-            step={activeStep}
-            blockExplorer={blockExplorer}
-            transactionHash={transactionHash}
           />
         </Stack>
       </UserProfileTemplate>

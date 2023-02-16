@@ -37,7 +37,7 @@ import {
   useFetchUserTradePurchasedQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
-import useBlockExplorer from '../../../../hooks/useBlockExplorer'
+import { blockExplorer } from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -105,10 +105,6 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const orderBy = useOrderByQuery<TradesOrderBy>('TIMESTAMP_DESC')
   const [changePage, changeLimit] = usePaginate()
   const { address } = useAccount()
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
 
   const date = useMemo(() => new Date(now), [now])
   const { data } = useFetchUserTradePurchasedQuery({
@@ -303,7 +299,9 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                         aria-label="external link"
                         as={Link}
                         href={
-                          blockExplorer.transaction(item.transactionHash) || '#'
+                          blockExplorer(item.asset?.chainId).transaction(
+                            item.transactionHash,
+                          ) || '#'
                         }
                         isExternal
                         variant="outline"

@@ -124,10 +124,7 @@ const CreatePage: NextPage<Props> = ({
 
   const [formData, setFormData] = useState<Partial<FormData>>()
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
+  const blockExplorer = useBlockExplorer(chainId)
   const imageUrlLocal = useLocalFileURL(
     formData?.isPrivate || formData?.isAnimation
       ? formData?.preview
