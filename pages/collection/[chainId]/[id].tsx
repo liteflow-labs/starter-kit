@@ -284,10 +284,6 @@ const CollectionPage: FC<Props> = ({
         collection={collectionDetails}
         baseURL={environment.BASE_URL}
         reportEmail={environment.REPORT_EMAIL}
-        explorer={{
-          name: environment.BLOCKCHAIN_EXPLORER_NAME,
-          url: environment.BLOCKCHAIN_EXPLORER_URL,
-        }}
       />
 
       <Flex py="6" justifyContent="space-between">

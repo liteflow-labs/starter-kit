@@ -12,27 +12,19 @@ import {
   Th,
   Thead,
   Tr,
-  useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import {
-  CancelOfferStep,
-  dateFromNow,
-  formatError,
-  useCancelOffer,
-  useIsLoggedIn,
-} from '@nft/hooks'
+import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
-import ButtonWithNetworkSwitch from '../../../../components/Button/SwitchNetwork'
+import CancelOfferButton from '../../../../components/Button/CancelOffer'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
-import CancelOfferModal from '../../../../components/Modal/CancelOffer'
 import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
@@ -46,7 +38,6 @@ import {
   useFetchUserBidsPlacedQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
-import useBlockExplorer from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -114,9 +105,7 @@ const BidPlacedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OfferOpenBuysOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
-  const [cancel, { activeStep, transactionHash }] = useCancelOffer(signer)
   const toast = useToast()
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
@@ -144,32 +133,13 @@ const BidPlacedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
     [data],
   )
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
-
-  const handleCancelOffer = useCallback(
-    async (id: string) => {
-      try {
-        onOpen()
-        await cancel({ id })
-        toast({
-          title: t('user.bid-placed.notifications.canceled'),
-          status: 'success',
-        })
-        await refetch()
-      } catch (e) {
-        toast({
-          title: formatError(e),
-          status: 'error',
-        })
-      } finally {
-        onClose()
-      }
-    },
-    [cancel, onClose, onOpen, refetch, t, toast],
-  )
+  const onCanceled = useCallback(async () => {
+    toast({
+      title: t('user.bid-placed.notifications.canceled'),
+      status: 'success',
+    })
+    await refetch()
+  }, [refetch, toast, t])
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -322,17 +292,25 @@ const BidPlacedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                       {ownerLoggedIn && (
                         <>
                           {!item.expiredAt || item.expiredAt > new Date() ? (
-                            <ButtonWithNetworkSwitch
-                              chainId={item.asset.chainId}
+                            <CancelOfferButton
                               variant="outline"
                               colorScheme="gray"
-                              disabled={activeStep !== CancelOfferStep.INITIAL}
-                              onClick={() => handleCancelOffer(item.id)}
+                              signer={signer}
+                              offerId={item.id}
+                              chainId={item.asset.chainId}
+                              onCanceled={onCanceled}
+                              onError={(e) =>
+                                toast({
+                                  status: 'error',
+                                  title: formatError(e),
+                                })
+                              }
+                              title={t('user.bid-placed.cancel.title')}
                             >
                               <Text as="span" isTruncated>
                                 {t('user.bid-placed.actions.cancel')}
                               </Text>
-                            </ButtonWithNetworkSwitch>
+                            </CancelOfferButton>
                           ) : (
                             <Button
                               as={Link}
@@ -376,15 +354,6 @@ const BidPlacedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
               pages: (props) =>
                 t('pagination.result.pages', { count: props.total }),
             }}
-          />
-
-          <CancelOfferModal
-            isOpen={isOpen}
-            onClose={onClose}
-            title={t('user.bid-placed.cancel.title')}
-            step={activeStep}
-            blockExplorer={blockExplorer}
-            transactionHash={transactionHash}
           />
         </Stack>
       </UserProfileTemplate>

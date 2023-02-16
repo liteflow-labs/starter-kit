@@ -70,6 +70,7 @@ query FetchUserAuctions(
         id
         image
         name
+        chainId
         ownerships(filter: { ownerAddress: { equalTo: $address } }) {
           aggregates {
             sum {
