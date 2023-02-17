@@ -124,10 +124,7 @@ const CreatePage: NextPage<Props> = ({
 
   const [formData, setFormData] = useState<Partial<FormData>>()
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
+  const blockExplorer = useBlockExplorer(chainId)
   const imageUrlLocal = useLocalFileURL(
     formData?.isPrivate || formData?.isAnimation
       ? formData?.preview
@@ -253,7 +250,7 @@ const CreatePage: NextPage<Props> = ({
         gap={12}
         templateColumns={{ base: '1fr', md: '1fr 2fr' }}
       >
-        <GridItem>
+        <GridItem overflow="hidden">
           <Flex as={Text} color="brand.black" mb={3} variant="button1">
             {t('asset.form.preview')}
           </Flex>
@@ -270,7 +267,7 @@ const CreatePage: NextPage<Props> = ({
             )}
           </Box>
         </GridItem>
-        <GridItem>
+        <GridItem overflow="hidden">
           <TokenFormCreate
             signer={signer}
             collection={data.collection}

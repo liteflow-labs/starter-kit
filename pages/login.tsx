@@ -76,7 +76,7 @@ const LoginPage: NextPage = () => {
         mb={{ base: 12, lg: 24 }}
         justify="center"
       >
-        <LoginForm onActivate={handleAuthenticated} />
+        <LoginForm onActivate={handleAuthenticated} chainId={undefined} />
       </Flex>
     </SmallLayout>
   )

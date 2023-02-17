@@ -173,10 +173,6 @@ const DetailPage: NextPage<Props> = ({
   const toast = useToast()
   const { address } = useAccount()
   const { query } = useRouter()
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
   const [showPreview, setShowPreview] = useState(false)
 
   const date = useMemo(() => new Date(nowProp), [nowProp])
@@ -196,6 +192,8 @@ const DetailPage: NextPage<Props> = ({
     () => chainCurrency.data?.currencies?.nodes || [],
     [chainCurrency],
   )
+
+  const blockExplorer = useBlockExplorer(asset?.collection.chainId)
 
   const totalOwned = useMemo(
     () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),
@@ -417,7 +415,12 @@ const DetailPage: NextPage<Props> = ({
                   </Link>
                 </Heading>
               )}
-              <Heading as="h1" variant="title" color="brand.black">
+              <Heading
+                as="h1"
+                variant="title"
+                color="brand.black"
+                wordBreak="break-word"
+              >
                 {asset.name}
               </Heading>
             </Stack>

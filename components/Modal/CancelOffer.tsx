@@ -121,7 +121,7 @@ const CancelOfferModal: FC<Props> = ({
             colorScheme="gray"
             isFullWidth
             rightIcon={<HiOutlineExternalLink />}
-            disabled={!transactionHash}
+            isDisabled={!transactionHash}
           >
             <Text as="span" isTruncated>
               {t('modal.cancel-offer.action', blockExplorer)}

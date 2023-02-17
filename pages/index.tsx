@@ -36,7 +36,6 @@ import {
   useFetchHomePageQuery,
 } from '../graphql'
 import useAccount from '../hooks/useAccount'
-import useBlockExplorer from '../hooks/useBlockExplorer'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useOrderById from '../hooks/useOrderById'
 import useSigner from '../hooks/useSigner'
@@ -128,11 +127,6 @@ const HomePage: NextPage<Props> = ({
     })
   }, [error, t, toast])
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
-
   const featured = useOrderById(featuredTokens, data?.featured?.nodes)
   const assets = useOrderById(tokens, data?.assets?.nodes)
   const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
@@ -147,7 +141,6 @@ const HomePage: NextPage<Props> = ({
       featured?.map((asset) => (
         <TokenHeader
           key={asset.id}
-          blockExplorer={blockExplorer}
           asset={convertAssetWithSupplies(asset)}
           currencies={currencies}
           auction={
@@ -171,7 +164,7 @@ const HomePage: NextPage<Props> = ({
           onAuctionAccepted={reloadInfo}
         />
       )),
-    [featured, blockExplorer, address, signer, reloadInfo, currencies],
+    [featured, address, signer, reloadInfo, currencies],
   )
   return (
     <LargeLayout>
@@ -242,7 +235,7 @@ const HomePage: NextPage<Props> = ({
           </Flex>
           <SimpleGrid spacing={6} columns={{ sm: 2, md: 3, lg: 4 }}>
             {assets.map((x, i) => (
-              <Flex key={i} justify="center">
+              <Flex key={i} justify="center" overflow="hidden">
                 <TokenCard
                   asset={convertAsset(x)}
                   creator={convertUser(x.creator, x.creator.address)}

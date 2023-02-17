@@ -210,7 +210,7 @@ const OfferFormCheckout: FC<Props> = ({
       {account ? (
         <ButtonWithNetworkSwitch
           chainId={chainId}
-          disabled={!!account && !canPurchase}
+          isDisabled={!!account && !canPurchase}
           isLoading={isSubmitting}
           size="lg"
           type="submit"
@@ -226,7 +226,11 @@ const OfferFormCheckout: FC<Props> = ({
           </Text>
         </Button>
       )}
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} />
+      <LoginModal
+        isOpen={loginIsOpen}
+        onClose={loginOnClose}
+        chainId={chainId}
+      />
       <AcceptOfferModal
         isOpen={acceptOfferIsOpen}
         onClose={acceptOfferOnClose}

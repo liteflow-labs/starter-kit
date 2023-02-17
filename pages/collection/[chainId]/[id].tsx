@@ -57,7 +57,6 @@ import useAssetFilterFromQuery, {
   OfferFilter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useEagerConnect from '../../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useFilterState from '../../../hooks/useFilterState'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
@@ -218,7 +217,7 @@ const CollectionPage: FC<Props> = ({
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery(currencies)
-  const { data, refetch } = useFetchCollectionAssetsQuery({
+  const { data } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
       now: date,
@@ -230,7 +229,6 @@ const CollectionPage: FC<Props> = ({
       filter: convertFilterToAssetFilter(filter, currencies, date),
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const { showFilters, toggleFilters, close, count } = useFilterState(filter)
   const updateFilter = useCallback(
@@ -286,10 +284,6 @@ const CollectionPage: FC<Props> = ({
         collection={collectionDetails}
         baseURL={environment.BASE_URL}
         reportEmail={environment.REPORT_EMAIL}
-        explorer={{
-          name: environment.BLOCKCHAIN_EXPLORER_NAME,
-          url: environment.BLOCKCHAIN_EXPLORER_URL,
-        }}
       />
 
       <Flex py="6" justifyContent="space-between">
@@ -367,7 +361,7 @@ const CollectionPage: FC<Props> = ({
               }
             >
               {data.assets.nodes.map((x, i) => (
-                <Flex key={i} justify="center">
+                <Flex key={i} justify="center" overflow="hidden">
                   <TokenCard
                     asset={convertAsset(x)}
                     creator={convertUser(x.creator, x.creator.address)}

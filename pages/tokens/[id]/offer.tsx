@@ -139,11 +139,6 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   const { address } = useAccount()
   useLoginRedirect(ready)
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
-
   const date = useMemo(() => new Date(now), [now])
   const { data } = useOfferForAssetQuery({
     variables: {
@@ -152,6 +147,8 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
       address: (ready ? address : currentAccount) || '',
     },
   })
+
+  const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
   const currencyRes = useChainCurrencies(data?.asset?.chainId)
 
@@ -280,7 +277,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
         gap={12}
         templateColumns={{ base: '1fr', md: '1fr 2fr' }}
       >
-        <GridItem>
+        <GridItem overflow="hidden">
           <Box pointerEvents="none">
             <TokenCard
               asset={convertAsset(asset)}

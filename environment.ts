@@ -3,8 +3,6 @@ import invariant from 'ts-invariant'
 type Environment = {
   MAGIC_API_KEY: string
   PUBLIC_ETHEREUM_PROVIDER: string
-  BLOCKCHAIN_EXPLORER_URL: string
-  BLOCKCHAIN_EXPLORER_NAME: string
   GRAPHQL_URL: string
   FEATURED_TOKEN: string[]
   PAGINATION_LIMIT: number
@@ -38,16 +36,6 @@ invariant(process.env.NEXT_PUBLIC_MAGIC_API_KEY, 'Missing magic API key')
 invariant(
   process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
   'Missing public Ethereum provider',
-)
-
-// blockchain explorer
-invariant(
-  process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_URL,
-  'Missing blockchain explorer URL',
-)
-invariant(
-  process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
-  'Missing blockchain explorer name',
 )
 
 // graphql
@@ -109,8 +97,6 @@ const MINTABLE_COLLECTIONS = (
 const environment: Environment = {
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
   PUBLIC_ETHEREUM_PROVIDER: process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
-  BLOCKCHAIN_EXPLORER_URL: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_URL,
-  BLOCKCHAIN_EXPLORER_NAME: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
   GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
   FEATURED_TOKEN: process.env.NEXT_PUBLIC_FEATURED_TOKEN.split(','),
   PAGINATION_LIMIT: 12,
