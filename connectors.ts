@@ -1,5 +1,7 @@
 import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector'
+import invariant from 'ts-invariant'
 import {
+  Chain,
   configureChains,
   Connector,
   createClient,
@@ -19,19 +21,34 @@ export const { chains, provider } = configureChains(
   [publicProvider()],
 )
 
+const email = (chainId: number) => {
+  invariant(environment.MAGIC_API_KEY, 'missing MAGIC_API_KEY')
+  const chain: Chain | undefined = chains.find((chain) => chain.id === chainId)
+  invariant(chain, `chain with id ${chainId} not found`)
+  const rpcUrl = chain.rpcUrls.default.http[0]
+  invariant(rpcUrl, `no rpcUrl found for chain ${chainId}`)
+  return new MagicConnectConnector({
+    options: {
+      apiKey: environment.MAGIC_API_KEY,
+      accentColor: theme.colors.brand[500],
+      customHeaderText: 'Acme',
+      magicSdkConfiguration: {
+        network: {
+          rpcUrl,
+          chainId,
+        },
+      },
+    },
+  }) as unknown as Connector
+}
+
 export const connectors: {
   injected?: InjectedConnector
   walletConnect?: WalletConnectConnector
   coinbase?: CoinbaseWalletConnector
   email?: Connector
 } = {
-  email: new MagicConnectConnector({
-    options: {
-      apiKey: environment.MAGIC_API_KEY,
-      accentColor: theme.colors.brand[500],
-      customHeaderText: 'Acme',
-    },
-  }) as unknown as Connector,
+  email: environment.MAGIC_API_KEY ? email(environment.CHAIN_ID) : undefined,
   injected: new InjectedConnector({}),
   walletConnect: new WalletConnectConnector({
     options: { version: '1' },
