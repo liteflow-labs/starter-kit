@@ -1,6 +1,5 @@
 import { NextPage } from 'next'
 import { useMemo } from 'react'
-import { useNetwork } from 'wagmi'
 import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
 import WalletAccount from '../../components/Wallet/Account/Wallet'
@@ -36,20 +35,14 @@ const WalletPage: NextPage = () => {
   useLoginRedirect(ready)
   const { data } = useWalletCurrenciesQuery()
   const currencies = useMemo(() => data?.currencies?.nodes, [data])
-  const { chain } = useNetwork()
 
   if (!currencies) return <></>
   if (!address) return <></>
-  if (!chain) return <></>
   return (
     <SmallLayout>
       <Head title="Account - Wallet" />
       <AccountTemplate currentTab="wallet">
-        <WalletAccount
-          account={address}
-          currencies={currencies}
-          networkName={chain.name}
-        />
+        <WalletAccount account={address} currencies={currencies} />
       </AccountTemplate>
     </SmallLayout>
   )

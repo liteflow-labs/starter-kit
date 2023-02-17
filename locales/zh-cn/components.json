@@ -871,10 +871,6 @@
         "title": "存入代币",
         "description": "您可以随时向下列地址存入代币并转移地址上的资金"
       },
-      "banner": {
-        "title": "使用 {{networkName}} 网络",
-        "description": "确保您选择存入代币的网络是 {{networkName}} 网络，否则资产可能会丢失。"
-      },
       "balances": "余额"
     },
     "balances": {
