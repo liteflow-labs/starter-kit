@@ -1,7 +1,6 @@
 import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector'
 import invariant from 'ts-invariant'
 import {
-  Chain,
   configureChains,
   Connector,
   createClient,
@@ -53,17 +52,22 @@ export const client = createClient({
 function emailConnector(chainId: number) {
   invariant(environment.MAGIC_API_KEY, 'missing MAGIC_API_KEY')
   const rpcUrl = (function () {
-    if (chainId === bscTestnet.id) {
-      return 'https://data-seed-prebsc-1-s1.binance.org:8545/'
+    switch (chainId) {
+      case mainnet.id:
+        return 'https://rpc.ankr.com/eth'
+      case goerli.id:
+        return 'https://rpc.ankr.com/eth_goerli'
+      case polygon.id:
+        return 'https://rpc.ankr.com/polygon'
+      case polygonMumbai.id:
+        return 'https://rpc.ankr.com/polygon_mumbai'
+      case bsc.id:
+        return 'https://rpc.ankr.com/bsc'
+      case bscTestnet.id:
+        return 'https://rpc.ankr.com/bsc_testnet_chapel'
     }
-    const chain: Chain | undefined = chains.find(
-      (chain) => chain.id === chainId,
-    )
-    invariant(chain, `chain with id ${chainId} not found`)
-    const rpcUrl = chain.rpcUrls.default.http[0]
-    invariant(rpcUrl, `no rpcUrl found for chain ${chainId}`)
-    return rpcUrl
   })()
+  invariant(rpcUrl, `no rpcUrl found for chain ${chainId}`)
   return new MagicConnectConnector({
     options: {
       apiKey: environment.MAGIC_API_KEY,
