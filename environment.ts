@@ -1,7 +1,7 @@
 import invariant from 'ts-invariant'
 
 type Environment = {
-  MAGIC_API_KEY: string
+  MAGIC_API_KEY?: string
   PUBLIC_ETHEREUM_PROVIDER: string
   GRAPHQL_URL: string
   FEATURED_TOKEN: string[]
@@ -28,9 +28,6 @@ type Environment = {
     address: string
   }[]
 }
-
-// magic api key
-invariant(process.env.NEXT_PUBLIC_MAGIC_API_KEY, 'Missing magic API key')
 
 // ethereum provider
 invariant(
