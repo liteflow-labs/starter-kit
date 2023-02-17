@@ -871,10 +871,6 @@
         "title": "Depositar monedas",
         "description": "Puedes depositar monedas y transferir fondos en cualquier momento usando la siguiente dirección"
       },
-      "banner": {
-        "title": "Conéctate a la red {{networkName}}",
-        "description": "Asegúrate de elegir la red {{networkName}} para depositar tus monedas o podrías perderlas."
-      },
       "balances": "Balances"
     },
     "balances": {

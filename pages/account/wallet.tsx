@@ -42,11 +42,7 @@ const WalletPage: NextPage = () => {
     <SmallLayout>
       <Head title="Account - Wallet" />
       <AccountTemplate currentTab="wallet">
-        <WalletAccount
-          account={address}
-          currencies={currencies}
-          networkName={environment.NETWORK_NAME}
-        />
+        <WalletAccount account={address} currencies={currencies} />
       </AccountTemplate>
     </SmallLayout>
   )

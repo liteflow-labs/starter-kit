@@ -144,7 +144,6 @@ const SaleDirectInfo: VFC<Props> = ({
           onClick={() => handleCancel(currentAccountFirstSale)}
           rightIcon={<HiArrowNarrowRight />}
           isLoading={activeStep !== CancelOfferStep.INITIAL}
-          disabled={activeStep !== CancelOfferStep.INITIAL}
         >
           <Text as="span" isTruncated>
             {t('sales.direct.info.cancel')}

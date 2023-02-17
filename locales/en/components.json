@@ -871,10 +871,6 @@
         "title": "Deposit tokens",
         "description": "You can deposit tokens and transfer funds at anytime on the following address"
       },
-      "banner": {
-        "title": "Use {{networkName}} network",
-        "description": "Ensure the network you choose to deposit tokens is the {{networkName}} network, or assets may be lost."
-      },
       "balances": "Balances"
     },
     "balances": {

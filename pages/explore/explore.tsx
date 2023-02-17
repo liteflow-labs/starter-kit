@@ -278,7 +278,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
                   }
                 >
                   {data.assets.nodes.map((x, i) => (
-                    <Flex key={i} justify="center">
+                    <Flex key={i} justify="center" overflow="hidden">
                       <TokenCard
                         asset={convertAsset(x)}
                         creator={convertUser(x.creator, x.creator.address)}

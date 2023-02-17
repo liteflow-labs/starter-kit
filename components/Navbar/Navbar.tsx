@@ -360,7 +360,10 @@ const UserMenu: VFC<{
           <MenuItem>{t('navbar.user.edit')}</MenuItem>
         </Link>
         {topUp.allowTopUp && (
-          <MenuItem disabled={topUp.addingFund} onClick={() => topUp.addFund()}>
+          <MenuItem
+            isDisabled={topUp.addingFund}
+            onClick={() => topUp.addFund()}
+          >
             {t('navbar.user.top-up')}
           </MenuItem>
         )}

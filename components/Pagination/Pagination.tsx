@@ -163,7 +163,7 @@ export default function Pagination({
             icon={
               <Icon as={IoChevronBackSharp} h={5} w={5} aria-hidden="true" />
             }
-            disabled={page === 1}
+            isDisabled={page === 1}
             onClick={() => goTo(page - 1)}
           />
           <IconButton
@@ -172,7 +172,7 @@ export default function Pagination({
             rounded="full"
             aria-label="next"
             icon={<Icon as={IoChevronForward} h={5} w={5} aria-hidden="true" />}
-            disabled={page === totalPage}
+            isDisabled={page === totalPage}
             onClick={() => goTo(page + 1)}
           />
         </Flex>
