@@ -404,13 +404,20 @@ const Navbar: VFC<{
   const [addFund, { loading: addingFund }] = useAddFund(signer)
   const [cookies] = useCookies()
   const lastNotification = cookies[`lastNotification-${address}`]
-  const { data, refetch } = useNavbarAccountQuery({
+  const {
+    data: accountData,
+    refetch,
+    previousData: previousAccountData,
+  } = useNavbarAccountQuery({
     variables: {
       account: address?.toLowerCase() || '',
       lastNotification: new Date(lastNotification || 0),
     },
     skip: !isLoggedIn,
   })
+  const account = isLoggedIn
+    ? accountData?.account || previousAccountData?.account
+    : undefined
 
   useEffect(() => {
     if (!isReady) return
@@ -481,9 +488,9 @@ const Navbar: VFC<{
               </Text>
             </Flex>
           )}
-          {data?.account ? (
+          {account ? (
             <>
-              <ActivityMenu account={data.account.address} />
+              <ActivityMenu account={account.address} />
               <Link href="/notification">
                 <IconButton
                   aria-label="Notifications"
@@ -494,7 +501,7 @@ const Navbar: VFC<{
                 >
                   <div>
                     <Icon as={FaBell} color="brand.black" h={4} w={4} />
-                    {data.account.notifications.totalCount > 0 && (
+                    {account.notifications.totalCount > 0 && (
                       <Flex
                         position="absolute"
                         top={2}
@@ -511,9 +518,9 @@ const Navbar: VFC<{
                 </IconButton>
               </Link>
               <UserMenu
-                account={data.account.address}
+                account={account.address}
                 topUp={{ allowTopUp, addFund, addingFund }}
-                user={data.account}
+                user={account}
                 signOutFn={() => logout().then(disconnect)}
               />
             </>
@@ -541,7 +548,7 @@ const Navbar: VFC<{
         </Flex>
         <Flex display={{ base: 'flex', lg: 'none' }} align="center">
           <DrawerMenu
-            account={data?.account?.address}
+            account={account?.address}
             logo={logo}
             router={router}
             multiLang={multiLang}
