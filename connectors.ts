@@ -60,8 +60,7 @@ function emailConnector(chainId: number) {
       (chain) => chain.id === chainId,
     )
     invariant(chain, `chain with id ${chainId} not found`)
-    const rpcUrl =
-      chain.rpcUrls['infura']?.http[0] || chain.rpcUrls.default.http[0]
+    const rpcUrl = chain.rpcUrls.default.http[0]
     invariant(rpcUrl, `no rpcUrl found for chain ${chainId}`)
     return rpcUrl
   })()
