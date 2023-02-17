@@ -871,10 +871,6 @@
         "title": "トークンの入金",
         "description": "トークンの入金と送金は以下のアドレスにいつでも可能です"
       },
-      "banner": {
-        "title": "{{networkName}} ネットワークを使う",
-        "description": "トークンを預けるネットワークが {{networkName}} ネットワークであることをご確認ください。さもなければ資産が失われる可能性があります。"
-      },
       "balances": "残高"
     },
     "balances": {
