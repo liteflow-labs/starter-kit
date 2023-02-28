@@ -28,7 +28,6 @@ const LoginPage: NextPage = () => {
     base: environment.REFERRAL_PERCENTAGE.base,
     secondary: environment.REFERRAL_PERCENTAGE.secondary,
   }
-  const loginUrl = environment.BASE_URL + '/login'
   const platformName = 'Acme'
   return (
     <SmallLayout>
@@ -41,7 +40,7 @@ const LoginPage: NextPage = () => {
           <Heading variant="subtitle" pb={4}>
             {t('referral.link')}
           </Heading>
-          <ReferralForm loginUrl={loginUrl} signer={signer} />
+          <ReferralForm baseUrl={environment.BASE_URL} signer={signer} />
         </div>
 
         <div>

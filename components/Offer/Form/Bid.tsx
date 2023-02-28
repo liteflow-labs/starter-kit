@@ -54,6 +54,7 @@ type FormData = {
 type Props = {
   signer: (Signer & TypedDataSigner) | undefined
   account: string | null | undefined
+  baseUrl: string
   currencies: {
     id: string
     decimals: number
@@ -86,6 +87,7 @@ const OfferFormBid: FC<Props> = (props) => {
   const {
     signer,
     account,
+    baseUrl,
     currencies,
     assetId,
     chainId,
@@ -423,6 +425,7 @@ const OfferFormBid: FC<Props> = (props) => {
       <LoginModal
         isOpen={loginIsOpen}
         onClose={loginOnClose}
+        baseUrl={baseUrl}
         chainId={chainId}
       />
       <CreateOfferModal

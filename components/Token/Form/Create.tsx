@@ -46,6 +46,7 @@ export type FormData = {
 }
 
 type Props = {
+  baseUrl: string
   signer: (Signer & TypedDataSigner) | undefined
   collection: {
     chainId: number
@@ -63,6 +64,7 @@ type Props = {
 }
 
 const TokenFormCreate: FC<Props> = ({
+  baseUrl,
   signer,
   collection,
   categories,
@@ -379,6 +381,7 @@ const TokenFormCreate: FC<Props> = ({
       <LoginModal
         isOpen={loginIsOpen}
         onClose={loginOnClose}
+        baseUrl={baseUrl}
         chainId={collection.chainId}
       />
       <CreateCollectibleModal

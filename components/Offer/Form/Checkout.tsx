@@ -41,6 +41,7 @@ type FormData = {
 type Props = {
   signer: Signer | undefined
   account: string | null | undefined
+  baseUrl: string
   offer: Pick<Offer, 'id' | 'unitPrice' | 'availableQuantity'>
   chainId: number
   blockExplorer: BlockExplorer
@@ -57,6 +58,7 @@ type Props = {
 const OfferFormCheckout: FC<Props> = ({
   signer,
   account,
+  baseUrl,
   currency,
   onPurchased,
   multiple,
@@ -229,6 +231,7 @@ const OfferFormCheckout: FC<Props> = ({
       <LoginModal
         isOpen={loginIsOpen}
         onClose={loginOnClose}
+        baseUrl={baseUrl}
         chainId={chainId}
       />
       <AcceptOfferModal

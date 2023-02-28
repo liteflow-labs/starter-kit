@@ -115,6 +115,7 @@ function Layout({
         <Banner />
         <Navbar
           allowTopUp={environment.ALLOW_TOP_UP}
+          baseUrl={environment.BASE_URL}
           router={{
             asPath: router.asPath,
             isReady: router.isReady,

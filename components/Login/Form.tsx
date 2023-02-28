@@ -9,10 +9,11 @@ import WalletWalletConnect from '../Wallet/Connectors/WalletConnect'
 
 type Props = {
   onActivate?: () => void
+  baseUrl: string
   chainId: number | undefined
 }
 
-const LoginForm: FC<Props> = ({ onActivate, chainId }) => {
+const LoginForm: FC<Props> = ({ onActivate, baseUrl, chainId }) => {
   const { t } = useTranslation('components')
 
   const [errorFromLogin, setErrorFromLogin] = useState<Error>()
@@ -87,6 +88,7 @@ const LoginForm: FC<Props> = ({ onActivate, chainId }) => {
               <WalletMetamask
                 onActivate={onActivate}
                 onError={setErrorFromLogin}
+                baseUrl={baseUrl}
                 chainId={chainId}
               />
             </Stack>

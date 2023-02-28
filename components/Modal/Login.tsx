@@ -17,10 +17,11 @@ import LoginForm from '../Login/Form'
 type Props = {
   isOpen: boolean
   onClose: () => void
+  baseUrl: string
   chainId: number | undefined
 }
 
-const LoginModal: FC<Props> = ({ isOpen, onClose, chainId }) => {
+const LoginModal: FC<Props> = ({ isOpen, onClose, baseUrl, chainId }) => {
   const { t } = useTranslation('components')
   const { isLoggedIn } = useAccount()
 
@@ -49,7 +50,7 @@ const LoginModal: FC<Props> = ({ isOpen, onClose, chainId }) => {
             {t('modal.login.description')}
           </Text>
 
-          <LoginForm chainId={chainId} />
+          <LoginForm baseUrl={baseUrl} chainId={chainId} />
         </ModalBody>
         <ModalFooter as="div" />
       </ModalContent>

@@ -8,17 +8,18 @@ import useAccount from '../../hooks/useAccount'
 import LoginModal from '../Modal/Login'
 
 type Props = {
-  loginUrl: string
+  baseUrl: string
   signer: Signer | undefined
 }
 
-const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
+const ReferralForm: VFC<Props> = ({ baseUrl, signer }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
   const { isLoggedIn } = useAccount()
   const { create, creating } = useInvitation(signer)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [url, setUrl] = useState<string>()
+  const loginUrl = baseUrl + '/login'
 
   useEffect(() => {
     if (!isLoggedIn) return // make sure the user is fully logged in
@@ -46,7 +47,12 @@ const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
     if (!isLoggedIn)
       return (
         <>
-          <LoginModal isOpen={isOpen} onClose={onClose} chainId={undefined} />
+          <LoginModal
+            isOpen={isOpen}
+            onClose={onClose}
+            baseUrl={baseUrl}
+            chainId={undefined}
+          />
           <Button onClick={onOpen} width="full">
             <Text as="span" isTruncated>
               {t('referral.form.connect')}
@@ -68,7 +74,17 @@ const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
         </Text>
       </Button>
     )
-  }, [isLoggedIn, handleClick, t, creating, url, isOpen, onClose, onOpen])
+  }, [
+    isLoggedIn,
+    isOpen,
+    onClose,
+    baseUrl,
+    onOpen,
+    t,
+    url,
+    creating,
+    handleClick,
+  ])
 
   return action
 }

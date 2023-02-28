@@ -379,6 +379,7 @@ type FormData = {
 
 const Navbar: VFC<{
   allowTopUp: boolean
+  baseUrl: string
   disableMinting?: boolean
   logo?: {
     path: string
@@ -394,7 +395,15 @@ const Navbar: VFC<{
   }
   signer: Signer | undefined
   multiLang?: MultiLang
-}> = ({ allowTopUp, logo, router, multiLang, disableMinting, signer }) => {
+}> = ({
+  allowTopUp,
+  baseUrl,
+  logo,
+  router,
+  multiLang,
+  disableMinting,
+  signer,
+}) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { address, isLoggedIn, logout } = useAccount()
@@ -558,7 +567,12 @@ const Navbar: VFC<{
           />
         </Flex>
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} chainId={undefined} />
+      <LoginModal
+        isOpen={isOpen}
+        onClose={onClose}
+        baseUrl={baseUrl}
+        chainId={undefined}
+      />
     </>
   )
 }

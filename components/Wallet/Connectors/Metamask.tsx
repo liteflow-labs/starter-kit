@@ -1,11 +1,15 @@
+import { Box, Text } from '@chakra-ui/react'
 import { VFC } from 'react'
+import { isMobile } from 'react-device-detect'
 import invariant from 'ts-invariant'
 import { connectors } from '../../../connectors'
+import Link from '../../Link/Link'
 import WalletBase from './_base'
 
 type Props = {
   onError: (error: Error) => void
   onActivate: (() => void) | undefined
+  baseUrl: string
   chainId: number | undefined
 }
 
@@ -217,8 +221,37 @@ export const IconMetamask = (
   </svg>
 )
 
-const WalletMetamask: VFC<Props> = ({ onError, onActivate, chainId }) => {
+const WalletMetamask: VFC<Props> = ({
+  onError,
+  onActivate,
+  baseUrl,
+  chainId,
+}) => {
   invariant(connectors.injected, 'Injected connector is not supported')
+
+  if (isMobile && !window.ethereum) {
+    return (
+      <Box
+        as={Link}
+        href={`https://metamask.app.Box/dapp/${baseUrl}`}
+        isExternal
+      >
+        <Box h={8} w={8}>
+          {IconMetamask}
+        </Box>
+        <Text
+          as="span"
+          color="brand.black"
+          fontSize="sm"
+          fontWeight="semibold"
+          lineHeight={5}
+        >
+          Metamask
+        </Text>
+      </Box>
+    )
+  }
+
   return (
     <WalletBase
       connector={connectors.injected}

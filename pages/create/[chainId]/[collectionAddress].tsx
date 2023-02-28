@@ -269,6 +269,7 @@ const CreatePage: NextPage<Props> = ({
         </GridItem>
         <GridItem overflow="hidden">
           <TokenFormCreate
+            baseUrl={environment.BASE_URL}
             signer={signer}
             collection={data.collection}
             categories={categories}
