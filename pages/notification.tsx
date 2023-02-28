@@ -28,7 +28,13 @@ export const getServerSideProps = wrapServerSideProps<Props>(
   environment.GRAPHQL_URL,
   async (ctx, client) => {
     const address = ctx.user.address
-    if (!address) return { props: { currentAccount: null } }
+    if (!address)
+      return {
+        redirect: {
+          destination: '/login?redirectTo=notification',
+          permanent: false,
+        },
+      }
 
     const { data, error } = await client.query<GetNotificationsQuery>({
       query: GetNotificationsDocument,
