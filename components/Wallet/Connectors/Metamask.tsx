@@ -233,7 +233,7 @@ const WalletMetamask: VFC<Props> = ({
     return (
       <Box
         as={Link}
-        href={`https://metamask.app.Box/dapp/${baseUrl}`}
+        href={`https://metamask.app.link/dapp/${baseUrl}`}
         isExternal
       >
         <Box h={8} w={8}>
