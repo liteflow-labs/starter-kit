@@ -296,6 +296,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
                 signer={signer}
                 account={address}
                 assetId={asset.id}
+                baseUrl={environment.BASE_URL}
                 chainId={asset.chainId}
                 multiple={true}
                 supply={asset.ownerships.aggregates?.sum?.quantity || '0'}
