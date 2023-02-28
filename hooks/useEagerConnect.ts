@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import environment from 'environment'
 import { useCallback, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { isMobile } from 'react-device-detect'
@@ -26,6 +27,11 @@ export default function useEagerConnect(): boolean {
         if (isMobile && window.ethereum) {
           void activate(connectors.injected, undefined, true)
           return
+        }
+        if (isMobile && !window.ethereum) {
+          const metamaskAppDeepLink =
+            'https://metamask.app.link/dapp/' + environment.BASE_URL
+          return window.open(metamaskAppDeepLink, '_self')
         }
       } catch (e) {
         console.error('Failed to activate injected connector', e)
