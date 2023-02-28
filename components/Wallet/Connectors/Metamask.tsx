@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { VFC } from 'react'
 import { isMobile } from 'react-device-detect'
 import invariant from 'ts-invariant'
@@ -231,7 +231,7 @@ const WalletMetamask: VFC<Props> = ({
 
   if (isMobile && !window.ethereum) {
     return (
-      <Box
+      <Flex
         as={Link}
         href={`https://metamask.app.link/dapp/${baseUrl}`}
         isExternal
@@ -248,7 +248,7 @@ const WalletMetamask: VFC<Props> = ({
         >
           Metamask
         </Text>
-      </Box>
+      </Flex>
     )
   }
 
