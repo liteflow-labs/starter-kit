@@ -1,9 +1,19 @@
-import { Box, Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react'
 import { useInvitation } from '@nft/hooks'
+import MetamaskMobileModal from 'components/Modal/MetamaskMobile'
+import environment from 'environment'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect } from 'react'
+import { isMobile } from 'react-device-detect'
 import Head from '../components/Head'
 import LoginForm from '../components/Login/Form'
 import BackButton from '../components/Navbar/BackButton'
@@ -21,6 +31,13 @@ const LoginPage: NextPage = () => {
   const { isLoggedIn } = useAccount()
   const { accept } = useInvitation(signer)
   const toast = useToast()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {
+    if (isMobile && !window.ethereum) {
+      onOpen()
+    }
+  }, [onOpen])
 
   const handleAuthenticated = useCallback(async () => {
     try {
@@ -78,6 +95,11 @@ const LoginPage: NextPage = () => {
       >
         <LoginForm onActivate={handleAuthenticated} chainId={undefined} />
       </Flex>
+      <MetamaskMobileModal
+        isOpen={isOpen}
+        onClose={onClose}
+        baseUrl={environment.BASE_URL}
+      />
     </SmallLayout>
   )
 }
