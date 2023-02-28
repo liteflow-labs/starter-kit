@@ -1,7 +1,7 @@
-import { useWeb3React } from '@web3-react/core'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { UrlObject } from 'url'
+import useAccount from './useAccount'
 
 /**
  * Hook redirecting a user to a login page when they are not logged in with their wallet
@@ -12,14 +12,14 @@ export default function useLoginRedirect(
   url?: UrlObject,
 ): void {
   const { replace, asPath } = useRouter()
-  const { account } = useWeb3React()
+  const { isLoggedIn } = useAccount()
 
   useEffect(() => {
     if (!ready) return
-    if (account) return
+    if (isLoggedIn) return
     void replace({
       ...(url || { pathname: '/login' }),
       query: { redirectTo: asPath },
     })
-  }, [account, url, replace, asPath, ready])
+  }, [isLoggedIn, url, replace, asPath, ready])
 }

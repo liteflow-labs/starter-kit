@@ -29,22 +29,19 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { EmailConnector } from '@nft/email-connector'
 import { useAddFund } from '@nft/hooks'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
-import { useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useTranslation from 'next-translate/useTranslation'
 import { MittEmitter } from 'next/dist/shared/lib/mitt'
 import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
+import { useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
 import LoginModal from '../Modal/Login'
@@ -363,7 +360,10 @@ const UserMenu: VFC<{
           <MenuItem>{t('navbar.user.edit')}</MenuItem>
         </Link>
         {topUp.allowTopUp && (
-          <MenuItem disabled={topUp.addingFund} onClick={() => topUp.addFund()}>
+          <MenuItem
+            isDisabled={topUp.addingFund}
+            onClick={() => topUp.addFund()}
+          >
             {t('navbar.user.top-up')}
           </MenuItem>
         )}
@@ -392,40 +392,32 @@ const Navbar: VFC<{
     isReady: boolean
     events: MittEmitter<'routeChangeStart'>
   }
-  login: {
-    email?: EmailConnector
-    injected?: InjectedConnector
-    walletConnect?: WalletConnectConnector
-    coinbase?: WalletLinkConnector
-    networkName: string
-  }
   signer: Signer | undefined
   multiLang?: MultiLang
-}> = ({
-  allowTopUp,
-  logo,
-  router,
-  login,
-  multiLang,
-  disableMinting,
-  signer,
-}) => {
+}> = ({ allowTopUp, logo, router, multiLang, disableMinting, signer }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { account: accountWithChecksum, deactivate } = useWeb3React()
-  const account = accountWithChecksum?.toLowerCase()
+  const { address, isLoggedIn, logout } = useAccount()
+  const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady } = router
   const { register, setValue, handleSubmit } = useForm<FormData>()
   const [addFund, { loading: addingFund }] = useAddFund(signer)
   const [cookies] = useCookies()
-  const lastNotification = cookies[`lastNotification-${account}`]
-  const { data, refetch } = useNavbarAccountQuery({
+  const lastNotification = cookies[`lastNotification-${address}`]
+  const {
+    data: accountData,
+    refetch,
+    previousData: previousAccountData,
+  } = useNavbarAccountQuery({
     variables: {
-      account: account?.toLowerCase() || '',
+      account: address?.toLowerCase() || '',
       lastNotification: new Date(lastNotification || 0),
     },
-    skip: !account,
+    skip: !isLoggedIn,
   })
+  const account = isLoggedIn
+    ? accountData?.account || previousAccountData?.account
+    : undefined
 
   useEffect(() => {
     if (!isReady) return
@@ -496,9 +488,9 @@ const Navbar: VFC<{
               </Text>
             </Flex>
           )}
-          {account && data?.account ? (
+          {account ? (
             <>
-              <ActivityMenu account={account} />
+              <ActivityMenu account={account.address} />
               <Link href="/notification">
                 <IconButton
                   aria-label="Notifications"
@@ -509,7 +501,7 @@ const Navbar: VFC<{
                 >
                   <div>
                     <Icon as={FaBell} color="brand.black" h={4} w={4} />
-                    {data.account.notifications.totalCount > 0 && (
+                    {account.notifications.totalCount > 0 && (
                       <Flex
                         position="absolute"
                         top={2}
@@ -526,10 +518,10 @@ const Navbar: VFC<{
                 </IconButton>
               </Link>
               <UserMenu
-                account={account}
+                account={account.address}
                 topUp={{ allowTopUp, addFund, addingFund }}
-                user={data.account}
-                signOutFn={deactivate}
+                user={account}
+                signOutFn={() => logout().then(disconnect)}
               />
             </>
           ) : (
@@ -556,17 +548,17 @@ const Navbar: VFC<{
         </Flex>
         <Flex display={{ base: 'flex', lg: 'none' }} align="center">
           <DrawerMenu
-            account={account}
+            account={account?.address}
             logo={logo}
             router={router}
             multiLang={multiLang}
             topUp={{ allowTopUp, addFund, addingFund }}
             disableMinting={disableMinting}
-            signOutFn={deactivate}
+            signOutFn={() => logout().then(disconnect)}
           />
         </Flex>
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} {...login} />
+      <LoginModal isOpen={isOpen} onClose={onClose} chainId={undefined} />
     </>
   )
 }

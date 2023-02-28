@@ -1,14 +1,4 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  Button,
-  Heading,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Button, Heading, Stack, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import WalletAddress from '../Address'
@@ -23,8 +13,7 @@ const WalletAccount: FC<{
     decimals: number
     symbol: string
   }[]
-  networkName: string
-}> = ({ account, currencies, networkName }) => {
+}> = ({ account, currencies }) => {
   const { t } = useTranslation('components')
 
   return (
@@ -40,20 +29,9 @@ const WalletAccount: FC<{
         </div>
         <Button variant="outline" colorScheme="gray" isFullWidth>
           <Text as="span" isTruncated>
-            <WalletAddress address={account} isCopyable isShort />
+            <WalletAddress address={account} isCopyable />
           </Text>
         </Button>
-        <Alert status="warning" borderRadius="xl">
-          <AlertIcon />
-          <Box fontSize="sm">
-            <AlertTitle>
-              {t('wallet.wallet.banner.title', { networkName })}
-            </AlertTitle>
-            <AlertDescription>
-              {t('wallet.wallet.banner.description', { networkName })}
-            </AlertDescription>
-          </Box>
-        </Alert>
       </Stack>
       <hr />
       <Stack spacing={6}>

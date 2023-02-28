@@ -325,10 +325,7 @@
     "login": {
       "title": "使用钱包登录",
       "description": "使用以下选项之一进行连接。",
-      "alternative": "或使用",
-      "errors": {
-        "wrong-network": "您连接到错误的网络。请切换到 {{networkName}} 网络。"
-      }
+      "alternative": "或使用"
     }
   },
   "back": "返回",
@@ -866,26 +863,13 @@
     },
     "connectors": {
       "email": {
-        "form": {
-          "submit": "登录",
-          "validation": {
-            "required": "此字段为必填字段",
-            "invalid": "电子邮件地址无效"
-          },
-          "email": {
-            "label": "电子邮件地址"
-          }
-        }
+        "label": "使用电子邮件登录"
       }
     },
     "wallet": {
       "deposit": {
         "title": "存入代币",
         "description": "您可以随时向下列地址存入代币并转移地址上的资金"
-      },
-      "banner": {
-        "title": "使用 {{networkName}} 网络",
-        "description": "确保您选择存入代币的网络是 {{networkName}} 网络，否则资产可能会丢失。"
       },
       "balances": "余额"
     },

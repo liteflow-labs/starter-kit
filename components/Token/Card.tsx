@@ -189,8 +189,8 @@ const TokenCard: VFC<Props> = ({
           </HStack>
         )}
       </Flex>
-      <Flex justify="space-between" px={4} pt={4} pb={3} align="start">
-        <Stack spacing={0} w="full">
+      <Flex justify="space-between" px={4} pt={4} pb={3} gap={2} align="start">
+        <Stack spacing={0} w="full" overflow="hidden">
           {displayCreator ? (
             <Avatar
               address={creator.address}
@@ -220,7 +220,7 @@ const TokenCard: VFC<Props> = ({
             </Heading>
           </Link>
         </Stack>
-        <Box visibility={isHovered ? 'visible' : 'hidden'}>
+        <Box display={isHovered ? 'block' : 'none'}>
           <Menu>
             <MenuButton>
               <Icon as={HiOutlineDotsHorizontal} />

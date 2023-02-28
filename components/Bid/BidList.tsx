@@ -10,6 +10,7 @@ import Bid from './Bid'
 
 type Props = {
   bids: (BidProps['bid'] & { currency: { id: string } })[]
+  chainId: number
   signer: Signer | undefined
   account: string | null | undefined
   isSingle: boolean
@@ -22,6 +23,7 @@ type Props = {
 
 const BidList: VFC<Props> = ({
   bids,
+  chainId,
   signer,
   account,
   isSingle,
@@ -45,6 +47,7 @@ const BidList: VFC<Props> = ({
           {i > 0 && bids[i - 1]?.currency.id !== bid.currency.id && <hr />}
           <Bid
             bid={bid}
+            chainId={chainId}
             key={bid.id}
             signer={signer}
             account={account}

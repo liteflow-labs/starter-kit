@@ -623,7 +623,7 @@ export const convertTrade = (
     currency: Maybe<
       Pick<Currency, 'id' | 'image' | 'name' | 'decimals' | 'symbol'>
     >
-    asset: Maybe<Pick<Asset, 'name' | 'image'>>
+    asset: Maybe<Pick<Asset, 'name' | 'image' | 'chainId'>>
   },
 ): {
   transactionHash: string
@@ -642,6 +642,7 @@ export const convertTrade = (
   asset?: {
     name: string
     image: string
+    chainId: number
   }
 } => {
   return {
@@ -656,6 +657,7 @@ export const convertTrade = (
       ? {
           name: trade.asset.name,
           image: trade.asset.image,
+          chainId: trade.asset.chainId,
         }
       : undefined,
   }

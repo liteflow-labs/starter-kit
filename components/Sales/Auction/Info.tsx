@@ -15,12 +15,14 @@ import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight
 import useTranslation from 'next-translate/useTranslation'
 import { ReactElement, useCallback, useMemo, useState, VFC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Link from '../../Link/Link'
 import AcceptAuctionModal from '../../Modal/AcceptAuction'
 import Price from '../../Price/Price'
 
 export type Props = {
   assetId: string
+  chainId: number
   auction: {
     id: string
     reserveAmount: BigNumber
@@ -44,6 +46,7 @@ export type Props = {
 const SaleAuctionInfo: VFC<Props> = ({
   signer,
   assetId,
+  chainId,
   auction,
   isOwner,
   isHomepage,
@@ -103,15 +106,20 @@ const SaleAuctionInfo: VFC<Props> = ({
         type: 'success',
         icon: <Icon as={BiBadgeCheck} h={6} w={6} color="white" />,
         title: t('sales.auction.info.no-bids.title'),
-        action: {
-          children: (
+        action: (
+          <Button
+            as={Link}
+            variant="outline"
+            colorScheme="gray"
+            bgColor="white"
+            href={`/tokens/${assetId}/offer`}
+            rightIcon={<HiArrowNarrowRight />}
+          >
             <Text as="span" isTruncated>
               {t('sales.auction.info.no-bids.action')}
             </Text>
-          ),
-          href: `/tokens/${assetId}/offer`,
-          rightIcon: <HiArrowNarrowRight />,
-        },
+          </Button>
+        ),
       }
     }
     if (endedWithNoReserve) {
@@ -119,15 +127,20 @@ const SaleAuctionInfo: VFC<Props> = ({
         type: 'success',
         icon: <Icon as={BiBadgeCheck} h={6} w={6} color="white" />,
         title: t('sales.auction.info.no-reserve.title'),
-        action: {
-          children: (
+        action: (
+          <Button
+            as={Link}
+            variant="outline"
+            colorScheme="gray"
+            bgColor="white"
+            href={`/tokens/${assetId}/offer`}
+            rightIcon={<HiArrowNarrowRight />}
+          >
             <Text as="span" isTruncated>
               {t('sales.auction.info.no-reserve.action')}
             </Text>
-          ),
-          href: `/tokens/${assetId}/offer`,
-          rightIcon: <HiArrowNarrowRight />,
-        },
+          </Button>
+        ),
       }
     }
     if (endedWithReserve) {
@@ -135,16 +148,21 @@ const SaleAuctionInfo: VFC<Props> = ({
         type: 'success',
         icon: <Icon as={BiBadgeCheck} h={6} w={6} color="white" />,
         title: t('sales.auction.info.with-reserve.title'),
-        action: {
-          children: (
+        action: (
+          <ButtonWithNetworkSwitch
+            chainId={chainId}
+            variant="outline"
+            colorScheme="gray"
+            bgColor="white"
+            onClick={acceptAuction}
+            isLoading={loading}
+            rightIcon={<HiArrowNarrowRight />}
+          >
             <Text as="span" isTruncated>
               {t('sales.auction.info.with-reserve.action')}
             </Text>
-          ),
-          onClick: acceptAuction,
-          loading: loading,
-          rightIcon: <HiArrowNarrowRight />,
-        },
+          </ButtonWithNetworkSwitch>
+        ),
       }
     }
   }, [
@@ -157,6 +175,7 @@ const SaleAuctionInfo: VFC<Props> = ({
     loading,
     acceptAuction,
     t,
+    chainId,
   ])
 
   if (!isOwner) return null
@@ -188,23 +207,8 @@ const SaleAuctionInfo: VFC<Props> = ({
         </Heading>
       </Flex>
 
-      {info.action?.onClick && (
-        <Button
-          variant="outline"
-          colorScheme="gray"
-          bgColor="white"
-          {...info.action}
-        />
-      )}
-      {info.action?.href && (
-        <Button
-          as={Link}
-          variant="outline"
-          colorScheme="gray"
-          bgColor="white"
-          {...info.action}
-        />
-      )}
+      {info.action}
+
       <AcceptAuctionModal
         isOpen={isOpen}
         onClose={onClose}

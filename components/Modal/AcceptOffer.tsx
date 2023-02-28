@@ -208,7 +208,7 @@ const AcceptOfferModal: FC<Props> = ({
             colorScheme="gray"
             isFullWidth
             rightIcon={<HiOutlineExternalLink />}
-            disabled={!transactionHash}
+            isDisabled={!transactionHash}
           >
             <Text as="span" isTruncated>
               {step === AcceptOfferStep.APPROVAL_SIGNATURE ||

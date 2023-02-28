@@ -1,16 +1,12 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { InjectedConnector } from '@web3-react/injected-connector'
 import { VFC } from 'react'
+import invariant from 'ts-invariant'
+import { connectors } from '../../../connectors'
 import WalletBase from './_base'
 
 type Props = {
-  connector: InjectedConnector
-  onError: (error?: Error) => void
-  activate: (
-    connector: AbstractConnector,
-    onError?: ((error: Error) => void) | undefined,
-    throwErrors?: boolean | undefined,
-  ) => Promise<void>
+  onError: (error: Error) => void
+  onActivate: (() => void) | undefined
+  chainId: number | undefined
 }
 
 export const IconMetamask = (
@@ -221,14 +217,16 @@ export const IconMetamask = (
   </svg>
 )
 
-const WalletMetamask: VFC<Props> = ({ connector, onError, activate }) => {
+const WalletMetamask: VFC<Props> = ({ onError, onActivate, chainId }) => {
+  invariant(connectors.injected, 'Injected connector is not supported')
   return (
     <WalletBase
-      connector={connector}
+      connector={connectors.injected}
       icon={IconMetamask}
       onError={onError}
-      activate={activate}
+      onActivate={onActivate}
       name="Metamask"
+      chainId={chainId}
     />
   )
 }

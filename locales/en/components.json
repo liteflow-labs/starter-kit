@@ -325,10 +325,7 @@
     "login": {
       "title": "Sign in with your wallet",
       "description": "Connect with one of the following options.",
-      "alternative": "Or sign in with",
-      "errors": {
-        "wrong-network": "You are connected to the wrong network. Please switch to the {{networkName}} network."
-      }
+      "alternative": "Or sign in with"
     }
   },
   "back": "Go back",
@@ -866,26 +863,13 @@
     },
     "connectors": {
       "email": {
-        "form": {
-          "submit": "Sign in",
-          "validation": {
-            "required": "This field is required",
-            "invalid": "Email is not valid"
-          },
-          "email": {
-            "label": "Email address"
-          }
-        }
+        "label": "Sign in with email"
       }
     },
     "wallet": {
       "deposit": {
         "title": "Deposit tokens",
         "description": "You can deposit tokens and transfer funds at anytime on the following address"
-      },
-      "banner": {
-        "title": "Use {{networkName}} network",
-        "description": "Ensure the network you choose to deposit tokens is the {{networkName}} network, or assets may be lost."
       },
       "balances": "Balances"
     },

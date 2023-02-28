@@ -22,7 +22,6 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { EmailConnector } from '@nft/email-connector'
 import {
   formatDateDatetime,
   formatError,
@@ -30,15 +29,13 @@ import {
   useCreateOffer,
 } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import LoginModal from '../../Modal/Login'
@@ -65,6 +62,7 @@ type Props = {
     name: string
   }[]
   assetId: string
+  chainId: number
   blockExplorer: BlockExplorer
   onCreated: (offerId: string) => void
   auctionId: string | undefined
@@ -72,13 +70,6 @@ type Props = {
   offerValidity: number
   feesPerTenThousand: number
   allowTopUp: boolean
-  login: {
-    email?: EmailConnector
-    injected?: InjectedConnector
-    walletConnect?: WalletConnectConnector
-    coinbase?: WalletLinkConnector
-    networkName: string
-  }
 } & (
   | {
       multiple: true
@@ -97,6 +88,7 @@ const OfferFormBid: FC<Props> = (props) => {
     account,
     currencies,
     assetId,
+    chainId,
     blockExplorer,
     onCreated,
     auctionId,
@@ -104,7 +96,6 @@ const OfferFormBid: FC<Props> = (props) => {
     offerValidity,
     feesPerTenThousand,
     allowTopUp,
-    login,
   } = props
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
   const toast = useToast()
@@ -409,8 +400,9 @@ const OfferFormBid: FC<Props> = (props) => {
             currency={currency}
             allowTopUp={allowTopUp && ((price && !canBid) || balanceZero)}
           />
-          <Button
-            disabled={!canBid}
+          <ButtonWithNetworkSwitch
+            chainId={chainId}
+            isDisabled={!canBid}
             isLoading={isSubmitting}
             size="lg"
             type="submit"
@@ -418,7 +410,7 @@ const OfferFormBid: FC<Props> = (props) => {
             <Text as="span" isTruncated>
               {t('offer.form.bid.submit')}
             </Text>
-          </Button>
+          </ButtonWithNetworkSwitch>
         </>
       ) : (
         <Button size="lg" type="button" onClick={loginOnOpen}>
@@ -428,7 +420,11 @@ const OfferFormBid: FC<Props> = (props) => {
         </Button>
       )}
 
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} {...login} />
+      <LoginModal
+        isOpen={loginIsOpen}
+        onClose={loginOnClose}
+        chainId={chainId}
+      />
       <CreateOfferModal
         isOpen={createOfferIsOpen}
         onClose={createOfferOnClose}

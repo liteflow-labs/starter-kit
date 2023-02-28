@@ -9,7 +9,7 @@ import {
 } from '@nft/hooks'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useMemo, VFC } from 'react'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import Link from '../../Link/Link'
 import AcceptAuctionModal from '../../Modal/AcceptAuction'
 
@@ -23,12 +23,12 @@ export type Props = {
     winningOffer: { id: string } | null | undefined
     asset: {
       id: string
+      chainId: number
     }
   }
   bestBid?: {
     amount: BigNumber
   }
-  blockExplorer: BlockExplorer
   onAuctionAccepted: (id: string) => void
 }
 
@@ -36,10 +36,10 @@ const SaleAuctionAction: VFC<Props> = ({
   signer,
   auction,
   bestBid,
-  blockExplorer,
   onAuctionAccepted,
 }) => {
   const { t } = useTranslation('components')
+  const blockExplorer = useBlockExplorer(auction.asset.chainId)
   const { inProgress, endedAndWaitingForTransfer, reservePriceMatches } =
     useAuctionStatus(auction, bestBid)
   const [accept, { activeStep, transactionHash }] = useAcceptAuction(signer)
@@ -77,7 +77,6 @@ const SaleAuctionAction: VFC<Props> = ({
       return (
         <Button
           isLoading={activeStep !== AcceptAuctionStep.INITIAL}
-          disabled={activeStep !== AcceptAuctionStep.INITIAL}
           onClick={() => handleAcceptAuction(auction.id)}
         >
           <Text as="span" isTruncated>

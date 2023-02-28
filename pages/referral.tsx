@@ -15,7 +15,6 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Head from '../components/Head'
 import ReferralForm from '../components/Referral/Form'
-import connectors from '../connectors'
 import environment from '../environment'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
@@ -42,14 +41,7 @@ const LoginPage: NextPage = () => {
           <Heading variant="subtitle" pb={4}>
             {t('referral.link')}
           </Heading>
-          <ReferralForm
-            login={{
-              ...connectors,
-              networkName: environment.NETWORK_NAME,
-            }}
-            loginUrl={loginUrl}
-            signer={signer}
-          />
+          <ReferralForm loginUrl={loginUrl} signer={signer} />
         </div>
 
         <div>

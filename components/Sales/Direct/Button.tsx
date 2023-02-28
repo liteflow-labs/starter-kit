@@ -10,6 +10,7 @@ import SaleDirectModal from './Modal'
 
 export type Props = {
   assetId: string
+  chainId: number
   blockExplorer: BlockExplorer
   isHomepage: boolean
   sales: ModalProps['sales']
@@ -21,6 +22,7 @@ export type Props = {
 
 const SaleDirectButton: VFC<Props> = ({
   assetId,
+  chainId,
   blockExplorer,
   isHomepage,
   sales,
@@ -69,10 +71,11 @@ const SaleDirectButton: VFC<Props> = ({
         signer={signer}
         currentAccount={currentAccount}
         sales={sales}
+        chainId={chainId}
         onOfferCanceled={onOfferCanceled}
       />
     )
-  }, [sales, currentAccount, signer, onOfferCanceled, blockExplorer])
+  }, [sales, currentAccount, signer, onOfferCanceled, blockExplorer, chainId])
 
   if (ownAllSupply && isHomepage)
     return (

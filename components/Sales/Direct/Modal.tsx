@@ -24,6 +24,7 @@ export type Props = {
   signer: Signer | undefined
   currentAccount: string | null | undefined
   sales: (ItemProps['sale'] & { currency: { id: string } })[]
+  chainId: number
   onOfferCanceled: (id: string) => Promise<void>
 }
 
@@ -32,6 +33,7 @@ const SaleDirectModal: VFC<Props> = ({
   signer,
   currentAccount,
   sales,
+  chainId,
   onOfferCanceled,
 }) => {
   const { t } = useTranslation('components')
@@ -67,6 +69,7 @@ const SaleDirectModal: VFC<Props> = ({
                   )}
                   <SaleDirectModalItem
                     key={sale.id}
+                    chainId={chainId}
                     sale={sale}
                     blockExplorer={blockExplorer}
                     signer={signer}

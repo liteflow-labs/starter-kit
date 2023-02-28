@@ -1,6 +1,5 @@
 import { Button, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -15,6 +14,7 @@ import {
   GetNotificationsQuery,
   useGetNotificationsQuery,
 } from '../graphql'
+import useAccount from '../hooks/useAccount'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import SmallLayout from '../layouts/small'
@@ -50,7 +50,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
   const ready = useEagerConnect()
   const { t } = useTranslation('templates')
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   useLoginRedirect(ready)
   const [_, setCookies] = useCookies()
   const [loading, setLoading] = useState(false)
@@ -83,17 +83,13 @@ const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
   }, [data, fetchMore])
 
   useEffect(() => {
-    if (!account) return
-    setCookies(
-      `lastNotification-${account.toLowerCase()}`,
-      new Date().toJSON(),
-      {
-        secure: true,
-        sameSite: true,
-        path: '/',
-      },
-    )
-  }, [account, setCookies])
+    if (!address) return
+    setCookies(`lastNotification-${address}`, new Date().toJSON(), {
+      secure: true,
+      sameSite: true,
+      path: '/',
+    })
+  }, [address, setCookies])
 
   return (
     <SmallLayout>

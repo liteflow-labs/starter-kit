@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
@@ -24,7 +23,6 @@ import BackButton from '../../../components/Navbar/BackButton'
 import OfferFormBid from '../../../components/Offer/Form/Bid'
 import Price from '../../../components/Price/Price'
 import TokenCard from '../../../components/Token/Card'
-import connectors from '../../../connectors'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -33,16 +31,23 @@ import {
 } from '../../../convert'
 import environment from '../../../environment'
 import {
+  AddressFilter,
   BidOnAssetDocument,
   BidOnAssetQuery,
+  ChainCurrenciesDocument,
+  ChainCurrenciesQuery,
+  ChainCurrenciesQueryVariables,
+  CurrencyFilter,
   FeesForBidDocument,
   FeesForBidQuery,
+  IntFilter,
   useBidOnAssetQuery,
   useFeesForBidQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
 import { wrapServerSideProps } from '../../../props'
@@ -85,6 +90,19 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       variables: { id: assetId },
     })
     if (feeQuery.error) throw error
+    const chainCurrency = await client.query<
+      ChainCurrenciesQuery,
+      ChainCurrenciesQueryVariables
+    >({
+      query: ChainCurrenciesDocument,
+      variables: {
+        filter: {
+          chainId: { equalTo: data.asset.chainId } as IntFilter,
+          address: { isNull: false } as AddressFilter,
+        } as CurrencyFilter,
+      },
+    })
+    if (chainCurrency.error) throw chainCurrency.error
     return {
       props: {
         assetId,
@@ -109,17 +127,20 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch } = useBidOnAssetQuery({
+  const { data } = useBidOnAssetQuery({
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
+
+  const currencyRes = useChainCurrencies(data?.asset?.chainId, {
+    onlyERC20: true,
+  })
 
   const fees = useFeesForBidQuery({
     variables: {
@@ -129,10 +150,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
 
   const feesPerTenThousand = fees.data?.orderFees.valuePerTenThousand || 0
 
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
+  const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
   const asset = useMemo(() => data?.asset, [data])
 
@@ -141,8 +159,9 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
     [asset],
   )
   const currencies = useMemo(
-    () => (auction ? [auction.currency] : data?.currencies?.nodes || []),
-    [auction, data],
+    () =>
+      auction ? [auction.currency] : currencyRes.data?.currencies?.nodes || [],
+    [auction, currencyRes],
   )
 
   const highestBid = useMemo(() => auction?.bestBid.nodes[0], [auction])
@@ -174,7 +193,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
         gap={12}
         templateColumns={{ base: '1fr', md: '1fr 2fr' }}
       >
-        <GridItem>
+        <GridItem overflow="hidden">
           <Box pointerEvents="none">
             <TokenCard
               asset={convertAsset(asset)}
@@ -256,8 +275,9 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
               asset.ownerships.nodes[0] && (
                 <OfferFormBid
                   signer={signer}
-                  account={account?.toLowerCase()}
+                  account={address}
                   assetId={asset.id}
+                  chainId={asset.chainId}
                   multiple={false}
                   owner={asset.ownerships.nodes[0].ownerAddress}
                   currencies={currencies}
@@ -268,17 +288,14 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
                   offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
                   feesPerTenThousand={feesPerTenThousand}
                   allowTopUp={environment.ALLOW_TOP_UP}
-                  login={{
-                    ...connectors,
-                    networkName: environment.NETWORK_NAME,
-                  }}
                 />
               )}
             {asset.collection.standard === 'ERC1155' && (
               <OfferFormBid
                 signer={signer}
-                account={account?.toLowerCase()}
+                account={address}
                 assetId={asset.id}
+                chainId={asset.chainId}
                 multiple={true}
                 supply={asset.ownerships.aggregates?.sum?.quantity || '0'}
                 currencies={currencies}
@@ -289,10 +306,6 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
                 feesPerTenThousand={feesPerTenThousand}
                 allowTopUp={environment.ALLOW_TOP_UP}
-                login={{
-                  ...connectors,
-                  networkName: environment.NETWORK_NAME,
-                }}
               />
             )}
           </Flex>
