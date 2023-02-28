@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, HTMLAttributes } from 'react'
@@ -29,16 +29,19 @@ const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
 }) => {
   const { t } = useTranslation('components')
   return (
-    <Box {...props}>
-      <Flex
-        as={Link}
+    <Box
+      as={Link}
+      href={`/tokens/${assetId}${!isOwner ? '/bid' : ''}`}
+      py={2}
+      px={4}
+      bgColor={showButton ? 'brand.500' : 'gray.100'}
+      {...props}
+    >
+      <Text
+        variant="subtitle2"
         color={showButton ? 'white' : 'gray.500'}
-        bgColor={showButton ? 'brand.500' : 'gray.100'}
-        py={2}
-        px={4}
-        fontSize="sm"
-        fontWeight="semibold"
-        href={`/tokens/${assetId}${!isOwner ? '/bid' : ''}`}
+        noOfLines={1}
+        wordBreak="break-all"
       >
         {showButton ? (
           isOwner ? (
@@ -47,8 +50,8 @@ const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
             t('sales.open.card-footer.place-bid')
           )
         ) : bestBid ? (
-          <Flex gap={1}>
-            <Text variant="subtitle2">
+          <>
+            <Text as="span" variant="subtitle2" mr={1}>
               {t('sales.auction.card-footer.highest-bid')}
             </Text>
             <Text
@@ -58,11 +61,11 @@ const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
               currency={bestBid.currency}
               color="brand.black"
             />
-          </Flex>
+          </>
         ) : (
           t('sales.open.card-footer.open')
         )}
-      </Flex>
+      </Text>
     </Box>
   )
 }
