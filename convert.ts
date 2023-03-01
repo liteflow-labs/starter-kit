@@ -99,13 +99,13 @@ export const convertAssetWithSupplies = (
         sum: Maybe<Pick<OfferOpenSaleSumAggregates, 'availableQuantity'>>
       }>
     }
-    collection: Pick<Collection, 'standard'>
+    collection: Pick<Collection, 'standard' | 'mintType'>
   },
 ): ReturnType<typeof convertAsset> & {
   saleSupply: BigNumber
   totalSupply: BigNumber
   owned: BigNumber
-  collection: Pick<Collection, 'standard'>
+  collection: Pick<Collection, 'standard' | 'mintType'>
 } => {
   const bestBid = asset.bestBid?.nodes[0]
   return {
@@ -119,6 +119,7 @@ export const convertAssetWithSupplies = (
       address: asset.collection.address,
       name: asset.collection.name,
       standard: asset.collection.standard,
+      mintType: asset.collection.mintType,
     },
     saleSupply: BigNumber.from(
       asset.sales.aggregates?.sum?.availableQuantity || 0,

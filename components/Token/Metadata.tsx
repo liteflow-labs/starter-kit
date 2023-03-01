@@ -29,6 +29,7 @@ export type Props = {
   numberOfOwners: number
   saleSupply: BigNumber
   totalSupply: BigNumber | null | undefined
+  isOpenCollection: boolean
 }
 
 const TokenMetadata: VFC<Props> = ({
@@ -39,6 +40,7 @@ const TokenMetadata: VFC<Props> = ({
   numberOfOwners,
   saleSupply,
   totalSupply,
+  isOpenCollection,
 }) => {
   const { t } = useTranslation('components')
   return (
@@ -46,7 +48,9 @@ const TokenMetadata: VFC<Props> = ({
       {creator && (
         <Stack spacing={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
-            {t('token.metadata.creator')}
+            {isOpenCollection
+              ? t('token.metadata.creator')
+              : t('token.metadata.minted_by')}
           </Heading>
           <Avatar
             address={creator.address}
