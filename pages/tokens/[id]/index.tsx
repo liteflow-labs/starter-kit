@@ -29,6 +29,7 @@ import { formatError } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
+import linkify from 'components/Linkify/Linkify'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
@@ -492,7 +493,7 @@ const DetailPage: NextPage<Props> = ({
             {t('asset.detail.description')}
           </Heading>
           <Text as="p" variant="text-sm" color="gray.500" mt={3}>
-            {asset.description}
+            {linkify(asset.description)}
           </Text>
 
           <Stack as="nav" mt={8} align="flex-start" spacing={3}>

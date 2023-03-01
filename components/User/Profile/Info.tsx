@@ -17,6 +17,7 @@ import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard
 import { HiOutlineGlobeAlt } from '@react-icons/all-files/hi/HiOutlineGlobeAlt'
 import { SiInstagram } from '@react-icons/all-files/si/SiInstagram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
+import linkify from 'components/Linkify/Linkify'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useState, VFC } from 'react'
 import useAccount from '../../../hooks/useAccount'
@@ -120,7 +121,7 @@ const UserProfileInfo: VFC<{
             {t('user.info.bio')}
           </Heading>
           <Text as="p" variant="text-sm" color="gray.500">
-            {description}
+            {linkify(description)}
           </Text>
         </Stack>
       )}
