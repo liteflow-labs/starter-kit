@@ -26,6 +26,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
           count
         }
       }
+      mintType
     }
     name
     description

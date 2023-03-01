@@ -18,6 +18,7 @@ fragment HomeAssetDetail on Asset {
     address
     name
     standard
+    mintType
   }
   image
   animationUrl
