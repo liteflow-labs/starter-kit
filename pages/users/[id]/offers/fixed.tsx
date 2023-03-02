@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Flex,
+  Icon,
   Stack,
   Table,
   TableContainer,
@@ -15,6 +16,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
+import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -22,6 +24,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import CancelOfferButton from '../../../../components/Button/CancelOffer'
+import Empty from '../../../../components/Empty/Empty'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -342,6 +345,15 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
                 ))}
               </Tbody>
             </Table>
+            {offers.length === 0 && (
+              <Empty
+                icon={
+                  <Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />
+                }
+                title={t('user.fixed.table.empty.title')}
+                description={t('user.fixed.table.empty.description')}
+              />
+            )}
           </TableContainer>
 
           <Pagination
