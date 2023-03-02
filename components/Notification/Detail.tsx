@@ -190,22 +190,13 @@ export default function NotificationDetail({
         )}
         {/* Fallback to avatar if image is not set but userAddress is set. userImage is optional */}
         {'userAddress' in content && 'userImage' in content && (
-          <div>
-            <Box
-              position="relative"
-              h={14}
-              w={14}
-              overflow="hidden"
-              bgColor="gray.100"
-              rounded="full"
-            >
-              <AccountImage
-                address={content.userAddress}
-                image={content.userImage}
-                size={56}
-              />
-            </Box>
-          </div>
+          <Flex
+            as={AccountImage}
+            address={content.userAddress}
+            image={content.userImage}
+            size={56}
+            rounded="full"
+          />
         )}
         <Box>
           <Text variant="caption" color="brand.black">

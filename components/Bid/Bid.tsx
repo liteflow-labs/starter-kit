@@ -140,7 +140,7 @@ const Bid: VFC<Props> = ({
               address={bid.maker.address}
               image={bid.maker.image}
               size={40}
-              cursor="pointer"
+              rounded="full"
             />
           </Link>
         }

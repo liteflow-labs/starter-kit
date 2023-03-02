@@ -339,15 +339,13 @@ const UserMenu: VFC<{
   return (
     <Menu>
       <MenuButton>
-        <Flex>
-          <Box
-            as={AccountImage}
-            rounded="full"
-            address={user.address || account}
-            image={user.image}
-            size={40}
-          />
-        </Flex>
+        <Flex
+          as={AccountImage}
+          address={user.address || account}
+          image={user.image}
+          size={40}
+          rounded="full"
+        />
       </MenuButton>
       <MenuList>
         <Link href={`/users/${account}`}>
