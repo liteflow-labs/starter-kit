@@ -12,13 +12,13 @@ import {
   Th,
   Thead,
   Tr,
-  useToast
+  useToast,
 } from '@chakra-ui/react'
 import {
   dateFromNow,
   formatAddress,
   formatError,
-  useIsLoggedIn
+  useIsLoggedIn,
 } from '@nft/hooks'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -42,7 +42,7 @@ import {
   FetchUserBidsReceivedDocument,
   FetchUserBidsReceivedQuery,
   OfferOpenBuysOrderBy,
-  useFetchUserBidsReceivedQuery
+  useFetchUserBidsReceivedQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
