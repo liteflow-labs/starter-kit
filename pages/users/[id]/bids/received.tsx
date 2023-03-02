@@ -248,7 +248,7 @@ const BidReceivedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                 {bids.map((item) => (
                   <Tr fontSize="sm" key={item.id}>
                     <Td>
-                      <Flex gap={3}>
+                      <Flex as={Link} href={`/tokens/${item.asset.id}`} gap={3}>
                         <Image
                           src={item.asset.image}
                           alt={item.asset.name}
@@ -286,7 +286,11 @@ const BidReceivedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                         currency={item.currency}
                       />
                     </Td>
-                    <Td>{formatAddress(item.maker.address)}</Td>
+                    <Td>
+                      <Link href={`/users/${item.maker.address}`}>
+                        {formatAddress(item.maker.address)}
+                      </Link>
+                    </Td>
                     <Td>{dateFromNow(item.createdAt)}</Td>
                     <Td isNumeric>
                       {ownerLoggedIn && (
