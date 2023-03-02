@@ -468,6 +468,7 @@ const DetailPage: NextPage<Props> = ({
             totalSupply={BigNumber.from(
               asset.ownerships.aggregates?.sum?.quantity || '0',
             )}
+            isOpenCollection={asset.collection.mintType === 'PUBLIC'}
           />
           <SaleDetail
             assetId={asset.id}
