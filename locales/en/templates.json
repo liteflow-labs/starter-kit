@@ -265,7 +265,11 @@
         "item": "Item",
         "price": "Highest bid",
         "status": "Status",
-        "created": "Created"
+        "created": "Created",
+        "empty": {
+          "title": "No Results Found",
+          "description": "Come back later or browse the platform in the meantime"
+        }
       }
     },
     "bid-placed": {
@@ -291,7 +295,11 @@
         "item": "Item",
         "price": "Total Amount",
         "status": "Status",
-        "created": "Placed"
+        "created": "Placed",
+        "empty": {
+          "title": "No Results Found",
+          "description": "Come back later or browse the platform in the meantime"
+        }
       },
       "requested": "{{value}} requested",
       "status": {
@@ -324,7 +332,11 @@
         "item": "Item",
         "price": "Total Amount",
         "from": "Bidder",
-        "created": "Received"
+        "created": "Received",
+        "empty": {
+          "title": "No Results Found",
+          "description": "Come back later or browse the platform in the meantime"
+        }
       },
       "requested": "{{value}} requested",
       "accept": {
@@ -364,7 +376,11 @@
         "item": "Item",
         "price": "Unit price",
         "status": "Status",
-        "created": "Created"
+        "created": "Created",
+        "empty": {
+          "title": "No Results Found",
+          "description": "Come back later or browse the platform in the meantime"
+        }
       },
       "status": {
         "active": "Active",
@@ -409,7 +425,11 @@
         "item": "Item",
         "price": "Total Amount",
         "from": "Seller",
-        "created": "Purchased"
+        "created": "Purchased",
+        "empty": {
+          "title": "No Results Found",
+          "description": "Come back later or browse the platform in the meantime"
+        }
       },
       "purchased": "{{value}} purchased"
     },
@@ -431,7 +451,11 @@
         "item": "Item",
         "price": "Total Amount",
         "to": "Buyer",
-        "created": "Sold"
+        "created": "Sold",
+        "empty": {
+          "title": "No Results Found",
+          "description": "Come back later or browse the platform in the meantime"
+        }
       },
       "sold": "{{value}} sold"
     }
