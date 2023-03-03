@@ -120,7 +120,7 @@ const UserProfileInfo: VFC<{
           <Heading as="h4" variant="heading2" color="brand.black">
             {t('user.info.bio')}
           </Heading>
-          <Text as="p" variant="text-sm" color="gray.500">
+          <Text as="p" variant="text-sm" color="gray.500" whiteSpace="pre-wrap">
             {linkify(description)}
           </Text>
         </Stack>
