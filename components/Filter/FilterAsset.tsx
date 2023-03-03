@@ -499,7 +499,7 @@ const FilterAsset: NextPage<Props> = ({
                 flex="1"
                 textAlign="left"
                 noOfLines={1}
-                wordBreak="break-all"
+                wordBreak="break-word"
                 title={type}
               >
                 {type}
@@ -530,7 +530,7 @@ const FilterAsset: NextPage<Props> = ({
                         variant="subtitle2"
                         color="black"
                         noOfLines={1}
-                        wordBreak="break-all"
+                        wordBreak="break-word"
                         title={value}
                       >
                         {value}

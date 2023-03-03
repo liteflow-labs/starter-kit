@@ -87,7 +87,7 @@ const UserProfileInfo: VFC<{
             as="h1"
             variant="title"
             color="brand.black"
-            overflowWrap="break-word"
+            wordBreak="break-word"
           >
             {name}
           </Heading>
