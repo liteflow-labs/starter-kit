@@ -246,7 +246,11 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                   <Tr fontSize="sm" key={index}>
                     <Td>
                       {item.asset ? (
-                        <Flex gap={3}>
+                        <Flex
+                          as={Link}
+                          href={`/tokens/${item.asset.id}`}
+                          gap={3}
+                        >
                           <Image
                             src={item.asset.image}
                             alt={item.asset.name}
@@ -295,7 +299,11 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                         '-'
                       )}
                     </Td>
-                    <Td>{formatAddress(item.sellerAddress)}</Td>
+                    <Td>
+                      <Link href={`/users/${item.sellerAddress}`}>
+                        {formatAddress(item.sellerAddress)}
+                      </Link>
+                    </Td>
                     <Td>{dateFromNow(item.createdAt)}</Td>
                     <Td>
                       <IconButton
