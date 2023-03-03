@@ -254,7 +254,7 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
                 {offers.map((item) => (
                   <Tr fontSize="sm" key={item.id}>
                     <Td>
-                      <Flex gap={3}>
+                      <Flex as={Link} href={`/tokens/${item.asset.id}`} gap={3}>
                         <Image
                           src={item.asset.image}
                           alt={item.asset.name}
