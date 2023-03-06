@@ -7,7 +7,7 @@ query FetchAllERC721And1155(
   $filter: [AssetFilter!]
 ) {
   assets(
-    filter: { ownershipsExist: true, and: $filter }
+    filter: { and: $filter }
     first: $limit
     offset: $offset
     orderBy: $orderBy

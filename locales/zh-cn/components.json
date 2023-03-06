@@ -768,6 +768,7 @@
     },
     "metadata": {
       "creator": "创建者",
+      "minted_by": "创建者",
       "owner": "所有者",
       "owners": "所有者",
       "edition": "版本",

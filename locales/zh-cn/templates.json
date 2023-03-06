@@ -265,7 +265,11 @@
         "item": "商品",
         "price": "最高出价",
         "status": "状态",
-        "created": "已创建"
+        "created": "已创建",
+        "empty": {
+          "title": "未找到结果",
+          "description": "请稍后再试或在此期间浏览平台"
+        }
       }
     },
     "bid-placed": {
@@ -291,7 +295,11 @@
         "item": "商品",
         "price": "总金额",
         "status": "状态",
-        "created": "已提交"
+        "created": "已提交",
+        "empty": {
+          "title": "未找到结果",
+          "description": "请稍后再试或在此期间浏览平台"
+        }
       },
       "requested": "已请求 {{value}} 件",
       "status": {
@@ -324,7 +332,11 @@
         "item": "商品",
         "price": "总金额",
         "from": "出价者",
-        "created": "已接收"
+        "created": "已接收",
+        "empty": {
+          "title": "未找到结果",
+          "description": "请稍后再试或在此期间浏览平台"
+        }
       },
       "requested": "已请求 {{value}} 件",
       "accept": {
@@ -364,7 +376,11 @@
         "item": "商品",
         "price": "单价",
         "status": "状态",
-        "created": "已创建"
+        "created": "已创建",
+        "empty": {
+          "title": "未找到结果",
+          "description": "请稍后再试或在此期间浏览平台"
+        }
       },
       "status": {
         "active": "激活",
@@ -409,7 +425,11 @@
         "item": "商品",
         "price": "总金额",
         "from": "卖方",
-        "created": "已购买"
+        "created": "已购买",
+        "empty": {
+          "title": "未找到结果",
+          "description": "请稍后再试或在此期间浏览平台"
+        }
       },
       "purchased": "已购买 {{value}} 件"
     },
@@ -431,7 +451,11 @@
         "item": "商品",
         "price": "总金额",
         "to": "买方",
-        "created": "已售出"
+        "created": "已售出",
+        "empty": {
+          "title": "未找到结果",
+          "description": "请稍后再试或在此期间浏览平台"
+        }
       },
       "sold": "已售出 {{value}} 件"
     }

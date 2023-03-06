@@ -1,9 +1,5 @@
 query FetchDefaultAssetIds($limit: Int!) {
-  assets(
-    filter: { ownershipsExist: true }
-    orderBy: CREATED_AT_DESC
-    first: $limit
-  ) {
+  assets(orderBy: CREATED_AT_DESC, first: $limit) {
     nodes {
       id
     }
@@ -18,6 +14,7 @@ fragment HomeAssetDetail on Asset {
     address
     name
     standard
+    mintType
   }
   image
   animationUrl
