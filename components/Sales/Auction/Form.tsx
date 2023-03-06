@@ -111,7 +111,7 @@ const SalesAuctionForm: VFC<Props> = ({
   })
 
   return (
-    <Stack as="form" spacing={8} onSubmit={onSubmit} noValidate>
+    <Stack as="form" spacing={8} onSubmit={onSubmit}>
       <Stack spacing={6}>
         {currencies.length > 1 && (
           <Select
