@@ -265,7 +265,11 @@
         "item": "アイテム",
         "price": "最高入札額",
         "status": "状態",
-        "created": "作成済"
+        "created": "作成済",
+        "empty": {
+          "title": "結果が見つかりません",
+          "description": "またお越しいただくか、プラットフォームをご覧ください"
+        }
       }
     },
     "bid-placed": {
@@ -291,7 +295,11 @@
         "item": "アイテム",
         "price": "総額",
         "status": "状態",
-        "created": "入札済"
+        "created": "入札済",
+        "empty": {
+          "title": "結果が見つかりません",
+          "description": "またお越しいただくか、プラットフォームをご覧ください"
+        }
       },
       "requested": "{{value}} をリクエスト",
       "status": {
@@ -324,7 +332,11 @@
         "item": "アイテム",
         "price": "総額",
         "from": "入札者",
-        "created": "受取済"
+        "created": "受取済",
+        "empty": {
+          "title": "結果が見つかりません",
+          "description": "またお越しいただくか、プラットフォームをご覧ください"
+        }
       },
       "requested": "{{value}}</> をリクエスト",
       "accept": {
@@ -364,7 +376,11 @@
         "item": "アイテム",
         "price": "ユニット価格",
         "status": "状態",
-        "created": "作成済"
+        "created": "作成済",
+        "empty": {
+          "title": "結果が見つかりません",
+          "description": "またお越しいただくか、プラットフォームをご覧ください"
+        }
       },
       "status": {
         "active": "アクティブ",
@@ -409,7 +425,11 @@
         "item": "アイテム",
         "price": "総額",
         "from": "販売者",
-        "created": "購入済"
+        "created": "購入済",
+        "empty": {
+          "title": "結果が見つかりません",
+          "description": "またお越しいただくか、プラットフォームをご覧ください"
+        }
       },
       "purchased": "{{value}} を購入済"
     },
@@ -431,7 +451,11 @@
         "item": "アイテム",
         "price": "総額",
         "to": "購入者",
-        "created": "販売済"
+        "created": "販売済",
+        "empty": {
+          "title": "結果が見つかりません",
+          "description": "またお越しいただくか、プラットフォームをご覧ください"
+        }
       },
       "sold": "{{value}} 販売済"
     }

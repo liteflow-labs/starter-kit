@@ -44,7 +44,6 @@ query FetchCollectionAssets(
 ) {
   assets(
     filter: {
-      ownershipsExist: true
       chainId: { equalTo: $chainId }
       collectionAddress: { equalTo: $collectionAddress }
       and: $filter
