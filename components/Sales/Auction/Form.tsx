@@ -111,7 +111,7 @@ const SalesAuctionForm: VFC<Props> = ({
   })
 
   return (
-    <Stack as="form" spacing={8} onSubmit={onSubmit}>
+    <Stack as="form" spacing={8} onSubmit={onSubmit} noValidate>
       <Stack spacing={6}>
         {currencies.length > 1 && (
           <Select
@@ -161,6 +161,8 @@ const SalesAuctionForm: VFC<Props> = ({
                 placeholder={t('sales.auction.form.price.placeholder')}
                 {...register('price', {
                   validate: (value) => {
+                    if (value !== undefined && parseFloat(value) < 0)
+                      return t('sales.auction.form.validation.positive')
                     const nbDecimals = value.split('.')[1]?.length || 0
                     if (nbDecimals > currency.decimals)
                       return t('sales.auction.form.validation.decimals', {
