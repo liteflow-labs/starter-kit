@@ -84,14 +84,15 @@ const SaleDirectModalItem: VFC<Props> = ({
     <>
       <ListItem
         image={
-          <Link href={`/users/${sale.maker.address}`}>
+          <Flex as={Link} href={`/users/${sale.maker.address}`}>
             <Flex
               as={AccountImage}
               address={sale.maker.address}
               image={sale.maker.image}
               size={40}
+              rounded="full"
             />
-          </Link>
+          </Flex>
         }
         label={
           <Flex
