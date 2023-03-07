@@ -112,7 +112,6 @@ const FilterAsset: NextPage<Props> = ({
     skip: !!selectedCollection,
   })
 
-  console.log(filter.traits)
   const collection = useMemo(() => {
     if (selectedCollection) return selectedCollection
     if (!filterResult.collection) return null
