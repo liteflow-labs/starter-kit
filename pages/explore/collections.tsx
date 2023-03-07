@@ -1,4 +1,5 @@
-import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, Flex, SimpleGrid, Text, useToast } from '@chakra-ui/react'
+import { formatError } from '@nft/hooks'
 import CollectionCard from 'components/Collection/CollectionCard'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
@@ -79,6 +80,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   useEagerConnect()
   const { pathname, query, replace } = useRouter()
   const { t } = useTranslation('templates')
+  const toast = useToast()
   const [loadingOrder, setLoadingOrder] = useState(false)
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
@@ -102,11 +104,16 @@ const CollectionsPage: NextPage<Props> = ({}) => {
           pathname,
           query: { ...query, orderBy, page: undefined },
         })
+      } catch (e) {
+        toast({
+          title: formatError(e),
+          status: 'error',
+        })
       } finally {
         setLoadingOrder(false)
       }
     },
-    [replace, pathname, query],
+    [replace, pathname, query, toast],
   )
 
   const collections = useMemo(() => data?.collections?.nodes || [], [data])

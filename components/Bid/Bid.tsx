@@ -1,4 +1,11 @@
-import { Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react'
+import {
+  Divider,
+  Flex,
+  Icon,
+  Text,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import {
@@ -6,6 +13,7 @@ import {
   CancelOfferStep,
   dateFromNow,
   formatDate,
+  formatError,
   isSameAddress,
   useAcceptOffer,
   useCancelOffer,
@@ -67,6 +75,7 @@ const Bid: VFC<Props> = ({
   onCanceled,
 }) => {
   const { t } = useTranslation('components')
+  const toast = useToast()
   const {
     isOpen: acceptOfferIsOpen,
     onOpen: acceptOfferOnOpen,
@@ -111,6 +120,11 @@ const Bid: VFC<Props> = ({
       confirmAcceptOnClose()
       await acceptOffer(bid, quantity || bid.availableQuantity)
       await onAccepted(bid.id)
+    } catch (e) {
+      toast({
+        title: formatError(e),
+        status: 'error',
+      })
     } finally {
       acceptOfferOnClose()
     }
@@ -125,6 +139,11 @@ const Bid: VFC<Props> = ({
       cancelOfferOnOpen()
       await cancelOffer(bid)
       await onCanceled(bid.id)
+    } catch (e) {
+      toast({
+        title: formatError(e),
+        status: 'error',
+      })
     } finally {
       cancelOfferOnClose()
     }
