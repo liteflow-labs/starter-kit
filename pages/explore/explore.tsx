@@ -153,7 +153,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
   const filter = useAssetFilterFromQuery(currencies)
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
-  const { data } = useFetchAllErc721And1155Query({
+  const { data, previousData, loading } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
       address: (ready ? address : currentAccount) || '',
@@ -163,6 +163,11 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
       filter: convertFilterToAssetFilter(filter, currencies, date),
     },
   })
+
+  const assets = useMemo(() => {
+    if (loading) return previousData?.assets
+    return data?.assets
+  }, [data?.assets, loading, previousData])
 
   const { showFilters, toggleFilters, close, count } = useFilterState(filter)
 
@@ -209,7 +214,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading}
+        loading={pageLoading || loading}
         search={filter.search}
         selectedTabIndex={0}
       >
@@ -267,7 +272,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {data?.assets?.totalCount && data?.assets?.totalCount > 0 ? (
+              {assets?.totalCount && assets?.totalCount > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -277,7 +282,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
                       : { base: 1, sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {data.assets.nodes.map((x, i) => (
+                  {assets?.nodes.map((x, i) => (
                     <Flex key={i} justify="center" overflow="hidden">
                       <TokenCard
                         asset={convertAsset(x)}
@@ -313,7 +318,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
                   limit={limit}
                   limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  total={data?.assets?.totalCount}
+                  total={assets?.totalCount}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}
                   result={{
