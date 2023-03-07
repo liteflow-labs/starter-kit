@@ -101,7 +101,11 @@ const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
         {(notifications || []).length > 0 ? (
           <>
             {notifications.map((notification) => (
-              <NotificationDetail key={notification.id} {...notification} />
+              <NotificationDetail
+                key={notification.id}
+                currentAccount={currentAccount}
+                {...notification}
+              />
             ))}
             {hasNextPage && (
               <Button isLoading={loading} onClick={loadMore}>

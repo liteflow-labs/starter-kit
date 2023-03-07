@@ -4,20 +4,20 @@ import Trans from 'next-translate/Trans'
 export type IProps = {
   auction: {
     asset: {
-      id: string
       image: string
       name: string
     }
   }
+  currentAccount: string
 }
 
-export default function AuctionExpired({ auction }: IProps): {
+export default function AuctionExpired({ auction, currentAccount }: IProps): {
   link: string
   image: string
   children: JSX.Element
 } {
   return {
-    link: `/tokens/${auction.asset.id}`,
+    link: `/users/${currentAccount}/offers/auction`,
     image: auction.asset.image,
     children: (
       <Trans
