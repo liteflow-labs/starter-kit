@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Button,
   Checkbox,
+  CheckboxGroup,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -111,6 +112,7 @@ const FilterAsset: NextPage<Props> = ({
     skip: !!selectedCollection,
   })
 
+  console.log(filter.traits)
   const collection = useMemo(() => {
     if (selectedCollection) return selectedCollection
     if (!filterResult.collection) return null
@@ -512,36 +514,40 @@ const FilterAsset: NextPage<Props> = ({
               </Flex>
             </AccordionButton>
             <AccordionPanel maxHeight="400px" overflow="auto">
-              <Stack spacing={1}>
-                {values.map(({ value, count }, i) => (
-                  <Checkbox
-                    key={i}
-                    isChecked={filter.traits
-                      .find((x) => x.type === type)
-                      ?.values.includes(value)}
-                    onChange={(e) =>
-                      e.target.checked
-                        ? addTrait(type, value)
-                        : removeTrait(type, value)
-                    }
-                  >
-                    <Flex justifyContent="space-between" gap={3}>
-                      <Text
-                        variant="subtitle2"
-                        color="black"
-                        noOfLines={1}
-                        wordBreak="break-word"
-                        title={value}
-                      >
-                        {value}
-                      </Text>
-                      <Text variant="subtitle2" color="black">
-                        {count}
-                      </Text>
-                    </Flex>
-                  </Checkbox>
-                ))}
-              </Stack>
+              <CheckboxGroup
+                defaultValue={
+                  filter?.traits?.find((trait) => trait.type === type)?.values
+                }
+              >
+                <Stack spacing={1}>
+                  {values.map(({ value, count }, i) => (
+                    <Checkbox
+                      key={i}
+                      value={value}
+                      onChange={(e) =>
+                        e.target.checked
+                          ? addTrait(type, value)
+                          : removeTrait(type, value)
+                      }
+                    >
+                      <Flex justifyContent="space-between" gap={3}>
+                        <Text
+                          variant="subtitle2"
+                          color="black"
+                          noOfLines={1}
+                          wordBreak="break-word"
+                          title={value}
+                        >
+                          {value}
+                        </Text>
+                        <Text variant="subtitle2" color="black">
+                          {count}
+                        </Text>
+                      </Flex>
+                    </Checkbox>
+                  ))}
+                </Stack>
+              </CheckboxGroup>
             </AccordionPanel>
           </AccordionItem>
         ))}
