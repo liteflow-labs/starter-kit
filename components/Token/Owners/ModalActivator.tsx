@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { ButtonHTMLAttributes, VFC } from 'react'
 import AccountImage from '../../Wallet/Image'
 
@@ -24,26 +24,21 @@ const OwnersModalActivator: VFC<Props> = ({
           ml={index !== 0 ? -3 : undefined}
           title={name ? name : ''}
         >
-          <Box
+          <Flex
             as={AccountImage}
             address={address}
             image={image}
             position="relative"
-            h={8}
-            w={8}
-            overflow="hidden"
             rounded="full"
           />
         </Flex>
       ))}
       {numberOfOwners === 5 && owners[4] && (
         <Flex ml={-3} title={owners[4].name ? owners[4].name : ''}>
-          <Box
+          <Flex
             as={AccountImage}
             address={owners[4].address}
             image={owners[4].image}
-            h={8}
-            w={8}
             rounded="full"
           />
         </Flex>

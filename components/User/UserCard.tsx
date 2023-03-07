@@ -43,25 +43,22 @@ const UserCard: FC<Props> = ({ user }) => {
           ) : (
             <Box bg="gray.100" height="full" />
           )}
-          <Box
+          <Flex
             position="absolute"
-            bottom={0}
-            transform="translate(1rem, 50%)"
-            border="2px solid"
-            borderColor="white"
+            bottom={-8}
+            left={4}
             rounded="full"
-            w={16}
-            h={16}
+            borderWidth="2px"
+            borderColor="white"
           >
-            <Box
+            <Flex
               as={AccountImage}
               address={user.address}
               image={user.image}
               size={60}
-              objectFit="cover"
               rounded="full"
             />
-          </Box>
+          </Flex>
         </Box>
         <Flex
           alignItems="center"

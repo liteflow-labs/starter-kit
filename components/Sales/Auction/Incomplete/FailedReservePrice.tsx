@@ -51,14 +51,11 @@ const SaleAuctionIncompleteReservePrice: VFC<Props> = ({
           {t('sales.auction.failed-no-reserve.highest-bid')}
         </Heading>
         <Flex align="center" gap={3}>
-          <Box
+          <Flex
             as={AccountImage}
-            display="inline-block"
-            h={8}
-            w={8}
-            rounded="full"
             address={bestBid.maker.address}
             image={bestBid.maker.image}
+            rounded="full"
           />
           <Heading as="h4" variant="heading2" color="brand.black">
             <Trans

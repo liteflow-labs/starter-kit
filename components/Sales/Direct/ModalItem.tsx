@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Flex,
   Icon,
@@ -86,13 +85,12 @@ const SaleDirectModalItem: VFC<Props> = ({
       <ListItem
         image={
           <Flex as={Link} href={`/users/${sale.maker.address}`}>
-            <Box
+            <Flex
               as={AccountImage}
               address={sale.maker.address}
               image={sale.maker.image}
               size={40}
-              w={10}
-              h={10}
+              rounded="full"
             />
           </Flex>
         }
