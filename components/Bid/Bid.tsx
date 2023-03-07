@@ -134,15 +134,15 @@ const Bid: VFC<Props> = ({
     <>
       <ListItem
         image={
-          <Link href={`/users/${bid.maker.address}`}>
+          <Flex as={Link} href={`/users/${bid.maker.address}`}>
             <Flex
               as={AccountImage}
               address={bid.maker.address}
               image={bid.maker.image}
               size={40}
-              cursor="pointer"
+              rounded="full"
             />
-          </Link>
+          </Flex>
         }
         label={
           <Flex gap={2}>

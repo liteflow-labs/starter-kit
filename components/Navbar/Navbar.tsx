@@ -340,12 +340,12 @@ const UserMenu: VFC<{
     <Menu>
       <MenuButton>
         <Flex>
-          <Box
+          <Flex
             as={AccountImage}
-            rounded="full"
             address={user.address || account}
             image={user.image}
             size={40}
+            rounded="full"
           />
         </Flex>
       </MenuButton>
