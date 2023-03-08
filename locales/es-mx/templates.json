@@ -265,7 +265,11 @@
         "item": "Item",
         "price": "Oferta más alta",
         "status": "Estatus",
-        "created": "Creado"
+        "created": "Creado",
+        "empty": {
+          "title": "No Se Han Encontrado Resultados",
+          "description": "Vuelve más tarde o explora la plataforma mientras tanto"
+        }
       }
     },
     "bid-placed": {
@@ -291,7 +295,11 @@
         "item": "Item",
         "price": "Monto Total",
         "status": "Estatus",
-        "created": "Colocada"
+        "created": "Colocada",
+        "empty": {
+          "title": "No Se Han Encontrado Resultados",
+          "description": "Vuelve más tarde o explora la plataforma mientras tanto"
+        }
       },
       "requested": "{{value}} solicitado",
       "status": {
@@ -324,7 +332,11 @@
         "item": "Item",
         "price": "Monto Total",
         "from": "Comprador",
-        "created": "Recibida"
+        "created": "Recibida",
+        "empty": {
+          "title": "No Se Han Encontrado Resultados",
+          "description": "Vuelve más tarde o explora la plataforma mientras tanto"
+        }
       },
       "requested": "{{value}} solicitado",
       "accept": {
@@ -364,7 +376,11 @@
         "item": "Item",
         "price": "Precio (individual)",
         "status": "Estatus",
-        "created": "Creado"
+        "created": "Creado",
+        "empty": {
+          "title": "No Se Han Encontrado Resultados",
+          "description": "Vuelve más tarde o explora la plataforma mientras tanto"
+        }
       },
       "status": {
         "active": "Activa",
@@ -409,7 +425,11 @@
         "item": "Item",
         "price": "Monto Total",
         "from": "Vendedor",
-        "created": "Comprado"
+        "created": "Comprado",
+        "empty": {
+          "title": "No Se Han Encontrado Resultados",
+          "description": "Vuelve más tarde o explora la plataforma mientras tanto"
+        }
       },
       "purchased": "{{value}} comprado"
     },
@@ -431,7 +451,11 @@
         "item": "Item",
         "price": "Monto Total",
         "to": "Comprador",
-        "created": "Vendido"
+        "created": "Vendido",
+        "empty": {
+          "title": "No Se Han Encontrado Resultados",
+          "description": "Vuelve más tarde o explora la plataforma mientras tanto"
+        }
       },
       "sold": "{{value}} vendido"
     }

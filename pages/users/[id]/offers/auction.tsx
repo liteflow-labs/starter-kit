@@ -1,6 +1,7 @@
 import {
   Box,
   Flex,
+  Icon,
   Stack,
   Table,
   TableContainer,
@@ -14,13 +15,14 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
+import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import Empty from '../../../../components/Empty/Empty'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -42,7 +44,7 @@ import {
   FetchUserAuctionsQuery,
   useFetchUserAuctionsQuery,
 } from '../../../../graphql'
-import useBlockExplorer from '../../../../hooks/useBlockExplorer'
+import useAccount from '../../../../hooks/useAccount'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -107,14 +109,10 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AuctionsOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
   const toast = useToast()
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
@@ -178,7 +176,7 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
 
       <UserProfileTemplate
         signer={signer}
-        currentAccount={account}
+        currentAccount={address}
         account={userAccount}
         currentTab="offers"
         totals={
@@ -265,7 +263,7 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                 {auctions.map((item) => (
                   <Tr fontSize="sm" key={item.id}>
                     <Td>
-                      <Flex gap={3}>
+                      <Flex as={Link} href={`/tokens/${item.asset.id}`} gap={3}>
                         <Image
                           src={item.asset.image}
                           alt={item.asset.name}
@@ -313,7 +311,6 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                           signer={signer}
                           auction={item}
                           bestBid={item.bestBid}
-                          blockExplorer={blockExplorer}
                           onAuctionAccepted={onAuctionAccepted}
                         />
                       )}
@@ -322,6 +319,15 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                 ))}
               </Tbody>
             </Table>
+            {auctions.length === 0 && (
+              <Empty
+                icon={
+                  <Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />
+                }
+                title={t('user.auctions.table.empty.title')}
+                description={t('user.auctions.table.empty.description')}
+              />
+            )}
           </TableContainer>
 
           <Pagination

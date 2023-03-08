@@ -1,6 +1,7 @@
 import {
   Box,
   Flex,
+  Icon,
   IconButton,
   Stack,
   Table,
@@ -15,13 +16,14 @@ import {
 } from '@chakra-ui/react'
 import { dateFromNow, formatAddress } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
-import { useWeb3React } from '@web3-react/core'
+import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import Empty from '../../../../components/Empty/Empty'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -37,7 +39,8 @@ import {
   TradesOrderBy,
   useFetchUserTradePurchasedQuery,
 } from '../../../../graphql'
-import useBlockExplorer from '../../../../hooks/useBlockExplorer'
+import useAccount from '../../../../hooks/useAccount'
+import { blockExplorer } from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -104,11 +107,7 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<TradesOrderBy>('TIMESTAMP_DESC')
   const [changePage, changeLimit] = usePaginate()
-  const { account } = useWeb3React()
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
+  const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
   const { data } = useFetchUserTradePurchasedQuery({
@@ -147,7 +146,7 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
 
       <UserProfileTemplate
         signer={signer}
-        currentAccount={account}
+        currentAccount={address}
         account={userAccount}
         currentTab="trades"
         totals={
@@ -247,7 +246,11 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                   <Tr fontSize="sm" key={index}>
                     <Td>
                       {item.asset ? (
-                        <Flex gap={3}>
+                        <Flex
+                          as={Link}
+                          href={`/tokens/${item.asset.id}`}
+                          gap={3}
+                        >
                           <Image
                             src={item.asset.image}
                             alt={item.asset.name}
@@ -296,14 +299,20 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                         '-'
                       )}
                     </Td>
-                    <Td>{formatAddress(item.sellerAddress)}</Td>
+                    <Td>
+                      <Link href={`/users/${item.sellerAddress}`}>
+                        {formatAddress(item.sellerAddress)}
+                      </Link>
+                    </Td>
                     <Td>{dateFromNow(item.createdAt)}</Td>
                     <Td>
                       <IconButton
                         aria-label="external link"
                         as={Link}
                         href={
-                          blockExplorer.transaction(item.transactionHash) || '#'
+                          blockExplorer(item.asset?.chainId).transaction(
+                            item.transactionHash,
+                          ) || '#'
                         }
                         isExternal
                         variant="outline"
@@ -317,6 +326,15 @@ const TradePurchasedPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                 ))}
               </Tbody>
             </Table>
+            {trades.length === 0 && (
+              <Empty
+                icon={
+                  <Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />
+                }
+                title={t('user.trade-purchased.table.empty.title')}
+                description={t('user.trade-purchased.table.empty.description')}
+              />
+            )}
           </TableContainer>
 
           <Pagination

@@ -17,9 +17,10 @@ import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard
 import { HiOutlineGlobeAlt } from '@react-icons/all-files/hi/HiOutlineGlobeAlt'
 import { SiInstagram } from '@react-icons/all-files/si/SiInstagram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
-import { useWeb3React } from '@web3-react/core'
+import linkify from 'components/Linkify/Linkify'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useState, VFC } from 'react'
+import useAccount from '../../../hooks/useAccount'
 import Link from '../../Link/Link'
 import WalletAddress from '../../Wallet/Address'
 
@@ -47,7 +48,7 @@ const UserProfileInfo: VFC<{
   const { t } = useTranslation('components')
   const { create: createReferralLink, creating: creatingReferralLink } =
     useInvitation(signer)
-  const { account } = useWeb3React()
+  const { isLoggedIn } = useAccount()
   const toast = useToast()
   const [referralUrl, setReferralUrl] = useState<string>()
 
@@ -56,7 +57,7 @@ const UserProfileInfo: VFC<{
   const ownerLoggedIn = useIsLoggedIn(address)
 
   useEffect(() => {
-    if (!account) return
+    if (!isLoggedIn) return
     if (referralUrl) return
     if (!loginUrlForReferral) return
     createReferralLink()
@@ -67,7 +68,7 @@ const UserProfileInfo: VFC<{
           status: 'error',
         }),
       )
-  }, [referralUrl, account, createReferralLink, loginUrlForReferral, toast])
+  }, [referralUrl, isLoggedIn, createReferralLink, loginUrlForReferral, toast])
 
   const handleReferralCopyLink = useCallback(() => {
     if (!referralUrl) return
@@ -86,7 +87,7 @@ const UserProfileInfo: VFC<{
             as="h1"
             variant="title"
             color="brand.black"
-            overflowWrap="break-word"
+            wordBreak="break-word"
           >
             {name}
           </Heading>
@@ -119,8 +120,8 @@ const UserProfileInfo: VFC<{
           <Heading as="h4" variant="heading2" color="brand.black">
             {t('user.info.bio')}
           </Heading>
-          <Text as="p" variant="text-sm" color="gray.500">
-            {description}
+          <Text as="p" variant="text-sm" color="gray.500" whiteSpace="pre-wrap">
+            {linkify(description)}
           </Text>
         </Stack>
       )}

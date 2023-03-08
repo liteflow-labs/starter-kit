@@ -1,4 +1,5 @@
-import { Box, chakra, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, Flex, SimpleGrid, Text, useToast } from '@chakra-ui/react'
+import { formatError } from '@nft/hooks'
 import CollectionCard from 'components/Collection/CollectionCard'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
@@ -79,6 +80,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   useEagerConnect()
   const { pathname, query, replace } = useRouter()
   const { t } = useTranslation('templates')
+  const toast = useToast()
   const [loadingOrder, setLoadingOrder] = useState(false)
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
@@ -102,16 +104,19 @@ const CollectionsPage: NextPage<Props> = ({}) => {
           pathname,
           query: { ...query, orderBy, page: undefined },
         })
+      } catch (e) {
+        toast({
+          title: formatError(e),
+          status: 'error',
+        })
       } finally {
         setLoadingOrder(false)
       }
     },
-    [replace, pathname, query],
+    [replace, pathname, query, toast],
   )
 
   const collections = useMemo(() => data?.collections?.nodes || [], [data])
-
-  const ChakraPagination = chakra(Pagination)
 
   return (
     <>
@@ -175,32 +180,31 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               />
             </Flex>
           )}
-          <ChakraPagination
-            py="6"
-            borderTop="1px"
-            borderColor="gray.200"
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            total={data?.collections?.totalCount}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          <Box py="6" borderTop="1px" borderColor="gray.200">
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              total={data?.collections?.totalCount}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              result={{
+                label: t('pagination.result.label'),
+                caption: (props) => (
+                  <Trans
+                    ns="templates"
+                    i18nKey="pagination.result.caption"
+                    values={props}
+                    components={[
+                      <Text as="span" color="brand.black" key="text" />,
+                    ]}
+                  />
+                ),
+                pages: (props) =>
+                  t('pagination.result.pages', { count: props.total }),
+              }}
+            />
+          </Box>
         </>
       </ExploreTemplate>
     </>

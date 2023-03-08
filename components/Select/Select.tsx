@@ -32,7 +32,7 @@ type IProps<T extends string> = HTMLAttributes<any> & {
   }[]
   value?: T
   onChange?(value: string | string[] | undefined): void
-  disabled?: boolean
+  isDisabled?: boolean
   error?: FieldError | undefined
   name: string
   hint?: string
@@ -52,6 +52,7 @@ const Select = <T extends string>({
   placeholder,
   error,
   onChange,
+  isDisabled,
   name,
   hint,
   required,
@@ -108,17 +109,9 @@ const Select = <T extends string>({
               px={4}
               py={2}
               borderWidth="1px"
-              color={
-                props.disabled ? 'gray.500' : !error ? 'brand.black' : 'red.900'
-              }
-              bgColor={props.disabled ? 'gray.100' : 'white'}
+              color={error ? 'red.900' : 'brand.black'}
               w={selectWidth ? selectWidth : 'full'}
-              shadow={props.disabled ? undefined : 'sm'}
-              pointerEvents={props.disabled ? 'none' : undefined}
               borderColor={!error ? 'gray.200' : 'red.300'}
-              _hover={{
-                shadow: props.disabled ? undefined : 'md',
-              }}
               _focus={{
                 ring: 1,
                 ringColor: !error ? 'brand.500' : 'red.500',
@@ -126,6 +119,7 @@ const Select = <T extends string>({
                 outline: 'none',
               }}
               rightIcon={<Icon w={5} h={5} as={HiChevronDown} />}
+              isDisabled={isDisabled}
             >
               <Flex align="center" gap={2}>
                 {selectedChoice ? (

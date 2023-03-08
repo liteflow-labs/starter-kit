@@ -7,6 +7,7 @@ query FeesForOffer($id: String!) {
 query OfferForAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
+    chainId
     collection {
       chainId
       address
@@ -109,16 +110,6 @@ query OfferForAsset($id: String!, $address: Address, $now: Datetime!) {
       verification {
         status
       }
-    }
-  }
-  currencies(orderBy: CREATED_AT_ASC) {
-    nodes {
-      image
-      name
-      id
-      decimals
-      symbol
-      address
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Flex, HStack, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, VFC } from 'react'
@@ -34,8 +34,8 @@ const SaleDirectCardFooter: VFC<Props> = ({
         return
       case 1:
         return (
-          <HStack spacing={1}>
-            <Text as="span" variant="subtitle2" color="gray.500">
+          <>
+            <Text as="span" variant="subtitle2" color="gray.500" mr={1}>
               {t('sales.direct.card-footer.price')}
             </Text>
             <Text as="span" variant="subtitle2" color="brand.black">
@@ -45,7 +45,7 @@ const SaleDirectCardFooter: VFC<Props> = ({
                 averageFrom={100000}
               />
             </Text>
-          </HStack>
+          </>
         )
       default:
         return hasMultiCurrency ? (
@@ -55,8 +55,8 @@ const SaleDirectCardFooter: VFC<Props> = ({
             })}
           </Text>
         ) : (
-          <HStack spacing={1}>
-            <Text as="span" variant="subtitle2" color="gray.500">
+          <>
+            <Text as="span" variant="subtitle2" color="gray.500" mr={1}>
               {t('sales.direct.card-footer.from')}
             </Text>
             <Text as="span" variant="subtitle2" color="brand.black">
@@ -66,7 +66,7 @@ const SaleDirectCardFooter: VFC<Props> = ({
                 averageFrom={100000}
               />
             </Text>
-          </HStack>
+          </>
         )
     }
   }, [numberOfSales, unitPrice, currency, hasMultiCurrency, t])
@@ -74,19 +74,23 @@ const SaleDirectCardFooter: VFC<Props> = ({
   return (
     <Flex
       as={Link}
-      color={showButton ? 'white' : 'gray.500'}
-      bgColor={showButton ? 'brand.500' : 'gray.100'}
+      href={`/checkout/${saleId}`}
       py={2}
       px={4}
-      fontSize="sm"
-      fontWeight="semibold"
-      href={`/checkout/${saleId}`}
+      bgColor={showButton ? 'brand.500' : 'gray.100'}
     >
-      {showButton
-        ? isOwner
-          ? t('sales.direct.card-footer.view')
-          : t('sales.direct.card-footer.purchase')
-        : chip}
+      <Text
+        variant="subtitle2"
+        color={showButton ? 'white' : 'gray.500'}
+        noOfLines={1}
+        wordBreak="break-all"
+      >
+        {showButton
+          ? isOwner
+            ? t('sales.direct.card-footer.view')
+            : t('sales.direct.card-footer.purchase')
+          : chip}
+      </Text>
     </Flex>
   )
 }

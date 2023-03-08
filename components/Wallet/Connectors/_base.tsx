@@ -1,51 +1,54 @@
-import { Box, Spinner, Text } from '@chakra-ui/react'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { SyntheticEvent, useState, VFC } from 'react'
+import { Box, BoxProps, Spinner, Text } from '@chakra-ui/react'
+import { SyntheticEvent, useMemo, useState, VFC } from 'react'
+import { Connector, useAccount as useWagmiAccount, useConnect } from 'wagmi'
+import useAccount from '../../../hooks/useAccount'
 
-type Props = {
-  connector: AbstractConnector
+type Props = Omit<BoxProps, 'onError'> & {
+  connector: Connector
   name: string
   icon: JSX.Element
-  activate: (
-    connector: AbstractConnector,
-    onError?: ((error: Error) => void) | undefined,
-    throwErrors?: boolean | undefined,
-  ) => Promise<void>
-  onError: (error?: Error) => void
+  onActivate: (() => void) | undefined
+  onError: (error: Error) => void
+  chainId: number | undefined
 }
 
 const WalletBase: VFC<Props> = ({
   icon,
   connector,
-  onError,
   name,
-  activate,
+  onError,
+  onActivate,
+  chainId,
+  ...props
 }) => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const { isConnected, isLoggedIn } = useAccount()
+  const { connector: connectedConnector } = useWagmiAccount()
+  const { connectAsync } = useConnect({ chainId })
+  const [isLoading, setIsLoading] = useState(false)
+
   const handle = async (e: SyntheticEvent) => {
-    setLoading(true)
     e.stopPropagation()
     e.preventDefault()
-    onError() // reset error
-    if (loading) return
+    setIsLoading(true)
     try {
-      if (connector instanceof WalletConnectConnector) {
-        // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-        // from issue https://github.com/NoahZinsmeister/web3-react/issues/124#issuecomment-993923827
-        // let's remove this hack when issue is resolved
-        connector.walletConnectProvider = undefined
-      }
-      await activate(connector, undefined, true)
-    } catch (error) {
-      onError(error as Error)
+      await connectAsync({ connector })
+      onActivate && onActivate()
+    } catch (e) {
+      onError(e as Error)
     } finally {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
+  const loading = useMemo(
+    () =>
+      isLoading ||
+      (isConnected && !isLoggedIn && connectedConnector === connector),
+    [isLoading, isConnected, isLoggedIn, connectedConnector, connector],
+  )
+
   return (
-    <Box as="a" p={6} onClick={handle}>
+    <Box as="a" p={6} onClick={handle} {...props}>
       {loading ? (
         <Spinner
           display="block"

@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import { useMemo } from 'react'
 import AccountTemplate from '../../components/Account/Account'
@@ -10,6 +9,7 @@ import {
   WalletCurrenciesDocument,
   WalletCurrenciesQuery,
 } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import useLoginRedirect from '../../hooks/useLoginRedirect'
 import SmallLayout from '../../layouts/small'
@@ -31,22 +31,18 @@ export const getServerSideProps = wrapServerSideProps(
 
 const WalletPage: NextPage = () => {
   const ready = useEagerConnect()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   useLoginRedirect(ready)
   const { data } = useWalletCurrenciesQuery()
   const currencies = useMemo(() => data?.currencies?.nodes, [data])
 
   if (!currencies) return <></>
-  if (!account) return <></>
+  if (!address) return <></>
   return (
     <SmallLayout>
       <Head title="Account - Wallet" />
       <AccountTemplate currentTab="wallet">
-        <WalletAccount
-          account={account.toLowerCase()}
-          currencies={currencies}
-          networkName={environment.NETWORK_NAME}
-        />
+        <WalletAccount account={address} currencies={currencies} />
       </AccountTemplate>
     </SmallLayout>
   )

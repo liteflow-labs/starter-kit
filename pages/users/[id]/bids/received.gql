@@ -8,9 +8,7 @@ query FetchUserBidsReceived(
   account(address: $address) {
     ...AccountDetail
   }
-  created: assets(
-    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
-  ) {
+  created: assets(filter: { creatorAddress: { equalTo: $address } }) {
     totalCount
   }
   onSale: assets(
@@ -38,9 +36,7 @@ query FetchUserBidsReceived(
   ) {
     totalCount
   }
-  owned: ownerships(
-    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
-  ) {
+  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
     totalCount
   }
   bids: offerOpenBuys(
@@ -80,6 +76,7 @@ query FetchUserBidsReceived(
         id
         name
         image
+        chainId
       }
     }
   }

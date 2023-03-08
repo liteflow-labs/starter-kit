@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Icon,
@@ -22,12 +21,14 @@ import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight
 import useTranslation from 'next-translate/useTranslation'
 import { ReactElement, useCallback, useMemo, VFC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import CancelOfferModal from '../../Modal/CancelOffer'
 import Price from '../../Price/Price'
 import SaleOpenEdit from '../Open/Info'
 
 export type Props = {
   assetId: string
+  chainId: number
   blockExplorer: BlockExplorer
   isOwner: boolean
   isHomepage: boolean
@@ -51,6 +52,7 @@ export type Props = {
 // TODO: the logic of this component doesn't seems right. The component mostly renders nothing
 const SaleDirectInfo: VFC<Props> = ({
   assetId,
+  chainId,
   blockExplorer,
   isOwner,
   isHomepage,
@@ -134,19 +136,19 @@ const SaleDirectInfo: VFC<Props> = ({
             )}
           </Heading>
         </Flex>
-        <Button
+        <ButtonWithNetworkSwitch
+          chainId={chainId}
           variant="outline"
           colorScheme="gray"
           bgColor="white"
           onClick={() => handleCancel(currentAccountFirstSale)}
           rightIcon={<HiArrowNarrowRight />}
           isLoading={activeStep !== CancelOfferStep.INITIAL}
-          disabled={activeStep !== CancelOfferStep.INITIAL}
         >
           <Text as="span" isTruncated>
             {t('sales.direct.info.cancel')}
           </Text>
-        </Button>
+        </ButtonWithNetworkSwitch>
         <CancelOfferModal
           isOpen={isOpen}
           onClose={onClose}
@@ -167,6 +169,7 @@ const SaleDirectInfo: VFC<Props> = ({
     blockExplorer,
     transactionHash,
     handleCancel,
+    chainId,
   ])
 
   const create = useMemo(() => {

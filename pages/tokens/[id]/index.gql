@@ -26,6 +26,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
           count
         }
       }
+      mintType
     }
     name
     description
@@ -240,12 +241,6 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
           symbol
         }
       }
-    }
-  }
-  currencies(orderBy: CREATED_AT_ASC, filter: { address: { isNull: false } }) {
-    # keep only non-native currency. Cannot create bid with native currency.
-    nodes {
-      image
     }
   }
 }

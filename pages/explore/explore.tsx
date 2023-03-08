@@ -1,6 +1,5 @@
 import {
   Box,
-  chakra,
   Flex,
   Grid,
   GridItem,
@@ -14,7 +13,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -44,6 +42,7 @@ import {
   FetchCurrenciesQuery,
   useFetchAllErc721And1155Query,
 } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
   extractTraitsFromQuery,
@@ -51,7 +50,6 @@ import useAssetFilterFromQuery, {
   OfferFilter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../hooks/useExecuteOnAccountChange'
 import useFilterState from '../../hooks/useFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
@@ -151,21 +149,25 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const filter = useAssetFilterFromQuery(currencies)
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
-  const { data, refetch } = useFetchAllErc721And1155Query({
+  const { data, previousData, loading } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
       limit,
       offset,
       orderBy,
       filter: convertFilterToAssetFilter(filter, currencies, date),
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
+
+  const assets = useMemo(() => {
+    if (loading) return previousData?.assets
+    return data?.assets
+  }, [data?.assets, loading, previousData])
 
   const { showFilters, toggleFilters, close, count } = useFilterState(filter)
 
@@ -205,7 +207,6 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
   )
 
   const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
-  const ChakraPagination = chakra(Pagination)
 
   return (
     <>
@@ -213,7 +214,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading}
+        loading={pageLoading || loading}
         search={filter.search}
         selectedTabIndex={0}
       >
@@ -271,7 +272,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {data?.assets?.totalCount && data?.assets?.totalCount > 0 ? (
+              {assets?.totalCount && assets?.totalCount > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -281,8 +282,8 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
                       : { base: 1, sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {data.assets.nodes.map((x, i) => (
-                    <Flex key={i} justify="center">
+                  {assets?.nodes.map((x, i) => (
+                    <Flex key={i} justify="center" overflow="hidden">
                       <TokenCard
                         asset={convertAsset(x)}
                         creator={convertUser(x.creator, x.creator.address)}
@@ -312,33 +313,31 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
                   />
                 </Flex>
               )}
-              <ChakraPagination
-                mt="6"
-                py="6"
-                borderTop="1px"
-                borderColor="gray.200"
-                limit={limit}
-                limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-                page={page}
-                total={data?.assets?.totalCount}
-                onPageChange={changePage}
-                onLimitChange={changeLimit}
-                result={{
-                  label: t('pagination.result.label'),
-                  caption: (props) => (
-                    <Trans
-                      ns="templates"
-                      i18nKey="pagination.result.caption"
-                      values={props}
-                      components={[
-                        <Text as="span" color="brand.black" key="text" />,
-                      ]}
-                    />
-                  ),
-                  pages: (props) =>
-                    t('pagination.result.pages', { count: props.total }),
-                }}
-              />
+              <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
+                <Pagination
+                  limit={limit}
+                  limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+                  page={page}
+                  total={assets?.totalCount}
+                  onPageChange={changePage}
+                  onLimitChange={changeLimit}
+                  result={{
+                    label: t('pagination.result.label'),
+                    caption: (props) => (
+                      <Trans
+                        ns="templates"
+                        i18nKey="pagination.result.caption"
+                        values={props}
+                        components={[
+                          <Text as="span" color="brand.black" key="text" />,
+                        ]}
+                      />
+                    ),
+                    pages: (props) =>
+                      t('pagination.result.pages', { count: props.total }),
+                  }}
+                />
+              </Box>
             </GridItem>
           </Grid>
         </>
