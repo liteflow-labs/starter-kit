@@ -196,6 +196,7 @@ const HomePage: NextPage<Props> = ({
                   lg: '25%',
                 }}
                 p="10px"
+                overflow="hidden"
               >
                 <TokenCard
                   asset={convertAsset(x.asset)}
