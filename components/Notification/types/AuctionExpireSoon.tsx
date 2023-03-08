@@ -5,11 +5,11 @@ import Price from '../../Price/Price'
 export type IProps = {
   auction: {
     asset: {
-      id: string
       image: string
       name: string
     }
   }
+  currentAccount: string
   offer: {
     amount: string
     currency: {
@@ -19,13 +19,17 @@ export type IProps = {
   }
 }
 
-export default function AuctionExpireSoon({ auction, offer }: IProps): {
+export default function AuctionExpireSoon({
+  auction,
+  currentAccount,
+  offer,
+}: IProps): {
   link: string
   image: string
   children: JSX.Element
 } {
   return {
-    link: `/tokens/${auction.asset.id}`,
+    link: `/users/${currentAccount}/offers/auction`,
     image: auction.asset.image,
     children: (
       <Trans
