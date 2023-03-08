@@ -1,4 +1,5 @@
-import { Button, Heading, Icon, Stack, Text } from '@chakra-ui/react'
+import { Button, Heading, Icon, Stack, Text, useToast } from '@chakra-ui/react'
+import { formatError } from '@nft/hooks'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
@@ -50,6 +51,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
   const ready = useEagerConnect()
   const { t } = useTranslation('templates')
+  const toast = useToast()
   const { address } = useAccount()
   useLoginRedirect(ready)
   const [_, setCookies] = useCookies()
@@ -77,10 +79,15 @@ const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
         variables: { cursor: data?.notifications?.pageInfo.endCursor },
         updateQuery: concatToQuery('notifications'),
       })
+    } catch (e) {
+      toast({
+        title: formatError(e),
+        status: 'error',
+      })
     } finally {
       setLoading(false)
     }
-  }, [data, fetchMore])
+  }, [data?.notifications?.pageInfo.endCursor, fetchMore, toast])
 
   useEffect(() => {
     if (!address) return
