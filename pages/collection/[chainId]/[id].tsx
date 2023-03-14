@@ -1,6 +1,5 @@
 import {
   Box,
-  chakra,
   Flex,
   Grid,
   GridItem,
@@ -14,7 +13,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { removeEmptyFromObject } from '@nft/hooks'
-import { useWeb3React } from '@web3-react/core'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -50,6 +48,7 @@ import {
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
   extractTraitsFromQuery,
@@ -57,7 +56,6 @@ import useAssetFilterFromQuery, {
   OfferFilter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useEagerConnect from '../../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useFilterState from '../../../hooks/useFilterState'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
@@ -204,7 +202,7 @@ const CollectionPage: FC<Props> = ({
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
       collectionAddress: collectionAddress,
@@ -216,11 +214,11 @@ const CollectionPage: FC<Props> = ({
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery(currencies)
-  const { data, refetch } = useFetchCollectionAssetsQuery({
+  const { data } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
       now: date,
-      currentAccount: (ready ? account?.toLowerCase() : currentAccount) || '',
+      currentAccount: (ready ? address : currentAccount) || '',
       limit,
       offset,
       orderBy,
@@ -228,7 +226,6 @@ const CollectionPage: FC<Props> = ({
       filter: convertFilterToAssetFilter(filter, currencies, date),
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const { showFilters, toggleFilters, close, count } = useFilterState(filter)
   const updateFilter = useCallback(
@@ -274,7 +271,6 @@ const CollectionPage: FC<Props> = ({
   )
 
   const [changePage, changeLimit] = usePaginate()
-  const ChakraPagination = chakra(Pagination)
 
   if (!collectionDetails) return null
   return (
@@ -285,10 +281,6 @@ const CollectionPage: FC<Props> = ({
         collection={collectionDetails}
         baseURL={environment.BASE_URL}
         reportEmail={environment.REPORT_EMAIL}
-        explorer={{
-          name: environment.BLOCKCHAIN_EXPLORER_NAME,
-          url: environment.BLOCKCHAIN_EXPLORER_URL,
-        }}
       />
 
       <Flex py="6" justifyContent="space-between">
@@ -366,7 +358,7 @@ const CollectionPage: FC<Props> = ({
               }
             >
               {data.assets.nodes.map((x, i) => (
-                <Flex key={i} justify="center">
+                <Flex key={i} justify="center" overflow="hidden">
                   <TokenCard
                     asset={convertAsset(x)}
                     creator={convertUser(x.creator, x.creator.address)}
@@ -395,33 +387,31 @@ const CollectionPage: FC<Props> = ({
               />
             </Flex>
           )}
-          <ChakraPagination
-            mt="6"
-            py="6"
-            borderTop="1px"
-            borderColor="gray.200"
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            total={data?.assets?.totalCount}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              total={data?.assets?.totalCount}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              result={{
+                label: t('pagination.result.label'),
+                caption: (props) => (
+                  <Trans
+                    ns="templates"
+                    i18nKey="pagination.result.caption"
+                    values={props}
+                    components={[
+                      <Text as="span" color="brand.black" key="text" />,
+                    ]}
+                  />
+                ),
+                pages: (props) =>
+                  t('pagination.result.pages', { count: props.total }),
+              }}
+            />
+          </Box>
         </GridItem>
       </Grid>
     </LargeLayout>

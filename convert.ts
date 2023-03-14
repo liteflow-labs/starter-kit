@@ -99,13 +99,13 @@ export const convertAssetWithSupplies = (
         sum: Maybe<Pick<OfferOpenSaleSumAggregates, 'availableQuantity'>>
       }>
     }
-    collection: Pick<Collection, 'standard'>
+    collection: Pick<Collection, 'standard' | 'mintType'>
   },
 ): ReturnType<typeof convertAsset> & {
   saleSupply: BigNumber
   totalSupply: BigNumber
   owned: BigNumber
-  collection: Pick<Collection, 'standard'>
+  collection: Pick<Collection, 'standard' | 'mintType'>
 } => {
   const bestBid = asset.bestBid?.nodes[0]
   return {
@@ -119,6 +119,7 @@ export const convertAssetWithSupplies = (
       address: asset.collection.address,
       name: asset.collection.name,
       standard: asset.collection.standard,
+      mintType: asset.collection.mintType,
     },
     saleSupply: BigNumber.from(
       asset.sales.aggregates?.sum?.availableQuantity || 0,
@@ -623,7 +624,7 @@ export const convertTrade = (
     currency: Maybe<
       Pick<Currency, 'id' | 'image' | 'name' | 'decimals' | 'symbol'>
     >
-    asset: Maybe<Pick<Asset, 'name' | 'image'>>
+    asset: Maybe<Pick<Asset, 'id' | 'name' | 'image' | 'chainId'>>
   },
 ): {
   transactionHash: string
@@ -640,8 +641,10 @@ export const convertTrade = (
     symbol: string
   } | null
   asset?: {
+    id: string
     name: string
     image: string
+    chainId: number
   }
 } => {
   return {
@@ -654,8 +657,10 @@ export const convertTrade = (
     currency: trade.currency,
     asset: trade.asset
       ? {
+          id: trade.asset.id,
           name: trade.asset.name,
           image: trade.asset.image,
+          chainId: trade.asset.chainId,
         }
       : undefined,
   }

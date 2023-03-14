@@ -13,7 +13,6 @@ import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
 import { IoImageOutline } from '@react-icons/all-files/io5/IoImageOutline'
 import { IoImagesOutline } from '@react-icons/all-files/io5/IoImagesOutline'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -31,6 +30,7 @@ import {
   FetchCollectionsAndAccountVerificationStatusQueryVariables,
   useFetchCollectionsAndAccountVerificationStatusQuery,
 } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import SmallLayout from '../../layouts/small'
 import { wrapServerSideProps } from '../../props'
@@ -78,11 +78,11 @@ const CreatePage: NextPage = () => {
   const ready = useEagerConnect()
   const { t } = useTranslation('templates')
   const { back } = useRouter()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { data, called } = useFetchCollectionsAndAccountVerificationStatusQuery(
     {
       variables: {
-        account: account?.toLowerCase() || '',
+        account: address || '',
         collectionFilter: collectionsFilter,
         fetchCollections: environment.MINTABLE_COLLECTIONS.length > 0,
       },

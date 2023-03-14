@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Button,
   Checkbox,
+  CheckboxGroup,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -206,7 +207,7 @@ const FilterAsset: NextPage<Props> = ({
               {offerTypes.map(({ key, value }) => (
                 <Button
                   key={key}
-                  disabled={isSubmitting}
+                  isDisabled={isSubmitting}
                   variant="outline"
                   size="sm"
                   px={4}
@@ -262,7 +263,7 @@ const FilterAsset: NextPage<Props> = ({
                   }))}
                   value={currency?.id}
                   required
-                  disabled={isSubmitting}
+                  isDisabled={isSubmitting}
                   error={errors.currencyId}
                   onChange={(x: any) => setValue('currencyId', x)}
                   sortAlphabetically
@@ -388,7 +389,10 @@ const FilterAsset: NextPage<Props> = ({
                 </Flex>
               )}
 
-              <Button disabled={isSubmitting} onClick={() => propagateFilter()}>
+              <Button
+                isDisabled={isSubmitting}
+                onClick={() => propagateFilter()}
+              >
                 <Text as="span" isTruncated>
                   {t('filters.assets.submit')}
                 </Text>
@@ -496,7 +500,7 @@ const FilterAsset: NextPage<Props> = ({
                 flex="1"
                 textAlign="left"
                 noOfLines={1}
-                wordBreak="break-all"
+                wordBreak="break-word"
                 title={type}
               >
                 {type}
@@ -509,36 +513,40 @@ const FilterAsset: NextPage<Props> = ({
               </Flex>
             </AccordionButton>
             <AccordionPanel maxHeight="400px" overflow="auto">
-              <Stack spacing={1}>
-                {values.map(({ value, count }, i) => (
-                  <Checkbox
-                    key={i}
-                    isChecked={filter.traits
-                      .find((x) => x.type === type)
-                      ?.values.includes(value)}
-                    onChange={(e) =>
-                      e.target.checked
-                        ? addTrait(type, value)
-                        : removeTrait(type, value)
-                    }
-                  >
-                    <Flex justifyContent="space-between" gap={3}>
-                      <Text
-                        variant="subtitle2"
-                        color="black"
-                        noOfLines={1}
-                        wordBreak="break-all"
-                        title={value}
-                      >
-                        {value}
-                      </Text>
-                      <Text variant="subtitle2" color="black">
-                        {count}
-                      </Text>
-                    </Flex>
-                  </Checkbox>
-                ))}
-              </Stack>
+              <CheckboxGroup
+                defaultValue={
+                  filter?.traits?.find((trait) => trait.type === type)?.values
+                }
+              >
+                <Stack spacing={1}>
+                  {values.map(({ value, count }, i) => (
+                    <Checkbox
+                      key={i}
+                      value={value}
+                      onChange={(e) =>
+                        e.target.checked
+                          ? addTrait(type, value)
+                          : removeTrait(type, value)
+                      }
+                    >
+                      <Flex justifyContent="space-between" gap={3}>
+                        <Text
+                          variant="subtitle2"
+                          color="black"
+                          noOfLines={1}
+                          wordBreak="break-word"
+                          title={value}
+                        >
+                          {value}
+                        </Text>
+                        <Text variant="subtitle2" color="black">
+                          {count}
+                        </Text>
+                      </Flex>
+                    </Checkbox>
+                  ))}
+                </Stack>
+              </CheckboxGroup>
             </AccordionPanel>
           </AccordionItem>
         ))}

@@ -27,6 +27,7 @@ import { FC, useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Dropzone from '../../Dropzone/Dropzone'
 import CreateCollectibleModal from '../../Modal/CreateCollectible'
 import LoginModal from '../../Modal/Login'
@@ -54,9 +55,6 @@ type Props = {
   categories: { id: string; title: string }[]
   blockExplorer: BlockExplorer
   uploadUrl: string
-  login: {
-    networkName: string
-  }
   activateUnlockableContent: boolean
   maxRoyalties: number
   onCreated: (id: string) => void
@@ -70,7 +68,6 @@ const TokenFormCreate: FC<Props> = ({
   categories,
   blockExplorer,
   uploadUrl,
-  login,
   activateUnlockableContent,
   maxRoyalties,
   onCreated,
@@ -363,11 +360,15 @@ const TokenFormCreate: FC<Props> = ({
         error={errors.category}
       />
       {signer ? (
-        <Button isLoading={activeStep !== CreateNftStep.INITIAL} type="submit">
+        <ButtonWithNetworkSwitch
+          chainId={collection.chainId}
+          isLoading={activeStep !== CreateNftStep.INITIAL}
+          type="submit"
+        >
           <Text as="span" isTruncated>
             {t('token.form.create.submit')}
           </Text>
-        </Button>
+        </ButtonWithNetworkSwitch>
       ) : (
         <Button type="button" onClick={loginOnOpen}>
           <Text as="span" isTruncated>
@@ -375,7 +376,11 @@ const TokenFormCreate: FC<Props> = ({
           </Text>
         </Button>
       )}
-      <LoginModal isOpen={loginIsOpen} onClose={loginOnClose} {...login} />
+      <LoginModal
+        isOpen={loginIsOpen}
+        onClose={loginOnClose}
+        chainId={collection.chainId}
+      />
       <CreateCollectibleModal
         isOpen={createCollectibleIsOpen}
         onClose={createCollectibleOnClose}

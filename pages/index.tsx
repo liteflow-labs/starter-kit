@@ -9,7 +9,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -36,7 +35,7 @@ import {
   FetchHomePageQuery,
   useFetchHomePageQuery,
 } from '../graphql'
-import useBlockExplorer from '../hooks/useBlockExplorer'
+import useAccount from '../hooks/useAccount'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useOrderById from '../hooks/useOrderById'
 import useSigner from '../hooks/useSigner'
@@ -106,7 +105,7 @@ const HomePage: NextPage<Props> = ({
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const toast = useToast()
   const date = useMemo(() => new Date(now), [now])
   const { data, refetch, error } = useFetchHomePageQuery({
@@ -115,7 +114,7 @@ const HomePage: NextPage<Props> = ({
       now: date,
       limit,
       assetIds: tokens,
-      address: (ready ? account?.toLowerCase() : currentAccount) || '',
+      address: (ready ? address : currentAccount) || '',
     },
   })
 
@@ -127,11 +126,6 @@ const HomePage: NextPage<Props> = ({
       status: 'error',
     })
   }, [error, t, toast])
-
-  const blockExplorer = useBlockExplorer(
-    environment.BLOCKCHAIN_EXPLORER_NAME,
-    environment.BLOCKCHAIN_EXPLORER_URL,
-  )
 
   const featured = useOrderById(featuredTokens, data?.featured?.nodes)
   const assets = useOrderById(tokens, data?.assets?.nodes)
@@ -147,7 +141,6 @@ const HomePage: NextPage<Props> = ({
       featured?.map((asset) => (
         <TokenHeader
           key={asset.id}
-          blockExplorer={blockExplorer}
           asset={convertAssetWithSupplies(asset)}
           currencies={currencies}
           auction={
@@ -166,12 +159,12 @@ const HomePage: NextPage<Props> = ({
           numberOfOwners={asset.ownerships.totalCount}
           isHomepage={true}
           signer={signer}
-          currentAccount={account?.toLowerCase()}
+          currentAccount={address}
           onOfferCanceled={reloadInfo}
           onAuctionAccepted={reloadInfo}
         />
       )),
-    [featured, blockExplorer, account, signer, reloadInfo, currencies],
+    [featured, address, signer, reloadInfo, currencies],
   )
   return (
     <LargeLayout>
@@ -203,6 +196,7 @@ const HomePage: NextPage<Props> = ({
                   lg: '25%',
                 }}
                 p="10px"
+                overflow="hidden"
               >
                 <TokenCard
                   asset={convertAsset(x.asset)}
@@ -242,7 +236,7 @@ const HomePage: NextPage<Props> = ({
           </Flex>
           <SimpleGrid spacing={6} columns={{ sm: 2, md: 3, lg: 4 }}>
             {assets.map((x, i) => (
-              <Flex key={i} justify="center">
+              <Flex key={i} justify="center" overflow="hidden">
                 <TokenCard
                   asset={convertAsset(x)}
                   creator={convertUser(x.creator, x.creator.address)}

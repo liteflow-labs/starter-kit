@@ -8,9 +8,7 @@ query FetchUserTradeSold(
   account(address: $address) {
     ...AccountDetail
   }
-  created: assets(
-    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
-  ) {
+  created: assets(filter: { creatorAddress: { equalTo: $address } }) {
     totalCount
   }
   onSale: assets(
@@ -38,9 +36,7 @@ query FetchUserTradeSold(
   ) {
     totalCount
   }
-  owned: ownerships(
-    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
-  ) {
+  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
     totalCount
   }
   trades(
@@ -65,8 +61,10 @@ query FetchUserTradeSold(
         symbol
       }
       asset {
+        id
         name
         image
+        chainId
       }
     }
   }

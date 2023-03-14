@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react'
+import { Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { VFC } from 'react'
 import Link from '../Link/Link'
@@ -17,14 +17,12 @@ const Avatar: VFC<Props> = ({ address, name, image, verified, size = 8 }) => {
   return (
     <Link display="block" flexShrink={0} href={`/users/${address}`}>
       <Flex align="center" gap={2}>
-        <Box
+        <Flex
           as={AccountImage}
-          rounded="full"
           address={address}
           image={image}
           size={size * 4}
-          w={size}
-          h={size}
+          rounded="full"
         />
         <Text as="span" variant="subtitle2" color="gray.500">
           {name || <WalletAddress address={address} isShort />}

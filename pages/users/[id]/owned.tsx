@@ -1,5 +1,4 @@
 import { Text } from '@chakra-ui/react'
-import { useWeb3React } from '@web3-react/core'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -23,8 +22,8 @@ import {
   OwnershipsOrderBy,
   useFetchOwnedAssetsQuery,
 } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useEagerConnect from '../../../hooks/useEagerConnect'
-import useExecuteOnAccountChange from '../../../hooks/useExecuteOnAccountChange'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
@@ -100,20 +99,19 @@ const OwnedPage: NextPage<Props> = ({
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OwnershipsOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch } = useFetchOwnedAssetsQuery({
+  const { data } = useFetchOwnedAssetsQuery({
     variables: {
       address: userAddress,
-      currentAddress: (ready ? account?.toLowerCase() : currentAccount) || '',
+      currentAddress: (ready ? address : currentAccount) || '',
       limit,
       offset,
       orderBy,
       now: date,
     },
   })
-  useExecuteOnAccountChange(refetch, ready)
 
   const userAccount = useMemo(
     () => convertFullUser(data?.account || null, userAddress),
@@ -160,7 +158,7 @@ const OwnedPage: NextPage<Props> = ({
       />
       <UserProfileTemplate
         signer={signer}
-        currentAccount={account}
+        currentAccount={address}
         account={userAccount}
         currentTab="owned"
         totals={

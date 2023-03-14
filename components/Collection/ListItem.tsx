@@ -60,7 +60,7 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
             <Text
               variant="subtitle2"
               noOfLines={1}
-              wordBreak="break-all"
+              wordBreak="break-word"
               maxW={16}
             >
               {numbro(collection.totalVolume).format({

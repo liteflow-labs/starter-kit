@@ -245,7 +245,7 @@ const CreateCollectibleModal: FC<Props> = ({
               colorScheme="gray"
               isFullWidth
               rightIcon={<HiOutlineExternalLink />}
-              disabled={!transactionHash}
+              isDisabled={!transactionHash}
             >
               <Text as="span" isTruncated>
                 {t('modal.create-collectible.action', blockExplorer)}

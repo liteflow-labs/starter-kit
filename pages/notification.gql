@@ -47,7 +47,6 @@ query GetNotifications($address: Address!, $cursor: Cursor) {
         unitPrice
         quantity
         asset {
-          id
           image
           name
         }
