@@ -1,6 +1,20 @@
 import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector'
+import {
+  connectorsForWallets,
+  Wallet,
+  WalletList,
+} from '@rainbow-me/rainbowkit'
+import {
+  braveWallet,
+  coinbaseWallet,
+  injectedWallet,
+  metaMaskWallet,
+  rainbowWallet,
+  walletConnectWallet,
+} from '@rainbow-me/rainbowkit/wallets'
 import invariant from 'ts-invariant'
 import {
+  Chain,
   configureChains,
   Connector,
   createClient,
@@ -8,49 +22,74 @@ import {
   mainnet,
 } from 'wagmi'
 import { bsc, bscTestnet, polygon, polygonMumbai } from 'wagmi/chains'
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
-import { InjectedConnector } from 'wagmi/connectors/injected'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
 import { theme } from './styles/theme'
 
-export const { chains, provider } = configureChains(
+export const { chains, provider } = configureChains<Chain>(
   [mainnet, goerli, bscTestnet, bsc, polygon, polygonMumbai],
   [publicProvider()],
 )
 
-export const connectors: {
-  injected?: InjectedConnector
-  walletConnect?: WalletConnectConnector
-  coinbase?: CoinbaseWalletConnector
-  email?: Connector
-} = {
-  email: environment.MAGIC_API_KEY
-    ? emailConnector(environment.CHAIN_ID)
-    : undefined,
-  injected: new InjectedConnector({}),
-  walletConnect: new WalletConnectConnector({
-    options: { version: '1' },
-  }),
-  coinbase: new CoinbaseWalletConnector({
-    options: { appName: 'Acme' },
-  }),
+// Copied from https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/wallets/getDefaultWallets.ts#L11
+// Only added the shimDisconnect option
+const getDefaultWallets = ({
+  appName,
+  chains,
+  shimDisconnect,
+}: {
+  appName: string
+  chains: Chain[]
+  shimDisconnect?: boolean
+}): {
+  connectors: ReturnType<typeof connectorsForWallets>
+  wallets: WalletList
+} => {
+  const wallets: WalletList = [
+    {
+      groupName: 'Popular',
+      wallets: [
+        injectedWallet({ chains, shimDisconnect }),
+        rainbowWallet({ chains, shimDisconnect }),
+        coinbaseWallet({ appName, chains }),
+        metaMaskWallet({ chains, shimDisconnect }),
+        walletConnectWallet({ chains }),
+        braveWallet({ chains, shimDisconnect }),
+        emailConnector({
+          chains,
+          chainId: environment.CHAIN_ID,
+        }),
+      ],
+    },
+  ]
+
+  return {
+    connectors: connectorsForWallets(wallets),
+    wallets,
+  }
 }
+
+const { connectors } = getDefaultWallets({
+  appName: environment.APP_NAME,
+  chains,
+  shimDisconnect: true,
+})
 
 export const client = createClient({
   autoConnect: true,
   provider,
-  connectors: [
-    connectors.email,
-    connectors.injected,
-    connectors.coinbase,
-    connectors.walletConnect,
-  ].filter(Boolean),
+  connectors: connectors,
 })
 
-function emailConnector(chainId: number) {
-  invariant(environment.MAGIC_API_KEY, 'missing MAGIC_API_KEY')
+function emailConnector({
+  chains,
+  chainId,
+}: {
+  chains: any[]
+  chainId: number
+}): Wallet {
+  const apiKey = environment.MAGIC_API_KEY
+  invariant(apiKey, 'missing MAGIC_API_KEY')
   const rpcUrl = (function () {
     switch (chainId) {
       case mainnet.id:
@@ -68,17 +107,29 @@ function emailConnector(chainId: number) {
     }
   })()
   invariant(rpcUrl, `no rpcUrl found for chain ${chainId}`)
-  return new MagicConnectConnector({
-    options: {
-      apiKey: environment.MAGIC_API_KEY,
-      accentColor: theme.colors.brand[500],
-      customHeaderText: 'Acme',
-      magicSdkConfiguration: {
-        network: {
-          rpcUrl,
-          chainId,
+  return {
+    id: 'magic',
+    name: 'Magic',
+    iconUrl: 'https://svgshare.com/i/iJK.svg',
+    iconBackground: '#fff',
+    createConnector: () => {
+      const connector = new MagicConnectConnector({
+        chains: chains,
+        options: {
+          apiKey: apiKey,
+          accentColor: theme.colors.brand[500],
+          customHeaderText: environment.APP_NAME,
+          magicSdkConfiguration: {
+            network: {
+              rpcUrl,
+              chainId,
+            },
+          },
         },
-      },
+      }) as unknown as Connector
+      return {
+        connector,
+      }
     },
-  }) as unknown as Connector
+  }
 }
