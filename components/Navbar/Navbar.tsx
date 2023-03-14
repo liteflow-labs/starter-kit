@@ -6,7 +6,6 @@ import {
   AccordionPanel,
   As,
   Box,
-  Button,
   Divider,
   Drawer,
   DrawerBody,
@@ -30,6 +29,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { useAddFund } from '@nft/hooks'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
@@ -44,7 +44,6 @@ import { useNavbarAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
-import LoginModal from '../Modal/Login'
 import Select from '../Select/Select'
 import AccountImage from '../Wallet/Image'
 
@@ -396,7 +395,6 @@ const Navbar: VFC<{
   multiLang?: MultiLang
 }> = ({ allowTopUp, logo, router, multiLang, disableMinting, signer }) => {
   const { t } = useTranslation('components')
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const { address, isLoggedIn, logout } = useAccount()
   const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady } = router
@@ -525,11 +523,12 @@ const Navbar: VFC<{
               />
             </>
           ) : (
-            <Button onClick={onOpen}>
-              <Text as="span" isTruncated>
-                {t('navbar.sign-in')}
-              </Text>
-            </Button>
+            <ConnectButton
+              accountStatus="address"
+              chainStatus="none"
+              showBalance={false}
+              label={t('navbar.sign-in')}
+            />
           )}
           {multiLang && (
             <Flex display={{ base: 'none', lg: 'flex' }} align="center">
@@ -558,7 +557,6 @@ const Navbar: VFC<{
           />
         </Flex>
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} chainId={undefined} />
     </>
   )
 }
