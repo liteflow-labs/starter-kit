@@ -15,6 +15,7 @@ import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
@@ -71,8 +72,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? ctx.params.id[0]
         : ctx.params.id
       : null
-    if (!assetId) return { notFound: true }
-
+    invariant(assetId, 'assetId is falsy')
     const now = new Date()
     const { data, error } = await client.query<BidOnAssetQuery>({
       query: BidOnAssetDocument,
@@ -102,6 +102,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (chainCurrency.error) throw chainCurrency.error
+    if (!chainCurrency.data) return { notFound: true }
     return {
       props: {
         assetId,

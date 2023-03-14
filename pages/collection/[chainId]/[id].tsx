@@ -18,6 +18,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { wrapServerSideProps } from 'props'
 import { FC, useCallback, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
 import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
@@ -80,14 +81,14 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? ctx.params.chainId[0]
         : ctx.params.chainId
       : null
-    if (!chainIdStr) return { notFound: true }
+    invariant(chainIdStr, 'chainId is required')
     const chainId = parseInt(chainIdStr, 10)
     const collectionAddress = ctx.params?.id
       ? Array.isArray(ctx.params.id)
         ? ctx.params.id[0]
         : ctx.params.id
       : null
-    if (!collectionAddress) return { notFound: true }
+    invariant(collectionAddress, 'Collection Address is required')
     const limit = ctx.query.limit
       ? Array.isArray(ctx.query.limit)
         ? parseInt(ctx.query.limit[0] || '0', 10)

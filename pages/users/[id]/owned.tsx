@@ -4,6 +4,7 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
@@ -51,12 +52,10 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         ? ctx.params.id[0]?.toLowerCase()
         : ctx.params.id.toLowerCase()
       : null
-    if (!userAddress) return { notFound: true }
-
+    invariant(userAddress, 'userAddress is falsy')
     const limit = getLimit(ctx, environment.PAGINATION_LIMIT)
     const orderBy = getOrder<OwnershipsOrderBy>(ctx, 'CREATED_AT_DESC')
     const offset = getOffset(ctx, environment.PAGINATION_LIMIT)
-
     const now = new Date()
     const { data, error } = await client.query<FetchOwnedAssetsQuery>({
       query: FetchOwnedAssetsDocument,
@@ -70,7 +69,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
+    if (!data) return { notFound: true }
     return {
       props: {
         userAddress,
