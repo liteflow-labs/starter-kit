@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { CreateNftStep, formatError, useCreateNFT } from '@nft/hooks'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -30,7 +31,6 @@ import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Dropzone from '../../Dropzone/Dropzone'
 import CreateCollectibleModal from '../../Modal/CreateCollectible'
-import LoginModal from '../../Modal/Login'
 import Select from '../../Select/Select'
 
 export type FormData = {
@@ -76,11 +76,7 @@ const TokenFormCreate: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
-  const {
-    isOpen: loginIsOpen,
-    onOpen: loginOnOpen,
-    onClose: loginOnClose,
-  } = useDisclosure()
+  const { openConnectModal } = useConnectModal()
   const {
     isOpen: createCollectibleIsOpen,
     onOpen: createCollectibleOnOpen,
@@ -370,17 +366,12 @@ const TokenFormCreate: FC<Props> = ({
           </Text>
         </ButtonWithNetworkSwitch>
       ) : (
-        <Button type="button" onClick={loginOnOpen}>
+        <Button type="button" onClick={openConnectModal}>
           <Text as="span" isTruncated>
             {t('token.form.create.submit')}
           </Text>
         </Button>
       )}
-      <LoginModal
-        isOpen={loginIsOpen}
-        onClose={loginOnClose}
-        chainId={collection.chainId}
-      />
       <CreateCollectibleModal
         isOpen={createCollectibleIsOpen}
         onClose={createCollectibleOnClose}

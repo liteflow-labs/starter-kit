@@ -1,11 +1,11 @@
-import { Button, Icon, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import { Button, Icon, Text, useToast } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { formatError, useInvitation } from '@nft/hooks'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo, useState, VFC } from 'react'
 import useAccount from '../../hooks/useAccount'
-import LoginModal from '../Modal/Login'
 
 type Props = {
   loginUrl: string
@@ -17,7 +17,7 @@ const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
   const toast = useToast()
   const { isLoggedIn } = useAccount()
   const { create, creating } = useInvitation(signer)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { openConnectModal } = useConnectModal()
   const [url, setUrl] = useState<string>()
 
   useEffect(() => {
@@ -45,14 +45,11 @@ const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
   const action = useMemo(() => {
     if (!isLoggedIn)
       return (
-        <>
-          <LoginModal isOpen={isOpen} onClose={onClose} chainId={undefined} />
-          <Button onClick={onOpen} width="full">
-            <Text as="span" isTruncated>
-              {t('referral.form.connect')}
-            </Text>
-          </Button>
-        </>
+        <Button onClick={openConnectModal} width="full">
+          <Text as="span" isTruncated>
+            {t('referral.form.connect')}
+          </Text>
+        </Button>
       )
     return (
       <Button
@@ -68,7 +65,7 @@ const ReferralForm: VFC<Props> = ({ loginUrl, signer }) => {
         </Text>
       </Button>
     )
-  }, [isLoggedIn, handleClick, t, creating, url, isOpen, onClose, onOpen])
+  }, [isLoggedIn, handleClick, t, creating, url, openConnectModal])
 
   return action
 }
