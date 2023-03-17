@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   As,
   Box,
+  Button,
   Divider,
   Drawer,
   DrawerBody,
@@ -39,7 +40,7 @@ import { MittEmitter } from 'next/dist/shared/lib/mitt'
 import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
-import { useDisconnect } from 'wagmi'
+import { useAccount as useWagmiAccount, useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import Image from '../Image/Image'
@@ -395,6 +396,7 @@ const Navbar: VFC<{
   multiLang?: MultiLang
 }> = ({ allowTopUp, logo, router, multiLang, disableMinting, signer }) => {
   const { t } = useTranslation('components')
+  const { isConnected } = useWagmiAccount()
   const { address, isLoggedIn, logout } = useAccount()
   const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady } = router
@@ -522,6 +524,10 @@ const Navbar: VFC<{
                 signOutFn={() => logout().then(disconnect)}
               />
             </>
+          ) : isConnected ? (
+            <Button colorScheme="brand" isDisabled>
+              {t('navbar.signing-in')}
+            </Button>
           ) : (
             <ConnectButton
               accountStatus="address"
