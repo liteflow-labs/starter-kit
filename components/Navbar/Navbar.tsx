@@ -525,9 +525,11 @@ const Navbar: VFC<{
               />
             </>
           ) : isConnected ? (
-            <Button colorScheme="brand" isDisabled>
-              {t('navbar.signing-in')}
-            </Button>
+            <Button
+              colorScheme="brand"
+              isLoading
+              loadingText={t('navbar.signing-in')}
+            />
           ) : (
             <ConnectButton
               accountStatus="address"
