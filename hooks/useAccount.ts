@@ -3,11 +3,10 @@ import { useAuthenticate, useIsLoggedIn } from '@nft/hooks'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
 import { useCallback, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
-import { Connector, useAccount as useWagmiAccount } from 'wagmi'
+import { Connector } from 'wagmi'
 
 type AccountDetail = {
   isLoggedIn: boolean
-  isConnected: boolean
   address?: string
   jwtToken: string | null
   logout: () => Promise<void>
@@ -22,11 +21,9 @@ const COOKIE_OPTIONS = {
 }
 
 export default function useAccount(): AccountDetail {
-  const { address, isConnected } = useWagmiAccount()
   const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
     useAuthenticate()
   const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
-  const isLoggedIn = useIsLoggedIn(address || '')
 
   const logout = useCallback(async () => {
     resetAuthenticationToken()
@@ -40,6 +37,9 @@ export default function useAccount(): AccountDetail {
     if (res.exp && res.exp < Math.ceil(Date.now() / 1000)) return null
     return { address: res.address.toLowerCase(), token: jwtToken }
   }, [cookies])
+
+  const address = useMemo(() => jwt?.address, [jwt])
+  const isLoggedIn = useIsLoggedIn(address || '')
 
   const login = useCallback(
     async (connector: Connector<any, any, Signer>) => {
@@ -70,7 +70,6 @@ export default function useAccount(): AccountDetail {
       address: jwt?.address?.toLowerCase(),
       jwtToken: jwt?.token,
       isLoggedIn: !!jwt,
-      isConnected: !!jwt,
       logout,
       login,
     }
@@ -80,7 +79,6 @@ export default function useAccount(): AccountDetail {
     address: isLoggedIn ? address?.toLowerCase() : undefined,
     jwtToken: isLoggedIn ? jwt?.token : null,
     isLoggedIn,
-    isConnected,
     logout,
     login,
   }
