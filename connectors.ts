@@ -55,11 +55,14 @@ const getDefaultWallets = ({
         metaMaskWallet({ chains, shimDisconnect }),
         walletConnectWallet({ chains }),
         braveWallet({ chains, shimDisconnect }),
-        emailConnector({
-          chains,
-          chainId: environment.CHAIN_ID,
-        }),
-      ],
+        environment.MAGIC_API_KEY
+          ? emailConnector({
+              chains,
+              chainId: environment.CHAIN_ID,
+              apiKey: environment.MAGIC_API_KEY,
+            })
+          : undefined,
+      ].filter(Boolean),
     },
   ]
 
@@ -84,12 +87,12 @@ export const client = createClient({
 function emailConnector({
   chains,
   chainId,
+  apiKey,
 }: {
   chains: any[]
   chainId: number
+  apiKey: string
 }): Wallet {
-  const apiKey = environment.MAGIC_API_KEY
-  invariant(apiKey, 'missing MAGIC_API_KEY')
   const rpcUrl = (function () {
     switch (chainId) {
       case mainnet.id:
