@@ -3,7 +3,6 @@ import invariant from 'ts-invariant'
 type Environment = {
   APP_NAME: string
   MAGIC_API_KEY?: string
-  PUBLIC_ETHEREUM_PROVIDER: string
   GRAPHQL_URL: string
   FEATURED_TOKEN: string[]
   PAGINATION_LIMIT: number
@@ -29,12 +28,6 @@ type Environment = {
     address: string
   }[]
 }
-
-// ethereum provider
-invariant(
-  process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
-  'Missing public Ethereum provider',
-)
 
 // graphql
 invariant(process.env.NEXT_PUBLIC_GRAPHQL_URL, 'Missing GraphQL URL')
@@ -95,7 +88,6 @@ const MINTABLE_COLLECTIONS = (
 const environment: Environment = {
   APP_NAME: 'Acme',
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
-  PUBLIC_ETHEREUM_PROVIDER: process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
   GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
   FEATURED_TOKEN: process.env.NEXT_PUBLIC_FEATURED_TOKEN.split(','),
   PAGINATION_LIMIT: 12,
