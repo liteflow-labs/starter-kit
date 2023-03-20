@@ -1,7 +1,6 @@
 import invariant from 'ts-invariant'
 
 type Environment = {
-  APP_NAME: string
   MAGIC_API_KEY?: string
   GRAPHQL_URL: string
   FEATURED_TOKEN: string[]
@@ -86,7 +85,6 @@ const MINTABLE_COLLECTIONS = (
   .map((address) => ({ address: address.toLowerCase(), chainId: CHAIN_ID }))
 
 const environment: Environment = {
-  APP_NAME: 'Acme',
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
   GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
   FEATURED_TOKEN: process.env.NEXT_PUBLIC_FEATURED_TOKEN.split(','),

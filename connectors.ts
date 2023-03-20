@@ -70,7 +70,7 @@ const getDefaultWallets = ({
 }
 
 const { connectors } = getDefaultWallets({
-  appName: environment.APP_NAME,
+  appName: 'Acme',
   chains,
   shimDisconnect: true,
 })
@@ -118,7 +118,7 @@ function emailConnector({
         options: {
           apiKey: apiKey,
           accentColor: theme.colors.brand[500],
-          customHeaderText: environment.APP_NAME,
+          customHeaderText: 'Acme',
           magicSdkConfiguration: {
             network: {
               rpcUrl,
