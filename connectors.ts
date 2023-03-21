@@ -23,7 +23,7 @@ const connectors = {
   }),
 }
 
-if (environment.MAGIC_API_KEY?.length > 0) {
+if (environment.MAGIC_API_KEY.length > 0) {
   connectors.email = new EmailConnector({
     apiKey: environment.MAGIC_API_KEY,
     options: {

@@ -1,7 +1,7 @@
 import invariant from 'ts-invariant'
 
 type Environment = {
-  MAGIC_API_KEY: string | undefined
+  MAGIC_API_KEY: string
   PUBLIC_ETHEREUM_PROVIDER: string
   BLOCKCHAIN_EXPLORER_URL: string
   BLOCKCHAIN_EXPLORER_NAME: string
@@ -128,7 +128,7 @@ const MINTABLE_COLLECTIONS = (
   .map((address) => ({ address: address.toLowerCase(), chainId: CHAIN_ID }))
 
 const environment: Environment = {
-  MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
+  MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? '',
   PUBLIC_ETHEREUM_PROVIDER: process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
   BLOCKCHAIN_EXPLORER_URL: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_URL,
   BLOCKCHAIN_EXPLORER_NAME: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
