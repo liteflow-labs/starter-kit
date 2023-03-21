@@ -1,7 +1,7 @@
 import invariant from 'ts-invariant'
 
 type Environment = {
-  MAGIC_API_KEY: string
+  MAGIC_API_KEY: string | undefined
   PUBLIC_ETHEREUM_PROVIDER: string
   BLOCKCHAIN_EXPLORER_URL: string
   BLOCKCHAIN_EXPLORER_NAME: string
