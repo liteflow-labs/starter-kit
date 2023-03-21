@@ -4,7 +4,7 @@ import useAccount from './useAccount'
 
 export default function useEagerConnect(): boolean {
   const { isReconnecting } = useWagmiAccount()
-  const { isLoggedIn, isConnected } = useAccount()
+  const { isConnected, isLoggedIn } = useAccount()
   const [hasBeenReady, setHasBeenReady] = useState(false)
 
   const ready = useMemo(() => {
