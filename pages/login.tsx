@@ -2,6 +2,7 @@ import { Box, Flex, Heading, Stack, Text, useToast } from '@chakra-ui/react'
 import { useInvitation } from '@nft/hooks'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import WalletEmail from 'components/Wallet/Connectors/Email'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -97,7 +98,7 @@ const LoginPage: NextPage = () => {
         mb={{ base: 12, lg: 24 }}
         justify="center"
       >
-        {/* {connectors.email && (
+        {connectors.email && (
           <WalletEmail
             connector={connectors.email}
             activate={handleAuthenticated}
@@ -122,7 +123,7 @@ const LoginPage: NextPage = () => {
               </Text>
             </Box>
           </Flex>
-        )} */}
+        )}
 
         {error && (
           <Text as="span" role="alert" variant="error" mt={3}>

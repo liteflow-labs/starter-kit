@@ -36,7 +36,7 @@ type Environment = {
 }
 
 // magic api key
-invariant(process.env.NEXT_PUBLIC_MAGIC_API_KEY, 'Missing magic API key')
+// invariant(process.env.NEXT_PUBLIC_MAGIC_API_KEY, 'Missing magic API key')
 
 // ethereum provider
 invariant(

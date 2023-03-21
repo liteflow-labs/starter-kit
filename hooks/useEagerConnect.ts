@@ -31,22 +31,22 @@ export default function useEagerConnect(): boolean {
         console.error('Failed to activate injected connector', e)
       }
     }
-    // if (connectors.email) {
-    //   try {
-    //     const user = await connectors.email.loggedInUser()
-    //     const address = await connectors.email.getAccount()
-    //     if (
-    //       user &&
-    //       user.email &&
-    //       address?.toLowerCase() === connectedAddress?.toLowerCase()
-    //     ) {
-    //       void activate(connectors.email.withEmail(user.email), undefined, true)
-    //       return
-    //     }
-    //   } catch (e) {
-    //     console.error('Failed to activate email connector', e)
-    //   }
-    // }
+    if (connectors.email) {
+      try {
+        const user = await connectors.email.loggedInUser()
+        const address = await connectors.email.getAccount()
+        if (
+          user &&
+          user.email &&
+          address?.toLowerCase() === connectedAddress?.toLowerCase()
+        ) {
+          void activate(connectors.email.withEmail(user.email), undefined, true)
+          return
+        }
+      } catch (e) {
+        console.error('Failed to activate email connector', e)
+      }
+    }
     setTried(true)
   }, [activate, connectedAddress])
 
