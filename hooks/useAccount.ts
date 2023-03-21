@@ -3,10 +3,11 @@ import { useAuthenticate, useIsLoggedIn } from '@nft/hooks'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
 import { useCallback, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
-import { Connector } from 'wagmi'
+import { Connector, useAccount as useWagmiAccount } from 'wagmi'
 
 type AccountDetail = {
   isLoggedIn: boolean
+  isConnected: boolean
   address?: string
   jwtToken: string | null
   logout: () => Promise<void>
@@ -21,9 +22,18 @@ const COOKIE_OPTIONS = {
 }
 
 export default function useAccount(): AccountDetail {
+  const { address, isConnected } = useWagmiAccount({
+    // FIXME: Implements dummy onConnect and onDisconnect functions to prevent a bug only present with React 17 where other onConnect and onDisconnect in the same component (eg: AccountProvider) are not triggered if another useWagmiAccount doesn't implement those functions.
+    // See https://github.com/liteflow-labs/starter-kit/pull/230#issuecomment-1477409307 for more info.
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onConnect: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onDisconnect: () => {},
+  })
   const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
     useAuthenticate()
   const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
+  const isLoggedIn = useIsLoggedIn(address || '')
 
   const logout = useCallback(async () => {
     resetAuthenticationToken()
@@ -37,9 +47,6 @@ export default function useAccount(): AccountDetail {
     if (res.exp && res.exp < Math.ceil(Date.now() / 1000)) return null
     return { address: res.address.toLowerCase(), token: jwtToken }
   }, [cookies])
-
-  const address = useMemo(() => jwt?.address, [jwt])
-  const isLoggedIn = useIsLoggedIn(address || '')
 
   const login = useCallback(
     async (connector: Connector<any, any, Signer>) => {
@@ -70,6 +77,7 @@ export default function useAccount(): AccountDetail {
       address: jwt?.address?.toLowerCase(),
       jwtToken: jwt?.token,
       isLoggedIn: !!jwt,
+      isConnected: !!jwt,
       logout,
       login,
     }
@@ -79,6 +87,7 @@ export default function useAccount(): AccountDetail {
     address: isLoggedIn ? address?.toLowerCase() : undefined,
     jwtToken: isLoggedIn ? jwt?.token : null,
     isLoggedIn,
+    isConnected,
     logout,
     login,
   }
