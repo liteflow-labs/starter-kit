@@ -113,7 +113,7 @@ function emailConnector({
   return {
     id: 'magic',
     name: 'Magic',
-    iconUrl: 'https://svgshare.com/i/iJK.svg',
+    iconUrl: '/magic.svg',
     iconBackground: '#fff',
     createConnector: () => {
       const connector = new MagicConnectConnector({
