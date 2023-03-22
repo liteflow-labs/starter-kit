@@ -1,38 +1,39 @@
 import invariant from 'ts-invariant'
 
 type Environment = {
-  MAGIC_API_KEY: string
-  PUBLIC_ETHEREUM_PROVIDER: string
-  BLOCKCHAIN_EXPLORER_URL: string
-  BLOCKCHAIN_EXPLORER_NAME: string
-  DRONE_COLLECTION_ADDRESS: string
-  GRAPHQL_URL: string
-  PAGINATION_LIMIT: number
-  CHAIN_ID: number
-  NETWORK_NAME: string
-  REPORT_EMAIL: string
-  HOME_TOKENS?: string[]
-  OFFER_VALIDITY_IN_SECONDS: number
-  AUCTION_VALIDITY_IN_SECONDS: number
-  BUGSNAG_API_KEY?: string
-  BASE_URL: string
-  UPLOAD_URL: string
-  REFERRAL_PERCENTAGE: { base: number; secondary?: number }
-  // Set to true if you want only verified users to be able to create NFTs.
-  // Set to false if you want everyone to be able to create NFTs.
-  RESTRICT_TO_VERIFIED_ACCOUNT: boolean
-  // Limit the maximum percentage for royalties
-  MAX_ROYALTIES: number
-  // Allow users to top up their wallet with fiat
-  ALLOW_TOP_UP: boolean
-  // Collections where user can mint
-  MINTABLE_COLLECTIONS: {
-    chainId: number
-    address: string
-  }[]
-  CONTENTFUL_ACCESS_TOKEN: string
-  CONTENTFUL_ENVIRONMENT_ID: string
-  CONTENTFUL_SPACE_ID: string
+    MAGIC_API_KEY: string
+    PUBLIC_ETHEREUM_PROVIDER: string
+    BLOCKCHAIN_EXPLORER_URL: string
+    BLOCKCHAIN_EXPLORER_NAME: string
+    DRONE_COLLECTION_ADDRESS: string
+    GRAPHQL_URL: string
+    PAGINATION_LIMIT: number
+    CHAIN_ID: number
+    NETWORK_NAME: string
+    REPORT_EMAIL: string
+    HOME_TOKENS?: string[]
+    OFFER_VALIDITY_IN_SECONDS: number
+    AUCTION_VALIDITY_IN_SECONDS: number
+    BUGSNAG_API_KEY?: string
+    BASE_URL: string
+    UPLOAD_URL: string
+    REFERRAL_PERCENTAGE: { base: number; secondary?: number }
+    // Set to true if you want only verified users to be able to create NFTs.
+    // Set to false if you want everyone to be able to create NFTs.
+    RESTRICT_TO_VERIFIED_ACCOUNT: boolean
+    // Limit the maximum percentage for royalties
+    MAX_ROYALTIES: number
+    // Allow users to top up their wallet with fiat
+    ALLOW_TOP_UP: boolean
+    // Collections where user can mint
+    MINTABLE_COLLECTIONS: {
+        chainId: number
+        address: string
+    }[]
+    CONTENTFUL_ACCESS_TOKEN: string
+    CONTENTFUL_ENVIRONMENT_ID: string
+    CONTENTFUL_SPACE_ID: string
+    DEFY_API_BASE_URL: string
 }
 
 // magic api key
@@ -40,18 +41,18 @@ invariant(process.env.NEXT_PUBLIC_MAGIC_API_KEY, 'Missing magic API key')
 
 // ethereum provider
 invariant(
-  process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
-  'Missing public Ethereum provider',
+    process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
+    'Missing public Ethereum provider',
 )
 
 // blockchain explorer
 invariant(
-  process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_URL,
-  'Missing blockchain explorer URL',
+    process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_URL,
+    'Missing blockchain explorer URL',
 )
 invariant(
-  process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
-  'Missing blockchain explorer name',
+    process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
+    'Missing blockchain explorer name',
 )
 
 // graphql
@@ -68,90 +69,96 @@ invariant(process.env.NEXT_PUBLIC_NETWORK_NAME, 'missing env NETWORK_NAME')
 invariant(process.env.NEXT_PUBLIC_REPORT_EMAIL, 'missing env REPORT_EMAIL')
 
 invariant(
-  process.env.NEXT_PUBLIC_OFFER_VALIDITY_IN_SECONDS,
-  'missing env OFFER_VALIDITY_IN_SECONDS',
+    process.env.NEXT_PUBLIC_OFFER_VALIDITY_IN_SECONDS,
+    'missing env OFFER_VALIDITY_IN_SECONDS',
 )
 const OFFER_VALIDITY_IN_SECONDS = parseInt(
-  process.env.NEXT_PUBLIC_OFFER_VALIDITY_IN_SECONDS,
-  10,
+    process.env.NEXT_PUBLIC_OFFER_VALIDITY_IN_SECONDS,
+    10,
 )
 invariant(
-  !isNaN(OFFER_VALIDITY_IN_SECONDS),
-  'env NEXT_PUBLIC_OFFER_VALIDITY_IN_SECONDS must be an integer',
+    !isNaN(OFFER_VALIDITY_IN_SECONDS),
+    'env NEXT_PUBLIC_OFFER_VALIDITY_IN_SECONDS must be an integer',
 )
 
 invariant(
-  process.env.NEXT_PUBLIC_AUCTION_VALIDITY_IN_SECONDS,
-  'missing env AUCTION_VALIDITY_IN_SECONDS',
+    process.env.NEXT_PUBLIC_AUCTION_VALIDITY_IN_SECONDS,
+    'missing env AUCTION_VALIDITY_IN_SECONDS',
 )
 const AUCTION_VALIDITY_IN_SECONDS = parseInt(
-  process.env.NEXT_PUBLIC_AUCTION_VALIDITY_IN_SECONDS,
-  10,
+    process.env.NEXT_PUBLIC_AUCTION_VALIDITY_IN_SECONDS,
+    10,
 )
 invariant(
-  !isNaN(AUCTION_VALIDITY_IN_SECONDS),
-  'env NEXT_PUBLIC_AUCTION_VALIDITY_IN_SECONDS must be an integer',
+    !isNaN(AUCTION_VALIDITY_IN_SECONDS),
+    'env NEXT_PUBLIC_AUCTION_VALIDITY_IN_SECONDS must be an integer',
 )
 
 invariant(process.env.NEXT_PUBLIC_BASE_URL, 'Base url is not defined')
 
 invariant(
-  process.env.NEXT_PUBLIC_UPLOAD_URL,
-  'env NEXT_PUBLIC_UPLOAD_URL is not defined',
+    process.env.NEXT_PUBLIC_UPLOAD_URL,
+    'env NEXT_PUBLIC_UPLOAD_URL is not defined',
 )
 
 invariant(
-  process.env.NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS,
-  'env NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS is not defined',
+    process.env.NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS,
+    'env NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS is not defined',
 )
 
 invariant(
-  process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
-  'env NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN is not defined',
+    process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
+    'env NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN is not defined',
 )
 
 invariant(
-  process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID,
-  'env NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID is not defined',
+    process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID,
+    'env NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID is not defined',
 )
 
 invariant(
-  process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
-  'env NEXT_PUBLIC_CONTENTFUL_SPACE_ID is not defined',
+    process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
+    'env NEXT_PUBLIC_CONTENTFUL_SPACE_ID is not defined',
+)
+
+invariant(
+    process.env.NEXT_PUBLIC_DEFY_API_BASE_URL,
+    'env NEXT_PUBLIC_DEFY_API_BASE_URL is not defined',
 )
 
 const MINTABLE_COLLECTIONS = (
-  process.env.NEXT_PUBLIC_MINTABLE_COLLECTIONS || ''
+    process.env.NEXT_PUBLIC_MINTABLE_COLLECTIONS || ''
 )
-  .split(',')
-  .filter(Boolean)
-  .map((address) => ({ address: address.toLowerCase(), chainId: CHAIN_ID }))
+    .split(',')
+    .filter(Boolean)
+    .map((address) => ({ address: address.toLowerCase(), chainId: CHAIN_ID }))
 
 const environment: Environment = {
-  MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
-  PUBLIC_ETHEREUM_PROVIDER: process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
-  BLOCKCHAIN_EXPLORER_URL: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_URL,
-  BLOCKCHAIN_EXPLORER_NAME: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
-  DRONE_COLLECTION_ADDRESS: process.env.NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS,
-  GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
-  PAGINATION_LIMIT: 12,
-  CHAIN_ID: CHAIN_ID,
-  NETWORK_NAME: process.env.NEXT_PUBLIC_NETWORK_NAME,
-  REPORT_EMAIL: process.env.NEXT_PUBLIC_REPORT_EMAIL,
-  HOME_TOKENS: process.env.NEXT_PUBLIC_HOME_TOKENS?.split(','),
-  OFFER_VALIDITY_IN_SECONDS: OFFER_VALIDITY_IN_SECONDS,
-  AUCTION_VALIDITY_IN_SECONDS: AUCTION_VALIDITY_IN_SECONDS,
-  BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,
-  BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
-  UPLOAD_URL: process.env.NEXT_PUBLIC_UPLOAD_URL,
-  REFERRAL_PERCENTAGE: { base: 20 * 0.025, secondary: 20 * 0.01 },
-  RESTRICT_TO_VERIFIED_ACCOUNT: true,
-  MAX_ROYALTIES: 30,
-  ALLOW_TOP_UP: true,
-  MINTABLE_COLLECTIONS,
-  CONTENTFUL_ACCESS_TOKEN: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
-  CONTENTFUL_ENVIRONMENT_ID: process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID,
-  CONTENTFUL_SPACE_ID: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
+    MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
+    PUBLIC_ETHEREUM_PROVIDER: process.env.NEXT_PUBLIC_ETHEREUM_PROVIDER,
+    BLOCKCHAIN_EXPLORER_URL: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_URL,
+    BLOCKCHAIN_EXPLORER_NAME: process.env.NEXT_PUBLIC_BLOCKCHAIN_EXPLORER_NAME,
+    DRONE_COLLECTION_ADDRESS: process.env.NEXT_PUBLIC_DRONE_COLLECTION_ADDRESS,
+    GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+    PAGINATION_LIMIT: 12,
+    CHAIN_ID: CHAIN_ID,
+    NETWORK_NAME: process.env.NEXT_PUBLIC_NETWORK_NAME,
+    REPORT_EMAIL: process.env.NEXT_PUBLIC_REPORT_EMAIL,
+    HOME_TOKENS: process.env.NEXT_PUBLIC_HOME_TOKENS?.split(','),
+    OFFER_VALIDITY_IN_SECONDS: OFFER_VALIDITY_IN_SECONDS,
+    AUCTION_VALIDITY_IN_SECONDS: AUCTION_VALIDITY_IN_SECONDS,
+    BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,
+    BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    UPLOAD_URL: process.env.NEXT_PUBLIC_UPLOAD_URL,
+    REFERRAL_PERCENTAGE: { base: 20 * 0.025, secondary: 20 * 0.01 },
+    RESTRICT_TO_VERIFIED_ACCOUNT: true,
+    MAX_ROYALTIES: 30,
+    ALLOW_TOP_UP: true,
+    MINTABLE_COLLECTIONS,
+    CONTENTFUL_ACCESS_TOKEN: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
+    CONTENTFUL_ENVIRONMENT_ID: process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID,
+    CONTENTFUL_SPACE_ID: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
+    DEFY_API_BASE_URL: process.env.NEXT_PUBLIC_DEFY_API_BASE_URL,
 }
 
 export default environment
