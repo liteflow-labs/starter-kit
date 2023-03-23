@@ -59,7 +59,7 @@ function Withdraw() {
         } else {
             setWithdrawTransferDisabled(false)
         }
-    }, [transferAmount])
+    }, [transferAmount, currentDefyBalance])
 
     const withdrawToChain = async () => {
         if (transferAmount != 0) {
