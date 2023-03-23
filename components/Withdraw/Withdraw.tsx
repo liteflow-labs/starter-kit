@@ -1,35 +1,44 @@
-import { useEffect, useRef, useState } from "react";
-import { BigNumber, ethers } from "ethers"
+import {
+    Button,
+    NumberDecrementStepper,
+    NumberIncrementStepper,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    Stack,
+    Text,
+} from '@chakra-ui/react'
+import { useEffect, useState } from "react";
 import axios from "axios"
 import { useWeb3React } from '@web3-react/core'
 import environment from '../../environment'
 import useSigner from '../../hooks/useSigner'
+import useTranslation from 'next-translate/useTranslation'
 
 function Withdraw() {
-
+    const { t } = useTranslation('components')
     const signer = useSigner();
-
-    const inputRef = useRef<HTMLInputElement>(null)
 
     // current account address
     const { account } = useWeb3React()
 
-    const [transferAmount, setTransferAmount] = useState<any>(BigNumber.from(0))
+    const [transferAmount, setTransferAmount] = useState<number>(1)
     const [withdrawTransferDisabled, setWithdrawTransferDisabled] = useState<boolean>(false)
 
     const [currentDefyBalance, setCurrentDefyBalance] = useState<number>(0)
 
+    const [isTransferring, setIsTransferring] = useState<boolean>(false)
+
     const updateUserCurrentDefy = async () => {
-        const url = `${environment.DEFY_API_BASE_URL}/Operatives/${account}/defyWallet`
+        const url = `${environment.DEFY_API_BASE_URL}/Operatives/defyBalance`
+
         try {
             const result = await axios.get(url, {
-                method: "get",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                params: {
+                    connectedAddress: account
+                }
             })
-            console.log(result)
-            setCurrentDefyBalance(await result.data)
+            setCurrentDefyBalance(await result.data.amount)
         } catch (e) {
             return "[error processing]"
         }
@@ -37,16 +46,15 @@ function Withdraw() {
 
     function getTotalAmountAfterWithdrawFormatted(): string {
         try {
-            const transferAmountNumber = parseFloat(ethers.utils.formatEther(transferAmount))
-            const total = currentDefyBalance - transferAmountNumber
-            return total.toFixed(4)
+            const total = currentDefyBalance - transferAmount
+            return total.toFixed(2)
         } catch (err) {
             return "[error processing]"
         }
     }
 
     useEffect(() => {
-        if (parseFloat(ethers.utils.formatEther(transferAmount)) > currentDefyBalance) {
+        if (transferAmount > currentDefyBalance) {
             setWithdrawTransferDisabled(true)
         } else {
             setWithdrawTransferDisabled(false)
@@ -54,132 +62,135 @@ function Withdraw() {
     }, [transferAmount])
 
     const withdrawToChain = async () => {
-        // operative to sign message
-        var message = `DEFY Withdrawal Request\nWallet Address: ${account}\nTokens: ${parseFloat(ethers.utils.formatEther(transferAmount))}`;
+        if (transferAmount != 0) {
+            // operative to sign message
+            var message = `DEFY Withdrawal Request\nWallet Address: ${account}\nTokens: ${transferAmount}`;
 
-        var signedMessageHash = await signer?.signMessage(message)
+            try {
+                setIsTransferring(true)
+                var signedMessageHash = await signer?.signMessage(message)
 
-        // build webApi endpoint url
-        const url = `${environment.DEFY_API_BASE_URL}/TokenBridge/withdrawTokens`
-
-        try {
-            const result = await axios.post(url, {
-                WalletAddress: account,
-                Message: message,
-                Signature: signedMessageHash
-            })
-            console.log(result)
-        } catch (err) {
-            return "[error processing]"
+                // build webApi endpoint url
+                const url = `${environment.DEFY_API_BASE_URL}/TokenBridge/withdrawTokens`
+                const result = await axios.post(url, {
+                    WalletAddress: account,
+                    Message: message,
+                    Signature: signedMessageHash
+                })
+                console.log(result)
+                setIsTransferring(false)
+            } catch (err) {
+                setIsTransferring(false)
+                return "[error processing]"
+            }
         }
     }
 
     useEffect(() => {
-        setTimeout(() => { updateUserCurrentDefy(), 3000 })
+        if (account) { updateUserCurrentDefy() }
+
         // TODO: add in after withdraw
-    }, [])
+    }, [account])
 
     return account ? (
-        <div className="grid grid-cols-2 w-full gap-1 ">
-            <div className="flex items-center justify-center p-4 glass text-white col-span-2">
-                WITHDRAW DEFY <div className="ml-2 i-carbon:arrows-horizontal" />
-            </div>
+        <Stack
+            align="flex-start"
+            spacing={12}
+            flex="1 1 0%"
+        >
+            {(
+                <>
+                    <Text>
+                        {t('withdraw.from') + " @" + account}
+                    </Text>
 
-            <div className="flex flex-col items-center justify-center p-4 text-white col-span-2 glass">
+                    {/**<img src={defyIcon} className="w-5 h-5" alt="" /> */}
 
-                {(
-                    <div className="text-left w-full flex flex-col gap-2">
-                        <div className="leading-tight">
-                            <span className="font-bold">From</span>
-                            <br />
-                            <span className="text-xs text-white:80">
-                                {
-                                    "@" + account
+                    <NumberInput
+                        clampValueOnBlur={false}
+                        value={transferAmount}
+                        min={1}
+                        max={100000}
+                        step={10}
+                        w="full"
+                        onChange={(e) => {
+                            if (e) { // only call setTransferAmount if e is not empty or undefined
+                                try {
+                                    setTransferAmount(parseFloat(e));
+                                } catch (error) {
+                                    console.error(error);
+                                    // handle the error here (e.g. show an error message to the user)
                                 }
-                            </span>
-                        </div>
-                        <div className="flex border-1 p-2 gap-2 items-center">
-                            {/**<img src={defyIcon} className="w-5 h-5" alt="" /> */}
-
-                            <input
-                                onChange={(e) => {
-                                    setTransferAmount(ethers.utils.parseEther(e.target.value))
-                                }}
-                                ref={inputRef}
-                                type="number"
-                                step="10"
-                                min="0"
-                                max="100000"
-                                className="bg-transparent px-2 py-1 border-b-transparent border-b-2 focus:border-b-green focus:bg-black:40 outline-none min-w-40"
-                                placeholder="0.00"
-                            />{" "}
-                            <div className="flex-1 text-left text-xs text-white:80">
-                                of total in-game balance{" "}
-                                {currentDefyBalance.toFixed(1)}
-                            </div>
-                            <button
-                                onClick={() => {
-                                    setTransferAmount(ethers.utils.parseEther(
-                                        currentDefyBalance.toString() || "0")
-                                    )
-                                    if (inputRef.current && currentDefyBalance) {
-                                        inputRef.current.value = currentDefyBalance.toFixed(1).toString()
-                                        setTransferAmount(ethers.utils.parseEther(currentDefyBalance.toString()))
-                                    }
-                                }}
-                            >
-                                Max
-                            </button>
-
-                        </div>
-                        <div className="w-10 h-10 border-1 rounded-full mx-auto flex items-center justify-center -mb-8">
-                            <div className="i-carbon:arrow-down" />
-                        </div>
-                        <span className="font-bold">
-                            To{" "}
-                            <span className="text-xs font-normal text-white:80">
-                                {
-                                    account
-                                }
-                            </span>
-                        </span>
-
-                        <div className="bg-black:40 p-2 flex gap-2 items-center">
-                            {/** <img src={defyIcon} className="w-5 h-5" alt="" /> */}
-                            {currentDefyBalance &&
-                                ethers.utils.formatEther(currentDefyBalance) || 0.0
                             }
-                            <span className="text-xs text-white:80">
-                                Current on-chain balance
-                            </span>
-                        </div>
-                        <span className="text-xs text-white:80">
-                            {transferAmount && !withdrawTransferDisabled &&
-                                `After transfer your in game balance will be ${getTotalAmountAfterWithdrawFormatted()}`}
-                        </span>
+                        }}
+                    >
+                        <NumberInputField />
+                        <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                        </NumberInputStepper>
+                    </NumberInput>
 
-                        {!withdrawTransferDisabled &&
-                            <button
-                                className="bg-black:90 p-3 hover:bg-green hover:text-black hover:tracking-tight"
+                    {" "}
+                    <Text>
+                        {t('withdraw.balance')}{" "}
+                        {typeof currentDefyBalance === 'number' ? currentDefyBalance.toString() : 'N/A'}
+                    </Text>
+                    <Button
+                        variant='outline'
+                        onClick={async () => {
+                            setTransferAmount(currentDefyBalance || 0)
+                            if (currentDefyBalance) {
+                                setTransferAmount(currentDefyBalance)
+                            }
+                        }}
+                    >
+                        Max
+                    </Button>
+
+                    <Text as="span" isTruncated>
+                        {t('withdraw.to')}{" "}{account}
+                    </Text>
+
+                    <Text>
+                        {transferAmount && !withdrawTransferDisabled &&
+                            `${t('withdraw.after')} ${getTotalAmountAfterWithdrawFormatted()} DEFY`}
+                    </Text>
+
+                    {!withdrawTransferDisabled &&
+                        (!isTransferring ?
+                            <Button
+                                variant='outline'
                                 onClick={async () => {
-                                    if (!transferAmount.isZero()) {
+                                    if (transferAmount) {
                                         await withdrawToChain()
                                     }
                                 }}
                             >
-                                TRANSFER
-                            </button>
-                        }
-                    </div>
-                )}
-            </div>
-        </div>
+                                {t('withdraw.transfer')}
+                            </Button>
+                            :
+                            <Button
+                                isLoading
+                                loadingText='Transferring'
+                                variant='outline'
+                            >
+                            </Button>
+                        )
+                    }
+                </>
+            )}
+        </Stack>
     ) : (
-        <div className="w-full flex justify-center items-center h-40 glass text-white">
+        <Stack
+            align="flex-start"
+            spacing={12}
+            as="form"
+            flex="1 1 0%"
+        >
             loading...
-        </div>
+        </Stack>
     )
 }
-
 
 export default Withdraw

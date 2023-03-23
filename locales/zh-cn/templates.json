@@ -1,425 +1,428 @@
 {
-  "error": {
-    "500": "很抱歉，出了点问题。"
-  },
-  "home": {
-    "explore": "浏览所有藏品",
-    "collections": "收藏品",
-    "auctions": "拍卖",
-    "featured": "精选藏品"
-  },
-  "explore": {
-    "title": "探索藏品",
-    "empty": {
-      "title": "未找到藏品",
-      "description": "请更新筛选条件来查找更多藏品。"
+    "error": {
+        "500": "很抱歉，出了点问题。"
     },
-    "form": {
-      "submit": "应用",
-      "clear": "全部清空",
-      "currency": {
-        "label": "价格范围",
-        "placeholder": "选择货币"
-      },
-      "min-price": {
-        "placeholder": "从",
-        "validation": {
-          "positive": "最低价格必须大于 0",
-          "decimals": "最低价格支持最多 {{ nbDecimals }} 位小数"
-        }
-      },
-      "max-price": {
-        "placeholder": "到",
-        "validation": {
-          "positive": "最高价格必须大于 0",
-          "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
-        }
-      },
-      "offers": {
-        "label": "状态",
-        "values": {
-          "fixed": "固定价格",
-          "auction": "拍卖"
-        }
-      },
-      "categories": {
-        "label": "特征过滤器"
-      },
-      "collections": {
-        "label": "收藏品"
-      }
+    "home": {
+        "explore": "浏览所有藏品",
+        "collections": "收藏品",
+        "auctions": "拍卖",
+        "featured": "精选藏品"
     },
-    "orderBy": {
-      "label": "排序方式",
-      "values": {
-        "createdAtDesc": "日期：最新",
-        "createdAtAsc": "日期：最早"
-      }
-    }
-  },
-  "asset": {
-    "detail": {
-      "unlockable": {
-        "title": "可解锁内容",
-        "tooltip": "项目内容只能由项目所有者解锁"
-      },
-      "show-preview": "显示预览",
-      "description": "描述",
-      "traits": "特征",
-      "tabs": {
-        "bids": "出价",
-        "history": "历史记录"
-      },
-      "menu": {
-        "report": {
-          "label": "举报",
-          "subject": "举报 NFT",
-          "body": "我要举报下列 NFT {{name}} (#{{id}})\n原因如下： "
-        }
-      },
-      "explorerLink": "在 {{name}} 上查看",
-      "ipfsLink": "在 IPFS 上查看",
-      "errors": {
-        "image": "出现问题"
-      }
-    },
-    "form": {
-      "title": {
-        "single": "创建单个藏品",
-        "multiple": "创建多个藏品"
-      },
-      "preview": "预览",
-      "notifications": {
-        "created": "您已成功创建藏品。"
-      },
-      "notFound": {
-        "title": "未找到集合",
-        "description": "您尝试在其上创建 NFT 的集合不存在",
-        "link": "在其他集合上创建"
-      }
-    },
-    "typeSelector": {
-      "title": "创建藏品",
-      "description": "如果您希望自己的藏品独一无二，请选择“单份”，如想要多次售卖一件藏品，请选择“多份”",
-      "single": {
-        "title": "单份",
-        "type": "ERC721"
-      },
-      "multiple": {
-        "title": "多份",
-        "type": "ERC1155"
-      },
-      "empty": {
-        "title": "未找到集合",
-        "description": "没有收藏对铸币开放"
-      }
-    },
-    "restricted": {
-      "title": "创建仅限于经过验证的用户",
-      "description": "要请求帐户验证，请通过 <0/> 与支持团队联系，他们将指导您完成流程的每一步。",
-      "info": "验证您的帐户后，您将收到通知并能够访问创建功能。"
-    }
-  },
-  "login": {
-    "title": "欢迎！",
-    "subtitle": "使用您的钱包登录",
-    "description": "通过下列方式之一连接。",
-    "alternative": "或使用下列帐户登录",
-    "successes": {
-      "invitation": "您的邀请已与您的帐户相关联。"
-    },
-    "errors": {
-      "wrong-network": "您连接到了错误的网络。请切换至 {{networkName}} 网络。",
-      "invitation": "您的邀请无法与此帐户相关联。 确保这是一个尚未链接到其他邀请码的帐户。"
-    }
-  },
-  "notifications": {
-    "title": "通知",
-    "loadMore": "显示更多",
-    "empty": {
-      "title": "未找到通知",
-      "description": "请稍后再试或在此期间浏览平台"
-    }
-  },
-  "offers": {
-    "bid": {
-      "meta": {
-        "title": "为 {{name}} 提交出价",
-        "description": "为 {{creator}} 创作的 {{name}} 提交出价"
-      },
-      "title": "提交出价",
-      "notifications": {
-        "created": "您的出价已成功提交。"
-      },
-      "auction": "距离拍卖结束还有",
-      "highestBid": "最高出价"
-    },
-    "checkout": {
-      "from": "从",
-      "meta": {
-        "title": "购买 {{name}}",
-        "description": "购买由 {{creator}} 创作的 {{name}}"
-      },
-      "title": "结账",
-      "notifications": {
-        "purchased": "已成功购买藏品。"
-      },
-      "on-sale": "售卖时长为",
-      "per-edition": "每版"
-    },
-    "form": {
-      "meta": {
-        "title": "为 {{name}} 创建要约",
-        "description": "为 {{name}} 创建要约"
-      },
-      "title": "藏品要约",
-      "notifications": {
-        "created": "您已成功创建要约。"
-      },
-      "options": {
-        "label": "要约类型",
-        "hints": {
-          "fixed": "为您的藏品输入价格，方便用户立即购买",
-          "auction": "为买家设置提交出价的时间期限"
+    "explore": {
+        "title": "探索藏品",
+        "empty": {
+            "title": "未找到藏品",
+            "description": "请更新筛选条件来查找更多藏品。"
         },
-        "values": {
-          "fixed": "固定价格",
-          "auction": "限时拍卖"
+        "form": {
+            "submit": "应用",
+            "clear": "全部清空",
+            "currency": {
+                "label": "价格范围",
+                "placeholder": "选择货币"
+            },
+            "min-price": {
+                "placeholder": "从",
+                "validation": {
+                    "positive": "最低价格必须大于 0",
+                    "decimals": "最低价格支持最多 {{ nbDecimals }} 位小数"
+                }
+            },
+            "max-price": {
+                "placeholder": "到",
+                "validation": {
+                    "positive": "最高价格必须大于 0",
+                    "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
+                }
+            },
+            "offers": {
+                "label": "状态",
+                "values": {
+                    "fixed": "固定价格",
+                    "auction": "拍卖"
+                }
+            },
+            "categories": {
+                "label": "特征过滤器"
+            },
+            "collections": {
+                "label": "收藏品"
+            }
+        },
+        "orderBy": {
+            "label": "排序方式",
+            "values": {
+                "createdAtDesc": "日期：最新",
+                "createdAtAsc": "日期：最早"
+            }
         }
-      }
+    },
+    "asset": {
+        "detail": {
+            "unlockable": {
+                "title": "可解锁内容",
+                "tooltip": "项目内容只能由项目所有者解锁"
+            },
+            "show-preview": "显示预览",
+            "description": "描述",
+            "traits": "特征",
+            "tabs": {
+                "bids": "出价",
+                "history": "历史记录"
+            },
+            "menu": {
+                "report": {
+                    "label": "举报",
+                    "subject": "举报 NFT",
+                    "body": "我要举报下列 NFT {{name}} (#{{id}})\n原因如下： "
+                }
+            },
+            "explorerLink": "在 {{name}} 上查看",
+            "ipfsLink": "在 IPFS 上查看",
+            "errors": {
+                "image": "出现问题"
+            }
+        },
+        "form": {
+            "title": {
+                "single": "创建单个藏品",
+                "multiple": "创建多个藏品"
+            },
+            "preview": "预览",
+            "notifications": {
+                "created": "您已成功创建藏品。"
+            },
+            "notFound": {
+                "title": "未找到集合",
+                "description": "您尝试在其上创建 NFT 的集合不存在",
+                "link": "在其他集合上创建"
+            }
+        },
+        "typeSelector": {
+            "title": "创建藏品",
+            "description": "如果您希望自己的藏品独一无二，请选择“单份”，如想要多次售卖一件藏品，请选择“多份”",
+            "single": {
+                "title": "单份",
+                "type": "ERC721"
+            },
+            "multiple": {
+                "title": "多份",
+                "type": "ERC1155"
+            },
+            "empty": {
+                "title": "未找到集合",
+                "description": "没有收藏对铸币开放"
+            }
+        },
+        "restricted": {
+            "title": "创建仅限于经过验证的用户",
+            "description": "要请求帐户验证，请通过 <0/> 与支持团队联系，他们将指导您完成流程的每一步。",
+            "info": "验证您的帐户后，您将收到通知并能够访问创建功能。"
+        }
+    },
+    "login": {
+        "title": "欢迎！",
+        "subtitle": "使用您的钱包登录",
+        "description": "通过下列方式之一连接。",
+        "alternative": "或使用下列帐户登录",
+        "successes": {
+            "invitation": "您的邀请已与您的帐户相关联。"
+        },
+        "errors": {
+            "wrong-network": "您连接到了错误的网络。请切换至 {{networkName}} 网络。",
+            "invitation": "您的邀请无法与此帐户相关联。 确保这是一个尚未链接到其他邀请码的帐户。"
+        }
+    },
+    "notifications": {
+        "title": "通知",
+        "loadMore": "显示更多",
+        "empty": {
+            "title": "未找到通知",
+            "description": "请稍后再试或在此期间浏览平台"
+        }
+    },
+    "offers": {
+        "bid": {
+            "meta": {
+                "title": "为 {{name}} 提交出价",
+                "description": "为 {{creator}} 创作的 {{name}} 提交出价"
+            },
+            "title": "提交出价",
+            "notifications": {
+                "created": "您的出价已成功提交。"
+            },
+            "auction": "距离拍卖结束还有",
+            "highestBid": "最高出价"
+        },
+        "checkout": {
+            "from": "从",
+            "meta": {
+                "title": "购买 {{name}}",
+                "description": "购买由 {{creator}} 创作的 {{name}}"
+            },
+            "title": "结账",
+            "notifications": {
+                "purchased": "已成功购买藏品。"
+            },
+            "on-sale": "售卖时长为",
+            "per-edition": "每版"
+        },
+        "form": {
+            "meta": {
+                "title": "为 {{name}} 创建要约",
+                "description": "为 {{name}} 创建要约"
+            },
+            "title": "藏品要约",
+            "notifications": {
+                "created": "您已成功创建要约。"
+            },
+            "options": {
+                "label": "要约类型",
+                "hints": {
+                    "fixed": "为您的藏品输入价格，方便用户立即购买",
+                    "auction": "为买家设置提交出价的时间期限"
+                },
+                "values": {
+                    "fixed": "固定价格",
+                    "auction": "限时拍卖"
+                }
+            }
+        }
+    },
+    "pagination": {
+        "result": {
+            "label": "每页结果数",
+            "caption": "第 <0>{{from}}</0> 至 <0>{{to}}</0> 条结果，共 <0>{{total}}</0> 条",
+            "pages_one": "共 {{count}} 页",
+            "pages_other": "共 {{count}} 页"
+        }
+    },
+    "referral": {
+        "title": "推荐创作者",
+        "description": "通过您的推荐链接在{{platformName}}平台上加入新的创作者，并从他们永久创建的 NFT 的销售中赚取一定比例。",
+        "link": "您的推荐链接",
+        "how": {
+            "title": "这个怎么运作",
+            "steps": [
+                "复制您的推荐链接并将其分享给您想要加入的创建者",
+                "创作者使用您的推荐链接登录平台（只有新创作者可以通过推荐链接入职）",
+                "然后您的推荐奖励与创建者的帐户相关联",
+                "每次出售您推荐的创建者创建的 NFT 时，您都会收到推荐奖励"
+            ]
+        },
+        "rewards": {
+            "title": "推荐奖励",
+            "primary": {
+                "title": "初级销售",
+                "description": "您将从销售中赚取 {{percentage}}%",
+                "tooltip": "工具提示内容 > 主要销售是在 NFT 铸造之后发生的第一次销售。"
+            },
+            "secondary": {
+                "title": "二次销售",
+                "description": "您将从销售中赚取 {{percentage}}%",
+                "tooltip": "工具提示内容 > 二级销售是在 NFT 一级销售之后发生的所有销售。"
+            }
+        }
+    },
+    "withdraw": {
+        "title": "退出 DEFY"
+    },
+    "user": {
+        "auctions": {
+            "nav": {
+                "fixed": "固定价格",
+                "auction": "拍卖"
+            },
+            "notifications": {
+                "accepted": "拍卖已接受"
+            },
+            "orderBy": {
+                "label": "排序方式",
+                "values": {
+                    "createdAtDesc": "日期：最新",
+                    "createdAtAsc": "日期：最早"
+                }
+            },
+            "table": {
+                "item": "商品",
+                "price": "最高出价",
+                "status": "状态",
+                "created": "已创建"
+            }
+        },
+        "bid-placed": {
+            "nav": {
+                "received": "已接收",
+                "placed": "已提交"
+            },
+            "notifications": {
+                "canceled": "出价已取消"
+            },
+            "actions": {
+                "cancel": "取消",
+                "new": "新出价"
+            },
+            "orderBy": {
+                "label": "排序方式",
+                "values": {
+                    "createdAtDesc": "日期：最新",
+                    "createdAtAsc": "日期：最早"
+                }
+            },
+            "table": {
+                "item": "商品",
+                "price": "总金额",
+                "status": "状态",
+                "created": "已提交"
+            },
+            "requested": "已请求 {{value}} 件",
+            "status": {
+                "expired": "已过期",
+                "active": "激活"
+            },
+            "cancel": {
+                "title": "取消要约"
+            }
+        },
+        "bid-received": {
+            "nav": {
+                "received": "已接收",
+                "placed": "已提交"
+            },
+            "notifications": {
+                "accepted": "出价已接受"
+            },
+            "actions": {
+                "accept": "接受"
+            },
+            "orderBy": {
+                "label": "排序方式",
+                "values": {
+                    "createdAtDesc": "日期：最新",
+                    "createdAtAsc": "日期：最早"
+                }
+            },
+            "table": {
+                "item": "商品",
+                "price": "总金额",
+                "from": "出价者",
+                "created": "已接收"
+            },
+            "requested": "已请求 {{value}} 件",
+            "accept": {
+                "title": "接受要约"
+            }
+        },
+        "created-assets": {
+            "orderBy": {
+                "values": {
+                    "createdAtDesc": "日期：最新",
+                    "createdAtAsc": "日期：最早"
+                }
+            }
+        },
+        "fixed": {
+            "nav": {
+                "fixed": "固定价格",
+                "auction": "拍卖"
+            },
+            "notifications": {
+                "canceled": "要约已取消"
+            },
+            "actions": {
+                "cancel": "取消",
+                "new": "新售卖"
+            },
+            "orderBy": {
+                "label": "排序方式",
+                "values": {
+                    "createdAtDesc": "日期：最新",
+                    "createdAtAsc": "日期：最早",
+                    "unitPriceAsc": "价格：从低到高",
+                    "unitPriceDesc": "价格：从高到低"
+                }
+            },
+            "table": {
+                "item": "商品",
+                "price": "单价",
+                "status": "状态",
+                "created": "已创建"
+            },
+            "status": {
+                "active": "激活",
+                "expired": "已过期"
+            },
+            "available": "{{value}} 件正在售卖中",
+            "cancel": {
+                "title": "取消要约"
+            }
+        },
+        "on-sale-assets": {
+            "orderBy": {
+                "values": {
+                    "createdAtDesc": "资产：最新",
+                    "createdAtAsc": "资产：最早"
+                }
+            }
+        },
+        "owned-assets": {
+            "orderBy": {
+                "values": {
+                    "createdAtDesc": "日期：最新",
+                    "createdAtAsc": "日期：最早"
+                }
+            }
+        },
+        "trade-purchased": {
+            "nav": {
+                "sold": "已售出",
+                "purchased": "已购买"
+            },
+            "orderBy": {
+                "label": "排序方式",
+                "values": {
+                    "timestampDesc": "日期：最新",
+                    "timestampAsc": "日期：最早",
+                    "amountAsc": "金额：从低到高",
+                    "amountDesc": "金额：从高到低"
+                }
+            },
+            "table": {
+                "item": "商品",
+                "price": "总金额",
+                "from": "卖方",
+                "created": "已购买"
+            },
+            "purchased": "已购买 {{value}} 件"
+        },
+        "trade-sold": {
+            "nav": {
+                "sold": "已售出",
+                "purchased": "已购买"
+            },
+            "orderBy": {
+                "label": "排序方式",
+                "values": {
+                    "timestampDesc": "日期：最新",
+                    "timestampAsc": "日期：最早",
+                    "amountAsc": "金额：从低到高",
+                    "amountDesc": "金额：从高到低"
+                }
+            },
+            "table": {
+                "item": "商品",
+                "price": "总金额",
+                "to": "买方",
+                "created": "已售出"
+            },
+            "sold": "已售出 {{value}} 件"
+        }
+    },
+    "users": {
+        "form": {
+            "notifications": {
+                "updated": "您的个人资料已成功更新。"
+            }
+        }
     }
-  },
-  "pagination": {
-    "result": {
-      "label": "每页结果数",
-      "caption": "第 <0>{{from}}</0> 至 <0>{{to}}</0> 条结果，共 <0>{{total}}</0> 条",
-      "pages_one": "共 {{count}} 页",
-      "pages_other": "共 {{count}} 页"
-    }
-  },
-  "referral": {
-    "title": "推荐创作者",
-    "description": "通过您的推荐链接在{{platformName}}平台上加入新的创作者，并从他们永久创建的 NFT 的销售中赚取一定比例。",
-    "link": "您的推荐链接",
-    "how": {
-      "title": "这个怎么运作",
-      "steps": [
-        "复制您的推荐链接并将其分享给您想要加入的创建者",
-        "创作者使用您的推荐链接登录平台（只有新创作者可以通过推荐链接入职）",
-        "然后您的推荐奖励与创建者的帐户相关联",
-        "每次出售您推荐的创建者创建的 NFT 时，您都会收到推荐奖励"
-      ]
-    },
-    "rewards": {
-      "title": "推荐奖励",
-      "primary": {
-        "title": "初级销售",
-        "description": "您将从销售中赚取 {{percentage}}%",
-        "tooltip": "工具提示内容 > 主要销售是在 NFT 铸造之后发生的第一次销售。"
-      },
-      "secondary": {
-        "title": "二次销售",
-        "description": "您将从销售中赚取 {{percentage}}%",
-        "tooltip": "工具提示内容 > 二级销售是在 NFT 一级销售之后发生的所有销售。"
-      }
-    }
-  },
-  "user": {
-    "auctions": {
-      "nav": {
-        "fixed": "固定价格",
-        "auction": "拍卖"
-      },
-      "notifications": {
-        "accepted": "拍卖已接受"
-      },
-      "orderBy": {
-        "label": "排序方式",
-        "values": {
-          "createdAtDesc": "日期：最新",
-          "createdAtAsc": "日期：最早"
-        }
-      },
-      "table": {
-        "item": "商品",
-        "price": "最高出价",
-        "status": "状态",
-        "created": "已创建"
-      }
-    },
-    "bid-placed": {
-      "nav": {
-        "received": "已接收",
-        "placed": "已提交"
-      },
-      "notifications": {
-        "canceled": "出价已取消"
-      },
-      "actions": {
-        "cancel": "取消",
-        "new": "新出价"
-      },
-      "orderBy": {
-        "label": "排序方式",
-        "values": {
-          "createdAtDesc": "日期：最新",
-          "createdAtAsc": "日期：最早"
-        }
-      },
-      "table": {
-        "item": "商品",
-        "price": "总金额",
-        "status": "状态",
-        "created": "已提交"
-      },
-      "requested": "已请求 {{value}} 件",
-      "status": {
-        "expired": "已过期",
-        "active": "激活"
-      },
-      "cancel": {
-        "title": "取消要约"
-      }
-    },
-    "bid-received": {
-      "nav": {
-        "received": "已接收",
-        "placed": "已提交"
-      },
-      "notifications": {
-        "accepted": "出价已接受"
-      },
-      "actions": {
-        "accept": "接受"
-      },
-      "orderBy": {
-        "label": "排序方式",
-        "values": {
-          "createdAtDesc": "日期：最新",
-          "createdAtAsc": "日期：最早"
-        }
-      },
-      "table": {
-        "item": "商品",
-        "price": "总金额",
-        "from": "出价者",
-        "created": "已接收"
-      },
-      "requested": "已请求 {{value}} 件",
-      "accept": {
-        "title": "接受要约"
-      }
-    },
-    "created-assets": {
-      "orderBy": {
-        "values": {
-          "createdAtDesc": "日期：最新",
-          "createdAtAsc": "日期：最早"
-        }
-      }
-    },
-    "fixed": {
-      "nav": {
-        "fixed": "固定价格",
-        "auction": "拍卖"
-      },
-      "notifications": {
-        "canceled": "要约已取消"
-      },
-      "actions": {
-        "cancel": "取消",
-        "new": "新售卖"
-      },
-      "orderBy": {
-        "label": "排序方式",
-        "values": {
-          "createdAtDesc": "日期：最新",
-          "createdAtAsc": "日期：最早",
-          "unitPriceAsc": "价格：从低到高",
-          "unitPriceDesc": "价格：从高到低"
-        }
-      },
-      "table": {
-        "item": "商品",
-        "price": "单价",
-        "status": "状态",
-        "created": "已创建"
-      },
-      "status": {
-        "active": "激活",
-        "expired": "已过期"
-      },
-      "available": "{{value}} 件正在售卖中",
-      "cancel": {
-        "title": "取消要约"
-      }
-    },
-    "on-sale-assets": {
-      "orderBy": {
-        "values": {
-          "createdAtDesc": "资产：最新",
-          "createdAtAsc": "资产：最早"
-        }
-      }
-    },
-    "owned-assets": {
-      "orderBy": {
-        "values": {
-          "createdAtDesc": "日期：最新",
-          "createdAtAsc": "日期：最早"
-        }
-      }
-    },
-    "trade-purchased": {
-      "nav": {
-        "sold": "已售出",
-        "purchased": "已购买"
-      },
-      "orderBy": {
-        "label": "排序方式",
-        "values": {
-          "timestampDesc": "日期：最新",
-          "timestampAsc": "日期：最早",
-          "amountAsc": "金额：从低到高",
-          "amountDesc": "金额：从高到低"
-        }
-      },
-      "table": {
-        "item": "商品",
-        "price": "总金额",
-        "from": "卖方",
-        "created": "已购买"
-      },
-      "purchased": "已购买 {{value}} 件"
-    },
-    "trade-sold": {
-      "nav": {
-        "sold": "已售出",
-        "purchased": "已购买"
-      },
-      "orderBy": {
-        "label": "排序方式",
-        "values": {
-          "timestampDesc": "日期：最新",
-          "timestampAsc": "日期：最早",
-          "amountAsc": "金额：从低到高",
-          "amountDesc": "金额：从高到低"
-        }
-      },
-      "table": {
-        "item": "商品",
-        "price": "总金额",
-        "to": "买方",
-        "created": "已售出"
-      },
-      "sold": "已售出 {{value}} 件"
-    }
-  },
-  "users": {
-    "form": {
-      "notifications": {
-        "updated": "您的个人资料已成功更新。"
-      }
-    }
-  }
 }

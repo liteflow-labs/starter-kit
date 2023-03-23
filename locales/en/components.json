@@ -1,806 +1,814 @@
 {
-  "account": {
-    "title": "Account",
-    "tabs": {
-      "wallet": "Wallet",
-      "edit-profile": "Edit profile"
-    }
-  },
-  "bid": {
-    "list": {
-      "none": "No bids"
-    },
-    "detail": {
-      "per-edition-single": "<0/>",
-      "per-edition-multiple": "<0/> per edition",
-      "requested": "<0>{{quantity}}</0> requested",
-      "expires": ". Expires: {{date}}",
-      "accept": "Accept bid",
-      "cancel": "Cancel",
-      "modal": {
-        "accept": {
-          "title": "Accept a bid"
-        },
-        "cancel": {
-          "title": "Cancel Offer"
+    "account": {
+        "title": "Account",
+        "tabs": {
+            "wallet": "Wallet",
+            "edit-profile": "Edit profile"
         }
-      }
-    }
-  },
-  "countdown": {
-    "day": "{{value}}d",
-    "hour": "{{value}}h",
-    "min": "{{value}}m",
-    "sec": "{{value}}s"
-  },
-  "dropzone": {
-    "required": "This field is required."
-  },
-  "footer": {
-    "copyright": "© {{date}} {{name}} All rights reserved."
-  },
-  "history": {
-    "none": "No history",
-    "listing": {
-      "by": "By <0/>",
-      "listed_one": "<0>{{count}}</0> edition listed for <1/>",
-      "listed_other": "<0>{{count}}</0> editions listed for <1/> each"
-    },
-    "mint": {
-      "by": "By <0/>",
-      "minted_one": "<0>{{count}}</0> edition minted",
-      "minted_other": "<0>{{count}}</0> editions minted"
-    },
-    "lazymint": {
-      "by": "By <0/>",
-      "minted_one": "<0>{{count}}</0> edition lazy minted",
-      "minted_other": "<0>{{count}}</0> editions lazy minted"
-    },
-    "transfer": {
-      "from": "From <0/>",
-      "transferred_one": "<0>{{count}}</0> edition transferred to <1/>",
-      "transferred_other": "<0>{{count}}</0> editions transferred to <1/>"
-    },
-    "purchase": {
-      "from": "From <0/> to <1/>",
-      "purchased_one": "<0>{{count}}</0> edition purchased for <1/>",
-      "purchased_other": "<0>{{count}}</0> editions purchased for <1/> each"
-    }
-  },
-  "modal": {
-    "accept-auction": {
-      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
-      "action": "View on {{name}}",
-      "auction": {
-        "resolve": {
-          "title": "Auction is being checked",
-          "description": "We are finding and verifying the best bid"
-        },
-        "default": {
-          "title": "Auction has been approved",
-          "description": "Completed"
-        }
-      },
-      "approval": {
-        "resolve": {
-          "title": "We need your permission",
-          "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
-        },
-        "signature": {
-          "title": "We need your permission",
-          "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
-        },
-        "pending": {
-          "title": "Approval is pending",
-          "description": "Request is being processed"
-        },
-        "default": {
-          "title": "Permission has been approved",
-          "description": "Completed"
-        }
-      },
-      "transaction": {
-        "approval": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "signature": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "pending": {
-          "title": "Confirmation is pending",
-          "description": "0/2 completed - Transaction is pending on Blockchain"
-        },
-        "ownership": {
-          "title": "Confirmation is pending",
-          "description": "1/2 completed - Ownership is being checked"
-        }
-      }
-    },
-    "accept-offer": {
-      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
-      "action": {
-        "permission": "Permission detail on {{name}}",
-        "transaction": "Transaction detail on {{name}}"
-      },
-      "approval": {
-        "signature": {
-          "title": "We need your permission",
-          "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
-        },
-        "pending": {
-          "title": "Approval is pending",
-          "description": "Request is being processed"
-        },
-        "default": {
-          "title": "Permission has been approved",
-          "description": "Completed"
-        }
-      },
-      "transaction": {
-        "approval": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "signature": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "pending": {
-          "title": "Confirmation is pending",
-          "description": "0/2 completed - Transaction is pending on Blockchain"
-        },
-        "ownership": {
-          "title": "Confirmation is pending",
-          "description": "1/2 completed - Ownership is being checked"
-        }
-      }
-    },
-    "cancel-offer": {
-      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
-      "action": "View on {{name}}",
-      "transaction": {
-        "signature": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "pending": {
-          "title": "Confirmation is pending",
-          "description": "Transaction is pending on Blockchain"
-        }
-      }
-    },
-    "create-collectible": {
-      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
-      "description-lazymint": "Sign the message display in your wallet to continue.",
-      "action": "View on {{name}}",
-      "upload": {
-        "upload": {
-          "title": "File is uploading",
-          "description": "Wait until your file is uploaded"
-        },
-        "default": {
-          "title": "File has been uploaded",
-          "description": "Completed"
-        }
-      },
-      "transaction": {
-        "upload": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "signature": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "pending": {
-          "title": "Confirmation is pending",
-          "description": "0/2 completed - Transaction is pending on Blockchain"
-        },
-        "ownership": {
-          "title": "Confirmation is pending",
-          "description": "1/2 completed - Ownership is being checked"
-        },
-        "lazymint-signature": {
-          "title": "Signature is required",
-          "description": "Open and sign message in your wallet"
-        },
-        "lazymint-pending": {
-          "title": "Creating asset",
-          "description": "Asset is being created"
-        }
-      }
-    },
-    "create-offer": {
-      "description": "Sign the message display in your wallet to continue.",
-      "action": "View on {{name}}",
-      "approval": {
-        "approval": {
-          "title": "We need your permission",
-          "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
-        },
-        "pending": {
-          "title": "Approval is pending",
-          "description": "Request is being processed"
-        },
-        "signature": {
-          "title": "Permission has been approved",
-          "description": "Completed"
-        }
-      },
-      "signature": {
-        "pending": {
-          "title": "Signature is required",
-          "description": "Open and sign message in your wallet"
-        },
-        "signature": {
-          "title": "Signature is required",
-          "description": "Open and confirm transaction in your wallet"
-        }
-      }
-    },
-    "login": {
-      "title": "Sign in with your wallet",
-      "description": "Connect with one of the following options.",
-      "alternative": "Or sign in with",
-      "errors": {
-        "wrong-network": "You are connected to the wrong network. Please switch to the {{networkName}} network."
-      }
-    }
-  },
-  "back": "Go back",
-  "navbar": {
-    "open-menu": "Open main menu",
-    "open-activity": "Open activity menu",
-    "explore": "Explore",
-    "create": "Create",
-    "search": "Search",
-    "sign-in": "Sign in",
-    "notifications": "Notifications",
-    "activity": {
-      "title": "Activity",
-      "bids": "Bids",
-      "trades": "Trades",
-      "offers": "Offers"
-    },
-    "user": {
-      "title": "My Account",
-      "profile": "Profile",
-      "wallet": "Wallet",
-      "edit": "Edit profile",
-      "top-up": "Top-up",
-      "sign-out": "Sign out"
-    }
-  },
-  "network-selection": {
-    "title": "Wrong network",
-    "description": "You are connected to the wrong network.",
-    "hint": "Please switch to the <0>{{networkName}}</0> network."
-  },
-  "newsletter": {
-    "title": "Subscribe to our Newsletter",
-    "action": "Subscribe",
-    "coming-soon": "Feature coming soon",
-    "form": {
-      "validation": {
-        "required": "This field is required.",
-        "email": "Please enter a valid email address."
-      },
-      "email": {
-        "placeholder": "Enter your email"
-      }
-    }
-  },
-  "notification": {
-    "account-verification-validated": "Your profile has been verified. <0>Check my profile</0>",
-    "auction": {
-      "bid": {
-        "created": "You have received a new bid of <0/> for your auction on <1>{{name}}</1>",
-        "expired": "Your bid of <0/> for the auction on <1>{{name}}</1> has met the expiration date. The bid has been canceled"
-      },
-      "ended": {
-        "no-bids": "Your auction for <0>{{name}}</0> has ended but no bids were placed. Create a new sale today!",
-        "reserve-price-buyer": "The auction for <0>{{name}}</0> has ended but the reserve price hasn’t been met.",
-        "reserve-price-seller": "Your auction for <0>{{name}}</0> has ended but your reserve price hasn’t been met. Create a new sale today!",
-        "won-buyer": "Congratulations 🎉 You won the auction for <0>{{name}}</0>! Wait for the owner’s confirmation to receive the ownership",
-        "won-seller": "Congratulations 🎉 Your auction for <0>{{name}}</0> has been won for <1/>! Confirm the sale to collect the funds"
-      },
-      "expired": "The expiration date has been met for <0>{{name}}</0>. The auction and its bids have been canceled. Create a new sale!",
-      "expire-soon": "Your auction for <0>{{name}}</0> and its winning bid of <1/> will expire in less than 24 hours 🔥 Confirm the sale before it’s too late!"
     },
     "bid": {
-      "accepted": {
-        "one": "Congratulations 🎉 your bid for <0>{{count}}</0> edition of <1>{{name}}</1> for <2/> has been accepted.",
-        "other": "Congratulations 🎉 your bid for <0>{{count}}</0> editions of <1>{{name}}</1> for <2/> each has been accepted."
-      },
-      "created": {
-        "one": "You have received a bid for <0>{{count}}</0> edition of <1>{{name}}</1> for <2/>",
-        "other": "You have received a bid for <0>{{count}}</0> editions of <1>{{name}}</1> for <2/> each"
-      },
-      "expired": {
-        "one": "Your bid for <0>{{count}}</0> edition of <1>{{name}}</1> for <2/> has met the expiration date. The bid has been canceled.",
-        "other": "Your bid for <0>{{count}}</0> editions of <1>{{name}}</1> for <2/> each has met the expiration date. The bid has been canceled."
-      }
+        "list": {
+            "none": "No bids"
+        },
+        "detail": {
+            "per-edition-single": "<0/>",
+            "per-edition-multiple": "<0/> per edition",
+            "requested": "<0>{{quantity}}</0> requested",
+            "expires": ". Expires: {{date}}",
+            "accept": "Accept bid",
+            "cancel": "Cancel",
+            "modal": {
+                "accept": {
+                    "title": "Accept a bid"
+                },
+                "cancel": {
+                    "title": "Cancel Offer"
+                }
+            }
+        }
+    },
+    "countdown": {
+        "day": "{{value}}d",
+        "hour": "{{value}}h",
+        "min": "{{value}}m",
+        "sec": "{{value}}s"
+    },
+    "dropzone": {
+        "required": "This field is required."
+    },
+    "footer": {
+        "copyright": "© {{date}} {{name}} All rights reserved."
+    },
+    "history": {
+        "none": "No history",
+        "listing": {
+            "by": "By <0/>",
+            "listed_one": "<0>{{count}}</0> edition listed for <1/>",
+            "listed_other": "<0>{{count}}</0> editions listed for <1/> each"
+        },
+        "mint": {
+            "by": "By <0/>",
+            "minted_one": "<0>{{count}}</0> edition minted",
+            "minted_other": "<0>{{count}}</0> editions minted"
+        },
+        "lazymint": {
+            "by": "By <0/>",
+            "minted_one": "<0>{{count}}</0> edition lazy minted",
+            "minted_other": "<0>{{count}}</0> editions lazy minted"
+        },
+        "transfer": {
+            "from": "From <0/>",
+            "transferred_one": "<0>{{count}}</0> edition transferred to <1/>",
+            "transferred_other": "<0>{{count}}</0> editions transferred to <1/>"
+        },
+        "purchase": {
+            "from": "From <0/> to <1/>",
+            "purchased_one": "<0>{{count}}</0> edition purchased for <1/>",
+            "purchased_other": "<0>{{count}}</0> editions purchased for <1/> each"
+        }
+    },
+    "modal": {
+        "accept-auction": {
+            "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
+            "action": "View on {{name}}",
+            "auction": {
+                "resolve": {
+                    "title": "Auction is being checked",
+                    "description": "We are finding and verifying the best bid"
+                },
+                "default": {
+                    "title": "Auction has been approved",
+                    "description": "Completed"
+                }
+            },
+            "approval": {
+                "resolve": {
+                    "title": "We need your permission",
+                    "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
+                },
+                "signature": {
+                    "title": "We need your permission",
+                    "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
+                },
+                "pending": {
+                    "title": "Approval is pending",
+                    "description": "Request is being processed"
+                },
+                "default": {
+                    "title": "Permission has been approved",
+                    "description": "Completed"
+                }
+            },
+            "transaction": {
+                "approval": {
+                    "title": "Your confirmation is required",
+                    "description": "Open and confirm transaction in your wallet"
+                },
+                "signature": {
+                    "title": "Your confirmation is required",
+                    "description": "Open and confirm transaction in your wallet"
+                },
+                "pending": {
+                    "title": "Confirmation is pending",
+                    "description": "0/2 completed - Transaction is pending on Blockchain"
+                },
+                "ownership": {
+                    "title": "Confirmation is pending",
+                    "description": "1/2 completed - Ownership is being checked"
+                }
+            }
+        },
+        "accept-offer": {
+            "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
+            "action": {
+                "permission": "Permission detail on {{name}}",
+                "transaction": "Transaction detail on {{name}}"
+            },
+            "approval": {
+                "signature": {
+                    "title": "We need your permission",
+                    "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
+                },
+                "pending": {
+                    "title": "Approval is pending",
+                    "description": "Request is being processed"
+                },
+                "default": {
+                    "title": "Permission has been approved",
+                    "description": "Completed"
+                }
+            },
+            "transaction": {
+                "approval": {
+                    "title": "Your confirmation is required",
+                    "description": "Open and confirm transaction in your wallet"
+                },
+                "signature": {
+                    "title": "Your confirmation is required",
+                    "description": "Open and confirm transaction in your wallet"
+                },
+                "pending": {
+                    "title": "Confirmation is pending",
+                    "description": "0/2 completed - Transaction is pending on Blockchain"
+                },
+                "ownership": {
+                    "title": "Confirmation is pending",
+                    "description": "1/2 completed - Ownership is being checked"
+                }
+            }
+        },
+        "cancel-offer": {
+            "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
+            "action": "View on {{name}}",
+            "transaction": {
+                "signature": {
+                    "title": "Your confirmation is required",
+                    "description": "Open and confirm transaction in your wallet"
+                },
+                "pending": {
+                    "title": "Confirmation is pending",
+                    "description": "Transaction is pending on Blockchain"
+                }
+            }
+        },
+        "create-collectible": {
+            "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
+            "description-lazymint": "Sign the message display in your wallet to continue.",
+            "action": "View on {{name}}",
+            "upload": {
+                "upload": {
+                    "title": "File is uploading",
+                    "description": "Wait until your file is uploaded"
+                },
+                "default": {
+                    "title": "File has been uploaded",
+                    "description": "Completed"
+                }
+            },
+            "transaction": {
+                "upload": {
+                    "title": "Your confirmation is required",
+                    "description": "Open and confirm transaction in your wallet"
+                },
+                "signature": {
+                    "title": "Your confirmation is required",
+                    "description": "Open and confirm transaction in your wallet"
+                },
+                "pending": {
+                    "title": "Confirmation is pending",
+                    "description": "0/2 completed - Transaction is pending on Blockchain"
+                },
+                "ownership": {
+                    "title": "Confirmation is pending",
+                    "description": "1/2 completed - Ownership is being checked"
+                },
+                "lazymint-signature": {
+                    "title": "Signature is required",
+                    "description": "Open and sign message in your wallet"
+                },
+                "lazymint-pending": {
+                    "title": "Creating asset",
+                    "description": "Asset is being created"
+                }
+            }
+        },
+        "create-offer": {
+            "description": "Sign the message display in your wallet to continue.",
+            "action": "View on {{name}}",
+            "approval": {
+                "approval": {
+                    "title": "We need your permission",
+                    "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
+                },
+                "pending": {
+                    "title": "Approval is pending",
+                    "description": "Request is being processed"
+                },
+                "signature": {
+                    "title": "Permission has been approved",
+                    "description": "Completed"
+                }
+            },
+            "signature": {
+                "pending": {
+                    "title": "Signature is required",
+                    "description": "Open and sign message in your wallet"
+                },
+                "signature": {
+                    "title": "Signature is required",
+                    "description": "Open and confirm transaction in your wallet"
+                }
+            }
+        },
+        "login": {
+            "title": "Sign in with your wallet",
+            "description": "Connect with one of the following options.",
+            "alternative": "Or sign in with",
+            "errors": {
+                "wrong-network": "You are connected to the wrong network. Please switch to the {{networkName}} network."
+            }
+        }
+    },
+    "back": "Go back",
+    "navbar": {
+        "open-menu": "Open main menu",
+        "open-activity": "Open activity menu",
+        "explore": "Explore",
+        "create": "Create",
+        "search": "Search",
+        "sign-in": "Sign in",
+        "notifications": "Notifications",
+        "activity": {
+            "title": "Activity",
+            "bids": "Bids",
+            "trades": "Trades",
+            "offers": "Offers"
+        },
+        "user": {
+            "title": "My Account",
+            "profile": "Profile",
+            "wallet": "Wallet",
+            "edit": "Edit profile",
+            "top-up": "Top-up",
+            "sign-out": "Sign out"
+        },
+        "withdraw": "Withdraw"
+    },
+    "network-selection": {
+        "title": "Wrong network",
+        "description": "You are connected to the wrong network.",
+        "hint": "Please switch to the <0>{{networkName}}</0> network."
+    },
+    "newsletter": {
+        "title": "Subscribe to our Newsletter",
+        "action": "Subscribe",
+        "coming-soon": "Feature coming soon",
+        "form": {
+            "validation": {
+                "required": "This field is required.",
+                "email": "Please enter a valid email address."
+            },
+            "email": {
+                "placeholder": "Enter your email"
+            }
+        }
+    },
+    "notification": {
+        "account-verification-validated": "Your profile has been verified. <0>Check my profile</0>",
+        "auction": {
+            "bid": {
+                "created": "You have received a new bid of <0/> for your auction on <1>{{name}}</1>",
+                "expired": "Your bid of <0/> for the auction on <1>{{name}}</1> has met the expiration date. The bid has been canceled"
+            },
+            "ended": {
+                "no-bids": "Your auction for <0>{{name}}</0> has ended but no bids were placed. Create a new sale today!",
+                "reserve-price-buyer": "The auction for <0>{{name}}</0> has ended but the reserve price hasn’t been met.",
+                "reserve-price-seller": "Your auction for <0>{{name}}</0> has ended but your reserve price hasn’t been met. Create a new sale today!",
+                "won-buyer": "Congratulations 🎉 You won the auction for <0>{{name}}</0>! Wait for the owner’s confirmation to receive the ownership",
+                "won-seller": "Congratulations 🎉 Your auction for <0>{{name}}</0> has been won for <1/>! Confirm the sale to collect the funds"
+            },
+            "expired": "The expiration date has been met for <0>{{name}}</0>. The auction and its bids have been canceled. Create a new sale!",
+            "expire-soon": "Your auction for <0>{{name}}</0> and its winning bid of <1/> will expire in less than 24 hours 🔥 Confirm the sale before it’s too late!"
+        },
+        "bid": {
+            "accepted": {
+                "one": "Congratulations 🎉 your bid for <0>{{count}}</0> edition of <1>{{name}}</1> for <2/> has been accepted.",
+                "other": "Congratulations 🎉 your bid for <0>{{count}}</0> editions of <1>{{name}}</1> for <2/> each has been accepted."
+            },
+            "created": {
+                "one": "You have received a bid for <0>{{count}}</0> edition of <1>{{name}}</1> for <2/>",
+                "other": "You have received a bid for <0>{{count}}</0> editions of <1>{{name}}</1> for <2/> each"
+            },
+            "expired": {
+                "one": "Your bid for <0>{{count}}</0> edition of <1>{{name}}</1> for <2/> has met the expiration date. The bid has been canceled.",
+                "other": "Your bid for <0>{{count}}</0> editions of <1>{{name}}</1> for <2/> each has met the expiration date. The bid has been canceled."
+            }
+        },
+        "offer": {
+            "expired": "The expiration date has been met for {{name}}. Create a new sale!",
+            "purchased": {
+                "one": "Congratulations 🎉 You sold <0>{{count}}</0> edition of <1>{{name}}</1> to <2>{{account}}</2> for <3/>",
+                "other": "Congratulations 🎉 You sold <0>{{count}}</0> editions of <1>{{name}}</1> to <2>{{account}}</2> for <3/> each",
+                "short": "Congratulations 🎉 You sold <0>{{name}}</0> for <1/>"
+            }
+        },
+        "referral-referee-registered": "<0>{{username}}</0> successfully registered with your referral link"
     },
     "offer": {
-      "expired": "The expiration date has been met for {{name}}. Create a new sale!",
-      "purchased": {
-        "one": "Congratulations 🎉 You sold <0>{{count}}</0> edition of <1>{{name}}</1> to <2>{{account}}</2> for <3/>",
-        "other": "Congratulations 🎉 You sold <0>{{count}}</0> editions of <1>{{name}}</1> to <2>{{account}}</2> for <3/> each",
-        "short": "Congratulations 🎉 You sold <0>{{name}}</0> for <1/>"
-      }
-    },
-    "referral-referee-registered": "<0>{{username}}</0> successfully registered with your referral link"
-  },
-  "offer": {
-    "summary": {
-      "single": "Single edition",
-      "price": "Price per edition",
-      "quantity": "Number of edition",
-      "fees": "Service fee {{value}}%",
-      "total": "Total to pay"
-    },
-    "form": {
-      "bid": {
-        "submit": "Place a bid",
-        "title": "Place a bid",
-        "validation": {
-          "required": "This field is required.",
-          "integer": "This field must be an integer.",
-          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
-          "in-range": "This field must be between 1 and {{ max }}.",
-          "positive": "This field must be greater than 0."
+        "summary": {
+            "single": "Single edition",
+            "price": "Price per edition",
+            "quantity": "Number of edition",
+            "fees": "Service fee {{value}}%",
+            "total": "Total to pay"
         },
-        "currency": {
-          "label": "Currency",
-          "hint": "Set the currency with which you want to place an open bid",
-          "placeholder": "Select a currency"
-        },
-        "price": {
-          "label": "Your price",
-          "placeholder": "Enter price for your bid"
-        },
-        "quantity": {
-          "label": "Quantity",
-          "placeholder": "Enter quantity",
-          "suffix": "Edition"
-        },
-        "expiration": {
-          "label": "Expiration date",
-          "tooltip": "Your bid will be canceled at the end of the selected period. This prevent from long running and forgotten bids."
-        },
-        "supply_one": "{{count}} edition available",
-        "supply_other": "{{count}} editions available"
-      },
-      "checkout": {
-        "title": "Purchase Collectible",
-        "submit": "Proceed to Payment",
-        "validation": {
-          "required": "This field is required.",
-          "integer": "This field must be an integer.",
-          "in-range": "This field must be between 1 and {{ max }}."
-        },
-        "quantity": {
-          "label": "Quantity",
-          "placeholder": "Enter amount",
-          "suffix": "Edition"
-        },
-        "ownership": {
-          "title": "Automatic ownership transfer",
-          "description": "Once you purchase an NFT, the ownership will automatically be transfer to you. There is no extra actions required on your side."
-        },
-        "available_one": "{{count}} edition available",
-        "available_other": "{{count}} editions available"
-      }
-    }
-  },
-  "referral": {
-    "form": {
-      "connect": "Sign in to generate your referral link",
-      "copy": "Link copied to the clipboard"
-    }
-  },
-  "sales": {
-    "auction": {
-      "success": {
-        "ended": "The auction has ended with a winner 🎉",
-        "highest-bid": "Highest bid",
-        "offer": "<0/> <1>by</1> <2/>",
-        "banner-owner": {
-          "title": "Confirm the sale before {{date}}",
-          "description": "After that date, the auction and its bids will be canceled."
-        },
-        "banner": {
-          "title": "The seller has until the {{date}} to confirm the sale",
-          "description": "After that date, the auction and its bids will be canceled."
+        "form": {
+            "bid": {
+                "submit": "Place a bid",
+                "title": "Place a bid",
+                "validation": {
+                    "required": "This field is required.",
+                    "integer": "This field must be an integer.",
+                    "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
+                    "in-range": "This field must be between 1 and {{ max }}.",
+                    "positive": "This field must be greater than 0."
+                },
+                "currency": {
+                    "label": "Currency",
+                    "hint": "Set the currency with which you want to place an open bid",
+                    "placeholder": "Select a currency"
+                },
+                "price": {
+                    "label": "Your price",
+                    "placeholder": "Enter price for your bid"
+                },
+                "quantity": {
+                    "label": "Quantity",
+                    "placeholder": "Enter quantity",
+                    "suffix": "Edition"
+                },
+                "expiration": {
+                    "label": "Expiration date",
+                    "tooltip": "Your bid will be canceled at the end of the selected period. This prevent from long running and forgotten bids."
+                },
+                "supply_one": "{{count}} edition available",
+                "supply_other": "{{count}} editions available"
+            },
+            "checkout": {
+                "title": "Purchase Collectible",
+                "submit": "Proceed to Payment",
+                "validation": {
+                    "required": "This field is required.",
+                    "integer": "This field must be an integer.",
+                    "in-range": "This field must be between 1 and {{ max }}."
+                },
+                "quantity": {
+                    "label": "Quantity",
+                    "placeholder": "Enter amount",
+                    "suffix": "Edition"
+                },
+                "ownership": {
+                    "title": "Automatic ownership transfer",
+                    "description": "Once you purchase an NFT, the ownership will automatically be transfer to you. There is no extra actions required on your side."
+                },
+                "available_one": "{{count}} edition available",
+                "available_other": "{{count}} editions available"
+            }
         }
-      },
-      "failed-no-bid": {
-        "ended": "The auction has ended",
-        "highest-bid": "Highest bid",
-        "no-bids": "No bids yet",
-        "banner": {
-          "title": "No bids have been placed",
-          "description": "The auction has ended but no bids have been placed."
-        }
-      },
-      "failed-no-reserve": {
-        "ended": "The auction has ended",
-        "highest-bid": "Highest bid",
-        "offer": "<0/> <1>by</1> <2/>",
-        "banner": {
-          "title": "Reserve price not met",
-          "description": "The auction has ended but the reserve price hasn't been met."
-        }
-      },
-      "in-progress": {
-        "highest-bid": "Highest bid",
-        "open": "Open for bids",
-        "offer": "Make an offer",
-        "ending": "Auction ending in"
-      },
-      "action": {
-        "cancel": "Cancel",
-        "accept": "Accept",
-        "new-sale": "New Sale",
-        "title": "Accept Auction"
-      },
-      "button": {
-        "place-bid": "Place a bid",
-        "view": "View Collectible"
-      },
-      "card-footer": {
-        "highest-bid": "Highest bid:",
-        "place-bid": "Place a bid"
-      },
-      "form": {
-        "submit": "Create Offer",
-        "validation": {
-          "required": "This field is required.",
-          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
-          "positive": "This field must be greater than 0."
-        },
-        "currency": {
-          "label": "Currency",
-          "hint": "Set the auction's currency with which buyers can place bids",
-          "placeholder": "Select a currency"
-        },
-        "price": {
-          "label": "Reserve price",
-          "hint": "Set a specific amount for which bids below it won't win the auction",
-          "placeholder": "Enter a reserve price",
-          "info": "(Optional)"
-        },
-        "start": {
-          "label": "Start Date",
-          "placeholder": "Right away"
-        },
-        "end": {
-          "label": "End Date"
-        },
-        "banner": {
-          "title": "Auction rules",
-          "item1": "When an auction starts, you won't be able to cancel the sale anymore. This is to provide a fair experience to the Platform users.",
-          "item2": "Expiration period: To prevent from long running and forgotten sales, your auction and its bids will be canceled {{validity}} after the selected end date. You can always recreate a sale at the end of the period."
-        }
-      },
-      "info": {
-        "title": "Confirm the sale",
-        "reserve": "Reserve price:",
-        "no-bids": {
-          "title": "You own this Collectible",
-          "action": "Sell Collectible"
-        },
-        "no-reserve": {
-          "title": "You own this Collectible",
-          "action": "Sell Collectible"
-        },
-        "with-reserve": {
-          "title": "You own this Collectible",
-          "action": "Confirm sale"
-        }
-      },
-      "status": {
-        "active": "Active",
-        "ended": "Ended"
-      }
-    },
-    "direct": {
-      "button": {
-        "place-bid": "Place a bid",
-        "buy": "Buy Collectible",
-        "view": "View Collectible"
-      },
-      "card-footer": {
-        "price": "Price",
-        "from": "From",
-        "purchase": "Purchase",
-        "offers": "{{count}} offers available"
-      },
-      "form": {
-        "submit": "Create offer",
-        "title": "Create a sale",
-        "validation": {
-          "positive": "This field must be greater than 0.",
-          "integer": "This field must be an integer.",
-          "in-range": "This field must be between 1 and {{ max }}.",
-          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
-          "required": "This field is required."
-        },
-        "currency": {
-          "label": "Currency",
-          "hint": "Set the sale's currency with which buyers can purchase",
-          "placeholder": "Select a currency"
-        },
-        "price": {
-          "label": "Price",
-          "placeholder": "Enter price"
-        },
-        "quantity": {
-          "label": "Quantity",
-          "placeholder": "Enter quantity",
-          "suffix": "Edition"
-        },
-        "expiration": {
-          "label": "Expiration date",
-          "tooltip": "Your sale will be canceled at the end of the selected period. This prevent from long running and forgotten sales. You can always create a new sale after it expired."
-        },
-        "fees": "Service fee {{value}}%",
-        "royalties": "Royalties {{value}}%",
-        "total-fees": "Total service fee {{value}}%",
-        "total-royalties": "Total royalties {{value}}%",
-        "total-receive": "Total you will receive",
-        "receive-single": "You will receive",
-        "receive-multiple": "Price per edition",
-        "available_one": "{{count}} edition available",
-        "available_other": "{{count}} editions available",
-        "quantity-for-sale": "Quantity for sale",
-        "quantities_one": "{{count}} edition",
-        "quantities_other": "{{count}} editions"
-      },
-      "info": {
-        "cancel-confirmation": "Are you sure to cancel this offer?",
-        "price": "Asking price:",
-        "cancel": "Cancel Offer"
-      },
-      "modal": {
-        "title": "Available Offers",
-        "button": "Buy"
-      },
-      "modal-item": {
-        "cancel-confirmation": "Are you sure to cancel this offer?",
-        "per-edition": " per edition",
-        "available_one": "{{count}} edition available",
-        "available_other": "{{count}} editions available",
-        "expiration": "Sale expires: {{date}}",
-        "cancel": "Cancel Offer",
-        "buy": "Buy"
-      },
-      "summary": {
-        "offer_one": "{{count}} offer",
-        "offer_other": "{{count}} offers",
-        "per-edition": "per edition",
-        "available": "available",
-        "on-sale-from": "On sale from",
-        "on-sale-for": "On sale for",
-        "expires": "Sale expires"
-      }
-    },
-    "open": {
-      "button": {
-        "view": "View Collectible",
-        "place-bid": "Place a bid"
-      },
-      "card-footer": {
-        "open": "Open for bids",
-        "place-bid": "Place a bid"
-      },
-      "info": {
-        "owner": "You own this Collectible",
-        "sell": "Sell Collectible"
-      },
-      "summary": {
-        "open": "Open for bids",
-        "offer": "Make an offer"
-      }
-    }
-  },
-  "token": {
-    "form": {
-      "create": {
-        "submit": "Create Item",
-        "title": "Create a Collectible",
-        "validation": {
-          "required": "This field is required.",
-          "positive": "This field must be greater than 0.",
-          "integer": "This field must be an integer.",
-          "in-range": "This field must be between 0 and {{ max }}.",
-          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals."
-        },
-        "file": {
-          "label": "Upload file",
-          "heading": "Drag & drop file or",
-          "hint": "JPG, PNG, GIF, WEBP, WEBM or MP4. Max 100 MB.",
-          "file": {
-            "chose": "Choose File",
-            "replace": "Replace File"
-          }
-        },
-        "preview": {
-          "label": "Upload preview",
-          "heading": "Drag & drop file or",
-          "hint": "JPG, PNG, GIF or WEBP. Max 100 MB.",
-          "file": {
-            "chose": "Choose File",
-            "replace": "Replace File"
-          }
-        },
-        "name": {
-          "label": "Title",
-          "placeholder": "Give a title to your collectible"
-        },
-        "description": {
-          "label": "Description",
-          "placeholder": "Give a description to your collectible",
-          "info": "(Optional)"
-        },
-        "amount": {
-          "label": "Number of copies",
-          "placeholder": "E.g.: 10"
-        },
-        "royalties": {
-          "label": "Royalties",
-          "placeholder": "Add royalties with a percent of each sale",
-          "info": "(Optional)"
-        },
-        "category": {
-          "label": "Category",
-          "placeholder": "Select a category"
-        },
-        "unlockable": {
-          "label": "Unlockable content",
-          "hint": "(Optional)",
-          "choice": "The item's content can only be unlocked by the owner of the item"
-        }
-      }
-    },
-    "owners": {
-      "title": "Owners"
-    },
-    "modal-item": {
-      "owns_one": "Owns {{count}} edition",
-      "owns_other": "Owns {{count}} editions"
-    },
-    "grid": {
-      "empty": {
-        "title": "No Collectibles Found",
-        "description": "Browse the marketplace to find more collectibles",
-        "action": "Browse Marketplace"
-      },
-      "sort": {
-        "label": "Sort by"
-      }
-    },
-    "metadata": {
-      "creator": "Creator",
-      "owner": "Owner",
-      "owners": "Owners",
-      "edition": "Edition",
-      "single": "Single"
-    },
-    "supply": {
-      "available": "{{current}} of {{total}} available"
-    }
-  },
-  "traits": {
-    "rarity": "{{value}} rarity"
-  },
-  "user": {
-    "balance": {
-      "title": "Your balance",
-      "add-funds": "Add Funds"
-    },
-    "info": {
-      "verified": "Verified",
-      "edit": "Edit profile",
-      "bio": "Bio"
     },
     "referral": {
-      "title": "Refer a creator",
-      "description": "Share your referral link to onboard new creators and gets rewards.",
-      "how": "How it works"
-    },
-    "navigation": {
-      "on-sale": "On Sale",
-      "owned": "Owned",
-      "created": "Created",
-      "bids": "Bids",
-      "trades": "Trades",
-      "offers": "Offers"
-    },
-    "form": {
-      "edit": {
-        "submit": "Save Changes",
-        "image": {
-          "label": "Upload a Profile Image",
-          "heading": "Drag & drop file or",
-          "hint": "Recommended size: 400x400px. JPG, PNG, GIF OR WEBP. Max file size 10 MB.",
-          "file": {
-            "chose": "Choose File",
-            "replace": "Replace File"
-          }
-        },
-        "cover": {
-          "label": "Upload a Cover Image",
-          "heading": "Drag & drop file or",
-          "hint": "Recommended size: 1128x200px. JPG, PNG, GIF OR WEBP. Max file size 10 MB.",
-          "file": {
-            "chose": "Choose File",
-            "replace": "Replace File"
-          }
-        },
-        "name": {
-          "label": "Display Name",
-          "placeholder": "Enter your display name"
-        },
-        "description": {
-          "label": "Bio",
-          "placeholder": "Enter a short bio"
-        },
-        "email": {
-          "label": "Email Notification",
-          "placeholder": "Enter your email",
-          "validation": {
-            "invalid": "Email is not valid"
-          }
-        },
-        "twitter": {
-          "label": "Twitter Username",
-          "placeholder": "@"
-        },
-        "instagram": {
-          "label": "Instagram Username",
-          "placeholder": "@"
-        },
-        "website": {
-          "label": "Personal Site",
-          "placeholder": "https://"
-        }
-      }
-    }
-  },
-  "wallet": {
-    "address": {
-      "copy": "Address copied to the clipboard"
-    },
-    "connectors": {
-      "email": {
         "form": {
-          "submit": "Sign in",
-          "validation": {
-            "required": "This field is required",
-            "invalid": "Email is not valid"
-          },
-          "email": {
-            "label": "Email address"
-          }
+            "connect": "Sign in to generate your referral link",
+            "copy": "Link copied to the clipboard"
         }
-      }
+    },
+    "sales": {
+        "auction": {
+            "success": {
+                "ended": "The auction has ended with a winner 🎉",
+                "highest-bid": "Highest bid",
+                "offer": "<0/> <1>by</1> <2/>",
+                "banner-owner": {
+                    "title": "Confirm the sale before {{date}}",
+                    "description": "After that date, the auction and its bids will be canceled."
+                },
+                "banner": {
+                    "title": "The seller has until the {{date}} to confirm the sale",
+                    "description": "After that date, the auction and its bids will be canceled."
+                }
+            },
+            "failed-no-bid": {
+                "ended": "The auction has ended",
+                "highest-bid": "Highest bid",
+                "no-bids": "No bids yet",
+                "banner": {
+                    "title": "No bids have been placed",
+                    "description": "The auction has ended but no bids have been placed."
+                }
+            },
+            "failed-no-reserve": {
+                "ended": "The auction has ended",
+                "highest-bid": "Highest bid",
+                "offer": "<0/> <1>by</1> <2/>",
+                "banner": {
+                    "title": "Reserve price not met",
+                    "description": "The auction has ended but the reserve price hasn't been met."
+                }
+            },
+            "in-progress": {
+                "highest-bid": "Highest bid",
+                "open": "Open for bids",
+                "offer": "Make an offer",
+                "ending": "Auction ending in"
+            },
+            "action": {
+                "cancel": "Cancel",
+                "accept": "Accept",
+                "new-sale": "New Sale",
+                "title": "Accept Auction"
+            },
+            "button": {
+                "place-bid": "Place a bid",
+                "view": "View Collectible"
+            },
+            "card-footer": {
+                "highest-bid": "Highest bid:",
+                "place-bid": "Place a bid"
+            },
+            "form": {
+                "submit": "Create Offer",
+                "validation": {
+                    "required": "This field is required.",
+                    "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
+                    "positive": "This field must be greater than 0."
+                },
+                "currency": {
+                    "label": "Currency",
+                    "hint": "Set the auction's currency with which buyers can place bids",
+                    "placeholder": "Select a currency"
+                },
+                "price": {
+                    "label": "Reserve price",
+                    "hint": "Set a specific amount for which bids below it won't win the auction",
+                    "placeholder": "Enter a reserve price",
+                    "info": "(Optional)"
+                },
+                "start": {
+                    "label": "Start Date",
+                    "placeholder": "Right away"
+                },
+                "end": {
+                    "label": "End Date"
+                },
+                "banner": {
+                    "title": "Auction rules",
+                    "item1": "When an auction starts, you won't be able to cancel the sale anymore. This is to provide a fair experience to the Platform users.",
+                    "item2": "Expiration period: To prevent from long running and forgotten sales, your auction and its bids will be canceled {{validity}} after the selected end date. You can always recreate a sale at the end of the period."
+                }
+            },
+            "info": {
+                "title": "Confirm the sale",
+                "reserve": "Reserve price:",
+                "no-bids": {
+                    "title": "You own this Collectible",
+                    "action": "Sell Collectible"
+                },
+                "no-reserve": {
+                    "title": "You own this Collectible",
+                    "action": "Sell Collectible"
+                },
+                "with-reserve": {
+                    "title": "You own this Collectible",
+                    "action": "Confirm sale"
+                }
+            },
+            "status": {
+                "active": "Active",
+                "ended": "Ended"
+            }
+        },
+        "direct": {
+            "button": {
+                "place-bid": "Place a bid",
+                "buy": "Buy Collectible",
+                "view": "View Collectible"
+            },
+            "card-footer": {
+                "price": "Price",
+                "from": "From",
+                "purchase": "Purchase",
+                "offers": "{{count}} offers available"
+            },
+            "form": {
+                "submit": "Create offer",
+                "title": "Create a sale",
+                "validation": {
+                    "positive": "This field must be greater than 0.",
+                    "integer": "This field must be an integer.",
+                    "in-range": "This field must be between 1 and {{ max }}.",
+                    "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
+                    "required": "This field is required."
+                },
+                "currency": {
+                    "label": "Currency",
+                    "hint": "Set the sale's currency with which buyers can purchase",
+                    "placeholder": "Select a currency"
+                },
+                "price": {
+                    "label": "Price",
+                    "placeholder": "Enter price"
+                },
+                "quantity": {
+                    "label": "Quantity",
+                    "placeholder": "Enter quantity",
+                    "suffix": "Edition"
+                },
+                "expiration": {
+                    "label": "Expiration date",
+                    "tooltip": "Your sale will be canceled at the end of the selected period. This prevent from long running and forgotten sales. You can always create a new sale after it expired."
+                },
+                "fees": "Service fee {{value}}%",
+                "royalties": "Royalties {{value}}%",
+                "total-fees": "Total service fee {{value}}%",
+                "total-royalties": "Total royalties {{value}}%",
+                "total-receive": "Total you will receive",
+                "receive-single": "You will receive",
+                "receive-multiple": "Price per edition",
+                "available_one": "{{count}} edition available",
+                "available_other": "{{count}} editions available",
+                "quantity-for-sale": "Quantity for sale",
+                "quantities_one": "{{count}} edition",
+                "quantities_other": "{{count}} editions"
+            },
+            "info": {
+                "cancel-confirmation": "Are you sure to cancel this offer?",
+                "price": "Asking price:",
+                "cancel": "Cancel Offer"
+            },
+            "modal": {
+                "title": "Available Offers",
+                "button": "Buy"
+            },
+            "modal-item": {
+                "cancel-confirmation": "Are you sure to cancel this offer?",
+                "per-edition": " per edition",
+                "available_one": "{{count}} edition available",
+                "available_other": "{{count}} editions available",
+                "expiration": "Sale expires: {{date}}",
+                "cancel": "Cancel Offer",
+                "buy": "Buy"
+            },
+            "summary": {
+                "offer_one": "{{count}} offer",
+                "offer_other": "{{count}} offers",
+                "per-edition": "per edition",
+                "available": "available",
+                "on-sale-from": "On sale from",
+                "on-sale-for": "On sale for",
+                "expires": "Sale expires"
+            }
+        },
+        "open": {
+            "button": {
+                "view": "View Collectible",
+                "place-bid": "Place a bid"
+            },
+            "card-footer": {
+                "open": "Open for bids",
+                "place-bid": "Place a bid"
+            },
+            "info": {
+                "owner": "You own this Collectible",
+                "sell": "Sell Collectible"
+            },
+            "summary": {
+                "open": "Open for bids",
+                "offer": "Make an offer"
+            }
+        }
+    },
+    "token": {
+        "form": {
+            "create": {
+                "submit": "Create Item",
+                "title": "Create a Collectible",
+                "validation": {
+                    "required": "This field is required.",
+                    "positive": "This field must be greater than 0.",
+                    "integer": "This field must be an integer.",
+                    "in-range": "This field must be between 0 and {{ max }}.",
+                    "decimals": "This field supports a maximum of {{ nbDecimals }} decimals."
+                },
+                "file": {
+                    "label": "Upload file",
+                    "heading": "Drag & drop file or",
+                    "hint": "JPG, PNG, GIF, WEBP, WEBM or MP4. Max 100 MB.",
+                    "file": {
+                        "chose": "Choose File",
+                        "replace": "Replace File"
+                    }
+                },
+                "preview": {
+                    "label": "Upload preview",
+                    "heading": "Drag & drop file or",
+                    "hint": "JPG, PNG, GIF or WEBP. Max 100 MB.",
+                    "file": {
+                        "chose": "Choose File",
+                        "replace": "Replace File"
+                    }
+                },
+                "name": {
+                    "label": "Title",
+                    "placeholder": "Give a title to your collectible"
+                },
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Give a description to your collectible",
+                    "info": "(Optional)"
+                },
+                "amount": {
+                    "label": "Number of copies",
+                    "placeholder": "E.g.: 10"
+                },
+                "royalties": {
+                    "label": "Royalties",
+                    "placeholder": "Add royalties with a percent of each sale",
+                    "info": "(Optional)"
+                },
+                "category": {
+                    "label": "Category",
+                    "placeholder": "Select a category"
+                },
+                "unlockable": {
+                    "label": "Unlockable content",
+                    "hint": "(Optional)",
+                    "choice": "The item's content can only be unlocked by the owner of the item"
+                }
+            }
+        },
+        "owners": {
+            "title": "Owners"
+        },
+        "modal-item": {
+            "owns_one": "Owns {{count}} edition",
+            "owns_other": "Owns {{count}} editions"
+        },
+        "grid": {
+            "empty": {
+                "title": "No Collectibles Found",
+                "description": "Browse the marketplace to find more collectibles",
+                "action": "Browse Marketplace"
+            },
+            "sort": {
+                "label": "Sort by"
+            }
+        },
+        "metadata": {
+            "creator": "Creator",
+            "owner": "Owner",
+            "owners": "Owners",
+            "edition": "Edition",
+            "single": "Single"
+        },
+        "supply": {
+            "available": "{{current}} of {{total}} available"
+        }
+    },
+    "traits": {
+        "rarity": "{{value}} rarity"
+    },
+    "user": {
+        "balance": {
+            "title": "Your balance",
+            "add-funds": "Add Funds"
+        },
+        "info": {
+            "verified": "Verified",
+            "edit": "Edit profile",
+            "bio": "Bio"
+        },
+        "referral": {
+            "title": "Refer a creator",
+            "description": "Share your referral link to onboard new creators and gets rewards.",
+            "how": "How it works"
+        },
+        "navigation": {
+            "on-sale": "On Sale",
+            "owned": "Owned",
+            "created": "Created",
+            "bids": "Bids",
+            "trades": "Trades",
+            "offers": "Offers"
+        },
+        "form": {
+            "edit": {
+                "submit": "Save Changes",
+                "image": {
+                    "label": "Upload a Profile Image",
+                    "heading": "Drag & drop file or",
+                    "hint": "Recommended size: 400x400px. JPG, PNG, GIF OR WEBP. Max file size 10 MB.",
+                    "file": {
+                        "chose": "Choose File",
+                        "replace": "Replace File"
+                    }
+                },
+                "cover": {
+                    "label": "Upload a Cover Image",
+                    "heading": "Drag & drop file or",
+                    "hint": "Recommended size: 1128x200px. JPG, PNG, GIF OR WEBP. Max file size 10 MB.",
+                    "file": {
+                        "chose": "Choose File",
+                        "replace": "Replace File"
+                    }
+                },
+                "name": {
+                    "label": "Display Name",
+                    "placeholder": "Enter your display name"
+                },
+                "description": {
+                    "label": "Bio",
+                    "placeholder": "Enter a short bio"
+                },
+                "email": {
+                    "label": "Email Notification",
+                    "placeholder": "Enter your email",
+                    "validation": {
+                        "invalid": "Email is not valid"
+                    }
+                },
+                "twitter": {
+                    "label": "Twitter Username",
+                    "placeholder": "@"
+                },
+                "instagram": {
+                    "label": "Instagram Username",
+                    "placeholder": "@"
+                },
+                "website": {
+                    "label": "Personal Site",
+                    "placeholder": "https://"
+                }
+            }
+        }
     },
     "wallet": {
-      "deposit": {
-        "title": "Deposit tokens",
-        "description": "You can deposit tokens and transfer funds at anytime on the following address"
-      },
-      "banner": {
-        "title": "Use {{networkName}} network",
-        "description": "Ensure the network you choose to deposit tokens is the {{networkName}} network, or assets may be lost."
-      },
-      "balances": "Balances"
+        "address": {
+            "copy": "Address copied to the clipboard"
+        },
+        "connectors": {
+            "email": {
+                "form": {
+                    "submit": "Sign in",
+                    "validation": {
+                        "required": "This field is required",
+                        "invalid": "Email is not valid"
+                    },
+                    "email": {
+                        "label": "Email address"
+                    }
+                }
+            }
+        },
+        "wallet": {
+            "deposit": {
+                "title": "Deposit tokens",
+                "description": "You can deposit tokens and transfer funds at anytime on the following address"
+            },
+            "banner": {
+                "title": "Use {{networkName}} network",
+                "description": "Ensure the network you choose to deposit tokens is the {{networkName}} network, or assets may be lost."
+            },
+            "balances": "Balances"
+        },
+        "balances": {
+            "none": "There are no available balances."
+        }
     },
-    "balances": {
-      "none": "There are no available balances."
+    "withdraw": {
+        "balance": "of total in-game balance",
+        "from": "From",
+        "to": "To",
+        "transfer": "Transfer",
+        "after": "After transfer your in game balance will be "
     }
-  }
 }
