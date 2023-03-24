@@ -39,10 +39,19 @@ import { useWeb3React } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
+import WelcomeModal from 'components/Modal/Welcome'
 import useTranslation from 'next-translate/useTranslation'
 import { MittEmitter } from 'next/dist/shared/lib/mitt'
 import Image from 'next/image'
-import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
+import {
+  FC,
+  HTMLAttributes,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  VFC,
+} from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
 import { useNavbarAccountQuery } from '../../graphql'
@@ -373,6 +382,8 @@ const UserMenu: VFC<{
   )
 }
 
+const WELCOME_MODAL_STORAGE_KEY = 'DEFYWelcomeModalViewed'
+
 type FormData = {
   search: string
 }
@@ -411,7 +422,16 @@ const Navbar: VFC<{
   signer,
 }) => {
   const { t } = useTranslation('components')
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isLoginOpen,
+    onOpen: onOpenLogin,
+    onClose: onCloseLogin,
+  } = useDisclosure()
+  const {
+    isOpen: isWelcomeOpen,
+    onOpen: onOpenWelcome,
+    onClose: onCloseWelcome,
+  } = useDisclosure()
   const { account: accountWithChecksum, deactivate } = useWeb3React()
   const account = accountWithChecksum?.toLowerCase()
   const { asPath, query, push, isReady } = router
@@ -425,6 +445,26 @@ const Navbar: VFC<{
       lastNotification: new Date(lastNotification || 0),
     },
     skip: !account,
+  })
+
+  const [hasViewedWelcome, setHasViewedWelcome] = useState(
+    localStorage.getItem(WELCOME_MODAL_STORAGE_KEY) === 'true',
+  )
+
+  const handleOnCloseWelcome = useCallback(() => {
+    onCloseWelcome()
+    setHasViewedWelcome(true)
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(WELCOME_MODAL_STORAGE_KEY, 'true')
+    }
+  }, [onCloseWelcome])
+
+  const onSubmit = handleSubmit((data) => {
+    if (data.search) query.search = data.search
+    else delete query.search
+    delete query.skip // reset pagination
+    return push({ pathname: '/explore', query })
   })
 
   useEffect(() => {
@@ -441,12 +481,12 @@ const Navbar: VFC<{
     }
   }, [router.events, refetch])
 
-  const onSubmit = handleSubmit((data) => {
-    if (data.search) query.search = data.search
-    else delete query.search
-    delete query.skip // reset pagination
-    return push({ pathname: '/explore', query })
-  })
+  // Handle welcome screen state
+  useEffect(() => {
+    if (hasViewedWelcome === false) {
+      onOpenWelcome()
+    }
+  }, [hasViewedWelcome, onOpenWelcome])
 
   return (
     <>
@@ -531,7 +571,7 @@ const Navbar: VFC<{
               />
             </>
           ) : (
-            <Button onClick={onOpen}>
+            <Button onClick={onOpenLogin}>
               <Text as="span" isTruncated>
                 {t('navbar.sign-in')}
               </Text>
@@ -564,7 +604,10 @@ const Navbar: VFC<{
           />
         </Flex>
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} {...login} />
+
+      <LoginModal isOpen={isLoginOpen} onClose={onCloseLogin} {...login} />
+
+      <WelcomeModal isOpen={isWelcomeOpen} onClose={handleOnCloseWelcome} />
     </>
   )
 }
