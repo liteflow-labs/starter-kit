@@ -336,6 +336,7 @@
     "create": "创建",
     "search": "搜索",
     "sign-in": "登录",
+    "signing-in": "登录中...",
     "notifications": "通知",
     "activity": {
       "title": "活动",
@@ -768,6 +769,7 @@
     },
     "metadata": {
       "creator": "创建者",
+      "minted_by": "创建者",
       "owner": "所有者",
       "owners": "所有者",
       "edition": "版本",

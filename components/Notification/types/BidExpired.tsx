@@ -3,12 +3,12 @@ import Trans from 'next-translate/Trans'
 import Price from '../../Price/Price'
 
 export type IProps = {
+  currentAccount: string
   offer: {
     amount: string
     unitPrice: string
     quantity: string
     asset: {
-      id: string
       image: string
       name: string
     }
@@ -19,13 +19,13 @@ export type IProps = {
   }
 }
 
-export default function BidExpired({ offer }: IProps): {
+export default function BidExpired({ currentAccount, offer }: IProps): {
   link: string
   image: string
   children: JSX.Element
 } {
   return {
-    link: `/tokens/${offer.asset.id}`,
+    link: `/users/${currentAccount}/bids/placed`,
     image: offer.asset.image,
     children: (
       <Trans

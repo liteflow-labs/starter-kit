@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react'
+import { Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import useTranslation from 'next-translate/useTranslation'
 import { VFC } from 'react'
@@ -27,13 +27,11 @@ const OwnersModalItem: VFC<Props> = ({
     <Flex as={Link} href={`/users/${address}`}>
       <ListItem
         image={
-          <Box
+          <Flex
             as={AccountImage}
             address={address}
             image={image}
             size={40}
-            h={10}
-            w={10}
             rounded="full"
           />
         }

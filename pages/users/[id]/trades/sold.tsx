@@ -1,6 +1,7 @@
 import {
   Box,
   Flex,
+  Icon,
   IconButton,
   Stack,
   Table,
@@ -15,12 +16,14 @@ import {
 } from '@chakra-ui/react'
 import { dateFromNow, formatAddress } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
+import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
+import Empty from '../../../../components/Empty/Empty'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -239,7 +242,11 @@ const TradeSoldPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                   <Tr fontSize="sm" key={index}>
                     <Td>
                       {item.asset ? (
-                        <Flex gap={3}>
+                        <Flex
+                          as={Link}
+                          href={`/tokens/${item.asset.id}`}
+                          gap={3}
+                        >
                           <Image
                             src={item.asset.image}
                             alt={item.asset.name}
@@ -288,7 +295,11 @@ const TradeSoldPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                         '-'
                       )}
                     </Td>
-                    <Td>{formatAddress(item.buyerAddress)}</Td>
+                    <Td>
+                      <Link href={`/users/${item.buyerAddress}`}>
+                        {formatAddress(item.buyerAddress)}
+                      </Link>
+                    </Td>
                     <Td>{dateFromNow(item.createdAt)}</Td>
                     <Td>
                       <IconButton
@@ -311,6 +322,15 @@ const TradeSoldPage: NextPage<Props> = ({ meta, now, userAddress }) => {
                 ))}
               </Tbody>
             </Table>
+            {trades.length === 0 && (
+              <Empty
+                icon={
+                  <Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />
+                }
+                title={t('user.trade-sold.table.empty.title')}
+                description={t('user.trade-sold.table.empty.description')}
+              />
+            )}
           </TableContainer>
 
           <Pagination

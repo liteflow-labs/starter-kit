@@ -336,6 +336,7 @@
     "create": "Create",
     "search": "Search",
     "sign-in": "Sign in",
+    "signing-in": "Signing in...",
     "notifications": "Notifications",
     "activity": {
       "title": "Activity",
@@ -768,6 +769,7 @@
     },
     "metadata": {
       "creator": "Creator",
+      "minted_by": "Minted by",
       "owner": "Owner",
       "owners": "Owners",
       "edition": "Edition",

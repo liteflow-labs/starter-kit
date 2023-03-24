@@ -4,6 +4,7 @@ import Trans from 'next-translate/Trans'
 import Price from '../../Price/Price'
 
 export type IProps = {
+  currentAccount: string
   offer: {
     amount: string
     unitPrice: string
@@ -12,7 +13,6 @@ export type IProps = {
       symbol: string
     }
     asset: {
-      id: string
       image: string
       name: string
     }
@@ -26,13 +26,17 @@ export type IProps = {
   } | null
 }
 
-export default function OfferPurchased({ offer, trade }: IProps): {
+export default function OfferPurchased({
+  currentAccount,
+  offer,
+  trade,
+}: IProps): {
   link: string
   image: string
   children: JSX.Element
 } {
   return {
-    link: `/tokens/${offer.asset.id}`,
+    link: `/users/${currentAccount}/trades`,
     image: offer.asset.image,
     children: trade ? (
       <Trans

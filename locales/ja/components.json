@@ -336,6 +336,7 @@
     "create": "作成する",
     "search": "検索",
     "sign-in": "サインイン",
+    "signing-in": "サインイン...",
     "notifications": "通知",
     "activity": {
       "title": "アクティビティ",
@@ -768,6 +769,7 @@
     },
     "metadata": {
       "creator": "作成者",
+      "minted_by": "作成者",
       "owner": "所有者",
       "owners": "所有者",
       "edition": "エディション",

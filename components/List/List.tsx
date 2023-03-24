@@ -59,7 +59,7 @@ export function ListItem({
               variant="text-sm"
               color="gray.500"
               noOfLines={1}
-              wordBreak="break-all"
+              wordBreak="break-word"
             >
               {label}
             </Text>
@@ -69,7 +69,7 @@ export function ListItem({
                 variant="text-sm"
                 color="gray.500"
                 noOfLines={1}
-                wordBreak="break-all"
+                wordBreak="break-word"
               >
                 {subtitle}
               </Text>
@@ -80,7 +80,7 @@ export function ListItem({
                 variant="text-sm"
                 color="gray.500"
                 noOfLines={1}
-                wordBreak="break-all"
+                wordBreak="break-word"
               >
                 {caption}
               </Text>

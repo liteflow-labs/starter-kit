@@ -9,7 +9,7 @@ import {
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMemo, VFC } from 'react'
-import { Standard } from '../../graphql'
+import { MintType, Standard } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
 import type { Props as SaleDetailProps } from '../Sales/Detail'
@@ -31,6 +31,7 @@ export type Props = {
       address: string
       standard: Standard
       chainId: number
+      mintType: MintType
     }
     totalSupply: BigNumber
     owned: BigNumber
@@ -142,6 +143,7 @@ const TokenHeader: VFC<Props> = ({
           saleSupply={asset.saleSupply}
           standard={asset.collection.standard}
           totalSupply={asset.totalSupply}
+          isOpenCollection={asset.collection.mintType === 'PUBLIC'}
         />
         <SaleDetail
           blockExplorer={blockExplorer}
