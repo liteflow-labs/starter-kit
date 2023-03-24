@@ -82,6 +82,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     })
     if (error) throw error
     if (!data) throw new Error('data is falsy')
+    if (!data.collection) return { notFound: true }
     return {
       props: {
         chainId: parseInt(chainId, 10),
