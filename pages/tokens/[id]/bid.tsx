@@ -83,6 +83,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
+    if (!data) throw new Error('data is falsy')
     if (!data.asset) return { notFound: true }
     const feeQuery = await client.query<FeesForBidQuery>({
       query: FeesForBidDocument,
