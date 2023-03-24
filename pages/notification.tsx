@@ -39,7 +39,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
-    if (!data.notifications) return { notFound: true }
+    if (!data) throw new Error('data is falsy')
     return {
       props: {
         currentAccount: address,

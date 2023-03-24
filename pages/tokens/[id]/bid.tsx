@@ -102,6 +102,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (chainCurrency.error) throw chainCurrency.error
+    if (!chainCurrency) throw new Error('chainCurrency is falsy')
     if (!chainCurrency.data) return { notFound: true }
     return {
       props: {

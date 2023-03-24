@@ -22,6 +22,7 @@ export const getServerSideProps = wrapServerSideProps(
       query: WalletCurrenciesDocument,
     })
     if (error) throw error
+    if (!data) throw new Error('data is falsy')
     if (!data.currencies?.nodes) return { notFound: true }
     return {
       props: {},
