@@ -155,7 +155,7 @@ const TokenCard: VFC<Props> = ({
       <Flex as={Link} href={href} w="full" position="relative">
         <AspectRatio w="full" ratio={1}>
           <TokenMedia
-            image={asset.image}
+            imageUrl={asset.image}
             animationUrl={asset.animationUrl}
             unlockedContent={asset.unlockedContent}
             defaultText={asset.name}

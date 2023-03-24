@@ -11,16 +11,41 @@ import { FaImage } from '@react-icons/all-files/fa/FaImage'
 import { useEffect, useState, VFC } from 'react'
 import Image from '../Image/Image'
 
+const getUnlockedContentUrls = (
+  unlockedContent:
+    | {
+        url: string
+        mimetype: string | null
+      }
+    | null
+    | undefined,
+  imageUrl: string,
+  animationUrl: string | null | undefined,
+): { image: string; animation: string | null } => {
+  if (unlockedContent) {
+    return {
+      image: unlockedContent.url,
+      animation: unlockedContent.mimetype?.startsWith('video/')
+        ? unlockedContent.url
+        : null,
+    }
+  }
+  return {
+    image: imageUrl,
+    animation: animationUrl || null,
+  }
+}
+
 const TokenMedia: VFC<{
-  image: string | null | undefined
+  imageUrl: string
   animationUrl: string | null | undefined
   unlockedContent: { url: string; mimetype: string | null } | null | undefined
-  defaultText?: string
+  defaultText: string
   controls?: boolean
   fill?: boolean
   sizes: string
 }> = ({
-  image,
+  imageUrl,
   animationUrl,
   unlockedContent,
   defaultText,
@@ -31,18 +56,18 @@ const TokenMedia: VFC<{
   const { colors } = useTheme()
 
   // prioritize unlockedContent
-  if (unlockedContent) {
-    if (unlockedContent.mimetype?.startsWith('video/'))
-      animationUrl = unlockedContent.url
-    else image = unlockedContent.url
-  }
+  const { image, animation } = getUnlockedContentUrls(
+    unlockedContent,
+    imageUrl,
+    animationUrl,
+  )
 
   const [imageError, setImageError] = useState(false)
   const [videoError, setVideoError] = useState(false)
 
   // reset when image change. Needed when component is recycled
   useEffect(() => setImageError(false), [image])
-  useEffect(() => setVideoError(false), [image, animationUrl])
+  useEffect(() => setVideoError(false), [image, animation])
 
   // cannot display anything
   if (imageError && videoError)
@@ -53,7 +78,7 @@ const TokenMedia: VFC<{
         </svg>
         <Center width="100%" height="100%" position="absolute">
           <Stack align="center" spacing={3}>
-            <Icon as={FaImage} color="gray.500" w="5em" h="4em" />
+            <Icon as={FaImage} color="gray.500" boxSize="4em" />
             <Text color="gray.500" fontWeight="600">
               An issue occurred
             </Text>
@@ -63,7 +88,7 @@ const TokenMedia: VFC<{
     )
 
   // Hack in case the image fails to load because it is a video
-  if (image && imageError && !videoError) {
+  if (imageError && !videoError) {
     return (
       <Box
         as="video"
@@ -81,11 +106,11 @@ const TokenMedia: VFC<{
   }
 
   // display video
-  if (animationUrl && !videoError) {
+  if (animation && !videoError) {
     return (
       <Box
         as="video"
-        src={animationUrl}
+        src={animation}
         autoPlay
         playsInline
         muted
@@ -98,39 +123,29 @@ const TokenMedia: VFC<{
     )
   }
 
-  // display image
-  if (image && !imageError) {
-    // Use a basic image when the file is a blob or data
-    if (image.startsWith('blob:') || image.startsWith('data:'))
-      return (
-        <chakra.img
-          src={image}
-          alt={defaultText}
-          objectFit={fill ? 'cover' : 'scale-down'}
-          sizes={sizes}
-        />
-      )
-
+  // Use a basic image when the file is a blob or data
+  if (image.startsWith('blob:') || image.startsWith('data:'))
     return (
-      <Box position="relative" w="full" h="full">
-        <Image
-          src={image}
-          alt={defaultText}
-          onError={() => setImageError(true)}
-          layout="fill"
-          objectFit={fill ? 'cover' : 'scale-down'}
-          sizes={sizes}
-          unoptimized={unlockedContent?.mimetype === 'image/gif'}
-        />
-      </Box>
+      <chakra.img
+        src={image}
+        alt={defaultText}
+        objectFit={fill ? 'cover' : 'scale-down'}
+        sizes={sizes}
+      />
     )
-  }
 
-  // nothing to display
   return (
-    <svg viewBox="0 0 1 1">
-      <rect width="1" height="1" fill={colors.brand[50]} />
-    </svg>
+    <Box position="relative" w="full" h="full">
+      <Image
+        src={image}
+        alt={defaultText}
+        onError={() => setImageError(true)}
+        layout="fill"
+        objectFit={fill ? 'cover' : 'scale-down'}
+        sizes={sizes}
+        unoptimized={unlockedContent?.mimetype === 'image/gif'}
+      />
+    </Box>
   )
 }
 
