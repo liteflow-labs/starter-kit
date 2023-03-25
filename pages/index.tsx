@@ -68,10 +68,11 @@ export const getServerSideProps = wrapServerSideProps<Props>(
           limit: environment.PAGINATION_LIMIT,
         },
       })
+      if (res.error) throw res.error
       tokensToRender = res.data.assets?.nodes.map((x) => x.id) || []
     }
 
-    const { data, error } = await client.query<FetchHomePageQuery>({
+    const { error } = await client.query<FetchHomePageQuery>({
       query: FetchHomePageDocument,
       variables: {
         featuredIds: environment.FEATURED_TOKEN,
@@ -82,7 +83,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
     return {
       props: {
         now: now.toJSON(),

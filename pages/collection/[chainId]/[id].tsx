@@ -126,9 +126,12 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 
     const {
       data: { currencies },
+      error: collectionError,
     } = await client.query<FetchCurrenciesQuery>({
       query: FetchCurrenciesDocument,
     })
+
+    if (collectionError) throw collectionError
 
     const { data: collectionDetailsData, error: collectionDetailsError } =
       await client.query<
@@ -141,6 +144,9 @@ export const getServerSideProps = wrapServerSideProps<Props>(
           chainId: chainId,
         },
       })
+
+    if (collectionDetailsError) throw collectionDetailsError
+    if (!collectionDetailsData?.collection) return { notFound: true }
 
     const filter = convertFilterToAssetFilter(
       {
@@ -156,30 +162,24 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       now,
     )
 
-    const { data: collectionAssetsData, error: collectionAssetsError } =
-      await client.query<
-        FetchCollectionAssetsQuery,
-        FetchCollectionAssetsQueryVariables
-      >({
-        query: FetchCollectionAssetsDocument,
-        variables: {
-          currentAccount: ctx.user.address || '',
-          now,
-          offset,
-          limit,
-          collectionAddress: collectionAddress,
-          chainId: chainId,
-          orderBy,
-          filter,
-        },
-      })
+    const { error: collectionAssetsError } = await client.query<
+      FetchCollectionAssetsQuery,
+      FetchCollectionAssetsQueryVariables
+    >({
+      query: FetchCollectionAssetsDocument,
+      variables: {
+        currentAccount: ctx.user.address || '',
+        now,
+        offset,
+        limit,
+        collectionAddress: collectionAddress,
+        chainId: chainId,
+        orderBy,
+        filter,
+      },
+    })
 
-    if (collectionDetailsError) throw collectionDetailsError
-    if (!collectionDetailsData)
-      throw new Error('collectionDetailsData is falsy')
-    if (!collectionDetailsData?.collection) return { notFound: true }
     if (collectionAssetsError) throw collectionAssetsError
-    if (!collectionAssetsData) throw new Error('collectionAssetsData is falsy')
 
     return {
       props: {

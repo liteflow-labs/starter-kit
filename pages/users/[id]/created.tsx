@@ -69,7 +69,9 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
+    // Do not throw a not found as we may not have the user in the database and it's
+    // completely acceptable and doesn't mean the user doesn't exist on the blockchain
+    // if (!data.account) return { notFound: true }
     return {
       props: {
         userAddress,

@@ -45,7 +45,7 @@ const collectionsFilter = {
 export const getServerSideProps = wrapServerSideProps(
   environment.GRAPHQL_URL,
   async (context, client) => {
-    const { data, error } = await client.query<
+    const { error } = await client.query<
       FetchCollectionsAndAccountVerificationStatusQuery,
       FetchCollectionsAndAccountVerificationStatusQueryVariables
     >({
@@ -57,7 +57,6 @@ export const getServerSideProps = wrapServerSideProps(
       },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
     return {
       props: {},
     }

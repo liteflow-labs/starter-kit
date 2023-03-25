@@ -18,12 +18,10 @@ import { wrapServerSideProps } from '../../props'
 export const getServerSideProps = wrapServerSideProps(
   environment.GRAPHQL_URL,
   async (_, client) => {
-    const { data, error } = await client.query<WalletCurrenciesQuery>({
+    const { error } = await client.query<WalletCurrenciesQuery>({
       query: WalletCurrenciesDocument,
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    if (!data.currencies?.nodes) return { notFound: true }
     return {
       props: {},
     }

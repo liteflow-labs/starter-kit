@@ -110,9 +110,12 @@ export const getServerSideProps = wrapServerSideProps<Props>(
 
     const {
       data: { currencies },
+      error: currenciesError,
     } = await client.query<FetchCurrenciesQuery>({
       query: FetchCurrenciesDocument,
     })
+    if (currenciesError) throw currenciesError
+
     const now = new Date()
     const filter = convertFilterToAssetFilter(
       { search, collection, currencyId, maxPrice, minPrice, offers, traits },
@@ -120,7 +123,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       now,
     )
 
-    const { data, error } = await client.query<FetchAllErc721And1155Query>({
+    const { error } = await client.query<FetchAllErc721And1155Query>({
       query: FetchAllErc721And1155Document,
       variables: {
         now,
@@ -132,7 +135,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
     return {
       props: {
         currentAccount: ctx.user.address,

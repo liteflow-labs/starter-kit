@@ -71,8 +71,8 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    if (!data.offer || !data.offer.asset) return { notFound: true }
+    if (!data.offer) return { notFound: true }
+    if (!data.offer.asset) return { notFound: true }
     return {
       props: {
         offerId,

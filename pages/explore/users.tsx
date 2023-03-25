@@ -55,12 +55,11 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     const queryFilter = []
     if (search) queryFilter.push(searchFilter(search))
 
-    const { data, error } = await client.query<FetchExploreUsersQuery>({
+    const { error } = await client.query<FetchExploreUsersQuery>({
       query: FetchExploreUsersDocument,
       variables: { limit, offset, filter: queryFilter },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
 
     return {
       props: {},

@@ -31,7 +31,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
     const address = ctx.user.address
     if (!address) return { props: { currentAccount: null } }
 
-    const { data, error } = await client.query<GetNotificationsQuery>({
+    const { error } = await client.query<GetNotificationsQuery>({
       query: GetNotificationsDocument,
       variables: {
         cursor: null,
@@ -39,7 +39,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
     return {
       props: {
         currentAccount: address,

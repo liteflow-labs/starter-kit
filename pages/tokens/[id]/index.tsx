@@ -133,7 +133,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (error) throw error
-    if (!data) throw new Error('data is falsy')
     if (!data.asset) return { notFound: true }
     const chainCurrency = await client.query<
       ChainCurrenciesQuery,
@@ -148,8 +147,6 @@ export const getServerSideProps = wrapServerSideProps<Props>(
       },
     })
     if (chainCurrency.error) throw chainCurrency.error
-    if (!chainCurrency) throw new Error('chainCurrency is falsy')
-    if (!chainCurrency.data) return { notFound: true }
     return {
       props: {
         now: now.toJSON(),

@@ -20,7 +20,7 @@ import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
 import SmallLayout from '../layouts/small'
 
-const LoginPage: NextPage = () => {
+const ReferralPage: NextPage = () => {
   useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -116,4 +116,4 @@ const LoginPage: NextPage = () => {
   )
 }
 
-export default LoginPage
+export default ReferralPage
