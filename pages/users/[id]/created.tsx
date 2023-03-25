@@ -53,9 +53,11 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         : ctx.params.id.toLowerCase()
       : null
     invariant(userAddress, 'userAddress is falsy')
+
     const limit = getLimit(ctx, environment.PAGINATION_LIMIT)
     const orderBy = getOrder<AssetsOrderBy>(ctx, 'CREATED_AT_DESC')
     const offset = getOffset(ctx, environment.PAGINATION_LIMIT)
+
     const now = new Date()
     const { data, error } = await client.query<FetchCreatedAssetsQuery>({
       query: FetchCreatedAssetsDocument,
@@ -147,6 +149,8 @@ const CreatedPage: NextPage<Props> = ({
     [data],
   )
 
+  if (!assets) return <></>
+  if (!data) return <></>
   return (
     <LargeLayout>
       <Head
@@ -162,9 +166,9 @@ const CreatedPage: NextPage<Props> = ({
         currentTab="created"
         totals={
           new Map([
-            ['created', data?.created?.totalCount || 0],
-            ['on-sale', data?.onSale?.totalCount || 0],
-            ['owned', data?.owned?.totalCount || 0],
+            ['created', data.created?.totalCount || 0],
+            ['on-sale', data.onSale?.totalCount || 0],
+            ['owned', data.owned?.totalCount || 0],
           ])
         }
         loginUrlForReferral={environment.BASE_URL + '/login'}
@@ -189,7 +193,7 @@ const CreatedPage: NextPage<Props> = ({
             limit,
             limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
             page,
-            total: data?.created?.totalCount || 0,
+            total: data.created?.totalCount || 0,
             onPageChange: changePage,
             onLimitChange: changeLimit,
             result: {

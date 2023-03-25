@@ -73,6 +73,7 @@ export const getServerSideProps = wrapServerSideProps<Props>(
         : ctx.params.id
       : null
     invariant(assetId, 'assetId is falsy')
+
     const now = new Date()
     const { data, error } = await client.query<BidOnAssetQuery>({
       query: BidOnAssetDocument,
