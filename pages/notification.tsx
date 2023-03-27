@@ -9,46 +9,13 @@ import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
 import NotificationDetail from '../components/Notification/Detail'
 import { concatToQuery } from '../concat'
-import environment from '../environment'
-import {
-  GetNotificationsDocument,
-  GetNotificationsQuery,
-  useGetNotificationsQuery,
-} from '../graphql'
+import { useGetNotificationsQuery } from '../graphql'
 import useAccount from '../hooks/useAccount'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import SmallLayout from '../layouts/small'
-import { wrapServerSideProps } from '../props'
 
-type Props = {
-  currentAccount: string | null
-}
-
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const address = ctx.user.address
-    if (!address) return { props: { currentAccount: null } }
-
-    const { data, error } = await client.query<GetNotificationsQuery>({
-      query: GetNotificationsDocument,
-      variables: {
-        cursor: null,
-        address,
-      },
-    })
-    if (error) throw error
-    if (!data.notifications) return { notFound: true }
-    return {
-      props: {
-        currentAccount: address,
-      },
-    }
-  },
-)
-
-const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
+const NotificationPage: NextPage = ({}) => {
   const ready = useEagerConnect()
   const { t } = useTranslation('templates')
   const toast = useToast()
@@ -60,9 +27,9 @@ const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
   const { data, fetchMore } = useGetNotificationsQuery({
     variables: {
       cursor: null,
-      address: currentAccount || '',
+      address: address || '',
     },
-    skip: !currentAccount,
+    skip: !address,
   })
 
   const notifications = useMemo(() => data?.notifications?.nodes || [], [data])
@@ -110,7 +77,7 @@ const NotificationPage: NextPage<Props> = ({ currentAccount }) => {
             {notifications.map((notification) => (
               <NotificationDetail
                 key={notification.id}
-                currentAccount={currentAccount}
+                currentAccount={address || null}
                 {...notification}
               />
             ))}
