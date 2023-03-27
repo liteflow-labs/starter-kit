@@ -35,7 +35,6 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
-import invariant from 'ts-invariant'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
@@ -54,38 +53,18 @@ import {
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
-import {
-  AddressFilter,
-  ChainCurrenciesDocument,
-  ChainCurrenciesQuery,
-  ChainCurrenciesQueryVariables,
-  CurrencyFilter,
-  FetchAssetDocument,
-  FetchAssetIdFromTokenIdDocument,
-  FetchAssetIdFromTokenIdQuery,
-  FetchAssetIdFromTokenIdQueryVariables,
-  FetchAssetQuery,
-  IntFilter,
-  useFetchAssetQuery,
-} from '../../../graphql'
+import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useNow from '../../../hooks/useNow'
+import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
-import { wrapServerSideProps } from '../../../props'
 
 type Props = {
-  assetId: string
   now: string
-  currentAccount: string | null
-  meta: {
-    title: string
-    description: string
-    image: string
-  }
 }
 
 enum AssetTabs {
@@ -93,95 +72,22 @@ enum AssetTabs {
   history = 'history',
 }
 
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const now = new Date()
-    const assetId = ctx.params?.id
-      ? Array.isArray(ctx.params.id)
-        ? ctx.params.id[0]
-        : ctx.params.id
-      : null
-    invariant(assetId, 'assetId is falsy')
-
-    // check if assetId is only a tokenId
-    if (!assetId.includes('-')) {
-      const { data, error } = await client.query<
-        FetchAssetIdFromTokenIdQuery,
-        FetchAssetIdFromTokenIdQueryVariables
-      >({
-        query: FetchAssetIdFromTokenIdDocument,
-        variables: { tokenId: assetId },
-      })
-      if (error) throw error
-      const fullAssetId = data.assets?.nodes.at(0)
-      if (!fullAssetId) return { notFound: true }
-      return {
-        redirect: {
-          permanent: true,
-          destination: `/tokens/${fullAssetId.id}`,
-        },
-      }
-    }
-
-    const { data, error } = await client.query<FetchAssetQuery>({
-      query: FetchAssetDocument,
-      variables: {
-        id: assetId,
-        now,
-        address: ctx.user.address || '',
-      },
-    })
-    if (error) throw error
-    if (!data.asset) return { notFound: true }
-    const chainCurrency = await client.query<
-      ChainCurrenciesQuery,
-      ChainCurrenciesQueryVariables
-    >({
-      query: ChainCurrenciesDocument,
-      variables: {
-        filter: {
-          chainId: { equalTo: data.asset.collection.chainId } as IntFilter,
-          address: { isNull: false } as AddressFilter,
-        } as CurrencyFilter,
-      },
-    })
-    if (chainCurrency.error) throw chainCurrency.error
-    return {
-      props: {
-        now: now.toJSON(),
-        assetId,
-        currentAccount: ctx.user.address,
-        meta: {
-          title: data.asset.name,
-          description: data.asset.description,
-          image: data.asset.image,
-        },
-      },
-    }
-  },
-)
-
-const DetailPage: NextPage<Props> = ({
-  currentAccount,
-  assetId,
-  now: nowProp,
-  meta,
-}) => {
-  const ready = useEagerConnect()
+const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
+  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
   const { address } = useAccount()
   const { query } = useRouter()
   const [showPreview, setShowPreview] = useState(false)
+  const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(nowProp), [nowProp])
   const { data, refetch } = useFetchAssetQuery({
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? address : currentAccount) || '',
+      address: address || '',
     },
   })
   const chainCurrency = useChainCurrencies(data?.asset?.collection.chainId, {
@@ -324,9 +230,9 @@ const DetailPage: NextPage<Props> = ({
   return (
     <LargeLayout>
       <Head
-        title={meta.title}
-        description={meta.description}
-        image={meta.image}
+        title={asset.name}
+        description={asset.description}
+        image={asset.image}
       />
       <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <AspectRatio ratio={1}>
