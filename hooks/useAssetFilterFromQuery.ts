@@ -188,7 +188,8 @@ export default function useAssetFilterFromQuery(
     currencies.length === 1
       ? currencies[0]!.id
       : currencies.find((x) => x.id === paramCurrencyId)?.id ||
-        currencies[0]!.id
+        currencies[0]?.id ||
+        null
 
   return {
     search,

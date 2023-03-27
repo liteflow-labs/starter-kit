@@ -24,6 +24,9 @@ export default function getClient(
         Account: {
           keyFields: ['address'],
         },
+        Collection: {
+          keyFields: ['chainId', 'address'],
+        },
       },
     }).restore(windowApolloState || {}),
     ssrMode: isServer,
