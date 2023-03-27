@@ -1,9 +1,4 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from '@apollo/client'
+import { ApolloProvider } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
@@ -11,7 +6,8 @@ import { LiteflowProvider } from '@nft/hooks'
 import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import dayjs from 'dayjs'
-import type { AppProps } from 'next/app'
+import type { AppContext, AppInitialProps, AppProps } from 'next/app'
+import App from 'next/app'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
@@ -29,6 +25,7 @@ import {
   useDisconnect,
   WagmiConfig,
 } from 'wagmi'
+import getClient from '../client'
 import Banner from '../components/Banner/Banner'
 import ChatWindow from '../components/ChatWindow'
 import Footer from '../components/Footer/Footer'
@@ -38,7 +35,6 @@ import { chains, client } from '../connectors'
 import environment from '../environment'
 import useAccount, { COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import useSigner from '../hooks/useSigner'
-import { APOLLO_STATE_PROP_NAME, PropsWithUserAndState } from '../props'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
@@ -46,15 +42,13 @@ require('dayjs/locale/es-mx')
 
 NProgress.configure({ showSpinner: false })
 
-function Layout({
-  userAddress,
-  children,
-}: PropsWithChildren<{ userAddress: string | null }>) {
+function Layout({ children }: PropsWithChildren<{}>) {
   const router = useRouter()
   const signer = useSigner()
+  const { address } = useAccount()
   const userProfileLink = useMemo(
-    () => (userAddress ? `/users/${userAddress}` : '/login'),
-    [userAddress],
+    () => (address ? `/users/${address}` : '/login'),
+    [address],
   )
   const footerLinks = useMemo(() => {
     const texts = {
@@ -144,11 +138,7 @@ function Layout({
   )
 }
 
-function AccountProvider(
-  props: PropsWithChildren<{
-    cache: NormalizedCacheObject
-  }>,
-) {
+function AccountProvider(props: PropsWithChildren<{}>) {
   const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
   const toast = useToast()
@@ -182,33 +172,18 @@ function AccountProvider(
   }, [connector, login])
 
   const client = useMemo(
-    () =>
-      new ApolloClient({
-        uri: environment.GRAPHQL_URL,
-        headers: jwtToken
-          ? {
-              authorization: `Bearer ${jwtToken}`,
-            }
-          : {},
-        cache: new InMemoryCache({
-          typePolicies: {
-            Account: {
-              keyFields: ['address'],
-            },
-          },
-        }).restore(props.cache),
-        ssrMode: typeof window === 'undefined',
-      }),
-    [jwtToken, props.cache],
+    // The client needs to be reset when the jwtToken changes but only on the client as the server will
+    // always have the same token and will rerender this app multiple times and needs to preserve the cache
+    () => getClient(jwtToken, typeof window !== 'undefined'),
+    [jwtToken],
   )
 
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
 
-function MyApp({
-  Component,
-  pageProps,
-}: AppProps<PropsWithUserAndState>): JSX.Element {
+type MyAppProps = { jwt: string | null; now: Date }
+
+function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
   const router = useRouter()
   dayjs.locale(router.locale)
   usePageViews()
@@ -240,7 +215,7 @@ function MyApp({
 
   const cookies =
     typeof window === 'undefined'
-      ? new Cookies({ [COOKIE_JWT_TOKEN]: pageProps.user?.token })
+      ? new Cookies({ [COOKIE_JWT_TOKEN]: pageProps.jwt })
       : undefined
 
   return (
@@ -274,8 +249,8 @@ function MyApp({
           <CookiesProvider cookies={cookies}>
             <ChakraProvider theme={theme}>
               <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
-                <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
-                  <Layout userAddress={pageProps?.user?.address || null}>
+                <AccountProvider>
+                  <Layout>
                     <Component {...pageProps} />
                   </Layout>
                 </AccountProvider>
@@ -287,4 +262,24 @@ function MyApp({
     </ErrorBoundary>
   )
 }
+
+MyApp.getInitialProps = async (
+  appContext: AppContext,
+): Promise<AppInitialProps<MyAppProps>> => {
+  const initialProps = await App.getInitialProps(appContext)
+  const cookies = (appContext.ctx.req as any)?.cookies // TODO: fix type
+  const jwt = cookies ? cookies['jwt-token'] : null
+  // Generate the now time, rounded to the second to avoid re-rendering on the client
+  // TOFIX: find a better way to share the time between the app and document
+  const now = Math.floor(Date.now() / 1000) * 1000
+  return {
+    ...initialProps,
+    pageProps: {
+      ...initialProps.pageProps,
+      jwt,
+      now,
+    },
+  }
+}
+
 export default MyApp
