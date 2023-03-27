@@ -22,7 +22,7 @@ const COOKIE_OPTIONS = {
 }
 
 export default function useAccount(): AccountDetail {
-  const { address, isConnected, isReconnecting } = useWagmiAccount({
+  const { isConnected, isReconnecting } = useWagmiAccount({
     // FIXME: Implements dummy onConnect and onDisconnect functions to prevent a bug only present with React 17 where other onConnect and onDisconnect in the same component (eg: AccountProvider) are not triggered if another useWagmiAccount doesn't implement those functions.
     // See https://github.com/liteflow-labs/starter-kit/pull/230#issuecomment-1477409307 for more info.
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -91,7 +91,7 @@ export default function useAccount(): AccountDetail {
   }
 
   return {
-    address: isLoggedIn ? address?.toLowerCase() : undefined,
+    address: isLoggedIn ? jwt?.address?.toLowerCase() : undefined,
     jwtToken: isLoggedIn ? jwt?.token : null,
     isLoggedIn,
     isConnected,
