@@ -16,8 +16,6 @@ import environment from '../../environment'
 import {
   CollectionFilter,
   CollectionsOrderBy,
-  FetchExploreCollectionsDocument,
-  FetchExploreCollectionsQuery,
   useFetchExploreCollectionsQuery,
 } from '../../graphql'
 import useEagerConnect from '../../hooks/useEagerConnect'
@@ -25,7 +23,6 @@ import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
 import useQueryParamSingle from '../../hooks/useQueryParamSingle'
-import { wrapServerSideProps } from '../../props'
 
 type Props = {}
 
@@ -37,44 +34,6 @@ const searchFilter = (search: string): CollectionFilter =>
       { description: { includesInsensitive: search } } as CollectionFilter,
     ],
   } as CollectionFilter)
-
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const limit = ctx.query.limit
-      ? Array.isArray(ctx.query.limit)
-        ? parseInt(ctx.query.limit[0] || '0', 10)
-        : parseInt(ctx.query.limit, 10)
-      : environment.PAGINATION_LIMIT
-    const page = ctx.query.page
-      ? Array.isArray(ctx.query.page)
-        ? parseInt(ctx.query.page[0] || '0', 10)
-        : parseInt(ctx.query.page, 10)
-      : 1
-    const offset = (page - 1) * limit
-    const orderBy = Array.isArray(ctx.query.orderBy)
-      ? (ctx.query.orderBy[0] as CollectionsOrderBy)
-      : (ctx.query.orderBy as CollectionsOrderBy) || 'TOTAL_VOLUME_DESC'
-    const search =
-      ctx.query.search && !Array.isArray(ctx.query.search)
-        ? ctx.query.search
-        : null
-
-    const queryFilter = []
-    if (search) queryFilter.push(searchFilter(search))
-
-    const { data, error } = await client.query<FetchExploreCollectionsQuery>({
-      query: FetchExploreCollectionsDocument,
-      variables: { limit, offset, filter: queryFilter, orderBy },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-
-    return {
-      props: {},
-    }
-  },
-)
 
 const CollectionsPage: NextPage<Props> = ({}) => {
   useEagerConnect()
