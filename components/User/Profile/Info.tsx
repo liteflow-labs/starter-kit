@@ -60,6 +60,7 @@ const UserProfileInfo: VFC<{
     if (!isLoggedIn) return
     if (referralUrl) return
     if (!loginUrlForReferral) return
+    if (!signer) return
     createReferralLink()
       .then((id) => setReferralUrl(`${loginUrlForReferral}?ref=${id}`))
       .catch((error) =>
@@ -68,7 +69,14 @@ const UserProfileInfo: VFC<{
           status: 'error',
         }),
       )
-  }, [referralUrl, isLoggedIn, createReferralLink, loginUrlForReferral, toast])
+  }, [
+    referralUrl,
+    isLoggedIn,
+    createReferralLink,
+    loginUrlForReferral,
+    toast,
+    signer,
+  ])
 
   const handleReferralCopyLink = useCallback(() => {
     if (!referralUrl) return
