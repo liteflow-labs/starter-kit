@@ -22,7 +22,7 @@ const COOKIE_OPTIONS = {
 }
 
 export default function useAccount(): AccountDetail {
-  const { address, isConnected } = useWagmiAccount({
+  const { address, isConnected, isReconnecting } = useWagmiAccount({
     // FIXME: Implements dummy onConnect and onDisconnect functions to prevent a bug only present with React 17 where other onConnect and onDisconnect in the same component (eg: AccountProvider) are not triggered if another useWagmiAccount doesn't implement those functions.
     // See https://github.com/liteflow-labs/starter-kit/pull/230#issuecomment-1477409307 for more info.
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -33,7 +33,6 @@ export default function useAccount(): AccountDetail {
   const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
     useAuthenticate()
   const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
-  const isLoggedIn = useIsLoggedIn(address || '')
 
   const logout = useCallback(async () => {
     resetAuthenticationToken()
@@ -47,6 +46,14 @@ export default function useAccount(): AccountDetail {
     if (res.exp && res.exp < Math.ceil(Date.now() / 1000)) return null
     return { address: res.address.toLowerCase(), token: jwtToken }
   }, [cookies])
+
+  let isLoggedIn = useIsLoggedIn(jwt?.address || '')
+
+  // Reconnect based on the token and mark as logged in
+  if (!isLoggedIn && isReconnecting && jwt) {
+    setAuthenticationToken(jwt.token)
+    isLoggedIn = true
+  }
 
   const login = useCallback(
     async (connector: Connector<any, any, Signer>) => {
