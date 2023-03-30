@@ -20,7 +20,6 @@ declare module '@pinata/ipfs-gateway-tools/dist/node' {
   }
 }
 
-type IPFS = string
 type UUID = string
 type URI = string
 
