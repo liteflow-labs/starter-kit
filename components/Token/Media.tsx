@@ -32,7 +32,7 @@ const getUnlockedContentUrls = (
   }
   return {
     image: imageUrl,
-    animation: animationUrl || null,
+    animation: animationUrl || (imageUrl.endsWith('.mp4') && imageUrl) || null,
   }
 }
 
