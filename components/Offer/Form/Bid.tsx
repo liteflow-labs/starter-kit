@@ -31,7 +31,7 @@ import {
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
@@ -133,6 +133,18 @@ const OfferFormBid: FC<Props> = (props) => {
       auctionExpirationDate: defaultAuctionExpirationValue,
     },
   })
+
+  useEffect(() => {
+    const defaultCurrency = currencies[0]?.id
+    if (defaultCurrency) setValue('currencyId', defaultCurrency)
+    setValue('expiredAt', defaultExpirationValue)
+    setValue('auctionExpirationDate', defaultAuctionExpirationValue)
+  }, [
+    currencies,
+    defaultExpirationValue,
+    defaultAuctionExpirationValue,
+    setValue,
+  ])
 
   const price = watch('bid')
   const quantity = watch('quantity')

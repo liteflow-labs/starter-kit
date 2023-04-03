@@ -30,7 +30,7 @@ import {
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { useEffect, useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
 import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
@@ -107,6 +107,13 @@ const SalesDirectForm: VFC<Props> = ({
       expiredAt: defaultExpirationValue,
     },
   })
+
+  useEffect(() => {
+    const defaultCurrency = currencies[0]?.id
+    if (defaultCurrency) setValue('currencyId', defaultCurrency)
+    setValue('expiredAt', defaultExpirationValue)
+  }, [currencies, defaultExpirationValue, setValue])
+
   const [createAndPublishOffer, { activeStep, transactionHash }] =
     useCreateOffer(signer)
 

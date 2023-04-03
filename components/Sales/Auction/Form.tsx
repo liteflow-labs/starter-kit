@@ -28,7 +28,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatError, getHumanizedDate, useCreateAuction } from '@nft/hooks'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { useEffect, useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import Image from '../../Image/Image'
@@ -77,6 +77,11 @@ const SalesAuctionForm: VFC<Props> = ({
       currencyId: currencies[0]?.id,
     },
   })
+
+  useEffect(() => {
+    const defaultCurrency = currencies[0]?.id
+    if (defaultCurrency) setValue('currencyId', defaultCurrency)
+  }, [currencies, setValue])
 
   const price = watch('price')
 
