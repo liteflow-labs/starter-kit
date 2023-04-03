@@ -8,6 +8,8 @@ import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
 import { LiteflowProvider } from '@nft/hooks'
+import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import '@rainbow-me/rainbowkit/styles.css'
 import dayjs from 'dayjs'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
@@ -32,7 +34,7 @@ import ChatWindow from '../components/ChatWindow'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
-import { client } from '../connectors'
+import { chains, client } from '../connectors'
 import environment from '../environment'
 import useAccount, { COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import useSigner from '../hooks/useSigner'
@@ -147,7 +149,7 @@ function AccountProvider(
     cache: NormalizedCacheObject
   }>,
 ) {
-  const { login, jwtToken } = useAccount()
+  const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
   const toast = useToast()
 
@@ -163,6 +165,9 @@ function AccountProvider(
         })
         disconnect()
       }
+    },
+    onDisconnect() {
+      void logout()
     },
   })
 
@@ -259,17 +264,25 @@ function MyApp({
       </Head>
       <GoogleAnalytics strategy="lazyOnload" />
       <WagmiConfig client={client}>
-        <CookiesProvider cookies={cookies}>
-          <ChakraProvider theme={theme}>
-            <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
-              <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
-                <Layout userAddress={pageProps?.user?.address || null}>
-                  <Component {...pageProps} />
-                </Layout>
-              </AccountProvider>
-            </LiteflowProvider>
-          </ChakraProvider>
-        </CookiesProvider>
+        <RainbowKitProvider
+          chains={chains}
+          theme={lightTheme({
+            accentColor: theme.colors.brand[500],
+            borderRadius: 'medium',
+          })}
+        >
+          <CookiesProvider cookies={cookies}>
+            <ChakraProvider theme={theme}>
+              <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
+                <AccountProvider cache={pageProps[APOLLO_STATE_PROP_NAME]}>
+                  <Layout userAddress={pageProps?.user?.address || null}>
+                    <Component {...pageProps} />
+                  </Layout>
+                </AccountProvider>
+              </LiteflowProvider>
+            </ChakraProvider>
+          </CookiesProvider>
+        </RainbowKitProvider>
       </WagmiConfig>
     </ErrorBoundary>
   )

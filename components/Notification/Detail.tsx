@@ -27,6 +27,7 @@ import {
 
 export type IProps = {
   createdAt: Date
+  currentAccount: string | null
   action: NotificationAction
   accountVerification: {
     status: AccountVerificationStatus
@@ -47,7 +48,6 @@ export type IProps = {
     unitPrice: string
     quantity: string
     asset: {
-      id: string
       image: string
       name: string
     }
@@ -73,6 +73,7 @@ export type IProps = {
 export default function NotificationDetail({
   action,
   createdAt,
+  currentAccount,
   accountVerification,
   auction,
   offer,
@@ -93,6 +94,7 @@ export default function NotificationDetail({
         userAddress: string
       }
     | undefined = useMemo(() => {
+    invariant(currentAccount, 'currentAccount is required')
     switch (action) {
       case 'ACCOUNT_VERIFICATION_VALIDATED':
         invariant(accountVerification, 'accountVerification is required')
@@ -100,38 +102,38 @@ export default function NotificationDetail({
 
       case 'OFFER_PURCHASED':
         invariant(offer, 'offer is required')
-        return OfferPurchased({ offer, trade })
+        return OfferPurchased({ currentAccount, offer, trade })
 
       case 'BID_ACCEPTED':
         invariant(offer, 'offer is required')
-        return BidAccepted({ offer })
+        return BidAccepted({ currentAccount, offer })
 
       case 'BID_CREATED':
         invariant(offer, 'offer is required')
-        return BidCreated({ offer })
+        return BidCreated({ currentAccount, offer })
 
       case 'AUCTION_BID_CREATED':
         invariant(auction, 'auction is required')
         invariant(offer, 'offer is required')
-        return AuctionBidCreated({ auction, offer })
+        return AuctionBidCreated({ auction, currentAccount, offer })
 
       case 'AUCTION_BID_EXPIRED':
         invariant(auction, 'auction is required')
         invariant(offer, 'offer is required')
-        return AuctionBidExpired({ auction, offer })
+        return AuctionBidExpired({ auction, currentAccount, offer })
 
       case 'AUCTION_ENDED_WON_SELLER':
         invariant(auction, 'auction is required')
         invariant(offer, 'offer is required')
-        return AuctionEndedWonSeller({ auction, offer })
+        return AuctionEndedWonSeller({ auction, currentAccount, offer })
 
       case 'AUCTION_ENDED_RESERVEPRICE_SELLER':
         invariant(auction, 'auction is required')
-        return AuctionEndedReservePriceSeller({ auction })
+        return AuctionEndedReservePriceSeller({ auction, currentAccount })
 
       case 'AUCTION_ENDED_NOBIDS':
         invariant(auction, 'auction is required')
-        return AuctionEndedNoBids({ auction })
+        return AuctionEndedNoBids({ auction, currentAccount })
 
       case 'AUCTION_ENDED_WON_BUYER':
         invariant(auction, 'auction is required')
@@ -144,25 +146,33 @@ export default function NotificationDetail({
       case 'AUCTION_EXPIRE_SOON':
         invariant(auction, 'auction is required')
         invariant(offer, 'offer is required')
-        return AuctionExpireSoon({ auction, offer })
+        return AuctionExpireSoon({ auction, currentAccount, offer })
 
       case 'AUCTION_EXPIRED':
         invariant(auction, 'auction is required')
-        return AuctionExpired({ auction })
+        return AuctionExpired({ auction, currentAccount })
 
       case 'BID_EXPIRED':
         invariant(offer, 'offer is required')
-        return BidExpired({ offer })
+        return BidExpired({ currentAccount, offer })
 
       case 'OFFER_EXPIRED':
         invariant(offer, 'sale is required')
-        return OfferExpired({ offer })
+        return OfferExpired({ currentAccount, offer })
 
       case 'REFERRAL_REFEREE_REGISTERED':
         invariant(refereeAccount, 'refereeAccount is required')
         return ReferralRefereeRegistered({ refereeAccount })
     }
-  }, [accountVerification, action, auction, offer, trade, refereeAccount])
+  }, [
+    currentAccount,
+    action,
+    accountVerification,
+    offer,
+    trade,
+    auction,
+    refereeAccount,
+  ])
 
   if (!content) return <></>
   return (
