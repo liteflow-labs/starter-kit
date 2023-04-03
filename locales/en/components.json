@@ -336,6 +336,7 @@
     "create": "Create",
     "search": "Search",
     "sign-in": "Sign in",
+    "signing-in": "Signing in...",
     "notifications": "Notifications",
     "activity": {
       "title": "Activity",

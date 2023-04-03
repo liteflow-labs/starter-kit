@@ -2,22 +2,22 @@ import { Text } from '@chakra-ui/react'
 import Trans from 'next-translate/Trans'
 
 export type IProps = {
+  currentAccount: string
   offer: {
     asset: {
-      id: string
       image: string
       name: string
     }
   }
 }
 
-export default function OfferExpired({ offer }: IProps): {
+export default function OfferExpired({ currentAccount, offer }: IProps): {
   link: string
   image: string
   children: JSX.Element
 } {
   return {
-    link: `/tokens/${offer.asset.id}`,
+    link: `/users/${currentAccount}/offers`,
     image: offer.asset.image,
     children: (
       <Trans
