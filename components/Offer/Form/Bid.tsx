@@ -28,6 +28,7 @@ import {
   useBalance,
   useCreateOffer,
 } from '@nft/hooks'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
@@ -38,7 +39,6 @@ import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
-import LoginModal from '../../Modal/Login'
 import Select from '../../Select/Select'
 import Balance from '../../User/Balance'
 import Summary from '../Summary'
@@ -99,11 +99,7 @@ const OfferFormBid: FC<Props> = (props) => {
   } = props
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
   const toast = useToast()
-  const {
-    isOpen: loginIsOpen,
-    onOpen: loginOnOpen,
-    onClose: loginOnClose,
-  } = useDisclosure()
+  const { openConnectModal } = useConnectModal()
   const {
     isOpen: createOfferIsOpen,
     onOpen: createOfferOnOpen,
@@ -413,18 +409,13 @@ const OfferFormBid: FC<Props> = (props) => {
           </ButtonWithNetworkSwitch>
         </>
       ) : (
-        <Button size="lg" type="button" onClick={loginOnOpen}>
+        <Button size="lg" type="button" onClick={openConnectModal}>
           <Text as="span" isTruncated>
             {t('offer.form.bid.submit')}
           </Text>
         </Button>
       )}
 
-      <LoginModal
-        isOpen={loginIsOpen}
-        onClose={loginOnClose}
-        chainId={chainId}
-      />
       <CreateOfferModal
         isOpen={createOfferIsOpen}
         onClose={createOfferOnClose}

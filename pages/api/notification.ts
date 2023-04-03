@@ -28,8 +28,11 @@ const emails = new Map<
   keyof Events,
   ((data: Events[keyof Events]) => SendMailOptions | null)[]
 >([
-  ['BID_CREATED', [BidCreated]],
-  ['AUCTION_BID_CREATED', [AuctionBidCreated]],
+  ['BID_CREATED', [(data) => BidCreated(data as Events['BID_CREATED'])]],
+  [
+    'AUCTION_BID_CREATED',
+    [(data) => AuctionBidCreated(data as Events['AUCTION_BID_CREATED'])],
+  ],
 ])
 
 export default async function notification(
