@@ -16,10 +16,14 @@ config:
   scalars:
     URI: 'URI'
     UUID: 'UUID'
-    Datetime: 'Date'
+    Datetime: 'Date' # FIXME: wrong type, it's actually a string
     Cursor: 'string'
     JSON: '{ [key: string]: any }'
     Uint256: 'string'
+    Int256: 'string'
     Address: 'string'
     TransactionHash: 'string'
     BigFloat: 'string'
+    # BigInt: 'string' # FIXME: this breaks the build. Need to fix the type in the codebase
+    Bytes32: 'string'
+    FullText: 'string'
