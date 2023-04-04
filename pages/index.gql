@@ -1,5 +1,9 @@
 query FetchDefaultAssetIds($limit: Int!) {
-  assets(orderBy: CREATED_AT_DESC, first: $limit) {
+  assets(
+    filter: { ownershipsExist: true }
+    orderBy: CREATED_AT_DESC
+    first: $limit
+  ) {
     nodes {
       id
     }

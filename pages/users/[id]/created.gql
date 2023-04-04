@@ -10,7 +10,7 @@ query FetchCreatedAssets(
     ...AccountDetail
   }
   created: assets(
-    filter: { creatorAddress: { equalTo: $address } }
+    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
     first: $limit
     offset: $offset
     orderBy: $orderBy
@@ -45,7 +45,9 @@ query FetchCreatedAssets(
   ) {
     totalCount
   }
-  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+  owned: ownerships(
+    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+  ) {
     totalCount
   }
 }
