@@ -15,6 +15,7 @@ query FetchUserTradePurchased(
   }
   onSale: assets(
     filter: {
+      ownershipsExist: true
       or: [
         {
           sales: {

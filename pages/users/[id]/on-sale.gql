@@ -16,6 +16,7 @@ query FetchOnSaleAssets(
   }
   onSale: assets(
     filter: {
+      ownershipsExist: true
       or: [
         {
           sales: {

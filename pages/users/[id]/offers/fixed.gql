@@ -15,6 +15,7 @@ query FetchUserFixedPrice(
   }
   onSale: assets(
     filter: {
+      ownershipsExist: true
       or: [
         {
           sales: {

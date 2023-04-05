@@ -1,5 +1,9 @@
 query FetchAssetIdFromTokenId($tokenId: String!) {
-  assets(condition: { tokenId: $tokenId }, first: 1) {
+  assets(
+    condition: { tokenId: $tokenId }
+    filter: { ownershipsExist: true }
+    first: 1
+  ) {
     nodes {
       id
     }
