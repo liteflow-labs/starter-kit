@@ -9,11 +9,14 @@ query FetchOnSaleAssets(
   account(address: $address) {
     ...AccountDetail
   }
-  created: assets(filter: { creatorAddress: { equalTo: $address } }) {
+  created: assets(
+    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
+  ) {
     totalCount
   }
   onSale: assets(
     filter: {
+      ownershipsExist: true
       or: [
         {
           sales: {
@@ -43,7 +46,9 @@ query FetchOnSaleAssets(
       ...AssetDetail
     }
   }
-  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
+  owned: ownerships(
+    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+  ) {
     totalCount
   }
 }
