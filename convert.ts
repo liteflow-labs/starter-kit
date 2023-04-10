@@ -31,9 +31,7 @@ export const convertAsset = (
   > & {
     collection: Pick<Collection, 'address' | 'name' | 'chainId'>
     owned: {
-      aggregates: Maybe<{
-        sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
-      }>
+      nodes: Array<Pick<Ownership, 'quantity'>>
     }
     bestBid: Maybe<{
       nodes: Array<
@@ -76,7 +74,10 @@ export const convertAsset = (
       address: asset.collection.address,
       name: asset.collection.name,
     },
-    owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+    owned: asset.owned.nodes.reduce(
+      (sum, ownership) => sum.add(ownership.quantity),
+      BigNumber.from(0),
+    ),
     unlockedContent: asset.unlockedContent,
     bestBid: bestBid
       ? {
@@ -127,7 +128,10 @@ export const convertAssetWithSupplies = (
     totalSupply: BigNumber.from(
       asset.ownerships.aggregates?.sum?.quantity || '0',
     ),
-    owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+    owned: asset.owned.nodes.reduce(
+      (sum, ownership) => sum.add(ownership.quantity),
+      BigNumber.from(0),
+    ),
     bestBid: bestBid
       ? {
           unitPrice: BigNumber.from(bestBid.unitPrice),

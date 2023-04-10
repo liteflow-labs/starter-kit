@@ -88,10 +88,8 @@ query FetchCollectionAssets(
       owned: ownerships(
         filter: { ownerAddress: { equalTo: $currentAccount } }
       ) {
-        aggregates {
-          sum {
-            quantity
-          }
+        nodes {
+          quantity
         }
       }
       bestBid: bids(

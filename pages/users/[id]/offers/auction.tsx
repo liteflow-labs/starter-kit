@@ -14,6 +14,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -139,8 +140,12 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
         ...convertAuctionFull(x),
         asset: x.asset,
         createdAt: new Date(x.createdAt),
-        ownAsset:
-          parseInt(x.asset.ownerships.aggregates?.sum?.quantity || '0', 10) > 0,
+        ownAsset: x.asset.ownerships.nodes
+          .reduce(
+            (sum, ownership) => sum.add(ownership.quantity),
+            BigNumber.from(0),
+          )
+          .gt(0),
       })),
     [data],
   )

@@ -35,10 +35,8 @@ fragment HomeAssetDetail on Asset {
     }
   }
   owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-    aggregates {
-      sum {
-        quantity
-      }
+    nodes {
+      quantity
     }
   }
   ownerships(
@@ -184,10 +182,8 @@ fragment HomeAsset on Asset {
     }
   }
   owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-    aggregates {
-      sum {
-        quantity
-      }
+    nodes {
+      quantity
     }
   }
   auctions(
@@ -290,10 +286,8 @@ fragment HomeAuction on Auction {
       name
     }
     owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-      aggregates {
-        sum {
-          quantity
-        }
+      nodes {
+        quantity
       }
     }
     image

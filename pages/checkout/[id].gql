@@ -34,10 +34,8 @@ query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
         }
       }
       owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-        aggregates {
-          sum {
-            quantity
-          }
+        nodes {
+          quantity
         }
       }
       bestBid: bids(

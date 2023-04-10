@@ -28,10 +28,8 @@ query FetchAllERC721And1155(
       }
       animationUrl
       owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-        aggregates {
-          sum {
-            quantity
-          }
+        nodes {
+          quantity
         }
       }
       auctions(

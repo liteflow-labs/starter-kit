@@ -73,10 +73,8 @@ query FetchUserAuctions(
         name
         chainId
         ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-          aggregates {
-            sum {
-              quantity
-            }
+          nodes {
+            quantity
           }
         }
       }

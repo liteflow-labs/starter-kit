@@ -89,10 +89,8 @@ fragment AssetDetail on Asset {
     }
   }
   owned: ownerships(filter: { ownerAddress: { equalTo: $currentAddress } }) {
-    aggregates {
-      sum {
-        quantity
-      }
+    nodes {
+      quantity
     }
   }
 }
