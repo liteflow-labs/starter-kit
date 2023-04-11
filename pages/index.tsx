@@ -247,12 +247,7 @@ const HomePage: NextPage<Props> = ({
                       : undefined
                   }
                   numberOfSales={x.firstSale.totalCount}
-                  hasMultiCurrency={
-                    parseInt(
-                      x.currencySales.aggregates?.distinctCount?.currencyId,
-                      10,
-                    ) > 1
-                  }
+                  hasMultiCurrency={x.firstSale.totalCurrencyDistinctCount > 1}
                 />
               </Flex>
             ))}

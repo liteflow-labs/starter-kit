@@ -289,12 +289,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
                   : undefined
               }
               numberOfSales={asset.firstSale.totalCount}
-              hasMultiCurrency={
-                parseInt(
-                  asset.currencySales.aggregates?.distinctCount?.currencyId,
-                  10,
-                ) > 1
-              }
+              hasMultiCurrency={asset.firstSale.totalCurrencyDistinctCount > 1}
             />
           </Box>
         </GridItem>

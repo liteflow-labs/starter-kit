@@ -87,6 +87,7 @@ query FetchAllERC721And1155(
         }
       ) {
         totalCount
+        totalCurrencyDistinctCount
         nodes {
           id
           unitPrice
@@ -96,13 +97,6 @@ query FetchAllERC721And1155(
             id
             decimals
             symbol
-          }
-        }
-      }
-      currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
-        aggregates {
-          distinctCount {
-            currencyId
           }
         }
       }

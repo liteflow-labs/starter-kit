@@ -201,12 +201,7 @@ const BidPage: NextPage<Props> = ({ now, assetId, meta, currentAccount }) => {
               auction={auction ? convertAuctionWithBestBid(auction) : undefined}
               sale={convertSale(asset.firstSale.nodes[0])}
               numberOfSales={asset.firstSale.totalCount}
-              hasMultiCurrency={
-                parseInt(
-                  asset.currencySales.aggregates?.distinctCount?.currencyId,
-                  10,
-                ) > 1
-              }
+              hasMultiCurrency={asset.firstSale.totalCurrencyDistinctCount > 1}
             />
           </Box>
         </GridItem>

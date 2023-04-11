@@ -169,12 +169,7 @@ const CheckoutPage: NextPage<Props> = ({
                   : undefined
               }
               numberOfSales={asset.firstSale.totalCount}
-              hasMultiCurrency={
-                parseInt(
-                  asset.currencySales.aggregates?.distinctCount?.currencyId,
-                  10,
-                ) > 1
-              }
+              hasMultiCurrency={asset.firstSale.totalCurrencyDistinctCount > 1}
             />
           </Box>
         </GridItem>
