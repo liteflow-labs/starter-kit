@@ -14,6 +14,7 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
       name
       standard
     }
+    quantity
     name
     image
     animationUrl
@@ -113,11 +114,6 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
     ownerships(first: 1) {
       nodes {
         ownerAddress
-      }
-      aggregates {
-        sum {
-          quantity
-        }
       }
     }
   }

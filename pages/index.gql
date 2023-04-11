@@ -20,6 +20,7 @@ fragment HomeAssetDetail on Asset {
     standard
     mintType
   }
+  quantity
   image
   animationUrl
   unlockedContent {
@@ -60,11 +61,6 @@ fragment HomeAssetDetail on Asset {
         verification {
           status
         }
-      }
-    }
-    aggregates {
-      sum {
-        quantity
       }
     }
   }
