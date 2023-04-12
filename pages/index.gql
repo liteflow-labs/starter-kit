@@ -34,10 +34,8 @@ fragment HomeAssetDetail on Asset {
       status
     }
   }
-  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-    nodes {
-      quantity
-    }
+  owned: ownership(ownerAddress: $address) {
+    quantity
   }
   ownerships(
     orderBy: [
@@ -181,10 +179,8 @@ fragment HomeAsset on Asset {
       status
     }
   }
-  owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-    nodes {
-      quantity
-    }
+  owned: ownership(ownerAddress: $address) {
+    quantity
   }
   auctions(
     first: 1
@@ -285,10 +281,8 @@ fragment HomeAuction on Auction {
       address
       name
     }
-    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-      nodes {
-        quantity
-      }
+    owned: ownership(ownerAddress: $address) {
+      quantity
     }
     image
     animationUrl

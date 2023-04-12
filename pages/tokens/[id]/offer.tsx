@@ -166,11 +166,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   const asset = useMemo(() => data?.asset, [data])
 
   const quantityAvailable = useMemo(
-    () =>
-      asset?.owned.nodes.reduce(
-        (sum, ownership) => sum.add(ownership.quantity),
-        BigNumber.from(0),
-      ) || BigNumber.from(0),
+    () => BigNumber.from(asset?.owned?.quantity || 0),
     [asset],
   )
 

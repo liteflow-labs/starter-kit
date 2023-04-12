@@ -72,10 +72,8 @@ query FetchUserAuctions(
         image
         name
         chainId
-        ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-          nodes {
-            quantity
-          }
+        owned: ownership(ownerAddress: $address) {
+          quantity
         }
       }
       bestBid: offers(

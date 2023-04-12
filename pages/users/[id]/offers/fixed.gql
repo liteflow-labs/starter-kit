@@ -74,10 +74,8 @@ query FetchUserFixedPrice(
         name
         image
         chainId
-        ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-          nodes {
-            quantity
-          }
+        owned: ownership(ownerAddress: $address) {
+          quantity
         }
       }
       currency {

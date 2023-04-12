@@ -30,9 +30,7 @@ export const convertAsset = (
     'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
   > & {
     collection: Pick<Collection, 'address' | 'name' | 'chainId'>
-    owned: {
-      nodes: Array<Pick<Ownership, 'quantity'>>
-    }
+    owned: Maybe<Pick<Ownership, 'quantity'>>
     bestBid: Maybe<{
       nodes: Array<
         Pick<Offer, 'unitPrice' | 'amount'> & {
@@ -74,10 +72,7 @@ export const convertAsset = (
       address: asset.collection.address,
       name: asset.collection.name,
     },
-    owned: asset.owned.nodes.reduce(
-      (sum, ownership) => sum.add(ownership.quantity),
-      BigNumber.from(0),
-    ),
+    owned: BigNumber.from(asset.owned?.quantity || 0),
     unlockedContent: asset.unlockedContent,
     bestBid: bestBid
       ? {
@@ -128,10 +123,7 @@ export const convertAssetWithSupplies = (
     totalSupply: BigNumber.from(
       asset.ownerships.aggregates?.sum?.quantity || '0',
     ),
-    owned: asset.owned.nodes.reduce(
-      (sum, ownership) => sum.add(ownership.quantity),
-      BigNumber.from(0),
-    ),
+    owned: BigNumber.from(asset.owned?.quantity || 0),
     bestBid: bestBid
       ? {
           unitPrice: BigNumber.from(bestBid.unitPrice),

@@ -140,12 +140,7 @@ const AuctionPage: NextPage<Props> = ({ meta, now, userAddress }) => {
         ...convertAuctionFull(x),
         asset: x.asset,
         createdAt: new Date(x.createdAt),
-        ownAsset: x.asset.ownerships.nodes
-          .reduce(
-            (sum, ownership) => sum.add(ownership.quantity),
-            BigNumber.from(0),
-          )
-          .gt(0),
+        ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
     [data],
   )

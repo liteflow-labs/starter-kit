@@ -142,12 +142,7 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
         ...convertSaleFull(x),
         createdAt: new Date(x.createdAt),
         asset: x.asset,
-        ownAsset: x.asset.ownerships.nodes
-          .reduce(
-            (sum, ownership) => sum.add(ownership.quantity),
-            BigNumber.from(0),
-          )
-          .gt(0),
+        ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
     [data],
   )

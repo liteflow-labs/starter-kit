@@ -85,12 +85,8 @@ query FetchCollectionAssets(
         image
         name
       }
-      owned: ownerships(
-        filter: { ownerAddress: { equalTo: $currentAccount } }
-      ) {
-        nodes {
-          quantity
-        }
+      owned: ownership(ownerAddress: $currentAccount) {
+        quantity
       }
       bestBid: bids(
         orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
