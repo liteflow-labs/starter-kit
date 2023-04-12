@@ -311,7 +311,6 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
           />
         </Stack>
       </UserProfileTemplate>
-      )
     </LargeLayout>
   )
 }

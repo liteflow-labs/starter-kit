@@ -19,6 +19,7 @@ const Image = chakra(NextImage, {
       'lazyBoundary',
       'lazyRoot',
       'unoptimized',
+      'onError',
     ].includes(prop),
 })
 

@@ -243,7 +243,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             bg="brand.50"
           >
             <TokenMedia
-              image={asset.image}
+              imageUrl={asset.image}
               animationUrl={asset.animationUrl}
               unlockedContent={showPreview ? undefined : asset.unlockedContent}
               defaultText={asset.name}
