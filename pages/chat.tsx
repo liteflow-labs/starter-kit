@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react'
 import type { Account } from '@nft/chat'
 import { Chat as ChatComponent, ChatProvider } from '@nft/chat'
 import request, { gql } from 'graphql-request'
@@ -44,13 +45,25 @@ const ChatPage: NextPage = () => {
   return (
     <LargeLayout>
       <Head title="Chat" />
-      <ChatProvider
-        signer={signer as any}
-        theme={theme}
-        lookupAddress={lookupAddress}
+      <Box
+        borderBlock="1px"
+        borderInline={{ base: 'none', lg: '1px' }}
+        // Need color definition for both breakpoints for some reason.
+        // borderColor="gray.200" doesn't apply for both.
+        borderColor={{ base: 'gray.200', lg: 'gray.200' }}
+        rounded={{ base: 'none', lg: 'xl' }}
+        height="50vh"
+        overflow="hidden"
+        mx={{ base: -6, lg: 0 }}
       >
-        <ChatComponent />
-      </ChatProvider>
+        <ChatProvider
+          signer={signer as any}
+          theme={theme}
+          lookupAddress={lookupAddress}
+        >
+          <ChatComponent />
+        </ChatProvider>
+      </Box>
     </LargeLayout>
   )
 }
