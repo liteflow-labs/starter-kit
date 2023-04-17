@@ -1,5 +1,9 @@
 query FetchDefaultAssetIds($limit: Int!) {
-  assets(orderBy: CREATED_AT_DESC, first: $limit) {
+  assets(
+    filter: { ownershipsExist: true }
+    orderBy: CREATED_AT_DESC
+    first: $limit
+  ) {
     nodes {
       id
     }
@@ -333,12 +337,17 @@ query FetchHomePage(
   $assetIds: [String!]!
   $address: Address
 ) {
-  featured: assets(filter: { id: { in: $featuredIds } }) {
+  featured: assets(
+    filter: { ownershipsExist: true, id: { in: $featuredIds } }
+  ) {
     nodes {
       ...HomeAssetDetail
     }
   }
-  assets(filter: { id: { in: $assetIds } }, first: $limit) {
+  assets(
+    filter: { ownershipsExist: true, id: { in: $assetIds } }
+    first: $limit
+  ) {
     nodes {
       ...HomeAsset
     }

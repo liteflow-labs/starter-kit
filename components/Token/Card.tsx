@@ -154,20 +154,24 @@ const TokenCard: VFC<Props> = ({
     >
       <Flex as={Link} href={href} w="full" position="relative">
         <AspectRatio w="full" ratio={1}>
-          <TokenMedia
-            image={asset.image}
-            animationUrl={asset.animationUrl}
-            unlockedContent={asset.unlockedContent}
-            defaultText={asset.name}
-            fill={true}
-            // sizes determined from the explorer page
-            sizes="
+          {asset.image ? (
+            <TokenMedia
+              imageUrl={asset.image}
+              animationUrl={asset.animationUrl}
+              unlockedContent={asset.unlockedContent}
+              defaultText={asset.name}
+              fill={true}
+              // sizes determined from the explorer page
+              sizes="
             (min-width: 80em) 292px,
             (min-width: 62em) 25vw,
             (min-width: 48em) 33vw,
             (min-width: 30em) 50vw,
             100vw"
-          />
+            />
+          ) : (
+            <Box bg="brand.50" />
+          )}
         </AspectRatio>
         {auction && (
           <HStack

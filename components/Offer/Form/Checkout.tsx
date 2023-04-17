@@ -24,7 +24,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { formatError, useAcceptOffer, useBalance } from '@nft/hooks'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Offer } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
@@ -85,6 +85,12 @@ const OfferFormCheckout: FC<Props> = ({
       quantity: offer.availableQuantity,
     },
   })
+
+  useEffect(
+    () => setValue('quantity', offer.availableQuantity),
+    [offer.availableQuantity, setValue],
+  )
+
   const quantity = watch('quantity')
 
   const [balance] = useBalance(account, currency.id)
