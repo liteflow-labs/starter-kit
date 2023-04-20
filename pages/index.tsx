@@ -28,93 +28,43 @@ import {
   convertUser,
 } from '../convert'
 import environment from '../environment'
-import {
-  FetchDefaultAssetIdsDocument,
-  FetchDefaultAssetIdsQuery,
-  FetchHomePageDocument,
-  FetchHomePageQuery,
-  useFetchHomePageQuery,
-} from '../graphql'
+import { useFetchDefaultAssetIdsQuery, useFetchHomePageQuery } from '../graphql'
 import useAccount from '../hooks/useAccount'
-import useEagerConnect from '../hooks/useEagerConnect'
 import useOrderById from '../hooks/useOrderById'
 import useSigner from '../hooks/useSigner'
 import LargeLayout from '../layouts/large'
-import { wrapServerSideProps } from '../props'
 
 type Props = {
-  now: string
-  featuredTokens: string[]
-  limit: number
-  tokens: string[]
-  currentAccount: string | null
+  now: number
 }
-
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const now = new Date()
-    let tokensToRender
-    if (environment.HOME_TOKENS) {
-      // Randomize list of assets to display
-      tokensToRender = environment.HOME_TOKENS.sort(
-        () => Math.random() - 0.5,
-      ).slice(0, environment.PAGINATION_LIMIT)
-    } else {
-      // Fallback to default list of assets
-      const res = await client.query<FetchDefaultAssetIdsQuery>({
-        query: FetchDefaultAssetIdsDocument,
-        variables: {
-          limit: environment.PAGINATION_LIMIT,
-        },
-      })
-      tokensToRender = res.data.assets?.nodes.map((x) => x.id) || []
-    }
-
-    const { data, error } = await client.query<FetchHomePageQuery>({
-      query: FetchHomePageDocument,
-      variables: {
-        featuredIds: environment.FEATURED_TOKEN,
-        now,
-        limit: environment.PAGINATION_LIMIT,
-        assetIds: tokensToRender,
-        address: ctx.user.address || '',
-      },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    return {
-      props: {
-        now: now.toJSON(),
-        limit: environment.PAGINATION_LIMIT,
-        featuredTokens: environment.FEATURED_TOKEN,
-        tokens: tokensToRender,
-        currentAccount: ctx.user.address,
-      },
-    }
-  },
-)
-
-const HomePage: NextPage<Props> = ({
-  currentAccount,
-  featuredTokens,
-  limit,
-  now,
-  tokens,
-}) => {
-  const ready = useEagerConnect()
+const HomePage: NextPage<Props> = ({ now }) => {
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { address } = useAccount()
   const toast = useToast()
   const date = useMemo(() => new Date(now), [now])
+  const { data: tokensToRender } = useFetchDefaultAssetIdsQuery({
+    variables: { limit: environment.PAGINATION_LIMIT },
+    skip: !!environment.HOME_TOKENS,
+  })
+
+  const assetIds = useMemo(() => {
+    if (environment.HOME_TOKENS) {
+      return environment.HOME_TOKENS.sort(() => Math.random() - 0.5).slice(
+        0,
+        environment.PAGINATION_LIMIT,
+      )
+    }
+    return (tokensToRender?.assets?.nodes || []).map((x) => x.id)
+  }, [tokensToRender])
+
   const { data, refetch, error } = useFetchHomePageQuery({
     variables: {
-      featuredIds: featuredTokens,
+      featuredIds: environment.FEATURED_TOKEN,
       now: date,
-      limit,
-      assetIds: tokens,
-      address: (ready ? address : currentAccount) || '',
+      limit: environment.PAGINATION_LIMIT,
+      assetIds: assetIds,
+      address: address || '',
     },
   })
 
@@ -127,8 +77,11 @@ const HomePage: NextPage<Props> = ({
     })
   }, [error, t, toast])
 
-  const featured = useOrderById(featuredTokens, data?.featured?.nodes)
-  const assets = useOrderById(tokens, data?.assets?.nodes)
+  const featured = useOrderById(
+    environment.FEATURED_TOKEN,
+    data?.featured?.nodes,
+  )
+  const assets = useOrderById(assetIds, data?.assets?.nodes)
   const currencies = useMemo(() => data?.currencies?.nodes || [], [data])
   const auctions = useMemo(() => data?.auctions?.nodes || [], [data])
 

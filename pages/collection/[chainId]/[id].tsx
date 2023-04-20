@@ -16,9 +16,7 @@ import { removeEmptyFromObject } from '@nft/hooks'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { wrapServerSideProps } from 'props'
 import { FC, useCallback, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
 import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
@@ -37,171 +35,34 @@ import {
 import environment from '../../../environment'
 import {
   AssetsOrderBy,
-  Currency,
-  FetchCollectionAssetsDocument,
-  FetchCollectionAssetsQuery,
-  FetchCollectionAssetsQueryVariables,
-  FetchCollectionDetailsDocument,
-  FetchCollectionDetailsQuery,
-  FetchCollectionDetailsQueryVariables,
-  FetchCurrenciesDocument,
-  FetchCurrenciesQuery,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
+  useFetchCurrenciesQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
-  extractTraitsFromQuery,
   Filter,
-  OfferFilter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useFilterState from '../../../hooks/useFilterState'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
+import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../layouts/large'
 
 type Props = {
-  chainId: number
-  collectionAddress: string
-  currentAccount: string | null
   now: string
-  // Currencies
-  currencies: Pick<Currency, 'id' | 'image' | 'decimals'>[]
 }
 
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const now = new Date()
-    const chainIdStr = ctx.params?.chainId
-      ? Array.isArray(ctx.params.chainId)
-        ? ctx.params.chainId[0]
-        : ctx.params.chainId
-      : null
-    invariant(chainIdStr, 'chainId is required')
-    const chainId = parseInt(chainIdStr, 10)
-    const collectionAddress = ctx.params?.id
-      ? Array.isArray(ctx.params.id)
-        ? ctx.params.id[0]
-        : ctx.params.id
-      : null
-    invariant(collectionAddress, 'Collection Address is required')
-    const limit = ctx.query.limit
-      ? Array.isArray(ctx.query.limit)
-        ? parseInt(ctx.query.limit[0] || '0', 10)
-        : parseInt(ctx.query.limit, 10)
-      : environment.PAGINATION_LIMIT
-    const page = ctx.query.page
-      ? Array.isArray(ctx.query.page)
-        ? parseInt(ctx.query.page[0] || '0', 10)
-        : parseInt(ctx.query.page, 10)
-      : 1
-    const offset = (page - 1) * limit
-    const orderBy = Array.isArray(ctx.query.orderBy)
-      ? (ctx.query.orderBy[0] as AssetsOrderBy)
-      : (ctx.query.orderBy as AssetsOrderBy) ||
-        'SALES_MIN_UNIT_PRICE_IN_REF_ASC'
-
-    const currencyId =
-      ctx.query.currencyId && !Array.isArray(ctx.query.currencyId)
-        ? ctx.query.currencyId
-        : null
-    const minPrice =
-      ctx.query.minPrice && !Array.isArray(ctx.query.minPrice)
-        ? parseFloat(ctx.query.minPrice)
-        : null
-    const maxPrice =
-      ctx.query.maxPrice && !Array.isArray(ctx.query.maxPrice)
-        ? parseFloat(ctx.query.maxPrice)
-        : null
-    const offers = ctx.query.offers
-      ? Array.isArray(ctx.query.offers)
-        ? ((ctx.query.offers[0] || null) as OfferFilter | null)
-        : (ctx.query.offers as OfferFilter)
-      : null
-    const traits = extractTraitsFromQuery(ctx.query)
-
-    const {
-      data: { currencies },
-    } = await client.query<FetchCurrenciesQuery>({
-      query: FetchCurrenciesDocument,
-    })
-
-    const { data: collectionDetailsData, error: collectionDetailsError } =
-      await client.query<
-        FetchCollectionDetailsQuery,
-        FetchCollectionDetailsQueryVariables
-      >({
-        query: FetchCollectionDetailsDocument,
-        variables: {
-          collectionAddress: collectionAddress,
-          chainId: chainId,
-        },
-      })
-
-    const filter = convertFilterToAssetFilter(
-      {
-        currencyId,
-        maxPrice,
-        minPrice,
-        offers,
-        traits,
-        collection: null,
-        search: null,
-      },
-      currencies?.nodes || [],
-      now,
-    )
-
-    const { data: collectionAssetsData, error: collectionAssetsError } =
-      await client.query<
-        FetchCollectionAssetsQuery,
-        FetchCollectionAssetsQueryVariables
-      >({
-        query: FetchCollectionAssetsDocument,
-        variables: {
-          currentAccount: ctx.user.address || '',
-          now,
-          offset,
-          limit,
-          collectionAddress: collectionAddress,
-          chainId: chainId,
-          orderBy,
-          filter,
-        },
-      })
-
-    if (collectionDetailsError) throw collectionDetailsError
-    if (!collectionDetailsData)
-      throw new Error('collectionDetailsData is falsy')
-    if (!collectionDetailsData.collection) return { notFound: true }
-    if (collectionAssetsError) throw collectionAssetsError
-    if (!collectionAssetsData) throw new Error('collectionAssetsData is falsy')
-
-    return {
-      props: {
-        chainId,
-        collectionAddress: collectionAddress,
-        currentAccount: ctx.user.address,
-        now: now.toJSON(),
-        currencies: currencies?.nodes || [],
-      },
-    }
-  },
-)
-
-const CollectionPage: FC<Props> = ({
-  chainId,
-  collectionAddress,
-  now,
-  currentAccount,
-  currencies,
-}) => {
-  const ready = useEagerConnect()
+const CollectionPage: FC<Props> = ({ now }) => {
+  useEagerConnect()
   const { query, push, pathname } = useRouter()
+  const chainId = useRequiredQueryParamSingle<number>('chainId', {
+    parse: parseInt,
+  })
+  const collectionAddress = useRequiredQueryParamSingle('id')
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
@@ -216,12 +77,17 @@ const CollectionPage: FC<Props> = ({
   const orderBy = useOrderByQuery<AssetsOrderBy>(
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
+  const { data: currencyData } = useFetchCurrenciesQuery()
+  const currencies = useMemo(
+    () => currencyData?.currencies?.nodes || [],
+    [currencyData],
+  )
   const filter = useAssetFilterFromQuery(currencies)
   const { data } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
       now: date,
-      currentAccount: (ready ? address : currentAccount) || '',
+      currentAccount: address || '',
       limit,
       offset,
       orderBy,

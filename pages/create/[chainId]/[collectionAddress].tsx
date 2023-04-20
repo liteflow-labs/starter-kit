@@ -13,7 +13,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { isSameAddress, useConfig } from '@nft/hooks'
+import { useConfig } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
 import Empty from 'components/Empty/Empty'
@@ -22,7 +22,6 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import React, { useCallback, useMemo, useState } from 'react'
-import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import Link from '../../../components/Link/Link'
 import BackButton from '../../../components/Navbar/BackButton'
@@ -31,66 +30,15 @@ import TokenCard from '../../../components/Token/Card'
 import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
 import environment from '../../../environment'
-import {
-  FetchAccountAndCollectionDocument,
-  FetchAccountAndCollectionQuery,
-  FetchAccountAndCollectionQueryVariables,
-  useFetchAccountAndCollectionQuery,
-} from '../../../graphql'
+import { useFetchAccountAndCollectionQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLocalFileURL from '../../../hooks/useLocalFileURL'
+import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
-import { wrapServerSideProps } from '../../../props'
 import { values as traits } from '../../../traits'
-
-type Props = {
-  chainId: number
-  collectionAddress: string
-  currentAccount: string | null
-}
-
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (context, client) => {
-    const chainId = Array.isArray(context.query.chainId)
-      ? context.query.chainId[0]
-      : context.query.chainId
-    const collectionAddress = Array.isArray(context.query.collectionAddress)
-      ? context.query.collectionAddress[0]
-      : context.query.collectionAddress
-    invariant(collectionAddress, "collectionAddress can't be falsy")
-    invariant(chainId, "chainId can't be falsy")
-    invariant(
-      environment.MINTABLE_COLLECTIONS.filter(({ address }) =>
-        isSameAddress(address, collectionAddress),
-      ).length > 0,
-      'collectionAddress is not mintable',
-    )
-    const { data, error } = await client.query<
-      FetchAccountAndCollectionQuery,
-      FetchAccountAndCollectionQueryVariables
-    >({
-      query: FetchAccountAndCollectionDocument,
-      variables: {
-        chainId: parseInt(chainId, 10),
-        account: context.user.address || '',
-        collectionAddress,
-      },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    return {
-      props: {
-        chainId: parseInt(chainId, 10),
-        collectionAddress,
-        currentAccount: context.user.address,
-      },
-    }
-  },
-)
 
 const Layout = ({ children }: { children: React.ReactNode }) => (
   <SmallLayout>
@@ -102,13 +50,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
   </SmallLayout>
 )
 
-const CreatePage: NextPage<Props> = ({
-  currentAccount,
-  chainId,
-  collectionAddress,
-}) => {
-  const ready = useEagerConnect()
+const CreatePage: NextPage = ({}) => {
+  useEagerConnect()
   const signer = useSigner()
+  const collectionAddress = useRequiredQueryParamSingle('collectionAddress')
+  const chainId = useRequiredQueryParamSingle<number>('chainId', {
+    parse: parseInt,
+  })
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const { address } = useAccount()
@@ -118,7 +66,7 @@ const CreatePage: NextPage<Props> = ({
     variables: {
       chainId,
       collectionAddress,
-      account: (ready ? address : currentAccount) || '',
+      account: address || '',
     },
   })
 
