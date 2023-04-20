@@ -27,7 +27,6 @@ import {
 } from 'wagmi'
 import getClient from '../client'
 import Banner from '../components/Banner/Banner'
-import ChatWindow from '../components/ChatWindow'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
@@ -106,35 +105,33 @@ function Layout({ children }: PropsWithChildren<{}>) {
   }, [router.locale, userProfileLink])
 
   return (
-    <ChatWindow>
-      <Box mt={12}>
-        <Banner />
-        <Navbar
-          allowTopUp={environment.ALLOW_TOP_UP}
-          router={{
-            asPath: router.asPath,
-            isReady: router.isReady,
-            push: router.push,
-            query: router.query,
-            events: router.events,
-          }}
-          multiLang={{
-            locale: router.locale,
-            pathname: router.pathname,
-            choices: [
-              { label: 'En', value: 'en' },
-              { label: '日本語', value: 'ja' },
-              { label: '中文', value: 'zh-cn' },
-              { label: 'Spanish', value: 'es-mx' },
-            ],
-          }}
-          signer={signer}
-          disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
-        />
-        {children}
-        <Footer name="Acme, Inc." links={footerLinks} />
-      </Box>
-    </ChatWindow>
+    <Box mt={12}>
+      <Banner />
+      <Navbar
+        allowTopUp={environment.ALLOW_TOP_UP}
+        router={{
+          asPath: router.asPath,
+          isReady: router.isReady,
+          push: router.push,
+          query: router.query,
+          events: router.events,
+        }}
+        multiLang={{
+          locale: router.locale,
+          pathname: router.pathname,
+          choices: [
+            { label: 'En', value: 'en' },
+            { label: '日本語', value: 'ja' },
+            { label: '中文', value: 'zh-cn' },
+            { label: 'Spanish', value: 'es-mx' },
+          ],
+        }}
+        signer={signer}
+        disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
+      />
+      {children}
+      <Footer name="Acme, Inc." links={footerLinks} />
+    </Box>
   )
 }
 
