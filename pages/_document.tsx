@@ -1,6 +1,7 @@
 // eslint-disable-next-line @next/next/no-document-import-in-page
 import { NormalizedCacheObject } from '@apollo/client'
 import { getDataFromTree } from '@apollo/client/react/ssr'
+import { AppInitialProps } from 'next/app'
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -10,16 +11,20 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document'
-import { ReactElement } from 'react'
+import { ComponentType, ReactElement } from 'react'
 import invariant from 'ts-invariant'
 import getClient from '../client'
+import { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
+import { MyAppProps } from './_app'
+
+type MyDocumentProps = { apolloState: NormalizedCacheObject }
 
 class MyDocument extends Document {
-  constructor(props: DocumentProps) {
+  constructor(props: DocumentProps & MyDocumentProps) {
     super(props)
 
-    const { __NEXT_DATA__, apolloState } = props as any // TODO: fix type
-    __NEXT_DATA__.apolloState = apolloState
+    const { __NEXT_DATA__, apolloState } = props
+    __NEXT_DATA__.props.apolloState = apolloState
   }
 
   render(): ReactElement {
@@ -40,19 +45,22 @@ class MyDocument extends Document {
   }
 
   static async getInitialProps(
-    context: DocumentContext,
-  ): Promise<DocumentInitialProps & { apolloState: NormalizedCacheObject }> {
+    context: DocumentContext & {
+      req?: { cookies?: COOKIES }
+    },
+  ): Promise<DocumentInitialProps & MyDocumentProps> {
     invariant(context.req)
-    const cookies = (context.req as any).cookies // TODO: fix type
-    const jwt = cookies ? cookies['jwt-token'] : null
+    const jwt = context.req?.cookies?.[COOKIE_JWT_TOKEN] || null
     // the `getClient` needs to be reset on every request as early as possible and before any rendering
     const apolloClient = getClient(jwt, true)
     // Generate the now time, rounded to the second to avoid re-rendering on the client
     // TOFIX: find a better way to share the time between the app and document
-    const now = Math.floor(Date.now() / 1000) * 1000
+    const now = new Date(Math.floor(Date.now() / 1000) * 1000)
+    // properly type the AppTree with the props from MyApp
+    const AppTree = context.AppTree as typeof context.AppTree &
+      ComponentType<AppInitialProps<MyAppProps>>
     // This renders the page and wait for all requests to be resolved
-    await getDataFromTree(<context.AppTree pageProps={{ jwt, now }} />) // TOFIX: Need to somehow pass the page props here
-    // This `defaultGetInitialProps` should be as late as possible and after the data are resolved by `getDataFromTree`
+    await getDataFromTree(<AppTree pageProps={{ jwt, now }} />) // This `defaultGetInitialProps` should be as late as possible and after the data are resolved by `getDataFromTree`
     const initialProps = await context.defaultGetInitialProps(context)
     return {
       ...initialProps,

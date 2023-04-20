@@ -15,6 +15,9 @@ type AccountDetail = {
 }
 
 export const COOKIE_JWT_TOKEN = 'jwt-token'
+export type COOKIES = {
+  [COOKIE_JWT_TOKEN]: string | undefined
+}
 const COOKIE_OPTIONS = {
   secure: true,
   sameSite: true,
@@ -32,7 +35,9 @@ export default function useAccount(): AccountDetail {
   })
   const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
     useAuthenticate()
-  const [cookies, setCookie, removeCookie] = useCookies([COOKIE_JWT_TOKEN])
+  const [cookies, setCookie, removeCookie] = useCookies<string, COOKIES>([
+    COOKIE_JWT_TOKEN,
+  ])
 
   const logout = useCallback(async () => {
     resetAuthenticationToken()
@@ -82,7 +87,7 @@ export default function useAccount(): AccountDetail {
   if (typeof window === 'undefined') {
     return {
       address: jwt?.address?.toLowerCase(),
-      jwtToken: jwt?.token,
+      jwtToken: jwt?.token || null,
       isLoggedIn: !!jwt,
       isConnected: !!jwt,
       logout,
@@ -92,7 +97,7 @@ export default function useAccount(): AccountDetail {
 
   return {
     address: isLoggedIn ? jwt?.address?.toLowerCase() : undefined,
-    jwtToken: isLoggedIn ? jwt?.token : null,
+    jwtToken: isLoggedIn ? jwt?.token || null : null,
     isLoggedIn,
     isConnected,
     logout,
