@@ -6,7 +6,7 @@ import {
 import environment from './environment'
 
 const isServer = typeof window === 'undefined'
-const windowApolloState = !isServer && (window.__NEXT_DATA__ as any).apolloState
+const windowApolloState = !isServer && window.__NEXT_DATA__.props.apolloState
 
 let _client: ApolloClient<NormalizedCacheObject>
 

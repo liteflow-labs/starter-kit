@@ -32,7 +32,7 @@ import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
 import { chains, client } from '../connectors'
 import environment from '../environment'
-import useAccount, { COOKIE_JWT_TOKEN } from '../hooks/useAccount'
+import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import useSigner from '../hooks/useSigner'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
@@ -178,7 +178,7 @@ function AccountProvider(props: PropsWithChildren<{}>) {
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
 
-type MyAppProps = { jwt: string | null; now: Date }
+export type MyAppProps = { jwt: string | null; now: Date }
 
 function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
   const router = useRouter()
@@ -212,7 +212,7 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
 
   const cookies =
     typeof window === 'undefined'
-      ? new Cookies({ [COOKIE_JWT_TOKEN]: pageProps.jwt })
+      ? new Cookies({ [COOKIE_JWT_TOKEN]: pageProps.jwt } as COOKIES)
       : undefined
 
   return (
@@ -261,14 +261,19 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
 }
 
 MyApp.getInitialProps = async (
-  appContext: AppContext,
+  appContext: AppContext & {
+    ctx: {
+      req?: { cookies?: COOKIES }
+    }
+  },
 ): Promise<AppInitialProps<MyAppProps>> => {
-  const initialProps = await App.getInitialProps(appContext)
-  const cookies = (appContext.ctx.req as any)?.cookies // TODO: fix type
-  const jwt = cookies ? cookies['jwt-token'] : null
+  const initialProps = (await App.getInitialProps(
+    appContext,
+  )) as AppInitialProps<{}> // force type of props to empty object instead of any so TS will properly require MyAppProps to be returned by this function
+  const jwt = appContext.ctx.req?.cookies?.[COOKIE_JWT_TOKEN] || null
   // Generate the now time, rounded to the second to avoid re-rendering on the client
   // TOFIX: find a better way to share the time between the app and document
-  const now = Math.floor(Date.now() / 1000) * 1000
+  const now = new Date(Math.floor(Date.now() / 1000) * 1000)
   return {
     ...initialProps,
     pageProps: {
