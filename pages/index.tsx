@@ -13,6 +13,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
 import Link from '../components/Link/Link'
+import Loader from '../components/Loader'
 import Slider from '../components/Slider/Slider'
 import TokenCard from '../components/Token/Card'
 import TokenHeader from '../components/Token/Header'
@@ -58,7 +59,7 @@ const HomePage: NextPage<Props> = ({ now }) => {
     return (tokensToRender?.assets?.nodes || []).map((x) => x.id)
   }, [tokensToRender])
 
-  const { data, refetch, error } = useFetchHomePageQuery({
+  const { data, refetch, error, loading } = useFetchHomePageQuery({
     variables: {
       featuredIds: environment.FEATURED_TOKEN,
       now: date,
@@ -119,6 +120,9 @@ const HomePage: NextPage<Props> = ({ now }) => {
       )),
     [featured, address, signer, reloadInfo, currencies],
   )
+
+  if (loading) return <Loader fullPage />
+
   return (
     <LargeLayout>
       {featuredAssets && featuredAssets.length > 0 && (

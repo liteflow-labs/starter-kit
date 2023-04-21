@@ -5,6 +5,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import Head from '../../../components/Head'
+import Loader from '../../../components/Loader'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
 import {
@@ -45,7 +46,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useFetchCreatedAssetsQuery({
+  const { data, loading } = useFetchCreatedAssetsQuery({
     variables: {
       address: userAddress,
       currentAddress: address || '',
@@ -89,6 +90,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
     [data],
   )
 
+  if (loading) return <Loader fullPage />
   if (!assets) return <></>
   if (!data) return <></>
   return (
