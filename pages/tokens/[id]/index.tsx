@@ -39,6 +39,7 @@ import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
 import ChakraLink from '../../../components/Link/Link'
+import Loader from '../../../components/Loader'
 import SaleDetail from '../../../components/Sales/Detail'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
@@ -83,7 +84,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(nowProp), [nowProp])
-  const { data, refetch } = useFetchAssetQuery({
+  const { data, refetch, loading } = useFetchAssetQuery({
     variables: {
       id: assetId,
       now: date,
@@ -226,6 +227,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [refetch, refreshAsset, toast],
   )
 
+  if (loading) return <Loader fullPage />
   if (!asset) return <></>
   return (
     <LargeLayout>
@@ -315,11 +317,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             <Stack spacing={1}>
               {asset.collection.name && (
                 <Heading as="p" variant="heading1" color="gray.500">
-                  <Link
+                  <ChakraLink
                     href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}
                   >
                     {asset.collection.name}
-                  </Link>
+                  </ChakraLink>
                 </Heading>
               )}
               <Heading

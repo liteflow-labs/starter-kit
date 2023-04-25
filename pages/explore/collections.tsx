@@ -44,7 +44,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
   const search = useQueryParamSingle('search')
-  const { data } = useFetchExploreCollectionsQuery({
+  const { data, loading } = useFetchExploreCollectionsQuery({
     variables: {
       limit,
       offset,
@@ -83,7 +83,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading || loadingOrder}
+        loading={pageLoading || loadingOrder || loading}
         search={search}
         selectedTabIndex={1}
       >

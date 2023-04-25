@@ -14,6 +14,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import Head from '../../components/Head'
 import Image from '../../components/Image/Image'
+import Loader from '../../components/Loader'
 import BackButton from '../../components/Navbar/BackButton'
 import OfferFormCheckout from '../../components/Offer/Form/Checkout'
 import Price from '../../components/Price/Price'
@@ -49,7 +50,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useCheckoutQuery({
+  const { data, loading } = useCheckoutQuery({
     variables: {
       id: offerId,
       now: date,
@@ -79,6 +80,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${data.offer.asset.id}`)
   }, [data, toast, t, push])
 
+  if (loading) return <Loader fullPage />
   if (!offer) return null
   if (!asset) return null
   return (
