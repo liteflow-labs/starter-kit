@@ -1,7 +1,6 @@
 import {
   AspectRatio,
   Box,
-  Button,
   Center,
   Flex,
   FormControl,
@@ -9,7 +8,6 @@ import {
   Heading,
   Icon,
   IconButton,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -28,7 +26,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatError } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
-import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import linkify from 'components/Linkify/Linkify'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
@@ -44,6 +41,7 @@ import SaleDetail from '../../../components/Sales/Detail'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
 import TraitList from '../../../components/Trait/TraitList'
+import { chains } from '../../../connectors'
 import {
   convertAuctionFull,
   convertBidFull,
@@ -117,6 +115,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   )
   const isSingle = useMemo(
     () => asset?.collection.standard === 'ERC721',
+    [asset],
+  )
+  const chain = useMemo(
+    () => chains.find((x) => x.chainId === asset?.chainId),
     [asset],
   )
 
@@ -397,61 +399,81 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           />
         </Flex>
 
-        <Box p={6}>
-          <Heading as="h4" variant="heading2" color="brand.black">
-            {t('asset.detail.description')}
-          </Heading>
-          <Text
-            as="p"
-            variant="text-sm"
-            color="gray.500"
-            mt={3}
-            whiteSpace="pre-wrap"
-          >
-            {linkify(asset.description)}
-          </Text>
-
-          <Stack as="nav" mt={8} align="flex-start" spacing={3}>
-            <Button
-              as={Link}
-              href={assetExternalURL}
-              isExternal
-              variant="outline"
-              colorScheme="gray"
-              width={48}
-              justifyContent="space-between"
-              rightIcon={<HiOutlineExternalLink />}
-            >
-              <Text as="span" isTruncated>
-                {t('asset.detail.explorerLink', blockExplorer)}
+        <Stack p={6} spacing={6}>
+          <Stack spacing={3}>
+            <Heading as="h4" variant="heading2" color="brand.black">
+              {t('asset.detail.description')}
+            </Heading>
+            <Stack borderRadius="2xl" p={3} borderWidth="1px" mt={4}>
+              <Text
+                as="p"
+                variant="text-sm"
+                color="gray.500"
+                whiteSpace="pre-wrap"
+              >
+                {linkify(asset.description)}
               </Text>
-            </Button>
-
-            <Button
-              as={Link}
-              href={asset.image}
-              isExternal
-              variant="outline"
-              colorScheme="gray"
-              width={48}
-              justifyContent="space-between"
-              rightIcon={<HiOutlineExternalLink />}
-            >
-              <Text as="span" isTruncated>
-                {t('asset.detail.ipfsLink')}
-              </Text>
-            </Button>
+            </Stack>
           </Stack>
 
-          {traits && (
-            <Box pt={8}>
-              <Heading as="h4" variant="heading2" color="brand.black" pb={3}>
-                {t('asset.detail.traits')}
-              </Heading>
+          <Stack spacing={3}>
+            <Heading as="h4" variant="heading2" color="brand.black">
+              {t('asset.detail.detail')}
+            </Heading>
+            <Stack
+              as="nav"
+              borderRadius="2xl"
+              p={3}
+              borderWidth="1px"
+              mt={8}
+              align="flex-start"
+              spacing={3}
+            >
+              <Flex>
+                <Text color="gray.500" mr={2}>
+                  {t('asset.detail.details.chain')}
+                </Text>
+                <Text>{chain?.name}</Text>
+              </Flex>
+
+              <Flex>
+                <Text color="gray.500" mr={2}>
+                  {t('asset.detail.details.explorer')}
+                </Text>
+                <ChakraLink href={assetExternalURL} isExternal externalIcon>
+                  {blockExplorer.name}
+                </ChakraLink>
+              </Flex>
+
+              <Flex>
+                <Text color="gray.500" mr={2}>
+                  {t('asset.detail.details.media')}
+                </Text>
+                <ChakraLink href={asset.image} isExternal externalIcon>
+                  IPFS
+                </ChakraLink>
+              </Flex>
+
+              <Flex>
+                <Text color="gray.500" mr={2}>
+                  {t('asset.detail.details.metadata')}
+                </Text>
+                <ChakraLink href={asset.tokenUri} isExternal externalIcon>
+                  IPFS
+                </ChakraLink>
+              </Flex>
+            </Stack>
+          </Stack>
+
+          <Stack spacing={3}>
+            <Heading as="h4" variant="heading2" color="brand.black" pb={3}>
+              {t('asset.detail.traits')}
+            </Heading>
+            <Box borderRadius="2xl" p={3} borderWidth="1px">
               <TraitList traits={traits} />
             </Box>
-          )}
-        </Box>
+          </Stack>
+        </Stack>
 
         <div>
           <Tabs
