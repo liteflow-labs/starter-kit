@@ -19,6 +19,7 @@ import Countdown from 'components/Countdown/Countdown'
 import environment from 'environment'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, useState, VFC } from 'react'
+import Image from '../Image/Image'
 import Link from '../Link/Link'
 import SaleAuctionCardFooter from '../Sales/Auction/CardFooter'
 import SaleDirectCardFooter from '../Sales/Direct/CardFooter'
@@ -149,6 +150,7 @@ const TokenCard: VFC<Props> = ({
       borderWidth="1px"
       borderColor="gray.200"
       bgColor="white"
+      position="relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -193,6 +195,16 @@ const TokenCard: VFC<Props> = ({
           </HStack>
         )}
       </Flex>
+      {isHovered && (
+        <Box rounded="full" padding={4} position="absolute" top={0} left={0}>
+          <Image
+            src={`/chains/${asset.collection.chainId}.svg`}
+            alt={asset.collection.chainId.toString()}
+            width={24}
+            height={24}
+          />
+        </Box>
+      )}
       <Flex justify="space-between" px={4} pt={4} pb={3} gap={2} align="start">
         <Stack spacing={0} w="full" overflow="hidden">
           {displayCreator ? (
