@@ -26,6 +26,7 @@ import Empty from '../../../../components/Empty/Empty'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
+import Loader from '../../../../components/Loader'
 import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
@@ -59,7 +60,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useFetchUserTradeSoldQuery({
+  const { data, loading } = useFetchUserTradeSoldQuery({
     variables: {
       address: userAddress,
       limit,
@@ -85,6 +86,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
     () => (data?.trades?.nodes || []).map(convertTrade),
     [data],
   )
+  if (loading) return <Loader fullPage />
   return (
     <LargeLayout>
       <Head

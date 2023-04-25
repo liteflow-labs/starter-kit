@@ -22,6 +22,7 @@ import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
 import FilterNav from '../../../components/Filter/FilterNav'
 import Head from '../../../components/Head'
+import Loader from '../../../components/Loader'
 import Pagination from '../../../components/Pagination/Pagination'
 import Select from '../../../components/Select/Select'
 import TokenCard from '../../../components/Token/Card'
@@ -67,7 +68,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
-  const { data: collectionData } = useFetchCollectionDetailsQuery({
+  const { data: collectionData, loading } = useFetchCollectionDetailsQuery({
     variables: {
       collectionAddress: collectionAddress,
       chainId: chainId,
@@ -83,7 +84,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
     [currencyData],
   )
   const filter = useAssetFilterFromQuery(currencies)
-  const { data } = useFetchCollectionAssetsQuery({
+  const { data, loading: assetLoading } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
       now: date,
@@ -141,6 +142,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
 
   const [changePage, changeLimit] = usePaginate()
 
+  if (loading) return <Loader fullPage />
   if (!collectionDetails) return null
   return (
     <LargeLayout>
@@ -216,6 +218,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
+          {assetLoading && <Loader />}
           {data?.assets?.totalCount && data?.assets?.totalCount > 0 ? (
             <SimpleGrid
               flexWrap="wrap"

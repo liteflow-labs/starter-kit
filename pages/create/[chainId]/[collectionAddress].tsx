@@ -24,6 +24,7 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useMemo, useState } from 'react'
 import Head from '../../../components/Head'
 import Link from '../../../components/Link/Link'
+import Loader from '../../../components/Loader'
 import BackButton from '../../../components/Navbar/BackButton'
 import type { Props as NFTCardProps } from '../../../components/Token/Card'
 import TokenCard from '../../../components/Token/Card'
@@ -62,7 +63,7 @@ const CreatePage: NextPage = ({}) => {
   const { address } = useAccount()
   const { data: config } = useConfig()
   const toast = useToast()
-  const { data } = useFetchAccountAndCollectionQuery({
+  const { data, loading } = useFetchAccountAndCollectionQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -129,6 +130,8 @@ const CreatePage: NextPage = ({}) => {
     },
     [push, t, toast],
   )
+
+  if (loading) return <Loader fullPage />
 
   if (environment.RESTRICT_TO_VERIFIED_ACCOUNT && !creator.verified) {
     return (

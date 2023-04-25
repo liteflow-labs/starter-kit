@@ -17,6 +17,7 @@ import { useCallback, useMemo } from 'react'
 import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
+import Loader from '../../../components/Loader'
 import BackButton from '../../../components/Navbar/BackButton'
 import OfferFormBid from '../../../components/Offer/Form/Bid'
 import Price from '../../../components/Price/Price'
@@ -51,7 +52,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
   const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useBidOnAssetQuery({
+  const { data, loading } = useBidOnAssetQuery({
     variables: {
       id: assetId,
       now: date,
@@ -95,6 +96,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${assetId}`)
   }, [toast, t, push, assetId])
 
+  if (loading) return <Loader fullPage />
   if (!asset) return <></>
   return (
     <SmallLayout>

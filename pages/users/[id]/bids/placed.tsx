@@ -27,6 +27,7 @@ import Empty from '../../../../components/Empty/Empty'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
+import Loader from '../../../../components/Loader'
 import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
@@ -64,7 +65,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch } = useFetchUserBidsPlacedQuery({
+  const { data, refetch, loading } = useFetchUserBidsPlacedQuery({
     variables: {
       address: userAddress,
       limit,
@@ -102,6 +103,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
     },
     [replace, pathname, query],
   )
+  if (loading) return <Loader fullPage />
   return (
     <LargeLayout>
       <Head

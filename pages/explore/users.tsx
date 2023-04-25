@@ -32,7 +32,7 @@ const UsersPage: NextPage<Props> = () => {
   const { t } = useTranslation('templates')
   const { limit, offset, page } = usePaginateQuery()
   const search = useQueryParamSingle('search')
-  const { data } = useFetchExploreUsersQuery({
+  const { data, loading } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
@@ -50,7 +50,7 @@ const UsersPage: NextPage<Props> = () => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading}
+        loading={pageLoading || loading}
         search={search}
         selectedTabIndex={2}
       >

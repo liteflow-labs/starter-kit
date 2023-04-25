@@ -19,6 +19,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import Head from '../../../components/Head'
+import Loader from '../../../components/Loader'
 import BackButton from '../../../components/Navbar/BackButton'
 import Radio from '../../../components/Radio/Radio'
 import SalesAuctionForm from '../../../components/Sales/Auction/Form'
@@ -74,7 +75,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useOfferForAssetQuery({
+  const { data, loading } = useOfferForAssetQuery({
     variables: {
       id: assetId,
       now: date,
@@ -191,6 +192,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     onCreated,
   ])
 
+  if (loading) return <Loader fullPage />
   if (!asset) return <></>
   return (
     <SmallLayout>
