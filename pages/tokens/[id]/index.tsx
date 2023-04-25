@@ -9,7 +9,6 @@ import {
   Heading,
   Icon,
   IconButton,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -38,7 +37,7 @@ import { useCallback, useMemo, useState } from 'react'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
-import ChakraLink from '../../../components/Link/Link'
+import Link from '../../../components/Link/Link'
 import SaleDetail from '../../../components/Sales/Detail'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
@@ -345,7 +344,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   <MenuItem onClick={() => refreshMetadata(asset.id)}>
                     {t('asset.detail.menu.refresh-metadata')}
                   </MenuItem>
-                  <ChakraLink
+                  <Link
                     href={`mailto:${
                       environment.REPORT_EMAIL
                     }?subject=${encodeURI(
@@ -356,7 +355,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     isExternal
                   >
                     <MenuItem>{t('asset.detail.menu.report.label')}</MenuItem>
-                  </ChakraLink>
+                  </Link>
                 </MenuList>
               </Menu>
             </Flex>
@@ -461,18 +460,13 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           >
             <TabList>
               {tabs.map((tab, index) => (
-                <ChakraLink
-                  key={index}
-                  href={tab.href}
-                  whiteSpace="nowrap"
-                  mr={4}
-                >
+                <Link key={index} href={tab.href} whiteSpace="nowrap" mr={4}>
                   <Tab>
                     <Text as="span" variant="subtitle1">
                       {tab.title}
                     </Text>
                   </Tab>
-                </ChakraLink>
+                </Link>
               ))}
             </TabList>
           </Tabs>
