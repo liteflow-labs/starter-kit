@@ -1,4 +1,4 @@
-import { Box, Spinner } from '@chakra-ui/react'
+import { Center, Spinner } from '@chakra-ui/react'
 import { FC, useMemo } from 'react'
 
 type Props = {
@@ -12,17 +12,9 @@ const Loader: FC<Props> = ({ fullPage }) => {
     [fullPage],
   )
   return (
-    <Box
-      p={4}
-      width="100%"
-      display="flex"
-      flex="1"
-      justifyContent="center"
-      alignItems="center"
-      {...style}
-    >
+    <Center p={4} {...style}>
       <Spinner size="lg" />
-    </Box>
+    </Center>
   )
 }
 
