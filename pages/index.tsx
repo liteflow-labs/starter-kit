@@ -12,6 +12,7 @@ import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import Link from '../components/Link/Link'
 import Loader from '../components/Loader'
 import Slider from '../components/Slider/Slider'
@@ -51,13 +52,21 @@ const HomePage: NextPage<Props> = ({ now }) => {
 
   const assetIds = useMemo(() => {
     if (environment.HOME_TOKENS) {
-      return environment.HOME_TOKENS.sort(() => Math.random() - 0.5).slice(
-        0,
-        environment.PAGINATION_LIMIT,
-      )
+      // Pseudo randomize the array based on the date's seconds
+      const tokens = [...environment.HOME_TOKENS]
+      const rng = (date.getTime() / 1000) % tokens.length
+      for (let i = 0; i < tokens.length; i++) {
+        const j = (i + rng) % tokens.length
+        const [temp1, temp2] = [tokens[i], tokens[j]]
+        invariant(temp1)
+        invariant(temp2)
+        tokens[i] = temp2
+        tokens[j] = temp1
+      }
+      return tokens.slice(0, environment.PAGINATION_LIMIT)
     }
     return (tokensToRender?.assets?.nodes || []).map((x) => x.id)
-  }, [tokensToRender])
+  }, [tokensToRender, date])
 
   const { data, refetch, error, loading } = useFetchHomePageQuery({
     variables: {
