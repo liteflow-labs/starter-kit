@@ -57,7 +57,8 @@
         "floor-price": "Precio piso",
         "total-volume": "Volumen total",
         "owners": "Propietarios",
-        "items": "Elementos"
+        "items": "Elementos",
+        "chain": "Cadena"
       },
       "by": "Por",
       "menu": {

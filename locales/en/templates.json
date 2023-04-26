@@ -57,7 +57,8 @@
         "floor-price": "Floor price",
         "total-volume": "Total Volume",
         "owners": "Owners",
-        "items": "Items"
+        "items": "Items",
+        "chain": "Chain"
       },
       "by": "By",
       "menu": {
