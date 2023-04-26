@@ -39,8 +39,8 @@ import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
   Filter,
 } from '../../hooks/useAssetFilterFromQuery'
+import useAssetFilterState from '../../hooks/useAssetFilterState'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useFilterState from '../../hooks/useFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -75,7 +75,8 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     return data?.assets
   }, [data?.assets, loading, previousData])
 
-  const { showFilters, toggleFilters, close, count } = useFilterState(filter)
+  const { showFilters, toggleFilters, close, count } =
+    useAssetFilterState(filter)
 
   const updateFilter = useCallback(
     async (filter: Filter) => {

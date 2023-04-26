@@ -221,7 +221,7 @@ const FilterAsset: NextPage<Props> = ({
           <AccordionPanel>
             <CheckboxGroup
               value={filterResult.chains}
-              defaultValue={[1]}
+              defaultValue={[]}
               onChange={(value) =>
                 propagateFilter({ chains: value as number[] })
               }
