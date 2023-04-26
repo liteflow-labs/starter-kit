@@ -124,6 +124,9 @@ const FilterAsset: NextPage<Props> = ({
       orderBy: ['TOTAL_VOLUME_DESC'],
       filter: {
         name: { includesInsensitive: collectionSearch } as StringFilter,
+        ...(filterResult.chains.length
+          ? { chainId: { in: filterResult.chains } }
+          : {}),
       } as CollectionFilter,
     },
     skip: !!selectedCollection,
