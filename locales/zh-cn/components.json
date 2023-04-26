@@ -71,6 +71,11 @@
       "title": "过滤 器",
       "clear": "清除过滤器"
     },
+    "collections": {
+      "chains": {
+        "label": "链"
+      }
+    },
     "assets": {
       "submit": "应用",
       "clear": "全部清空",
