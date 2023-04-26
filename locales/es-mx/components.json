@@ -74,6 +74,9 @@
     "assets": {
       "submit": "Aplicar",
       "clear": "Limpiar filtros",
+      "chains": {
+        "label": "Cadena"
+      },
       "currency": {
         "label": "Rango de precios",
         "placeholder": "Selecciona una moneda"

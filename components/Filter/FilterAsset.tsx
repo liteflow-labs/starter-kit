@@ -30,6 +30,7 @@ import useTranslation from 'next-translate/useTranslation'
 import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { chains } from '../../connectors'
 import {
   CollectionFilter,
   StringFilter,
@@ -49,6 +50,7 @@ type Props = {
 }
 
 export const NoFilter: Filter = {
+  chains: [],
   collection: null,
   currencyId: null,
   maxPrice: null,
@@ -194,6 +196,40 @@ const FilterAsset: NextPage<Props> = ({
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
+              {t('filters.assets.chains.label')}
+            </Heading>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
+            <CheckboxGroup
+              value={filterResult.chains}
+              defaultValue={[1]}
+              onChange={(value) => propagateFilter({ chains: value })}
+            >
+              <Stack spacing={1}>
+                {chains.map(({ id, name }, i) => (
+                  <Checkbox key={i} value={id}>
+                    <Flex gap={2} alignItems="center">
+                      <Image src={`/chains/${id}.svg`} width={24} height={24} />
+                      <Text
+                        variant="subtitle2"
+                        color="black"
+                        noOfLines={1}
+                        wordBreak="break-word"
+                        title={name}
+                      >
+                        {name}
+                      </Text>
+                    </Flex>
+                  </Checkbox>
+                ))}
+              </Stack>
+            </CheckboxGroup>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Heading variant="heading2" flex="1" textAlign="left">
               {t('filters.assets.offers.label')}
             </Heading>
             <AccordionIcon />
@@ -230,7 +266,6 @@ const FilterAsset: NextPage<Props> = ({
             </Flex>
           </AccordionPanel>
         </AccordionItem>
-
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
@@ -523,6 +558,7 @@ const FilterAsset: NextPage<Props> = ({
                     <Checkbox
                       key={i}
                       value={value}
+                      name={type}
                       onChange={(e) =>
                         e.target.checked
                           ? addTrait(type, value)

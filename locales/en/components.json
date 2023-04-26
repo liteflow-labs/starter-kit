@@ -74,6 +74,9 @@
     "assets": {
       "submit": "Apply",
       "clear": "Clear All",
+      "chains": {
+        "label": "Chain"
+      },
       "currency": {
         "label": "Price range",
         "placeholder": "Select a currency"

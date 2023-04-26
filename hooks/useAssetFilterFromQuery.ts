@@ -7,10 +7,12 @@ import {
   AssetToManyOfferOpenSaleFilter,
   AuctionFilter,
   DatetimeFilter,
+  IntFilter,
   OfferOpenSaleFilter,
   Uint256Filter,
 } from '../graphql'
 import { parseBigNumber } from './useParseBigNumber'
+import useQueryParamMulti from './useQueryParamMulti'
 import useQueryParamSingle from './useQueryParamSingle'
 
 type TraitFilter = {
@@ -19,6 +21,7 @@ type TraitFilter = {
 }
 
 export type Filter = {
+  chains: number[]
   search: string | null
   minPrice: number | null
   maxPrice: number | null
@@ -32,6 +35,11 @@ export enum OfferFilter {
   fixed = 'fixed',
   auction = 'auction',
 }
+
+const chainFilter = (chains: number[]): AssetFilter =>
+  ({
+    chainId: { in: chains } as IntFilter,
+  } as AssetFilter)
 
 const searchFilter = (search: string): AssetFilter =>
   ({
@@ -158,6 +166,8 @@ export const convertFilterToAssetFilter = (
       ? currencies[0]
       : currencies.find((x) => x.id === filter.currencyId) || currencies[0]
   const queryFilter = []
+  if (filter.chains && filter.chains.length > 0)
+    queryFilter.push(chainFilter(filter.chains))
   if (filter.search) queryFilter.push(searchFilter(filter.search))
   if (filter.collection) queryFilter.push(collectionFilter(filter.collection))
   if (currency) {
@@ -173,11 +183,16 @@ export const convertFilterToAssetFilter = (
 }
 
 const parseToFloat = (value?: string) => (value ? parseFloat(value) : null)
+const parseToInt = (value?: string): number => {
+  invariant(value)
+  return parseInt(value, 10)
+}
 
 export default function useAssetFilterFromQuery(
   currencies: { id: string }[],
 ): Filter {
   const { query } = useRouter()
+  const chains = useQueryParamMulti<number>('chains', { parse: parseToInt })
   const search = useQueryParamSingle('search')
   const minPrice = useQueryParamSingle('minPrice', { parse: parseToFloat })
   const maxPrice = useQueryParamSingle('maxPrice', { parse: parseToFloat })
@@ -192,6 +207,7 @@ export default function useAssetFilterFromQuery(
         null
 
   return {
+    chains,
     search,
     minPrice,
     maxPrice,
