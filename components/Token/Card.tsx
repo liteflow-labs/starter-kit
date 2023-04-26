@@ -210,8 +210,8 @@ const TokenCard: VFC<Props> = ({
           left={4}
           title={chainName}
           cursor="pointer"
-          bgColor="rgba(159, 159, 159, 0.4)"
           overflow="hidden"
+          filter="grayscale(100%)"
         >
           <Image
             src={`/chains/${asset.collection.chainId}.svg`}
