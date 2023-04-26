@@ -19,6 +19,7 @@ import Countdown from 'components/Countdown/Countdown'
 import environment from 'environment'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, useState, VFC } from 'react'
+import { chains } from '../../connectors'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
 import SaleAuctionCardFooter from '../Sales/Auction/CardFooter'
@@ -98,6 +99,12 @@ const TokenCard: VFC<Props> = ({
   const href = asset.id ? `/tokens/${asset.id}` : '#'
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const [isHovered, setIsHovered] = useState(false)
+
+  const chainName = useMemo(
+    () => chains.find((x) => x.id === asset.collection.chainId)?.name,
+    [asset.collection.chainId],
+  )
+
   const footer = useMemo(() => {
     if (auction)
       return (
@@ -196,14 +203,23 @@ const TokenCard: VFC<Props> = ({
         )}
       </Flex>
       {isHovered && (
-        <Box rounded="full" padding={4} position="absolute" top={0} left={0}>
+        <Flex
+          rounded="full"
+          position="absolute"
+          top={4}
+          left={4}
+          title={chainName}
+          cursor="pointer"
+          bgColor="rgba(159, 159, 159, 0.4)"
+          overflow="hidden"
+        >
           <Image
             src={`/chains/${asset.collection.chainId}.svg`}
             alt={asset.collection.chainId.toString()}
             width={24}
             height={24}
           />
-        </Box>
+        </Flex>
       )}
       <Flex justify="space-between" px={4} pt={4} pb={3} gap={2} align="start">
         <Stack spacing={0} w="full" overflow="hidden">
