@@ -35,6 +35,7 @@ import { useCallback, useMemo, useState } from 'react'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
+import Image from '../../../components/Image/Image'
 import ChakraLink from '../../../components/Link/Link'
 import Loader from '../../../components/Loader'
 import SaleDetail from '../../../components/Sales/Detail'
@@ -118,7 +119,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [asset],
   )
   const chain = useMemo(
-    () => chains.find((x) => x.chainId === asset?.chainId),
+    () => chains.find((x) => x.id === asset?.chainId),
     [asset],
   )
 
@@ -430,49 +431,61 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               spacing={3}
             >
               <Flex>
-                <Text color="gray.500" mr={2}>
+                <Text variant="text-sm" color="gray.500" mr={2}>
                   {t('asset.detail.details.chain')}
                 </Text>
-                <Text>{chain?.name}</Text>
+                <Image
+                  src={`/chains/${asset.collection.chainId}.svg`}
+                  alt={asset.collection.chainId.toString()}
+                  width={20}
+                  height={20}
+                />
+                <Text variant="subtitle2" ml={1}>
+                  {chain?.name}
+                </Text>
               </Flex>
 
               <Flex>
-                <Text color="gray.500" mr={2}>
+                <Text variant="text-sm" color="gray.500" mr={2}>
                   {t('asset.detail.details.explorer')}
                 </Text>
                 <ChakraLink href={assetExternalURL} isExternal externalIcon>
-                  {blockExplorer.name}
+                  <Text variant="subtitle2">{blockExplorer.name}</Text>
                 </ChakraLink>
               </Flex>
 
               <Flex>
-                <Text color="gray.500" mr={2}>
+                <Text variant="text-sm" color="gray.500" mr={2}>
                   {t('asset.detail.details.media')}
                 </Text>
                 <ChakraLink href={asset.image} isExternal externalIcon>
-                  IPFS
+                  <Text variant="subtitle2">IPFS</Text>
                 </ChakraLink>
               </Flex>
 
-              <Flex>
-                <Text color="gray.500" mr={2}>
-                  {t('asset.detail.details.metadata')}
-                </Text>
-                <ChakraLink href={asset.tokenUri} isExternal externalIcon>
-                  IPFS
-                </ChakraLink>
-              </Flex>
+              {asset.tokenUri && (
+                <Flex>
+                  <Text variant="text-sm" color="gray.500" mr={2}>
+                    {t('asset.detail.details.metadata')}
+                  </Text>
+                  <ChakraLink href={asset.tokenUri} isExternal externalIcon>
+                    <Text variant="subtitle2">IPFS</Text>
+                  </ChakraLink>
+                </Flex>
+              )}
             </Stack>
           </Stack>
 
-          <Stack spacing={3}>
-            <Heading as="h4" variant="heading2" color="brand.black" pb={3}>
-              {t('asset.detail.traits')}
-            </Heading>
-            <Box borderRadius="2xl" p={3} borderWidth="1px">
-              <TraitList traits={traits} />
-            </Box>
-          </Stack>
+          {traits && (
+            <Stack spacing={3}>
+              <Heading as="h4" variant="heading2" color="brand.black" pb={3}>
+                {t('asset.detail.traits')}
+              </Heading>
+              <Box borderRadius="2xl" p={3} borderWidth="1px">
+                <TraitList traits={traits} />
+              </Box>
+            </Stack>
+          )}
         </Stack>
 
         <div>
