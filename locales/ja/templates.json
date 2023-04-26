@@ -103,6 +103,13 @@
       "ipfsLink": "IPFSで表示",
       "errors": {
         "image": "問題が発生しました"
+      },
+      "details": {
+        "title": "詳細",
+        "chain": "鎖",
+        "explorer": "エクスプローラーで見る",
+        "media": "メディアを見る",
+        "metadata": "メタデータを表示"
       }
     },
     "form": {

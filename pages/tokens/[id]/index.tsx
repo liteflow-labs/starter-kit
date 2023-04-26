@@ -419,7 +419,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
 
           <Stack spacing={3}>
             <Heading as="h4" variant="heading2" color="brand.black">
-              {t('asset.detail.detail')}
+              {t('asset.detail.details.title')}
             </Heading>
             <Stack
               as="nav"
@@ -430,7 +430,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               align="flex-start"
               spacing={3}
             >
-              <Flex>
+              <Flex alignItems="center">
                 <Text variant="text-sm" color="gray.500" mr={2}>
                   {t('asset.detail.details.chain')}
                 </Text>
@@ -445,7 +445,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 </Text>
               </Flex>
 
-              <Flex>
+              <Flex alignItems="center">
                 <Text variant="text-sm" color="gray.500" mr={2}>
                   {t('asset.detail.details.explorer')}
                 </Text>
@@ -454,7 +454,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 </ChakraLink>
               </Flex>
 
-              <Flex>
+              <Flex alignItems="center">
                 <Text variant="text-sm" color="gray.500" mr={2}>
                   {t('asset.detail.details.media')}
                 </Text>
@@ -464,7 +464,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               </Flex>
 
               {asset.tokenUri && (
-                <Flex>
+                <Flex alignItems="center">
                   <Text variant="text-sm" color="gray.500" mr={2}>
                     {t('asset.detail.details.metadata')}
                   </Text>

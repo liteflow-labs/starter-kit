@@ -103,6 +103,13 @@
       "ipfsLink": "View on IPFS",
       "errors": {
         "image": "An issue occured"
+      },
+      "details": {
+        "title": "Details",
+        "chain": "Chain",
+        "explorer": "View on explorer",
+        "media": "View media",
+        "metadata": "View metadata"
       }
     },
     "form": {
