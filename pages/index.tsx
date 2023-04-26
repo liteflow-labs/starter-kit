@@ -12,7 +12,6 @@ import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import Link from '../components/Link/Link'
 import Loader from '../components/Loader'
 import Slider from '../components/Slider/Slider'
@@ -54,16 +53,22 @@ const HomePage: NextPage<Props> = ({ now }) => {
     if (environment.HOME_TOKENS) {
       // Pseudo randomize the array based on the date's seconds
       const tokens = [...environment.HOME_TOKENS]
-      const rng = (date.getTime() / 1000) % tokens.length
-      for (let i = 0; i < tokens.length; i++) {
-        const j = (i + rng) % tokens.length
-        const [temp1, temp2] = [tokens[i], tokens[j]]
-        invariant(temp1)
-        invariant(temp2)
-        tokens[i] = temp2
-        tokens[j] = temp1
+
+      const seed = date.getTime() / 1000 // convert to seconds as date is currently truncated to the second
+      const randomTokens = []
+      while (
+        tokens.length &&
+        randomTokens.length < environment.PAGINATION_LIMIT
+      ) {
+        // generate random based on seed and length of the remaining tokens array
+        // It will change when seed changes (basically every request) and also on each iteration of the loop as length of tokens changes
+        const randomIndex = seed % tokens.length
+        // remove the element from tokens
+        const element = tokens.splice(randomIndex, 1)
+        // push the element into the returned array in order
+        randomTokens.push(...element)
       }
-      return tokens.slice(0, environment.PAGINATION_LIMIT)
+      return randomTokens
     }
     return (tokensToRender?.assets?.nodes || []).map((x) => x.id)
   }, [tokensToRender, date])
