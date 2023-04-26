@@ -71,6 +71,11 @@
       "title": "フィルター",
       "clear": "フィルターをクリアする"
     },
+    "collections": {
+      "chains": {
+        "label": "鎖"
+      }
+    },
     "assets": {
       "submit": "適用する",
       "clear": "すべてクリア",

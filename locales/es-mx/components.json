@@ -71,6 +71,11 @@
       "title": "Filtros",
       "clear": "Borrar filtros"
     },
+    "collections": {
+      "chains": {
+        "label": "Cadena"
+      }
+    },
     "assets": {
       "submit": "Aplicar",
       "clear": "Limpiar filtros",

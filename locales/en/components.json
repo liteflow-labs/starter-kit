@@ -71,6 +71,11 @@
       "title": "Filters",
       "clear": "Clear filters"
     },
+    "collections": {
+      "chains": {
+        "label": "Chain"
+      }
+    },
     "assets": {
       "submit": "Apply",
       "clear": "Clear All",
