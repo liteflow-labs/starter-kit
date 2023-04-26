@@ -38,7 +38,6 @@ import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
-  useFetchCurrenciesQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
@@ -78,12 +77,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const orderBy = useOrderByQuery<AssetsOrderBy>(
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
-  const { data: currencyData } = useFetchCurrenciesQuery()
-  const currencies = useMemo(
-    () => currencyData?.currencies?.nodes || [],
-    [currencyData],
-  )
-  const filter = useAssetFilterFromQuery(currencies)
+  const filter = useAssetFilterFromQuery()
   const { data, loading: assetLoading } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
@@ -93,20 +87,22 @@ const CollectionPage: FC<Props> = ({ now }) => {
       offset,
       orderBy,
       chainId: chainId,
-      filter: convertFilterToAssetFilter(filter, currencies, date),
+      filter: convertFilterToAssetFilter(filter, date),
     },
   })
 
   const { showFilters, toggleFilters, close, count } = useFilterState(filter)
   const updateFilter = useCallback(
     async (filter: Filter) => {
-      const { traits, ...otherFilters } = filter
+      const { traits, currency, ...otherFilters } = filter
       const cleanData = removeEmptyFromObject({
         ...Object.keys(query).reduce((acc, value) => {
           if (value.startsWith('trait')) return acc
           return { ...acc, [value]: query[value] }
         }, {}),
         ...otherFilters,
+        currency: currency?.id,
+        decimals: currency?.decimals,
         page: 1,
         ...traits.reduce(
           (acc, { type, values }) => ({
@@ -197,11 +193,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             <ModalHeader>{t('collection.filter')}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <FilterAsset
-                currencies={currencies}
-                onFilterChange={updateFilter}
-                filter={filter}
-              />
+              <FilterAsset onFilterChange={updateFilter} filter={filter} />
             </ModalBody>
           </ModalContent>
         </Modal>
@@ -210,7 +202,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
         {showFilters && (
           <GridItem as="aside">
             <FilterAsset
-              currencies={currencies}
               selectedCollection={collectionDetails}
               onFilterChange={updateFilter}
               filter={filter}
