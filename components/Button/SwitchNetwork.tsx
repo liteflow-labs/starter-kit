@@ -30,7 +30,7 @@ const ButtonWithNetworkSwitch = ({
     switchNetwork()
   }, [switchNetwork])
 
-  if (chain?.id !== chainId)
+  if (chain && chain.id !== chainId)
     return (
       <Button
         {...props}
