@@ -209,7 +209,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   />
                 </Flex>
               )}
-              <Box py="6" borderTop="1px" borderColor="gray.200">
+              <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
                 <Pagination
                   limit={limit}
                   limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
