@@ -13,21 +13,38 @@ import {
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import invariant from 'ts-invariant'
+import { Chain, configureChains, Connector, createClient } from 'wagmi'
 import {
-  Chain,
-  configureChains,
-  Connector,
-  createClient,
+  bsc,
+  bscTestnet,
   goerli,
   mainnet,
-} from 'wagmi'
-import { bsc, bscTestnet, polygon, polygonMumbai } from 'wagmi/chains'
+  polygon,
+  polygonMumbai,
+} from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
 import { theme } from './styles/theme'
 
+const supportedChains = [
+  mainnet,
+  goerli,
+  bscTestnet,
+  bsc,
+  polygon,
+  polygonMumbai,
+]
+const activatedChains =
+  environment.CHAIN_IDS.length > 0
+    ? environment.CHAIN_IDS
+    : [environment.CHAIN_ID]
+
 export const { chains, provider } = configureChains<Chain>(
-  [mainnet, goerli, bscTestnet, bsc, polygon, polygonMumbai],
+  activatedChains.map((x) => {
+    const chain = supportedChains.find((y) => y.id === x)
+    invariant(chain, `Chain ${x} is not supported`)
+    return chain
+  }),
   [publicProvider()],
 )
 

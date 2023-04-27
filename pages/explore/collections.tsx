@@ -9,6 +9,7 @@ import {
   ModalContent,
   ModalHeader,
   SimpleGrid,
+  Spacer,
   Text,
   useBreakpointValue,
   useToast,
@@ -30,6 +31,7 @@ import FilterCollection, {
 import FilterNav from '../../components/Filter/FilterNav'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
+import { chains } from '../../connectors'
 import environment from '../../environment'
 import {
   CollectionsOrderBy,
@@ -104,6 +106,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   )
 
   const collections = useMemo(() => data?.collections?.nodes || [], [data])
+  const hasFilter = chains.length > 1
 
   return (
     <>
@@ -117,12 +120,16 @@ const CollectionsPage: NextPage<Props> = ({}) => {
       >
         <>
           <Flex py="6" justifyContent="space-between">
-            <FilterNav
-              showFilters={showFilters}
-              toggleFilters={toggleFilters}
-              count={count}
-              onClear={() => updateFilter(NoFilter)}
-            />
+            {hasFilter ? (
+              <FilterNav
+                showFilters={showFilters}
+                toggleFilters={toggleFilters}
+                count={count}
+                onClear={() => updateFilter(NoFilter)}
+              />
+            ) : (
+              <Spacer />
+            )}
             <Box>
               <Select<CollectionsOrderBy>
                 name="orderBy"
@@ -153,7 +160,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               />
             </Box>
           </Flex>
-          {isSmall && (
+          {hasFilter && isSmall && (
             <Modal isOpen={showFilters} onClose={close} size="full">
               <ModalContent rounded="none">
                 <ModalHeader>{t('explore.nfts.filter')}</ModalHeader>
@@ -168,7 +175,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
             </Modal>
           )}
           <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
-            {showFilters && !isSmall && (
+            {hasFilter && showFilters && !isSmall && (
               <GridItem as="aside">
                 <FilterCollection
                   onFilterChange={updateFilter}
@@ -176,13 +183,13 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                 />
               </GridItem>
             )}
-            <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
+            <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
               {collections.length > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
                   columns={
-                    showFilters
+                    hasFilter && showFilters
                       ? { base: 1, sm: 2, md: 3, lg: 4 }
                       : { base: 1, sm: 2, md: 4, lg: 6 }
                   }
