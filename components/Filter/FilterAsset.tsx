@@ -16,7 +16,6 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Link,
   NumberInput,
   NumberInputField,
   Stack,
@@ -476,7 +475,6 @@ const FilterAsset: NextPage<Props> = ({
               <Stack spacing={3}>
                 {!selectedCollection && (
                   <CollectionListItem
-                    as={Link}
                     width="full"
                     borderColor="brand.500"
                     bgColor="brand.50"
@@ -484,6 +482,7 @@ const FilterAsset: NextPage<Props> = ({
                     borderRadius="md"
                     padding={2}
                     textAlign="left"
+                    cursor="pointer"
                     onClick={() =>
                       propagateFilter({ collection: null, traits: [] })
                     }
