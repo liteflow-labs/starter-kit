@@ -2,6 +2,7 @@ import { NextPage } from 'next'
 import { useMemo } from 'react'
 import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
+import Loader from '../../components/Loader'
 import WalletAccount from '../../components/Wallet/Account/Wallet'
 import { useWalletCurrenciesQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
@@ -13,9 +14,10 @@ const WalletPage: NextPage = () => {
   const ready = useEagerConnect()
   const { address } = useAccount()
   useLoginRedirect(ready)
-  const { data } = useWalletCurrenciesQuery()
+  const { data, loading } = useWalletCurrenciesQuery()
   const currencies = useMemo(() => data?.currencies?.nodes, [data])
 
+  if (loading) return <Loader fullPage />
   if (!currencies) return <></>
   if (!address) return <></>
   return (

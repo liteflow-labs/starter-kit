@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
+import Loader from '../components/Loader'
 import NotificationDetail from '../components/Notification/Detail'
 import { concatToQuery } from '../concat'
 import { useGetNotificationsQuery } from '../graphql'
@@ -24,7 +25,11 @@ const NotificationPage: NextPage = ({}) => {
   const [_, setCookies] = useCookies()
   const [loading, setLoading] = useState(false)
 
-  const { data, fetchMore } = useGetNotificationsQuery({
+  const {
+    data,
+    fetchMore,
+    loading: fetching,
+  } = useGetNotificationsQuery({
     variables: {
       cursor: null,
       address: address || '',
@@ -64,6 +69,8 @@ const NotificationPage: NextPage = ({}) => {
       path: '/',
     })
   }, [address, setCookies])
+
+  if (fetching) return <Loader fullPage />
 
   return (
     <SmallLayout>

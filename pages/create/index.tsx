@@ -21,6 +21,7 @@ import React from 'react'
 import Empty from '../../components/Empty/Empty'
 import Head from '../../components/Head'
 import Link from '../../components/Link/Link'
+import Loader from '../../components/Loader'
 import BackButton from '../../components/Navbar/BackButton'
 import environment from '../../environment'
 import {
@@ -62,7 +63,7 @@ const CreatePage: NextPage = () => {
       },
     })
 
-  if (loading) return <></>
+  if (loading) return <Loader fullPage />
 
   if (
     environment.RESTRICT_TO_VERIFIED_ACCOUNT &&

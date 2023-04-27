@@ -38,6 +38,7 @@ import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
 import Link from '../../../components/Link/Link'
+import Loader from '../../../components/Loader'
 import SaleDetail from '../../../components/Sales/Detail'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
@@ -82,7 +83,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(nowProp), [nowProp])
-  const { data, refetch } = useFetchAssetQuery({
+  const { data, refetch, loading } = useFetchAssetQuery({
     variables: {
       id: assetId,
       now: date,
@@ -225,6 +226,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [refetch, refreshAsset, toast],
   )
 
+  if (loading) return <Loader fullPage />
   if (!asset) return <></>
   return (
     <LargeLayout>

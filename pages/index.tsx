@@ -13,6 +13,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
 import Link from '../components/Link/Link'
+import Loader from '../components/Loader'
 import Slider from '../components/Slider/Slider'
 import TokenCard from '../components/Token/Card'
 import TokenHeader from '../components/Token/Header'
@@ -50,15 +51,29 @@ const HomePage: NextPage<Props> = ({ now }) => {
 
   const assetIds = useMemo(() => {
     if (environment.HOME_TOKENS) {
-      return environment.HOME_TOKENS.sort(() => Math.random() - 0.5).slice(
-        0,
-        environment.PAGINATION_LIMIT,
-      )
+      // Pseudo randomize the array based on the date's seconds
+      const tokens = [...environment.HOME_TOKENS]
+
+      const seed = date.getTime() / 1000 // convert to seconds as date is currently truncated to the second
+      const randomTokens = []
+      while (
+        tokens.length &&
+        randomTokens.length < environment.PAGINATION_LIMIT
+      ) {
+        // generate random based on seed and length of the remaining tokens array
+        // It will change when seed changes (basically every request) and also on each iteration of the loop as length of tokens changes
+        const randomIndex = seed % tokens.length
+        // remove the element from tokens
+        const element = tokens.splice(randomIndex, 1)
+        // push the element into the returned array in order
+        randomTokens.push(...element)
+      }
+      return randomTokens
     }
     return (tokensToRender?.assets?.nodes || []).map((x) => x.id)
-  }, [tokensToRender])
+  }, [tokensToRender, date])
 
-  const { data, refetch, error } = useFetchHomePageQuery({
+  const { data, refetch, error, loading } = useFetchHomePageQuery({
     variables: {
       featuredIds: environment.FEATURED_TOKEN,
       now: date,
@@ -119,6 +134,9 @@ const HomePage: NextPage<Props> = ({ now }) => {
       )),
     [featured, address, signer, reloadInfo, currencies],
   )
+
+  if (loading) return <Loader fullPage />
+
   return (
     <LargeLayout>
       {featuredAssets && featuredAssets.length > 0 && (
