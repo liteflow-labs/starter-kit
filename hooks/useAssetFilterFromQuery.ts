@@ -7,10 +7,12 @@ import {
   AssetToManyOfferOpenSaleFilter,
   AuctionFilter,
   DatetimeFilter,
+  IntFilter,
   OfferOpenSaleFilter,
   Uint256Filter,
 } from '../graphql'
 import { parseBigNumber } from './useParseBigNumber'
+import useQueryParamMulti from './useQueryParamMulti'
 import useQueryParamSingle from './useQueryParamSingle'
 
 type TraitFilter = {
@@ -19,12 +21,16 @@ type TraitFilter = {
 }
 
 export type Filter = {
+  chains: number[]
   search: string | null
   minPrice: number | null
   maxPrice: number | null
   collection: string | null
   offers: OfferFilter | null
-  currencyId: string | null
+  currency: {
+    id: string
+    decimals: number
+  } | null
   traits: TraitFilter[]
 }
 
@@ -32,6 +38,11 @@ export enum OfferFilter {
   fixed = 'fixed',
   auction = 'auction',
 }
+
+const chainFilter = (chains: number[]): AssetFilter =>
+  ({
+    chainId: { in: chains } as IntFilter,
+  } as AssetFilter)
 
 const searchFilter = (search: string): AssetFilter =>
   ({
@@ -150,21 +161,18 @@ export const extractTraitsFromQuery = (
 
 export const convertFilterToAssetFilter = (
   filter: Filter,
-  currencies: { id: string; decimals: number }[],
   now: Date,
 ): AssetFilter[] => {
-  const currency =
-    currencies.length === 1
-      ? currencies[0]
-      : currencies.find((x) => x.id === filter.currencyId) || currencies[0]
   const queryFilter = []
+  if (filter.chains && filter.chains.length > 0)
+    queryFilter.push(chainFilter(filter.chains))
   if (filter.search) queryFilter.push(searchFilter(filter.search))
   if (filter.collection) queryFilter.push(collectionFilter(filter.collection))
-  if (currency) {
+  if (filter.currency) {
     if (filter.minPrice)
-      queryFilter.push(minPriceFilter(filter.minPrice, currency, now))
+      queryFilter.push(minPriceFilter(filter.minPrice, filter.currency, now))
     if (filter.maxPrice)
-      queryFilter.push(maxPriceFilter(filter.maxPrice, currency, now))
+      queryFilter.push(maxPriceFilter(filter.maxPrice, filter.currency, now))
   }
   if (filter.offers) queryFilter.push(offersFilter(filter.offers, now))
   if (filter.traits && filter.traits.length > 0)
@@ -173,31 +181,37 @@ export const convertFilterToAssetFilter = (
 }
 
 const parseToFloat = (value?: string) => (value ? parseFloat(value) : null)
+const parseToInt = (value?: string): number => {
+  invariant(value)
+  return parseInt(value, 10)
+}
 
-export default function useAssetFilterFromQuery(
-  currencies: { id: string }[],
-): Filter {
+export default function useAssetFilterFromQuery(): Filter {
   const { query } = useRouter()
+  const chains = useQueryParamMulti<number>('chains', { parse: parseToInt })
   const search = useQueryParamSingle('search')
   const minPrice = useQueryParamSingle('minPrice', { parse: parseToFloat })
   const maxPrice = useQueryParamSingle('maxPrice', { parse: parseToFloat })
   const collection = useQueryParamSingle('collection')
   const offers = useQueryParamSingle<OfferFilter>('offers')
-  const paramCurrencyId = useQueryParamSingle('currencyId')
-  const currencyId =
-    currencies.length === 1
-      ? currencies[0]!.id
-      : currencies.find((x) => x.id === paramCurrencyId)?.id ||
-        currencies[0]?.id ||
-        null
+  const currencyId = useQueryParamSingle('currency')
+  const currencyDecimals = useQueryParamSingle('decimals', {
+    parse: parseToInt,
+  })
 
   return {
+    chains,
     search,
     minPrice,
     maxPrice,
     collection,
     offers,
-    currencyId,
+    currency: currencyId
+      ? {
+          id: currencyId,
+          decimals: currencyDecimals || 18,
+        }
+      : null,
     traits: extractTraitsFromQuery(query),
   }
 }

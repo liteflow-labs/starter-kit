@@ -57,7 +57,8 @@
         "floor-price": "Floor price",
         "total-volume": "Total Volume",
         "owners": "Owners",
-        "items": "Items"
+        "items": "Items",
+        "chain": "Chain"
       },
       "by": "By",
       "menu": {
@@ -102,6 +103,13 @@
       "ipfsLink": "View on IPFS",
       "errors": {
         "image": "An issue occured"
+      },
+      "details": {
+        "title": "Details",
+        "chain": "Chain",
+        "explorer": "View on explorer",
+        "media": "View media",
+        "metadata": "View metadata"
       }
     },
     "form": {

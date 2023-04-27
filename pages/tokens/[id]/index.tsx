@@ -1,7 +1,6 @@
 import {
   AspectRatio,
   Box,
-  Button,
   Center,
   Flex,
   FormControl,
@@ -27,7 +26,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatError } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
-import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import linkify from 'components/Linkify/Linkify'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
@@ -37,12 +35,14 @@ import { useCallback, useMemo, useState } from 'react'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
+import Image from '../../../components/Image/Image'
 import Link from '../../../components/Link/Link'
 import Loader from '../../../components/Loader'
 import SaleDetail from '../../../components/Sales/Detail'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
 import TraitList from '../../../components/Trait/TraitList'
+import { chains } from '../../../connectors'
 import {
   convertAuctionFull,
   convertBidFull,
@@ -116,6 +116,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   )
   const isSingle = useMemo(
     () => asset?.collection.standard === 'ERC721',
+    [asset],
+  )
+  const chain = useMemo(
+    () => chains.find((x) => x.id === asset?.chainId),
     [asset],
   )
 
@@ -396,61 +400,93 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           />
         </Flex>
 
-        <Box p={6}>
-          <Heading as="h4" variant="heading2" color="brand.black">
-            {t('asset.detail.description')}
-          </Heading>
-          <Text
-            as="p"
-            variant="text-sm"
-            color="gray.500"
-            mt={3}
-            whiteSpace="pre-wrap"
-          >
-            {linkify(asset.description)}
-          </Text>
-
-          <Stack as="nav" mt={8} align="flex-start" spacing={3}>
-            <Button
-              as={Link}
-              href={assetExternalURL}
-              isExternal
-              variant="outline"
-              colorScheme="gray"
-              width={48}
-              justifyContent="space-between"
-              rightIcon={<HiOutlineExternalLink />}
-            >
-              <Text as="span" isTruncated>
-                {t('asset.detail.explorerLink', blockExplorer)}
+        <Stack p={6} spacing={6}>
+          <Stack spacing={3}>
+            <Heading as="h4" variant="heading2" color="brand.black">
+              {t('asset.detail.description')}
+            </Heading>
+            <Stack borderRadius="2xl" p={3} borderWidth="1px" mt={4}>
+              <Text
+                as="p"
+                variant="text-sm"
+                color="gray.500"
+                whiteSpace="pre-wrap"
+              >
+                {linkify(asset.description)}
               </Text>
-            </Button>
+            </Stack>
+          </Stack>
 
-            <Button
-              as={Link}
-              href={asset.image}
-              isExternal
-              variant="outline"
-              colorScheme="gray"
-              width={48}
-              justifyContent="space-between"
-              rightIcon={<HiOutlineExternalLink />}
+          <Stack spacing={3}>
+            <Heading as="h4" variant="heading2" color="brand.black">
+              {t('asset.detail.details.title')}
+            </Heading>
+            <Stack
+              as="nav"
+              borderRadius="2xl"
+              p={3}
+              borderWidth="1px"
+              mt={8}
+              align="flex-start"
+              spacing={3}
             >
-              <Text as="span" isTruncated>
-                {t('asset.detail.ipfsLink')}
-              </Text>
-            </Button>
+              <Flex alignItems="center">
+                <Text variant="text-sm" color="gray.500" mr={2}>
+                  {t('asset.detail.details.chain')}
+                </Text>
+                <Image
+                  src={`/chains/${asset.collection.chainId}.svg`}
+                  alt={asset.collection.chainId.toString()}
+                  width={20}
+                  height={20}
+                />
+                <Text variant="subtitle2" ml={1}>
+                  {chain?.name}
+                </Text>
+              </Flex>
+
+              <Flex alignItems="center">
+                <Text variant="text-sm" color="gray.500" mr={2}>
+                  {t('asset.detail.details.explorer')}
+                </Text>
+                <Link href={assetExternalURL} isExternal externalIcon>
+                  <Text variant="subtitle2">{blockExplorer.name}</Text>
+                </Link>
+              </Flex>
+
+              <Flex alignItems="center">
+                <Text variant="text-sm" color="gray.500" mr={2}>
+                  {t('asset.detail.details.media')}
+                </Text>
+                <Link href={asset.image} isExternal externalIcon>
+                  <Text variant="subtitle2">IPFS</Text>
+                </Link>
+              </Flex>
+
+              {asset.tokenUri && (
+                <Flex alignItems="center">
+                  <Text variant="text-sm" color="gray.500" mr={2}>
+                    {t('asset.detail.details.metadata')}
+                  </Text>
+                  <Link href={asset.tokenUri} isExternal externalIcon>
+                    <Text variant="subtitle2">IPFS</Text>
+                  </Link>
+                </Flex>
+              )}
+            </Stack>
           </Stack>
 
           {traits && (
-            <Box pt={8}>
+            <Stack spacing={3}>
               <Heading as="h4" variant="heading2" color="brand.black" pb={3}>
                 {t('asset.detail.traits')}
               </Heading>
-              <TraitList traits={traits} />
-            </Box>
+              <Box borderRadius="2xl" p={3} borderWidth="1px">
+                <TraitList traits={traits} />
+              </Box>
+            </Stack>
           )}
-        </Box>
+        </Stack>
 
         <div>
           <Tabs

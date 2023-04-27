@@ -33,18 +33,14 @@ import {
   convertUser,
 } from '../../convert'
 import environment from '../../environment'
-import {
-  AssetsOrderBy,
-  useFetchAllErc721And1155Query,
-  useFetchCurrenciesQuery,
-} from '../../graphql'
+import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
   Filter,
 } from '../../hooks/useAssetFilterFromQuery'
+import useAssetFilterState from '../../hooks/useAssetFilterState'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useFilterState from '../../hooks/useFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -60,12 +56,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
-  const { data: dataCurrencies } = useFetchCurrenciesQuery()
-  const currencies = useMemo(
-    () => dataCurrencies?.currencies?.nodes || [],
-    [dataCurrencies],
-  )
-  const filter = useAssetFilterFromQuery(currencies)
+  const filter = useAssetFilterFromQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
   const { data, previousData, loading } = useFetchAllErc721And1155Query({
@@ -75,7 +66,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
       limit,
       offset,
       orderBy,
-      filter: convertFilterToAssetFilter(filter, currencies, date),
+      filter: convertFilterToAssetFilter(filter, date),
     },
   })
 
@@ -84,16 +75,19 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     return data?.assets
   }, [data?.assets, loading, previousData])
 
-  const { showFilters, toggleFilters, close, count } = useFilterState(filter)
+  const { showFilters, toggleFilters, close, count } =
+    useAssetFilterState(filter)
 
   const updateFilter = useCallback(
     async (filter: Filter) => {
-      const { traits, ...otherFilters } = filter
+      const { traits, currency, ...otherFilters } = filter
       const cleanData = removeEmptyFromObject({
         ...Object.keys(query).reduce((acc, value) => {
           if (value.startsWith('trait')) return acc
           return { ...acc, [value]: query[value] }
         }, {}),
+        currency: currency?.id,
+        decimals: currency?.decimals,
         ...otherFilters,
         search: filter.search,
         page: 1,
@@ -167,11 +161,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                 <ModalHeader>{t('explore.nfts.filter')}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <FilterAsset
-                    currencies={currencies}
-                    onFilterChange={updateFilter}
-                    filter={filter}
-                  />
+                  <FilterAsset onFilterChange={updateFilter} filter={filter} />
                 </ModalBody>
               </ModalContent>
             </Modal>
@@ -179,11 +169,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
           <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
             {showFilters && !isSmall && (
               <GridItem as="aside">
-                <FilterAsset
-                  currencies={currencies}
-                  onFilterChange={updateFilter}
-                  filter={filter}
-                />
+                <FilterAsset onFilterChange={updateFilter} filter={filter} />
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
