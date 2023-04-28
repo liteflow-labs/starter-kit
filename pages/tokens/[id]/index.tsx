@@ -13,6 +13,7 @@ import {
   MenuItem,
   MenuList,
   SimpleGrid,
+  Skeleton,
   Stack,
   Switch,
   Tab,
@@ -39,8 +40,8 @@ import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
 import Image from '../../../components/Image/Image'
 import Link from '../../../components/Link/Link'
-import Loader from '../../../components/Loader'
 import SaleDetail from '../../../components/Sales/Detail'
+import SkeletonProperty from '../../../components/Skeleton/Property'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
 import TraitList from '../../../components/Trait/TraitList'
@@ -200,7 +201,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   )
 
   if (!loading && !asset) return <Error statusCode={404} />
-  if (!asset) return <Loader fullPage />
   return (
     <LargeLayout>
       <Head
@@ -216,18 +216,24 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             p={12}
             bg="brand.50"
           >
-            <TokenMedia
-              imageUrl={asset.image}
-              animationUrl={asset.animationUrl}
-              unlockedContent={showPreview ? undefined : asset.unlockedContent}
-              defaultText={asset.name}
-              controls
-              sizes="
+            {loading || !asset ? (
+              <Skeleton width="100%" height="100%" />
+            ) : (
+              <TokenMedia
+                imageUrl={asset.image}
+                animationUrl={asset.animationUrl}
+                unlockedContent={
+                  showPreview ? undefined : asset.unlockedContent
+                }
+                defaultText={asset.name}
+                controls
+                sizes="
               (min-width: 80em) 500px,
               (min-width: 48em) 50vw,
               100vw"
-            />
-            {asset.hasUnlockableContent && (
+              />
+            )}
+            {asset && asset.hasUnlockableContent && (
               <Flex
                 w="full"
                 mt={3}
@@ -287,235 +293,265 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
         <Flex direction="column" my="auto" gap={8} p={{ base: 6, md: 0 }}>
           <Flex justify="space-between">
             <Stack spacing={1}>
-              {asset.collection.name && (
-                <Heading as="p" variant="heading1" color="gray.500">
+              <Heading as="p" variant="heading1" color="gray.500">
+                {loading || !asset ? (
+                  <Skeleton height="1em" width="200px" />
+                ) : (
                   <Link
                     href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}
                   >
                     {asset.collection.name}
                   </Link>
-                </Heading>
-              )}
+                )}
+              </Heading>
               <Heading
                 as="h1"
                 variant="title"
                 color="brand.black"
                 wordBreak="break-word"
               >
-                {asset.name}
+                {loading || !asset ? (
+                  <Skeleton height="1em" width="300px" />
+                ) : (
+                  asset.name
+                )}
               </Heading>
             </Stack>
-            <Flex direction="row" align="flex-start" gap={3}>
-              <Menu>
-                <MenuButton
-                  as={IconButton}
-                  variant="outline"
-                  colorScheme="gray"
-                  rounded="full"
-                  aria-label="activator"
-                  icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
-                />
-                <MenuList>
-                  <MenuItem onClick={() => refreshMetadata(asset.id)}>
-                    {t('asset.detail.menu.refresh-metadata')}
-                  </MenuItem>
-                  <Link
-                    href={`mailto:${
-                      environment.REPORT_EMAIL
-                    }?subject=${encodeURI(
-                      t('asset.detail.menu.report.subject'),
-                    )}&body=${encodeURI(
-                      t('asset.detail.menu.report.body', asset),
-                    )}`}
-                    isExternal
-                  >
-                    <MenuItem>{t('asset.detail.menu.report.label')}</MenuItem>
-                  </Link>
-                </MenuList>
-              </Menu>
-            </Flex>
+            {asset && (
+              <Flex direction="row" align="flex-start" gap={3}>
+                <Menu>
+                  <MenuButton
+                    as={IconButton}
+                    variant="outline"
+                    colorScheme="gray"
+                    rounded="full"
+                    aria-label="activator"
+                    icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
+                  />
+                  <MenuList>
+                    <MenuItem onClick={() => refreshMetadata(asset.id)}>
+                      {t('asset.detail.menu.refresh-metadata')}
+                    </MenuItem>
+                    <Link
+                      href={`mailto:${
+                        environment.REPORT_EMAIL
+                      }?subject=${encodeURI(
+                        t('asset.detail.menu.report.subject'),
+                      )}&body=${encodeURI(
+                        t('asset.detail.menu.report.body', asset),
+                      )}`}
+                      isExternal
+                    >
+                      <MenuItem>{t('asset.detail.menu.report.label')}</MenuItem>
+                    </Link>
+                  </MenuList>
+                </Menu>
+              </Flex>
+            )}
           </Flex>
 
-          <TokenMetadata
-            assetId={asset.id}
-            creator={creator}
-            owners={owners}
-            numberOfOwners={asset.ownerships.totalCount}
-            saleSupply={BigNumber.from(
-              asset.sales.aggregates?.sum?.availableQuantity || 0,
-            )}
-            standard={asset.collection.standard}
-            totalSupply={BigNumber.from(
-              asset.ownerships.aggregates?.sum?.quantity || '0',
-            )}
-            isOpenCollection={asset.collection.mintType === 'PUBLIC'}
-          />
-          <SaleDetail
-            assetId={asset.id}
-            chainId={chainId}
-            blockExplorer={blockExplorer}
-            currencies={chainCurrency.data?.currencies?.nodes || []}
-            signer={signer}
-            currentAccount={address}
-            isSingle={isSingle}
-            isHomepage={false}
-            isOwner={isOwner}
-            auction={auction}
-            bestBid={bestBid}
-            directSales={directSales}
-            ownAllSupply={ownAllSupply}
-            onOfferCanceled={refresh}
-            onAuctionAccepted={refresh}
-          />
+          {loading || !asset ? (
+            <SkeletonProperty items={3} />
+          ) : (
+            <TokenMetadata
+              assetId={asset.id}
+              creator={creator}
+              owners={owners}
+              numberOfOwners={asset.ownerships.totalCount}
+              saleSupply={BigNumber.from(
+                asset.sales.aggregates?.sum?.availableQuantity || 0,
+              )}
+              standard={asset.collection.standard}
+              totalSupply={BigNumber.from(
+                asset.ownerships.aggregates?.sum?.quantity || '0',
+              )}
+              isOpenCollection={asset.collection.mintType === 'PUBLIC'}
+            />
+          )}
+          {loading || !asset ? (
+            <>
+              <SkeletonProperty items={1} />
+              <Skeleton height="40px" width="100%" />
+            </>
+          ) : (
+            <SaleDetail
+              assetId={asset.id}
+              chainId={chainId}
+              blockExplorer={blockExplorer}
+              currencies={chainCurrency.data?.currencies?.nodes || []}
+              signer={signer}
+              currentAccount={address}
+              isSingle={isSingle}
+              isHomepage={false}
+              isOwner={isOwner}
+              auction={auction}
+              bestBid={bestBid}
+              directSales={directSales}
+              ownAllSupply={ownAllSupply}
+              onOfferCanceled={refresh}
+              onAuctionAccepted={refresh}
+            />
+          )}
         </Flex>
 
-        <Stack p={6} spacing={6}>
-          <Stack spacing={3}>
-            <Heading as="h4" variant="heading2" color="brand.black">
-              {t('asset.detail.description')}
-            </Heading>
-            <Stack borderRadius="2xl" p={3} borderWidth="1px" mt={4}>
-              <Text
-                as="p"
-                variant="text-sm"
-                color="gray.500"
-                whiteSpace="pre-wrap"
-              >
-                {linkify(asset.description)}
-              </Text>
-            </Stack>
-          </Stack>
+        {asset && (
+          <>
+            <Stack p={6} spacing={6}>
+              {asset.description && (
+                <Stack spacing={3}>
+                  <Heading as="h4" variant="heading2" color="brand.black">
+                    {t('asset.detail.description')}
+                  </Heading>
+                  <Stack borderRadius="2xl" p={3} borderWidth="1px" mt={4}>
+                    <Text
+                      as="p"
+                      variant="text-sm"
+                      color="gray.500"
+                      whiteSpace="pre-wrap"
+                    >
+                      {linkify(asset.description)}
+                    </Text>
+                  </Stack>
+                </Stack>
+              )}
 
-          <Stack spacing={3}>
-            <Heading as="h4" variant="heading2" color="brand.black">
-              {t('asset.detail.details.title')}
-            </Heading>
-            <Stack
-              as="nav"
-              borderRadius="2xl"
-              p={3}
-              borderWidth="1px"
-              mt={8}
-              align="flex-start"
-              spacing={3}
-            >
-              <Flex alignItems="center">
-                <Text variant="text-sm" color="gray.500" mr={2}>
-                  {t('asset.detail.details.chain')}
-                </Text>
-                <Image
-                  src={`/chains/${chainId}.svg`}
-                  alt={chainId.toString()}
-                  width={20}
-                  height={20}
-                />
-                <Text variant="subtitle2" ml={1}>
-                  {chain?.name}
-                </Text>
-              </Flex>
+              <Stack spacing={3}>
+                <Heading as="h4" variant="heading2" color="brand.black">
+                  {t('asset.detail.details.title')}
+                </Heading>
+                <Stack
+                  as="nav"
+                  borderRadius="2xl"
+                  p={3}
+                  borderWidth="1px"
+                  mt={8}
+                  align="flex-start"
+                  spacing={3}
+                >
+                  <Flex alignItems="center">
+                    <Text variant="text-sm" color="gray.500" mr={2}>
+                      {t('asset.detail.details.chain')}
+                    </Text>
+                    <Image
+                      src={`/chains/${chainId}.svg`}
+                      alt={chainId.toString()}
+                      width={20}
+                      height={20}
+                    />
+                    <Text variant="subtitle2" ml={1}>
+                      {chain?.name}
+                    </Text>
+                  </Flex>
 
-              <Flex alignItems="center">
-                <Text variant="text-sm" color="gray.500" mr={2}>
-                  {t('asset.detail.details.explorer')}
-                </Text>
-                <Link href={assetExternalURL} isExternal externalIcon>
-                  <Text variant="subtitle2">{blockExplorer.name}</Text>
-                </Link>
-              </Flex>
+                  <Flex alignItems="center">
+                    <Text variant="text-sm" color="gray.500" mr={2}>
+                      {t('asset.detail.details.explorer')}
+                    </Text>
+                    <Link href={assetExternalURL} isExternal externalIcon>
+                      <Text variant="subtitle2">{blockExplorer.name}</Text>
+                    </Link>
+                  </Flex>
 
-              <Flex alignItems="center">
-                <Text variant="text-sm" color="gray.500" mr={2}>
-                  {t('asset.detail.details.media')}
-                </Text>
-                <Link href={asset.image} isExternal externalIcon>
-                  <Text variant="subtitle2">IPFS</Text>
-                </Link>
-              </Flex>
+                  <Flex alignItems="center">
+                    <Text variant="text-sm" color="gray.500" mr={2}>
+                      {t('asset.detail.details.media')}
+                    </Text>
+                    <Link href={asset.image} isExternal externalIcon>
+                      <Text variant="subtitle2">IPFS</Text>
+                    </Link>
+                  </Flex>
 
-              {asset.tokenUri && (
-                <Flex alignItems="center">
-                  <Text variant="text-sm" color="gray.500" mr={2}>
-                    {t('asset.detail.details.metadata')}
-                  </Text>
-                  <Link href={asset.tokenUri} isExternal externalIcon>
-                    <Text variant="subtitle2">IPFS</Text>
-                  </Link>
-                </Flex>
+                  {asset.tokenUri && (
+                    <Flex alignItems="center">
+                      <Text variant="text-sm" color="gray.500" mr={2}>
+                        {t('asset.detail.details.metadata')}
+                      </Text>
+                      <Link href={asset.tokenUri} isExternal externalIcon>
+                        <Text variant="subtitle2">IPFS</Text>
+                      </Link>
+                    </Flex>
+                  )}
+                </Stack>
+              </Stack>
+
+              {traits && (
+                <Stack spacing={3}>
+                  <Heading
+                    as="h4"
+                    variant="heading2"
+                    color="brand.black"
+                    pb={3}
+                  >
+                    {t('asset.detail.traits')}
+                  </Heading>
+                  <Box borderRadius="2xl" p={3} borderWidth="1px">
+                    <TraitList traits={traits} />
+                  </Box>
+                </Stack>
               )}
             </Stack>
-          </Stack>
 
-          {traits && (
-            <Stack spacing={3}>
-              <Heading as="h4" variant="heading2" color="brand.black" pb={3}>
-                {t('asset.detail.traits')}
-              </Heading>
-              <Box borderRadius="2xl" p={3} borderWidth="1px">
-                <TraitList traits={traits} />
+            <div>
+              <Tabs
+                isManual
+                index={tabIndex}
+                colorScheme="brand"
+                overflowX="auto"
+                overflowY="hidden"
+              >
+                <TabList>
+                  {tabs.map((tab) => (
+                    <Tab
+                      key={tab}
+                      as={Link}
+                      whiteSpace="nowrap"
+                      href={`/tokens/${assetId}?filter=${tab}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        void replace(
+                          `/tokens/${assetId}?filter=${tab}`,
+                          undefined,
+                          {
+                            shallow: true,
+                          },
+                        )
+                      }}
+                    >
+                      <Text as="span" variant="subtitle1">
+                        {t(`asset.detail.tabs.${tab}`)}
+                      </Text>
+                    </Tab>
+                  ))}
+                </TabList>
+              </Tabs>
+              <Box h={96} overflowY="auto" py={6}>
+                {(!query.filter || query.filter === AssetTabs.bids) && (
+                  <BidList
+                    now={date}
+                    chainId={chainId}
+                    collectionAddress={collectionAddress}
+                    tokenId={tokenId}
+                    auctionId={auction?.id}
+                    signer={signer}
+                    account={address}
+                    isSingle={isSingle}
+                    preventAcceptation={!isOwner || !!auction}
+                    onAccepted={refresh}
+                    onCanceled={refresh}
+                    totalOwned={totalOwned}
+                  />
+                )}
+                {query.filter === AssetTabs.history && (
+                  <HistoryList
+                    chainId={chainId}
+                    collectionAddress={collectionAddress}
+                    tokenId={tokenId}
+                  />
+                )}
               </Box>
-            </Stack>
-          )}
-        </Stack>
-
-        <div>
-          <Tabs
-            isManual
-            index={tabIndex}
-            colorScheme="brand"
-            overflowX="auto"
-            overflowY="hidden"
-          >
-            <TabList>
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab}
-                  as={Link}
-                  whiteSpace="nowrap"
-                  href={`/tokens/${assetId}?filter=${tab}`}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    void replace(
-                      `/tokens/${assetId}?filter=${tab}`,
-                      undefined,
-                      {
-                        shallow: true,
-                      },
-                    )
-                  }}
-                >
-                  <Text as="span" variant="subtitle1">
-                    {t(`asset.detail.tabs.${tab}`)}
-                  </Text>
-                </Tab>
-              ))}
-            </TabList>
-          </Tabs>
-          <Box h={96} overflowY="auto" py={6}>
-            {(!query.filter || query.filter === AssetTabs.bids) && (
-              <BidList
-                now={date}
-                chainId={chainId}
-                collectionAddress={collectionAddress}
-                tokenId={tokenId}
-                auctionId={auction?.id}
-                signer={signer}
-                account={address}
-                isSingle={isSingle}
-                preventAcceptation={!isOwner || !!auction}
-                onAccepted={refresh}
-                onCanceled={refresh}
-                totalOwned={totalOwned}
-              />
-            )}
-            {query.filter === AssetTabs.history && (
-              <HistoryList
-                chainId={chainId}
-                collectionAddress={collectionAddress}
-                tokenId={tokenId}
-              />
-            )}
-          </Box>
-        </div>
+            </div>
+          </>
+        )}
       </SimpleGrid>
     </LargeLayout>
   )
