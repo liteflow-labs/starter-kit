@@ -30,8 +30,10 @@ import linkify from 'components/Linkify/Linkify'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
+import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
+import invariant from 'ts-invariant'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
@@ -46,7 +48,6 @@ import { chains } from '../../../connectors'
 import {
   convertAuctionFull,
   convertBidFull,
-  convertHistories,
   convertOwnership,
   convertSaleFull,
   convertTraits,
@@ -72,15 +73,22 @@ enum AssetTabs {
   history = 'history',
 }
 
+const tabs = [AssetTabs.bids, AssetTabs.history]
+
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
   const { address } = useAccount()
-  const { query } = useRouter()
+  const { query, replace } = useRouter()
   const [showPreview, setShowPreview] = useState(false)
   const assetId = useRequiredQueryParamSingle('id')
+  const [_chainId, collectionAddress, tokenId] = assetId.split('-')
+  invariant(_chainId, 'chainId is required')
+  invariant(collectionAddress, 'collectionAddress is required')
+  invariant(tokenId, 'tokenId is required')
+  const chainId = parseInt(_chainId, 10)
 
   const date = useMemo(() => new Date(nowProp), [nowProp])
   const { data, refetch, loading } = useFetchAssetQuery({
@@ -90,17 +98,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
       address: address || '',
     },
   })
-  const chainCurrency = useChainCurrencies(data?.asset?.collection.chainId, {
-    onlyERC20: true,
-  })
+  const chainCurrency = useChainCurrencies(chainId, { onlyERC20: true })
 
   const asset = useMemo(() => data?.asset, [data])
-  const currencies = useMemo(
-    () => chainCurrency.data?.currencies?.nodes || [],
-    [chainCurrency],
-  )
 
-  const blockExplorer = useBlockExplorer(asset?.collection.chainId)
+  const blockExplorer = useBlockExplorer(chainId)
 
   const totalOwned = useMemo(
     () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),
@@ -118,23 +120,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     () => asset?.collection.standard === 'ERC721',
     [asset],
   )
-  const chain = useMemo(
-    () => chains.find((x) => x.id === asset?.chainId),
-    [asset],
-  )
-
-  const tabs = [
-    {
-      title: t('asset.detail.tabs.bids'),
-      href: `/tokens/${assetId}?filter=bids`,
-      type: AssetTabs.bids,
-    },
-    {
-      title: t('asset.detail.tabs.history'),
-      href: `/tokens/${assetId}?filter=history`,
-      type: AssetTabs.history,
-    },
-  ]
+  const chain = useMemo(() => chains.find((x) => x.id === chainId), [chainId])
 
   const traits = useMemo(
     () =>
@@ -145,18 +131,21 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [asset],
   )
 
-  const defaultIndex = query.filter
-    ? tabs.findIndex((tab) => tab.type === query.filter)
-    : 0
+  const tabIndex = useMemo(
+    () => (query.filter ? tabs.findIndex((tab) => tab === query.filter) : 0),
+    [query.filter],
+  )
 
-  const assetExternalURL = useMemo(() => {
-    if (!asset) return ''
-    return blockExplorer.token(asset.collectionAddress, asset.tokenId)
-  }, [asset, blockExplorer])
+  const assetExternalURL = useMemo(
+    () => blockExplorer.token(collectionAddress, tokenId),
+    [blockExplorer, collectionAddress, tokenId],
+  )
 
   const now = useNow()
-  const activeAuction = useMemo(() => {
-    const auction = asset?.auctions.nodes[0]
+  const auction = useMemo(() => {
+    const first = asset?.auctions.nodes[0]
+    if (!first) return
+    const auction = convertAuctionFull(first)
     if (!auction) return
     // check if auction is expired
     if (new Date(auction.expireAt) <= now) return
@@ -165,23 +154,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     return auction
   }, [asset, now])
 
-  const bids = useMemo(() => {
-    if (!asset) return []
-    return activeAuction
-      ? activeAuction.offers.nodes.map(convertBidFull)
-      : asset.bids.nodes.length > 0
-      ? asset.bids.nodes.map(convertBidFull)
-      : []
-  }, [activeAuction, asset])
-
   const directSales = useMemo(
     () => asset?.sales.nodes.map(convertSaleFull) || [],
-    [asset],
-  )
-
-  const auction = useMemo(
-    () =>
-      asset?.auctions.nodes.map((auction) => convertAuctionFull(auction))[0],
     [asset],
   )
 
@@ -198,11 +172,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
 
   const owners = useMemo(
     () => asset?.ownerships.nodes.map(convertOwnership) || [],
-    [asset],
-  )
-
-  const histories = useMemo(
-    () => asset?.histories.nodes.map(convertHistories) || [],
     [asset],
   )
 
@@ -230,14 +199,14 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [refetch, refreshAsset, toast],
   )
 
-  if (loading) return <Loader fullPage />
-  if (!asset) return <></>
+  if (!loading && !asset) return <Error statusCode={404} />
+  if (!asset) return <Loader fullPage />
   return (
     <LargeLayout>
       <Head
-        title={asset.name}
-        description={asset.description}
-        image={asset.image}
+        title={asset?.name || 'loading...'}
+        description={asset?.description}
+        image={asset?.image}
       />
       <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <AspectRatio ratio={1}>
@@ -383,9 +352,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           />
           <SaleDetail
             assetId={asset.id}
-            chainId={asset.collection.chainId}
+            chainId={chainId}
             blockExplorer={blockExplorer}
-            currencies={currencies}
+            currencies={chainCurrency.data?.currencies?.nodes || []}
             signer={signer}
             currentAccount={address}
             isSingle={isSingle}
@@ -435,8 +404,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   {t('asset.detail.details.chain')}
                 </Text>
                 <Image
-                  src={`/chains/${asset.collection.chainId}.svg`}
-                  alt={asset.collection.chainId.toString()}
+                  src={`/chains/${chainId}.svg`}
+                  alt={chainId.toString()}
                   width={20}
                   height={20}
                 />
@@ -491,33 +460,48 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
         <div>
           <Tabs
             isManual
-            defaultIndex={defaultIndex}
+            index={tabIndex}
             colorScheme="brand"
             overflowX="auto"
             overflowY="hidden"
           >
             <TabList>
-              {tabs.map((tab, index) => (
-                <Link key={index} href={tab.href} whiteSpace="nowrap" mr={4}>
-                  <Tab>
-                    <Text as="span" variant="subtitle1">
-                      {tab.title}
-                    </Text>
-                  </Tab>
-                </Link>
+              {tabs.map((tab) => (
+                <Tab
+                  key={tab}
+                  as={Link}
+                  whiteSpace="nowrap"
+                  href={`/tokens/${assetId}?filter=${tab}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    void replace(
+                      `/tokens/${assetId}?filter=${tab}`,
+                      undefined,
+                      {
+                        shallow: true,
+                      },
+                    )
+                  }}
+                >
+                  <Text as="span" variant="subtitle1">
+                    {t(`asset.detail.tabs.${tab}`)}
+                  </Text>
+                </Tab>
               ))}
             </TabList>
           </Tabs>
           <Box h={96} overflowY="auto" py={6}>
             {(!query.filter || query.filter === AssetTabs.bids) && (
               <BidList
-                bids={bids}
-                chainId={asset.collection.chainId}
+                now={date}
+                chainId={chainId}
+                collectionAddress={collectionAddress}
+                tokenId={tokenId}
+                auctionId={auction?.id}
                 signer={signer}
                 account={address}
                 isSingle={isSingle}
-                blockExplorer={blockExplorer}
-                preventAcceptation={!isOwner || !!activeAuction}
+                preventAcceptation={!isOwner || !!auction}
                 onAccepted={refresh}
                 onCanceled={refresh}
                 totalOwned={totalOwned}
@@ -525,8 +509,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             )}
             {query.filter === AssetTabs.history && (
               <HistoryList
-                histories={histories}
-                blockExplorer={blockExplorer}
+                chainId={chainId}
+                collectionAddress={collectionAddress}
+                tokenId={tokenId}
               />
             )}
           </Box>
