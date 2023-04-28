@@ -71,9 +71,17 @@
       "title": "フィルター",
       "clear": "フィルターをクリアする"
     },
+    "collections": {
+      "chains": {
+        "label": "鎖"
+      }
+    },
     "assets": {
       "submit": "適用する",
       "clear": "すべてクリア",
+      "chains": {
+        "label": "鎖"
+      },
       "currency": {
         "label": "価格レンジ",
         "placeholder": "通貨の選択"

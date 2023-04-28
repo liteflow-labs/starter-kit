@@ -71,9 +71,17 @@
       "title": "Filtros",
       "clear": "Borrar filtros"
     },
+    "collections": {
+      "chains": {
+        "label": "Cadena"
+      }
+    },
     "assets": {
       "submit": "Aplicar",
       "clear": "Limpiar filtros",
+      "chains": {
+        "label": "Cadena"
+      },
       "currency": {
         "label": "Rango de precios",
         "placeholder": "Selecciona una moneda"

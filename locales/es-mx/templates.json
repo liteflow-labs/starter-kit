@@ -57,7 +57,8 @@
         "floor-price": "Precio piso",
         "total-volume": "Volumen total",
         "owners": "Propietarios",
-        "items": "Elementos"
+        "items": "Elementos",
+        "chain": "Cadena"
       },
       "by": "Por",
       "menu": {
@@ -102,6 +103,13 @@
       "ipfsLink": "Ver en IPFS",
       "errors": {
         "image": "Ocurrió un problema"
+      },
+      "details": {
+        "title": "Detalles",
+        "chain": "Cadena",
+        "explorer": "Ver en el explorador",
+        "media": "Ver medios",
+        "metadata": "Ver metadatos"
       }
     },
     "form": {

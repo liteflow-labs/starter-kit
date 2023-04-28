@@ -173,13 +173,27 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
 
   const assetIds = useMemo(() => {
     if (environment.HOME_TOKENS) {
-      return environment.HOME_TOKENS.sort(() => Math.random() - 0.5).slice(
-        0,
-        environment.PAGINATION_LIMIT,
-      )
+      // Pseudo randomize the array based on the date's seconds
+      const tokens = [...environment.HOME_TOKENS]
+
+      const seed = date.getTime() / 1000 // convert to seconds as date is currently truncated to the second
+      const randomTokens = []
+      while (
+        tokens.length &&
+        randomTokens.length < environment.PAGINATION_LIMIT
+      ) {
+        // generate random based on seed and length of the remaining tokens array
+        // It will change when seed changes (basically every request) and also on each iteration of the loop as length of tokens changes
+        const randomIndex = seed % tokens.length
+        // remove the element from tokens
+        const element = tokens.splice(randomIndex, 1)
+        // push the element into the returned array in order
+        randomTokens.push(...element)
+      }
+      return randomTokens
     }
     return (defaultAssetQuery.data?.assets?.nodes || []).map((x) => x.id)
-  }, [defaultAssetQuery])
+  }, [defaultAssetQuery, date])
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {

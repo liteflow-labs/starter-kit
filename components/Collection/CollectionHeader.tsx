@@ -3,13 +3,13 @@ import {
   Divider,
   Flex,
   Heading,
+  HStack,
   Icon,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  SimpleGrid,
   Text,
 } from '@chakra-ui/react'
 import { formatAddress } from '@nft/hooks'
@@ -27,6 +27,7 @@ import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 import ChakraLink from '../../components/Link/Link'
+import { chains } from '../../connectors'
 
 type Props = {
   collection: {
@@ -60,6 +61,10 @@ type Props = {
 const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
   const { t } = useTranslation('templates')
   const blockExplorer = useBlockExplorer(collection.chainId)
+  const chain = useMemo(
+    () => chains.find((x) => x.id === collection.chainId),
+    [collection.chainId],
+  )
 
   const blocks = useMemo(
     () => [
@@ -102,6 +107,14 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
         value: numbro(collection.supply).format({ thousandSeparated: true }),
         title: collection.supply.toString(),
       },
+      {
+        type: 'separator',
+      },
+      {
+        name: t('collection.header.data-labels.chain'),
+        value: chain?.name,
+        title: chain?.name,
+      },
     ],
     [
       collection.floorPrice,
@@ -110,6 +123,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
       collection.totalOwners,
       collection.totalVolume,
       collection.totalVolumeCurrencySymbol,
+      chain,
       t,
     ],
   )
@@ -261,38 +275,32 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
           </Truncate>
         </Box>
       )}
-      <SimpleGrid
-        columns={{ base: 2, sm: 4 }}
-        spacing={8}
-        mt={4}
-        w={{ base: 'full', sm: 'max-content' }}
-      >
-        {blocks.map((block) => (
-          <Flex
-            key={block.name}
-            flexDirection="column"
-            justifyContent="center"
-            py={2}
-          >
-            <Text
-              variant="button1"
-              title={block.title}
-              color="brand.black"
-              isTruncated
-            >
-              {block.value}
-            </Text>
-            <Text
-              variant="subtitle2"
-              title={block.name}
-              isTruncated
-              color="gray.500"
-            >
-              {block.name}
-            </Text>
-          </Flex>
-        ))}
-      </SimpleGrid>
+      <HStack spacing={8} mt={4} flexWrap="wrap">
+        {blocks.map((block, i) =>
+          block.type === 'separator' ? (
+            <Divider orientation="vertical" height="40px" key={i} />
+          ) : (
+            <Flex key={i} flexDirection="column" justifyContent="center" py={2}>
+              <Text
+                variant="button1"
+                title={block.title}
+                color="brand.black"
+                isTruncated
+              >
+                {block.value}
+              </Text>
+              <Text
+                variant="subtitle2"
+                title={block.name}
+                isTruncated
+                color="gray.500"
+              >
+                {block.name}
+              </Text>
+            </Flex>
+          ),
+        )}
+      </HStack>
     </>
   )
 }
