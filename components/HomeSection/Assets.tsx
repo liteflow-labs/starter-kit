@@ -28,6 +28,7 @@ import useHandleQueryError from '../../hooks/useHandleQueryError'
 import useOrderById from '../../hooks/useOrderById'
 import Link from '../Link/Link'
 import SkeletonGrid from '../Skeleton/Grid'
+import SkeletonTokenCard from '../Skeleton/TokenCard'
 import TokenCard from '../Token/Card'
 
 gql`
@@ -212,7 +213,9 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
-        <SkeletonGrid items={12} />
+        <SkeletonGrid items={environment.PAGINATION_LIMIT}>
+          <SkeletonTokenCard />
+        </SkeletonGrid>
       </Stack>
     )
   if (assets.length === 0) return null

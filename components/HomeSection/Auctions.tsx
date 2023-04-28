@@ -11,6 +11,7 @@ import { useFetchAuctionsQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import SkeletonGrid from '../Skeleton/Grid'
+import SkeletonTokenCard from '../Skeleton/TokenCard'
 import Slider from '../Slider/Slider'
 import TokenCard from '../Token/Card'
 
@@ -108,7 +109,9 @@ const AuctionsHomeSection: FC<Props> = ({ date }) => {
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
-        <SkeletonGrid items={4} />
+        <SkeletonGrid items={4}>
+          <SkeletonTokenCard />
+        </SkeletonGrid>
       </Stack>
     )
   if (auctions.length === 0) return null
