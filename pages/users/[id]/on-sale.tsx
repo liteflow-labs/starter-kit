@@ -5,8 +5,6 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import UserProfileTemplate from '../../../components/Profile'
-import SkeletonGrid from '../../../components/Skeleton/Grid'
-import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenGrid from '../../../components/Token/Grid'
 import {
   convertAsset,
@@ -94,52 +92,47 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
         currentTab="on-sale"
         loginUrlForReferral={environment.BASE_URL + '/login'}
       >
-        {loading ? (
-          <SkeletonGrid items={environment.PAGINATION_LIMIT} compact>
-            <SkeletonTokenCard />
-          </SkeletonGrid>
-        ) : (
-          <TokenGrid<AssetsOrderBy>
-            assets={assets}
-            orderBy={{
-              value: orderBy,
-              choices: [
-                {
-                  label: t('user.on-sale-assets.orderBy.values.createdAtDesc'),
-                  value: 'CREATED_AT_DESC',
-                },
-                {
-                  label: t('user.on-sale-assets.orderBy.values.createdAtAsc'),
-                  value: 'CREATED_AT_ASC',
-                },
-              ],
-              onSort: changeOrder,
-            }}
-            pagination={{
-              limit,
-              limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
-              page,
-              total: data?.onSale?.totalCount || 0,
-              onPageChange: changePage,
-              onLimitChange: changeLimit,
-              result: {
-                label: t('pagination.result.label'),
-                caption: (props) => (
-                  <Trans
-                    ns="templates"
-                    i18nKey="pagination.result.caption"
-                    values={props}
-                    components={[
-                      <Text as="span" color="brand.black" key="text" />,
-                    ]}
-                  />
-                ),
-                pages: (props) =>
-                  t('pagination.result.pages', { count: props.total }),
+        <TokenGrid<AssetsOrderBy>
+          assets={assets}
+          loading={loading}
+          orderBy={{
+            value: orderBy,
+            choices: [
+              {
+                label: t('user.on-sale-assets.orderBy.values.createdAtDesc'),
+                value: 'CREATED_AT_DESC',
               },
-            }}
-          />
-        )}
+              {
+                label: t('user.on-sale-assets.orderBy.values.createdAtAsc'),
+                value: 'CREATED_AT_ASC',
+              },
+            ],
+            onSort: changeOrder,
+          }}
+          pagination={{
+            limit,
+            limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
+            page,
+            total: data?.onSale?.totalCount || 0,
+            onPageChange: changePage,
+            onLimitChange: changeLimit,
+            result: {
+              label: t('pagination.result.label'),
+              caption: (props) => (
+                <Trans
+                  ns="templates"
+                  i18nKey="pagination.result.caption"
+                  values={props}
+                  components={[
+                    <Text as="span" color="brand.black" key="text" />,
+                  ]}
+                />
+              ),
+              pages: (props) =>
+                t('pagination.result.pages', { count: props.total }),
+            },
+          }}
+        />
       </UserProfileTemplate>
     </LargeLayout>
   )
