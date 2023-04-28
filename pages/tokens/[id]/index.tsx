@@ -73,13 +73,15 @@ enum AssetTabs {
   history = 'history',
 }
 
+const tabs = [AssetTabs.bids, AssetTabs.history]
+
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
   const { address } = useAccount()
-  const { query } = useRouter()
+  const { query, replace } = useRouter()
   const [showPreview, setShowPreview] = useState(false)
   const assetId = useRequiredQueryParamSingle('id')
   const [_chainId, collectionAddress, tokenId] = assetId.split('-')
@@ -120,19 +122,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   )
   const chain = useMemo(() => chains.find((x) => x.id === chainId), [chainId])
 
-  const tabs = [
-    {
-      title: t('asset.detail.tabs.bids'),
-      href: `/tokens/${assetId}?filter=bids`,
-      type: AssetTabs.bids,
-    },
-    {
-      title: t('asset.detail.tabs.history'),
-      href: `/tokens/${assetId}?filter=history`,
-      type: AssetTabs.history,
-    },
-  ]
-
   const traits = useMemo(
     () =>
       asset &&
@@ -142,9 +131,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [asset],
   )
 
-  const defaultIndex = query.filter
-    ? tabs.findIndex((tab) => tab.type === query.filter)
-    : 0
+  const tabIndex = useMemo(
+    () => (query.filter ? tabs.findIndex((tab) => tab === query.filter) : 0),
+    [query.filter],
+  )
 
   const assetExternalURL = useMemo(
     () => blockExplorer.token(collectionAddress, tokenId),
@@ -470,20 +460,33 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
         <div>
           <Tabs
             isManual
-            defaultIndex={defaultIndex}
+            index={tabIndex}
             colorScheme="brand"
             overflowX="auto"
             overflowY="hidden"
           >
             <TabList>
-              {tabs.map((tab, index) => (
-                <Link key={index} href={tab.href} whiteSpace="nowrap" mr={4}>
-                  <Tab>
-                    <Text as="span" variant="subtitle1">
-                      {tab.title}
-                    </Text>
-                  </Tab>
-                </Link>
+              {tabs.map((tab) => (
+                <Tab
+                  key={tab}
+                  as={Link}
+                  whiteSpace="nowrap"
+                  href={`/tokens/${assetId}?filter=${tab}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    void replace(
+                      `/tokens/${assetId}?filter=${tab}`,
+                      undefined,
+                      {
+                        shallow: true,
+                      },
+                    )
+                  }}
+                >
+                  <Text as="span" variant="subtitle1">
+                    {t(`asset.detail.tabs.${tab}`)}
+                  </Text>
+                </Tab>
               ))}
             </TabList>
           </Tabs>
