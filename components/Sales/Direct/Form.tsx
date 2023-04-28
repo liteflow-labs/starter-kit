@@ -30,7 +30,7 @@ import {
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { useEffect, useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
 import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
@@ -107,6 +107,13 @@ const SalesDirectForm: VFC<Props> = ({
       expiredAt: defaultExpirationValue,
     },
   })
+
+  useEffect(() => {
+    const defaultCurrency = currencies[0]?.id
+    if (defaultCurrency) setValue('currencyId', defaultCurrency)
+    setValue('expiredAt', defaultExpirationValue)
+  }, [currencies, defaultExpirationValue, setValue])
+
   const [createAndPublishOffer, { activeStep, transactionHash }] =
     useCreateOffer(signer)
 
@@ -114,12 +121,11 @@ const SalesDirectForm: VFC<Props> = ({
   const quantity = watch('quantity')
 
   const currencyId = watch('currencyId')
-  const currency = useMemo(() => {
-    const c = currencies.find((x) => x.id === currencyId)
-    if (!c) throw new Error("Can't find currency")
-    return c
-  }, [currencies, currencyId])
-  const priceUnit = useParseBigNumber(price, currency.decimals)
+  const currency = useMemo(
+    () => currencies.find((x) => x.id === currencyId),
+    [currencies, currencyId],
+  )
+  const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
   const amountFees = useMemo(() => {
@@ -166,6 +172,7 @@ const SalesDirectForm: VFC<Props> = ({
 
   const isSingle = useMemo(() => standard === 'ERC721', [standard])
 
+  if (!currency) return <></>
   return (
     <Stack as="form" spacing={8} onSubmit={onSubmit}>
       {currencies.length > 1 && (

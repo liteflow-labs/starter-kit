@@ -1,5 +1,8 @@
 query FetchAssetIdFromTokenId($tokenId: String!) {
-  assets(condition: { tokenId: $tokenId }, first: 1) {
+  assets(
+    filter: { tokenId: { equalTo: $tokenId }, ownershipsExist: true }
+    first: 1
+  ) {
     nodes {
       id
     }
@@ -10,6 +13,8 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
     tokenId
+    tokenUri
+    chainId
     collectionAddress
     collection {
       chainId

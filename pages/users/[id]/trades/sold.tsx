@@ -22,84 +22,33 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import Empty from '../../../../components/Empty/Empty'
 import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
+import Loader from '../../../../components/Loader'
 import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import { convertFullUser, convertTrade } from '../../../../convert'
 import environment from '../../../../environment'
-import {
-  FetchUserTradeSoldDocument,
-  FetchUserTradeSoldQuery,
-  TradesOrderBy,
-  useFetchUserTradeSoldQuery,
-} from '../../../../graphql'
+import { TradesOrderBy, useFetchUserTradeSoldQuery } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
+import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
-import { getLimit, getOffset, getOrder } from '../../../../params'
-import { wrapServerSideProps } from '../../../../props'
 
 type Props = {
-  userAddress: string
   now: string
-  meta: {
-    title: string
-    description: string
-    image: string
-  }
 }
 
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (context, client) => {
-    const userAddress = context.params?.id
-      ? Array.isArray(context.params.id)
-        ? context.params.id[0]?.toLowerCase()
-        : context.params.id.toLowerCase()
-      : null
-    invariant(userAddress, 'userAddress is falsy')
-    const limit = getLimit(context, environment.PAGINATION_LIMIT)
-    const orderBy = getOrder<TradesOrderBy>(context, 'TIMESTAMP_DESC')
-    const offset = getOffset(context, environment.PAGINATION_LIMIT)
-    const now = new Date()
-    const { data, error } = await client.query<FetchUserTradeSoldQuery>({
-      query: FetchUserTradeSoldDocument,
-      variables: {
-        limit,
-        offset,
-        orderBy,
-        address: userAddress,
-        now,
-      },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    return {
-      props: {
-        userAddress,
-        now: now.toJSON(),
-        meta: {
-          title: data.account?.name || userAddress,
-          description: data.account?.description || '',
-          image: data.account?.image || '',
-        },
-      },
-    }
-  },
-)
-
-const TradeSoldPage: NextPage<Props> = ({ meta, now, userAddress }) => {
+const TradeSoldPage: NextPage<Props> = ({ now }) => {
   useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -108,9 +57,10 @@ const TradeSoldPage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const orderBy = useOrderByQuery<TradesOrderBy>('TIMESTAMP_DESC')
   const [changePage, changeLimit] = usePaginate()
   const { address } = useAccount()
+  const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useFetchUserTradeSoldQuery({
+  const { data, loading } = useFetchUserTradeSoldQuery({
     variables: {
       address: userAddress,
       limit,
@@ -136,12 +86,13 @@ const TradeSoldPage: NextPage<Props> = ({ meta, now, userAddress }) => {
     () => (data?.trades?.nodes || []).map(convertTrade),
     [data],
   )
+  if (loading) return <Loader fullPage />
   return (
     <LargeLayout>
       <Head
-        title={meta.title}
-        description={meta.description}
-        image={meta.image}
+        title={userAccount?.name || userAddress}
+        description={userAccount?.description || ''}
+        image={userAccount?.image || ''}
       />
 
       <UserProfileTemplate

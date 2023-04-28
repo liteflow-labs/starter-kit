@@ -21,19 +21,16 @@ import React from 'react'
 import Empty from '../../components/Empty/Empty'
 import Head from '../../components/Head'
 import Link from '../../components/Link/Link'
+import Loader from '../../components/Loader'
 import BackButton from '../../components/Navbar/BackButton'
 import environment from '../../environment'
 import {
   CollectionFilter,
-  FetchCollectionsAndAccountVerificationStatusDocument,
-  FetchCollectionsAndAccountVerificationStatusQuery,
-  FetchCollectionsAndAccountVerificationStatusQueryVariables,
   useFetchCollectionsAndAccountVerificationStatusQuery,
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import SmallLayout from '../../layouts/small'
-import { wrapServerSideProps } from '../../props'
 
 const collectionsFilter = {
   or: environment.MINTABLE_COLLECTIONS.map(({ chainId, address }) => ({
@@ -41,28 +38,6 @@ const collectionsFilter = {
     address: { equalTo: address },
   })),
 } as CollectionFilter
-
-export const getServerSideProps = wrapServerSideProps(
-  environment.GRAPHQL_URL,
-  async (context, client) => {
-    const { data, error } = await client.query<
-      FetchCollectionsAndAccountVerificationStatusQuery,
-      FetchCollectionsAndAccountVerificationStatusQueryVariables
-    >({
-      query: FetchCollectionsAndAccountVerificationStatusDocument,
-      variables: {
-        account: context.user.address || '',
-        collectionFilter: collectionsFilter,
-        fetchCollections: environment.MINTABLE_COLLECTIONS.length > 0,
-      },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    return {
-      props: {},
-    }
-  },
-)
 
 const Layout = ({ children }: { children: React.ReactNode }) => (
   <SmallLayout>
@@ -75,20 +50,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
 )
 
 const CreatePage: NextPage = () => {
-  const ready = useEagerConnect()
+  useEagerConnect()
   const { t } = useTranslation('templates')
   const { back } = useRouter()
   const { address } = useAccount()
-  const { data, called } = useFetchCollectionsAndAccountVerificationStatusQuery(
-    {
+  const { data, called, loading } =
+    useFetchCollectionsAndAccountVerificationStatusQuery({
       variables: {
         account: address || '',
         collectionFilter: collectionsFilter,
         fetchCollections: environment.MINTABLE_COLLECTIONS.length > 0,
       },
-      skip: !ready,
-    },
-  )
+    })
+
+  if (loading) return <Loader fullPage />
 
   if (
     environment.RESTRICT_TO_VERIFIED_ACCOUNT &&
@@ -157,7 +132,6 @@ const CreatePage: NextPage = () => {
             key={`${chainId}/${address}`}
           >
             <Stack
-              as="a"
               w={64}
               align="center"
               justify="center"

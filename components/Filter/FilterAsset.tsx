@@ -16,7 +16,6 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Link,
   NumberInput,
   NumberInputField,
   Stack,
@@ -30,9 +29,13 @@ import useTranslation from 'next-translate/useTranslation'
 import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { chains } from '../../connectors'
 import {
   CollectionFilter,
+  CurrencyFilter,
+  InputMaybe,
   StringFilter,
+  useChainCurrenciesQuery,
   useFetchCollectionTraitsQuery,
   useSearchCollectionQuery,
 } from '../../graphql'
@@ -42,15 +45,15 @@ import List from '../List/List'
 import Select from '../Select/Select'
 
 type Props = {
-  currencies: { id: string; decimals: number; symbol?: string; image: string }[]
   filter: Filter
   selectedCollection?: { chainId: number; address: string }
   onFilterChange: (filter: Filter) => void
 }
 
 export const NoFilter: Filter = {
+  chains: [],
   collection: null,
-  currencyId: null,
+  currency: null,
   maxPrice: null,
   minPrice: null,
   offers: null,
@@ -65,7 +68,6 @@ const offerTypes = [
 ]
 
 const FilterAsset: NextPage<Props> = ({
-  currencies,
   filter,
   selectedCollection,
   onFilterChange,
@@ -90,12 +92,26 @@ const FilterAsset: NextPage<Props> = ({
     return () => reset(NoFilter)
   }, [reset, filter])
 
+  const { data: currencyData } = useChainCurrenciesQuery({
+    variables: {
+      filter:
+        filterResult.chains.length > 0
+          ? ({ chainId: { in: filterResult.chains } } as CurrencyFilter)
+          : (undefined as unknown as InputMaybe<CurrencyFilter>),
+    },
+  })
+  const currencies = useMemo(
+    () => currencyData?.currencies?.nodes || [],
+    [currencyData],
+  )
+
   const currency = useMemo(
     () =>
       currencies.length === 1
         ? currencies[0]
-        : currencies.find((x) => x.id === filterResult.currencyId),
-    [currencies, filterResult.currencyId],
+        : currencies.find((x) => x.id === filterResult.currency?.id) ||
+          currencies[0],
+    [currencies, filterResult.currency],
   )
 
   const [collectionSearch, setCollectionSearch] = useState('')
@@ -107,6 +123,9 @@ const FilterAsset: NextPage<Props> = ({
       orderBy: ['TOTAL_VOLUME_DESC'],
       filter: {
         name: { includesInsensitive: collectionSearch } as StringFilter,
+        ...(filterResult.chains.length
+          ? { chainId: { in: filterResult.chains } }
+          : {}),
       } as CollectionFilter,
     },
     skip: !!selectedCollection,
@@ -191,6 +210,49 @@ const FilterAsset: NextPage<Props> = ({
   return (
     <Stack spacing={8} as="form" onSubmit={handleSubmit(onFilterChange)}>
       <Accordion allowMultiple defaultIndex={isSmall ? [] : [2]}>
+        {chains.length > 1 && (
+          <AccordionItem>
+            <AccordionButton>
+              <Heading variant="heading2" flex="1" textAlign="left">
+                {t('filters.assets.chains.label')}
+              </Heading>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel>
+              <CheckboxGroup
+                value={filterResult.chains}
+                defaultValue={[]}
+                onChange={(value) =>
+                  propagateFilter({ chains: value as number[] })
+                }
+              >
+                <Stack spacing={1}>
+                  {chains.map(({ id, name }, i) => (
+                    <Checkbox key={i} value={id}>
+                      <Flex gap={2} alignItems="center">
+                        <Image
+                          src={`/chains/${id}.svg`}
+                          width={24}
+                          height={24}
+                          alt={name}
+                        />
+                        <Text
+                          variant="subtitle2"
+                          color="black"
+                          noOfLines={1}
+                          wordBreak="break-word"
+                          title={name}
+                        >
+                          {name}
+                        </Text>
+                      </Flex>
+                    </Checkbox>
+                  ))}
+                </Stack>
+              </CheckboxGroup>
+            </AccordionPanel>
+          </AccordionItem>
+        )}
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
@@ -230,7 +292,6 @@ const FilterAsset: NextPage<Props> = ({
             </Flex>
           </AccordionPanel>
         </AccordionItem>
-
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
@@ -252,20 +313,19 @@ const FilterAsset: NextPage<Props> = ({
                   <Text ml="2">{currency.symbol}</Text>
                 </Flex>
               ) : (
-                <Select
-                  name="currencyId"
+                <Select<{ id: string; decimals: number }>
+                  name="currency"
                   control={control as any} // TODO: fix this type
                   placeholder={t('filters.assets.currency.placeholder')}
                   choices={currencies.map((x) => ({
-                    value: x.id,
+                    value: x,
                     label: x.symbol || '',
                     image: x.image,
                   }))}
-                  value={currency?.id}
+                  value={currency}
                   required
                   isDisabled={isSubmitting}
-                  error={errors.currencyId}
-                  onChange={(x: any) => setValue('currencyId', x)}
+                  onChange={(x: any) => setValue('currency', x)}
                   sortAlphabetically
                 />
               )}
@@ -415,7 +475,6 @@ const FilterAsset: NextPage<Props> = ({
               <Stack spacing={3}>
                 {!selectedCollection && (
                   <CollectionListItem
-                    as={Link}
                     width="full"
                     borderColor="brand.500"
                     bgColor="brand.50"
@@ -423,6 +482,7 @@ const FilterAsset: NextPage<Props> = ({
                     borderRadius="md"
                     padding={2}
                     textAlign="left"
+                    cursor="pointer"
                     onClick={() =>
                       propagateFilter({ collection: null, traits: [] })
                     }
@@ -523,6 +583,7 @@ const FilterAsset: NextPage<Props> = ({
                     <Checkbox
                       key={i}
                       value={value}
+                      name={type}
                       onChange={(e) =>
                         e.target.checked
                           ? addTrait(type, value)

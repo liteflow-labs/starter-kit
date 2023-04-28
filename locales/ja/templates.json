@@ -57,7 +57,8 @@
         "floor-price": "最低価格",
         "total-volume": "総ボリューム",
         "owners": "所有者",
-        "items": "アイテム"
+        "items": "アイテム",
+        "chain": "鎖"
       },
       "by": "によって",
       "menu": {
@@ -102,6 +103,13 @@
       "ipfsLink": "IPFSで表示",
       "errors": {
         "image": "問題が発生しました"
+      },
+      "details": {
+        "title": "詳細",
+        "chain": "鎖",
+        "explorer": "エクスプローラーで見る",
+        "media": "メディアを見る",
+        "metadata": "メタデータを表示"
       }
     },
     "form": {

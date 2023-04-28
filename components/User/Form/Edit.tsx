@@ -11,7 +11,7 @@ import {
 import { Signer } from '@ethersproject/abstract-signer'
 import { useUpdateAccount } from '@nft/hooks'
 import useTranslation from 'next-translate/useTranslation'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Account } from '../../../graphql'
 import Dropzone from '../../Dropzone/Dropzone'
@@ -50,6 +50,7 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
@@ -63,6 +64,19 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
       website: account.website || undefined,
     },
   })
+
+  useEffect(() => {
+    reset({
+      cover: account.cover || undefined,
+      image: account.image || undefined,
+      description: account.description || undefined,
+      email: account.email || undefined,
+      instagram: account.instagram || undefined,
+      name: account.name || undefined,
+      twitter: account.twitter || undefined,
+      website: account.website || undefined,
+    })
+  }, [account, reset])
 
   const [editAccount] = useUpdateAccount(signer, { uploadUrl })
 

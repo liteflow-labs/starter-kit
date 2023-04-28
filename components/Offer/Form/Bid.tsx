@@ -32,8 +32,9 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import invariant from 'ts-invariant'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
@@ -130,18 +131,29 @@ const OfferFormBid: FC<Props> = (props) => {
     },
   })
 
+  useEffect(() => {
+    const defaultCurrency = currencies[0]?.id
+    if (defaultCurrency) setValue('currencyId', defaultCurrency)
+    setValue('expiredAt', defaultExpirationValue)
+    setValue('auctionExpirationDate', defaultAuctionExpirationValue)
+  }, [
+    currencies,
+    defaultExpirationValue,
+    defaultAuctionExpirationValue,
+    setValue,
+  ])
+
   const price = watch('bid')
   const quantity = watch('quantity')
   const currencyId = watch('currencyId')
 
-  const currency = useMemo(() => {
-    const c = currencies.find((x) => x.id === currencyId)
-    if (!c) throw new Error("Can't find currency")
-    return c
-  }, [currencies, currencyId])
+  const currency = useMemo(
+    () => currencies.find((x) => x.id === currencyId),
+    [currencies, currencyId],
+  )
 
-  const [balance] = useBalance(account, currency.id)
-  const priceUnit = useParseBigNumber(price, currency.decimals)
+  const [balance] = useBalance(account, currency?.id || null)
+  const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
   const totalPrice = useMemo(() => {
@@ -166,6 +178,7 @@ const OfferFormBid: FC<Props> = (props) => {
 
   const onSubmit = handleSubmit(async ({ expiredAt }) => {
     if (!auctionId && !expiredAt) throw new Error('expiredAt is required')
+    invariant(currency)
     try {
       createOfferOnOpen()
       const id = await createOffer({
@@ -204,6 +217,7 @@ const OfferFormBid: FC<Props> = (props) => {
     [auctionId, register, t],
   )
 
+  if (!currency) return <></>
   return (
     <Stack as="form" onSubmit={onSubmit} w="full" spacing={8}>
       {currencies.length > 1 && (

@@ -15,12 +15,11 @@ import { isSameAddress } from '@nft/hooks'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { NextPage } from 'next'
-import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
-import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
+import Loader from '../../../components/Loader'
 import BackButton from '../../../components/Navbar/BackButton'
 import Radio from '../../../components/Radio/Radio'
 import SalesAuctionForm from '../../../components/Sales/Auction/Form'
@@ -33,27 +32,15 @@ import {
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
-import {
-  ChainCurrenciesDocument,
-  ChainCurrenciesQuery,
-  ChainCurrenciesQueryVariables,
-  CurrencyFilter,
-  FeesForOfferDocument,
-  FeesForOfferQuery,
-  IntFilter,
-  OfferForAssetDocument,
-  OfferForAssetQuery,
-  useFeesForOfferQuery,
-  useOfferForAssetQuery,
-} from '../../../graphql'
+import { useFeesForOfferQuery, useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
+import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
-import { wrapServerSideProps } from '../../../props'
 
 type Props = {
   assetId: string
@@ -77,60 +64,7 @@ type SaleOption = {
   icon: any
 }
 
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const t = await getT(ctx.locale, 'templates')
-    const assetId = ctx.params?.id
-      ? Array.isArray(ctx.params.id)
-        ? ctx.params.id[0]
-        : ctx.params.id
-      : null
-    invariant(assetId, 'assetId is falsy')
-    const now = new Date()
-    const { data, error } = await client.query<OfferForAssetQuery>({
-      query: OfferForAssetDocument,
-      variables: {
-        id: assetId,
-        address: ctx.user.address || '',
-        now,
-      },
-    })
-    if (error) throw error
-    if (!data.asset) return { notFound: true }
-    const feeQuery = await client.query<FeesForOfferQuery>({
-      query: FeesForOfferDocument,
-      variables: { id: assetId },
-    })
-    if (feeQuery.error) throw error
-    const chainCurrency = await client.query<
-      ChainCurrenciesQuery,
-      ChainCurrenciesQueryVariables
-    >({
-      query: ChainCurrenciesDocument,
-      variables: {
-        filter: {
-          chainId: { equalTo: data.asset.chainId } as IntFilter,
-        } as CurrencyFilter,
-      },
-    })
-    if (chainCurrency.error) throw chainCurrency.error
-    return {
-      props: {
-        assetId,
-        now: now.toJSON(),
-        currentAccount: ctx.user.address,
-        meta: {
-          title: t('offers.form.meta.title', data.asset),
-          description: t('offers.form.meta.description', data.asset),
-          image: data.asset.image,
-        },
-      },
-    }
-  },
-)
-
-const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
+const OfferPage: NextPage<Props> = ({ now }) => {
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -138,13 +72,14 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   const toast = useToast()
   const { address } = useAccount()
   useLoginRedirect(ready)
+  const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useOfferForAssetQuery({
+  const { data, loading } = useOfferForAssetQuery({
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? address : currentAccount) || '',
+      address: address || '',
     },
   })
 
@@ -257,13 +192,14 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
     onCreated,
   ])
 
+  if (loading) return <Loader fullPage />
   if (!asset) return <></>
   return (
     <SmallLayout>
       <Head
-        title={meta.title}
-        description={meta.description}
-        image={meta.image}
+        title={t('offers.form.meta.title', asset)}
+        description={t('offers.form.meta.description', asset)}
+        image={asset.image}
       />
 
       <BackButton onClick={back} />
