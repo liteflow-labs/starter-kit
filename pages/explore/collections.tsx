@@ -23,7 +23,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import FilterCollection, {
   NoFilter,
@@ -31,6 +31,8 @@ import FilterCollection, {
 import FilterNav from '../../components/Filter/FilterNav'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
+import SkeletonCollectionCard from '../../components/Skeleton/CollectionCard'
+import SkeletonGrid from '../../components/Skeleton/Grid'
 import { chains } from '../../connectors'
 import environment from '../../environment'
 import {
@@ -55,7 +57,6 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const toast = useToast()
-  const [loadingOrder, setLoadingOrder] = useState(false)
   const { limit, offset, page } = usePaginateQuery()
   const filter = useCollectionFilterFromQuery()
   const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
@@ -83,11 +84,10 @@ const CollectionsPage: NextPage<Props> = ({}) => {
     [push, pathname],
   )
 
-  const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
+  const [changePage, changeLimit] = usePaginate()
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
-      setLoadingOrder(true)
       try {
         await replace({
           pathname,
@@ -98,8 +98,6 @@ const CollectionsPage: NextPage<Props> = ({}) => {
           title: formatError(e),
           status: 'error',
         })
-      } finally {
-        setLoadingOrder(false)
       }
     },
     [replace, pathname, query, toast],
@@ -114,7 +112,6 @@ const CollectionsPage: NextPage<Props> = ({}) => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading || loadingOrder || loading}
         search={filter.search}
         selectedTabIndex={1}
       >
@@ -184,7 +181,19 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
-              {collections.length > 0 ? (
+              {loading ? (
+                <SkeletonGrid
+                  items={environment.PAGINATION_LIMIT}
+                  compact
+                  columns={
+                    showFilters
+                      ? { base: 1, sm: 2, md: 3, lg: 4 }
+                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                  }
+                >
+                  <SkeletonCollectionCard />
+                </SkeletonGrid>
+              ) : collections.length > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"

@@ -1,12 +1,12 @@
 import { AspectRatio, Skeleton } from '@chakra-ui/react'
 import { FC } from 'react'
 
-const SkeletonTokenCard: FC = () => {
+const SkeletonCollectionCard: FC = () => {
   return (
-    <AspectRatio ratio={0.75}>
+    <AspectRatio ratio={0.86}>
       <Skeleton borderRadius="2xl" />
     </AspectRatio>
   )
 }
 
-export default SkeletonTokenCard
+export default SkeletonCollectionCard
