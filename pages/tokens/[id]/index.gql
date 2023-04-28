@@ -216,36 +216,5 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
         }
       }
     }
-    histories(orderBy: DATE_DESC) {
-      nodes {
-        action
-        date
-        unitPrice
-        quantity
-        fromAddress
-        from {
-          address
-          name
-          image
-          verification {
-            status
-          }
-        }
-        toAddress
-        to {
-          address
-          name
-          image
-          verification {
-            status
-          }
-        }
-        transactionHash
-        currency {
-          decimals
-          symbol
-        }
-      }
-    }
   }
 }
