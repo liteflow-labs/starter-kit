@@ -4,14 +4,11 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import Head from '../../../components/Head'
-import Loader from '../../../components/Loader'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
 import {
   convertAsset,
   convertAuctionWithBestBid,
-  convertFullUser,
   convertSale,
   convertUser,
 } from '../../../convert'
@@ -57,11 +54,6 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const userAccount = useMemo(
-    () => convertFullUser(data?.account || null, userAddress),
-    [data, userAddress],
-  )
-
   const changeOrder = useCallback(
     async (orderBy: any) => {
       await replace({ pathname, query: { ...query, orderBy } })
@@ -91,30 +83,18 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
     [data],
   )
 
-  if (loading) return <Loader fullPage />
-  if (!data) return <></>
   return (
     <LargeLayout>
-      <Head
-        title={data.account?.name || userAddress}
-        description={data.account?.description || ''}
-        image={data.account?.image || ''}
-      />
       <UserProfileTemplate
+        now={date}
         signer={signer}
         currentAccount={address}
-        account={userAccount}
+        address={userAddress}
         currentTab="owned"
-        totals={
-          new Map([
-            ['created', data.created?.totalCount || 0],
-            ['on-sale', data.onSale?.totalCount || 0],
-            ['owned', data.owned?.totalCount || 0],
-          ])
-        }
         loginUrlForReferral={environment.BASE_URL + '/login'}
       >
         <TokenGrid<OwnershipsOrderBy>
+          loading={loading}
           assets={assets}
           orderBy={{
             value: orderBy,
@@ -134,7 +114,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
             limit,
             limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
             page,
-            total: data.owned?.totalCount || 0,
+            total: data?.owned?.totalCount || 0,
             onPageChange: changePage,
             onLimitChange: changeLimit,
             result: {

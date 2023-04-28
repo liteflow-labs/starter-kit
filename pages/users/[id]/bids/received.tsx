@@ -28,7 +28,6 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import AcceptOfferButton from '../../../../components/Button/AcceptOffer'
 import Empty from '../../../../components/Empty/Empty'
-import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
 import Loader from '../../../../components/Loader'
@@ -36,7 +35,7 @@ import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
-import { convertBidFull, convertFullUser } from '../../../../convert'
+import { convertBidFull } from '../../../../convert'
 import environment from '../../../../environment'
 import {
   OfferOpenBuysOrderBy,
@@ -88,11 +87,6 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
     [data],
   )
 
-  const userAccount = useMemo(
-    () => convertFullUser(data?.account || null, userAddress),
-    [data, userAddress],
-  )
-
   const onAccepted = useCallback(async () => {
     toast({
       title: t('user.bid-received.notifications.accepted'),
@@ -108,26 +102,14 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  if (loading) return <Loader fullPage />
   return (
     <LargeLayout>
-      <Head
-        title={userAccount?.name || userAddress}
-        description={userAccount?.description || ''}
-        image={userAccount?.image || ''}
-      />
       <UserProfileTemplate
+        now={date}
         signer={signer}
-        account={userAccount}
         currentAccount={address}
+        address={userAddress}
         currentTab="bids"
-        totals={
-          new Map([
-            ['created', data?.created?.totalCount || 0],
-            ['on-sale', data?.onSale?.totalCount || 0],
-            ['owned', data?.owned?.totalCount || 0],
-          ])
-        }
         loginUrlForReferral={environment.BASE_URL + '/login'}
       >
         <Stack spacing={6}>
@@ -190,103 +172,112 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          <TableContainer bg="white" shadow="base" rounded="lg">
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th>{t('user.bid-received.table.item')}</Th>
-                  <Th isNumeric>{t('user.bid-received.table.price')}</Th>
-                  <Th>{t('user.bid-received.table.from')}</Th>
-                  <Th>{t('user.bid-received.table.created')}</Th>
-                  <Th isNumeric></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {bids.map((item) => (
-                  <Tr fontSize="sm" key={item.id}>
-                    <Td>
-                      <Flex as={Link} href={`/tokens/${item.asset.id}`} gap={3}>
-                        <Image
-                          src={item.asset.image}
-                          alt={item.asset.name}
-                          width={40}
-                          height={40}
-                          layout="fixed"
-                          objectFit="cover"
-                          rounded="full"
-                          h={10}
-                          w={10}
-                        />
-                        <Flex
-                          direction="column"
-                          my="auto"
-                          title={item.asset.name}
-                        >
-                          <Text as="span" noOfLines={1}>
-                            {item.asset.name}
-                          </Text>
-                          {item.availableQuantity.gt(1) && (
-                            <Text as="span" variant="caption" color="gray.500">
-                              {t('user.bid-received.requested', {
-                                value: item.availableQuantity.toString(),
-                              })}
-                            </Text>
-                          )}
-                        </Flex>
-                      </Flex>
-                    </Td>
-                    <Td isNumeric>
-                      <Text
-                        as={Price}
-                        noOfLines={1}
-                        amount={item.unitPrice.mul(item.availableQuantity)}
-                        currency={item.currency}
-                      />
-                    </Td>
-                    <Td>
-                      <Link href={`/users/${item.maker.address}`}>
-                        {formatAddress(item.maker.address)}
-                      </Link>
-                    </Td>
-                    <Td>{dateFromNow(item.createdAt)}</Td>
-                    <Td isNumeric>
-                      {ownerLoggedIn && (
-                        <AcceptOfferButton
-                          variant="outline"
-                          colorScheme="gray"
-                          signer={signer}
-                          chainId={item.asset.chainId}
-                          offer={item}
-                          quantity={item.availableQuantity}
-                          onAccepted={onAccepted}
-                          onError={(e) =>
-                            toast({
-                              status: 'error',
-                              title: formatError(e),
-                            })
-                          }
-                          title={t('user.bid-received.accept.title')}
-                        >
-                          <Text as="span" isTruncated>
-                            {t('user.bid-received.actions.accept')}
-                          </Text>
-                        </AcceptOfferButton>
-                      )}
-                    </Td>
+          {loading ? (
+            <Loader />
+          ) : bids.length == 0 ? (
+            <Empty
+              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
+              title={t('user.bid-received.table.empty.title')}
+              description={t('user.bid-received.table.empty.description')}
+            />
+          ) : (
+            <TableContainer bg="white" shadow="base" rounded="lg">
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th>{t('user.bid-received.table.item')}</Th>
+                    <Th isNumeric>{t('user.bid-received.table.price')}</Th>
+                    <Th>{t('user.bid-received.table.from')}</Th>
+                    <Th>{t('user.bid-received.table.created')}</Th>
+                    <Th isNumeric></Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
-            {bids.length === 0 && (
-              <Empty
-                icon={
-                  <Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />
-                }
-                title={t('user.bid-received.table.empty.title')}
-                description={t('user.bid-received.table.empty.description')}
-              />
-            )}
-          </TableContainer>
+                </Thead>
+                <Tbody>
+                  {bids.map((item) => (
+                    <Tr fontSize="sm" key={item.id}>
+                      <Td>
+                        <Flex
+                          as={Link}
+                          href={`/tokens/${item.asset.id}`}
+                          gap={3}
+                        >
+                          <Image
+                            src={item.asset.image}
+                            alt={item.asset.name}
+                            width={40}
+                            height={40}
+                            layout="fixed"
+                            objectFit="cover"
+                            rounded="full"
+                            h={10}
+                            w={10}
+                          />
+                          <Flex
+                            direction="column"
+                            my="auto"
+                            title={item.asset.name}
+                          >
+                            <Text as="span" noOfLines={1}>
+                              {item.asset.name}
+                            </Text>
+                            {item.availableQuantity.gt(1) && (
+                              <Text
+                                as="span"
+                                variant="caption"
+                                color="gray.500"
+                              >
+                                {t('user.bid-received.requested', {
+                                  value: item.availableQuantity.toString(),
+                                })}
+                              </Text>
+                            )}
+                          </Flex>
+                        </Flex>
+                      </Td>
+                      <Td isNumeric>
+                        <Text
+                          as={Price}
+                          noOfLines={1}
+                          amount={item.unitPrice.mul(item.availableQuantity)}
+                          currency={item.currency}
+                        />
+                      </Td>
+                      <Td>
+                        <Link href={`/users/${item.maker.address}`}>
+                          {formatAddress(item.maker.address)}
+                        </Link>
+                      </Td>
+                      <Td>{dateFromNow(item.createdAt)}</Td>
+                      <Td isNumeric>
+                        {ownerLoggedIn && (
+                          <AcceptOfferButton
+                            variant="outline"
+                            colorScheme="gray"
+                            signer={signer}
+                            chainId={item.asset.chainId}
+                            offer={item}
+                            quantity={item.availableQuantity}
+                            onAccepted={onAccepted}
+                            onError={(e) =>
+                              toast({
+                                status: 'error',
+                                title: formatError(e),
+                              })
+                            }
+                            title={t('user.bid-received.accept.title')}
+                          >
+                            <Text as="span" isTruncated>
+                              {t('user.bid-received.actions.accept')}
+                            </Text>
+                          </AcceptOfferButton>
+                        )}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          )}
 
           <Pagination
             limit={limit}

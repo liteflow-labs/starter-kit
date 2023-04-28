@@ -23,7 +23,6 @@ import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import Empty from '../../../../components/Empty/Empty'
-import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
 import Loader from '../../../../components/Loader'
@@ -31,7 +30,7 @@ import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
-import { convertFullUser, convertTrade } from '../../../../convert'
+import { convertTrade } from '../../../../convert'
 import environment from '../../../../environment'
 import {
   TradesOrderBy,
@@ -69,14 +68,8 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
       limit,
       offset,
       orderBy,
-      now: date,
     },
   })
-
-  const userAccount = useMemo(
-    () => convertFullUser(data?.account || null, userAddress),
-    [data, userAddress],
-  )
 
   const trades = useMemo(
     () => (data?.trades?.nodes || []).map(convertTrade),
@@ -90,27 +83,14 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  if (loading) return <Loader fullPage />
   return (
     <LargeLayout>
-      <Head
-        title={userAccount?.name || userAddress}
-        description={userAccount?.description || ''}
-        image={userAccount?.image || ''}
-      />
-
       <UserProfileTemplate
+        now={date}
         signer={signer}
         currentAccount={address}
-        account={userAccount}
+        address={userAddress}
         currentTab="trades"
-        totals={
-          new Map([
-            ['created', data?.created?.totalCount || 0],
-            ['on-sale', data?.onSale?.totalCount || 0],
-            ['owned', data?.owned?.totalCount || 0],
-          ])
-        }
         loginUrlForReferral={environment.BASE_URL + '/login'}
       >
         <Stack spacing={6}>
@@ -185,112 +165,113 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          <TableContainer bg="white" shadow="base" rounded="lg">
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th>{t('user.trade-purchased.table.item')}</Th>
-                  <Th isNumeric>{t('user.trade-purchased.table.price')}</Th>
-                  <Th>{t('user.trade-purchased.table.from')}</Th>
-                  <Th>{t('user.trade-purchased.table.created')}</Th>
-                  <Th></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {trades.map((item, index) => (
-                  <Tr fontSize="sm" key={index}>
-                    <Td>
-                      {item.asset ? (
-                        <Flex
-                          as={Link}
-                          href={`/tokens/${item.asset.id}`}
-                          gap={3}
-                        >
-                          <Image
-                            src={item.asset.image}
-                            alt={item.asset.name}
-                            width={40}
-                            height={40}
-                            layout="fixed"
-                            objectFit="cover"
-                            rounded="full"
-                            h={10}
-                            w={10}
-                          />
-                          <Flex
-                            direction="column"
-                            my="auto"
-                            title={item.asset.name}
-                          >
-                            <Text as="span" noOfLines={1}>
-                              {item.asset.name}
-                            </Text>
-                            {item.quantity.gt(1) && (
-                              <Text
-                                as="span"
-                                variant="caption"
-                                color="gray.500"
-                              >
-                                {t('user.trade-purchased.purchased', {
-                                  value: item.quantity.toString(),
-                                })}
-                              </Text>
-                            )}
-                          </Flex>
-                        </Flex>
-                      ) : (
-                        '-'
-                      )}
-                    </Td>
-                    <Td isNumeric>
-                      {item.currency ? (
-                        <Text
-                          as={Price}
-                          noOfLines={1}
-                          amount={item.amount}
-                          currency={item.currency}
-                        />
-                      ) : (
-                        '-'
-                      )}
-                    </Td>
-                    <Td>
-                      <Link href={`/users/${item.sellerAddress}`}>
-                        {formatAddress(item.sellerAddress)}
-                      </Link>
-                    </Td>
-                    <Td>{dateFromNow(item.createdAt)}</Td>
-                    <Td>
-                      <IconButton
-                        aria-label="external link"
-                        as={Link}
-                        href={
-                          blockExplorer(item.asset?.chainId).transaction(
-                            item.transactionHash,
-                          ) || '#'
-                        }
-                        isExternal
-                        variant="outline"
-                        colorScheme="gray"
-                        rounded="full"
-                      >
-                        <HiExternalLink />
-                      </IconButton>
-                    </Td>
+          {loading ? (
+            <Loader />
+          ) : trades.length == 0 ? (
+            <Empty
+              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
+              title={t('user.trade-purchased.table.empty.title')}
+              description={t('user.trade-purchased.table.empty.description')}
+            />
+          ) : (
+            <TableContainer bg="white" shadow="base" rounded="lg">
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th>{t('user.trade-purchased.table.item')}</Th>
+                    <Th isNumeric>{t('user.trade-purchased.table.price')}</Th>
+                    <Th>{t('user.trade-purchased.table.from')}</Th>
+                    <Th>{t('user.trade-purchased.table.created')}</Th>
+                    <Th></Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
-            {trades.length === 0 && (
-              <Empty
-                icon={
-                  <Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />
-                }
-                title={t('user.trade-purchased.table.empty.title')}
-                description={t('user.trade-purchased.table.empty.description')}
-              />
-            )}
-          </TableContainer>
+                </Thead>
+                <Tbody>
+                  {trades.map((item, index) => (
+                    <Tr fontSize="sm" key={index}>
+                      <Td>
+                        {item.asset ? (
+                          <Flex
+                            as={Link}
+                            href={`/tokens/${item.asset.id}`}
+                            gap={3}
+                          >
+                            <Image
+                              src={item.asset.image}
+                              alt={item.asset.name}
+                              width={40}
+                              height={40}
+                              layout="fixed"
+                              objectFit="cover"
+                              rounded="full"
+                              h={10}
+                              w={10}
+                            />
+                            <Flex
+                              direction="column"
+                              my="auto"
+                              title={item.asset.name}
+                            >
+                              <Text as="span" noOfLines={1}>
+                                {item.asset.name}
+                              </Text>
+                              {item.quantity.gt(1) && (
+                                <Text
+                                  as="span"
+                                  variant="caption"
+                                  color="gray.500"
+                                >
+                                  {t('user.trade-purchased.purchased', {
+                                    value: item.quantity.toString(),
+                                  })}
+                                </Text>
+                              )}
+                            </Flex>
+                          </Flex>
+                        ) : (
+                          '-'
+                        )}
+                      </Td>
+                      <Td isNumeric>
+                        {item.currency ? (
+                          <Text
+                            as={Price}
+                            noOfLines={1}
+                            amount={item.amount}
+                            currency={item.currency}
+                          />
+                        ) : (
+                          '-'
+                        )}
+                      </Td>
+                      <Td>
+                        <Link href={`/users/${item.sellerAddress}`}>
+                          {formatAddress(item.sellerAddress)}
+                        </Link>
+                      </Td>
+                      <Td>{dateFromNow(item.createdAt)}</Td>
+                      <Td>
+                        <IconButton
+                          aria-label="external link"
+                          as={Link}
+                          href={
+                            blockExplorer(item.asset?.chainId).transaction(
+                              item.transactionHash,
+                            ) || '#'
+                          }
+                          isExternal
+                          variant="outline"
+                          colorScheme="gray"
+                          rounded="full"
+                        >
+                          <HiExternalLink />
+                        </IconButton>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          )}
 
           <Pagination
             limit={limit}
