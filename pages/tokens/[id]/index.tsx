@@ -152,8 +152,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   )
 
   const now = useNow()
-  const activeAuction = useMemo(() => {
-    const auction = asset?.auctions.nodes[0]
+  const auction = useMemo(() => {
+    const first = asset?.auctions.nodes[0]
+    if (!first) return
+    const auction = convertAuctionFull(first)
     if (!auction) return
     // check if auction is expired
     if (new Date(auction.expireAt) <= now) return
@@ -162,23 +164,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     return auction
   }, [asset, now])
 
-  const bids = useMemo(() => {
-    if (!asset) return []
-    return activeAuction
-      ? activeAuction.offers.nodes.map(convertBidFull)
-      : asset.bids.nodes.length > 0
-      ? asset.bids.nodes.map(convertBidFull)
-      : []
-  }, [activeAuction, asset])
-
   const directSales = useMemo(
     () => asset?.sales.nodes.map(convertSaleFull) || [],
-    [asset],
-  )
-
-  const auction = useMemo(
-    () =>
-      asset?.auctions.nodes.map((auction) => convertAuctionFull(auction))[0],
     [asset],
   )
 
@@ -503,13 +490,15 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           <Box h={96} overflowY="auto" py={6}>
             {(!query.filter || query.filter === AssetTabs.bids) && (
               <BidList
-                bids={bids}
+                now={date}
                 chainId={chainId}
+                collectionAddress={collectionAddress}
+                tokenId={tokenId}
+                auctionId={auction?.id}
                 signer={signer}
                 account={address}
                 isSingle={isSingle}
-                blockExplorer={blockExplorer}
-                preventAcceptation={!isOwner || !!activeAuction}
+                preventAcceptation={!isOwner || !!auction}
                 onAccepted={refresh}
                 onCanceled={refresh}
                 totalOwned={totalOwned}
