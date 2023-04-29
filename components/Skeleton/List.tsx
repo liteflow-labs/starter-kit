@@ -1,13 +1,13 @@
 import { FC, Fragment } from 'react'
-import List from '../List/List'
+import List, { ListProps } from '../List/List'
 
-type Props = {
+type Props = ListProps & {
   items: number
 }
 
-const SkeletonList: FC<Props> = ({ items, children }) => {
+const SkeletonList: FC<Props> = ({ items, children, ...props }) => {
   return (
-    <List>
+    <List {...props}>
       {Array.from({ length: items }).map((_, i) => (
         <Fragment key={i}>{children}</Fragment>
       ))}
