@@ -1,14 +1,23 @@
-import { Button, Heading, Icon, Stack, Text, useToast } from '@chakra-ui/react'
+import {
+  Button,
+  Flex,
+  Heading,
+  Icon,
+  Skeleton,
+  Stack,
+  Text,
+  useToast,
+} from '@chakra-ui/react'
 import { formatError } from '@nft/hooks'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
-import Loader from '../components/Loader'
 import NotificationDetail from '../components/Notification/Detail'
+import SkeletonList from '../components/Skeleton/List'
 import { concatToQuery } from '../concat'
 import { useGetNotificationsQuery } from '../graphql'
 import useAccount from '../hooks/useAccount'
@@ -23,13 +32,8 @@ const NotificationPage: NextPage = ({}) => {
   const { address } = useAccount()
   useLoginRedirect(ready)
   const [_, setCookies] = useCookies()
-  const [loading, setLoading] = useState(false)
 
-  const {
-    data,
-    fetchMore,
-    loading: fetching,
-  } = useGetNotificationsQuery({
+  const { data, fetchMore, loading } = useGetNotificationsQuery({
     variables: {
       cursor: null,
       address: address || '',
@@ -45,7 +49,6 @@ const NotificationPage: NextPage = ({}) => {
   )
 
   const loadMore = useCallback(async () => {
-    setLoading(true)
     try {
       await fetchMore({
         variables: { cursor: data?.notifications?.pageInfo.endCursor },
@@ -56,8 +59,6 @@ const NotificationPage: NextPage = ({}) => {
         title: formatError(e),
         status: 'error',
       })
-    } finally {
-      setLoading(false)
     }
   }, [data?.notifications?.pageInfo.endCursor, fetchMore, toast])
 
@@ -70,8 +71,6 @@ const NotificationPage: NextPage = ({}) => {
     })
   }, [address, setCookies])
 
-  if (fetching) return <Loader fullPage />
-
   return (
     <SmallLayout>
       <Head title="Notifications" />
@@ -79,24 +78,31 @@ const NotificationPage: NextPage = ({}) => {
         {t('notifications.title')}
       </Heading>
       <Stack spacing={6} mt={12}>
-        {(notifications || []).length > 0 ? (
-          <>
-            {notifications.map((notification) => (
-              <NotificationDetail
-                key={notification.id}
-                currentAccount={address || null}
-                {...notification}
-              />
-            ))}
-            {hasNextPage && (
-              <Button isLoading={loading} onClick={loadMore}>
-                <Text as="span" isTruncated>
-                  {t('notifications.loadMore')}
-                </Text>
-              </Button>
-            )}
-          </>
-        ) : (
+        {(notifications || []).map((notification) => (
+          <NotificationDetail
+            key={notification.id}
+            currentAccount={address || null}
+            {...notification}
+          />
+        ))}
+        {loading && (
+          <SkeletonList items={5} gap={6}>
+            <Flex align="center" gap={4}>
+              <Skeleton height="56px" width="56px" borderRadius="full" />
+              <Flex flex={1} gap={1} direction="column">
+                <Skeleton height="15px" width="250px" />
+              </Flex>
+            </Flex>
+          </SkeletonList>
+        )}
+        {hasNextPage && (
+          <Button isLoading={loading} onClick={loadMore}>
+            <Text as="span" isTruncated>
+              {t('notifications.loadMore')}
+            </Text>
+          </Button>
+        )}
+        {!loading && notifications.length === 0 && (
           <Empty
             icon={<Icon as={FaBell} color="brand.500" h={9} w={9} />}
             title={t('notifications.empty.title')}
