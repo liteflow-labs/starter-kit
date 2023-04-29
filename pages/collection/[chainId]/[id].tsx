@@ -194,7 +194,12 @@ const CollectionPage: FC<Props> = ({ now }) => {
             <ModalHeader>{t('collection.filter')}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <FilterAsset onFilterChange={updateFilter} filter={filter} />
+              <FilterAsset
+                noChain
+                selectedCollection={collectionDetails}
+                onFilterChange={updateFilter}
+                filter={filter}
+              />
             </ModalBody>
           </ModalContent>
         </Modal>
@@ -203,6 +208,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
         {showFilters && (
           <GridItem as="aside">
             <FilterAsset
+              noChain
               selectedCollection={collectionDetails}
               onFilterChange={updateFilter}
               filter={filter}
