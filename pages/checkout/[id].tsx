@@ -88,7 +88,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
       title: t('offers.checkout.notifications.purchased'),
       status: 'success',
     })
-    await push(`/tokens/${asset?.id}`)
+    await push(`/tokens/${asset.id}`)
   }, [asset, toast, t, push])
 
   if (!offerQuery.loading && !offer) return <Error statusCode={404} />
