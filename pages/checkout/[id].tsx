@@ -91,8 +91,10 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${asset?.id}`)
   }, [asset, toast, t, push])
 
-  if (!offerQuery.loading && !offer) return <Error statusCode={404} />
-  if (!assetQuery.loading && !asset) return <Error statusCode={404} />
+  if (!offerQuery.loading) {
+    if (!offer) return <Error statusCode={404} />
+    if (!assetQuery.loading && !asset) return <Error statusCode={404} />
+  }
   return (
     <SmallLayout>
       <Head
