@@ -207,7 +207,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   return (
     <LargeLayout>
       <Head
-        title={asset?.name || 'loading...'}
+        title={asset?.name || ''}
         description={asset?.description}
         image={asset?.image}
       />
