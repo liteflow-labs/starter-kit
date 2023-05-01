@@ -1,5 +1,4 @@
 import { Flex, Heading, Skeleton, Stack } from '@chakra-ui/react'
-import { gql } from 'graphql-request'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import {
@@ -14,81 +13,6 @@ import SkeletonGrid from '../Skeleton/Grid'
 import SkeletonTokenCard from '../Skeleton/TokenCard'
 import Slider from '../Slider/Slider'
 import TokenCard from '../Token/Card'
-
-gql`
-  query FetchAuctions($now: Datetime!, $address: Address) {
-    auctions(filter: { endAt: { greaterThan: $now } }, orderBy: END_AT_ASC) {
-      nodes {
-        id
-        endAt
-        bestBid: offers(
-          orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-          first: 1
-          filter: { signature: { isNull: false } }
-        ) {
-          nodes {
-            unitPrice
-            amount
-            currency {
-              image
-              name
-              id
-              decimals
-              symbol
-            }
-          }
-        }
-        asset {
-          id
-          name
-          collection {
-            chainId
-            address
-            name
-          }
-          owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-            aggregates {
-              sum {
-                quantity
-              }
-            }
-          }
-          image
-          animationUrl
-          unlockedContent {
-            url
-            mimetype
-          }
-          creator {
-            address
-            name
-            image
-            verification {
-              status
-            }
-          }
-          bestBid: bids(
-            orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-            filter: { expiredAt: { greaterThan: $now } }
-            first: 1
-          ) {
-            nodes {
-              unitPrice
-              amount
-              currency {
-                image
-                name
-                id
-                decimals
-                symbol
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
 
 type Props = {
   date: Date
