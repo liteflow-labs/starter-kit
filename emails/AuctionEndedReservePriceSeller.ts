@@ -3,24 +3,22 @@ import { formatUnits } from '@ethersproject/units'
 import { formatDate } from '@nft/hooks'
 import { Events } from '@nft/webhook'
 import environment from '../environment'
-import { fetchAdditionalAuctionData } from './auction-utils'
 
 export default async function AuctionEndedReservePriceSeller({
-  id,
-  endAt,
   asset,
   creator,
   currency,
   reserveAmount,
+  expireAt,
+  bestBid,
 }: Events['AUCTION_ENDED']): Promise<{
   html: string
   subject: string
   to: string
 } | null> {
-  const { expireAt, bestOffer } = await fetchAdditionalAuctionData(id, endAt)
-
-  if (!bestOffer) return null
-  if (BigNumber.from(bestOffer.amount).gte(reserveAmount)) return null
+  if (!bestBid) return null
+  const bidAmount = BigNumber.from(bestBid.unitPrice).mul(bestBid.quantity)
+  if (bidAmount.gte(reserveAmount)) return null
   if (!creator?.email) return null
   return {
     to: creator.email,

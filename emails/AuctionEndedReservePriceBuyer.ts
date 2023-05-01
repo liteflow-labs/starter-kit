@@ -2,28 +2,26 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatDate } from '@nft/hooks'
 import { Events } from '@nft/webhook'
 import environment from '../environment'
-import { fetchAdditionalAuctionData } from './auction-utils'
 
 export default async function AuctionEndedReservePriceBuyer({
-  id,
-  endAt,
   asset,
   reserveAmount,
+  expireAt,
+  bestBid,
 }: Events['AUCTION_ENDED']): Promise<{
   html: string
   subject: string
   to: string
 } | null> {
-  const { expireAt, bestOffer } = await fetchAdditionalAuctionData(id, endAt)
-
-  if (!bestOffer) return null
-  if (BigNumber.from(bestOffer.amount).gte(reserveAmount)) return null
-  if (!bestOffer.maker?.email) return null
+  if (!bestBid) return null
+  const bidAmount = BigNumber.from(bestBid.unitPrice).mul(bestBid.quantity)
+  if (bidAmount.gte(reserveAmount)) return null
+  if (!bestBid.maker?.email) return null
   return {
-    to: bestOffer.maker.email,
+    to: bestBid.maker.email,
     subject: `The auction has ended but the reserve price hasn't been met for ${asset.name}`,
     html: `Hi <strong>${
-      bestOffer.maker.username || bestOffer.maker.address
+      bestBid.maker.username || bestBid.maker.address
     }</strong>,<br/>
     <br/>
     You recently participated in an auction for the NFT <strong>${
