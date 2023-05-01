@@ -7,6 +7,8 @@ import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
+import SkeletonGrid from '../../components/Skeleton/Grid'
+import SkeletonUserCard from '../../components/Skeleton/UserCard'
 import UserCard from '../../components/User/UserCard'
 import { convertUserWithCover } from '../../convert'
 import environment from '../../environment'
@@ -40,7 +42,7 @@ const UsersPage: NextPage<Props> = () => {
     },
   })
 
-  const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
+  const [changePage, changeLimit] = usePaginate()
 
   const users = useMemo(() => data?.users?.nodes || [], [data])
 
@@ -50,12 +52,15 @@ const UsersPage: NextPage<Props> = () => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading || loading}
         search={search}
         selectedTabIndex={2}
       >
         <>
-          {users.length > 0 ? (
+          {loading ? (
+            <SkeletonGrid items={environment.PAGINATION_LIMIT} compact py={6}>
+              <SkeletonUserCard />
+            </SkeletonGrid>
+          ) : users.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}

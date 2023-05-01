@@ -25,6 +25,8 @@ import FilterNav from '../../components/Filter/FilterNav'
 import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
+import SkeletonGrid from '../../components/Skeleton/Grid'
+import SkeletonTokenCard from '../../components/Skeleton/TokenCard'
 import TokenCard from '../../components/Token/Card'
 import {
   convertAsset,
@@ -70,10 +72,10 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const assets = useMemo(() => {
-    if (loading) return previousData?.assets
-    return data?.assets
-  }, [data?.assets, loading, previousData])
+  const assets = useMemo(
+    () => data?.assets || previousData?.assets,
+    [data?.assets, previousData],
+  )
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -115,7 +117,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
+  const [changePage, changeLimit] = usePaginate()
 
   return (
     <>
@@ -123,7 +125,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading || loading}
         search={filter.search}
         selectedTabIndex={0}
       >
@@ -173,7 +174,19 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {assets?.totalCount && assets?.totalCount > 0 ? (
+              {loading ? (
+                <SkeletonGrid
+                  items={environment.PAGINATION_LIMIT}
+                  compact
+                  columns={
+                    showFilters
+                      ? { base: 1, sm: 2, md: 3, lg: 4 }
+                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                  }
+                >
+                  <SkeletonTokenCard />
+                </SkeletonGrid>
+              ) : assets?.totalCount && assets.totalCount > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"

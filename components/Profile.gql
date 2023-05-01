@@ -1,11 +1,25 @@
-query FetchOnSaleAssets(
-  $address: Address!
-  $currentAddress: Address!
-  $now: Datetime!
-  $limit: Int!
-  $offset: Int!
-  $orderBy: [AssetsOrderBy!]
-) {
+query FetchAccountDetail($address: Address!) {
+  account(address: $address) {
+    address
+    name
+    description
+    cover
+    image
+    twitter
+    instagram
+    website
+    verification {
+      status
+    }
+  }
+}
+
+query FetchAccountMetadata($address: Address!, $now: Datetime!) {
+  created: assets(
+    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
+  ) {
+    totalCount
+  }
   onSale: assets(
     filter: {
       ownershipsExist: true
@@ -29,13 +43,12 @@ query FetchOnSaleAssets(
         }
       ]
     }
-    first: $limit
-    offset: $offset
-    orderBy: $orderBy
   ) {
     totalCount
-    nodes {
-      ...AssetDetail
-    }
+  }
+  owned: ownerships(
+    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+  ) {
+    totalCount
   }
 }
