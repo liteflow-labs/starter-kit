@@ -16,8 +16,19 @@ The Marketplace template includes the following features:
   - Search collections
   - Search users
 - Explore NFTs, collections and users with filtering and sorting systems
+  - Explore NFTs
+    - filter by status
+    - filter by price
+    - filter by collection
+    - filter by traits
+    - sort by dates
+  - Explore collections
+    - filter by chains
+    - sort by volumes
+  - Explore users
 - Native currency and ERC20 support
 - List NFTs on sale
+  - Partial filling
   - Fixed price listing
   - Timed auction listing
 - Make offers on NFTs
@@ -42,18 +53,21 @@ The Marketplace template includes the following features:
   - In-app notifications
   - Email notifications
 - NFT details
-  - Chain details
-  - Traits with rarity
+  - Chain information
+  - Explorer link
+  - Media IPFS link
+  - Meta IPFS link
+  - Traits with percentages
 - NFT history (activity)
   - Minted
   - Listed
   - Purchased
-  - Transfered
+  - Transferred
 - Wallet connection with
   - Metamask
   - Coinbase
   - WalletConnect
-  - Magic link
+  - Magic
   - Rainbow
 - Multi chain support
 
@@ -62,6 +76,7 @@ It also includes compatibility with the following features:
 - Multi-language compatibility
 - Credit card payment gateway compatibility
 - Email connection compatibility
+- Wallet-to-wallet messaging system
 
 ## Additional Paid Features Showcased
 
@@ -70,10 +85,9 @@ The Marketplace template showcases the following additional paid features:
 - Lazymint for NFTs
   - Lazymint history (activity)
 - Unlockable content for NFTs
-- Multicurrency support
+- Multi currency support
 - Advanced fee customization support
 - Referral system
-- Messaging system with your own wallet address
 
 ## Libraries used
 
