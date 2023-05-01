@@ -12,7 +12,10 @@ The Marketplace template includes the following features:
   - Creator's royalties support
 - Featured NFTs on the home page
 - Search system
-- Explore NFTs with filtering and sorting systems
+  - Search NFTs
+  - Search collections
+  - Search users
+- Explore NFTs, collections and users with filtering and sorting systems
 - Native currency and ERC20 support
 - List NFTs on sale
   - Fixed price listing
@@ -38,6 +41,9 @@ The Marketplace template includes the following features:
 - Notifications
   - In-app notifications
   - Email notifications
+- NFT details
+  - Chain details
+  - Traits with rarity
 - NFT history (activity)
   - Minted
   - Listed
@@ -48,6 +54,8 @@ The Marketplace template includes the following features:
   - Coinbase
   - WalletConnect
   - Magic link
+  - Rainbow
+- Multi chain support
 
 It also includes compatibility with the following features:
 
@@ -60,10 +68,12 @@ It also includes compatibility with the following features:
 The Marketplace template showcases the following additional paid features:
 
 - Lazymint for NFTs
+  - Lazymint history (activity)
 - Unlockable content for NFTs
 - Multicurrency support
 - Advanced fee customization support
 - Referral system
+- Messaging system with your own wallet address
 
 ## Libraries used
 
@@ -75,6 +85,7 @@ The Marketplace template is based on the following tech stack
 - [Liteflow](https://liteflow.com/)
 - [ChakraUI](https://chakra-ui.com/)
 - [Wagmi](https://wagmi.sh/)
+- [Rainbowkit](https://rainbowkit.com/)
 - [Next translate](https://github.com/aralroca/next-translate)
 
 ## Get started
