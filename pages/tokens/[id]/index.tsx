@@ -488,7 +488,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     {t('asset.detail.traits')}
                   </Heading>
                   <Box borderRadius="2xl" p={3} borderWidth="1px">
-                    <TraitList traits={traits} />
+                    <TraitList
+                      chainId={chainId}
+                      collectionAddress={collectionAddress}
+                      traits={traits}
+                    />
                   </Box>
                 </Stack>
               )}
