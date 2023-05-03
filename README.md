@@ -33,6 +33,7 @@ The Marketplace template includes the following features:
   - Fixed price listing
   - Timed auction listing
 - Make offers on NFTs
+  - Partial filling
   - Open offer
   - Timed auction offer
 - Purchase NFTs
