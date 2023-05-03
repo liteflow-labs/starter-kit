@@ -10,6 +10,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Skeleton,
   Text,
 } from '@chakra-ui/react'
 import { formatAddress } from '@nft/hooks'
@@ -30,10 +31,10 @@ import ChakraLink from '../../components/Link/Link'
 import { chains } from '../../connectors'
 
 type Props = {
-  collection: {
+  collection: Partial<{
     address: string
     chainId: number
-    name: string
+    name: string | null
     description: string | null
     image: string | null
     cover: string | null
@@ -53,12 +54,12 @@ type Props = {
     floorPriceCurrencySymbol: string | null
     totalOwners: number
     supply: number
-  }
-  baseURL: string
+  }>
+  loading: boolean
   reportEmail: string
 }
 
-const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
+const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
   const { t } = useTranslation('templates')
   const blockExplorer = useBlockExplorer(collection.chainId)
   const chain = useMemo(
@@ -100,12 +101,12 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
         value: numbro(collection.totalOwners).format({
           thousandSeparated: true,
         }),
-        title: collection.totalOwners.toString(),
+        title: collection?.totalOwners?.toString(),
       },
       {
         name: t('collection.header.data-labels.items'),
         value: numbro(collection.supply).format({ thousandSeparated: true }),
-        title: collection.supply.toString(),
+        title: collection?.supply?.toString(),
       },
       {
         type: 'separator',
@@ -140,7 +141,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
         {collection.cover && (
           <Image
             src={collection.cover}
-            alt={collection.name}
+            alt={collection?.name || ''}
             layout="fill"
             objectFit="cover"
             borderRadius={{ base: 0, sm: '2xl' }}
@@ -164,7 +165,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
           {collection.image && (
             <Image
               src={collection.image}
-              alt={collection.name}
+              alt={collection?.name || ''}
               width={128}
               height={128}
               objectFit="cover"
@@ -175,7 +176,11 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
       <Flex pt={24} align="flex-start" justify="space-between" gap={4}>
         <Box>
           <Heading variant="title" pb={1}>
-            {collection.name}
+            {loading ? (
+              <Skeleton height="1em" width="200px" />
+            ) : (
+              collection.name
+            )}
           </Heading>
           <Heading color="gray.500" variant="heading1">
             {t('collection.header.by')}{' '}
@@ -194,79 +199,83 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
             </Text>
           </Heading>
         </Box>
-        <Flex justify="flex-end">
-          <Flex gap={4}>
-            <IconButton
-              as={Link}
-              aria-label={`Visit ${blockExplorer.name}`}
-              icon={<Etherscan boxSize={5} />}
-              rounded="full"
-              variant="outline"
-              colorScheme="gray"
-              href={blockExplorer.address(collection.address)}
-              isExternal
-            />
-            {collection.website && (
-              <IconButton
-                as={Link}
-                aria-label="Visit Website"
-                icon={<FaGlobe />}
-                rounded="full"
+        {collection && (
+          <Flex justify="flex-end">
+            <Flex gap={4}>
+              {collection.address && (
+                <IconButton
+                  as={Link}
+                  aria-label={`Visit ${blockExplorer.name}`}
+                  icon={<Etherscan boxSize={5} />}
+                  rounded="full"
+                  variant="outline"
+                  colorScheme="gray"
+                  href={blockExplorer.address(collection.address)}
+                  isExternal
+                />
+              )}
+              {collection.website && (
+                <IconButton
+                  as={Link}
+                  aria-label="Visit Website"
+                  icon={<FaGlobe />}
+                  rounded="full"
+                  variant="outline"
+                  colorScheme="gray"
+                  href={collection.website}
+                  isExternal
+                />
+              )}
+              {collection.discord && (
+                <IconButton
+                  as={Link}
+                  aria-label="Visit Discord"
+                  icon={<FaDiscord />}
+                  rounded="full"
+                  variant="outline"
+                  colorScheme="gray"
+                  href={collection.discord}
+                  isExternal
+                />
+              )}
+              {collection.twitter && (
+                <IconButton
+                  as={Link}
+                  aria-label="Visit Twitter"
+                  icon={<FaTwitter />}
+                  rounded="full"
+                  variant="outline"
+                  colorScheme="gray"
+                  href={collection.twitter}
+                  isExternal
+                />
+              )}
+            </Flex>
+            <Divider orientation="vertical" h="40px" mx={4} />
+            <Menu autoSelect={false}>
+              <MenuButton
+                as={IconButton}
                 variant="outline"
                 colorScheme="gray"
-                href={collection.website}
-                isExternal
-              />
-            )}
-            {collection.discord && (
-              <IconButton
-                as={Link}
-                aria-label="Visit Discord"
-                icon={<FaDiscord />}
                 rounded="full"
-                variant="outline"
-                colorScheme="gray"
-                href={collection.discord}
-                isExternal
+                aria-label="activator"
+                icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
               />
-            )}
-            {collection.twitter && (
-              <IconButton
-                as={Link}
-                aria-label="Visit Twitter"
-                icon={<FaTwitter />}
-                rounded="full"
-                variant="outline"
-                colorScheme="gray"
-                href={collection.twitter}
-                isExternal
-              />
-            )}
+              <MenuList>
+                <ChakraLink
+                  href={`mailto:${reportEmail}?subject=${encodeURI(
+                    'Report a collection',
+                  )}&body=${encodeURI(
+                    `I would like to report the following collection "${collection.name}" (#${collection.address})\nReason: `,
+                  )}`}
+                  isExternal
+                >
+                  <MenuItem>{t('collection.header.menu.report')}</MenuItem>
+                </ChakraLink>
+              </MenuList>
+            </Menu>
           </Flex>
-          <Divider orientation="vertical" h="40px" mx={4} />
-          <Menu autoSelect={false}>
-            <MenuButton
-              as={IconButton}
-              variant="outline"
-              colorScheme="gray"
-              rounded="full"
-              aria-label="activator"
-              icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
-            />
-            <MenuList>
-              <ChakraLink
-                href={`mailto:${reportEmail}?subject=${encodeURI(
-                  'Report a collection',
-                )}&body=${encodeURI(
-                  `I would like to report the following collection "${collection.name}" (#${collection.address})\nReason: `,
-                )}`}
-                isExternal
-              >
-                <MenuItem>{t('collection.header.menu.report')}</MenuItem>
-              </ChakraLink>
-            </MenuList>
-          </Menu>
-        </Flex>
+        )}
       </Flex>
       {collection.description && (
         <Box mt={4}>
@@ -281,22 +290,30 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
             <Divider orientation="vertical" height="40px" key={i} />
           ) : (
             <Flex key={i} flexDirection="column" justifyContent="center" py={2}>
-              <Text
-                variant="button1"
-                title={block.title}
-                color="brand.black"
-                isTruncated
-              >
-                {block.value}
-              </Text>
-              <Text
-                variant="subtitle2"
-                title={block.name}
-                isTruncated
-                color="gray.500"
-              >
-                {block.name}
-              </Text>
+              {loading ? (
+                <Skeleton height="1em" width="100px" mb={2} />
+              ) : (
+                <Text
+                  variant="button1"
+                  title={block.title}
+                  color="brand.black"
+                  isTruncated
+                >
+                  {block.value}
+                </Text>
+              )}
+              {loading ? (
+                <Skeleton height="1em" width="50px" />
+              ) : (
+                <Text
+                  variant="subtitle2"
+                  title={block.name}
+                  isTruncated
+                  color="gray.500"
+                >
+                  {block.name}
+                </Text>
+              )}
             </Flex>
           ),
         )}

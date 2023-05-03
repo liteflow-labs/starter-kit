@@ -15,6 +15,7 @@ import {
 import { removeEmptyFromObject } from '@nft/hooks'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
+import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { FC, useCallback, useMemo } from 'react'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
@@ -22,9 +23,10 @@ import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
 import FilterNav from '../../../components/Filter/FilterNav'
 import Head from '../../../components/Head'
-import Loader from '../../../components/Loader'
 import Pagination from '../../../components/Pagination/Pagination'
 import Select from '../../../components/Select/Select'
+import SkeletonGrid from '../../../components/Skeleton/Grid'
+import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../components/Token/Card'
 import {
   convertAsset,
@@ -139,15 +141,14 @@ const CollectionPage: FC<Props> = ({ now }) => {
 
   const [changePage, changeLimit] = usePaginate()
 
-  if (loading) return <Loader fullPage />
-  if (!collectionDetails) return null
+  if (!loading && !collectionDetails) return <Error statusCode={404} />
   return (
     <LargeLayout>
       <Head title="Explore collection" />
 
       <CollectionHeader
-        collection={collectionDetails}
-        baseURL={environment.BASE_URL}
+        collection={collectionDetails || {}}
+        loading={loading}
         reportEmail={environment.REPORT_EMAIL}
       />
 
@@ -194,7 +195,12 @@ const CollectionPage: FC<Props> = ({ now }) => {
             <ModalHeader>{t('collection.filter')}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <FilterAsset onFilterChange={updateFilter} filter={filter} />
+              <FilterAsset
+                noChain
+                selectedCollection={{ chainId, address: collectionAddress }}
+                onFilterChange={updateFilter}
+                filter={filter}
+              />
             </ModalBody>
           </ModalContent>
         </Modal>
@@ -203,15 +209,34 @@ const CollectionPage: FC<Props> = ({ now }) => {
         {showFilters && (
           <GridItem as="aside">
             <FilterAsset
-              selectedCollection={collectionDetails}
+              noChain
+              selectedCollection={{ chainId, address: collectionAddress }}
               onFilterChange={updateFilter}
               filter={filter}
             />
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-          {assetLoading && <Loader />}
-          {data?.assets?.totalCount && data?.assets?.totalCount > 0 ? (
+          {assetLoading || !data?.assets ? (
+            <SkeletonGrid
+              items={environment.PAGINATION_LIMIT}
+              compact
+              columns={
+                showFilters
+                  ? { base: 1, sm: 2, md: 3, lg: 4 }
+                  : { base: 1, sm: 2, md: 4, lg: 6 }
+              }
+            >
+              <SkeletonTokenCard />
+            </SkeletonGrid>
+          ) : data.assets.totalCount === 0 ? (
+            <Flex align="center" justify="center" h="full" py={12}>
+              <Empty
+                title={t('collection.empty.title')}
+                description={t('collection.empty.description')}
+              />
+            </Flex>
+          ) : (
             <SimpleGrid
               flexWrap="wrap"
               spacing="4"
@@ -243,13 +268,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
                 </Flex>
               ))}
             </SimpleGrid>
-          ) : (
-            <Flex align="center" justify="center" h="full" py={12}>
-              <Empty
-                title={t('collection.empty.title')}
-                description={t('collection.empty.description')}
-              />
-            </Flex>
           )}
           <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
             <Pagination

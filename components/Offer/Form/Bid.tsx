@@ -78,7 +78,7 @@ type Props = {
     }
   | {
       multiple: false
-      owner: string
+      owner?: string
     }
 )
 
@@ -189,7 +189,7 @@ const OfferFormBid: FC<Props> = (props) => {
         currencyId: currency.id,
         takerAddress: props.multiple
           ? undefined // Keep the bid open for anyone that can fill it
-          : props.owner.toLowerCase(),
+          : props.owner?.toLowerCase(),
         expiredAt: auctionId ? null : new Date(expiredAt),
         auctionId,
       })

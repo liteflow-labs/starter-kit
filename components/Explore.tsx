@@ -1,12 +1,4 @@
-import {
-  Flex,
-  Heading,
-  Spinner,
-  Tab,
-  TabList,
-  Tabs,
-  Text,
-} from '@chakra-ui/react'
+import { Flex, Heading, Tab, TabList, Tabs, Text } from '@chakra-ui/react'
 import LargeLayout from 'layouts/large'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
@@ -14,11 +6,10 @@ import Link from './Link/Link'
 
 const ExploreTemplate: FC<{
   title: string
-  loading: boolean
   search: string | null
   selectedTabIndex: number
   children: JSX.Element
-}> = ({ title, loading, search, selectedTabIndex, children }) => {
+}> = ({ title, search, selectedTabIndex, children }) => {
   const { t } = useTranslation('templates')
   const searchParam = search ? `?search=${search}` : ''
 
@@ -28,8 +19,6 @@ const ExploreTemplate: FC<{
         <Heading as="h1" variant="title" color="brand.black">
           {title}
         </Heading>
-
-        {loading && <Spinner thickness="2px" speed="0.65s" />}
       </Flex>
 
       <Tabs
