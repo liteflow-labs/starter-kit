@@ -17,14 +17,14 @@ The Marketplace template includes the following features:
   - Search users
 - Explore NFTs, collections and users with filtering and sorting systems
   - Explore NFTs
-    - Filter by chains
+    - Filter by chain
     - Filter by status
     - Filter by price
     - Filter by collection
     - Filter by traits
     - Sort by dates
   - Explore collections
-    - Filter by chains
+    - Filter by chain
     - Sort by volumes
   - Explore users
 - Native currency and ERC20 support
