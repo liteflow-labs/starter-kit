@@ -22,7 +22,7 @@ The Marketplace template includes the following features:
     - Filter by price
     - Filter by collection
     - Filter by traits
-    - sort by dates
+    - Sort by dates
   - Explore collections
     - Filter by chains
     - Sort by volumes
