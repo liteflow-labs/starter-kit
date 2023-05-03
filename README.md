@@ -17,14 +17,15 @@ The Marketplace template includes the following features:
   - Search users
 - Explore NFTs, collections and users with filtering and sorting systems
   - Explore NFTs
-    - filter by status
-    - filter by price
-    - filter by collection
-    - filter by traits
+    - Filter by chains
+    - Filter by status
+    - Filter by price
+    - Filter by collection
+    - Filter by traits
     - sort by dates
   - Explore collections
-    - filter by chains
-    - sort by volumes
+    - Filter by chains
+    - Sort by volumes
   - Explore users
 - Native currency and ERC20 support
 - List NFTs on sale
@@ -56,7 +57,7 @@ The Marketplace template includes the following features:
   - Chain information
   - Explorer link
   - Media IPFS link
-  - Meta IPFS link
+  - Metadata IPFS link
   - Traits with percentages
 - NFT history (activity)
   - Minted
@@ -69,7 +70,7 @@ The Marketplace template includes the following features:
   - WalletConnect
   - Magic
   - Rainbow
-- Multi chain support
+- Multi-chain support
 
 It also includes compatibility with the following features:
 
