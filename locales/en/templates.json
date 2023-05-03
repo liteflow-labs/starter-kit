@@ -32,6 +32,14 @@
       "empty": {
         "title": "No Users Found",
         "description": "Update your filters to find more users."
+      },
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest",
+          "nameAsc": "Alphabetical"
+        }
       }
     },
     "collections": {
