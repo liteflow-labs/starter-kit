@@ -2,7 +2,7 @@ import { Text } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { Fragment, useMemo, VFC } from 'react'
 import { convertBidFull } from '../../convert'
 import { useFetchAssetBidsQuery, useFetchAuctionBidsQuery } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
@@ -81,12 +81,11 @@ const BidList: VFC<Props> = ({
         </SkeletonList>
       ) : bids.length > 0 ? (
         bids.map((bid, i) => (
-          <>
+          <Fragment key={i}>
             {i > 0 && bids[i - 1]?.currency.id !== bid.currency.id && <hr />}
             <Bid
               bid={bid}
               chainId={chainId}
-              key={bid.id}
               signer={signer}
               account={account}
               preventAcceptation={preventAcceptation}
@@ -96,7 +95,7 @@ const BidList: VFC<Props> = ({
               isSingle={isSingle}
               totalOwned={totalOwned}
             />
-          </>
+          </Fragment>
         ))
       ) : (
         <Text as="p" variant="text" color="gray.500">
