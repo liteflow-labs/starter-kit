@@ -6,6 +6,7 @@ import {
   Flex,
   Heading,
   Icon,
+  Skeleton,
   Stack,
   Text,
 } from '@chakra-ui/react'
@@ -21,7 +22,6 @@ import React from 'react'
 import Empty from '../../components/Empty/Empty'
 import Head from '../../components/Head'
 import Link from '../../components/Link/Link'
-import Loader from '../../components/Loader'
 import BackButton from '../../components/Navbar/BackButton'
 import environment from '../../environment'
 import {
@@ -54,7 +54,7 @@ const CreatePage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back } = useRouter()
   const { address } = useAccount()
-  const { data, called, loading } =
+  const { data, loading } =
     useFetchCollectionsAndAccountVerificationStatusQuery({
       variables: {
         account: address || '',
@@ -63,9 +63,8 @@ const CreatePage: NextPage = () => {
       },
     })
 
-  if (loading) return <Loader fullPage />
-
   if (
+    !loading &&
     environment.RESTRICT_TO_VERIFIED_ACCOUNT &&
     data?.account?.verification?.status !== 'VALIDATED'
   )
@@ -126,58 +125,12 @@ const CreatePage: NextPage = () => {
         align={{ base: 'center', md: 'inherit' }}
         gap={6}
       >
-        {data?.collections?.nodes.map(({ address, chainId, standard }) => (
-          <Link
-            href={`/create/${chainId}/${address}`}
-            key={`${chainId}/${address}`}
-          >
-            <Stack
-              w={64}
-              align="center"
-              justify="center"
-              spacing={8}
-              rounded="xl"
-              border="1px"
-              borderColor="gray.200"
-              borderStyle="solid"
-              bg="white"
-              p={12}
-              shadow="sm"
-              _hover={{ shadow: 'md' }}
-              cursor="pointer"
-            >
-              <Flex
-                align="center"
-                justify="center"
-                mx="auto"
-                h={36}
-                w={36}
-                rounded="full"
-                bgColor={standard === 'ERC721' ? 'blue.50' : 'green.50'}
-                color={standard === 'ERC721' ? 'blue.500' : 'green.500'}
-              >
-                {standard === 'ERC721' ? (
-                  <Icon as={IoImageOutline} h={10} w={10} />
-                ) : (
-                  <Icon as={IoImagesOutline} h={10} w={10} />
-                )}
-              </Flex>
-              <Box textAlign="center">
-                <Heading as="h3" variant="heading1" color="brand.black">
-                  {standard === 'ERC721'
-                    ? t('asset.typeSelector.single.title')
-                    : t('asset.typeSelector.multiple.title')}
-                </Heading>
-                <Heading as="h5" variant="heading3" color="gray.500" mt={2}>
-                  {standard === 'ERC721'
-                    ? t('asset.typeSelector.single.type')
-                    : t('asset.typeSelector.multiple.type')}
-                </Heading>
-              </Box>
-            </Stack>
-          </Link>
-        ))}
-        {called && !data?.collections && (
+        {loading || !data?.collections ? (
+          <>
+            <Skeleton w={64} h={344} borderRadius="2xl" />
+            <Skeleton w={64} h={344} borderRadius="2xl" />
+          </>
+        ) : data.collections.nodes.length === 0 ? (
           <Empty
             title={t('asset.typeSelector.empty.title')}
             description={t('asset.typeSelector.empty.description')}
@@ -185,6 +138,58 @@ const CreatePage: NextPage = () => {
               <Icon as={HiExclamationCircle} w={8} h={8} color="gray.400" />
             }
           />
+        ) : (
+          data.collections.nodes.map(({ address, chainId, standard }) => (
+            <Link
+              href={`/create/${chainId}/${address}`}
+              key={`${chainId}/${address}`}
+            >
+              <Stack
+                w={64}
+                align="center"
+                justify="center"
+                spacing={8}
+                rounded="xl"
+                border="1px"
+                borderColor="gray.200"
+                borderStyle="solid"
+                bg="white"
+                p={12}
+                shadow="sm"
+                _hover={{ shadow: 'md' }}
+                cursor="pointer"
+              >
+                <Flex
+                  align="center"
+                  justify="center"
+                  mx="auto"
+                  h={36}
+                  w={36}
+                  rounded="full"
+                  bgColor={standard === 'ERC721' ? 'blue.50' : 'green.50'}
+                  color={standard === 'ERC721' ? 'blue.500' : 'green.500'}
+                >
+                  {standard === 'ERC721' ? (
+                    <Icon as={IoImageOutline} h={10} w={10} />
+                  ) : (
+                    <Icon as={IoImagesOutline} h={10} w={10} />
+                  )}
+                </Flex>
+                <Box textAlign="center">
+                  <Heading as="h3" variant="heading1" color="brand.black">
+                    {standard === 'ERC721'
+                      ? t('asset.typeSelector.single.title')
+                      : t('asset.typeSelector.multiple.title')}
+                  </Heading>
+                  <Heading as="h5" variant="heading3" color="gray.500" mt={2}>
+                    {standard === 'ERC721'
+                      ? t('asset.typeSelector.single.type')
+                      : t('asset.typeSelector.multiple.type')}
+                  </Heading>
+                </Box>
+              </Stack>
+            </Link>
+          ))
         )}
       </Flex>
     </Layout>

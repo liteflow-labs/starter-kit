@@ -32,6 +32,14 @@
       "empty": {
         "title": "未找到用户",
         "description": "请更新筛选条件来查找更多用户。"
+      },
+      "orderBy": {
+        "label": "排序方式",
+        "values": {
+          "createdAtDesc": "日期：最新",
+          "createdAtAsc": "日期：最早",
+          "nameAsc": "按字母顺序"
+        }
       }
     },
     "collections": {

@@ -62,6 +62,7 @@ fragment AssetDetail on Asset {
     filter: { expiredAt: { greaterThan: $now } }
   ) {
     totalCount
+    totalCurrencyDistinctCount
     nodes {
       id
       unitPrice
@@ -73,13 +74,6 @@ fragment AssetDetail on Asset {
       }
     }
   }
-  currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
-    aggregates {
-      distinctCount {
-        currencyId
-      }
-    }
-  }
   creator {
     address
     name
@@ -88,11 +82,7 @@ fragment AssetDetail on Asset {
       status
     }
   }
-  owned: ownerships(filter: { ownerAddress: { equalTo: $currentAddress } }) {
-    aggregates {
-      sum {
-        quantity
-      }
-    }
+  owned: ownership(ownerAddress: $currentAddress) {
+    quantity
   }
 }

@@ -41,6 +41,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
         value
       }
     }
+    quantity
     image
     animationUrl
     hasUnlockableContent
@@ -73,12 +74,8 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
         }
       }
     }
-    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-      aggregates {
-        sum {
-          quantity
-        }
-      }
+    owned: ownership(ownerAddress: $address) {
+      quantity
     }
     ownerships(
       orderBy: [
@@ -99,42 +96,6 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
           verification {
             status
           }
-        }
-      }
-      aggregates {
-        sum {
-          quantity
-        }
-      }
-    }
-    bids(
-      orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-      filter: { expiredAt: { greaterThan: $now } }
-    ) {
-      nodes {
-        id
-        createdAt
-        expiredAt
-        availableQuantity
-        taker {
-          address
-        }
-        maker {
-          address
-          name
-          image
-          verification {
-            status
-          }
-        }
-        amount
-        unitPrice
-        currency {
-          image
-          name
-          id
-          decimals
-          symbol
         }
       }
     }
@@ -163,11 +124,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
           }
         }
       }
-      aggregates {
-        sum {
-          availableQuantity
-        }
-      }
+      totalAvailableQuantitySum
     }
     auctions(first: 1, orderBy: CREATED_AT_DESC) {
       nodes {
@@ -186,6 +143,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
         offers(
           orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
           filter: { signature: { isNull: false } }
+          first: 1
         ) {
           nodes {
             id
@@ -213,37 +171,6 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
               symbol
             }
           }
-        }
-      }
-    }
-    histories(orderBy: DATE_DESC) {
-      nodes {
-        action
-        date
-        unitPrice
-        quantity
-        fromAddress
-        from {
-          address
-          name
-          image
-          verification {
-            status
-          }
-        }
-        toAddress
-        to {
-          address
-          name
-          image
-          verification {
-            status
-          }
-        }
-        transactionHash
-        currency {
-          decimals
-          symbol
         }
       }
     }

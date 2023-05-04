@@ -4,14 +4,11 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import Head from '../../../components/Head'
-import Loader from '../../../components/Loader'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
 import {
   convertAsset,
   convertAuctionWithBestBid,
-  convertFullUser,
   convertSale,
   convertUser,
 } from '../../../convert'
@@ -57,11 +54,6 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const userAccount = useMemo(
-    () => convertFullUser(data?.account || null, userAddress),
-    [data, userAddress],
-  )
-
   const changeOrder = useCallback(
     async (orderBy: any) => {
       await replace({ pathname, query: { ...query, orderBy } })
@@ -81,42 +73,24 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
           creator: convertUser(x.creator, x.creator.address),
           sale: convertSale(x.firstSale?.nodes[0]),
           numberOfSales: x.firstSale.totalCount,
-          hasMultiCurrency:
-            parseInt(
-              x.currencySales.aggregates?.distinctCount?.currencyId,
-              10,
-            ) > 1,
+          hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
         })),
     [data],
   )
 
-  if (loading) return <Loader fullPage />
-  if (!assets) return <></>
-  if (!data) return <></>
   return (
     <LargeLayout>
-      <Head
-        title={data.account?.name || userAddress}
-        description={data.account?.description || ''}
-        image={data.account?.image || ''}
-      />
-
       <UserProfileTemplate
+        now={date}
         signer={signer}
         currentAccount={address}
-        account={userAccount}
+        address={userAddress}
         currentTab="created"
-        totals={
-          new Map([
-            ['created', data.created?.totalCount || 0],
-            ['on-sale', data.onSale?.totalCount || 0],
-            ['owned', data.owned?.totalCount || 0],
-          ])
-        }
         loginUrlForReferral={environment.BASE_URL + '/login'}
       >
         <TokenGrid<AssetsOrderBy>
           assets={assets}
+          loading={loading}
           orderBy={{
             value: orderBy,
             choices: [
@@ -135,7 +109,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
             limit,
             limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
             page,
-            total: data.created?.totalCount || 0,
+            total: data?.created?.totalCount || 0,
             onPageChange: changePage,
             onLimitChange: changeLimit,
             result: {
