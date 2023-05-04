@@ -141,7 +141,7 @@ const TokenMedia: VFC<{
         alt={defaultText}
         onError={() => setImageError(true)}
         layout="fill"
-        objectFit={fill ? 'cover' : 'scale-down'}
+        objectFit={fill ? 'cover' : 'contain'}
         sizes={sizes}
         unoptimized={unlockedContent?.mimetype === 'image/gif'}
       />

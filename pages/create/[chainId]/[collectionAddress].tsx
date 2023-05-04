@@ -8,89 +8,39 @@ import {
   GridItem,
   Heading,
   Icon,
+  Skeleton,
   Stack,
   Text,
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { isSameAddress, useConfig } from '@nft/hooks'
+import { useConfig } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
-import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
-import Empty from 'components/Empty/Empty'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
+import Error from 'next/error'
 import { useRouter } from 'next/router'
 import React, { useCallback, useMemo, useState } from 'react'
-import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import Link from '../../../components/Link/Link'
 import BackButton from '../../../components/Navbar/BackButton'
+import SkeletonForm from '../../../components/Skeleton/Form'
+import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import type { Props as NFTCardProps } from '../../../components/Token/Card'
 import TokenCard from '../../../components/Token/Card'
 import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
 import environment from '../../../environment'
-import {
-  FetchAccountAndCollectionDocument,
-  FetchAccountAndCollectionQuery,
-  FetchAccountAndCollectionQueryVariables,
-  useFetchAccountAndCollectionQuery,
-} from '../../../graphql'
+import { useFetchAccountAndCollectionQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLocalFileURL from '../../../hooks/useLocalFileURL'
+import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
-import { wrapServerSideProps } from '../../../props'
 import { values as traits } from '../../../traits'
-
-type Props = {
-  chainId: number
-  collectionAddress: string
-  currentAccount: string | null
-}
-
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (context, client) => {
-    const chainId = Array.isArray(context.query.chainId)
-      ? context.query.chainId[0]
-      : context.query.chainId
-    const collectionAddress = Array.isArray(context.query.collectionAddress)
-      ? context.query.collectionAddress[0]
-      : context.query.collectionAddress
-    invariant(collectionAddress, "collectionAddress can't be falsy")
-    invariant(chainId, "chainId can't be falsy")
-    invariant(
-      environment.MINTABLE_COLLECTIONS.filter(({ address }) =>
-        isSameAddress(address, collectionAddress),
-      ).length > 0,
-      'collectionAddress is not mintable',
-    )
-    const { data, error } = await client.query<
-      FetchAccountAndCollectionQuery,
-      FetchAccountAndCollectionQueryVariables
-    >({
-      query: FetchAccountAndCollectionDocument,
-      variables: {
-        chainId: parseInt(chainId, 10),
-        account: context.user.address || '',
-        collectionAddress,
-      },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    return {
-      props: {
-        chainId: parseInt(chainId, 10),
-        collectionAddress,
-        currentAccount: context.user.address,
-      },
-    }
-  },
-)
 
 const Layout = ({ children }: { children: React.ReactNode }) => (
   <SmallLayout>
@@ -102,23 +52,23 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
   </SmallLayout>
 )
 
-const CreatePage: NextPage<Props> = ({
-  currentAccount,
-  chainId,
-  collectionAddress,
-}) => {
-  const ready = useEagerConnect()
+const CreatePage: NextPage = ({}) => {
+  useEagerConnect()
   const signer = useSigner()
+  const collectionAddress = useRequiredQueryParamSingle('collectionAddress')
+  const chainId = useRequiredQueryParamSingle<number>('chainId', {
+    parse: parseInt,
+  })
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const { address } = useAccount()
   const { data: config } = useConfig()
   const toast = useToast()
-  const { data } = useFetchAccountAndCollectionQuery({
+  const { data, loading } = useFetchAccountAndCollectionQuery({
     variables: {
       chainId,
       collectionAddress,
-      account: (ready ? address : currentAccount) || '',
+      account: address || '',
     },
   })
 
@@ -182,7 +132,11 @@ const CreatePage: NextPage<Props> = ({
     [push, t, toast],
   )
 
-  if (environment.RESTRICT_TO_VERIFIED_ACCOUNT && !creator.verified) {
+  if (
+    !loading &&
+    environment.RESTRICT_TO_VERIFIED_ACCOUNT &&
+    !creator.verified
+  ) {
     return (
       <Layout>
         <BackButton onClick={back} />
@@ -225,23 +179,18 @@ const CreatePage: NextPage<Props> = ({
     )
   }
 
-  if (!data?.collection)
-    return (
-      <Empty
-        title={t('asset.form.notFound.title')}
-        description={t('asset.form.notFound.description')}
-        button={t('asset.form.notFound.link')}
-        href="/create"
-        icon={<Icon as={HiExclamationCircle} w={8} h={8} color="gray.400" />}
-      />
-    )
+  if (!loading && !data?.collection) return <Error statusCode={404} />
   return (
     <Layout>
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" mt={6}>
-        {data.collection.standard === 'ERC1155'
-          ? t('asset.form.title.multiple')
-          : t('asset.form.title.single')}
+        {loading || !data?.collection ? (
+          <Skeleton height="1em" width="50%" />
+        ) : data.collection.standard === 'ERC1155' ? (
+          t('asset.form.title.multiple')
+        ) : (
+          t('asset.form.title.single')
+        )}
       </Heading>
 
       <Grid
@@ -255,7 +204,9 @@ const CreatePage: NextPage<Props> = ({
             {t('asset.form.preview')}
           </Flex>
           <Box pointerEvents="none">
-            {asset && (
+            {loading || !asset ? (
+              <SkeletonTokenCard />
+            ) : (
               <TokenCard
                 asset={asset}
                 creator={creator}
@@ -268,18 +219,22 @@ const CreatePage: NextPage<Props> = ({
           </Box>
         </GridItem>
         <GridItem overflow="hidden">
-          <TokenFormCreate
-            signer={signer}
-            collection={data.collection}
-            categories={categories}
-            uploadUrl={environment.UPLOAD_URL}
-            blockExplorer={blockExplorer}
-            onCreated={onCreated}
-            onInputChange={setFormData}
-            activateUnlockableContent={config?.hasUnlockableContent || false}
-            maxRoyalties={environment.MAX_ROYALTIES}
-            activateLazyMint={config?.hasLazyMint || false}
-          />
+          {loading || !data?.collection ? (
+            <SkeletonForm items={4} />
+          ) : (
+            <TokenFormCreate
+              signer={signer}
+              collection={data.collection}
+              categories={categories}
+              uploadUrl={environment.UPLOAD_URL}
+              blockExplorer={blockExplorer}
+              onCreated={onCreated}
+              onInputChange={setFormData}
+              activateUnlockableContent={config?.hasUnlockableContent || false}
+              maxRoyalties={environment.MAX_ROYALTIES}
+              activateLazyMint={config?.hasLazyMint || false}
+            />
+          )}
         </GridItem>
       </Grid>
     </Layout>

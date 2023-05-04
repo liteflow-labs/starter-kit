@@ -19,6 +19,8 @@ import Countdown from 'components/Countdown/Countdown'
 import environment from 'environment'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, useState, VFC } from 'react'
+import { chains } from '../../connectors'
+import Image from '../Image/Image'
 import Link from '../Link/Link'
 import SaleAuctionCardFooter from '../Sales/Auction/CardFooter'
 import SaleDirectCardFooter from '../Sales/Direct/CardFooter'
@@ -97,6 +99,12 @@ const TokenCard: VFC<Props> = ({
   const href = asset.id ? `/tokens/${asset.id}` : '#'
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const [isHovered, setIsHovered] = useState(false)
+
+  const chainName = useMemo(
+    () => chains.find((x) => x.id === asset.collection.chainId)?.name,
+    [asset.collection.chainId],
+  )
+
   const footer = useMemo(() => {
     if (auction)
       return (
@@ -149,6 +157,7 @@ const TokenCard: VFC<Props> = ({
       borderWidth="1px"
       borderColor="gray.200"
       bgColor="white"
+      position="relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -193,6 +202,25 @@ const TokenCard: VFC<Props> = ({
           </HStack>
         )}
       </Flex>
+      {isHovered && (
+        <Flex
+          rounded="full"
+          position="absolute"
+          top={4}
+          left={4}
+          title={chainName}
+          cursor="pointer"
+          overflow="hidden"
+          filter="grayscale(100%)"
+        >
+          <Image
+            src={`/chains/${asset.collection.chainId}.svg`}
+            alt={asset.collection.chainId.toString()}
+            width={24}
+            height={24}
+          />
+        </Flex>
+      )}
       <Flex justify="space-between" px={4} pt={4} pb={3} gap={2} align="start">
         <Stack spacing={0} w="full" overflow="hidden">
           {displayCreator ? (

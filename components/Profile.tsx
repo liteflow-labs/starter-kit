@@ -1,46 +1,65 @@
 import { GridItem, SimpleGrid, Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { isSameAddress } from '@nft/hooks'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import type { TabsEnum } from '../components/User/Profile/Navigation'
 import UserProfileNavigation from '../components/User/Profile/Navigation'
+import { convertFullUser } from '../convert'
+import {
+  useFetchAccountDetailQuery,
+  useFetchAccountMetadataQuery,
+} from '../graphql'
+import Head from './Head'
 import UserProfileBanner from './User/Profile/Banner'
 import UserProfileInfo from './User/Profile/Info'
 
 const UserProfileTemplate: FC<{
+  now: Date
   signer: Signer | undefined
   currentAccount: string | null | undefined
-  account: {
-    address: string
-    image: string | null
-    name: string | null
-    description: string | null
-    cover: string | null
-    instagram: string | null
-    twitter: string | null
-    website: string | null
-    verified: boolean
-  }
+  address: string
   currentTab: TabsEnum
-  totals: Map<TabsEnum, number>
   loginUrlForReferral?: string
 }> = ({
+  now,
   signer,
   currentAccount,
-  account,
+  address,
   currentTab,
-  totals,
   loginUrlForReferral,
   children,
 }) => {
-  if (!account) throw new Error('account is falsy')
+  const { data } = useFetchAccountDetailQuery({
+    variables: { address },
+  })
+  const { data: metadata } = useFetchAccountMetadataQuery({
+    variables: { address, now },
+  })
+  const account = useMemo(
+    () => convertFullUser(data?.account || null, address),
+    [data, address],
+  )
+  const totals = useMemo(
+    () =>
+      new Map<TabsEnum, number>([
+        ['created', metadata?.created?.totalCount || 0],
+        ['on-sale', metadata?.onSale?.totalCount || 0],
+        ['owned', metadata?.owned?.totalCount || 0],
+      ]),
+    [metadata],
+  )
   return (
     <>
+      <Head
+        title={account?.name || address}
+        description={account?.description || ''}
+        image={account?.image || ''}
+      />
       <UserProfileBanner
-        address={account.address}
-        cover={account.cover}
-        image={account.image}
-        name={account.name}
+        address={address}
+        cover={account?.cover}
+        image={account?.image}
+        name={account?.name}
       />
       <SimpleGrid
         mb={6}
@@ -50,22 +69,21 @@ const UserProfileTemplate: FC<{
       >
         <UserProfileInfo
           signer={signer}
-          address={account.address}
-          description={account.description}
-          instagram={account.instagram}
-          name={account.name}
-          twitter={account.twitter}
-          website={account.website}
-          verified={account.verified}
+          address={address}
+          description={account?.description}
+          instagram={account?.instagram}
+          name={account?.name}
+          twitter={account?.twitter}
+          website={account?.website}
+          verified={account?.verified}
           loginUrlForReferral={loginUrlForReferral}
         />
         <GridItem colSpan={{ lg: 3 }}>
           <Stack spacing={6}>
             <UserProfileNavigation
-              baseUrl={`/users/${account.address}`}
+              baseUrl={`/users/${address}`}
               showPrivateTabs={
-                !!currentAccount &&
-                isSameAddress(currentAccount, account.address)
+                !!currentAccount && isSameAddress(currentAccount, address)
               }
               currentTab={currentTab}
               totals={totals}

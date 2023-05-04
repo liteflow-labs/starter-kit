@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from './received'
+export { default } from './received'

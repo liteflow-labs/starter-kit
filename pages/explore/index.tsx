@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from './explore'
+export { default } from './explore'
