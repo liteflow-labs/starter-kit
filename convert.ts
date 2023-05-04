@@ -17,7 +17,7 @@ import {
   Offer,
   OfferOpenBuy,
   OfferOpenSale,
-  OfferOpenSaleSumAggregates,
+  OfferOpenSalesConnection,
   Ownership,
   OwnershipSumAggregates,
   Trade,
@@ -90,11 +90,7 @@ export const convertAssetWithSupplies = (
         sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
       }>
     }
-    sales: {
-      aggregates: Maybe<{
-        sum: Maybe<Pick<OfferOpenSaleSumAggregates, 'availableQuantity'>>
-      }>
-    }
+    sales: Pick<OfferOpenSalesConnection, 'totalAvailableQuantitySum'>
     collection: Pick<Collection, 'standard' | 'mintType'>
   },
 ): ReturnType<typeof convertAsset> & {
@@ -117,9 +113,7 @@ export const convertAssetWithSupplies = (
       standard: asset.collection.standard,
       mintType: asset.collection.mintType,
     },
-    saleSupply: BigNumber.from(
-      asset.sales.aggregates?.sum?.availableQuantity || 0,
-    ),
+    saleSupply: BigNumber.from(asset.sales.totalAvailableQuantitySum),
     totalSupply: BigNumber.from(
       asset.ownerships.aggregates?.sum?.quantity || '0',
     ),

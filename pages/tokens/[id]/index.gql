@@ -128,11 +128,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
           }
         }
       }
-      aggregates {
-        sum {
-          availableQuantity
-        }
-      }
+      totalAvailableQuantitySum
     }
     auctions(first: 1, orderBy: CREATED_AT_DESC) {
       nodes {
