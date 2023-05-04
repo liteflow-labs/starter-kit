@@ -19,7 +19,6 @@ import {
   OfferOpenSale,
   OfferOpenSalesConnection,
   Ownership,
-  OwnershipSumAggregates,
   Trade,
   Trait,
 } from './graphql'
@@ -84,15 +83,11 @@ export const convertAsset = (
 }
 
 export const convertAssetWithSupplies = (
-  asset: Parameters<typeof convertAsset>[0] & {
-    ownerships: {
-      aggregates: Maybe<{
-        sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
-      }>
-    }
-    sales: Pick<OfferOpenSalesConnection, 'totalAvailableQuantitySum'>
-    collection: Pick<Collection, 'standard' | 'mintType'>
-  },
+  asset: Parameters<typeof convertAsset>[0] &
+    Pick<Asset, 'quantity'> & {
+      sales: Pick<OfferOpenSalesConnection, 'totalAvailableQuantitySum'>
+      collection: Pick<Collection, 'standard' | 'mintType'>
+    },
 ): ReturnType<typeof convertAsset> & {
   saleSupply: BigNumber
   totalSupply: BigNumber
@@ -114,9 +109,7 @@ export const convertAssetWithSupplies = (
       mintType: asset.collection.mintType,
     },
     saleSupply: BigNumber.from(asset.sales.totalAvailableQuantitySum),
-    totalSupply: BigNumber.from(
-      asset.ownerships.aggregates?.sum?.quantity || '0',
-    ),
+    totalSupply: BigNumber.from(asset.quantity),
     owned: BigNumber.from(asset.owned?.quantity || 0),
     bestBid: bestBid
       ? {

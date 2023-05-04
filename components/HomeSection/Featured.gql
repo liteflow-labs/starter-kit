@@ -26,6 +26,7 @@ query FetchFeaturedAssets(
       }
       image
       animationUrl
+      quantity
       unlockedContent {
         url
         mimetype
@@ -60,11 +61,6 @@ query FetchFeaturedAssets(
             verification {
               status
             }
-          }
-        }
-        aggregates {
-          sum {
-            quantity
           }
         }
       }

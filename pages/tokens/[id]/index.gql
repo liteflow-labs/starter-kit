@@ -41,6 +41,7 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
         value
       }
     }
+    quantity
     image
     animationUrl
     hasUnlockableContent
@@ -95,11 +96,6 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
           verification {
             status
           }
-        }
-      }
-      aggregates {
-        sum {
-          quantity
         }
       }
     }

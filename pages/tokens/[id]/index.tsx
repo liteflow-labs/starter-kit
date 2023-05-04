@@ -115,10 +115,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
 
   const isOwner = useMemo(() => totalOwned.gt('0'), [totalOwned])
   const ownAllSupply = useMemo(
-    () =>
-      totalOwned.gte(
-        BigNumber.from(asset?.ownerships.aggregates?.sum?.quantity || '0'),
-      ),
+    () => totalOwned.gte(BigNumber.from(asset?.quantity || '0')),
     [asset, totalOwned],
   )
   const isSingle = useMemo(
@@ -364,9 +361,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               numberOfOwners={asset.ownerships.totalCount}
               saleSupply={BigNumber.from(asset.sales.totalAvailableQuantitySum)}
               standard={asset.collection.standard}
-              totalSupply={BigNumber.from(
-                asset.ownerships.aggregates?.sum?.quantity || '0',
-              )}
+              totalSupply={BigNumber.from(asset.quantity)}
               isOpenCollection={asset.collection.mintType === 'PUBLIC'}
             />
           )}
