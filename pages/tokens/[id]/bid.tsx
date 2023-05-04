@@ -138,10 +138,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 sale={convertSale(asset.firstSale.nodes[0])}
                 numberOfSales={asset.firstSale.totalCount}
                 hasMultiCurrency={
-                  parseInt(
-                    asset.currencySales.aggregates?.distinctCount?.currencyId,
-                    10,
-                  ) > 1
+                  asset.firstSale.totalCurrencyDistinctCount > 1
                 }
               />
             )}

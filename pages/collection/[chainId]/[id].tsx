@@ -259,10 +259,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
                     sale={convertSale(x.firstSale.nodes[0])}
                     numberOfSales={x.firstSale.totalCount}
                     hasMultiCurrency={
-                      parseInt(
-                        x.currencySales.aggregates?.distinctCount?.currencyId,
-                        10,
-                      ) > 1
+                      x.firstSale.totalCurrencyDistinctCount > 1
                     }
                   />
                 </Flex>

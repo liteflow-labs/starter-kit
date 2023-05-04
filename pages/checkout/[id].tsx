@@ -137,10 +137,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                 }
                 numberOfSales={asset.firstSale.totalCount}
                 hasMultiCurrency={
-                  parseInt(
-                    asset.currencySales.aggregates?.distinctCount?.currencyId,
-                    10,
-                  ) > 1
+                  asset.firstSale.totalCurrencyDistinctCount > 1
                 }
               />
             )}

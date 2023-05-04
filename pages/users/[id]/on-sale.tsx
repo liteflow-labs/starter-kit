@@ -73,11 +73,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
           creator: convertUser(x.creator, x.creator.address),
           sale: convertSale(x.firstSale?.nodes[0]),
           numberOfSales: x.firstSale.totalCount,
-          hasMultiCurrency:
-            parseInt(
-              x.currencySales.aggregates?.distinctCount?.currencyId,
-              10,
-            ) > 1,
+          hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
         })),
     [data],
   )

@@ -79,6 +79,7 @@ query FetchAssetForCheckout($id: String!, $address: Address, $now: Datetime!) {
       filter: { expiredAt: { greaterThan: $now } }
     ) {
       totalCount
+      totalCurrencyDistinctCount
       nodes {
         id
         unitPrice
@@ -88,13 +89,6 @@ query FetchAssetForCheckout($id: String!, $address: Address, $now: Datetime!) {
           id
           decimals
           symbol
-        }
-      }
-    }
-    currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
-      aggregates {
-        distinctCount {
-          currencyId
         }
       }
     }
