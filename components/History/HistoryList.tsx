@@ -1,11 +1,13 @@
 import { Text } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { useMemo, VFC } from 'react'
 import invariant from 'ts-invariant'
-import { AssetHistoryAction } from '../../graphql'
-import { BlockExplorer } from '../../hooks/useBlockExplorer'
+import { convertHistories } from '../../convert'
+import { useFetchAssetHistoryQuery } from '../../graphql'
+import useBlockExplorer from '../../hooks/useBlockExplorer'
 import List from '../List/List'
+import SkeletonList from '../Skeleton/List'
+import SkeletonListItem from '../Skeleton/ListItem'
 import {
   ListingListItem,
   MintListItem,
@@ -15,35 +17,32 @@ import {
 import LazyMintListItem from './ListItem/LazyMintListItem'
 
 type IProps = {
-  histories: {
-    action: AssetHistoryAction
-    date: Date
-    quantity: BigNumber
-    unitPrice: BigNumber | null
-    fromAddress: string
-    from: {
-      name: string | null
-      image: string | null
-      verified: boolean
-    } | null
-    toAddress: string | null
-    to: {
-      name: string | null
-      image: string | null
-      verified: boolean
-    } | null
-    transactionHash: string | null
-    currency: {
-      decimals: number
-      symbol: string
-    } | null
-  }[]
-  blockExplorer: BlockExplorer
+  chainId: number
+  collectionAddress: string
+  tokenId: string
 }
 
-const HistoryList: VFC<IProps> = ({ histories, blockExplorer }) => {
+const HistoryList: VFC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
   const { t } = useTranslation('components')
-  const ListItem = (history: IProps['histories'][0], i: number) => {
+
+  const { data, loading, previousData } = useFetchAssetHistoryQuery({
+    variables: {
+      id: [chainId, collectionAddress, tokenId].join('-'),
+    },
+  })
+  const blockExplorer = useBlockExplorer(chainId)
+
+  const histories = useMemo(
+    () =>
+      (
+        data?.asset?.histories.nodes ||
+        previousData?.asset?.histories.nodes ||
+        []
+      ).map(convertHistories),
+    [data, previousData],
+  )
+
+  const ListItem = (history: typeof histories[number], i: number) => {
     switch (history.action) {
       case 'LISTING':
         invariant(history.unitPrice, 'unitPrice is required')
@@ -97,13 +96,21 @@ const HistoryList: VFC<IProps> = ({ histories, blockExplorer }) => {
         return <LazyMintListItem {...history} key={i} />
     }
   }
-  if (histories.length === 0)
-    return (
-      <Text as="p" variant="text" color="gray.500">
-        {t('history.none')}
-      </Text>
-    )
-  return <List>{histories.map((history, i) => ListItem(history, i))}</List>
+  return (
+    <List>
+      {loading ? (
+        <SkeletonList items={5}>
+          <SkeletonListItem image subtitle caption />
+        </SkeletonList>
+      ) : histories.length > 0 ? (
+        histories.map((history, i) => ListItem(history, i))
+      ) : (
+        <Text as="p" variant="text" color="gray.500">
+          {t('history.none')}
+        </Text>
+      )}
+    </List>
+  )
 }
 
 export default HistoryList

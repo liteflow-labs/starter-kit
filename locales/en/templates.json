@@ -32,6 +32,14 @@
       "empty": {
         "title": "No Users Found",
         "description": "Update your filters to find more users."
+      },
+      "orderBy": {
+        "label": "Sort by",
+        "values": {
+          "createdAtDesc": "Date: Newest",
+          "createdAtAsc": "Date: Oldest",
+          "nameAsc": "Alphabetical"
+        }
       }
     },
     "collections": {
@@ -57,7 +65,8 @@
         "floor-price": "Floor price",
         "total-volume": "Total Volume",
         "owners": "Owners",
-        "items": "Items"
+        "items": "Items",
+        "chain": "Chain"
       },
       "by": "By",
       "menu": {
@@ -102,6 +111,13 @@
       "ipfsLink": "View on IPFS",
       "errors": {
         "image": "An issue occured"
+      },
+      "details": {
+        "title": "Details",
+        "chain": "Chain",
+        "explorer": "View on explorer",
+        "media": "View media",
+        "metadata": "View metadata"
       }
     },
     "form": {

@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from './fixed'
+export { default } from './fixed'

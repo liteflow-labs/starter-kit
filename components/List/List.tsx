@@ -99,6 +99,8 @@ export function ListItem({
   )
 }
 
+export type ListProps = StackProps
+
 export default function List({
   children,
   ...props

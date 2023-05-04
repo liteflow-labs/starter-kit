@@ -121,12 +121,11 @@ const SalesDirectForm: VFC<Props> = ({
   const quantity = watch('quantity')
 
   const currencyId = watch('currencyId')
-  const currency = useMemo(() => {
-    const c = currencies.find((x) => x.id === currencyId)
-    if (!c) throw new Error("Can't find currency")
-    return c
-  }, [currencies, currencyId])
-  const priceUnit = useParseBigNumber(price, currency.decimals)
+  const currency = useMemo(
+    () => currencies.find((x) => x.id === currencyId),
+    [currencies, currencyId],
+  )
+  const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
   const amountFees = useMemo(() => {
@@ -173,6 +172,7 @@ const SalesDirectForm: VFC<Props> = ({
 
   const isSingle = useMemo(() => standard === 'ERC721', [standard])
 
+  if (!currency) return <></>
   return (
     <Stack as="form" spacing={8} onSubmit={onSubmit}>
       {currencies.length > 1 && (

@@ -32,6 +32,14 @@
       "empty": {
         "title": "ユーザーが見つかりません",
         "description": "フィルターを更新して、より多くのユーザーを見つけてください。"
+      },
+      "orderBy": {
+        "label": "並び替え",
+        "values": {
+          "createdAtDesc": "日付: 最も新しい",
+          "createdAtAsc": "日付: 最も古い",
+          "nameAsc": "アルファベット順"
+        }
       }
     },
     "collections": {
@@ -57,7 +65,8 @@
         "floor-price": "最低価格",
         "total-volume": "総ボリューム",
         "owners": "所有者",
-        "items": "アイテム"
+        "items": "アイテム",
+        "chain": "鎖"
       },
       "by": "によって",
       "menu": {
@@ -102,6 +111,13 @@
       "ipfsLink": "IPFSで表示",
       "errors": {
         "image": "問題が発生しました"
+      },
+      "details": {
+        "title": "詳細",
+        "chain": "鎖",
+        "explorer": "エクスプローラーで見る",
+        "media": "メディアを見る",
+        "metadata": "メタデータを表示"
       }
     },
     "form": {
