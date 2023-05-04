@@ -71,9 +71,17 @@
       "title": "Filters",
       "clear": "Clear filters"
     },
+    "collections": {
+      "chains": {
+        "label": "Chain"
+      }
+    },
     "assets": {
       "submit": "Apply",
       "clear": "Clear All",
+      "chains": {
+        "label": "Chain"
+      },
       "currency": {
         "label": "Price range",
         "placeholder": "Select a currency"
@@ -336,6 +344,7 @@
     "create": "Create",
     "search": "Search",
     "sign-in": "Sign in",
+    "chat": "Messages",
     "signing-in": "Signing in...",
     "notifications": "Notifications",
     "activity": {

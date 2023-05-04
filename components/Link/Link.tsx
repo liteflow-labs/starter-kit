@@ -1,17 +1,27 @@
-import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
+import { Flex, Link as ChakraLink, LinkProps } from '@chakra-ui/react'
+import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import NextLink from 'next/link'
 import { forwardRef } from 'react'
 
 type IProps = LinkProps & {
   href: string
+  externalIcon?: boolean
 }
 
 const Link = forwardRef<any, IProps>(function Link(props, ref) {
-  const { children, href, isExternal, ...rest } = props
+  const { children, href, isExternal, externalIcon, ...rest } = props
   if (isExternal) {
     return (
       <ChakraLink ref={ref} href={href} isExternal {...rest}>
-        {children}
+        <Flex alignItems="center">
+          {children}
+          {externalIcon && (
+            <>
+              &nbsp;
+              <HiOutlineExternalLink />
+            </>
+          )}
+        </Flex>
       </ChakraLink>
     )
   }

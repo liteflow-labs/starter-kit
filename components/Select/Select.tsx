@@ -20,7 +20,7 @@ import { HTMLAttributes, ReactElement, useMemo } from 'react'
 import { Control, Controller, FieldError } from 'react-hook-form'
 import Image from '../Image/Image'
 
-type IProps<T extends string> = HTMLAttributes<any> & {
+type IProps<T extends any> = HTMLAttributes<any> & {
   selectWidth?: string | number
   dropdownMaxHeight?: string | number
   label?: string
@@ -31,7 +31,7 @@ type IProps<T extends string> = HTMLAttributes<any> & {
     caption?: string
   }[]
   value?: T
-  onChange?(value: string | string[] | undefined): void
+  onChange?(value: T | T[] | undefined): void
   isDisabled?: boolean
   error?: FieldError | undefined
   name: string
@@ -43,7 +43,7 @@ type IProps<T extends string> = HTMLAttributes<any> & {
   sortAlphabetically?: boolean
 }
 
-const Select = <T extends string>({
+const Select = <T extends any>({
   selectWidth,
   dropdownMaxHeight,
   label,
@@ -137,7 +137,7 @@ const Select = <T extends string>({
                           src={selectedChoice.image}
                           width={24}
                           height={24}
-                          alt={selectedChoice.value}
+                          alt={''}
                           objectFit="cover"
                         />
                       </Box>
@@ -191,7 +191,7 @@ const Select = <T extends string>({
                             src={choice.image}
                             width={24}
                             height={24}
-                            alt={choice.value}
+                            alt={''}
                             objectFit="cover"
                           />
                         </Box>

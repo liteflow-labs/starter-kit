@@ -24,12 +24,8 @@ query OfferForAsset($id: String!, $address: Address, $now: Datetime!) {
       url
       mimetype
     }
-    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-      aggregates {
-        sum {
-          quantity
-        }
-      }
+    owned: ownership(ownerAddress: $address) {
+      quantity
     }
     auctions(
       first: 1

@@ -3,47 +3,7 @@ query FetchUserBidsPlaced(
   $offset: Int!
   $orderBy: [OfferOpenBuysOrderBy!]
   $address: Address!
-  $now: Datetime
 ) {
-  account(address: $address) {
-    ...AccountDetail
-  }
-  created: assets(
-    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
-  ) {
-    totalCount
-  }
-  onSale: assets(
-    filter: {
-      ownershipsExist: true
-      or: [
-        {
-          sales: {
-            some: {
-              expiredAt: { greaterThan: $now }
-              makerAddress: { equalTo: $address }
-              availableQuantity: { greaterThan: "0" }
-            }
-          }
-        }
-        {
-          auctions: {
-            some: {
-              endAt: { greaterThan: $now }
-              creatorAddress: { equalTo: $address }
-            }
-          }
-        }
-      ]
-    }
-  ) {
-    totalCount
-  }
-  owned: ownerships(
-    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
-  ) {
-    totalCount
-  }
   bids: offerOpenBuys(
     orderBy: $orderBy
     first: $limit

@@ -15,6 +15,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -22,84 +23,32 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import CancelOfferButton from '../../../../components/Button/CancelOffer'
 import Empty from '../../../../components/Empty/Empty'
-import Head from '../../../../components/Head'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
+import Loader from '../../../../components/Loader'
 import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
-import { convertFullUser, convertSaleFull } from '../../../../convert'
+import { convertSaleFull } from '../../../../convert'
 import environment from '../../../../environment'
-import {
-  FetchUserFixedPriceDocument,
-  FetchUserFixedPriceQuery,
-  OffersOrderBy,
-  useFetchUserFixedPriceQuery,
-} from '../../../../graphql'
+import { OffersOrderBy, useFetchUserFixedPriceQuery } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
 import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
+import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
-import { getLimit, getOffset, getOrder } from '../../../../params'
-import { wrapServerSideProps } from '../../../../props'
 
 type Props = {
-  userAddress: string
   now: string
-  meta: {
-    title: string
-    description: string
-    image: string
-  }
 }
 
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (context, client) => {
-    const userAddress = context.params?.id
-      ? Array.isArray(context.params.id)
-        ? context.params.id[0]?.toLowerCase()
-        : context.params.id.toLowerCase()
-      : null
-    invariant(userAddress, 'userAddress is falsy')
-    const limit = getLimit(context, environment.PAGINATION_LIMIT)
-    const orderBy = getOrder<OffersOrderBy>(context, 'CREATED_AT_DESC')
-    const offset = getOffset(context, environment.PAGINATION_LIMIT)
-    const now = new Date()
-    const { data, error } = await client.query<FetchUserFixedPriceQuery>({
-      query: FetchUserFixedPriceDocument,
-      variables: {
-        limit,
-        offset,
-        orderBy,
-        address: userAddress,
-        now,
-      },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    return {
-      props: {
-        userAddress,
-        now: now.toJSON(),
-        meta: {
-          title: data.account?.name || userAddress,
-          description: data.account?.description || '',
-          image: data.account?.image || '',
-        },
-      },
-    }
-  },
-)
-
-const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
+const FixedPricePage: NextPage<Props> = ({ now }) => {
   useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -109,16 +58,16 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
   const orderBy = useOrderByQuery<OffersOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
   const toast = useToast()
+  const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch } = useFetchUserFixedPriceQuery({
+  const { data, refetch, loading } = useFetchUserFixedPriceQuery({
     variables: {
       address: userAddress,
       limit,
       offset,
       orderBy,
-      now: date,
     },
   })
 
@@ -130,19 +79,13 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
     await refetch()
   }, [refetch, toast, t])
 
-  const userAccount = useMemo(
-    () => convertFullUser(data?.account || null, userAddress),
-    [data, userAddress],
-  )
-
   const offers = useMemo(
     () =>
       (data?.offers?.nodes || []).map((x) => ({
         ...convertSaleFull(x),
         createdAt: new Date(x.createdAt),
         asset: x.asset,
-        ownAsset:
-          parseInt(x.asset.ownerships.aggregates?.sum?.quantity || '0', 10) > 0,
+        ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
     [data],
   )
@@ -153,25 +96,15 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
     },
     [replace, pathname, query],
   )
+
   return (
     <LargeLayout>
-      <Head
-        title={meta.title}
-        description={meta.description}
-        image={meta.image}
-      />
       <UserProfileTemplate
+        now={date}
         signer={signer}
         currentAccount={address}
-        account={userAccount}
+        address={userAddress}
         currentTab="offers"
-        totals={
-          new Map([
-            ['created', data?.created?.totalCount || 0],
-            ['on-sale', data?.onSale?.totalCount || 0],
-            ['owned', data?.owned?.totalCount || 0],
-          ])
-        }
         loginUrlForReferral={environment.BASE_URL + '/login'}
       >
         <Stack spacing={6}>
@@ -242,119 +175,128 @@ const FixedPricePage: NextPage<Props> = ({ meta, now, userAddress }) => {
             </Box>
           </Flex>
 
-          <TableContainer bg="white" shadow="base" rounded="lg">
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th>{t('user.fixed.table.item')}</Th>
-                  <Th isNumeric>{t('user.fixed.table.price')}</Th>
-                  <Th>{t('user.fixed.table.status')}</Th>
-                  <Th>{t('user.fixed.table.created')}</Th>
-                  <Th isNumeric></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {offers.map((item) => (
-                  <Tr fontSize="sm" key={item.id}>
-                    <Td>
-                      <Flex as={Link} href={`/tokens/${item.asset.id}`} gap={3}>
-                        <Image
-                          src={item.asset.image}
-                          alt={item.asset.name}
-                          width={40}
-                          height={40}
-                          layout="fixed"
-                          objectFit="cover"
-                          rounded="full"
-                          h={10}
-                          w={10}
-                        />
-                        <Flex
-                          direction="column"
-                          my="auto"
-                          title={item.asset.name}
-                        >
-                          <Text as="span" noOfLines={1}>
-                            {item.asset.name}
-                          </Text>
-                          {item.availableQuantity.gt(1) && (
-                            <Text as="span" variant="caption" color="gray.500">
-                              {t('user.fixed.available', {
-                                value: item.availableQuantity.toString(),
-                              })}
-                            </Text>
-                          )}
-                        </Flex>
-                      </Flex>
-                    </Td>
-                    <Td isNumeric>
-                      <Text
-                        as={Price}
-                        noOfLines={1}
-                        amount={item.unitPrice}
-                        currency={item.currency}
-                      />
-                    </Td>
-                    <Td>
-                      {item.expiredAt && item.expiredAt <= new Date()
-                        ? t('user.fixed.status.expired')
-                        : t('user.fixed.status.active')}
-                    </Td>
-                    <Td>{dateFromNow(item.createdAt)}</Td>
-                    <Td isNumeric>
-                      {ownerLoggedIn && (
-                        <>
-                          {!item.expiredAt || item.expiredAt > new Date() ? (
-                            <CancelOfferButton
-                              variant="outline"
-                              colorScheme="gray"
-                              signer={signer}
-                              offerId={item.id}
-                              chainId={item.asset.chainId}
-                              onCanceled={onCanceled}
-                              onError={(e) =>
-                                toast({
-                                  status: 'error',
-                                  title: formatError(e),
-                                })
-                              }
-                              title={t('user.fixed.cancel.title')}
-                            >
-                              <Text as="span" isTruncated>
-                                {t('user.fixed.actions.cancel')}
-                              </Text>
-                            </CancelOfferButton>
-                          ) : item.ownAsset ? (
-                            <Button
-                              as={Link}
-                              href={`/tokens/${item.asset.id}/offer`}
-                              variant="outline"
-                              colorScheme="gray"
-                            >
-                              <Text as="span" isTruncated>
-                                {t('user.fixed.actions.new')}
-                              </Text>
-                            </Button>
-                          ) : (
-                            '-'
-                          )}
-                        </>
-                      )}
-                    </Td>
+          {loading ? (
+            <Loader />
+          ) : offers.length == 0 ? (
+            <Empty
+              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
+              title={t('user.fixed.table.empty.title')}
+              description={t('user.fixed.table.empty.description')}
+            />
+          ) : (
+            <TableContainer bg="white" shadow="base" rounded="lg">
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th>{t('user.fixed.table.item')}</Th>
+                    <Th isNumeric>{t('user.fixed.table.price')}</Th>
+                    <Th>{t('user.fixed.table.status')}</Th>
+                    <Th>{t('user.fixed.table.created')}</Th>
+                    <Th isNumeric></Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
-            {offers.length === 0 && (
-              <Empty
-                icon={
-                  <Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />
-                }
-                title={t('user.fixed.table.empty.title')}
-                description={t('user.fixed.table.empty.description')}
-              />
-            )}
-          </TableContainer>
+                </Thead>
+                <Tbody>
+                  {offers.map((item) => (
+                    <Tr fontSize="sm" key={item.id}>
+                      <Td>
+                        <Flex
+                          as={Link}
+                          href={`/tokens/${item.asset.id}`}
+                          gap={3}
+                        >
+                          <Image
+                            src={item.asset.image}
+                            alt={item.asset.name}
+                            width={40}
+                            height={40}
+                            layout="fixed"
+                            objectFit="cover"
+                            rounded="full"
+                            h={10}
+                            w={10}
+                          />
+                          <Flex
+                            direction="column"
+                            my="auto"
+                            title={item.asset.name}
+                          >
+                            <Text as="span" noOfLines={1}>
+                              {item.asset.name}
+                            </Text>
+                            {item.availableQuantity.gt(1) && (
+                              <Text
+                                as="span"
+                                variant="caption"
+                                color="gray.500"
+                              >
+                                {t('user.fixed.available', {
+                                  value: item.availableQuantity.toString(),
+                                })}
+                              </Text>
+                            )}
+                          </Flex>
+                        </Flex>
+                      </Td>
+                      <Td isNumeric>
+                        <Text
+                          as={Price}
+                          noOfLines={1}
+                          amount={item.unitPrice}
+                          currency={item.currency}
+                        />
+                      </Td>
+                      <Td>
+                        {item.expiredAt && item.expiredAt <= new Date()
+                          ? t('user.fixed.status.expired')
+                          : t('user.fixed.status.active')}
+                      </Td>
+                      <Td>{dateFromNow(item.createdAt)}</Td>
+                      <Td isNumeric>
+                        {ownerLoggedIn && (
+                          <>
+                            {!item.expiredAt || item.expiredAt > new Date() ? (
+                              <CancelOfferButton
+                                variant="outline"
+                                colorScheme="gray"
+                                signer={signer}
+                                offerId={item.id}
+                                chainId={item.asset.chainId}
+                                onCanceled={onCanceled}
+                                onError={(e) =>
+                                  toast({
+                                    status: 'error',
+                                    title: formatError(e),
+                                  })
+                                }
+                                title={t('user.fixed.cancel.title')}
+                              >
+                                <Text as="span" isTruncated>
+                                  {t('user.fixed.actions.cancel')}
+                                </Text>
+                              </CancelOfferButton>
+                            ) : item.ownAsset ? (
+                              <Button
+                                as={Link}
+                                href={`/tokens/${item.asset.id}/offer`}
+                                variant="outline"
+                                colorScheme="gray"
+                              >
+                                <Text as="span" isTruncated>
+                                  {t('user.fixed.actions.new')}
+                                </Text>
+                              </Button>
+                            ) : (
+                              '-'
+                            )}
+                          </>
+                        )}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          )}
 
           <Pagination
             limit={limit}

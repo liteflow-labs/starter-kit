@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
+import Loader from '../../components/Loader'
 import UserFormEdit from '../../components/User/Form/Edit'
 import environment from '../../environment'
 import { useGetAccountQuery } from '../../graphql'
@@ -24,7 +25,7 @@ const EditPage: NextPage = () => {
 
   const toast = useToast()
 
-  const { data } = useGetAccountQuery({
+  const { data, loading } = useGetAccountQuery({
     variables: {
       address: address || '',
     },
@@ -42,6 +43,7 @@ const EditPage: NextPage = () => {
     [toast, t, push],
   )
 
+  if (loading) return <Loader fullPage />
   if (!data?.account) return <></>
   return (
     <SmallLayout>
