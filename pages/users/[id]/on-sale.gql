@@ -6,14 +6,6 @@ query FetchOnSaleAssets(
   $offset: Int!
   $orderBy: [AssetsOrderBy!]
 ) {
-  account(address: $address) {
-    ...AccountDetail
-  }
-  created: assets(
-    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
-  ) {
-    totalCount
-  }
   onSale: assets(
     filter: {
       ownershipsExist: true
@@ -45,10 +37,5 @@ query FetchOnSaleAssets(
     nodes {
       ...AssetDetail
     }
-  }
-  owned: ownerships(
-    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
-  ) {
-    totalCount
   }
 }

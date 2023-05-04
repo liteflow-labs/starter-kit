@@ -25,6 +25,8 @@ import FilterNav from '../../components/Filter/FilterNav'
 import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
+import SkeletonGrid from '../../components/Skeleton/Grid'
+import SkeletonTokenCard from '../../components/Skeleton/TokenCard'
 import TokenCard from '../../components/Token/Card'
 import {
   convertAsset,
@@ -33,152 +35,61 @@ import {
   convertUser,
 } from '../../convert'
 import environment from '../../environment'
-import {
-  AssetsOrderBy,
-  Currency,
-  FetchAllErc721And1155Document,
-  FetchAllErc721And1155Query,
-  FetchCurrenciesDocument,
-  FetchCurrenciesQuery,
-  useFetchAllErc721And1155Query,
-} from '../../graphql'
+import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
-  extractTraitsFromQuery,
   Filter,
-  OfferFilter,
 } from '../../hooks/useAssetFilterFromQuery'
+import useAssetFilterState from '../../hooks/useAssetFilterState'
 import useEagerConnect from '../../hooks/useEagerConnect'
-import useFilterState from '../../hooks/useFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
-import { wrapServerSideProps } from '../../props'
 
 type Props = {
-  currentAccount: string | null
   now: string
-  // Currencies
-  currencies: Pick<Currency, 'id' | 'image' | 'decimals'>[]
 }
 
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const limit = ctx.query.limit
-      ? Array.isArray(ctx.query.limit)
-        ? parseInt(ctx.query.limit[0] || '0', 10)
-        : parseInt(ctx.query.limit, 10)
-      : environment.PAGINATION_LIMIT
-    const page = ctx.query.page
-      ? Array.isArray(ctx.query.page)
-        ? parseInt(ctx.query.page[0] || '0', 10)
-        : parseInt(ctx.query.page, 10)
-      : 1
-    const offset = (page - 1) * limit
-    const orderBy = Array.isArray(ctx.query.orderBy)
-      ? (ctx.query.orderBy[0] as AssetsOrderBy)
-      : (ctx.query.orderBy as AssetsOrderBy) || 'CREATED_AT_DESC'
-    const search =
-      ctx.query.search && !Array.isArray(ctx.query.search)
-        ? ctx.query.search
-        : null
-    const currencyId =
-      ctx.query.currencyId && !Array.isArray(ctx.query.currencyId)
-        ? ctx.query.currencyId
-        : null
-    const minPrice =
-      ctx.query.minPrice && !Array.isArray(ctx.query.minPrice)
-        ? parseFloat(ctx.query.minPrice)
-        : null
-    const maxPrice =
-      ctx.query.maxPrice && !Array.isArray(ctx.query.maxPrice)
-        ? parseFloat(ctx.query.maxPrice)
-        : null
-    const collection = ctx.query.collection
-      ? Array.isArray(ctx.query.collection)
-        ? ctx.query.collection[0] || null
-        : ctx.query.collection || null
-      : null
-    const offers = ctx.query.offers
-      ? Array.isArray(ctx.query.offers)
-        ? ((ctx.query.offers[0] || null) as OfferFilter | null)
-        : (ctx.query.offers as OfferFilter)
-      : null
-    const traits = extractTraitsFromQuery(ctx.query)
-
-    const {
-      data: { currencies },
-    } = await client.query<FetchCurrenciesQuery>({
-      query: FetchCurrenciesDocument,
-    })
-    const now = new Date()
-    const filter = convertFilterToAssetFilter(
-      { search, collection, currencyId, maxPrice, minPrice, offers, traits },
-      currencies?.nodes || [],
-      now,
-    )
-
-    const { data, error } = await client.query<FetchAllErc721And1155Query>({
-      query: FetchAllErc721And1155Document,
-      variables: {
-        now,
-        address: ctx.user.address || '',
-        limit,
-        offset,
-        orderBy,
-        filter,
-      },
-    })
-    if (error) throw error
-    if (!data) throw new Error('data is falsy')
-    return {
-      props: {
-        currentAccount: ctx.user.address,
-        now: now.toJSON(),
-        currencies: currencies?.nodes || [],
-      },
-    }
-  },
-)
-
-const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
-  const ready = useEagerConnect()
+const ExplorePage: NextPage<Props> = ({ now }) => {
+  useEagerConnect()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
-  const filter = useAssetFilterFromQuery(currencies)
+  const filter = useAssetFilterFromQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
   const { data, previousData, loading } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
-      address: (ready ? address : currentAccount) || '',
+      address: address || '',
       limit,
       offset,
       orderBy,
-      filter: convertFilterToAssetFilter(filter, currencies, date),
+      filter: convertFilterToAssetFilter(filter, date),
     },
   })
 
-  const assets = useMemo(() => {
-    if (loading) return previousData?.assets
-    return data?.assets
-  }, [data?.assets, loading, previousData])
+  const assets = useMemo(
+    () => data?.assets || previousData?.assets,
+    [data?.assets, previousData],
+  )
 
-  const { showFilters, toggleFilters, close, count } = useFilterState(filter)
+  const { showFilters, toggleFilters, close, count } =
+    useAssetFilterState(filter)
 
   const updateFilter = useCallback(
     async (filter: Filter) => {
-      const { traits, ...otherFilters } = filter
+      const { traits, currency, ...otherFilters } = filter
       const cleanData = removeEmptyFromObject({
         ...Object.keys(query).reduce((acc, value) => {
           if (value.startsWith('trait')) return acc
           return { ...acc, [value]: query[value] }
         }, {}),
+        currency: currency?.id,
+        decimals: currency?.decimals,
         ...otherFilters,
         search: filter.search,
         page: 1,
@@ -206,7 +117,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
     [push, pathname, query],
   )
 
-  const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
+  const [changePage, changeLimit] = usePaginate()
 
   return (
     <>
@@ -214,7 +125,6 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading || loading}
         search={filter.search}
         selectedTabIndex={0}
       >
@@ -252,11 +162,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
                 <ModalHeader>{t('explore.nfts.filter')}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <FilterAsset
-                    currencies={currencies}
-                    onFilterChange={updateFilter}
-                    filter={filter}
-                  />
+                  <FilterAsset onFilterChange={updateFilter} filter={filter} />
                 </ModalBody>
               </ModalContent>
             </Modal>
@@ -264,15 +170,23 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
           <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
             {showFilters && !isSmall && (
               <GridItem as="aside">
-                <FilterAsset
-                  currencies={currencies}
-                  onFilterChange={updateFilter}
-                  filter={filter}
-                />
+                <FilterAsset onFilterChange={updateFilter} filter={filter} />
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {assets?.totalCount && assets?.totalCount > 0 ? (
+              {loading ? (
+                <SkeletonGrid
+                  items={environment.PAGINATION_LIMIT}
+                  compact
+                  columns={
+                    showFilters
+                      ? { base: 1, sm: 2, md: 3, lg: 4 }
+                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                  }
+                >
+                  <SkeletonTokenCard />
+                </SkeletonGrid>
+              ) : assets?.totalCount && assets.totalCount > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -295,11 +209,7 @@ const ExplorePage: NextPage<Props> = ({ currentAccount, now, currencies }) => {
                         sale={convertSale(x.firstSale.nodes[0])}
                         numberOfSales={x.firstSale.totalCount}
                         hasMultiCurrency={
-                          parseInt(
-                            x.currencySales.aggregates?.distinctCount
-                              ?.currencyId,
-                            10,
-                          ) > 1
+                          x.firstSale.totalCurrencyDistinctCount > 1
                         }
                       />
                     </Flex>

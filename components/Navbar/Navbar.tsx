@@ -32,6 +32,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { useAddFund } from '@nft/hooks'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
+import { FaEnvelope } from '@react-icons/all-files/fa/FaEnvelope'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
@@ -210,6 +211,9 @@ const DrawerMenu: VFC<{
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
+                <Link href="/chat">
+                  <NavItemMobile>{t('navbar.chat')}</NavItemMobile>
+                </Link>
                 <Link href="/notification">
                   <NavItemMobile>{t('navbar.notifications')}</NavItemMobile>
                 </Link>
@@ -488,8 +492,19 @@ const Navbar: VFC<{
             </Flex>
           )}
           {account ? (
-            <>
+            <HStack spacing={2}>
               <ActivityMenu account={account.address} />
+              <Link href="/chat">
+                <IconButton
+                  aria-label="Notifications"
+                  variant="ghost"
+                  colorScheme="gray"
+                  rounded="full"
+                  icon={
+                    <Icon as={FaEnvelope} color="brand.black" h={4} w={4} />
+                  }
+                />
+              </Link>
               <Link href="/notification">
                 <IconButton
                   aria-label="Notifications"
@@ -498,7 +513,7 @@ const Navbar: VFC<{
                   rounded="full"
                   position="relative"
                 >
-                  <div>
+                  <Flex>
                     <Icon as={FaBell} color="brand.black" h={4} w={4} />
                     {account.notifications.totalCount > 0 && (
                       <Flex
@@ -513,7 +528,7 @@ const Navbar: VFC<{
                         bgColor="red.500"
                       />
                     )}
-                  </div>
+                  </Flex>
                 </IconButton>
               </Link>
               <UserMenu
@@ -522,7 +537,7 @@ const Navbar: VFC<{
                 user={account}
                 signOutFn={() => logout().then(disconnect)}
               />
-            </>
+            </HStack>
           ) : isConnected ? (
             <Button
               colorScheme="brand"

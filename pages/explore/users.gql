@@ -1,9 +1,15 @@
 query FetchExploreUsers(
   $limit: Int!
   $offset: Int!
+  $orderBy: [AccountsOrderBy!]
   $filter: [AccountFilter!]
 ) {
-  users: accounts(first: $limit, offset: $offset, filter: { and: $filter }) {
+  users: accounts(
+    first: $limit
+    offset: $offset
+    orderBy: $orderBy
+    filter: { isImported: { equalTo: false }, and: $filter }
+  ) {
     nodes {
       username
       address

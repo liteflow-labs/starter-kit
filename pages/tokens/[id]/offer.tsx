@@ -7,6 +7,7 @@ import {
   Grid,
   GridItem,
   Heading,
+  Skeleton,
   useRadioGroup,
   useToast,
 } from '@chakra-ui/react'
@@ -15,8 +16,8 @@ import { isSameAddress } from '@nft/hooks'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { NextPage } from 'next'
-import getT from 'next-translate/getT'
 import useTranslation from 'next-translate/useTranslation'
+import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
@@ -25,6 +26,8 @@ import BackButton from '../../../components/Navbar/BackButton'
 import Radio from '../../../components/Radio/Radio'
 import SalesAuctionForm from '../../../components/Sales/Auction/Form'
 import SalesDirectForm from '../../../components/Sales/Direct/Form'
+import SkeletonForm from '../../../components/Skeleton/Form'
+import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../components/Token/Card'
 import {
   convertAsset,
@@ -33,27 +36,15 @@ import {
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
-import {
-  ChainCurrenciesDocument,
-  ChainCurrenciesQuery,
-  ChainCurrenciesQueryVariables,
-  CurrencyFilter,
-  FeesForOfferDocument,
-  FeesForOfferQuery,
-  IntFilter,
-  OfferForAssetDocument,
-  OfferForAssetQuery,
-  useFeesForOfferQuery,
-  useOfferForAssetQuery,
-} from '../../../graphql'
+import { useFeesForOfferQuery, useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
+import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
-import { wrapServerSideProps } from '../../../props'
 
 type Props = {
   assetId: string
@@ -77,60 +68,7 @@ type SaleOption = {
   icon: any
 }
 
-export const getServerSideProps = wrapServerSideProps<Props>(
-  environment.GRAPHQL_URL,
-  async (ctx, client) => {
-    const t = await getT(ctx.locale, 'templates')
-    const assetId = ctx.params?.id
-      ? Array.isArray(ctx.params.id)
-        ? ctx.params.id[0]
-        : ctx.params.id
-      : null
-    invariant(assetId, 'assetId is falsy')
-    const now = new Date()
-    const { data, error } = await client.query<OfferForAssetQuery>({
-      query: OfferForAssetDocument,
-      variables: {
-        id: assetId,
-        address: ctx.user.address || '',
-        now,
-      },
-    })
-    if (error) throw error
-    if (!data.asset) return { notFound: true }
-    const feeQuery = await client.query<FeesForOfferQuery>({
-      query: FeesForOfferDocument,
-      variables: { id: assetId },
-    })
-    if (feeQuery.error) throw error
-    const chainCurrency = await client.query<
-      ChainCurrenciesQuery,
-      ChainCurrenciesQueryVariables
-    >({
-      query: ChainCurrenciesDocument,
-      variables: {
-        filter: {
-          chainId: { equalTo: data.asset.chainId } as IntFilter,
-        } as CurrencyFilter,
-      },
-    })
-    if (chainCurrency.error) throw chainCurrency.error
-    return {
-      props: {
-        assetId,
-        now: now.toJSON(),
-        currentAccount: ctx.user.address,
-        meta: {
-          title: t('offers.form.meta.title', data.asset),
-          description: t('offers.form.meta.description', data.asset),
-          image: data.asset.image,
-        },
-      },
-    }
-  },
-)
-
-const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
+const OfferPage: NextPage<Props> = ({ now }) => {
   const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -138,13 +76,14 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   const toast = useToast()
   const { address } = useAccount()
   useLoginRedirect(ready)
+  const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useOfferForAssetQuery({
+  const { data, loading } = useOfferForAssetQuery({
     variables: {
       id: assetId,
       now: date,
-      address: (ready ? address : currentAccount) || '',
+      address: address || '',
     },
   })
 
@@ -166,7 +105,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
   const asset = useMemo(() => data?.asset, [data])
 
   const quantityAvailable = useMemo(
-    () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),
+    () => BigNumber.from(asset?.owned?.quantity || 0),
     [asset],
   )
 
@@ -242,7 +181,7 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
           onCreated={onCreated}
         />
       )
-    throw new Error('invalid sale')
+    invariant(true, 'Invalid sale type')
   }, [
     currencies,
     asset,
@@ -257,13 +196,13 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
     onCreated,
   ])
 
-  if (!asset) return <></>
+  if (!loading && !asset) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head
-        title={meta.title}
-        description={meta.description}
-        image={meta.image}
+        title={asset ? t('offers.form.meta.title', asset) : ''}
+        description={asset ? t('offers.form.meta.description', asset) : ''}
+        image={asset?.image}
       />
 
       <BackButton onClick={back} />
@@ -279,43 +218,54 @@ const OfferPage: NextPage<Props> = ({ currentAccount, now, assetId, meta }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            <TokenCard
-              asset={convertAsset(asset)}
-              creator={convertUser(asset.creator, asset.creator.address)}
-              sale={convertSale(asset.firstSale.nodes[0])}
-              auction={
-                asset.auctions.nodes[0]
-                  ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-                  : undefined
-              }
-              numberOfSales={asset.firstSale.totalCount}
-              hasMultiCurrency={
-                parseInt(
-                  asset.currencySales.aggregates?.distinctCount?.currencyId,
-                  10,
-                ) > 1
-              }
-            />
+            {loading || !asset ? (
+              <SkeletonTokenCard />
+            ) : (
+              <TokenCard
+                asset={convertAsset(asset)}
+                creator={convertUser(asset.creator, asset.creator.address)}
+                sale={convertSale(asset.firstSale.nodes[0])}
+                auction={
+                  asset.auctions.nodes[0]
+                    ? convertAuctionWithBestBid(asset.auctions.nodes[0])
+                    : undefined
+                }
+                numberOfSales={asset.firstSale.totalCount}
+                hasMultiCurrency={
+                  asset.firstSale.totalCurrencyDistinctCount > 1
+                }
+              />
+            )}
           </Box>
         </GridItem>
         <GridItem>
           <Flex direction="column" gap={8} grow={1} shrink={1} basis="0%">
-            <FormControl>
-              <FormLabel>{t('offers.form.options.label')}</FormLabel>
-              <FormHelperText mb={2}>
-                {sale === SaleType.FIXED_PRICE
-                  ? t('offers.form.options.hints.fixed')
-                  : t('offers.form.options.hints.auction')}
-              </FormHelperText>
-              <Flex mt={3} flexWrap="wrap" gap={4} {...getRootProps()}>
-                {saleOptions.map((choice, i) => {
-                  const radio = getRadioProps({ value: choice.value })
-                  return <Radio key={i} choice={choice} {...radio} />
-                })}
-              </Flex>
-            </FormControl>
+            {loading ? (
+              <>
+                <Skeleton height="24px" width="100px" />
+                <Flex gap={4}>
+                  <Skeleton height="85px" width="100%" borderRadius="2xl" />
+                  <Skeleton height="85px" width="100%" borderRadius="2xl" />
+                </Flex>
+              </>
+            ) : (
+              <FormControl>
+                <FormLabel>{t('offers.form.options.label')}</FormLabel>
+                <FormHelperText mb={2}>
+                  {sale === SaleType.FIXED_PRICE
+                    ? t('offers.form.options.hints.fixed')
+                    : t('offers.form.options.hints.auction')}
+                </FormHelperText>
+                <Flex mt={3} flexWrap="wrap" gap={4} {...getRootProps()}>
+                  {saleOptions.map((choice, i) => {
+                    const radio = getRadioProps({ value: choice.value })
+                    return <Radio key={i} choice={choice} {...radio} />
+                  })}
+                </Flex>
+              </FormControl>
+            )}
 
-            {saleForm && saleForm}
+            {loading || !asset ? <SkeletonForm items={2} /> : saleForm}
           </Flex>
         </GridItem>
       </Grid>
