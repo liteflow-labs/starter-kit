@@ -24,7 +24,6 @@ import {
 } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
-import { theme } from './styles/theme'
 
 const supportedChains = [
   mainnet,
@@ -73,11 +72,7 @@ const getDefaultWallets = ({
         walletConnectWallet({ chains }),
         braveWallet({ chains, shimDisconnect }),
         environment.MAGIC_API_KEY
-          ? emailConnector({
-              chains,
-              chainId: environment.CHAIN_ID,
-              apiKey: environment.MAGIC_API_KEY,
-            })
+          ? emailConnector({ chains, apiKey: environment.MAGIC_API_KEY })
           : undefined,
       ].filter(Boolean),
     },
@@ -103,30 +98,11 @@ export const client = createClient({
 
 function emailConnector({
   chains,
-  chainId,
   apiKey,
 }: {
   chains: any[]
-  chainId: number
   apiKey: string
 }): Wallet {
-  const rpcUrl = (function () {
-    switch (chainId) {
-      case mainnet.id:
-        return 'https://rpc.ankr.com/eth'
-      case goerli.id:
-        return 'https://rpc.ankr.com/eth_goerli'
-      case polygon.id:
-        return 'https://rpc.ankr.com/polygon'
-      case polygonMumbai.id:
-        return 'https://rpc.ankr.com/polygon_mumbai'
-      case bsc.id:
-        return 'https://rpc.ankr.com/bsc'
-      case bscTestnet.id:
-        return 'https://rpc.ankr.com/bsc_testnet_chapel'
-    }
-  })()
-  invariant(rpcUrl, `no rpcUrl found for chain ${chainId}`)
   return {
     id: 'magic',
     name: 'Magic',
@@ -137,14 +113,20 @@ function emailConnector({
         chains: chains,
         options: {
           apiKey: apiKey,
-          accentColor: theme.colors.brand[500],
-          customHeaderText: 'Acme',
-          magicSdkConfiguration: {
-            network: {
-              rpcUrl,
-              chainId,
+          networks: [
+            { chainId: mainnet.id, rpcUrl: 'https://rpc.ankr.com/eth' },
+            { chainId: goerli.id, rpcUrl: 'https://rpc.ankr.com/eth_goerli' },
+            { chainId: polygon.id, rpcUrl: 'https://rpc.ankr.com/polygon' },
+            {
+              chainId: polygonMumbai.id,
+              rpcUrl: 'https://rpc.ankr.com/polygon_mumbai',
             },
-          },
+            { chainId: bsc.id, rpcUrl: 'https://rpc.ankr.com/bsc' },
+            {
+              chainId: bscTestnet.id,
+              rpcUrl: 'https://rpc.ankr.com/bsc_testnet_chapel',
+            },
+          ],
         },
       }) as unknown as Connector
       return {
