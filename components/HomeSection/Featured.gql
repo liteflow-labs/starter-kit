@@ -38,12 +38,8 @@ query FetchFeaturedAssets(
           status
         }
       }
-      owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-        aggregates {
-          sum {
-            quantity
-          }
-        }
+      owned: ownership(ownerAddress: $address) {
+        quantity
       }
       ownerships(
         orderBy: [

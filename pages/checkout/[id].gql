@@ -53,12 +53,8 @@ query FetchAssetForCheckout($id: String!, $address: Address, $now: Datetime!) {
         status
       }
     }
-    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-      aggregates {
-        sum {
-          quantity
-        }
-      }
+    owned: ownership(ownerAddress: $address) {
+      quantity
     }
     bestBid: bids(
       orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]

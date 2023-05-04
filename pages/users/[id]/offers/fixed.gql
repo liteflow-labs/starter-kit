@@ -34,12 +34,8 @@ query FetchUserFixedPrice(
         name
         image
         chainId
-        ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-          aggregates {
-            sum {
-              quantity
-            }
-          }
+        owned: ownership(ownerAddress: $address) {
+          quantity
         }
       }
       currency {

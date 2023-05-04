@@ -28,12 +28,8 @@ query FetchAuctions($now: Datetime!, $address: Address) {
           address
           name
         }
-        owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-          aggregates {
-            sum {
-              quantity
-            }
-          }
+        owned: ownership(ownerAddress: $address) {
+          quantity
         }
         image
         animationUrl

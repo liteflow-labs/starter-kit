@@ -105,7 +105,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   const asset = useMemo(() => data?.asset, [data])
 
   const quantityAvailable = useMemo(
-    () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),
+    () => BigNumber.from(asset?.owned?.quantity || 0),
     [asset],
   )
 

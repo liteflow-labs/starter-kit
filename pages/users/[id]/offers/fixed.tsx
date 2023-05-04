@@ -15,6 +15,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -84,8 +85,7 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
         ...convertSaleFull(x),
         createdAt: new Date(x.createdAt),
         asset: x.asset,
-        ownAsset:
-          parseInt(x.asset.ownerships.aggregates?.sum?.quantity || '0', 10) > 0,
+        ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
     [data],
   )

@@ -109,9 +109,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const blockExplorer = useBlockExplorer(chainId)
 
   const totalOwned = useMemo(
-    () => BigNumber.from(asset?.owned.aggregates?.sum?.quantity || '0'),
+    () => BigNumber.from(asset?.owned?.quantity || 0),
     [asset],
   )
+
   const isOwner = useMemo(() => totalOwned.gt('0'), [totalOwned])
   const ownAllSupply = useMemo(
     () =>
