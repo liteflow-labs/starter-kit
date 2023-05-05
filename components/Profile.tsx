@@ -41,10 +41,10 @@ const UserProfileTemplate: FC<{
   )
   const totals = useMemo(
     () =>
-      new Map<TabsEnum, number>([
-        ['created', metadata?.created?.totalCount || 0],
-        ['on-sale', metadata?.onSale?.totalCount || 0],
-        ['owned', metadata?.owned?.totalCount || 0],
+      new Map<TabsEnum, number | undefined>([
+        ['created', metadata?.created?.totalCount],
+        ['on-sale', metadata?.onSale?.totalCount],
+        ['owned', metadata?.owned?.totalCount],
       ]),
     [metadata],
   )

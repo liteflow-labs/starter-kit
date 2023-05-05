@@ -36,19 +36,19 @@ const UserProfileNavigation: VFC<IProps> = ({
     () => [
       {
         title: t('user.navigation.on-sale'),
-        count: totals.get('on-sale') || 0,
+        count: totals.get('on-sale'),
         type: 'on-sale',
         href: `${baseUrl}/on-sale`,
       } as Tab,
       {
         title: t('user.navigation.owned'),
-        count: totals.get('owned') || 0,
+        count: totals.get('owned'),
         type: 'owned',
         href: `${baseUrl}/owned`,
       } as Tab,
       {
         title: t('user.navigation.created'),
-        count: totals.get('created') || 0,
+        count: totals.get('created'),
         type: 'created',
         href: `${baseUrl}/created`,
       } as Tab,
