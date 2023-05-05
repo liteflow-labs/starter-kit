@@ -79,7 +79,6 @@ query FetchAllERC721And1155(
         orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
         filter: {
           expiredAt: { greaterThan: $now }
-          availableQuantity: { greaterThan: "0" }
         }
       ) {
         totalCount

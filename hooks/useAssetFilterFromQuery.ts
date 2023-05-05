@@ -84,7 +84,6 @@ const minPriceFilter = (
     sales: {
       some: {
         expiredAt: { greaterThan: date },
-        availableQuantity: { greaterThan: '0' },
         currencyId: { equalTo: currency.id },
         unitPrice: {
           greaterThanOrEqualTo: parseBigNumber(
@@ -105,7 +104,6 @@ const maxPriceFilter = (
     sales: {
       some: {
         expiredAt: { greaterThan: date },
-        availableQuantity: { greaterThan: '0' },
         currencyId: { equalTo: currency.id },
         unitPrice: {
           lessThanOrEqualTo: parseBigNumber(
@@ -132,7 +130,6 @@ const offersFilter = (offers: OfferFilter, date: Date): AssetFilter => {
       sales: {
         some: {
           expiredAt: { greaterThan: date },
-          availableQuantity: { greaterThan: '0' },
         },
       },
     } as AssetFilter
