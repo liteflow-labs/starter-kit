@@ -23,7 +23,7 @@ query FetchAccountMetadata($address: Address!, $now: Datetime!) {
   onSale: assets(
     filter: {
       ownershipsExist: true
-      openSales: {
+      salesAndAuctions: {
         some: {
           creatorAddress: { equalTo: $address }
           endAt: { greaterThan: $now }
