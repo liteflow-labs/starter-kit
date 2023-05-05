@@ -15,7 +15,7 @@ export type IProps = {
   baseUrl: string
   showPrivateTabs: boolean
   currentTab: TabsEnum
-  totals: Map<TabsEnum, number>
+  totals: Map<TabsEnum, number | undefined>
 }
 
 type Tab = {
