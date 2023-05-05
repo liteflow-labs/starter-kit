@@ -23,24 +23,12 @@ query FetchAccountMetadata($address: Address!, $now: Datetime!) {
   onSale: assets(
     filter: {
       ownershipsExist: true
-      or: [
-        {
-          sales: {
-            some: {
-              expiredAt: { greaterThan: $now }
-              makerAddress: { equalTo: $address }
-            }
-          }
+      openSales: {
+        some: {
+          creatorAddress: { equalTo: $address }
+          endAt: { greaterThan: $now }
         }
-        {
-          auctions: {
-            some: {
-              endAt: { greaterThan: $now }
-              creatorAddress: { equalTo: $address }
-            }
-          }
-        }
-      ]
+      }
     }
   ) {
     totalCount
