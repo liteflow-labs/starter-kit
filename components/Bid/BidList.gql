@@ -1,5 +1,8 @@
 query FetchAssetBids($id: String!, $now: Datetime!) {
   asset(id: $id) {
+    chainId
+    collectionAddress
+    tokenId
     bids(
       orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
       filter: { expiredAt: { greaterThan: $now } }

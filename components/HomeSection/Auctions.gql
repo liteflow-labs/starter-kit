@@ -22,6 +22,9 @@ query FetchAuctions($now: Datetime!, $address: Address) {
       }
       asset {
         id
+        chainId
+        collectionAddress
+        tokenId
         name
         collection {
           chainId

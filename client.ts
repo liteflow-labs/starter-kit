@@ -24,6 +24,9 @@ export default function getClient(
         Account: {
           keyFields: ['address'],
         },
+        Asset: {
+          keyFields: ['chainId', 'collectionAddress', 'tokenId'],
+        },
         Collection: {
           keyFields: ['chainId', 'address'],
         },
