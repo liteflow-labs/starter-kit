@@ -107,11 +107,6 @@
         },
         "refresh-metadata": "Actualizar metadatos"
       },
-      "explorerLink": "Ver en {{name}}",
-      "ipfsLink": "Ver en IPFS",
-      "errors": {
-        "image": "Ocurrió un problema"
-      },
       "details": {
         "title": "Detalles",
         "chain": "Cadena",

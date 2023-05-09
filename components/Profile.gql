@@ -29,7 +29,6 @@ query FetchAccountMetadata($address: Address!, $now: Datetime!) {
             some: {
               expiredAt: { greaterThan: $now }
               makerAddress: { equalTo: $address }
-              availableQuantity: { greaterThan: "0" }
             }
           }
         }

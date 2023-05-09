@@ -15,7 +15,6 @@ query FetchOnSaleAssets(
             some: {
               expiredAt: { greaterThan: $now }
               makerAddress: { equalTo: $address }
-              availableQuantity: { greaterThan: "0" }
             }
           }
         }
