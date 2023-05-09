@@ -35,9 +35,11 @@ query FetchUserBidsPlaced(
       }
       asset {
         id
+        chainId
+        collectionAddress
+        tokenId
         name
         image
-        chainId
       }
     }
   }

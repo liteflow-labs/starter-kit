@@ -8,6 +8,8 @@ query OfferForAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
     chainId
+    collectionAddress
+    tokenId
     collection {
       chainId
       address
