@@ -47,7 +47,6 @@ import useAssetFilterFromQuery, {
   Filter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../../hooks/useAssetFilterState'
-import useEagerConnect from '../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
@@ -59,7 +58,6 @@ type Props = {
 }
 
 const CollectionPage: FC<Props> = ({ now }) => {
-  useEagerConnect()
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,

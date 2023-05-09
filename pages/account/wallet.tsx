@@ -6,14 +6,12 @@ import Loader from '../../components/Loader'
 import WalletAccount from '../../components/Wallet/Account/Wallet'
 import { useWalletCurrenciesQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import useLoginRedirect from '../../hooks/useLoginRedirect'
 import SmallLayout from '../../layouts/small'
 
 const WalletPage: NextPage = () => {
-  const ready = useEagerConnect()
   const { address } = useAccount()
-  useLoginRedirect(ready)
+  useLoginRedirect()
   const { data, loading } = useWalletCurrenciesQuery()
   const currencies = useMemo(() => data?.currencies?.nodes, [data])
 
