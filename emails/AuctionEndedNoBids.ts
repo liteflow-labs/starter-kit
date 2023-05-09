@@ -27,7 +27,7 @@ export default async function AuctionEndedNoBids({
     <br/>
     Without action from your side after the <strong>${formatDate(
       expireAt,
-    )}</strong>, the auction and its bids will be canceled.<br/>
+    )}</strong>, the auction will be canceled.<br/>
     <br/>
     <a href="${environment.BASE_URL}/tokens/${
       asset.id
