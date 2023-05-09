@@ -29,9 +29,11 @@ query FetchUserAuctions(
       }
       asset {
         id
+        chainId
+        collectionAddress
+        tokenId
         image
         name
-        chainId
         owned: ownership(ownerAddress: $address) {
           quantity
         }

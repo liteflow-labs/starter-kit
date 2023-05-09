@@ -1,5 +1,8 @@
 query GetAssetDataForRefresh($assetId: String!) {
   asset(id: $assetId) {
+    chainId
+    collectionAddress
+    tokenId
     updatedAt
   }
 }
