@@ -35,29 +35,28 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-const emails = new Map<
-  keyof Events,
-  ((data: any) => SendMailOptions | null | Promise<SendMailOptions | null>)[]
->([
-  ['AUCTION_BID_CREATED', [AuctionBidCreated]],
-  ['BID_CREATED', [BidCreated]],
-  ['OFFER_CREATED', []],
-  ['BID_EXPIRED', [BidExpired]],
-  ['OFFER_EXPIRED', [OfferExpired]],
-  ['AUCTION_BID_EXPIRED', [AuctionBidExpired]],
-  ['TRADE_CREATED', [BidAccepted, OfferPurchased]],
+const emails = new Map<keyof Events, ((data: any) => SendMailOptions | null)[]>(
   [
-    'AUCTION_ENDED',
+    ['AUCTION_BID_CREATED', [AuctionBidCreated]],
+    ['BID_CREATED', [BidCreated]],
+    ['OFFER_CREATED', []],
+    ['BID_EXPIRED', [BidExpired]],
+    ['OFFER_EXPIRED', [OfferExpired]],
+    ['AUCTION_BID_EXPIRED', [AuctionBidExpired]],
+    ['TRADE_CREATED', [BidAccepted, OfferPurchased]],
     [
-      AuctionEndedNoBids,
-      AuctionEndedReservePriceBuyer,
-      AuctionEndedReservePriceSeller,
-      AuctionEndedWonBuyer,
-      AuctionEndedWonSeller,
+      'AUCTION_ENDED',
+      [
+        AuctionEndedNoBids,
+        AuctionEndedReservePriceBuyer,
+        AuctionEndedReservePriceSeller,
+        AuctionEndedWonBuyer,
+        AuctionEndedWonSeller,
+      ],
     ],
+    ['AUCTION_EXPIRED', [AuctionExpired]],
   ],
-  ['AUCTION_EXPIRED', [AuctionExpired]],
-])
+)
 
 export default async function notification(
   req: NextApiRequest,
@@ -67,17 +66,16 @@ export default async function notification(
   const emailTemplates = emails.get(type)
   if (!emailTemplates)
     throw new Error(`Email template for event ${type} does not exist`)
-  const emailsToSend = await Promise.all(
-    emailTemplates.map((template) => template(data)),
-  )
-
   await Promise.all(
-    emailsToSend.filter(Boolean).map((email) =>
-      transporter.sendMail({
-        ...email,
-        from: process.env.EMAIL_FROM,
-      }),
-    ),
+    emailTemplates
+      .map((template) => template(data))
+      .filter(Boolean)
+      .map((email) =>
+        transporter.sendMail({
+          ...email,
+          from: process.env.EMAIL_FROM,
+        }),
+      ),
   )
 
   res.status(200).end()

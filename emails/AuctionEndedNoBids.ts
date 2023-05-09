@@ -2,16 +2,16 @@ import { formatDate } from '@nft/hooks'
 import { Events } from '@nft/webhook'
 import environment from '../environment'
 
-export default async function AuctionEndedNoBids({
+export default function AuctionEndedNoBids({
   asset,
   creator,
   expireAt,
   bestBid,
-}: Events['AUCTION_ENDED']): Promise<{
+}: Events['AUCTION_ENDED']): {
   html: string
   subject: string
   to: string
-} | null> {
+} | null {
   if (!!bestBid) return null
   if (!creator?.email) return null
   return {

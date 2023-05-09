@@ -3,16 +3,16 @@ import { formatDate } from '@nft/hooks'
 import { Events } from '@nft/webhook'
 import environment from '../environment'
 
-export default async function AuctionEndedReservePriceBuyer({
+export default function AuctionEndedReservePriceBuyer({
   asset,
   reserveAmount,
   expireAt,
   bestBid,
-}: Events['AUCTION_ENDED']): Promise<{
+}: Events['AUCTION_ENDED']): {
   html: string
   subject: string
   to: string
-} | null> {
+} | null {
   if (!bestBid) return null
   const bidAmount = BigNumber.from(bestBid.unitPrice).mul(bestBid.quantity)
   if (bidAmount.gte(reserveAmount)) return null
