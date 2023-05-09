@@ -107,11 +107,6 @@
         },
         "refresh-metadata": "メタデータの更新"
       },
-      "explorerLink": "{{name}} で表示",
-      "ipfsLink": "IPFSで表示",
-      "errors": {
-        "image": "問題が発生しました"
-      },
       "details": {
         "title": "詳細",
         "chain": "鎖",
