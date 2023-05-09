@@ -453,7 +453,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     <Text variant="text-sm" color="gray.500" mr={2}>
                       {t('asset.detail.details.media')}
                     </Text>
-                    <Link href={asset.image} isExternal externalIcon>
+                    <Link
+                      href={asset.animationUrl || asset.image}
+                      isExternal
+                      externalIcon
+                    >
                       <Text variant="subtitle2">IPFS</Text>
                     </Link>
                   </Flex>
