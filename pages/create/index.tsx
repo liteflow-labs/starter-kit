@@ -29,7 +29,6 @@ import {
   useFetchCollectionsAndAccountVerificationStatusQuery,
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import SmallLayout from '../../layouts/small'
 
 const collectionsFilter = {
@@ -50,7 +49,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
 )
 
 const CreatePage: NextPage = () => {
-  useEagerConnect()
   const { t } = useTranslation('templates')
   const { back } = useRouter()
   const { address } = useAccount()
