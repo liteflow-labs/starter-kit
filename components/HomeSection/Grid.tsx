@@ -77,7 +77,7 @@ const HomeGridSection: FC<Props> = ({
                 md: '25%',
                 lg: '16.66%',
               }}
-              p="10px"
+              p="8px"
               overflow="hidden"
             >
               {itemRender(item)}
