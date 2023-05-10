@@ -1,5 +1,7 @@
 import CollectionCard from 'components/Collection/CollectionCard'
 import { convertCollection } from 'convert'
+import environment from 'environment'
+import { useOrderByAddress } from 'hooks/useOrderByAddress'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { useFetchCollectionsQuery } from '../../graphql'
@@ -11,8 +13,11 @@ type Props = {}
 const CollectionsHomeSection: FC<Props> = () => {
   const { t } = useTranslation('templates')
   const collectionsQuery = useFetchCollectionsQuery({
-    // TODO: change limit
-    variables: { limit: 6 },
+    variables: {
+      collectionIds: environment.HOME_COLLECTIONS || '',
+      limit: environment.PAGINATION_LIMIT,
+    },
+    skip: !environment.HOME_COLLECTIONS,
   })
   useHandleQueryError(collectionsQuery)
 
@@ -20,15 +25,24 @@ const CollectionsHomeSection: FC<Props> = () => {
     () => collectionsQuery.data?.collections?.nodes || [],
     [collectionsQuery.data?.collections?.nodes],
   )
+
+  const orderedCollections = useOrderByAddress(
+    environment.HOME_COLLECTIONS,
+    collections,
+  )
+
   return (
     <HomeGridSection
-      explore={{ href: '/explore', title: t('home.explore') }}
+      explore={{
+        href: '/explore/collections',
+        title: t('home.collections.explore'),
+      }}
       isLoading={collectionsQuery.loading}
-      items={collections}
+      items={orderedCollections}
       itemRender={(collection: typeof collections[0]) => (
         <CollectionCard collection={convertCollection(collection)} />
       )}
-      title={t('home.featured')}
+      title={t('home.collections.title')}
     />
   )
 }

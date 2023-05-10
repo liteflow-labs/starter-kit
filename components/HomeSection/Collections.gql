@@ -1,5 +1,9 @@
-query FetchCollections($limit: Int!) {
-  collections(first: $limit, orderBy: TOTAL_VOLUME_DESC) {
+query FetchCollections($collectionIds: [Address!]!, $limit: Int!) {
+  collections(
+    filter: { address: { in: $collectionIds } }
+    first: $limit
+    orderBy: TOTAL_VOLUME_DESC
+  ) {
     nodes {
       chainId
       address
