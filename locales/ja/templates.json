@@ -3,9 +3,19 @@
     "500": "申し訳ありません、エラーが発生しました。"
   },
   "home": {
-    "explore": "すべてのNFTを見る",
+    "collections": {
+      "title": "注目すべきコレクション",
+      "explore": "コレクションを探索する"
+    },
+    "users": {
+      "title": "注目のユーザー",
+      "explore": "ユーザーを探索する"
+    },
     "auctions": "オークション",
-    "featured": "注目のNFT"
+    "nfts": {
+      "title": "注目すべきNFT",
+      "explore": "NFTを探索する"
+    }
   },
   "explore": {
     "title": "検索",

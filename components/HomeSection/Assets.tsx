@@ -68,7 +68,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
   const assets = useOrderById(assetIds, assetsQuery.data?.assets?.nodes)
   return (
     <HomeGridSection
-      explore={{ href: '/explore', title: t('home.explore') }}
+      explore={{ href: '/explore', title: t('home.nfts.explore') }}
       isLoading={defaultAssetQuery.loading || assetsQuery.loading}
       items={assets}
       itemRender={(item: typeof assets[0]) => (
@@ -85,7 +85,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
           hasMultiCurrency={item.firstSale.totalCurrencyDistinctCount > 1}
         />
       )}
-      title={t('home.featured')}
+      title={t('home.nfts.title')}
     />
   )
 }

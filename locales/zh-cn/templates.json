@@ -3,9 +3,19 @@
     "500": "很抱歉，出了点问题。"
   },
   "home": {
-    "explore": "浏览所有NFT",
+    "collections": {
+      "title": "著名藏品",
+      "explore": "探索收藏"
+    },
+    "users": {
+      "title": "知名用户",
+      "explore": "探索用户"
+    },
     "auctions": "拍卖",
-    "featured": "精选NFT"
+    "nfts": {
+      "title": "著名的 NFT",
+      "explore": "探索 NFT"
+    }
   },
   "explore": {
     "title": "探讨",
