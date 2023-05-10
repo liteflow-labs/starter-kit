@@ -187,8 +187,8 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   compact
                   columns={
                     showFilters
-                      ? { base: 1, sm: 2, md: 3, lg: 4 }
-                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                      ? { base: 2, md: 3, lg: 4 }
+                      : { base: 2, md: 4, lg: 6 }
                   }
                 >
                   <SkeletonCollectionCard />
@@ -199,8 +199,8 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   spacing="4"
                   columns={
                     hasFilter && showFilters
-                      ? { base: 1, sm: 2, md: 3, lg: 4 }
-                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                      ? { base: 2, md: 3, lg: 4 }
+                      : { base: 2, md: 4, lg: 6 }
                   }
                 >
                   {collections.map((collection, i) => (

@@ -110,14 +110,19 @@ const UsersPage: NextPage<Props> = () => {
             </Box>
           </Flex>
           {loading ? (
-            <SkeletonGrid items={environment.PAGINATION_LIMIT} compact py={6}>
+            <SkeletonGrid
+              items={environment.PAGINATION_LIMIT}
+              compact
+              columns={{ base: 2, md: 4, lg: 6 }}
+              py={6}
+            >
               <SkeletonUserCard />
             </SkeletonGrid>
           ) : users.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}
-              columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
+              columns={{ base: 2, md: 4, lg: 6 }}
               py={6}
             >
               {users.map((user, i) => (
