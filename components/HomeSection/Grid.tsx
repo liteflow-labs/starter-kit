@@ -45,7 +45,7 @@ const HomeGridSection: FC<Props> = ({
   if (!items || items.length === 0) return null
   return (
     <Stack spacing={6}>
-      <Flex flexWrap="wrap" justify="space-between" gap={4}>
+      <Flex flexWrap="wrap" align="center" justify="space-between" gap={4}>
         <Heading as="h2" variant="subtitle" color="brand.black">
           {title}
         </Heading>
