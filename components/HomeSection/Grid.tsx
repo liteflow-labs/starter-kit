@@ -72,7 +72,7 @@ const HomeGridSection: FC<Props> = ({
               grow={0}
               shrink={0}
               basis={{
-                base: '100%',
+                base: '80%',
                 sm: '50%',
                 md: '25%',
                 lg: '16.66%',
@@ -88,7 +88,7 @@ const HomeGridSection: FC<Props> = ({
         <SimpleGrid
           flexWrap="wrap"
           spacing={4}
-          columns={{ base: 1, sm: 2, md: 4, lg: 6 }}
+          columns={{ base: 2, md: 4, lg: 6 }}
         >
           {items.map((item, i) => (
             <Flex key={i} justify="center" overflow="hidden">
