@@ -15,28 +15,24 @@ export default function AuctionBidCreated({
   subject: string
   to: string
 } | null {
-  const amount = formatUnits(
-    BigNumber.from(unitPrice).mul(quantity),
-    currency.decimals,
-  )
+  const amount = BigNumber.from(unitPrice).mul(quantity)
   if (!taker?.email) return null
   return {
     to: taker.email,
-    subject: `New bid of ${amount} ${currency.symbol} received for your auction on ${asset.name}`,
-    html: `Hi <strong>${taker.username || taker.address}</strong>,
-<br/>
-<br/>
-We are pleased to let you know that you have received a new bid of <strong>${amount} ${
+    subject: `New bid of ${formatUnits(amount, currency.decimals)} ${
       currency.symbol
-    }</strong> from <strong>${
+    } received for your auction on ${asset.name}`,
+    html: `Hi <strong>${taker.username || taker.address}</strong>,<br/>
+    <br/>
+    We are pleased to let you know that you have received a new bid of <strong>${formatUnits(
+      amount,
+      currency.decimals,
+    )} ${currency.symbol}</strong> from <strong>${
       maker.username || maker.address
-    }</strong> for your auction on <strong>${asset.name}</strong>.
-<br/>
-<br/>      
-To view the bid click the link below.
-<br/>
-<br/>
-<a href="${environment.BASE_URL}/tokens/${asset.id}">View the bid</a>
-<br/>`,
+    }</strong> for your auction on <strong>${asset.name}</strong>.<br/>
+    <br/>      
+    To view the bid click the link below.<br/>
+    <br/>
+    <a href="${environment.BASE_URL}/tokens/${asset.id}">View the bid</a><br/>`,
   }
 }

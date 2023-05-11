@@ -31,9 +31,11 @@ query FetchUserFixedPrice(
       }
       asset {
         id
+        chainId
+        collectionAddress
+        tokenId
         name
         image
-        chainId
         owned: ownership(ownerAddress: $address) {
           quantity
         }

@@ -15,6 +15,9 @@ query FetchAllERC721And1155(
     totalCount
     nodes {
       id
+      chainId
+      collectionAddress
+      tokenId
       name
       collection {
         chainId
@@ -77,9 +80,7 @@ query FetchAllERC721And1155(
       firstSale: sales(
         first: 1
         orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-        filter: {
-          expiredAt: { greaterThan: $now }
-        }
+        filter: { expiredAt: { greaterThan: $now } }
       ) {
         totalCount
         totalCurrencyDistinctCount

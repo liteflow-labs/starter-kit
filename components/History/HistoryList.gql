@@ -1,5 +1,8 @@
 query FetchAssetHistory($id: String!) {
   asset(id: $id) {
+    chainId
+    collectionAddress
+    tokenId
     histories(orderBy: DATE_DESC) {
       nodes {
         action

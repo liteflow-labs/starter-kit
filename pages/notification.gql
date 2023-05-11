@@ -47,6 +47,9 @@ query GetNotifications($address: Address!, $cursor: Cursor) {
         unitPrice
         quantity
         asset {
+          chainId
+          collectionAddress
+          tokenId
           image
           name
         }
@@ -58,6 +61,9 @@ query GetNotifications($address: Address!, $cursor: Cursor) {
       auction {
         asset {
           id
+          chainId
+          collectionAddress
+          tokenId
           image
           name
         }

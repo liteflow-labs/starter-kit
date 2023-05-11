@@ -40,9 +40,11 @@ query FetchUserBidsReceived(
       }
       asset {
         id
+        chainId
+        collectionAddress
+        tokenId
         name
         image
-        chainId
       }
     }
   }

@@ -19,7 +19,6 @@ import {
   useFetchCreatedAssetsQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
-import useEagerConnect from '../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
@@ -32,7 +31,6 @@ type Props = {
 }
 
 const CreatedPage: NextPage<Props> = ({ now }) => {
-  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { pathname, replace, query } = useRouter()

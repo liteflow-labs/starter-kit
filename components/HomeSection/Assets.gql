@@ -22,6 +22,9 @@ query FetchAssets(
   ) {
     nodes {
       id
+      chainId
+      collectionAddress
+      tokenId
       name
       collection {
         chainId
