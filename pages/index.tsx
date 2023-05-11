@@ -3,6 +3,7 @@ import AssetsHomeSection from 'components/HomeSection/Assets'
 import AuctionsHomeSection from 'components/HomeSection/Auctions'
 import CollectionsHomeSection from 'components/HomeSection/Collections'
 import FeaturedHomeSection from 'components/HomeSection/Featured'
+import ResourcesHomeSection from 'components/HomeSection/Resources'
 import UsersHomeSection from 'components/HomeSection/Users'
 import { NextPage } from 'next'
 import { useMemo } from 'react'
@@ -21,6 +22,8 @@ const HomePage: NextPage<Props> = ({ now }) => {
         <UsersHomeSection />
         <AuctionsHomeSection date={date} />
         <AssetsHomeSection date={date} />
+        {/* TODO: to be removed */}
+        <ResourcesHomeSection />
       </Stack>
     </LargeLayout>
   )
