@@ -6,6 +6,9 @@ query FetchDefaultAssetIds($limit: Int!) {
   ) {
     nodes {
       id
+      chainId
+      collectionAddress
+      tokenId
     }
   }
 }
