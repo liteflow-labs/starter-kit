@@ -22,7 +22,8 @@ const UserCard: FC<Props> = ({ user }) => {
       <Box
         borderRadius="2xl"
         border="1px solid"
-        borderColor="gray.300"
+        borderColor="gray.200"
+        shadow="sm"
         w="full"
         overflow="hidden"
       >

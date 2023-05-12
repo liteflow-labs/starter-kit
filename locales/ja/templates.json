@@ -15,7 +15,8 @@
     "nfts": {
       "title": "注目すべきNFT",
       "explore": "NFTを探索する"
-    }
+    },
+    "resources": "資力"
   },
   "explore": {
     "title": "検索",
