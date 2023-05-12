@@ -1,48 +1,30 @@
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import HomeGridSection from './Grid'
-import HomeSectionCard from './SectionCard'
+import HomeSectionCard, { Props as ItemProps } from './SectionCard'
 
 type Props = {}
 
-// TODO: to be changed
-const items = [
+const items: ItemProps[] = []
+
+/* Example usage below
+const items: ItemProps[] = [
   {
     href: '/explore',
     isExternal: false,
-    image: '',
-    title: 'Card title looooooong',
-    description: 'Card subtext - Lorem ipsum dolor es looooooong',
+    image: 'https://picsum.photos/id/237/200/300',
+    title: 'Card title',
+    description: 'Card subtext - Lorem ipsum dolor es',
   },
   {
     href: 'https://liteflow.com/',
     isExternal: true,
     image: '',
     title: 'Card title',
-    description: 'Card subtext - Lorem ipsum dolor es',
-  },
-  {
-    href: '/explore/collections',
-    isExternal: false,
-    image: '',
-    title: 'Card title',
-    description: 'Card subtext - Lorem ipsum dolor es',
-  },
-  {
-    href: 'https://liteflow.com/about/',
-    isExternal: true,
-    image: '',
-    title: 'Card title',
-    description: 'Card subtext - Lorem ipsum dolor es',
-  },
-  {
-    href: '/explore/users',
-    isExternal: false,
-    image: '',
-    title: 'Card title',
-    description: 'Card subtext - Lorem ipsum dolor es',
+    description: '',
   },
 ]
+ */
 
 const ResourcesHomeSection: FC<Props> = () => {
   const { t } = useTranslation('templates')
@@ -51,7 +33,7 @@ const ResourcesHomeSection: FC<Props> = () => {
     <HomeGridSection
       isLoading={false}
       items={items}
-      itemRender={(item: typeof items[0]) => (
+      itemRender={(item: ItemProps) => (
         <HomeSectionCard
           href={item.href}
           isExternal={item.isExternal}

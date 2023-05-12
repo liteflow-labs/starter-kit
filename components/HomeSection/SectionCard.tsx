@@ -3,7 +3,7 @@ import Image from 'components/Image/Image'
 import { FC } from 'react'
 import Link from '../Link/Link'
 
-type Props = {
+export type Props = {
   description?: string
   href: string
   isExternal?: boolean
