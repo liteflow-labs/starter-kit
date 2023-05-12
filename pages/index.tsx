@@ -22,7 +22,6 @@ const HomePage: NextPage<Props> = ({ now }) => {
         <UsersHomeSection />
         <AuctionsHomeSection date={date} />
         <AssetsHomeSection date={date} />
-        {/* TODO: to be removed */}
         <ResourcesHomeSection />
       </Stack>
     </LargeLayout>
