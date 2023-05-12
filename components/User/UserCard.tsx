@@ -18,11 +18,12 @@ type Props = {
 
 const UserCard: FC<Props> = ({ user }) => {
   return (
-    <Link href={`/users/${user.address}`}>
+    <Link href={`/users/${user.address}`} w="full">
       <Box
         borderRadius="2xl"
         border="1px solid"
-        borderColor="gray.300"
+        borderColor="gray.200"
+        shadow="sm"
         w="full"
         overflow="hidden"
       >

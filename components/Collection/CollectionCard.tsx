@@ -27,9 +27,10 @@ const CollectionCard: FC<Props> = ({ collection }) => {
       as={Link}
       href={`/collection/${collection.chainId}/${collection.address}`}
       bg="white"
-      border="1px"
-      borderColor="gray.200"
       borderRadius="2xl"
+      border="1px solid"
+      borderColor="gray.200"
+      shadow="sm"
       overflow="hidden"
       w="full"
     >

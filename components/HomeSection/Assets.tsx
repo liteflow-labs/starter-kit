@@ -1,14 +1,3 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  Icon,
-  SimpleGrid,
-  Skeleton,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
-import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import {
@@ -25,10 +14,8 @@ import {
 import useAccount from '../../hooks/useAccount'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import useOrderById from '../../hooks/useOrderById'
-import Link from '../Link/Link'
-import SkeletonGrid from '../Skeleton/Grid'
-import SkeletonTokenCard from '../Skeleton/TokenCard'
 import TokenCard from '../Token/Card'
+import HomeGridSection from './Grid'
 
 type Props = {
   date: Date
@@ -79,55 +66,27 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
   useHandleQueryError(assetsQuery)
 
   const assets = useOrderById(assetIds, assetsQuery.data?.assets?.nodes)
-
-  if (defaultAssetQuery.loading || assetsQuery.loading)
-    return (
-      <Stack spacing={6}>
-        <Skeleton noOfLines={1} height={8} width={200} />
-        <SkeletonGrid items={environment.PAGINATION_LIMIT}>
-          <SkeletonTokenCard />
-        </SkeletonGrid>
-      </Stack>
-    )
-  if (assets.length === 0) return null
   return (
-    <Stack spacing={6}>
-      <Flex flexWrap="wrap" justify="space-between" gap={4}>
-        <Heading as="h2" variant="subtitle" color="brand.black">
-          {t('home.featured')}
-        </Heading>
-        <Link href="/explore">
-          <Button
-            variant="outline"
-            colorScheme="gray"
-            rightIcon={<Icon as={HiArrowNarrowRight} h={5} w={5} />}
-            iconSpacing="10px"
-          >
-            <Text as="span" isTruncated>
-              {t('home.explore')}
-            </Text>
-          </Button>
-        </Link>
-      </Flex>
-      <SimpleGrid spacing={6} columns={{ sm: 2, md: 3, lg: 4 }}>
-        {assets.map((x, i) => (
-          <Flex key={i} justify="center" overflow="hidden">
-            <TokenCard
-              asset={convertAsset(x)}
-              creator={convertUser(x.creator, x.creator.address)}
-              sale={convertSale(x.firstSale.nodes[0])}
-              auction={
-                x.auctions.nodes[0]
-                  ? convertAuctionWithBestBid(x.auctions.nodes[0])
-                  : undefined
-              }
-              numberOfSales={x.firstSale.totalCount}
-              hasMultiCurrency={x.firstSale.totalCurrencyDistinctCount > 1}
-            />
-          </Flex>
-        ))}
-      </SimpleGrid>
-    </Stack>
+    <HomeGridSection
+      explore={{ href: '/explore', title: t('home.nfts.explore') }}
+      isLoading={defaultAssetQuery.loading || assetsQuery.loading}
+      items={assets}
+      itemRender={(item: typeof assets[0]) => (
+        <TokenCard
+          asset={convertAsset(item)}
+          creator={convertUser(item.creator, item.creator.address)}
+          sale={convertSale(item.firstSale.nodes[0])}
+          auction={
+            item.auctions.nodes[0]
+              ? convertAuctionWithBestBid(item.auctions.nodes[0])
+              : undefined
+          }
+          numberOfSales={item.firstSale.totalCount}
+          hasMultiCurrency={item.firstSale.totalCurrencyDistinctCount > 1}
+        />
+      )}
+      title={t('home.nfts.title')}
+    />
   )
 }
 

@@ -153,9 +153,10 @@ const TokenCard: VFC<Props> = ({
       w="full"
       align="stretch"
       overflow="hidden"
-      rounded="xl"
-      borderWidth="1px"
+      borderRadius="2xl"
+      border="1px solid"
       borderColor="gray.200"
+      shadow="sm"
       bgColor="white"
       position="relative"
       onMouseEnter={() => setIsHovered(true)}

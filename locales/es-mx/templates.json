@@ -3,9 +3,20 @@
     "500": "Lo sentimos, algo salió mal."
   },
   "home": {
-    "explore": "Explorar Todos los NFTs",
+    "collections": {
+      "title": "Colecciones notables",
+      "explore": "Explorar colecciones"
+    },
+    "users": {
+      "title": "Usuarias notables",
+      "explore": "Explorar usuarias"
+    },
     "auctions": "Subastas",
-    "featured": "NFTs Destacados"
+    "nfts": {
+      "title": "NFT notables",
+      "explore": "Explorar NFT"
+    },
+    "resources": "Recursos"
   },
   "explore": {
     "title": "Explorar",

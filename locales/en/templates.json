@@ -3,9 +3,20 @@
     "500": "We're sorry, something went wrong."
   },
   "home": {
-    "explore": "Explore All NFTs",
+    "collections": {
+      "title": "Notable Collections",
+      "explore": "Explore collections"
+    },
+    "users": {
+      "title": "Notable Users",
+      "explore": "Explore users"
+    },
     "auctions": "Auctions",
-    "featured": "Featured NFTs"
+    "nfts": {
+      "title": "Notable NFTs",
+      "explore": "Explore NFTs"
+    },
+    "resources": "Resources"
   },
   "explore": {
     "title": "Explore",
