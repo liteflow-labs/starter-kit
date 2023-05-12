@@ -15,6 +15,14 @@ query FetchUserTradeSold(
       transactionHash
       timestamp
       buyerAddress
+      buyer {
+        address
+        name
+        image
+        verification {
+          status
+        }
+      }
       sellerAddress
       amount
       quantity

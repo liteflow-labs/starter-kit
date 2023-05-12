@@ -14,7 +14,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
-import { dateFromNow, formatAddress } from '@nft/hooks'
+import { dateFromNow } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -30,6 +30,7 @@ import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
+import Avatar from '../../../../components/User/Avatar'
 import { convertTrade } from '../../../../convert'
 import environment from '../../../../environment'
 import {
@@ -243,7 +244,12 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
                       </Td>
                       <Td>
                         <Link href={`/users/${item.sellerAddress}`}>
-                          {formatAddress(item.sellerAddress)}
+                          <Avatar
+                            address={item.seller.address}
+                            image={item.seller.image}
+                            name={item.seller.name}
+                            verified={item.seller.verified}
+                          />
                         </Link>
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
