@@ -16,6 +16,14 @@ query FetchUserTradePurchased(
       timestamp
       buyerAddress
       sellerAddress
+      seller {
+        address
+        name
+        image
+        verification {
+          status
+        }
+      }
       amount
       quantity
       currency {

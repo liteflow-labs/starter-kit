@@ -604,6 +604,16 @@ export const convertTrade = (
     | 'buyerAddress'
     | 'sellerAddress'
   > & {
+    buyer?: Maybe<
+      Pick<Account, 'address' | 'name' | 'image'> & {
+        verification: Maybe<Pick<AccountVerification, 'status'>>
+      }
+    >
+    seller?: Maybe<
+      Pick<Account, 'address' | 'name' | 'image'> & {
+        verification: Maybe<Pick<AccountVerification, 'status'>>
+      }
+    >
     currency: Maybe<
       Pick<Currency, 'id' | 'image' | 'name' | 'decimals' | 'symbol'>
     >
@@ -615,6 +625,18 @@ export const convertTrade = (
   quantity: BigNumber
   buyerAddress: string
   sellerAddress: string
+  buyer: {
+    address: string
+    name: string | null | undefined
+    image: string | null | undefined
+    verified: boolean
+  }
+  seller: {
+    address: string
+    name: string | null | undefined
+    image: string | null | undefined
+    verified: boolean
+  }
   createdAt: Date
   currency: {
     name: string
@@ -637,6 +659,18 @@ export const convertTrade = (
     createdAt: new Date(trade.timestamp),
     quantity: BigNumber.from(trade.quantity),
     sellerAddress: trade.sellerAddress,
+    buyer: {
+      address: trade.buyer?.address || trade.buyerAddress,
+      name: trade.buyer?.name,
+      image: trade.buyer?.image,
+      verified: trade.buyer?.verification?.status === 'VALIDATED',
+    },
+    seller: {
+      address: trade.seller?.address || trade.sellerAddress,
+      name: trade.seller?.name,
+      image: trade.seller?.image,
+      verified: trade.seller?.verification?.status === 'VALIDATED',
+    },
     currency: trade.currency,
     asset: trade.asset
       ? {
