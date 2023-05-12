@@ -40,7 +40,6 @@ import { useFeesForOfferQuery, useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
-import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -69,13 +68,12 @@ type SaleOption = {
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
-  const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
   const { address } = useAccount()
-  useLoginRedirect(ready)
+  useLoginRedirect()
   const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])

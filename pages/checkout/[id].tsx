@@ -33,7 +33,6 @@ import environment from '../../environment'
 import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
@@ -43,7 +42,6 @@ type Props = {
 }
 
 const CheckoutPage: NextPage<Props> = ({ now }) => {
-  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()

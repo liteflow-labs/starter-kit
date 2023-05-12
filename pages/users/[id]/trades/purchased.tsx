@@ -39,7 +39,6 @@ import {
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
-import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
@@ -52,7 +51,6 @@ type Props = {
 }
 
 const TradePurchasedPage: NextPage<Props> = ({ now }) => {
-  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()

@@ -44,7 +44,6 @@ import useCollectionFilterFromQuery, {
   Filter,
 } from '../../hooks/useCollectionFilterFromQuery'
 import useCollectionFilterState from '../../hooks/useCollectionFilterState'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -52,7 +51,6 @@ import usePaginateQuery from '../../hooks/usePaginateQuery'
 type Props = {}
 
 const CollectionsPage: NextPage<Props> = ({}) => {
-  useEagerConnect()
   const { pathname, push, query, replace } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
