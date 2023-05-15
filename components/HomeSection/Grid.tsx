@@ -37,7 +37,7 @@ const HomeGridSection: FC<Props> = ({
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
-        <SkeletonGrid items={6} columns={{ base: 1, sm: 2, md: 4, lg: 6 }}>
+        <SkeletonGrid items={6} columns={{ base: 1, sm: 2, lg: 4 }}>
           <SkeletonTokenCard />
         </SkeletonGrid>
       </Stack>
@@ -73,9 +73,8 @@ const HomeGridSection: FC<Props> = ({
               shrink={0}
               basis={{
                 base: '80%',
-                sm: '50%',
-                md: '25%',
-                lg: '16.66%',
+                md: '50%',
+                lg: '25%',
               }}
               p="8px"
               overflow="hidden"
@@ -85,11 +84,7 @@ const HomeGridSection: FC<Props> = ({
           ))}
         </Slider>
       ) : (
-        <SimpleGrid
-          flexWrap="wrap"
-          spacing={4}
-          columns={{ base: 2, md: 4, lg: 6 }}
-        >
+        <SimpleGrid flexWrap="wrap" spacing={4} columns={{ base: 2, lg: 4 }}>
           {items.map((item, i) => (
             <Flex key={i} justify="center" overflow="hidden">
               {itemRender(item)}
