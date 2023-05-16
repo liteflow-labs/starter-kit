@@ -555,7 +555,7 @@ const FilterAsset: NextPage<Props> = ({
           </AccordionItem>
         )}
 
-        {traits.map(({ type, values }, i) => (
+        {traits.map(({ type, values, numberOfValues }, i) => (
           <AccordionItem key={i}>
             <AccordionButton gap={4}>
               <Heading
@@ -570,7 +570,7 @@ const FilterAsset: NextPage<Props> = ({
               </Heading>
               <Flex gap="4" alignItems="center">
                 <Heading variant="heading2" color="gray.500">
-                  {values.nodes.length}
+                  {numberOfValues}
                 </Heading>
                 <AccordionIcon />
               </Flex>
