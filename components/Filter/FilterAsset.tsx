@@ -152,9 +152,9 @@ const FilterAsset: NextPage<Props> = ({
   })
 
   const traits = useMemo(() => {
-    if (!traitsData?.collection?.traits) return []
-    if (!propertySearch) return traitsData.collection.traits
-    return traitsData.collection.traits.filter(({ type }) =>
+    if (!traitsData?.collection?.traitsOfCollection.nodes) return []
+    if (!propertySearch) return traitsData.collection.traitsOfCollection.nodes
+    return traitsData.collection.traitsOfCollection.nodes.filter(({ type }) =>
       type.toLowerCase().includes(propertySearch.toLowerCase()),
     )
   }, [propertySearch, traitsData])
@@ -570,7 +570,7 @@ const FilterAsset: NextPage<Props> = ({
               </Heading>
               <Flex gap="4" alignItems="center">
                 <Heading variant="heading2" color="gray.500">
-                  {values.length}
+                  {values.nodes.length}
                 </Heading>
                 <AccordionIcon />
               </Flex>
@@ -582,7 +582,7 @@ const FilterAsset: NextPage<Props> = ({
                 }
               >
                 <Stack spacing={1}>
-                  {values.map(({ value, count }, i) => (
+                  {values.nodes.map(({ value, numberOfAssets }, i) => (
                     <Checkbox
                       key={i}
                       value={value}
@@ -604,7 +604,7 @@ const FilterAsset: NextPage<Props> = ({
                           {value}
                         </Text>
                         <Text variant="subtitle2" color="black">
-                          {count}
+                          {numberOfAssets}
                         </Text>
                       </Flex>
                     </Checkbox>
