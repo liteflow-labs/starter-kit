@@ -9,7 +9,6 @@ type TraitListProps = {
   traits: {
     type: string
     value: string
-    totalCount: number
     percent: number
   }[]
 }
