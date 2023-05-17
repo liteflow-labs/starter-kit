@@ -44,7 +44,6 @@ import useCollectionFilterFromQuery, {
   Filter,
 } from '../../hooks/useCollectionFilterFromQuery'
 import useCollectionFilterState from '../../hooks/useCollectionFilterState'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -52,7 +51,6 @@ import usePaginateQuery from '../../hooks/usePaginateQuery'
 type Props = {}
 
 const CollectionsPage: NextPage<Props> = ({}) => {
-  useEagerConnect()
   const { pathname, push, query, replace } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
@@ -187,8 +185,8 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   compact
                   columns={
                     showFilters
-                      ? { base: 1, sm: 2, md: 3, lg: 4 }
-                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                      ? { sm: 2, md: 3, lg: 4 }
+                      : { sm: 2, md: 4, lg: 6 }
                   }
                 >
                   <SkeletonCollectionCard />
@@ -199,8 +197,8 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   spacing="4"
                   columns={
                     hasFilter && showFilters
-                      ? { base: 1, sm: 2, md: 3, lg: 4 }
-                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                      ? { sm: 2, md: 3, lg: 4 }
+                      : { sm: 2, md: 4, lg: 6 }
                   }
                 >
                   {collections.map((collection, i) => (

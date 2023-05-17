@@ -16,12 +16,10 @@ import useTranslation from 'next-translate/useTranslation'
 import Head from '../components/Head'
 import ReferralForm from '../components/Referral/Form'
 import environment from '../environment'
-import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
 import SmallLayout from '../layouts/small'
 
 const LoginPage: NextPage = () => {
-  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const percentage = {

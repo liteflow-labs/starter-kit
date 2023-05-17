@@ -14,7 +14,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
-import { dateFromNow, formatAddress } from '@nft/hooks'
+import { dateFromNow } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -30,12 +30,12 @@ import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
+import Avatar from '../../../../components/User/Avatar'
 import { convertTrade } from '../../../../convert'
 import environment from '../../../../environment'
 import { TradesOrderBy, useFetchUserTradeSoldQuery } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
-import useEagerConnect from '../../../../hooks/useEagerConnect'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
@@ -48,7 +48,6 @@ type Props = {
 }
 
 const TradeSoldPage: NextPage<Props> = ({ now }) => {
-  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -237,7 +236,12 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
                       </Td>
                       <Td>
                         <Link href={`/users/${item.buyerAddress}`}>
-                          {formatAddress(item.buyerAddress)}
+                          <Avatar
+                            address={item.buyer.address}
+                            image={item.buyer.image}
+                            name={item.buyer.name}
+                            verified={item.buyer.verified}
+                          />
                         </Link>
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>

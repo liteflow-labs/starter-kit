@@ -60,6 +60,9 @@ query FetchCollectionAssets(
     }
     nodes {
       id
+      chainId
+      collectionAddress
+      tokenId
       name
       description
       image

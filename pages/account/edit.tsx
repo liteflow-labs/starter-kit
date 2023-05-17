@@ -10,18 +10,16 @@ import UserFormEdit from '../../components/User/Form/Edit'
 import environment from '../../environment'
 import { useGetAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import useLoginRedirect from '../../hooks/useLoginRedirect'
 import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
 
 const EditPage: NextPage = () => {
-  const ready = useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { push } = useRouter()
   const { address, isLoggedIn } = useAccount()
-  useLoginRedirect(ready)
+  useLoginRedirect()
 
   const toast = useToast()
 

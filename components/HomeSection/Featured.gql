@@ -16,6 +16,9 @@ query FetchFeaturedAssets(
   assets(filter: { ownershipsExist: true, id: { in: $featuredIds } }) {
     nodes {
       id
+      chainId
+      collectionAddress
+      tokenId
       name
       collection {
         chainId

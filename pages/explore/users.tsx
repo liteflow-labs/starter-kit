@@ -25,7 +25,6 @@ import {
   AccountsOrderBy,
   useFetchExploreUsersQuery,
 } from '../../graphql'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -43,7 +42,6 @@ const searchFilter = (search: string): AccountFilter =>
   } as AccountFilter)
 
 const UsersPage: NextPage<Props> = () => {
-  useEagerConnect()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
@@ -110,14 +108,19 @@ const UsersPage: NextPage<Props> = () => {
             </Box>
           </Flex>
           {loading ? (
-            <SkeletonGrid items={environment.PAGINATION_LIMIT} compact py={6}>
+            <SkeletonGrid
+              items={environment.PAGINATION_LIMIT}
+              compact
+              columns={{ sm: 2, md: 4, lg: 6 }}
+              py={6}
+            >
               <SkeletonUserCard />
             </SkeletonGrid>
           ) : users.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}
-              columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
+              columns={{ sm: 2, md: 4, lg: 6 }}
               py={6}
             >
               {users.map((user, i) => (

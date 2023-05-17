@@ -12,6 +12,7 @@ import {
   Auction,
   Collection,
   CollectionStats,
+  CollectionTraitValue,
   Currency,
   Maybe,
   Offer,
@@ -20,7 +21,6 @@ import {
   OfferOpenSalesConnection,
   Ownership,
   Trade,
-  Trait,
 } from './graphql'
 
 export const convertAsset = (
@@ -156,31 +156,31 @@ export const convertCollection = (
 export const convertTraits = (
   asset: Parameters<typeof convertAsset>[0] & {
     traits: {
-      nodes: Array<Pick<AssetTrait, 'type' | 'value'>>
+      nodes: Array<
+        Pick<AssetTrait, 'type' | 'value'> & {
+          collectionTraitValue: Maybe<
+            Pick<CollectionTraitValue, 'numberOfAssets'>
+          >
+        }
+      >
     }
     collection: {
       supply: number
-      traits: Array<Pick<Trait, 'type' | 'values'>>
     }
   },
 ): {
   type: string
   value: string
-  totalCount: number
   percent: number
 }[] => {
   const assetTraitsWithCounts = asset.traits.nodes.map((assetTrait) => {
-    const traitInCollection = asset.collection.traits.find(
-      ({ type }) => type === assetTrait.type,
-    )
-    const traitValueCount =
-      traitInCollection?.values?.find(({ value }) => value === assetTrait.value)
-        ?.count || 0
     return {
       type: assetTrait.type,
       value: assetTrait.value,
-      totalCount: traitValueCount,
-      percent: (traitValueCount / asset.collection.supply) * 100,
+      percent:
+        ((assetTrait.collectionTraitValue?.numberOfAssets || 0) /
+          asset.collection.supply) *
+        100,
     }
   })
 
@@ -604,6 +604,16 @@ export const convertTrade = (
     | 'buyerAddress'
     | 'sellerAddress'
   > & {
+    buyer?: Maybe<
+      Pick<Account, 'address' | 'name' | 'image'> & {
+        verification: Maybe<Pick<AccountVerification, 'status'>>
+      }
+    >
+    seller?: Maybe<
+      Pick<Account, 'address' | 'name' | 'image'> & {
+        verification: Maybe<Pick<AccountVerification, 'status'>>
+      }
+    >
     currency: Maybe<
       Pick<Currency, 'id' | 'image' | 'name' | 'decimals' | 'symbol'>
     >
@@ -615,6 +625,18 @@ export const convertTrade = (
   quantity: BigNumber
   buyerAddress: string
   sellerAddress: string
+  buyer: {
+    address: string
+    name: string | null | undefined
+    image: string | null | undefined
+    verified: boolean
+  }
+  seller: {
+    address: string
+    name: string | null | undefined
+    image: string | null | undefined
+    verified: boolean
+  }
   createdAt: Date
   currency: {
     name: string
@@ -637,6 +659,18 @@ export const convertTrade = (
     createdAt: new Date(trade.timestamp),
     quantity: BigNumber.from(trade.quantity),
     sellerAddress: trade.sellerAddress,
+    buyer: {
+      address: trade.buyer?.address || trade.buyerAddress,
+      name: trade.buyer?.name,
+      image: trade.buyer?.image,
+      verified: trade.buyer?.verification?.status === 'VALIDATED',
+    },
+    seller: {
+      address: trade.seller?.address || trade.sellerAddress,
+      name: trade.seller?.name,
+      image: trade.seller?.image,
+      verified: trade.seller?.verification?.status === 'VALIDATED',
+    },
     currency: trade.currency,
     asset: trade.asset
       ? {

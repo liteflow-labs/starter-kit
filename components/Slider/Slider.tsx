@@ -38,7 +38,7 @@ const Slider: FC<HTMLAttributes<any>> = ({ children }) => {
   return (
     <Box position="relative" mx="auto" w="full">
       <Box w="full" overflow="hidden" ref={viewportRef}>
-        <Flex mx="-10px" w="calc(100%+20px)" userSelect="none">
+        <Flex mx="-8px" w="calc(100% + 16px)" userSelect="none">
           {children}
         </Flex>
       </Box>

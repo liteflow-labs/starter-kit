@@ -16,6 +16,14 @@ query FetchUserTradePurchased(
       timestamp
       buyerAddress
       sellerAddress
+      seller {
+        address
+        name
+        image
+        verification {
+          status
+        }
+      }
       amount
       quantity
       currency {
@@ -27,9 +35,11 @@ query FetchUserTradePurchased(
       }
       asset {
         id
+        chainId
+        collectionAddress
+        tokenId
         name
         image
-        chainId
       }
     }
   }

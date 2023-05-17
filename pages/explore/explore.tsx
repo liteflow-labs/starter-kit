@@ -42,7 +42,6 @@ import useAssetFilterFromQuery, {
   Filter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../hooks/useAssetFilterState'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -52,7 +51,6 @@ type Props = {
 }
 
 const ExplorePage: NextPage<Props> = ({ now }) => {
-  useEagerConnect()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
@@ -180,8 +178,8 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   compact
                   columns={
                     showFilters
-                      ? { base: 1, sm: 2, md: 3, lg: 4 }
-                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                      ? { sm: 2, md: 3, lg: 4 }
+                      : { sm: 2, md: 4, lg: 6 }
                   }
                 >
                   <SkeletonTokenCard />
@@ -192,8 +190,8 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   spacing="4"
                   columns={
                     showFilters
-                      ? { base: 1, sm: 2, md: 3, lg: 4 }
-                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                      ? { sm: 2, md: 3, lg: 4 }
+                      : { sm: 2, md: 4, lg: 6 }
                   }
                 >
                   {assets?.nodes.map((x, i) => (

@@ -35,7 +35,6 @@ import environment from '../../../environment'
 import { useFetchAccountAndCollectionQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useEagerConnect from '../../../hooks/useEagerConnect'
 import useLocalFileURL from '../../../hooks/useLocalFileURL'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -53,7 +52,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
 )
 
 const CreatePage: NextPage = ({}) => {
-  useEagerConnect()
   const signer = useSigner()
   const collectionAddress = useRequiredQueryParamSingle('collectionAddress')
   const chainId = useRequiredQueryParamSingle<number>('chainId', {

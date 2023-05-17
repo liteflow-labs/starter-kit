@@ -21,16 +21,14 @@ import SkeletonList from '../components/Skeleton/List'
 import { concatToQuery } from '../concat'
 import { useGetNotificationsQuery } from '../graphql'
 import useAccount from '../hooks/useAccount'
-import useEagerConnect from '../hooks/useEagerConnect'
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import SmallLayout from '../layouts/small'
 
 const NotificationPage: NextPage = ({}) => {
-  const ready = useEagerConnect()
   const { t } = useTranslation('templates')
   const toast = useToast()
   const { address } = useAccount()
-  useLoginRedirect(ready)
+  useLoginRedirect()
   const [_, setCookies] = useCookies()
 
   const { data, fetchMore, loading } = useGetNotificationsQuery({

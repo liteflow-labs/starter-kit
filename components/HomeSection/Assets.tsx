@@ -84,17 +84,20 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
-        <SkeletonGrid items={environment.PAGINATION_LIMIT}>
+        <SkeletonGrid
+          items={environment.PAGINATION_LIMIT}
+          columns={{ sm: 2, md: 3, lg: 4 }}
+        >
           <SkeletonTokenCard />
         </SkeletonGrid>
       </Stack>
     )
-  if (assets.length === 0) return null
+
   return (
     <Stack spacing={6}>
-      <Flex flexWrap="wrap" justify="space-between" gap={4}>
+      <Flex flexWrap="wrap" align="center" justify="space-between" gap={4}>
         <Heading as="h2" variant="subtitle" color="brand.black">
-          {t('home.featured')}
+          {t('home.nfts.title')}
         </Heading>
         <Link href="/explore">
           <Button
@@ -104,25 +107,25 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
             iconSpacing="10px"
           >
             <Text as="span" isTruncated>
-              {t('home.explore')}
+              {t('home.nfts.explore')}
             </Text>
           </Button>
         </Link>
       </Flex>
-      <SimpleGrid spacing={6} columns={{ sm: 2, md: 3, lg: 4 }}>
-        {assets.map((x, i) => (
+      <SimpleGrid flexWrap="wrap" spacing={4} columns={{ sm: 2, md: 3, lg: 4 }}>
+        {assets.map((item, i) => (
           <Flex key={i} justify="center" overflow="hidden">
             <TokenCard
-              asset={convertAsset(x)}
-              creator={convertUser(x.creator, x.creator.address)}
-              sale={convertSale(x.firstSale.nodes[0])}
+              asset={convertAsset(item)}
+              creator={convertUser(item.creator, item.creator.address)}
+              sale={convertSale(item.firstSale.nodes[0])}
               auction={
-                x.auctions.nodes[0]
-                  ? convertAuctionWithBestBid(x.auctions.nodes[0])
+                item.auctions.nodes[0]
+                  ? convertAuctionWithBestBid(item.auctions.nodes[0])
                   : undefined
               }
-              numberOfSales={x.firstSale.totalCount}
-              hasMultiCurrency={x.firstSale.totalCurrencyDistinctCount > 1}
+              numberOfSales={item.firstSale.totalCount}
+              hasMultiCurrency={item.firstSale.totalCurrencyDistinctCount > 1}
             />
           </Flex>
         ))}

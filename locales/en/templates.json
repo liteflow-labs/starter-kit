@@ -3,9 +3,20 @@
     "500": "We're sorry, something went wrong."
   },
   "home": {
-    "explore": "Explore All NFTs",
+    "collections": {
+      "title": "Notable Collections",
+      "explore": "Explore collections"
+    },
+    "users": {
+      "title": "Notable Users",
+      "explore": "Explore users"
+    },
     "auctions": "Auctions",
-    "featured": "Featured NFTs"
+    "nfts": {
+      "title": "Notable NFTs",
+      "explore": "Explore NFTs"
+    },
+    "resources": "Resources"
   },
   "explore": {
     "title": "Explore",
@@ -60,6 +71,10 @@
   },
   "collection": {
     "filter": "Filters",
+    "card": {
+      "floor-price": "Floor price",
+      "total-volume": "Total Vol."
+    },
     "header": {
       "data-labels": {
         "floor-price": "Floor price",
@@ -106,11 +121,6 @@
           "body": "I would like to report the following NFT {{name}} (#{{id}})\nReason: "
         },
         "refresh-metadata": "Refresh Metadata"
-      },
-      "explorerLink": "View on {{name}}",
-      "ipfsLink": "View on IPFS",
-      "errors": {
-        "image": "An issue occured"
       },
       "details": {
         "title": "Details",

@@ -59,7 +59,6 @@ import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
-import useEagerConnect from '../../../hooks/useEagerConnect'
 import useNow from '../../../hooks/useNow'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -77,7 +76,6 @@ enum AssetTabs {
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
-  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
@@ -125,11 +123,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const chain = useMemo(() => chains.find((x) => x.id === chainId), [chainId])
 
   const traits = useMemo(
-    () =>
-      asset &&
-      asset.traits.nodes.length > 0 &&
-      asset.collection.traits &&
-      convertTraits(asset),
+    () => asset && asset.traits.nodes.length > 0 && convertTraits(asset),
     [asset],
   )
 
@@ -453,7 +447,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     <Text variant="text-sm" color="gray.500" mr={2}>
                       {t('asset.detail.details.media')}
                     </Text>
-                    <Link href={asset.image} isExternal externalIcon>
+                    <Link
+                      href={asset.animationUrl || asset.image}
+                      isExternal
+                      externalIcon
+                    >
                       <Text variant="subtitle2">IPFS</Text>
                     </Link>
                   </Flex>

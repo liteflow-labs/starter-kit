@@ -24,13 +24,6 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
       name
       address
       supply
-      traits {
-        type
-        values {
-          value
-          count
-        }
-      }
       mintType
     }
     name
@@ -39,6 +32,9 @@ query FetchAsset($id: String!, $address: Address, $now: Datetime!) {
       nodes {
         type
         value
+        collectionTraitValue {
+          numberOfAssets
+        }
       }
     }
     quantity
