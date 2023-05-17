@@ -112,11 +112,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
           </Button>
         </Link>
       </Flex>
-      <SimpleGrid
-        flexWrap="wrap"
-        spacing={4}
-        columns={{ base: 2, md: 3, lg: 4 }}
-      >
+      <SimpleGrid flexWrap="wrap" spacing={4} columns={{ sm: 2, md: 3, lg: 4 }}>
         {assets.map((item, i) => (
           <Flex key={i} justify="center" overflow="hidden">
             <TokenCard

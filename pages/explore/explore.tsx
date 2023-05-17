@@ -178,8 +178,8 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   compact
                   columns={
                     showFilters
-                      ? { base: 2, md: 3, lg: 4 }
-                      : { base: 2, md: 4, lg: 6 }
+                      ? { sm: 2, md: 3, lg: 4 }
+                      : { sm: 2, md: 4, lg: 6 }
                   }
                 >
                   <SkeletonTokenCard />
@@ -190,8 +190,8 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   spacing="4"
                   columns={
                     showFilters
-                      ? { base: 2, md: 3, lg: 4 }
-                      : { base: 2, md: 4, lg: 6 }
+                      ? { sm: 2, md: 3, lg: 4 }
+                      : { sm: 2, md: 4, lg: 6 }
                   }
                 >
                   {assets?.nodes.map((x, i) => (

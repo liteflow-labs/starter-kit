@@ -84,7 +84,7 @@ const HomeGridSection: FC<Props> = ({
           ))}
         </Slider>
       ) : (
-        <SimpleGrid flexWrap="wrap" spacing={4} columns={{ base: 2, lg: 4 }}>
+        <SimpleGrid flexWrap="wrap" spacing={4} columns={{ sm: 2, lg: 4 }}>
           {items.map((item, i) => (
             <Flex key={i} justify="center" overflow="hidden">
               {itemRender(item)}
