@@ -71,6 +71,10 @@
   },
   "collection": {
     "filter": "フィルター",
+    "card": {
+      "floor-price": "最低価格",
+      "total-volume": "総ボリューム"
+    },
     "header": {
       "data-labels": {
         "floor-price": "最低価格",
