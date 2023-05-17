@@ -1,0 +1,41 @@
+query FetchAccountDetail($address: Address!) {
+  account(address: $address) {
+    address
+    name
+    description
+    cover
+    image
+    twitter
+    instagram
+    website
+    verification {
+      status
+    }
+  }
+}
+
+query FetchAccountMetadata($address: Address!, $now: Datetime!) {
+  created: assets(
+    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
+  ) {
+    totalCount
+  }
+  onSale: assets(
+    filter: {
+      ownershipsExist: true
+      salesAndAuctions: {
+        some: {
+          creatorAddress: { equalTo: $address }
+          endAt: { greaterThan: $now }
+        }
+      }
+    }
+  ) {
+    totalCount
+  }
+  owned: ownerships(
+    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+  ) {
+    totalCount
+  }
+}

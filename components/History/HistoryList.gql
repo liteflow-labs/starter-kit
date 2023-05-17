@@ -1,0 +1,38 @@
+query FetchAssetHistory($id: String!) {
+  asset(id: $id) {
+    chainId
+    collectionAddress
+    tokenId
+    histories(orderBy: DATE_DESC) {
+      nodes {
+        action
+        date
+        unitPrice
+        quantity
+        fromAddress
+        from {
+          address
+          name
+          image
+          verification {
+            status
+          }
+        }
+        toAddress
+        to {
+          address
+          name
+          image
+          verification {
+            status
+          }
+        }
+        transactionHash
+        currency {
+          decimals
+          symbol
+        }
+      }
+    }
+  }
+}

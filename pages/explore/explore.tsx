@@ -25,6 +25,8 @@ import FilterNav from '../../components/Filter/FilterNav'
 import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
+import SkeletonGrid from '../../components/Skeleton/Grid'
+import SkeletonTokenCard from '../../components/Skeleton/TokenCard'
 import TokenCard from '../../components/Token/Card'
 import {
   convertAsset,
@@ -40,7 +42,6 @@ import useAssetFilterFromQuery, {
   Filter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../hooks/useAssetFilterState'
-import useEagerConnect from '../../hooks/useEagerConnect'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -50,7 +51,6 @@ type Props = {
 }
 
 const ExplorePage: NextPage<Props> = ({ now }) => {
-  useEagerConnect()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
@@ -70,10 +70,10 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const assets = useMemo(() => {
-    if (loading) return previousData?.assets
-    return data?.assets
-  }, [data?.assets, loading, previousData])
+  const assets = useMemo(
+    () => data?.assets || previousData?.assets,
+    [data?.assets, previousData],
+  )
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -115,7 +115,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
+  const [changePage, changeLimit] = usePaginate()
 
   return (
     <>
@@ -123,7 +123,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading || loading}
         search={filter.search}
         selectedTabIndex={0}
       >
@@ -173,14 +172,26 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {assets?.totalCount && assets?.totalCount > 0 ? (
+              {loading ? (
+                <SkeletonGrid
+                  items={environment.PAGINATION_LIMIT}
+                  compact
+                  columns={
+                    showFilters
+                      ? { sm: 2, md: 3, lg: 4 }
+                      : { sm: 2, md: 4, lg: 6 }
+                  }
+                >
+                  <SkeletonTokenCard />
+                </SkeletonGrid>
+              ) : assets?.totalCount && assets.totalCount > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
                   columns={
                     showFilters
-                      ? { base: 1, sm: 2, md: 3, lg: 4 }
-                      : { base: 1, sm: 2, md: 4, lg: 6 }
+                      ? { sm: 2, md: 3, lg: 4 }
+                      : { sm: 2, md: 4, lg: 6 }
                   }
                 >
                   {assets?.nodes.map((x, i) => (
@@ -196,11 +207,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                         sale={convertSale(x.firstSale.nodes[0])}
                         numberOfSales={x.firstSale.totalCount}
                         hasMultiCurrency={
-                          parseInt(
-                            x.currencySales.aggregates?.distinctCount
-                              ?.currencyId,
-                            10,
-                          ) > 1
+                          x.firstSale.totalCurrencyDistinctCount > 1
                         }
                       />
                     </Flex>

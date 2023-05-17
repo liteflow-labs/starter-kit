@@ -3,9 +3,20 @@
     "500": "很抱歉，出了点问题。"
   },
   "home": {
-    "explore": "浏览所有NFT",
+    "collections": {
+      "title": "著名藏品",
+      "explore": "探索收藏"
+    },
+    "users": {
+      "title": "知名用户",
+      "explore": "探索用户"
+    },
     "auctions": "拍卖",
-    "featured": "精选NFT"
+    "nfts": {
+      "title": "著名的 NFT",
+      "explore": "探索 NFT"
+    },
+    "resources": "资源"
   },
   "explore": {
     "title": "探讨",
@@ -32,6 +43,14 @@
       "empty": {
         "title": "未找到用户",
         "description": "请更新筛选条件来查找更多用户。"
+      },
+      "orderBy": {
+        "label": "排序方式",
+        "values": {
+          "createdAtDesc": "日期：最新",
+          "createdAtAsc": "日期：最早",
+          "nameAsc": "按字母顺序"
+        }
       }
     },
     "collections": {
@@ -52,6 +71,10 @@
   },
   "collection": {
     "filter": "过滤 器",
+    "card": {
+      "floor-price": "底价",
+      "total-volume": "总卷"
+    },
     "header": {
       "data-labels": {
         "floor-price": "底价",
@@ -98,11 +121,6 @@
           "body": "我要举报下列 NFT {{name}} (#{{id}})\n原因如下： "
         },
         "refresh-metadata": "刷新元数据"
-      },
-      "explorerLink": "在 {{name}} 上查看",
-      "ipfsLink": "在 IPFS 上查看",
-      "errors": {
-        "image": "出现问题"
       },
       "details": {
         "title": "细节",

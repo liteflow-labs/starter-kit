@@ -8,12 +8,10 @@ import { useCallback, useEffect } from 'react'
 import Head from '../components/Head'
 import BackButton from '../components/Navbar/BackButton'
 import useAccount from '../hooks/useAccount'
-import useEagerConnect from '../hooks/useEagerConnect'
 import useSigner from '../hooks/useSigner'
 import SmallLayout from '../layouts/small'
 
 const LoginPage: NextPage = () => {
-  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, query, replace } = useRouter()

@@ -8,12 +8,15 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
     chainId
+    collectionAddress
+    tokenId
     collection {
       chainId
       address
       name
       standard
     }
+    quantity
     name
     image
     animationUrl
@@ -29,12 +32,8 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
         status
       }
     }
-    owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-      aggregates {
-        sum {
-          quantity
-        }
-      }
+    owned: ownership(ownerAddress: $address) {
+      quantity
     }
     bestBid: bids(
       orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
@@ -91,6 +90,7 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
       filter: { expiredAt: { greaterThan: $now } }
     ) {
       totalCount
+      totalCurrencyDistinctCount
       nodes {
         id
         unitPrice
@@ -103,21 +103,9 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
         }
       }
     }
-    currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
-      aggregates {
-        distinctCount {
-          currencyId
-        }
-      }
-    }
     ownerships(first: 1) {
       nodes {
         ownerAddress
-      }
-      aggregates {
-        sum {
-          quantity
-        }
       }
     }
   }

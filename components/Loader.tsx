@@ -8,7 +8,7 @@ type Props = {
 const Loader: FC<Props> = ({ fullPage }) => {
   const style = useMemo(
     /* Add a min height of 100 of the viewport minus the 64px for the navbar */
-    () => (fullPage ? { minHeight: 'calc(100vh - 64px)' } : {}),
+    () => (fullPage ? { minHeight: 'calc(100vh - 64px)' } : { height: '100%' }),
     [fullPage],
   )
   return (

@@ -12,16 +12,15 @@ import {
   Auction,
   Collection,
   CollectionStats,
+  CollectionTraitValue,
   Currency,
   Maybe,
   Offer,
   OfferOpenBuy,
   OfferOpenSale,
-  OfferOpenSaleSumAggregates,
+  OfferOpenSalesConnection,
   Ownership,
-  OwnershipSumAggregates,
   Trade,
-  Trait,
 } from './graphql'
 
 export const convertAsset = (
@@ -30,11 +29,7 @@ export const convertAsset = (
     'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
   > & {
     collection: Pick<Collection, 'address' | 'name' | 'chainId'>
-    owned: {
-      aggregates: Maybe<{
-        sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
-      }>
-    }
+    owned: Maybe<Pick<Ownership, 'quantity'>>
     bestBid: Maybe<{
       nodes: Array<
         Pick<Offer, 'unitPrice' | 'amount'> & {
@@ -76,7 +71,7 @@ export const convertAsset = (
       address: asset.collection.address,
       name: asset.collection.name,
     },
-    owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+    owned: BigNumber.from(asset.owned?.quantity || 0),
     unlockedContent: asset.unlockedContent,
     bestBid: bestBid
       ? {
@@ -88,19 +83,11 @@ export const convertAsset = (
 }
 
 export const convertAssetWithSupplies = (
-  asset: Parameters<typeof convertAsset>[0] & {
-    ownerships: {
-      aggregates: Maybe<{
-        sum: Maybe<Pick<OwnershipSumAggregates, 'quantity'>>
-      }>
-    }
-    sales: {
-      aggregates: Maybe<{
-        sum: Maybe<Pick<OfferOpenSaleSumAggregates, 'availableQuantity'>>
-      }>
-    }
-    collection: Pick<Collection, 'standard' | 'mintType'>
-  },
+  asset: Parameters<typeof convertAsset>[0] &
+    Pick<Asset, 'quantity'> & {
+      sales: Pick<OfferOpenSalesConnection, 'totalAvailableQuantitySum'>
+      collection: Pick<Collection, 'standard' | 'mintType'>
+    },
 ): ReturnType<typeof convertAsset> & {
   saleSupply: BigNumber
   totalSupply: BigNumber
@@ -121,13 +108,9 @@ export const convertAssetWithSupplies = (
       standard: asset.collection.standard,
       mintType: asset.collection.mintType,
     },
-    saleSupply: BigNumber.from(
-      asset.sales.aggregates?.sum?.availableQuantity || 0,
-    ),
-    totalSupply: BigNumber.from(
-      asset.ownerships.aggregates?.sum?.quantity || '0',
-    ),
-    owned: BigNumber.from(asset.owned.aggregates?.sum?.quantity || '0'),
+    saleSupply: BigNumber.from(asset.sales.totalAvailableQuantitySum),
+    totalSupply: BigNumber.from(asset.quantity),
+    owned: BigNumber.from(asset.owned?.quantity || 0),
     bestBid: bestBid
       ? {
           unitPrice: BigNumber.from(bestBid.unitPrice),
@@ -173,31 +156,31 @@ export const convertCollection = (
 export const convertTraits = (
   asset: Parameters<typeof convertAsset>[0] & {
     traits: {
-      nodes: Array<Pick<AssetTrait, 'type' | 'value'>>
+      nodes: Array<
+        Pick<AssetTrait, 'type' | 'value'> & {
+          collectionTraitValue: Maybe<
+            Pick<CollectionTraitValue, 'numberOfAssets'>
+          >
+        }
+      >
     }
     collection: {
       supply: number
-      traits: Array<Pick<Trait, 'type' | 'values'>>
     }
   },
 ): {
   type: string
   value: string
-  totalCount: number
   percent: number
 }[] => {
   const assetTraitsWithCounts = asset.traits.nodes.map((assetTrait) => {
-    const traitInCollection = asset.collection.traits.find(
-      ({ type }) => type === assetTrait.type,
-    )
-    const traitValueCount =
-      traitInCollection?.values?.find(({ value }) => value === assetTrait.value)
-        ?.count || 0
     return {
       type: assetTrait.type,
       value: assetTrait.value,
-      totalCount: traitValueCount,
-      percent: (traitValueCount / asset.collection.supply) * 100,
+      percent:
+        ((assetTrait.collectionTraitValue?.numberOfAssets || 0) /
+          asset.collection.supply) *
+        100,
     }
   })
 
@@ -621,6 +604,16 @@ export const convertTrade = (
     | 'buyerAddress'
     | 'sellerAddress'
   > & {
+    buyer?: Maybe<
+      Pick<Account, 'address' | 'name' | 'image'> & {
+        verification: Maybe<Pick<AccountVerification, 'status'>>
+      }
+    >
+    seller?: Maybe<
+      Pick<Account, 'address' | 'name' | 'image'> & {
+        verification: Maybe<Pick<AccountVerification, 'status'>>
+      }
+    >
     currency: Maybe<
       Pick<Currency, 'id' | 'image' | 'name' | 'decimals' | 'symbol'>
     >
@@ -632,6 +625,18 @@ export const convertTrade = (
   quantity: BigNumber
   buyerAddress: string
   sellerAddress: string
+  buyer: {
+    address: string
+    name: string | null | undefined
+    image: string | null | undefined
+    verified: boolean
+  }
+  seller: {
+    address: string
+    name: string | null | undefined
+    image: string | null | undefined
+    verified: boolean
+  }
   createdAt: Date
   currency: {
     name: string
@@ -654,6 +659,18 @@ export const convertTrade = (
     createdAt: new Date(trade.timestamp),
     quantity: BigNumber.from(trade.quantity),
     sellerAddress: trade.sellerAddress,
+    buyer: {
+      address: trade.buyer?.address || trade.buyerAddress,
+      name: trade.buyer?.name,
+      image: trade.buyer?.image,
+      verified: trade.buyer?.verification?.status === 'VALIDATED',
+    },
+    seller: {
+      address: trade.seller?.address || trade.sellerAddress,
+      name: trade.seller?.name,
+      image: trade.seller?.image,
+      verified: trade.seller?.verification?.status === 'VALIDATED',
+    },
     currency: trade.currency,
     asset: trade.asset
       ? {

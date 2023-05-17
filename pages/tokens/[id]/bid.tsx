@@ -12,15 +12,17 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
+import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
-import Loader from '../../../components/Loader'
 import BackButton from '../../../components/Navbar/BackButton'
 import OfferFormBid from '../../../components/Offer/Form/Bid'
 import Price from '../../../components/Price/Price'
+import SkeletonForm from '../../../components/Skeleton/Form'
+import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../components/Token/Card'
 import {
   convertAsset,
@@ -33,7 +35,6 @@ import { useBidOnAssetQuery, useFeesForBidQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
-import useEagerConnect from '../../../hooks/useEagerConnect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
@@ -43,7 +44,6 @@ type Props = {
 }
 
 const BidPage: NextPage<Props> = ({ now }) => {
-  useEagerConnect()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
@@ -96,17 +96,20 @@ const BidPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${assetId}`)
   }, [toast, t, push, assetId])
 
-  if (loading) return <Loader fullPage />
-  if (!asset) return <></>
+  if (!loading && !asset) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head
-        title={t('offers.bid.meta.title', asset)}
-        description={t('offers.bid.meta.description', {
-          name: asset.name,
-          creator: asset.creator.name || asset.creator.address,
-        })}
-        image={asset.image}
+        title={asset ? t('offers.bid.meta.title', asset) : ''}
+        description={
+          asset
+            ? t('offers.bid.meta.description', {
+                name: asset.name,
+                creator: asset.creator.name || asset.creator.address,
+              })
+            : ''
+        }
+        image={asset?.image}
       />
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" my={12}>
@@ -121,19 +124,22 @@ const BidPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            <TokenCard
-              asset={convertAsset(asset)}
-              creator={convertUser(asset.creator, asset.creator.address)}
-              auction={auction ? convertAuctionWithBestBid(auction) : undefined}
-              sale={convertSale(asset.firstSale.nodes[0])}
-              numberOfSales={asset.firstSale.totalCount}
-              hasMultiCurrency={
-                parseInt(
-                  asset.currencySales.aggregates?.distinctCount?.currencyId,
-                  10,
-                ) > 1
-              }
-            />
+            {loading || !asset ? (
+              <SkeletonTokenCard />
+            ) : (
+              <TokenCard
+                asset={convertAsset(asset)}
+                creator={convertUser(asset.creator, asset.creator.address)}
+                auction={
+                  auction ? convertAuctionWithBestBid(auction) : undefined
+                }
+                sale={convertSale(asset.firstSale.nodes[0])}
+                numberOfSales={asset.firstSale.totalCount}
+                hasMultiCurrency={
+                  asset.firstSale.totalCurrencyDistinctCount > 1
+                }
+              />
+            )}
           </Box>
         </GridItem>
         <GridItem>
@@ -197,33 +203,33 @@ const BidPage: NextPage<Props> = ({ now }) => {
               </>
             )}
 
-            {asset.collection.standard === 'ERC721' &&
-              asset.ownerships.nodes[0] && (
-                <OfferFormBid
-                  signer={signer}
-                  account={address}
-                  assetId={asset.id}
-                  chainId={asset.chainId}
-                  multiple={false}
-                  owner={asset.ownerships.nodes[0].ownerAddress}
-                  currencies={currencies}
-                  blockExplorer={blockExplorer}
-                  onCreated={onCreated}
-                  auctionId={auction?.id}
-                  auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
-                  offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-                  feesPerTenThousand={feesPerTenThousand}
-                  allowTopUp={environment.ALLOW_TOP_UP}
-                />
-              )}
-            {asset.collection.standard === 'ERC1155' && (
+            {loading || !asset ? (
+              <SkeletonForm items={2} />
+            ) : asset.collection.standard === 'ERC721' ? (
+              <OfferFormBid
+                signer={signer}
+                account={address}
+                assetId={asset.id}
+                chainId={asset.chainId}
+                multiple={false}
+                owner={asset.ownerships.nodes[0]?.ownerAddress}
+                currencies={currencies}
+                blockExplorer={blockExplorer}
+                onCreated={onCreated}
+                auctionId={auction?.id}
+                auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
+                offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+                feesPerTenThousand={feesPerTenThousand}
+                allowTopUp={environment.ALLOW_TOP_UP}
+              />
+            ) : (
               <OfferFormBid
                 signer={signer}
                 account={address}
                 assetId={asset.id}
                 chainId={asset.chainId}
                 multiple={true}
-                supply={asset.ownerships.aggregates?.sum?.quantity || '0'}
+                supply={asset.quantity}
                 currencies={currencies}
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}

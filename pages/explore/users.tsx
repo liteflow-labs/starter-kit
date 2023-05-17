@@ -1,17 +1,31 @@
-import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  SimpleGrid,
+  Text,
+  useBreakpointValue,
+} from '@chakra-ui/react'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo } from 'react'
+import { useRouter } from 'next/router'
+import { useCallback, useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import Head from '../../components/Head'
 import Pagination from '../../components/Pagination/Pagination'
+import Select from '../../components/Select/Select'
+import SkeletonGrid from '../../components/Skeleton/Grid'
+import SkeletonUserCard from '../../components/Skeleton/UserCard'
 import UserCard from '../../components/User/UserCard'
 import { convertUserWithCover } from '../../convert'
 import environment from '../../environment'
-import { AccountFilter, useFetchExploreUsersQuery } from '../../graphql'
-import useEagerConnect from '../../hooks/useEagerConnect'
+import {
+  AccountFilter,
+  AccountsOrderBy,
+  useFetchExploreUsersQuery,
+} from '../../graphql'
+import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
 import useQueryParamSingle from '../../hooks/useQueryParamSingle'
@@ -28,19 +42,33 @@ const searchFilter = (search: string): AccountFilter =>
   } as AccountFilter)
 
 const UsersPage: NextPage<Props> = () => {
-  useEagerConnect()
+  const { query, pathname, push } = useRouter()
+  const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
+  const orderBy = useOrderByQuery<AccountsOrderBy>('CREATED_AT_DESC')
   const { limit, offset, page } = usePaginateQuery()
   const search = useQueryParamSingle('search')
   const { data, loading } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
+      orderBy,
       filter: search ? searchFilter(search) : [],
     },
   })
 
-  const [changePage, changeLimit, { loading: pageLoading }] = usePaginate()
+  const changeOrder = useCallback(
+    async (orderBy: any) => {
+      await push(
+        { pathname, query: { ...query, orderBy, page: undefined } },
+        undefined,
+        { shallow: true },
+      )
+    },
+    [push, pathname, query],
+  )
+
+  const [changePage, changeLimit] = usePaginate()
 
   const users = useMemo(() => data?.users?.nodes || [], [data])
 
@@ -50,16 +78,49 @@ const UsersPage: NextPage<Props> = () => {
 
       <ExploreTemplate
         title={t('explore.title')}
-        loading={pageLoading || loading}
         search={search}
         selectedTabIndex={2}
       >
         <>
-          {users.length > 0 ? (
+          <Flex pt={6} justifyContent="flex-end">
+            <Box>
+              <Select<AccountsOrderBy>
+                label={isSmall ? undefined : t('explore.users.orderBy.label')}
+                name="orderBy"
+                onChange={changeOrder}
+                choices={[
+                  {
+                    label: t('explore.users.orderBy.values.createdAtDesc'),
+                    value: 'CREATED_AT_DESC',
+                  },
+                  {
+                    label: t('explore.users.orderBy.values.createdAtAsc'),
+                    value: 'CREATED_AT_ASC',
+                  },
+                  {
+                    label: t('explore.users.orderBy.values.nameAsc'),
+                    value: 'NAME_ASC',
+                  },
+                ]}
+                value={orderBy}
+                inlineLabel
+              />
+            </Box>
+          </Flex>
+          {loading ? (
+            <SkeletonGrid
+              items={environment.PAGINATION_LIMIT}
+              compact
+              columns={{ sm: 2, md: 4, lg: 6 }}
+              py={6}
+            >
+              <SkeletonUserCard />
+            </SkeletonGrid>
+          ) : users.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}
-              columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
+              columns={{ sm: 2, md: 4, lg: 6 }}
               py={6}
             >
               {users.map((user, i) => (

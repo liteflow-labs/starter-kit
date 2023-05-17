@@ -15,6 +15,9 @@ query FetchAllERC721And1155(
     totalCount
     nodes {
       id
+      chainId
+      collectionAddress
+      tokenId
       name
       collection {
         chainId
@@ -27,12 +30,8 @@ query FetchAllERC721And1155(
         mimetype
       }
       animationUrl
-      owned: ownerships(filter: { ownerAddress: { equalTo: $address } }) {
-        aggregates {
-          sum {
-            quantity
-          }
-        }
+      owned: ownership(ownerAddress: $address) {
+        quantity
       }
       auctions(
         first: 1
@@ -81,12 +80,10 @@ query FetchAllERC721And1155(
       firstSale: sales(
         first: 1
         orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-        filter: {
-          expiredAt: { greaterThan: $now }
-          availableQuantity: { greaterThan: "0" }
-        }
+        filter: { expiredAt: { greaterThan: $now } }
       ) {
         totalCount
+        totalCurrencyDistinctCount
         nodes {
           id
           unitPrice
@@ -96,13 +93,6 @@ query FetchAllERC721And1155(
             id
             decimals
             symbol
-          }
-        }
-      }
-      currencySales: sales(filter: { expiredAt: { greaterThan: $now } }) {
-        aggregates {
-          distinctCount {
-            currencyId
           }
         }
       }

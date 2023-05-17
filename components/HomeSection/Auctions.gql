@@ -1,0 +1,71 @@
+query FetchAuctions($now: Datetime!, $address: Address) {
+  auctions(filter: { endAt: { greaterThan: $now } }, orderBy: END_AT_ASC) {
+    nodes {
+      id
+      endAt
+      bestBid: offers(
+        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+        first: 1
+        filter: { signature: { isNull: false } }
+      ) {
+        nodes {
+          unitPrice
+          amount
+          currency {
+            image
+            name
+            id
+            decimals
+            symbol
+          }
+        }
+      }
+      asset {
+        id
+        chainId
+        collectionAddress
+        tokenId
+        name
+        collection {
+          chainId
+          address
+          name
+        }
+        owned: ownership(ownerAddress: $address) {
+          quantity
+        }
+        image
+        animationUrl
+        unlockedContent {
+          url
+          mimetype
+        }
+        creator {
+          address
+          name
+          image
+          verification {
+            status
+          }
+        }
+        bestBid: bids(
+          orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+          filter: { expiredAt: { greaterThan: $now } }
+          first: 1
+        ) {
+          nodes {
+            unitPrice
+            amount
+            currency {
+              image
+              name
+              id
+              decimals
+              symbol
+            }
+          }
+        }
+      }
+    }
+  }
+}
