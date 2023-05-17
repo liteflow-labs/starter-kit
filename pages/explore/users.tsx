@@ -111,7 +111,7 @@ const UsersPage: NextPage<Props> = () => {
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
-              columns={{ base: 2, md: 4, lg: 6 }}
+              columns={{ sm: 2, md: 4, lg: 6 }}
               py={6}
             >
               <SkeletonUserCard />
@@ -120,7 +120,7 @@ const UsersPage: NextPage<Props> = () => {
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}
-              columns={{ base: 2, md: 4, lg: 6 }}
+              columns={{ sm: 2, md: 4, lg: 6 }}
               py={6}
             >
               {users.map((user, i) => (
