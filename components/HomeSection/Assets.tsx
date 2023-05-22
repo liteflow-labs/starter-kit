@@ -103,6 +103,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       </Stack>
     )
 
+  if (assets.length === 0) return null
   return (
     <Stack spacing={6}>
       <Flex flexWrap="wrap" align="center" justify="space-between" gap={4}>
