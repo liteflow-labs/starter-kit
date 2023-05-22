@@ -217,7 +217,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             p={12}
             bg="brand.50"
           >
-            {loading || !asset ? (
+            {!asset ? (
               <Skeleton width="100%" height="100%" />
             ) : (
               <TokenMedia
@@ -295,7 +295,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           <Flex justify="space-between">
             <Stack spacing={1}>
               <Heading as="p" variant="heading1" color="gray.500">
-                {loading || !asset ? (
+                {!asset ? (
                   <Skeleton height="1em" width="200px" />
                 ) : (
                   <Link
@@ -311,11 +311,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 color="brand.black"
                 wordBreak="break-word"
               >
-                {loading || !asset ? (
-                  <Skeleton height="1em" width="300px" />
-                ) : (
-                  asset.name
-                )}
+                {!asset ? <Skeleton height="1em" width="300px" /> : asset.name}
               </Heading>
             </Stack>
             {asset && (
@@ -351,7 +347,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             )}
           </Flex>
 
-          {loading || !asset ? (
+          {!asset ? (
             <SkeletonProperty items={3} />
           ) : (
             <TokenMetadata
@@ -365,7 +361,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               isOpenCollection={asset.collection.mintType === 'PUBLIC'}
             />
           )}
-          {loading || !asset ? (
+          {!asset ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
