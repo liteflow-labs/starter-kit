@@ -2,11 +2,16 @@ query FetchCollectionTraits($chainId: Int!, $address: Address!) {
   collection(chainId: $chainId, address: $address) {
     chainId
     address
-    traits {
-      type
-      values {
-        count
-        value
+    traitsOfCollection(first: 50, orderBy: [TYPE_ASC]) {
+      nodes {
+        type
+        numberOfValues
+        values(first: 50, orderBy: [NUMBER_OF_ASSETS_DESC, VALUE_ASC]) {
+          nodes {
+            value
+            numberOfAssets
+          }
+        }
       }
     }
   }

@@ -9,24 +9,12 @@ query FetchOnSaleAssets(
   onSale: assets(
     filter: {
       ownershipsExist: true
-      or: [
-        {
-          sales: {
-            some: {
-              expiredAt: { greaterThan: $now }
-              makerAddress: { equalTo: $address }
-            }
-          }
+      salesAndAuctions: {
+        some: {
+          creatorAddress: { equalTo: $address }
+          endAt: { greaterThan: $now }
         }
-        {
-          auctions: {
-            some: {
-              endAt: { greaterThan: $now }
-              creatorAddress: { equalTo: $address }
-            }
-          }
-        }
-      ]
+      }
     }
     first: $limit
     offset: $offset

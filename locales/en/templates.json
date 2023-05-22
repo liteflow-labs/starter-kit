@@ -71,6 +71,10 @@
   },
   "collection": {
     "filter": "Filters",
+    "card": {
+      "floor-price": "Floor price",
+      "total-volume": "Total Vol."
+    },
     "header": {
       "data-labels": {
         "floor-price": "Floor price",

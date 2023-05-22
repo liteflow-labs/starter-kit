@@ -23,13 +23,6 @@ query FetchAsset(
       name
       address
       supply
-      traits {
-        type
-        values {
-          value
-          count
-        }
-      }
       mintType
     }
     name
@@ -38,6 +31,9 @@ query FetchAsset(
       nodes {
         type
         value
+        collectionTraitValue {
+          numberOfAssets
+        }
       }
     }
     quantity

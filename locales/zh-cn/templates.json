@@ -71,6 +71,10 @@
   },
   "collection": {
     "filter": "过滤 器",
+    "card": {
+      "floor-price": "底价",
+      "total-volume": "总卷"
+    },
     "header": {
       "data-labels": {
         "floor-price": "底价",

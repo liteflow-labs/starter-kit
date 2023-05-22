@@ -71,6 +71,10 @@
   },
   "collection": {
     "filter": "Filtros",
+    "card": {
+      "floor-price": "Precio piso",
+      "total-volume": "Volumen total"
+    },
     "header": {
       "data-labels": {
         "floor-price": "Precio piso",

@@ -125,11 +125,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const chain = useMemo(() => chains.find((x) => x.id === chainId), [chainId])
 
   const traits = useMemo(
-    () =>
-      asset &&
-      asset.traits.nodes.length > 0 &&
-      asset.collection.traits &&
-      convertTraits(asset),
+    () => asset && asset.traits.nodes.length > 0 && convertTraits(asset),
     [asset],
   )
 
