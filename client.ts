@@ -35,8 +35,7 @@ export default function getClient(
     ssrMode: isServer,
     defaultOptions: {
       watchQuery: {
-        fetchPolicy: 'cache-first',
-        nextFetchPolicy: 'cache-and-network',
+        fetchPolicy: 'cache-and-network',
       },
     },
   })
