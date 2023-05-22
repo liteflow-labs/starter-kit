@@ -1,5 +1,13 @@
-query FetchAssetHistory($id: String!) {
-  asset(id: $id) {
+query FetchAssetHistory(
+  $chainId: Int!
+  $collectionAddress: Address!
+  $tokenId: String!
+) {
+  asset(
+    chainId: $chainId
+    collectionAddress: $collectionAddress
+    tokenId: $tokenId
+  ) {
     chainId
     collectionAddress
     tokenId

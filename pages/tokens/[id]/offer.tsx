@@ -75,11 +75,17 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   useLoginRedirect()
   const assetId = useRequiredQueryParamSingle('id')
+  const [chainId, collectionAddress, tokenId] = useMemo(
+    () => assetId.split('-'),
+    [assetId],
+  )
 
   const date = useMemo(() => new Date(now), [now])
   const { data, loading } = useOfferForAssetQuery({
     variables: {
-      id: assetId,
+      chainId: chainId ? parseInt(chainId, 10) : 0,
+      collectionAddress: collectionAddress || '',
+      tokenId: tokenId || '',
       now: date,
       address: address || '',
     },

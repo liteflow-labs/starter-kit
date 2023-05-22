@@ -92,7 +92,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const date = useMemo(() => new Date(nowProp), [nowProp])
   const { data, refetch, loading, previousData } = useFetchAssetQuery({
     variables: {
-      id: assetId,
+      chainId,
+      collectionAddress,
+      tokenId,
       now: date,
       address: address || '',
     },

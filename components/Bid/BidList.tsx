@@ -43,7 +43,9 @@ const BidList: VFC<Props> = ({
   const { t } = useTranslation('components')
   const bidResults = useFetchAssetBidsQuery({
     variables: {
-      id: [chainId, collectionAddress, tokenId].join('-'),
+      chainId,
+      collectionAddress,
+      tokenId,
       now: now,
     },
     skip: !!auctionId,

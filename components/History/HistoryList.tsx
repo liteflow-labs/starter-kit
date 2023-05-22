@@ -27,7 +27,9 @@ const HistoryList: VFC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
 
   const { data, loading, previousData } = useFetchAssetHistoryQuery({
     variables: {
-      id: [chainId, collectionAddress, tokenId].join('-'),
+      chainId,
+      collectionAddress,
+      tokenId,
     },
   })
   const blockExplorer = useBlockExplorer(chainId)
