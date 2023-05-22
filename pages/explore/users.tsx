@@ -48,7 +48,7 @@ const UsersPage: NextPage<Props> = () => {
   const orderBy = useOrderByQuery<AccountsOrderBy>('CREATED_AT_DESC')
   const { limit, offset, page } = usePaginateQuery()
   const search = useQueryParamSingle('search')
-  const { data, loading } = useFetchExploreUsersQuery({
+  const { data, loading, previousData } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
@@ -70,7 +70,7 @@ const UsersPage: NextPage<Props> = () => {
 
   const [changePage, changeLimit] = usePaginate()
 
-  const users = useMemo(() => data?.users?.nodes || [], [data])
+  const usersData = useMemo(() => data || previousData, [data, previousData])
 
   return (
     <>
@@ -107,7 +107,7 @@ const UsersPage: NextPage<Props> = () => {
               />
             </Box>
           </Flex>
-          {loading ? (
+          {loading || !usersData ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
@@ -116,14 +116,14 @@ const UsersPage: NextPage<Props> = () => {
             >
               <SkeletonUserCard />
             </SkeletonGrid>
-          ) : users.length > 0 ? (
+          ) : (usersData?.users?.nodes || []).length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}
               columns={{ base: 2, md: 4, lg: 6 }}
               py={6}
             >
-              {users.map((user, i) => (
+              {usersData?.users?.nodes.map((user, i) => (
                 <UserCard
                   key={i}
                   user={convertUserWithCover(user, user.address)}
@@ -143,7 +143,7 @@ const UsersPage: NextPage<Props> = () => {
               limit={limit}
               limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              total={data?.users?.totalCount}
+              total={usersData?.users?.totalCount}
               onPageChange={changePage}
               onLimitChange={changeLimit}
               result={{
