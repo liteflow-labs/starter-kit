@@ -41,7 +41,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useFetchOnSaleAssetsQuery({
+  const { data, loading, previousData } = useFetchOnSaleAssetsQuery({
     variables: {
       address: userAddress,
       currentAddress: address || '',
@@ -59,9 +59,11 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
+  const assetData = useMemo(() => data || previousData, [data, previousData])
+
   const assets = useMemo(
     () =>
-      (data?.onSale?.nodes || [])
+      (assetData?.onSale?.nodes || [])
         .filter((x): x is AssetDetailFragment => !!x)
         .map((x) => ({
           ...convertAsset(x),
@@ -73,7 +75,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
           numberOfSales: x.firstSale.totalCount,
           hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
         })),
-    [data],
+    [assetData],
   )
 
   return (
@@ -88,7 +90,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
       >
         <TokenGrid<AssetsOrderBy>
           assets={assets}
-          loading={loading}
+          loading={loading && !assetData}
           orderBy={{
             value: orderBy,
             choices: [
@@ -107,7 +109,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
             limit,
             limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
             page,
-            total: data?.onSale?.totalCount || 0,
+            total: assetData?.onSale?.totalCount || 0,
             onPageChange: changePage,
             onLimitChange: changeLimit,
             result: {

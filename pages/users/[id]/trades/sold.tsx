@@ -58,7 +58,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useFetchUserTradeSoldQuery({
+  const { data, loading, previousData } = useFetchUserTradeSoldQuery({
     variables: {
       address: userAddress,
       limit,
@@ -74,9 +74,10 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
+  const tradeData = useMemo(() => data || previousData, [data, previousData])
   const trades = useMemo(
-    () => (data?.trades?.nodes || []).map(convertTrade),
-    [data],
+    () => (tradeData?.trades?.nodes || []).map(convertTrade),
+    [tradeData],
   )
   return (
     <LargeLayout>
@@ -156,7 +157,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading ? (
+          {loading && !tradeData ? (
             <Loader />
           ) : trades.length == 0 ? (
             <Empty
@@ -275,7 +276,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={data?.trades?.totalCount || 0}
+            total={tradeData?.trades?.totalCount || 0}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (
