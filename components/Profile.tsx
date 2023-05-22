@@ -29,24 +29,32 @@ const UserProfileTemplate: FC<{
   loginUrlForReferral,
   children,
 }) => {
-  const { data } = useFetchAccountDetailQuery({
+  const { data, previousData } = useFetchAccountDetailQuery({
     variables: { address },
   })
-  const { data: metadata } = useFetchAccountMetadataQuery({
-    variables: { address, now },
-  })
+  const { data: metadata, previousData: previousMetadata } =
+    useFetchAccountMetadataQuery({ variables: { address, now } })
+
+  const accountData = useMemo(() => data || previousData, [data, previousData])
+
   const account = useMemo(
-    () => convertFullUser(data?.account || null, address),
-    [data, address],
+    () => convertFullUser(accountData?.account || null, address),
+    [accountData, address],
   )
+
+  const metadataData = useMemo(
+    () => metadata || previousMetadata,
+    [metadata, previousMetadata],
+  )
+
   const totals = useMemo(
     () =>
       new Map<TabsEnum, number | undefined>([
-        ['created', metadata?.created?.totalCount],
-        ['on-sale', metadata?.onSale?.totalCount],
-        ['owned', metadata?.owned?.totalCount],
+        ['created', metadataData?.created?.totalCount],
+        ['on-sale', metadataData?.onSale?.totalCount],
+        ['owned', metadataData?.owned?.totalCount],
       ]),
-    [metadata],
+    [metadataData],
   )
   return (
     <>

@@ -64,46 +64,53 @@ const BidList: VFC<Props> = ({
     [auctionId, auctionBidResult, bidResults],
   )
 
+  const bidData = useMemo(
+    () => bidResults.data || bidResults.previousData,
+    [bidResults.data, bidResults.previousData],
+  )
+
+  const auctionBidData = useMemo(
+    () => auctionBidResult.data || auctionBidResult.previousData,
+    [auctionBidResult.data, auctionBidResult.previousData],
+  )
   const bids = useMemo(() => {
     const list = auctionId
-      ? auctionBidResult.data?.auction?.offers.nodes ||
-        auctionBidResult.previousData?.auction?.offers.nodes ||
-        []
-      : bidResults.data?.asset?.bids.nodes ||
-        bidResults.previousData?.asset?.bids.nodes ||
-        []
+      ? auctionBidData?.auction?.offers.nodes || []
+      : bidData?.asset?.bids.nodes || []
     return list.map(convertBidFull)
-  }, [auctionBidResult, auctionId, bidResults])
+  }, [auctionId, auctionBidData, bidData])
 
+  if (result.loading && !bidData)
+    return (
+      <SkeletonList items={5}>
+        <SkeletonListItem image subtitle caption />
+      </SkeletonList>
+    )
+  if (bids.length === 0)
+    return (
+      <Text as="p" variant="text" color="gray.500">
+        {t('bid.list.none')}
+      </Text>
+    )
   return (
     <List>
-      {result.loading ? (
-        <SkeletonList items={5}>
-          <SkeletonListItem image subtitle caption />
-        </SkeletonList>
-      ) : bids.length > 0 ? (
-        bids.map((bid, i) => (
-          <Fragment key={i}>
-            {i > 0 && bids[i - 1]?.currency.id !== bid.currency.id && <hr />}
-            <Bid
-              bid={bid}
-              chainId={chainId}
-              signer={signer}
-              account={account}
-              preventAcceptation={preventAcceptation}
-              blockExplorer={blockExplorer}
-              onAccepted={onAccepted}
-              onCanceled={onCanceled}
-              isSingle={isSingle}
-              totalOwned={totalOwned}
-            />
-          </Fragment>
-        ))
-      ) : (
-        <Text as="p" variant="text" color="gray.500">
-          {t('bid.list.none')}
-        </Text>
-      )}
+      {bids.map((bid, i) => (
+        <Fragment key={i}>
+          {i > 0 && bids[i - 1]?.currency.id !== bid.currency.id && <hr />}
+          <Bid
+            bid={bid}
+            chainId={chainId}
+            signer={signer}
+            account={account}
+            preventAcceptation={preventAcceptation}
+            blockExplorer={blockExplorer}
+            onAccepted={onAccepted}
+            onCanceled={onCanceled}
+            isSingle={isSingle}
+            totalOwned={totalOwned}
+          />
+        </Fragment>
+      ))}
     </List>
   )
 }
