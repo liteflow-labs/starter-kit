@@ -8,6 +8,7 @@ import {
 } from '../../convert'
 import environment from '../../environment'
 import {
+  FetchAssetsQuery,
   useFetchAssetsQuery,
   useFetchDefaultAssetIdsQuery,
 } from '../../graphql'
@@ -29,6 +30,10 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     skip: !!environment.HOME_TOKENS,
   })
   useHandleQueryError(defaultAssetQuery)
+  const defaultAssetData = useMemo(
+    () => defaultAssetQuery.data || defaultAssetQuery.previousData,
+    [defaultAssetQuery.data, defaultAssetQuery.previousData],
+  )
 
   const assetIds = useMemo(() => {
     if (environment.HOME_TOKENS) {
@@ -51,8 +56,8 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       }
       return randomTokens
     }
-    return (defaultAssetQuery.data?.assets?.nodes || []).map((x) => x.id)
-  }, [defaultAssetQuery, date])
+    return (defaultAssetData?.assets?.nodes || []).map((x) => x.id)
+  }, [defaultAssetData, date])
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {
@@ -62,16 +67,24 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       address: address || '',
     },
   })
-
   useHandleQueryError(assetsQuery)
+  const assetData = useMemo(
+    () => assetsQuery.data || assetsQuery.previousData,
+    [assetsQuery.data, assetsQuery.previousData],
+  )
 
-  const assets = useOrderById(assetIds, assetsQuery.data?.assets?.nodes)
+  const assets = useOrderById(assetIds, assetData?.assets?.nodes || [])
   return (
     <HomeGridSection
       explore={{ href: '/explore', title: t('home.nfts.explore') }}
-      isLoading={defaultAssetQuery.loading || assetsQuery.loading}
+      isLoading={
+        (defaultAssetQuery.loading && !defaultAssetData) ||
+        (assetsQuery.loading && !assetData)
+      }
       items={assets}
-      itemRender={(item: typeof assets[0]) => (
+      itemRender={(
+        item: NonNullable<FetchAssetsQuery['assets']>['nodes'][number],
+      ) => (
         <TokenCard
           asset={convertAsset(item)}
           creator={convertUser(item.creator, item.creator.address)}

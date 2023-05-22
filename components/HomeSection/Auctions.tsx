@@ -5,7 +5,7 @@ import {
   convertAuctionWithBestBid,
   convertUser,
 } from '../../convert'
-import { useFetchAuctionsQuery } from '../../graphql'
+import { FetchAuctionsQuery, useFetchAuctionsQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import TokenCard from '../Token/Card'
@@ -22,15 +22,21 @@ const AuctionsHomeSection: FC<Props> = ({ date }) => {
     variables: { now: date, address: address || '' },
   })
   useHandleQueryError(auctionAssetsQuery)
+  const auctionData = useMemo(
+    () => auctionAssetsQuery.data || auctionAssetsQuery.previousData,
+    [auctionAssetsQuery.data, auctionAssetsQuery.previousData],
+  )
   const auctions = useMemo(
-    () => auctionAssetsQuery.data?.auctions?.nodes || [],
-    [auctionAssetsQuery.data],
+    () => auctionData?.auctions?.nodes || [],
+    [auctionData],
   )
   return (
     <HomeGridSection
-      isLoading={auctionAssetsQuery.loading}
+      isLoading={auctionAssetsQuery.loading && !auctionData}
       items={auctions}
-      itemRender={(item: typeof auctions[0]) => (
+      itemRender={(
+        item: NonNullable<FetchAuctionsQuery['auctions']>['nodes'][number],
+      ) => (
         <TokenCard
           key={item.id}
           asset={convertAsset(item.asset)}
