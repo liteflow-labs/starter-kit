@@ -5,6 +5,7 @@ import invariant from 'ts-invariant'
 import { convertHistories } from '../../convert'
 import { useFetchAssetHistoryQuery } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
+import List from '../List/List'
 import SkeletonList from '../Skeleton/List'
 import SkeletonListItem from '../Skeleton/ListItem'
 import {
@@ -106,7 +107,7 @@ const HistoryList: VFC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
         {t('history.none')}
       </Text>
     )
-  return <>{histories.map((history, i) => ListItem(history, i))}</>
+  return <List>{histories.map((history, i) => ListItem(history, i))}</List>
 }
 
 export default HistoryList
