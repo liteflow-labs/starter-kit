@@ -13,7 +13,7 @@ const Link = forwardRef<any, IProps>(function Link(props, ref) {
   if (isExternal) {
     return (
       <ChakraLink ref={ref} href={href} isExternal {...rest}>
-        <Flex alignItems="center">
+        <Flex alignItems="center" as="span">
           {children}
           {externalIcon && (
             <>
