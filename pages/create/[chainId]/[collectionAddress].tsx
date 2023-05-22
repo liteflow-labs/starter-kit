@@ -62,13 +62,23 @@ const CreatePage: NextPage = ({}) => {
   const { address } = useAccount()
   const { data: config } = useConfig()
   const toast = useToast()
-  const { data, loading } = useFetchAccountAndCollectionQuery({
+  const { data, loading, previousData } = useFetchAccountAndCollectionQuery({
     variables: {
       chainId,
       collectionAddress,
       account: address || '',
     },
   })
+
+  const collection = useMemo(
+    () => data?.collection || previousData?.collection,
+    [data, previousData],
+  )
+
+  const account = useMemo(
+    () => data?.account || previousData?.account,
+    [data, previousData],
+  )
 
   const [formData, setFormData] = useState<Partial<FormData>>()
 
@@ -83,7 +93,7 @@ const CreatePage: NextPage = ({}) => {
   )
 
   const asset: NFTCardProps['asset'] | undefined = useMemo(() => {
-    if (!data?.collection) return
+    if (!collection) return
     return {
       id: '',
       image: imageUrlLocal || '',
@@ -91,23 +101,23 @@ const CreatePage: NextPage = ({}) => {
       name: formData?.name || '',
       bestBid: undefined,
       collection: {
-        address: data.collection.address,
-        chainId: data.collection.chainId,
-        name: data.collection.name,
+        address: collection.address,
+        chainId: collection.chainId,
+        name: collection.name,
       },
       owned: BigNumber.from(0),
       unlockedContent: null,
     } as NFTCardProps['asset'] // TODO: use satisfies to ensure proper type
-  }, [imageUrlLocal, animationUrlLocal, formData?.name, data?.collection])
+  }, [imageUrlLocal, animationUrlLocal, formData?.name, collection])
 
   const creator = useMemo(
     () => ({
-      address: data?.account?.address || '0x',
-      image: data?.account?.image || undefined,
-      name: data?.account?.name || undefined,
-      verified: data?.account?.verification?.status === 'VALIDATED',
+      address: account?.address || '0x',
+      image: account?.image || undefined,
+      name: account?.name || undefined,
+      verified: account?.verification?.status === 'VALIDATED',
     }),
-    [data?.account],
+    [account],
   )
 
   const categories = useMemo(
@@ -131,7 +141,7 @@ const CreatePage: NextPage = ({}) => {
   )
 
   if (
-    !loading &&
+    account &&
     environment.RESTRICT_TO_VERIFIED_ACCOUNT &&
     !creator.verified
   ) {
@@ -177,14 +187,14 @@ const CreatePage: NextPage = ({}) => {
     )
   }
 
-  if (!loading && !data?.collection) return <Error statusCode={404} />
+  if (!loading && !collection) return <Error statusCode={404} />
   return (
     <Layout>
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" mt={6}>
-        {loading || !data?.collection ? (
+        {!collection ? (
           <Skeleton height="1em" width="50%" />
-        ) : data.collection.standard === 'ERC1155' ? (
+        ) : collection.standard === 'ERC1155' ? (
           t('asset.form.title.multiple')
         ) : (
           t('asset.form.title.single')
@@ -202,7 +212,7 @@ const CreatePage: NextPage = ({}) => {
             {t('asset.form.preview')}
           </Flex>
           <Box pointerEvents="none">
-            {loading || !asset ? (
+            {!asset ? (
               <SkeletonTokenCard />
             ) : (
               <TokenCard
@@ -217,12 +227,12 @@ const CreatePage: NextPage = ({}) => {
           </Box>
         </GridItem>
         <GridItem overflow="hidden">
-          {loading || !data?.collection ? (
+          {!collection ? (
             <SkeletonForm items={4} />
           ) : (
             <TokenFormCreate
               signer={signer}
-              collection={data.collection}
+              collection={collection}
               categories={categories}
               uploadUrl={environment.UPLOAD_URL}
               blockExplorer={blockExplorer}
