@@ -30,7 +30,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { useAddFund } from '@nft/hooks'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { FaEnvelope } from '@react-icons/all-files/fa/FaEnvelope'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
@@ -406,6 +406,7 @@ const Navbar: VFC<{
   const { register, setValue, handleSubmit } = useForm<FormData>()
   const [addFund, { loading: addingFund }] = useAddFund(signer)
   const [cookies] = useCookies()
+  const { openConnectModal } = useConnectModal()
   const lastNotification = cookies[`lastNotification-${address}`]
   const {
     data: accountData,
@@ -545,12 +546,9 @@ const Navbar: VFC<{
               loadingText={t('navbar.signing-in')}
             />
           ) : (
-            <ConnectButton
-              accountStatus="address"
-              chainStatus="none"
-              showBalance={false}
-              label={t('navbar.sign-in')}
-            />
+            <Button onClick={openConnectModal} colorScheme="brand">
+              {t('navbar.sign-in')}
+            </Button>
           )}
           {multiLang && (
             <Flex display={{ base: 'none', lg: 'flex' }} align="center">
