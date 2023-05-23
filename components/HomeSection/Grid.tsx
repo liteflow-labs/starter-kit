@@ -26,6 +26,8 @@ type Props = {
   title: string
 }
 
+const ITEM_PER_LINE = 4
+
 const HomeGridSection: FC<Props> = ({
   explore,
   isLoading,
@@ -37,7 +39,7 @@ const HomeGridSection: FC<Props> = ({
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
-        <SkeletonGrid items={6} columns={{ base: 1, sm: 2, lg: 4 }}>
+        <SkeletonGrid items={ITEM_PER_LINE} columns={{ base: 1, sm: 2, lg: 4 }}>
           <SkeletonTokenCard />
         </SkeletonGrid>
       </Stack>
@@ -64,7 +66,7 @@ const HomeGridSection: FC<Props> = ({
           </Link>
         )}
       </Flex>
-      {items.length > 6 ? (
+      {items.length > ITEM_PER_LINE ? (
         <Slider>
           {items.map((item, i) => (
             <Flex

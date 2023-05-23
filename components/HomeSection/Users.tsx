@@ -37,7 +37,7 @@ const UsersHomeSection: FC<Props> = () => {
         href: '/explore/users',
         title: t('home.users.explore'),
       }}
-      isLoading={usersQuery.loading && !usersQuery.previousData}
+      isLoading={usersQuery.loading && !userData}
       items={orderedUsers}
       itemRender={(
         user: NonNullable<FetchUsersQuery['users']>['nodes'][number],
