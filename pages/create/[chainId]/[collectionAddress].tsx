@@ -95,7 +95,7 @@ const CreatePage: NextPage = ({}) => {
   const asset: NFTCardProps['asset'] | undefined = useMemo(() => {
     if (!collection) return
     return {
-      id: '',
+      id: '--',
       image: imageUrlLocal || '',
       animationUrl: animationUrlLocal,
       name: formData?.name || '',
@@ -121,12 +121,8 @@ const CreatePage: NextPage = ({}) => {
   )
 
   const categories = useMemo(
-    () =>
-      (traits['Category'] || []).map((x) => ({
-        id: x,
-        title: t(`categories.${x}`, null, { fallback: x }),
-      })) || [],
-    [t],
+    () => (traits['Category'] || []).map((x) => ({ id: x, title: x })) || [],
+    [],
   )
 
   const onCreated = useCallback(

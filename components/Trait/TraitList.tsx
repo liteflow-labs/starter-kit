@@ -45,9 +45,7 @@ const TraitList: FC<TraitListProps> = ({
             isTruncated
             pb={1}
           >
-            {trait.type === 'Category'
-              ? t(`categories.${trait.type}`, null, { fallback: trait.type })
-              : trait.type}
+            {trait.type}
           </Text>
           <Text
             as="span"
@@ -56,9 +54,7 @@ const TraitList: FC<TraitListProps> = ({
             title={trait.value}
             isTruncated
           >
-            {trait.type === 'Category'
-              ? t(`categories.${trait.value}`, null, { fallback: trait.value })
-              : trait.value}
+            {trait.value}
           </Text>
           <Text
             as="span"

@@ -244,14 +244,12 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
                         )}
                       </Td>
                       <Td>
-                        <Link href={`/users/${item.sellerAddress}`}>
-                          <Avatar
-                            address={item.seller.address}
-                            image={item.seller.image}
-                            name={item.seller.name}
-                            verified={item.seller.verified}
-                          />
-                        </Link>
+                        <Avatar
+                          address={item.seller.address}
+                          image={item.seller.image}
+                          name={item.seller.name}
+                          verified={item.seller.verified}
+                        />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td>

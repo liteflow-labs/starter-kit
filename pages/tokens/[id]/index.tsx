@@ -290,7 +290,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
         <Flex direction="column" my="auto" gap={8} p={{ base: 6, md: 0 }}>
           <Flex justify="space-between">
             <Stack spacing={1}>
-              <Heading as="p" variant="heading1" color="gray.500">
+              <Heading variant="heading1" color="gray.500">
                 {!asset ? (
                   <Skeleton height="1em" width="200px" />
                 ) : (

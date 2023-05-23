@@ -240,14 +240,12 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                         />
                       </Td>
                       <Td>
-                        <Link href={`/users/${item.maker.address}`}>
-                          <Avatar
-                            address={item.maker.address}
-                            image={item.maker.image}
-                            name={item.maker.name}
-                            verified={item.maker.verified}
-                          />
-                        </Link>
+                        <Avatar
+                          address={item.maker.address}
+                          image={item.maker.image}
+                          name={item.maker.name}
+                          verified={item.maker.verified}
+                        />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>
