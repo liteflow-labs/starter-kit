@@ -1,4 +1,5 @@
 const nextTranslate = require('next-translate')
+const withTM = require('next-transpile-modules')(['three', 'react-three-fiber'])
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -24,9 +25,15 @@ const nextConfig = {
       if (!config.resolve.fallback) config.resolve.fallback = {}
       config.resolve.fallback.fs = false
     }
+    config.module.rules.push({
+      test: /\.(glb|gltf)$/,
+      use: {
+        loader: 'file-loader',
+      },
+    })
     return config
   },
   reactStrictMode: true,
 }
 
-module.exports = nextTranslate(withBundleAnalyzer(nextConfig))
+module.exports = withTM(nextTranslate(withBundleAnalyzer(nextConfig)))
