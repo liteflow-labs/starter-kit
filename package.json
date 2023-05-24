@@ -29,6 +29,8 @@
     "@nft/webhook": "^1.0.0-beta.17",
     "@rainbow-me/rainbowkit": "^0.11.1",
     "@react-icons/all-files": "^4.1.0",
+    "@react-three/drei": "^8.20.2",
+    "@react-three/fiber": "^7.0.29",
     "bignumber.js": "^9.1.1",
     "dayjs": "^1.11.6",
     "embla-carousel-react": "^5.0.1",
@@ -70,6 +72,8 @@
     "eslint-plugin-deprecation": "^1.2.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unused-imports": "^1.1.4",
+    "file-loader": "^6.2.0",
+    "next-transpile-modules": "^10.0.0",
     "prettier": "^2.8.1",
     "prettier-plugin-organize-imports": "^3.2.1",
     "typescript": "^4.3.4"
