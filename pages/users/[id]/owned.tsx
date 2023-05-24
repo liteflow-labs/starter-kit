@@ -41,7 +41,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useFetchOwnedAssetsQuery({
+  const { data, loading, previousData } = useFetchOwnedAssetsQuery({
     variables: {
       address: userAddress,
       currentAddress: address || '',
@@ -59,9 +59,11 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
+  const assetData = useMemo(() => data || previousData, [data, previousData])
+
   const assets = useMemo(
     () =>
-      (data?.owned?.nodes || [])
+      (assetData?.owned?.nodes || [])
         .map((x) => x.asset)
         .filter((x): x is AssetDetailFragment => !!x)
         .map((x) => ({
@@ -74,7 +76,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
           numberOfSales: x.firstSale.totalCount,
           hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
         })),
-    [data],
+    [assetData],
   )
 
   return (
@@ -88,7 +90,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
         loginUrlForReferral={environment.BASE_URL + '/login'}
       >
         <TokenGrid<OwnershipsOrderBy>
-          loading={loading}
+          loading={loading && !assetData}
           assets={assets}
           orderBy={{
             value: orderBy,
@@ -108,7 +110,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
             limit,
             limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
             page,
-            total: data?.owned?.totalCount || 0,
+            total: assetData?.owned?.totalCount || 0,
             onPageChange: changePage,
             onLimitChange: changeLimit,
             result: {

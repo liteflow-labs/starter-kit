@@ -70,10 +70,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const assets = useMemo(
-    () => data?.assets || previousData?.assets,
-    [data?.assets, previousData],
-  )
+  const assetsData = useMemo(() => data || previousData, [data, previousData])
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -172,7 +169,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {loading ? (
+              {loading || !assetsData ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact
@@ -184,7 +181,8 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                 >
                   <SkeletonTokenCard />
                 </SkeletonGrid>
-              ) : assets?.totalCount && assets.totalCount > 0 ? (
+              ) : assetsData?.assets?.totalCount &&
+                assetsData.assets.totalCount > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -194,7 +192,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                       : { sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {assets?.nodes.map((x, i) => (
+                  {assetsData?.assets.nodes.map((x, i) => (
                     <Flex key={i} justify="center" overflow="hidden">
                       <TokenCard
                         asset={convertAsset(x)}
@@ -226,7 +224,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   limit={limit}
                   limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  total={assets?.totalCount}
+                  total={assetsData?.assets?.totalCount}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}
                   result={{

@@ -133,15 +133,20 @@ const FilterAsset: NextPage<Props> = ({
     skip: !!selectedCollection,
   })
 
+  const collectionData = useMemo(
+    () => collectionResult.data || collectionResult.previousData,
+    [collectionResult.data, collectionResult.previousData],
+  )
+
   const collection = useMemo(() => {
     if (selectedCollection) return selectedCollection
     if (!filterResult.collection) return null
     const [chainId, address] = filterResult.collection.split('-')
     if (!chainId || !address) return null
-    return collectionResult.data?.collections?.nodes.find(
+    return collectionData?.collections?.nodes.find(
       (x) => x.address === address && x.chainId === parseInt(chainId, 10),
     )
-  }, [collectionResult.data, filterResult.collection, selectedCollection])
+  }, [collectionData, filterResult.collection, selectedCollection])
 
   const { data: traitsData } = useFetchCollectionTraitsQuery({
     variables: {
@@ -531,7 +536,7 @@ const FilterAsset: NextPage<Props> = ({
                   />
                 </InputGroup>
                 <List>
-                  {collectionResult.data?.collections?.nodes.map((x) => (
+                  {collectionData?.collections?.nodes.map((x) => (
                     <CollectionListItem
                       key={`${x.chainId}-${x.address}`}
                       cursor={'pointer'}

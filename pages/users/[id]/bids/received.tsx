@@ -62,23 +62,26 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch, loading } = useFetchUserBidsReceivedQuery({
-    variables: {
-      address: userAddress,
-      limit,
-      offset,
-      orderBy,
-      now: date,
-    },
-  })
+  const { data, refetch, loading, previousData } =
+    useFetchUserBidsReceivedQuery({
+      variables: {
+        address: userAddress,
+        limit,
+        offset,
+        orderBy,
+        now: date,
+      },
+    })
+
+  const bidData = useMemo(() => data || previousData, [data, previousData])
 
   const bids = useMemo(
     () =>
-      (data?.bids?.nodes || []).map((x) => ({
+      (bidData?.bids?.nodes || []).map((x) => ({
         ...convertBidFull(x),
         asset: x.asset,
       })),
-    [data],
+    [bidData],
   )
 
   const onAccepted = useCallback(async () => {
@@ -166,7 +169,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading ? (
+          {loading && !bidData ? (
             <Loader />
           ) : bids.length == 0 ? (
             <Empty
@@ -237,14 +240,12 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                         />
                       </Td>
                       <Td>
-                        <Link href={`/users/${item.maker.address}`}>
-                          <Avatar
-                            address={item.maker.address}
-                            image={item.maker.image}
-                            name={item.maker.name}
-                            verified={item.maker.verified}
-                          />
-                        </Link>
+                        <Avatar
+                          address={item.maker.address}
+                          image={item.maker.image}
+                          name={item.maker.name}
+                          verified={item.maker.verified}
+                        />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>
@@ -284,7 +285,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={data?.bids?.totalCount || 0}
+            total={bidData?.bids?.totalCount || 0}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (

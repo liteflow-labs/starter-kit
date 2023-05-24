@@ -42,6 +42,10 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     skip: !!environment.HOME_TOKENS,
   })
   useHandleQueryError(defaultAssetQuery)
+  const defaultAssetData = useMemo(
+    () => defaultAssetQuery.data || defaultAssetQuery.previousData,
+    [defaultAssetQuery.data, defaultAssetQuery.previousData],
+  )
 
   const assetIds = useMemo(() => {
     if (environment.HOME_TOKENS) {
@@ -64,8 +68,8 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       }
       return randomTokens
     }
-    return (defaultAssetQuery.data?.assets?.nodes || []).map((x) => x.id)
-  }, [defaultAssetQuery, date])
+    return (defaultAssetData?.assets?.nodes || []).map((x) => x.id)
+  }, [defaultAssetData, date])
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {
@@ -75,12 +79,18 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       address: address || '',
     },
   })
-
   useHandleQueryError(assetsQuery)
+  const assetData = useMemo(
+    () => assetsQuery.data || assetsQuery.previousData,
+    [assetsQuery.data, assetsQuery.previousData],
+  )
 
-  const assets = useOrderById(assetIds, assetsQuery.data?.assets?.nodes)
+  const assets = useOrderById(assetIds, assetData?.assets?.nodes)
 
-  if (defaultAssetQuery.loading || assetsQuery.loading)
+  if (
+    (defaultAssetQuery.loading && !defaultAssetData) ||
+    (assetsQuery.loading && !assetData)
+  )
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
@@ -93,6 +103,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       </Stack>
     )
 
+  if (assets.length === 0) return null
   return (
     <Stack spacing={6}>
       <Flex flexWrap="wrap" align="center" justify="space-between" gap={4}>

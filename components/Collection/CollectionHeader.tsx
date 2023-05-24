@@ -177,7 +177,7 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
         <Box>
           <Heading variant="title" pb={1}>
             {loading ? (
-              <Skeleton height="1em" width="200px" />
+              <Skeleton height="1em" width="200px" as="span" />
             ) : (
               collection.name
             )}

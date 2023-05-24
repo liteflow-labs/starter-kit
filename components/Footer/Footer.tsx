@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Show, Text } from '@chakra-ui/react'
+import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { VFC } from 'react'
 import Link from '../Link/Link'
@@ -16,7 +16,7 @@ const Footer: VFC<Props> = ({ name, links }) => {
   const { t } = useTranslation('components')
   return (
     <>
-      <hr />
+      <Divider />
       <footer>
         <Box mx="auto" px={{ base: 6, lg: 8 }} maxW="80rem">
           <Flex justify="center">
@@ -55,12 +55,7 @@ const Footer: VFC<Props> = ({ name, links }) => {
               )}
             </Flex>
           </Flex>
-          <Box
-            as="hr"
-            borderTop="1px"
-            borderStyle="solid"
-            borderColor="gray.200"
-          />
+          <Divider />
           <Flex
             direction={{ base: 'column', md: 'row' }}
             align="center"
@@ -76,9 +71,13 @@ const Footer: VFC<Props> = ({ name, links }) => {
               })}
             </Text>
             <Flex>
-              <Show above="md">
-                <Divider orientation="vertical" mx={6} color="gray.200" h={6} />
-              </Show>
+              <Divider
+                display={{ base: 'none', md: 'block' }}
+                orientation="vertical"
+                mx={6}
+                color="gray.200"
+                h={6}
+              />
               <Text
                 as="p"
                 variant="text"
