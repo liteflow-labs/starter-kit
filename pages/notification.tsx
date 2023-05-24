@@ -12,6 +12,7 @@ import { formatError } from '@nft/hooks'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
+import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 import Empty from '../components/Empty/Empty'
@@ -23,6 +24,10 @@ import { useGetNotificationsQuery } from '../graphql'
 import useAccount from '../hooks/useAccount'
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import SmallLayout from '../layouts/small'
+
+const DynamicGLTF = dynamic(() => import('../components/GLTF'), {
+  ssr: false,
+})
 
 const NotificationPage: NextPage = ({}) => {
   const { t } = useTranslation('templates')
@@ -75,6 +80,7 @@ const NotificationPage: NextPage = ({}) => {
       <Heading as="h1" variant="title" color="brand.black">
         {t('notifications.title')}
       </Heading>
+      <DynamicGLTF />
       <Stack spacing={6} mt={12}>
         {(notifications || []).map((notification) => (
           <NotificationDetail
