@@ -31,7 +31,7 @@ import {
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
-import { useBidOnAssetQuery, useFeesForBidQuery } from '../../../graphql'
+import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
@@ -68,14 +68,6 @@ const BidPage: NextPage<Props> = ({ now }) => {
     () => currencyRes.data || currencyRes.previousData,
     [currencyRes.data, currencyRes.previousData],
   )
-
-  const fees = useFeesForBidQuery({
-    variables: {
-      id: assetId,
-    },
-  })
-
-  const feesPerTenThousand = fees.data?.orderFees.valuePerTenThousand || 0
 
   const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
@@ -217,8 +209,9 @@ const BidPage: NextPage<Props> = ({ now }) => {
               <OfferFormBid
                 signer={signer}
                 account={address}
-                assetId={asset.id}
                 chainId={asset.chainId}
+                collectionAddress={asset.collectionAddress}
+                tokenId={asset.tokenId}
                 multiple={false}
                 owner={asset.ownerships.nodes[0]?.ownerAddress}
                 currencies={currencies}
@@ -227,15 +220,15 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 auctionId={auction?.id}
                 auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-                feesPerTenThousand={feesPerTenThousand}
                 allowTopUp={environment.ALLOW_TOP_UP}
               />
             ) : (
               <OfferFormBid
                 signer={signer}
                 account={address}
-                assetId={asset.id}
                 chainId={asset.chainId}
+                collectionAddress={asset.collectionAddress}
+                tokenId={asset.tokenId}
                 multiple={true}
                 supply={asset.quantity}
                 currencies={currencies}
@@ -244,7 +237,6 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 auctionId={auction?.id}
                 auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-                feesPerTenThousand={feesPerTenThousand}
                 allowTopUp={environment.ALLOW_TOP_UP}
               />
             )}

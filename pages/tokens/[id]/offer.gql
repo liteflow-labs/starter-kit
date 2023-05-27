@@ -1,9 +1,3 @@
-query FeesForOffer($id: String!) {
-  orderFees(assetId: $id) {
-    valuePerTenThousand
-  }
-}
-
 query OfferForAsset(
   $chainId: Int!
   $collectionAddress: Address!

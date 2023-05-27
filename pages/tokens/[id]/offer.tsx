@@ -36,7 +36,7 @@ import {
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
-import { useFeesForOfferQuery, useOfferForAssetQuery } from '../../../graphql'
+import { useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
@@ -94,14 +94,6 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
   const currencyRes = useChainCurrencies(data?.asset?.chainId)
-
-  const fees = useFeesForOfferQuery({
-    variables: {
-      id: assetId,
-    },
-  })
-
-  const feesPerTenThousand = fees.data?.orderFees.valuePerTenThousand || 0
 
   const asset = useMemo(
     () => data?.asset || previousData?.asset,
@@ -167,12 +159,12 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     if (sale === SaleType.FIXED_PRICE)
       return (
         <SalesDirectForm
-          assetId={assetId}
           chainId={asset.chainId}
+          collectionAddress={asset.collectionAddress}
+          tokenId={asset.tokenId}
           standard={asset.collection.standard}
           currencies={currencies}
           blockExplorer={blockExplorer}
-          feesPerTenThousand={feesPerTenThousand}
           royaltiesPerTenThousand={royaltiesPerTenThousand}
           quantityAvailable={quantityAvailable}
           signer={signer}
@@ -196,9 +188,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     currencies,
     asset,
     sale,
-    assetId,
     blockExplorer,
-    feesPerTenThousand,
     royaltiesPerTenThousand,
     quantityAvailable,
     signer,

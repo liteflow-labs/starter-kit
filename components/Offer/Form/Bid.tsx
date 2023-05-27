@@ -35,6 +35,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
+import { useFeesQuery } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
@@ -62,14 +63,14 @@ type Props = {
     image: string
     name: string
   }[]
-  assetId: string
   chainId: number
+  collectionAddress: string
+  tokenId: string
   blockExplorer: BlockExplorer
   onCreated: (offerId: string) => void
   auctionId: string | undefined
   auctionValidity: number
   offerValidity: number
-  feesPerTenThousand: number
   allowTopUp: boolean
 } & (
   | {
@@ -88,14 +89,14 @@ const OfferFormBid: FC<Props> = (props) => {
     signer,
     account,
     currencies,
-    assetId,
     chainId,
+    collectionAddress,
+    tokenId,
     blockExplorer,
     onCreated,
     auctionId,
     auctionValidity,
     offerValidity,
-    feesPerTenThousand,
     allowTopUp,
   } = props
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
@@ -156,6 +157,22 @@ const OfferFormBid: FC<Props> = (props) => {
   const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
+  const { data } = useFeesQuery({
+    variables: {
+      chainId,
+      collectionAddress,
+      tokenId,
+      currencyId: currency?.id || '',
+      quantity: quantityBN.toString(),
+      unitPrice: priceUnit.toString(),
+    },
+    skip: !currency?.id,
+  })
+  const feesPerTenThousand = useMemo(
+    () => data?.orderFees.valuePerTenThousand || 0,
+    [data],
+  )
+
   const totalPrice = useMemo(() => {
     return priceUnit.mul(quantityBN)
   }, [priceUnit, quantityBN])
@@ -185,7 +202,7 @@ const OfferFormBid: FC<Props> = (props) => {
         type: 'BUY',
         quantity: quantityBN,
         unitPrice: priceUnit,
-        assetId: assetId,
+        assetId: [chainId, collectionAddress, tokenId].join('-'),
         currencyId: currency.id,
         takerAddress: props.multiple
           ? undefined // Keep the bid open for anyone that can fill it
