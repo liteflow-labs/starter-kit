@@ -1,9 +1,3 @@
-query FeesForBid($id: String!) {
-  orderFees(assetId: $id) {
-    valuePerTenThousand
-  }
-}
-
 query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
   asset(id: $id) {
     id
