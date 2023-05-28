@@ -220,7 +220,6 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 auctionId={auction?.id}
                 auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-                allowTopUp={environment.ALLOW_TOP_UP}
               />
             ) : (
               <OfferFormBid
@@ -237,7 +236,6 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 auctionId={auction?.id}
                 auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-                allowTopUp={environment.ALLOW_TOP_UP}
               />
             )}
           </Flex>
