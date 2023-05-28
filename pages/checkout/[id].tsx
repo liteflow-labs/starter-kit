@@ -29,7 +29,6 @@ import {
   convertSale,
   convertUser,
 } from '../../convert'
-import environment from '../../environment'
 import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
@@ -219,7 +218,6 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                 currency={offer.currency}
                 multiple={!isSingle}
                 onPurchased={onPurchased}
-                allowTopUp={environment.ALLOW_TOP_UP}
               />
             )}
           </Flex>
