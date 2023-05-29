@@ -29,6 +29,7 @@ type Environment = {
     chainId: number
     address: string
   }[]
+  WALLET_CONNECT_PROJECT_ID: string
 }
 
 // graphql
@@ -93,6 +94,11 @@ const MINTABLE_COLLECTIONS = (
   .filter(Boolean)
   .map((address) => ({ address: address.toLowerCase(), chainId: CHAIN_ID }))
 
+invariant(
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+  'env NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID is not defined',
+)
+
 const environment: Environment = {
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
   GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
@@ -114,6 +120,7 @@ const environment: Environment = {
   MAX_ROYALTIES: 30,
   ALLOW_TOP_UP: true,
   MINTABLE_COLLECTIONS,
+  WALLET_CONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
 }
 
 export default environment
