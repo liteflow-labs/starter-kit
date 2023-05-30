@@ -22,8 +22,6 @@ type Environment = {
   RESTRICT_TO_VERIFIED_ACCOUNT: boolean
   // Limit the maximum percentage for royalties
   MAX_ROYALTIES: number
-  // Allow users to top up their wallet with fiat
-  ALLOW_TOP_UP: boolean
   // Collections where user can mint
   MINTABLE_COLLECTIONS: {
     chainId: number
@@ -112,7 +110,6 @@ const environment: Environment = {
   REFERRAL_PERCENTAGE: { base: 20 * 0.025, secondary: 20 * 0.01 },
   RESTRICT_TO_VERIFIED_ACCOUNT: true,
   MAX_ROYALTIES: 30,
-  ALLOW_TOP_UP: true,
   MINTABLE_COLLECTIONS,
 }
 

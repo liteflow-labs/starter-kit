@@ -28,8 +28,6 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
-import { useAddFund } from '@nft/hooks'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { FaEnvelope } from '@react-icons/all-files/fa/FaEnvelope'
@@ -103,22 +101,9 @@ const DrawerMenu: VFC<{
     events: MittEmitter<'routeChangeStart'>
   }
   multiLang?: MultiLang
-  topUp: {
-    allowTopUp: boolean
-    addFund: () => Promise<void>
-    addingFund: boolean
-  }
   disableMinting?: boolean
   signOutFn: () => void
-}> = ({
-  account,
-  signOutFn,
-  logo,
-  router,
-  multiLang,
-  topUp,
-  disableMinting,
-}) => {
+}> = ({ account, signOutFn, logo, router, multiLang, disableMinting }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { asPath, events, query, push } = router
   const { t } = useTranslation('components')
@@ -250,16 +235,6 @@ const DrawerMenu: VFC<{
                       <Link href={`/account/edit`}>
                         <NavItemMobile>{t('navbar.user.edit')}</NavItemMobile>
                       </Link>
-                      {topUp.allowTopUp && (
-                        <NavItemMobile
-                          onClick={
-                            topUp.addingFund ? undefined : () => topUp.addFund()
-                          }
-                          as="span"
-                        >
-                          {t('navbar.user.top-up')}
-                        </NavItemMobile>
-                      )}
                       <NavItemMobile onClick={signOutFn}>
                         {t('navbar.user.sign-out')}
                       </NavItemMobile>
@@ -332,13 +307,8 @@ const UserMenu: VFC<{
     address: string
     image: string | null
   }
-  topUp: {
-    allowTopUp: boolean
-    addFund: () => Promise<void>
-    addingFund: boolean
-  }
   signOutFn: () => void
-}> = ({ account, user, topUp, signOutFn }) => {
+}> = ({ account, user, signOutFn }) => {
   const { t } = useTranslation('components')
   return (
     <Menu>
@@ -363,14 +333,6 @@ const UserMenu: VFC<{
         <Link href="/account/edit">
           <MenuItem>{t('navbar.user.edit')}</MenuItem>
         </Link>
-        {topUp.allowTopUp && (
-          <MenuItem
-            isDisabled={topUp.addingFund}
-            onClick={() => topUp.addFund()}
-          >
-            {t('navbar.user.top-up')}
-          </MenuItem>
-        )}
         <MenuItem onClick={signOutFn}>{t('navbar.user.sign-out')}</MenuItem>
       </MenuList>
     </Menu>
@@ -382,7 +344,6 @@ type FormData = {
 }
 
 const Navbar: VFC<{
-  allowTopUp: boolean
   disableMinting?: boolean
   logo?: {
     path: string
@@ -396,15 +357,13 @@ const Navbar: VFC<{
     isReady: boolean
     events: MittEmitter<'routeChangeStart'>
   }
-  signer: Signer | undefined
   multiLang?: MultiLang
-}> = ({ allowTopUp, logo, router, multiLang, disableMinting, signer }) => {
+}> = ({ logo, router, multiLang, disableMinting }) => {
   const { t } = useTranslation('components')
   const { address, isLoggedIn, logout, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady } = router
   const { register, setValue, handleSubmit } = useForm<FormData>()
-  const [addFund, { loading: addingFund }] = useAddFund(signer)
   const [cookies] = useCookies()
   const { openConnectModal } = useConnectModal()
   const lastNotification = cookies[`lastNotification-${address}`]
@@ -534,7 +493,6 @@ const Navbar: VFC<{
               </Link>
               <UserMenu
                 account={account.address}
-                topUp={{ allowTopUp, addFund, addingFund }}
                 user={account}
                 signOutFn={() => logout().then(disconnect)}
               />
@@ -571,7 +529,6 @@ const Navbar: VFC<{
             logo={logo}
             router={router}
             multiLang={multiLang}
-            topUp={{ allowTopUp, addFund, addingFund }}
             disableMinting={disableMinting}
             signOutFn={() => logout().then(disconnect)}
           />

@@ -51,7 +51,6 @@ type Props = {
   }
   onPurchased: () => void
   multiple?: boolean
-  allowTopUp: boolean
 }
 
 const OfferFormCheckout: FC<Props> = ({
@@ -63,7 +62,6 @@ const OfferFormCheckout: FC<Props> = ({
   offer,
   chainId,
   blockExplorer,
-  allowTopUp,
 }) => {
   const { t } = useTranslation('components')
   const [acceptOffer, { activeStep, transactionHash }] = useAcceptOffer(signer)
@@ -189,16 +187,7 @@ const OfferFormCheckout: FC<Props> = ({
       {/* There seems to be a rendering issue when signed in, account fetched and
       page is refreshed that will cause the <Alert /> component below to render weirdly.
       Wrapping the conditional with a div solves the issue */}
-      <div>
-        {account && (
-          <Balance
-            signer={signer}
-            account={account}
-            currency={currency}
-            allowTopUp={allowTopUp && !canPurchase}
-          />
-        )}
-      </div>
+      <div>{account && <Balance account={account} currency={currency} />}</div>
 
       <Alert status="info" borderRadius="xl" mb={8}>
         <AlertIcon />
