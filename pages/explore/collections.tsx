@@ -58,7 +58,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   const { limit, offset, page } = usePaginateQuery()
   const filter = useCollectionFilterFromQuery()
   const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
-  const { data, loading } = useFetchExploreCollectionsQuery({
+  const { data, loading, previousData } = useFetchExploreCollectionsQuery({
     variables: {
       limit,
       offset,
@@ -101,7 +101,10 @@ const CollectionsPage: NextPage<Props> = ({}) => {
     [replace, pathname, query, toast],
   )
 
-  const collections = useMemo(() => data?.collections?.nodes || [], [data])
+  const collectionsData = useMemo(
+    () => data || previousData,
+    [data, previousData],
+  )
   const hasFilter = chains.length > 1
 
   return (
@@ -179,7 +182,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
-              {loading ? (
+              {loading || !collectionsData ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact
@@ -191,7 +194,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                 >
                   <SkeletonCollectionCard />
                 </SkeletonGrid>
-              ) : collections.length > 0 ? (
+              ) : (collectionsData?.collections?.nodes || []).length > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -201,7 +204,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                       : { sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {collections.map((collection, i) => (
+                  {collectionsData?.collections?.nodes.map((collection, i) => (
                     <CollectionCard
                       collection={convertCollection(collection)}
                       key={i}
@@ -221,7 +224,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   limit={limit}
                   limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  total={data?.collections?.totalCount}
+                  total={collectionsData?.collections?.totalCount}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}
                   result={{

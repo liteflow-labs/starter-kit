@@ -1,0 +1,19 @@
+query Fees(
+  $chainId: Int!
+  $collectionAddress: Address!
+  $tokenId: String!
+  $currencyId: String!
+  $quantity: Uint256!
+  $unitPrice: Uint256!
+) {
+  orderFees(
+    chainId: $chainId
+    collectionAddress: $collectionAddress
+    currencyId: $currencyId
+    quantity: $quantity
+    unitPrice: $unitPrice
+    tokenId: $tokenId
+  ) {
+    valuePerTenThousand
+  }
+}

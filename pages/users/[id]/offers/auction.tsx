@@ -63,7 +63,7 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch, loading } = useFetchUserAuctionsQuery({
+  const { data, refetch, loading, previousData } = useFetchUserAuctionsQuery({
     variables: {
       address: userAddress,
       limit,
@@ -72,16 +72,18 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
     },
   })
 
+  const auctionData = useMemo(() => data || previousData, [data, previousData])
+
   const auctions = useMemo(
     () =>
-      (data?.auctions?.nodes || []).map((x) => ({
+      (auctionData?.auctions?.nodes || []).map((x) => ({
         ...convertAuctionWithBestBid(x),
         ...convertAuctionFull(x),
         asset: x.asset,
         createdAt: new Date(x.createdAt),
         ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
-    [data],
+    [auctionData],
   )
 
   const onAuctionAccepted = useCallback(async () => {
@@ -176,7 +178,7 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading ? (
+          {loading && !auctionData ? (
             <Loader />
           ) : auctions.length == 0 ? (
             <Empty
@@ -269,7 +271,7 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={data?.auctions?.totalCount || 0}
+            total={auctionData?.auctions?.totalCount || 0}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (

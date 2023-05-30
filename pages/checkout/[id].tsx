@@ -29,7 +29,6 @@ import {
   convertSale,
   convertUser,
 } from '../../convert'
-import environment from '../../environment'
 import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
@@ -53,19 +52,20 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   const date = useMemo(() => new Date(now), [now])
   const offerQuery = useCheckoutQuery({ variables: { id: offerId } })
 
-  const offer = useMemo(() => offerQuery.data?.offer, [offerQuery.data])
-  const assetId = useMemo(() => {
-    if (!offer?.asset) return undefined
-    return [
-      offer.asset.chainId,
-      offer.asset.collectionAddress,
-      offer.asset.tokenId,
-    ].join('-')
-  }, [offer])
+  const offer = useMemo(
+    () => offerQuery.data?.offer || offerQuery.previousData?.offer,
+    [offerQuery.data, offerQuery.previousData],
+  )
 
   const assetQuery = useFetchAssetForCheckoutQuery({
-    variables: { now: date, address: address || '', id: assetId || '' },
-    skip: !assetId,
+    variables: {
+      now: date,
+      address: address || '',
+      chainId: offer?.asset.chainId || 0,
+      collectionAddress: offer?.asset.collectionAddress || '',
+      tokenId: offer?.asset.tokenId || '',
+    },
+    skip: !offer,
   })
 
   const asset = useMemo(() => assetQuery?.data?.asset, [assetQuery.data])
@@ -219,7 +219,6 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                 currency={offer.currency}
                 multiple={!isSingle}
                 onPurchased={onPurchased}
-                allowTopUp={environment.ALLOW_TOP_UP}
               />
             )}
           </Flex>

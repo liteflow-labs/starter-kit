@@ -36,7 +36,7 @@ const NotificationPage: NextPage = ({}) => {
   useLoginRedirect()
   const [_, setCookies] = useCookies()
 
-  const { data, fetchMore, loading } = useGetNotificationsQuery({
+  const { data, fetchMore, loading, previousData } = useGetNotificationsQuery({
     variables: {
       cursor: null,
       address: address || '',
@@ -44,7 +44,14 @@ const NotificationPage: NextPage = ({}) => {
     skip: !address,
   })
 
-  const notifications = useMemo(() => data?.notifications?.nodes || [], [data])
+  const notificationData = useMemo(
+    () => data || previousData,
+    [data, previousData],
+  )
+  const notifications = useMemo(
+    () => notificationData?.notifications?.nodes || [],
+    [notificationData],
+  )
 
   const hasNextPage = useMemo(
     () => data?.notifications?.pageInfo.hasNextPage,
@@ -54,7 +61,9 @@ const NotificationPage: NextPage = ({}) => {
   const loadMore = useCallback(async () => {
     try {
       await fetchMore({
-        variables: { cursor: data?.notifications?.pageInfo.endCursor },
+        variables: {
+          cursor: notificationData?.notifications?.pageInfo.endCursor,
+        },
         updateQuery: concatToQuery('notifications'),
       })
     } catch (e) {
@@ -63,7 +72,7 @@ const NotificationPage: NextPage = ({}) => {
         status: 'error',
       })
     }
-  }, [data?.notifications?.pageInfo.endCursor, fetchMore, toast])
+  }, [notificationData?.notifications?.pageInfo.endCursor, fetchMore, toast])
 
   useEffect(() => {
     if (!address) return

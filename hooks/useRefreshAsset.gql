@@ -1,5 +1,13 @@
-query GetAssetDataForRefresh($assetId: String!) {
-  asset(id: $assetId) {
+query GetAssetDataForRefresh(
+  $chainId: Int!
+  $collectionAddress: Address!
+  $tokenId: String!
+) {
+  asset(
+    chainId: $chainId
+    collectionAddress: $collectionAddress
+    tokenId: $tokenId
+  ) {
     chainId
     collectionAddress
     tokenId
@@ -7,8 +15,18 @@ query GetAssetDataForRefresh($assetId: String!) {
   }
 }
 
-mutation RefreshAsset($assetId: String!) {
-  refreshAsset(input: { assetId: $assetId }) {
+mutation RefreshAsset(
+  $chainId: Int!
+  $collectionAddress: Address!
+  $tokenId: String!
+) {
+  refreshAsset(
+    input: {
+      chainId: $chainId
+      collectionAddress: $collectionAddress
+      tokenId: $tokenId
+    }
+  ) {
     clientMutationId
   }
 }

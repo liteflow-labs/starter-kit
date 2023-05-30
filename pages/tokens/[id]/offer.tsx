@@ -36,7 +36,7 @@ import {
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
-import { useFeesForOfferQuery, useOfferForAssetQuery } from '../../../graphql'
+import { useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
@@ -75,11 +75,17 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   useLoginRedirect()
   const assetId = useRequiredQueryParamSingle('id')
+  const [chainId, collectionAddress, tokenId] = useMemo(
+    () => assetId.split('-'),
+    [assetId],
+  )
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useOfferForAssetQuery({
+  const { data, loading, previousData } = useOfferForAssetQuery({
     variables: {
-      id: assetId,
+      chainId: chainId ? parseInt(chainId, 10) : 0,
+      collectionAddress: collectionAddress || '',
+      tokenId: tokenId || '',
       now: date,
       address: address || '',
     },
@@ -89,18 +95,13 @@ const OfferPage: NextPage<Props> = ({ now }) => {
 
   const currencyRes = useChainCurrencies(data?.asset?.chainId)
 
-  const fees = useFeesForOfferQuery({
-    variables: {
-      id: assetId,
-    },
-  })
-
-  const feesPerTenThousand = fees.data?.orderFees.valuePerTenThousand || 0
+  const asset = useMemo(
+    () => data?.asset || previousData?.asset,
+    [data, previousData],
+  )
 
   const royaltiesPerTenThousand =
-    data?.asset?.royalties.reduce((sum, { value }) => sum + value, 0) || 0
-
-  const asset = useMemo(() => data?.asset, [data])
+    asset?.royalties.reduce((sum, { value }) => sum + value, 0) || 0
 
   const quantityAvailable = useMemo(
     () => BigNumber.from(asset?.owned?.quantity || 0),
@@ -112,9 +113,13 @@ const OfferPage: NextPage<Props> = ({ now }) => {
       ? isSameAddress(asset.creator.address.toLowerCase(), address)
       : false
 
+  const currencyData = useMemo(
+    () => currencyRes.data || currencyRes.previousData,
+    [currencyRes.data, currencyRes.previousData],
+  )
   const currencies = useMemo(
-    () => currencyRes.data?.currencies?.nodes || [],
-    [currencyRes],
+    () => currencyData?.currencies?.nodes || [],
+    [currencyData],
   )
 
   const saleOptions: [SaleOption, SaleOption] = useMemo(
@@ -150,17 +155,16 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   }, [toast, t, push, assetId])
 
   const saleForm = useMemo(() => {
-    if (!currencies) return
-    if (!asset) return
+    if (!currencies || !asset) return <SkeletonForm items={2} />
     if (sale === SaleType.FIXED_PRICE)
       return (
         <SalesDirectForm
-          assetId={assetId}
           chainId={asset.chainId}
+          collectionAddress={asset.collectionAddress}
+          tokenId={asset.tokenId}
           standard={asset.collection.standard}
           currencies={currencies}
           blockExplorer={blockExplorer}
-          feesPerTenThousand={feesPerTenThousand}
           royaltiesPerTenThousand={royaltiesPerTenThousand}
           quantityAvailable={quantityAvailable}
           signer={signer}
@@ -184,9 +188,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     currencies,
     asset,
     sale,
-    assetId,
     blockExplorer,
-    feesPerTenThousand,
     royaltiesPerTenThousand,
     quantityAvailable,
     signer,
@@ -216,7 +218,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {loading || !asset ? (
+            {!asset ? (
               <SkeletonTokenCard />
             ) : (
               <TokenCard
@@ -238,7 +240,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
         </GridItem>
         <GridItem>
           <Flex direction="column" gap={8} grow={1} shrink={1} basis="0%">
-            {loading ? (
+            {!asset ? (
               <>
                 <Skeleton height="24px" width="100px" />
                 <Flex gap={4}>
@@ -263,7 +265,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
               </FormControl>
             )}
 
-            {loading || !asset ? <SkeletonForm items={2} /> : saleForm}
+            {saleForm}
           </Flex>
         </GridItem>
       </Grid>

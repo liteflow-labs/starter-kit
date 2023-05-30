@@ -33,6 +33,11 @@ export default function getClient(
       },
     }).restore(windowApolloState || {}),
     ssrMode: isServer,
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+      },
+    },
   })
   return _client
 }

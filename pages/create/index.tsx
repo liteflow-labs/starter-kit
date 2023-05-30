@@ -18,7 +18,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import Head from '../../components/Head'
 import Link from '../../components/Link/Link'
@@ -52,7 +52,7 @@ const CreatePage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back } = useRouter()
   const { address } = useAccount()
-  const { data, loading } =
+  const { data, previousData } =
     useFetchCollectionsAndAccountVerificationStatusQuery({
       variables: {
         account: address || '',
@@ -61,10 +61,14 @@ const CreatePage: NextPage = () => {
       },
     })
 
+  const collectionAndAccountData = useMemo(
+    () => data || previousData,
+    [data, previousData],
+  )
   if (
-    !loading &&
+    collectionAndAccountData &&
     environment.RESTRICT_TO_VERIFIED_ACCOUNT &&
-    data?.account?.verification?.status !== 'VALIDATED'
+    collectionAndAccountData?.account?.verification?.status !== 'VALIDATED'
   )
     return (
       <Layout>
@@ -123,12 +127,12 @@ const CreatePage: NextPage = () => {
         align={{ base: 'center', md: 'inherit' }}
         gap={6}
       >
-        {loading || !data?.collections ? (
+        {!collectionAndAccountData?.collections ? (
           <>
             <Skeleton w={64} h={344} borderRadius="2xl" />
             <Skeleton w={64} h={344} borderRadius="2xl" />
           </>
-        ) : data.collections.nodes.length === 0 ? (
+        ) : collectionAndAccountData.collections.nodes.length === 0 ? (
           <Empty
             title={t('asset.typeSelector.empty.title')}
             description={t('asset.typeSelector.empty.description')}
@@ -137,57 +141,59 @@ const CreatePage: NextPage = () => {
             }
           />
         ) : (
-          data.collections.nodes.map(({ address, chainId, standard }) => (
-            <Link
-              href={`/create/${chainId}/${address}`}
-              key={`${chainId}/${address}`}
-            >
-              <Stack
-                w={64}
-                align="center"
-                justify="center"
-                spacing={8}
-                rounded="xl"
-                border="1px"
-                borderColor="gray.200"
-                borderStyle="solid"
-                bg="white"
-                p={12}
-                shadow="sm"
-                _hover={{ shadow: 'md' }}
-                cursor="pointer"
+          collectionAndAccountData.collections.nodes.map(
+            ({ address, chainId, standard }) => (
+              <Link
+                href={`/create/${chainId}/${address}`}
+                key={`${chainId}/${address}`}
               >
-                <Flex
+                <Stack
+                  w={64}
                   align="center"
                   justify="center"
-                  mx="auto"
-                  h={36}
-                  w={36}
-                  rounded="full"
-                  bgColor={standard === 'ERC721' ? 'blue.50' : 'green.50'}
-                  color={standard === 'ERC721' ? 'blue.500' : 'green.500'}
+                  spacing={8}
+                  rounded="xl"
+                  border="1px"
+                  borderColor="gray.200"
+                  borderStyle="solid"
+                  bg="white"
+                  p={12}
+                  shadow="sm"
+                  _hover={{ shadow: 'md' }}
+                  cursor="pointer"
                 >
-                  {standard === 'ERC721' ? (
-                    <Icon as={IoImageOutline} h={10} w={10} />
-                  ) : (
-                    <Icon as={IoImagesOutline} h={10} w={10} />
-                  )}
-                </Flex>
-                <Box textAlign="center">
-                  <Heading as="h3" variant="heading1" color="brand.black">
-                    {standard === 'ERC721'
-                      ? t('asset.typeSelector.single.title')
-                      : t('asset.typeSelector.multiple.title')}
-                  </Heading>
-                  <Heading as="h5" variant="heading3" color="gray.500" mt={2}>
-                    {standard === 'ERC721'
-                      ? t('asset.typeSelector.single.type')
-                      : t('asset.typeSelector.multiple.type')}
-                  </Heading>
-                </Box>
-              </Stack>
-            </Link>
-          ))
+                  <Flex
+                    align="center"
+                    justify="center"
+                    mx="auto"
+                    h={36}
+                    w={36}
+                    rounded="full"
+                    bgColor={standard === 'ERC721' ? 'blue.50' : 'green.50'}
+                    color={standard === 'ERC721' ? 'blue.500' : 'green.500'}
+                  >
+                    {standard === 'ERC721' ? (
+                      <Icon as={IoImageOutline} h={10} w={10} />
+                    ) : (
+                      <Icon as={IoImagesOutline} h={10} w={10} />
+                    )}
+                  </Flex>
+                  <Box textAlign="center">
+                    <Heading as="h3" variant="heading1" color="brand.black">
+                      {standard === 'ERC721'
+                        ? t('asset.typeSelector.single.title')
+                        : t('asset.typeSelector.multiple.title')}
+                    </Heading>
+                    <Heading as="h5" variant="heading3" color="gray.500" mt={2}>
+                      {standard === 'ERC721'
+                        ? t('asset.typeSelector.single.type')
+                        : t('asset.typeSelector.multiple.type')}
+                    </Heading>
+                  </Box>
+                </Stack>
+              </Link>
+            ),
+          )
         )}
       </Flex>
     </Layout>

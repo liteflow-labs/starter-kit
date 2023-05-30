@@ -27,13 +27,19 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
     <ListItem
       key={`${collection.chainId}-${collection.address}`}
       label={
-        <Text variant="subtitle2" color="gray.800" title={collection.name}>
+        <Text
+          variant="subtitle2"
+          color="gray.800"
+          title={collection.name}
+          as="span"
+        >
           {collection.name}
         </Text>
       }
       subtitle={
         <Text
           variant="caption"
+          as="span"
           title={
             collection.floorPrice
               ? `${collection.floorPrice} ${collection.floorPriceCurrencySymbol}`

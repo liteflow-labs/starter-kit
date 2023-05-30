@@ -61,7 +61,7 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useFetchUserTradePurchasedQuery({
+  const { data, loading, previousData } = useFetchUserTradePurchasedQuery({
     variables: {
       address: userAddress,
       limit,
@@ -70,9 +70,10 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
+  const tradeData = useMemo(() => data || previousData, [data, previousData])
   const trades = useMemo(
-    () => (data?.trades?.nodes || []).map(convertTrade),
-    [data],
+    () => (tradeData?.trades?.nodes || []).map(convertTrade),
+    [tradeData],
   )
 
   const changeOrder = useCallback(
@@ -164,7 +165,7 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading ? (
+          {loading && !tradeData ? (
             <Loader />
           ) : trades.length == 0 ? (
             <Empty
@@ -243,14 +244,12 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
                         )}
                       </Td>
                       <Td>
-                        <Link href={`/users/${item.sellerAddress}`}>
-                          <Avatar
-                            address={item.seller.address}
-                            image={item.seller.image}
-                            name={item.seller.name}
-                            verified={item.seller.verified}
-                          />
-                        </Link>
+                        <Avatar
+                          address={item.seller.address}
+                          image={item.seller.image}
+                          name={item.seller.name}
+                          verified={item.seller.verified}
+                        />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td>
@@ -283,7 +282,7 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={data?.trades?.totalCount || 0}
+            total={tradeData?.trades?.totalCount || 0}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (

@@ -11,18 +11,6 @@ import { IoChevronBackSharp } from '@react-icons/all-files/io5/IoChevronBackShar
 import { IoChevronForward } from '@react-icons/all-files/io5/IoChevronForward'
 import { useMemo } from 'react'
 
-type PropWithSelector = {
-  hideSelectors?: false | undefined
-  limits: number[]
-  onLimitChange: (limit: string) => void
-}
-
-type PropWithoutSelector = {
-  hideSelectors: true
-  limits?: never
-  onLimitChange?: never
-}
-
 export type IProp = {
   limit: number
   page: number
@@ -37,7 +25,10 @@ export type IProp = {
     }) => string | JSX.Element
     pages: (context: { total: number }) => string | JSX.Element
   }
-} & (PropWithSelector | PropWithoutSelector)
+  hideSelectors?: boolean
+  limits?: number[]
+  onLimitChange?: (limit: string) => void
+}
 
 export default function Pagination({
   limit,
@@ -45,6 +36,9 @@ export default function Pagination({
   page,
   result,
   total,
+  hideSelectors,
+  limits,
+  onLimitChange,
   ...props
 }: IProp): JSX.Element {
   const goTo = (newPage: number) => {
@@ -64,7 +58,7 @@ export default function Pagination({
   if (!total) return <></>
   return (
     <Flex
-      direction={{ base: props.hideSelectors ? 'row' : 'column', md: 'row' }}
+      direction={{ base: hideSelectors ? 'row' : 'column', md: 'row' }}
       align={{ base: 'center', sm: 'flex-start' }}
       justify={{ base: 'center', sm: 'space-between' }}
       w="full"
@@ -78,7 +72,7 @@ export default function Pagination({
         w={{ base: 'full', sm: 'auto' }}
         direction={{ base: 'column', sm: 'row' }}
       >
-        {!props.hideSelectors && (
+        {!hideSelectors && (
           <Flex
             position="relative"
             direction={{
@@ -93,10 +87,10 @@ export default function Pagination({
             <Select
               cursor="pointer"
               w="24"
-              onChange={(e) => props.onLimitChange(e.target.value)}
+              onChange={(e) => onLimitChange?.(e.target.value)}
               value={limit.toString()}
             >
-              {props.limits.map((limit) => (
+              {limits?.map((limit) => (
                 <option key={limit.toString()} value={limit.toString()}>
                   {limit.toString()}
                 </option>
@@ -125,7 +119,7 @@ export default function Pagination({
         gap={6}
         aria-label="Pagination"
       >
-        {!props.hideSelectors && (
+        {!hideSelectors && (
           <Flex align="center" gap={3}>
             <Flex
               position="relative"
