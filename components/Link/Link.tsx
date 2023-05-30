@@ -12,6 +12,7 @@ const Link = forwardRef<any, IProps>(function Link(props, ref) {
   const { children, href, isExternal, externalIcon, ...rest } = props
   if (isExternal) {
     return (
+      /* @ts-ignore */
       <ChakraLink ref={ref} href={href} isExternal {...rest}>
         <Flex alignItems="center" as="span">
           {children}

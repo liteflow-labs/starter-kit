@@ -35,7 +35,7 @@ export function ListItem({
   ...props
 }: ListItemProps): JSX.Element {
   return (
-    <Stack as="li" padding={2} {...props}>
+    <Stack {...props} as="li" padding={2}>
       <Flex align="center" gap={3}>
         {image && (
           <Flex
