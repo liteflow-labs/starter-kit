@@ -1,7 +1,7 @@
 import UserCard from 'components/User/UserCard'
 import { convertUserWithCover } from 'convert'
 import environment from 'environment'
-import { useOrderByAddress } from 'hooks/useOrderByAddress'
+import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { FetchUsersQuery, useFetchUsersQuery } from '../../graphql'
@@ -26,9 +26,10 @@ const UsersHomeSection: FC<Props> = () => {
     [usersQuery.data, usersQuery.previousData],
   )
 
-  const orderedUsers = useOrderByAddress(
+  const orderedUsers = useOrderByKey(
     environment.HOME_USERS,
     userData?.users?.nodes || [],
+    (user) => user.address,
   )
 
   return (
