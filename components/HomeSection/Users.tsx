@@ -27,7 +27,7 @@ const UsersHomeSection: FC<Props> = () => {
   )
 
   const orderedUsers = useOrderByKey(
-    environment.HOME_USERS,
+    environment.HOME_USERS || [],
     userData?.users?.nodes || [],
     (user) => user.address,
   )
