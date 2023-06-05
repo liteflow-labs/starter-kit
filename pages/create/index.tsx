@@ -1,8 +1,5 @@
 import {
-  Alert,
-  AlertIcon,
   Box,
-  Center,
   Flex,
   Heading,
   Icon,
@@ -10,12 +7,10 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
 import { IoImageOutline } from '@react-icons/all-files/io5/IoImageOutline'
 import { IoImagesOutline } from '@react-icons/all-files/io5/IoImagesOutline'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import React, { useMemo } from 'react'
@@ -65,51 +60,6 @@ const CreatePage: NextPage = () => {
     () => data || previousData,
     [data, previousData],
   )
-  if (
-    collectionAndAccountData &&
-    environment.RESTRICT_TO_VERIFIED_ACCOUNT &&
-    collectionAndAccountData?.account?.verification?.status !== 'VALIDATED'
-  )
-    return (
-      <Layout>
-        <BackButton onClick={back} />
-        <Heading as="h1" variant="title" color="brand.black" mt={6} mb={12}>
-          {t('asset.typeSelector.title')}
-        </Heading>
-        <Stack align="center" spacing={6} mb={40}>
-          <Center bgColor="brand.50" w={12} h={12} rounded="full">
-            <Icon as={HiBadgeCheck} color="brand.500" w={6} h={6} />
-          </Center>
-          <Stack textAlign="center">
-            <Heading variant="heading1">{t('asset.restricted.title')}</Heading>
-            <Text pb={2} color="gray.500">
-              <Trans
-                ns="templates"
-                i18nKey="asset.restricted.description"
-                components={[
-                  <Link
-                    fontWeight="bold"
-                    href={`mailto:${environment.REPORT_EMAIL}`}
-                    key="report"
-                  >
-                    {environment.REPORT_EMAIL}
-                  </Link>,
-                ]}
-              />
-            </Text>
-          </Stack>
-          <Alert
-            status="info"
-            rounded="xl"
-            borderWidth="1px"
-            borderColor="blue.300"
-          >
-            <AlertIcon />
-            <Text variant="subtitle2">{t('asset.restricted.info')}</Text>
-          </Alert>
-        </Stack>
-      </Layout>
-    )
 
   return (
     <Layout>
