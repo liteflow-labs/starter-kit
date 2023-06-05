@@ -23,7 +23,7 @@ import {
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
-import useOrderById from '../../hooks/useOrderById'
+import { useOrderByKey } from '../../hooks/useOrderByKey'
 import useSigner from '../../hooks/useSigner'
 import Slider from '../Slider/Slider'
 import TokenHeader from '../Token/Header'
@@ -51,9 +51,10 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
     [featureAssetsQuery.data, featureAssetsQuery.previousData],
   )
 
-  const featured = useOrderById(
+  const featured = useOrderByKey(
     environment.FEATURED_TOKEN,
     assetData?.assets?.nodes || [],
+    (asset) => asset.id,
   )
   const currencyData = useMemo(
     () => currenciesQuery.data || currenciesQuery.previousData,
