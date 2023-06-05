@@ -16,7 +16,11 @@ const Head: FC<PropsWithChildren<Props>> = ({
 }) => {
   return (
     <NextHead>
-      <title>{title} - Acme NFT Marketplace</title>
+      <title>
+        {title && title !== environment.META_TITLE
+          ? `${title} - ${environment.META_TITLE}`
+          : environment.META_TITLE}
+      </title>
       <meta property="og:title" content={title} />
       <meta name="twitter:title" content={title} />
       {description && (

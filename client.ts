@@ -17,7 +17,9 @@ export default function getClient(
   if (_client && !forceReset) return _client
 
   _client = new ApolloClient({
-    uri: environment.GRAPHQL_URL,
+    uri: `${
+      process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
+    }/${environment.LITEFLOW_API_KEY}/graphql`,
     headers: authorization ? { authorization: `Bearer ${authorization}` } : {},
     cache: new InMemoryCache({
       typePolicies: {
