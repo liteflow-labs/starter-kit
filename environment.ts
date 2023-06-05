@@ -9,6 +9,7 @@ import {
 } from 'wagmi/chains'
 
 invariant(process.env.NEXT_PUBLIC_BASE_URL, 'Base url is not defined')
+invariant(process.env.NEXT_PUBLIC_LITEFLOW_API_KEY, 'API key is not defined')
 
 const environment = {
   /**
@@ -16,7 +17,7 @@ const environment = {
    */
 
   // API Key for the Liteflow API, you can get one at https://dashboard.liteflow.com/developer
-  LITEFLOW_API_KEY: 'e921d000-de68-47fc-beea-e428971ba509',
+  LITEFLOW_API_KEY: process.env.NEXT_PUBLIC_LITEFLOW_API_KEY,
 
   // Email address to send reports to
   REPORT_EMAIL: `contact@domain.tld`,
