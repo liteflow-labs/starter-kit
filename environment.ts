@@ -89,6 +89,9 @@ const environment = {
     polygonMumbai,
   ],
 
+  // (Optional) Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
+  WALLET_CONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+
   // (Optional) Magic API Key, you can get one at https://magic.link/
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
 
