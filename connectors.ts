@@ -56,6 +56,7 @@ const getDefaultWallets = ({
 }: {
   appName: string
   chains: Chain[]
+  projectId: string
   shimDisconnect?: boolean
 }): {
   connectors: ReturnType<typeof connectorsForWallets>
@@ -87,6 +88,7 @@ const getDefaultWallets = ({
 const { connectors } = getDefaultWallets({
   appName: 'Acme',
   chains,
+  projectId: environment.WALLET_CONNECT_PROJECT_ID,
   shimDisconnect: true,
 })
 
