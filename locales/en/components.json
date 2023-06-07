@@ -805,9 +805,8 @@
       "bio": "Bio"
     },
     "referral": {
-      "title": "Refer a creator",
-      "description": "Share your referral link to onboard new creators and gets rewards.",
-      "how": "How it works"
+      "title": "Refer a friend",
+      "description": "Share your referral link to onboard new user."
     },
     "navigation": {
       "on-sale": "On Sale",

@@ -244,33 +244,6 @@
       "pages_other": "of {{count}} pages"
     }
   },
-  "referral": {
-    "title": "Refer a creator",
-    "description": "Onboard new creators on the {{platformName}} platform through your referral link and earn a percentage from the sales of the NFTs they created in perpetuity.",
-    "link": "Your referral link",
-    "how": {
-      "title": "How it works",
-      "steps": [
-        "Copy and share your referral link to the creator you want to onboard",
-        "The creator uses your referral link to sign in to the platform (only new creator can be onboarded through a referral link)",
-        "Your referral rewards is then associated with the creator’s account",
-        "Every time an NFT created by your referred creator is sold you will receive the referral rewards"
-      ]
-    },
-    "rewards": {
-      "title": "Referral rewards",
-      "primary": {
-        "title": "Primary sale",
-        "description": "You will earn {{percentage}}% from the sales.",
-        "tooltip": "A primary sale is the first sale that happens after the mint of an NFT."
-      },
-      "secondary": {
-        "title": "Secondary sales",
-        "description": "You will earn {{percentage}}% from the sales.",
-        "tooltip": "Secondary sales are all the sales that happen after the primary sale of an NFT."
-      }
-    }
-  },
   "user": {
     "auctions": {
       "nav": {

@@ -26,7 +26,6 @@ import {
   WagmiConfig,
 } from 'wagmi'
 import getClient from '../client'
-import Banner from '../components/Banner/Banner'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
@@ -53,7 +52,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
         explore: 'Explore',
         create: 'Create',
         profile: 'Profile',
-        referral: 'Referral',
         support: 'Support',
         terms: 'Terms',
         privacy: 'Privacy',
@@ -62,7 +60,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
         explore: '検索',
         create: '作成',
         profile: 'プロフィール',
-        referral: '紹介',
         support: 'サポート',
         terms: '利用規約',
         privacy: 'プライバシーポリシー',
@@ -71,7 +68,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
         explore: '探讨',
         create: '创造',
         profile: '资料',
-        referral: '转介',
         support: '支持',
         terms: '条款',
         privacy: '隐私',
@@ -80,7 +76,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
         explore: 'Explorar',
         create: 'Crear',
         profile: 'Perfil',
-        referral: 'Recomendación',
         support: 'Apoyo',
         terms: 'Letra chica',
         privacy: 'Privacidad',
@@ -89,11 +84,8 @@ function Layout({ children }: PropsWithChildren<{}>) {
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
       { href: '/explore', label: texts[locale].explore },
-      environment.MINTABLE_COLLECTIONS.length > 0
-        ? { href: '/create', label: texts[locale].create }
-        : undefined,
+      { href: '/create', label: texts[locale].create },
       { href: userProfileLink, label: texts[locale].profile },
-      { href: '/referral', label: texts[locale].referral },
       { href: '/', label: texts[locale].support },
       { href: '/', label: texts[locale].terms },
       { href: '/', label: texts[locale].privacy },
@@ -103,16 +95,8 @@ function Layout({ children }: PropsWithChildren<{}>) {
   }, [router.locale, userProfileLink])
 
   return (
-    <Box mt={12}>
-      <Banner />
+    <Box>
       <Navbar
-        router={{
-          asPath: router.asPath,
-          isReady: router.isReady,
-          push: router.push,
-          query: router.query,
-          events: router.events,
-        }}
         multiLang={{
           locale: router.locale,
           pathname: router.pathname,
@@ -123,7 +107,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
             { label: 'Spanish', value: 'es-mx' },
           ],
         }}
-        disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
       />
       {children}
       <Footer name={environment.META_COMPANY_NAME} links={footerLinks} />

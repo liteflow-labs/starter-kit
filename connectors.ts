@@ -50,7 +50,9 @@ const getDefaultWallets = ({
         rainbowWallet({ chains, shimDisconnect }),
         coinbaseWallet({ appName, chains }),
         metaMaskWallet({ chains, shimDisconnect }),
-        walletConnectWallet({ chains }),
+        environment.WALLET_CONNECT_PROJECT_ID
+          ? walletConnectWallet({ chains })
+          : undefined,
         braveWallet({ chains, shimDisconnect }),
         environment.MAGIC_API_KEY
           ? emailConnector({ chains, apiKey: environment.MAGIC_API_KEY })
