@@ -110,12 +110,6 @@ const environment = {
 
   // Keywords of the marketplace to place in the SEO keywords
   META_KEYWORDS: 'NFT, marketplace, platform, blockchain, liteflow',
-
-  /**
-   * Miscellaneous
-   */
-
-  MINTABLE_COLLECTIONS: [] as { chainId: number; address: string }[],
 }
 
 export default environment
