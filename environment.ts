@@ -2,8 +2,8 @@ import invariant from 'ts-invariant'
 import {
   bsc,
   bscTestnet,
-  goerli,
-  mainnet,
+  goerli as ethereumGoerli,
+  mainnet as ethereumMainnet,
   polygon,
   polygonMumbai,
 } from 'wagmi/chains'
@@ -19,22 +19,22 @@ const environment = {
   // API Key for the Liteflow API, you can get one at https://dashboard.liteflow.com/developer
   LITEFLOW_API_KEY: process.env.NEXT_PUBLIC_LITEFLOW_API_KEY,
 
-  // Email address to send reports to
+  // Email address for end users to send reports to
   REPORT_EMAIL: `contact@domain.tld`,
 
   // Number of items per page
   PAGINATION_LIMIT: 12,
 
-  // Number of seconds an offer is valid (recommendation: 28 days)
+  // Default value for the number of seconds an offer is valid (users can override this) (recommendation: 28 days)
   OFFER_VALIDITY_IN_SECONDS: 2419200, // 28 days
 
-  // Number of seconds an auction is valid (recommendation: 7 days)
+  // Default value for the number of seconds an auction is valid (users can override this) (recommendation: 7 days)
   AUCTION_VALIDITY_IN_SECONDS: 604800, // 7 days
 
   // Base URL of the website
   BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
 
-  // Maximum amount of royalties
+  // Maximum percentage of royalties
   MAX_ROYALTIES: 30,
 
   // (Optional) Bugsnag API Key, you can get one at https://www.bugsnag.com/
@@ -79,8 +79,15 @@ const environment = {
    * Wallet/chain configuration
    */
 
-  // List of supported chains. Liteflow is supporting the following: mainnet, goerli, bscTestnet, bsc, polygon, polygonMumbai
-  CHAINS: [mainnet, goerli, bscTestnet, bsc, polygon, polygonMumbai],
+  // List of supported chains. Liteflow is supporting the following: ethereumMainnet, ethereumGoerli, bscTestnet, bsc, polygon, polygonMumbai
+  CHAINS: [
+    ethereumMainnet,
+    ethereumGoerli,
+    bscTestnet,
+    bsc,
+    polygon,
+    polygonMumbai,
+  ],
 
   // (Optional) Magic API Key, you can get one at https://magic.link/
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
@@ -89,7 +96,7 @@ const environment = {
    * SEO Configuration
    */
 
-  // Name of the company to place in the footer and in the SEO title
+  // Name of the company to place in the SEO title and in the footer
   META_COMPANY_NAME: 'Acme, Inc.',
 
   // Title of the marketplace to place in the SEO title
@@ -99,8 +106,7 @@ const environment = {
   META_DESCRIPTION: 'Acme NFT Marketplace',
 
   // Keywords of the marketplace to place in the SEO keywords
-  META_KEYWORDS:
-    'NFT, marketplace, platform, white-label, blockchain, liteflow',
+  META_KEYWORDS: 'NFT, marketplace, platform, blockchain, liteflow',
 
   /**
    * Miscellaneous
