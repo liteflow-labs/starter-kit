@@ -244,33 +244,6 @@
       "pages_other": "共 {{count}} 页"
     }
   },
-  "referral": {
-    "title": "推荐创作者",
-    "description": "通过您的推荐链接在{{platformName}}平台上加入新的创作者，并从他们永久创建的 NFT 的销售中赚取一定比例。",
-    "link": "您的推荐链接",
-    "how": {
-      "title": "这个怎么运作",
-      "steps": [
-        "复制您的推荐链接并将其分享给您想要加入的创建者",
-        "创作者使用您的推荐链接登录平台（只有新创作者可以通过推荐链接入职）",
-        "然后您的推荐奖励与创建者的帐户相关联",
-        "每次出售您推荐的创建者创建的 NFT 时，您都会收到推荐奖励"
-      ]
-    },
-    "rewards": {
-      "title": "推荐奖励",
-      "primary": {
-        "title": "初级销售",
-        "description": "您将从销售中赚取 {{percentage}}%",
-        "tooltip": "工具提示内容 > 主要销售是在 NFT 铸造之后发生的第一次销售。"
-      },
-      "secondary": {
-        "title": "二次销售",
-        "description": "您将从销售中赚取 {{percentage}}%",
-        "tooltip": "工具提示内容 > 二级销售是在 NFT 一级销售之后发生的所有销售。"
-      }
-    }
-  },
   "user": {
     "auctions": {
       "nav": {
