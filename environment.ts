@@ -115,7 +115,6 @@ const environment = {
    * Miscellaneous
    */
 
-  RESTRICT_TO_VERIFIED_ACCOUNT: false,
   REFERRAL_PERCENTAGE: { base: 1, secondary: 0.5 },
   MINTABLE_COLLECTIONS: [] as { chainId: number; address: string }[],
 }
