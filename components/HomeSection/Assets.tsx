@@ -39,7 +39,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
   const { t } = useTranslation('templates')
   const defaultAssetQuery = useFetchDefaultAssetIdsQuery({
     variables: { limit: environment.PAGINATION_LIMIT },
-    skip: !!environment.HOME_TOKENS,
+    skip: environment.HOME_TOKENS.length > 0,
   })
   useHandleQueryError(defaultAssetQuery)
   const defaultAssetData = useMemo(
@@ -48,12 +48,12 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
   )
 
   const assetIds = useMemo(() => {
-    if (environment.HOME_TOKENS) {
+    if (environment.HOME_TOKENS.length > 0) {
       // Pseudo randomize the array based on the date's seconds
       const tokens = [...environment.HOME_TOKENS]
 
       const seed = date.getTime() / 1000 // convert to seconds as date is currently truncated to the second
-      const randomTokens = []
+      const randomTokens: string[] = []
       while (
         tokens.length &&
         randomTokens.length < environment.PAGINATION_LIMIT

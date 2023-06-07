@@ -60,7 +60,10 @@ const EditPage: NextPage = () => {
           <UserFormEdit
             signer={signer}
             onUpdated={onSubmit}
-            uploadUrl={environment.UPLOAD_URL}
+            uploadUrl={`${
+              process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
+              'https://api.liteflow.com'
+            }/${environment.LITEFLOW_API_KEY}/uploadToIPFS`}
             account={account}
           />
         )}

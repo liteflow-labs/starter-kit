@@ -126,7 +126,7 @@ function Layout({ children }: PropsWithChildren<{}>) {
         disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
       />
       {children}
-      <Footer name="Acme, Inc." links={footerLinks} />
+      <Footer name={environment.META_COMPANY_NAME} links={footerLinks} />
     </Box>
   )
 }
@@ -214,19 +214,16 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
   return (
     <ErrorBoundary>
       <Head
-        title="Acme NFT Marketplace"
-        description="The Web3 as a Service Company"
+        title={environment.META_TITLE}
+        description={environment.META_DESCRIPTION}
       >
-        <meta
-          name="keywords"
-          content="NFT, marketplace, platform, white-label, blockchain"
-        />
+        <meta name="keywords" content={environment.META_KEYWORDS} />
 
-        <meta name="author" content="Acme, Inc." />
-        <meta name="application-name" content="Acme NFT Marketplace" />
+        <meta name="author" content={environment.META_COMPANY_NAME} />
+        <meta name="application-name" content={environment.META_TITLE} />
 
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://demo.liteflow.com" />
+        <meta property="og:url" content={environment.BASE_URL} />
 
         <meta name="twitter:card" content="summary" />
       </Head>
@@ -241,7 +238,12 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
         >
           <CookiesProvider cookies={cookies}>
             <ChakraProvider theme={theme}>
-              <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
+              <LiteflowProvider
+                endpoint={`${
+                  process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
+                  'https://api.liteflow.com'
+                }/${environment.LITEFLOW_API_KEY}/graphql`}
+              >
                 <AccountProvider>
                   <Layout>
                     <Component {...pageProps} />

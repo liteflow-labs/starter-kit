@@ -20,7 +20,7 @@ const CollectionsHomeSection: FC<Props> = () => {
   const collectionsQuery = useFetchCollectionsQuery({
     variables: {
       filter: {
-        or: environment.HOME_COLLECTIONS?.map((x) => x.split('-')).map(
+        or: environment.HOME_COLLECTIONS.map((x) => x.split('-')).map(
           ([chainId, collectionAddress]) => {
             invariant(chainId && collectionAddress, 'invalid collection')
             return {
@@ -42,7 +42,7 @@ const CollectionsHomeSection: FC<Props> = () => {
   )
 
   const orderedCollections = useOrderByKey(
-    environment.HOME_COLLECTIONS || [],
+    environment.HOME_COLLECTIONS,
     collectionData?.collections?.nodes || [],
     (collection) => [collection.chainId, collection.address].join('-'),
   )
