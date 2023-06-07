@@ -24,7 +24,7 @@ import {
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
-import useOrderById from '../../hooks/useOrderById'
+import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Link from '../Link/Link'
 import SkeletonGrid from '../Skeleton/Grid'
 import SkeletonTokenCard from '../Skeleton/TokenCard'
@@ -85,7 +85,11 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     [assetsQuery.data, assetsQuery.previousData],
   )
 
-  const assets = useOrderById(assetIds, assetData?.assets?.nodes)
+  const assets = useOrderByKey(
+    assetIds,
+    assetData?.assets?.nodes || [],
+    (asset) => asset.id,
+  )
 
   if (
     (defaultAssetQuery.loading && !defaultAssetData) ||

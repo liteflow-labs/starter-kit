@@ -33,7 +33,6 @@ import Navbar from '../components/Navbar/Navbar'
 import { chains, client } from '../connectors'
 import environment from '../environment'
 import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
-import useSigner from '../hooks/useSigner'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
@@ -43,7 +42,6 @@ NProgress.configure({ showSpinner: false })
 
 function Layout({ children }: PropsWithChildren<{}>) {
   const router = useRouter()
-  const signer = useSigner()
   const { address } = useAccount()
   const userProfileLink = useMemo(
     () => (address ? `/users/${address}` : '/login'),
@@ -108,7 +106,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
     <Box mt={12}>
       <Banner />
       <Navbar
-        allowTopUp={environment.ALLOW_TOP_UP}
         router={{
           asPath: router.asPath,
           isReady: router.isReady,
@@ -126,7 +123,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
             { label: 'Spanish', value: 'es-mx' },
           ],
         }}
-        signer={signer}
         disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
       />
       {children}

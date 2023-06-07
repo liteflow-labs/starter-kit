@@ -71,7 +71,6 @@ type Props = {
   auctionId: string | undefined
   auctionValidity: number
   offerValidity: number
-  allowTopUp: boolean
 } & (
   | {
       multiple: true
@@ -97,7 +96,6 @@ const OfferFormBid: FC<Props> = (props) => {
     auctionId,
     auctionValidity,
     offerValidity,
-    allowTopUp,
   } = props
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
   const toast = useToast()
@@ -176,11 +174,6 @@ const OfferFormBid: FC<Props> = (props) => {
   const totalPrice = useMemo(() => {
     return priceUnit.mul(quantityBN)
   }, [priceUnit, quantityBN])
-
-  const balanceZero = useMemo(() => {
-    if (!balance) return false
-    return balance.isZero()
-  }, [balance])
 
   const totalFees = useMemo(() => {
     if (!totalPrice) return BigNumber.from(0)
@@ -421,12 +414,7 @@ const OfferFormBid: FC<Props> = (props) => {
 
       {account ? (
         <>
-          <Balance
-            signer={signer}
-            account={account}
-            currency={currency}
-            allowTopUp={allowTopUp && ((price && !canBid) || balanceZero)}
-          />
+          <Balance account={account} currency={currency} />
           <ButtonWithNetworkSwitch
             chainId={chainId}
             isDisabled={!canBid}
