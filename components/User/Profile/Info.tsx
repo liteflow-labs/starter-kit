@@ -11,7 +11,6 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { formatError, useInvitation, useIsLoggedIn } from '@nft/hooks'
-import { BsArrowRight } from '@react-icons/all-files/bs/BsArrowRight'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
 import { HiOutlineGlobeAlt } from '@react-icons/all-files/hi/HiOutlineGlobeAlt'
@@ -205,9 +204,6 @@ const UserProfileInfo: VFC<{
               {referralUrl}
             </Text>
           </Button>
-          <Flex as={Link} href="/referral" align="center">
-            {t('user.referral.how')} <Icon as={BsArrowRight} ml={2} />
-          </Flex>
         </Stack>
       )}
     </VStack>
