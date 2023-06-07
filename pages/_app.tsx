@@ -85,9 +85,7 @@ function Layout({ children }: PropsWithChildren<{}>) {
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
       { href: '/explore', label: texts[locale].explore },
-      environment.MINTABLE_COLLECTIONS.length > 0
-        ? { href: '/create', label: texts[locale].create }
-        : undefined,
+      { href: '/create', label: texts[locale].create },
       { href: userProfileLink, label: texts[locale].profile },
       { href: '/', label: texts[locale].support },
       { href: '/', label: texts[locale].terms },
@@ -101,13 +99,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
     <Box mt={12}>
       <Banner />
       <Navbar
-        router={{
-          asPath: router.asPath,
-          isReady: router.isReady,
-          push: router.push,
-          query: router.query,
-          events: router.events,
-        }}
         multiLang={{
           locale: router.locale,
           pathname: router.pathname,
@@ -118,7 +109,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
             { label: 'Spanish', value: 'es-mx' },
           ],
         }}
-        disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
       />
       {children}
       <Footer name={environment.META_COMPANY_NAME} links={footerLinks} />
