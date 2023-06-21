@@ -1,7 +1,14 @@
 import { Button, ButtonProps, useToast } from '@chakra-ui/react'
 import { formatError } from '@nft/hooks'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
+import useTranslation from 'next-translate/useTranslation'
 import { PropsWithChildren, useCallback } from 'react'
-import { useNetwork, useSwitchNetwork } from 'wagmi'
+import {
+  useAccount as useWagmiAccount,
+  useNetwork,
+  useSwitchNetwork,
+} from 'wagmi'
+import useAccount from '../../hooks/useAccount'
 
 const ButtonWithNetworkSwitch = ({
   children,
@@ -12,7 +19,11 @@ const ButtonWithNetworkSwitch = ({
     chainId: number
   }
 >): JSX.Element => {
+  const { t } = useTranslation('components')
   const { chain } = useNetwork()
+  const { address } = useWagmiAccount()
+  const { isLoggedIn } = useAccount()
+  const { openConnectModal } = useConnectModal()
   const { switchNetwork, isLoading } = useSwitchNetwork({
     chainId,
     throwForSwitchChainNotSupported: true,
@@ -30,14 +41,30 @@ const ButtonWithNetworkSwitch = ({
     switchNetwork()
   }, [switchNetwork])
 
+  console.log(address, isLoggedIn)
+
+  if (!address)
+    return (
+      <Button size={props.size} onClick={openConnectModal} colorScheme="brand">
+        {t('navbar.sign-in')}
+      </Button>
+    )
+
+  if (address && !isLoggedIn)
+    return (
+      <Button
+        size={props.size}
+        colorScheme="brand"
+        isLoading
+        loadingText={t('navbar.signing-in')}
+      />
+    )
+
   if (chain && chain.id !== chainId)
     return (
       <Button
-        {...props}
+        size={props.size}
         onClick={handleSwitchNetwork}
-        type="button"
-        leftIcon={undefined}
-        rightIcon={undefined}
         isLoading={isLoading}
       >
         Switch Network
