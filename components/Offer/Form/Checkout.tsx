@@ -4,7 +4,6 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
-  Button,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -22,7 +21,6 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { formatError, useAcceptOffer, useBalance } from '@nft/hooks'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
@@ -66,7 +64,6 @@ const OfferFormCheckout: FC<Props> = ({
   const { t } = useTranslation('components')
   const [acceptOffer, { activeStep, transactionHash }] = useAcceptOffer(signer)
   const toast = useToast()
-  const { openConnectModal } = useConnectModal()
   const {
     isOpen: acceptOfferIsOpen,
     onOpen: acceptOfferOnOpen,
@@ -198,25 +195,17 @@ const OfferFormCheckout: FC<Props> = ({
           </AlertDescription>
         </Box>
       </Alert>
-      {account ? (
-        <ButtonWithNetworkSwitch
-          chainId={chainId}
-          isDisabled={!!account && !canPurchase}
-          isLoading={isSubmitting}
-          size="lg"
-          type="submit"
-        >
-          <Text as="span" isTruncated>
-            {t('offer.form.checkout.submit')}
-          </Text>
-        </ButtonWithNetworkSwitch>
-      ) : (
-        <Button size="lg" type="button" onClick={openConnectModal}>
-          <Text as="span" isTruncated>
-            {t('offer.form.checkout.submit')}
-          </Text>
-        </Button>
-      )}
+      <ButtonWithNetworkSwitch
+        chainId={chainId}
+        isDisabled={!canPurchase}
+        isLoading={isSubmitting}
+        size="lg"
+        type="submit"
+      >
+        <Text as="span" isTruncated>
+          {t('offer.form.checkout.submit')}
+        </Text>
+      </ButtonWithNetworkSwitch>
 
       <AcceptOfferModal
         isOpen={acceptOfferIsOpen}
