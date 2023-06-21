@@ -45,13 +45,17 @@ const ButtonWithNetworkSwitch = ({
   if (!address)
     return (
       <Button {...restProps} onClick={openConnectModal}>
-        {t('navbar.sign-in')}
+        {t('network.button.sign-in')}
       </Button>
     )
 
   if (address && !isLoggedIn)
     return (
-      <Button {...restProps} isLoading loadingText={t('navbar.signing-in')} />
+      <Button
+        {...restProps}
+        isLoading
+        loadingText={t('network.button.signing-in')}
+      />
     )
 
   if (chain && chain.id !== chainId)
@@ -61,7 +65,7 @@ const ButtonWithNetworkSwitch = ({
         isLoading={networkIsLoading}
         onClick={handleSwitchNetwork}
       >
-        Switch Network
+        {t('network.button.switch-network')}
       </Button>
     )
 
