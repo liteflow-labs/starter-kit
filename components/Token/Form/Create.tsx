@@ -1,5 +1,4 @@
 import {
-  Button,
   Checkbox,
   FormControl,
   FormErrorMessage,
@@ -22,7 +21,6 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { CreateNftStep, formatError, useCreateNFT } from '@nft/hooks'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -76,7 +74,6 @@ const TokenFormCreate: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
-  const { openConnectModal } = useConnectModal()
   const {
     isOpen: createCollectibleIsOpen,
     onOpen: createCollectibleOnOpen,
@@ -355,23 +352,15 @@ const TokenFormCreate: FC<Props> = ({
         required
         error={errors.category}
       />
-      {signer ? (
-        <ButtonWithNetworkSwitch
-          chainId={collection.chainId}
-          isLoading={activeStep !== CreateNftStep.INITIAL}
-          type="submit"
-        >
-          <Text as="span" isTruncated>
-            {t('token.form.create.submit')}
-          </Text>
-        </ButtonWithNetworkSwitch>
-      ) : (
-        <Button type="button" onClick={openConnectModal}>
-          <Text as="span" isTruncated>
-            {t('token.form.create.submit')}
-          </Text>
-        </Button>
-      )}
+      <ButtonWithNetworkSwitch
+        chainId={collection.chainId}
+        isLoading={activeStep !== CreateNftStep.INITIAL}
+        type="submit"
+      >
+        <Text as="span" isTruncated>
+          {t('token.form.create.submit')}
+        </Text>
+      </ButtonWithNetworkSwitch>
       <CreateCollectibleModal
         isOpen={createCollectibleIsOpen}
         onClose={createCollectibleOnClose}
