@@ -19,12 +19,13 @@ const ButtonWithNetworkSwitch = ({
     chainId: number
   }
 >): JSX.Element => {
+  const { isLoading, leftIcon, rightIcon, type, ...restProps } = props
   const { t } = useTranslation('components')
   const { chain } = useNetwork()
   const { address } = useWagmiAccount()
   const { isLoggedIn } = useAccount()
   const { openConnectModal } = useConnectModal()
-  const { switchNetwork, isLoading } = useSwitchNetwork({
+  const { switchNetwork, isLoading: networkIsLoading } = useSwitchNetwork({
     chainId,
     throwForSwitchChainNotSupported: true,
     onError(error) {
@@ -43,27 +44,22 @@ const ButtonWithNetworkSwitch = ({
 
   if (!address)
     return (
-      <Button size={props.size} onClick={openConnectModal} colorScheme="brand">
+      <Button {...restProps} onClick={openConnectModal}>
         {t('navbar.sign-in')}
       </Button>
     )
 
   if (address && !isLoggedIn)
     return (
-      <Button
-        size={props.size}
-        colorScheme="brand"
-        isLoading
-        loadingText={t('navbar.signing-in')}
-      />
+      <Button {...restProps} isLoading loadingText={t('navbar.signing-in')} />
     )
 
   if (chain && chain.id !== chainId)
     return (
       <Button
-        size={props.size}
+        {...restProps}
+        isLoading={networkIsLoading}
         onClick={handleSwitchNetwork}
-        isLoading={isLoading}
       >
         Switch Network
       </Button>
