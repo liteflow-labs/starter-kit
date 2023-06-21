@@ -3,13 +3,13 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import {
   AcceptAuctionStep,
-  formatError,
   useAcceptAuction,
   useAuctionStatus,
 } from '@nft/hooks'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useMemo, VFC } from 'react'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import { formatError } from '../../../utils'
 import Link from '../../Link/Link'
 import AcceptAuctionModal from '../../Modal/AcceptAuction'
 

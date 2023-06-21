@@ -1,9 +1,9 @@
 import { Box, Flex, Icon, Text } from '@chakra-ui/react'
-import { formatAddress } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Image from 'components/Image/Image'
 import Link from 'components/Link/Link'
 import { FC } from 'react'
+import { formatAddress } from '../../utils'
 import AccountImage from '../Wallet/Image'
 
 type Props = {
