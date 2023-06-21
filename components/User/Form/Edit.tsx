@@ -9,7 +9,7 @@ import {
   Textarea,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { useUpdateAccount } from '@nft/hooks'
+import { useUpdateAccount } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'

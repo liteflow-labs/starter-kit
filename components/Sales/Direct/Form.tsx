@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CreateOfferStep, useCreateOffer } from '@nft/hooks'
+import { CreateOfferStep, useCreateOffer } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'

@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CancelOfferStep, useCancelOffer } from '@nft/hooks'
+import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, VFC } from 'react'

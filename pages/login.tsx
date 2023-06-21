@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, useToast } from '@chakra-ui/react'
-import { useInvitation } from '@nft/hooks'
+import { useInvitation } from '@liteflow/react'
 import { ConnectButton, useConnectModal } from '@rainbow-me/rainbowkit'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'

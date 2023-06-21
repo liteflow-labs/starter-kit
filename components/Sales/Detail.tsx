@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumberish } from '@ethersproject/bignumber'
-import { useAuctionStatus } from '@nft/hooks'
+import { useAuctionStatus } from '@liteflow/react'
 import { VFC } from 'react'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import SaleAuctionButton from './Auction/Button'

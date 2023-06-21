@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useCreateOffer } from '@nft/hooks'
+import { useCreateOffer } from '@liteflow/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'

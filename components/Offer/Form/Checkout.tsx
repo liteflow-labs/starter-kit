@@ -21,7 +21,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { useAcceptOffer } from '@nft/hooks'
+import { useAcceptOffer } from '@liteflow/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'

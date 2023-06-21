@@ -13,7 +13,7 @@ import {
   CancelOfferStep,
   useAcceptOffer,
   useCancelOffer,
-} from '@nft/hooks'
+} from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'

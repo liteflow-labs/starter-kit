@@ -1,7 +1,7 @@
 import { ButtonProps, useDisclosure } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumberish } from '@ethersproject/bignumber'
-import { AcceptOfferStep, useAcceptOffer } from '@nft/hooks'
+import { AcceptOfferStep, useAcceptOffer } from '@liteflow/react'
 import { PropsWithChildren, useCallback } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import AcceptOfferModal from '../Modal/AcceptOffer'

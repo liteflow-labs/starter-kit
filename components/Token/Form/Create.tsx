@@ -21,7 +21,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
-import { CreateNftStep, useCreateNFT } from '@nft/hooks'
+import { CreateNftStep, useCreateNFT } from '@liteflow/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
