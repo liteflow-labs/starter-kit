@@ -16,7 +16,7 @@ const ButtonWithNetworkSwitch = ({
   ...props
 }: PropsWithChildren<
   ButtonProps & {
-    chainId: number
+    chainId?: number
   }
 >): JSX.Element => {
   const { isLoading, leftIcon, rightIcon, type, ...restProps } = props
@@ -58,7 +58,7 @@ const ButtonWithNetworkSwitch = ({
       />
     )
 
-  if (chain && chain.id !== chainId)
+  if (chain && chainId && chain.id !== chainId)
     return (
       <Button
         {...restProps}
