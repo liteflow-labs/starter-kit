@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -28,7 +27,6 @@ import {
   useBalance,
   useCreateOffer,
 } from '@nft/hooks'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
@@ -99,7 +97,6 @@ const OfferFormBid: FC<Props> = (props) => {
   } = props
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
   const toast = useToast()
-  const { openConnectModal } = useConnectModal()
   const {
     isOpen: createOfferIsOpen,
     onOpen: createOfferOnOpen,
@@ -412,28 +409,18 @@ const OfferFormBid: FC<Props> = (props) => {
         />
       </div>
 
-      {account ? (
-        <>
-          <Balance account={account} currency={currency} />
-          <ButtonWithNetworkSwitch
-            chainId={chainId}
-            isDisabled={!canBid}
-            isLoading={isSubmitting}
-            size="lg"
-            type="submit"
-          >
-            <Text as="span" isTruncated>
-              {t('offer.form.bid.submit')}
-            </Text>
-          </ButtonWithNetworkSwitch>
-        </>
-      ) : (
-        <Button size="lg" type="button" onClick={openConnectModal}>
-          <Text as="span" isTruncated>
-            {t('offer.form.bid.submit')}
-          </Text>
-        </Button>
-      )}
+      {account && <Balance account={account} currency={currency} />}
+      <ButtonWithNetworkSwitch
+        chainId={chainId}
+        isLoading={isSubmitting}
+        isDisabled={!canBid}
+        size="lg"
+        type="submit"
+      >
+        <Text as="span" isTruncated>
+          {t('offer.form.bid.submit')}
+        </Text>
+      </ButtonWithNetworkSwitch>
 
       <CreateOfferModal
         isOpen={createOfferIsOpen}
