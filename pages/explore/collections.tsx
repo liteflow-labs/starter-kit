@@ -14,7 +14,6 @@ import {
   useBreakpointValue,
   useToast,
 } from '@chakra-ui/react'
-import { formatError, removeEmptyFromObject } from '@nft/hooks'
 import CollectionCard from 'components/Collection/CollectionCard'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
@@ -47,6 +46,7 @@ import useCollectionFilterState from '../../hooks/useCollectionFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
+import { formatError, removeEmptyFromObject } from '../../utils'
 
 type Props = {}
 

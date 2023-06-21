@@ -12,7 +12,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { isSameAddress } from '@nft/hooks'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { NextPage } from 'next'
@@ -44,6 +43,7 @@ import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
+import { isSameAddress } from '../../../utils'
 
 type Props = {
   assetId: string

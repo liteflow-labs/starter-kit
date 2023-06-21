@@ -1,6 +1,6 @@
 import { Text } from '@chakra-ui/react'
-import { formatAddress } from '@nft/hooks'
 import Trans from 'next-translate/Trans'
+import { formatAddress } from '../../../utils'
 
 export type IProps = {
   refereeAccount: {

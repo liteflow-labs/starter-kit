@@ -1,8 +1,8 @@
 import { Flex, Icon, Text, useToast } from '@chakra-ui/react'
-import { formatAddress } from '@nft/hooks'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo, VFC } from 'react'
+import { formatAddress } from '../../utils'
 
 const WalletAddress: VFC<{
   address: string

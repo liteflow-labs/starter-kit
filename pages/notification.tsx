@@ -8,7 +8,6 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { formatError } from '@nft/hooks'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
@@ -23,6 +22,7 @@ import { useGetNotificationsQuery } from '../graphql'
 import useAccount from '../hooks/useAccount'
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import SmallLayout from '../layouts/small'
+import { formatError } from '../utils'
 
 const NotificationPage: NextPage = ({}) => {
   const { t } = useTranslation('templates')

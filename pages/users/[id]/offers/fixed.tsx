@@ -16,7 +16,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
+import { useIsLoggedIn } from '@nft/hooks'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
@@ -42,6 +42,7 @@ import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
+import { dateFromNow, formatError } from '../../../../utils'
 
 type Props = {
   now: string

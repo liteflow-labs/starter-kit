@@ -12,7 +12,6 @@ import {
   Skeleton,
   Text,
 } from '@chakra-ui/react'
-import { formatAddress } from '@nft/hooks'
 import { FaDiscord } from '@react-icons/all-files/fa/FaDiscord'
 import { FaGlobe } from '@react-icons/all-files/fa/FaGlobe'
 import { FaTwitter } from '@react-icons/all-files/fa/FaTwitter'
@@ -28,6 +27,7 @@ import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 import ChakraLink from '../../components/Link/Link'
 import { chains } from '../../connectors'
+import { formatAddress } from '../../utils'
 
 type Props = {
   collection: Partial<{

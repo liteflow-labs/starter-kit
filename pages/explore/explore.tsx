@@ -12,7 +12,6 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import { removeEmptyFromObject } from '@nft/hooks'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -45,6 +44,7 @@ import useAssetFilterState from '../../hooks/useAssetFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
+import { removeEmptyFromObject } from '../../utils'
 
 type Props = {
   now: string

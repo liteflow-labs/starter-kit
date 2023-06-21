@@ -11,10 +11,6 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import {
   AcceptOfferStep,
   CancelOfferStep,
-  dateFromNow,
-  formatDate,
-  formatError,
-  isSameAddress,
   useAcceptOffer,
   useCancelOffer,
 } from '@nft/hooks'
@@ -23,6 +19,12 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { SyntheticEvent, useMemo, VFC } from 'react'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
+import {
+  dateFromNow,
+  formatDate,
+  formatError,
+  isSameAddress,
+} from '../../utils'
 import ButtonWithNetworkSwitch from '../Button/SwitchNetwork'
 import Link from '../Link/Link'
 import { ListItem } from '../List/List'

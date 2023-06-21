@@ -12,7 +12,6 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import { removeEmptyFromObject } from '@nft/hooks'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
@@ -52,6 +51,7 @@ import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../layouts/large'
+import { removeEmptyFromObject } from '../../../utils'
 
 type Props = {
   now: string

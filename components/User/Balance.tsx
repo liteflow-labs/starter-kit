@@ -1,8 +1,8 @@
 import { Flex, Heading, Icon, Text, VStack } from '@chakra-ui/react'
-import { useBalance } from '@nft/hooks'
 import { IoWalletOutline } from '@react-icons/all-files/io5/IoWalletOutline'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, HTMLAttributes } from 'react'
+import useBalance from '../../hooks/useBalance'
 import Price from '../Price/Price'
 
 const Balance: FC<

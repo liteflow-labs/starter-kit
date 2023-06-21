@@ -1,5 +1,4 @@
 import { Button, ButtonProps, useToast } from '@chakra-ui/react'
-import { formatError } from '@nft/hooks'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { PropsWithChildren, useCallback } from 'react'
@@ -9,6 +8,7 @@ import {
   useSwitchNetwork,
 } from 'wagmi'
 import useAccount from '../../hooks/useAccount'
+import { formatError } from '../../utils'
 
 const ButtonWithNetworkSwitch = ({
   children,

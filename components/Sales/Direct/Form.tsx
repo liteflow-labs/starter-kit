@@ -21,12 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  CreateOfferStep,
-  formatDateDatetime,
-  formatError,
-  useCreateOffer,
-} from '@nft/hooks'
+import { CreateOfferStep, useCreateOffer } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
@@ -35,6 +30,7 @@ import { useForm } from 'react-hook-form'
 import { Standard, useFeesQuery } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import { formatDateDatetime, formatError } from '../../../utils'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
