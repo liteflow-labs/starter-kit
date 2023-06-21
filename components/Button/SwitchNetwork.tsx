@@ -41,8 +41,6 @@ const ButtonWithNetworkSwitch = ({
     switchNetwork()
   }, [switchNetwork])
 
-  console.log(address, isLoggedIn)
-
   if (!address)
     return (
       <Button size={props.size} onClick={openConnectModal} colorScheme="brand">
