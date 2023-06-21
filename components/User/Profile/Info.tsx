@@ -10,7 +10,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { formatError, useInvitation, useIsLoggedIn } from '@nft/hooks'
+import { useInvitation, useIsLoggedIn } from '@nft/hooks'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
 import { HiOutlineGlobeAlt } from '@react-icons/all-files/hi/HiOutlineGlobeAlt'
@@ -20,6 +20,7 @@ import linkify from 'components/Linkify/Linkify'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useState, VFC } from 'react'
 import useAccount from '../../../hooks/useAccount'
+import { formatError } from '../../../utils'
 import Link from '../../Link/Link'
 import WalletAddress from '../../Wallet/Address'
 

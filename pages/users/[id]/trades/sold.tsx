@@ -14,7 +14,6 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
-import { dateFromNow } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -42,6 +41,7 @@ import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
+import { dateFromNow } from '../../../../utils'
 
 type Props = {
   now: string

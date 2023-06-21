@@ -1,6 +1,5 @@
 import { GridItem, SimpleGrid, Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { isSameAddress } from '@nft/hooks'
 import { FC, useMemo } from 'react'
 import type { TabsEnum } from '../components/User/Profile/Navigation'
 import UserProfileNavigation from '../components/User/Profile/Navigation'
@@ -9,6 +8,7 @@ import {
   useFetchAccountDetailQuery,
   useFetchAccountMetadataQuery,
 } from '../graphql'
+import { isSameAddress } from '../utils'
 import Head from './Head'
 import UserProfileBanner from './User/Profile/Banner'
 import UserProfileInfo from './User/Profile/Info'

@@ -24,7 +24,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatError } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import linkify from 'components/Linkify/Linkify'
@@ -63,6 +62,7 @@ import useNow from '../../../hooks/useNow'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
+import { formatError } from '../../../utils'
 
 type Props = {
   now: string

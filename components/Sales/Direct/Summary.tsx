@@ -1,9 +1,9 @@
 import { Box, Flex, Heading, Icon } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatDate } from '@nft/hooks'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo, VFC } from 'react'
+import { formatDate } from '../../../utils'
 import Image from '../../Image/Image'
 import Price from '../../Price/Price'
 

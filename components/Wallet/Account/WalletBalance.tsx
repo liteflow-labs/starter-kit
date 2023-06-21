@@ -1,6 +1,6 @@
 import { Spinner } from '@chakra-ui/react'
-import { useBalance } from '@nft/hooks'
 import { FC } from 'react'
+import useBalance from '../../../hooks/useBalance'
 import Price from '../../Price/Price'
 
 const WalletBalance: FC<{
