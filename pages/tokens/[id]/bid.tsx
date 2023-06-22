@@ -86,6 +86,10 @@ const BidPage: NextPage<Props> = ({ now }) => {
     [auction, currencyData],
   )
 
+  const bidCurrencies = currencies as (typeof currencies[number] & {
+    address: string
+  })[]
+
   const highestBid = useMemo(() => auction?.bestBid.nodes[0], [auction])
 
   const onCreated = useCallback(async () => {
@@ -214,7 +218,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 tokenId={asset.tokenId}
                 multiple={false}
                 owner={asset.ownerships.nodes[0]?.ownerAddress}
-                currencies={currencies}
+                currencies={bidCurrencies}
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}
                 auctionId={auction?.id}
@@ -230,7 +234,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 tokenId={asset.tokenId}
                 multiple={true}
                 supply={asset.quantity}
-                currencies={currencies}
+                currencies={bidCurrencies}
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}
                 auctionId={auction?.id}

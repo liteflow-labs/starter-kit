@@ -21,6 +21,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
+import { toAddress } from '@liteflow/core'
 import { CreateNftStep, useCreateNFT } from '@liteflow/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
@@ -116,19 +117,26 @@ const TokenFormCreate: FC<Props> = ({
       createCollectibleOnOpen()
       if (parseFloat(data.royalties) > maxRoyalties)
         throw new Error('Royalties too high')
-      const assetId = await createNFT({
-        chainId: collection.chainId,
-        collectionAddress: collection.address,
-        name: data.name,
-        description: data.description,
-        content: data.content,
-        preview: data.preview,
-        isAnimation: data.isAnimation,
-        isPrivate: data.isPrivate,
-        amount: collection.standard === 'ERC1155' ? parseInt(data.amount) : 1,
-        royalties: parseFloat(data.royalties),
-        traits: [{ type: 'Category', value: data.category }],
-      })
+      const assetId = await createNFT(
+        {
+          chain: collection.chainId,
+          collection: toAddress(collection.address),
+          supply: collection.standard === 'ERC1155' ? parseInt(data.amount) : 1,
+          royalties: parseFloat(data.royalties),
+          metadata: {
+            name: data.name,
+            description: data.description,
+            attributes: [{ traitType: 'Category', value: data.category }],
+            media: {
+              content: data.content,
+              preview: data.preview,
+              isAnimation: data.isAnimation,
+              isPrivate: data.isPrivate,
+            },
+          },
+        },
+        activateLazyMint,
+      )
 
       onCreated(assetId)
     } catch (e) {

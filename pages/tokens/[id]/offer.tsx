@@ -121,6 +121,13 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     () => currencyData?.currencies?.nodes || [],
     [currencyData],
   )
+  const auctionCurrencies = useMemo(
+    () =>
+      currencies.filter((c) => c.address) as (typeof currencies[number] & {
+        address: string
+      })[],
+    [currencies],
+  )
 
   const saleOptions: [SaleOption, SaleOption] = useMemo(
     () => [
@@ -178,7 +185,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
         <SalesAuctionForm
           signer={signer}
           assetId={asset.id}
-          currencies={currencies.filter((c) => c.address)} // Keep only non-native currency for bids on auction
+          currencies={auctionCurrencies}
           auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
@@ -186,6 +193,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     invariant(true, 'Invalid sale type')
   }, [
     currencies,
+    auctionCurrencies,
     asset,
     sale,
     blockExplorer,

@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
+import { toAddress } from '@liteflow/core'
 import { useCreateOffer } from '@liteflow/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
@@ -55,6 +56,7 @@ type Props = {
   account: string | null | undefined
   currencies: {
     id: string
+    address: string
     decimals: number
     symbol: string
     image: string
@@ -191,13 +193,19 @@ const OfferFormBid: FC<Props> = (props) => {
       const id = await createOffer({
         type: 'BUY',
         quantity: quantityBN,
-        unitPrice: priceUnit,
-        assetId: [chainId, collectionAddress, tokenId].join('-'),
-        currencyId: currency.id,
-        takerAddress: props.multiple
+        unitPrice: {
+          amount: priceUnit,
+          currency: toAddress(currency.address),
+        },
+        chain: chainId,
+        collection: toAddress(collectionAddress),
+        token: tokenId,
+        taker: props.multiple
           ? undefined // Keep the bid open for anyone that can fill it
-          : props.owner?.toLowerCase(),
-        expiredAt: auctionId ? null : new Date(expiredAt),
+          : props.owner
+          ? toAddress(props.owner)
+          : undefined,
+        expiredAt: auctionId ? undefined : new Date(expiredAt),
         auctionId,
       })
 
