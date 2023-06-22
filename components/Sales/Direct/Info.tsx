@@ -10,17 +10,13 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  CancelOfferStep,
-  formatError,
-  isSameAddress,
-  useCancelOffer,
-} from '@nft/hooks'
+import { CancelOfferStep, useCancelOffer } from '@nft/hooks'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
 import { ReactElement, useCallback, useMemo, VFC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import { formatError, isSameAddress } from '../../../utils'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import CancelOfferModal from '../../Modal/CancelOffer'
 import Price from '../../Price/Price'

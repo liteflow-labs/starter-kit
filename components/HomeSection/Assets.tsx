@@ -24,7 +24,7 @@ import {
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
-import useOrderById from '../../hooks/useOrderById'
+import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Link from '../Link/Link'
 import SkeletonGrid from '../Skeleton/Grid'
 import SkeletonTokenCard from '../Skeleton/TokenCard'
@@ -39,17 +39,21 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
   const { t } = useTranslation('templates')
   const defaultAssetQuery = useFetchDefaultAssetIdsQuery({
     variables: { limit: environment.PAGINATION_LIMIT },
-    skip: !!environment.HOME_TOKENS,
+    skip: environment.HOME_TOKENS.length > 0,
   })
   useHandleQueryError(defaultAssetQuery)
+  const defaultAssetData = useMemo(
+    () => defaultAssetQuery.data || defaultAssetQuery.previousData,
+    [defaultAssetQuery.data, defaultAssetQuery.previousData],
+  )
 
   const assetIds = useMemo(() => {
-    if (environment.HOME_TOKENS) {
+    if (environment.HOME_TOKENS.length > 0) {
       // Pseudo randomize the array based on the date's seconds
       const tokens = [...environment.HOME_TOKENS]
 
       const seed = date.getTime() / 1000 // convert to seconds as date is currently truncated to the second
-      const randomTokens = []
+      const randomTokens: string[] = []
       while (
         tokens.length &&
         randomTokens.length < environment.PAGINATION_LIMIT
@@ -64,8 +68,8 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       }
       return randomTokens
     }
-    return (defaultAssetQuery.data?.assets?.nodes || []).map((x) => x.id)
-  }, [defaultAssetQuery, date])
+    return (defaultAssetData?.assets?.nodes || []).map((x) => x.id)
+  }, [defaultAssetData, date])
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {
@@ -75,12 +79,22 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       address: address || '',
     },
   })
-
   useHandleQueryError(assetsQuery)
+  const assetData = useMemo(
+    () => assetsQuery.data || assetsQuery.previousData,
+    [assetsQuery.data, assetsQuery.previousData],
+  )
 
-  const assets = useOrderById(assetIds, assetsQuery.data?.assets?.nodes)
+  const assets = useOrderByKey(
+    assetIds,
+    assetData?.assets?.nodes || [],
+    (asset) => asset.id,
+  )
 
-  if (defaultAssetQuery.loading || assetsQuery.loading)
+  if (
+    (defaultAssetQuery.loading && !defaultAssetData) ||
+    (assetsQuery.loading && !assetData)
+  )
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
@@ -93,6 +107,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       </Stack>
     )
 
+  if (assets.length === 0) return null
   return (
     <Stack spacing={6}>
       <Flex flexWrap="wrap" align="center" justify="space-between" gap={4}>

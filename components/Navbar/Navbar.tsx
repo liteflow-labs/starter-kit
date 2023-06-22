@@ -28,16 +28,14 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
-import { useAddFund } from '@nft/hooks'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { FaEnvelope } from '@react-icons/all-files/fa/FaEnvelope'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import useTranslation from 'next-translate/useTranslation'
-import { MittEmitter } from 'next/dist/shared/lib/mitt'
+import { useRouter } from 'next/router'
 import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
@@ -96,31 +94,11 @@ const DrawerMenu: VFC<{
     width?: number
     height?: number
   }
-  router: {
-    asPath: string
-    query: any
-    push: (url: any, as?: any, options?: any) => Promise<boolean>
-    events: MittEmitter<'routeChangeStart'>
-  }
   multiLang?: MultiLang
-  topUp: {
-    allowTopUp: boolean
-    addFund: () => Promise<void>
-    addingFund: boolean
-  }
-  disableMinting?: boolean
   signOutFn: () => void
-}> = ({
-  account,
-  signOutFn,
-  logo,
-  router,
-  multiLang,
-  topUp,
-  disableMinting,
-}) => {
+}> = ({ account, signOutFn, logo, multiLang }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { asPath, events, query, push } = router
+  const { asPath, events, query, push } = useRouter()
   const { t } = useTranslation('components')
   const btnRef = useRef(null)
 
@@ -164,11 +142,9 @@ const DrawerMenu: VFC<{
             <Link href="/explore">
               <NavItemMobile>{t('navbar.explore')}</NavItemMobile>
             </Link>
-            {!disableMinting && (
-              <Link href="/create">
-                <NavItemMobile>{t('navbar.create')}</NavItemMobile>
-              </Link>
-            )}
+            <Link href="/create">
+              <NavItemMobile>{t('navbar.create')}</NavItemMobile>
+            </Link>
             {account ? (
               <>
                 <Accordion as="nav" allowMultiple>
@@ -250,16 +226,6 @@ const DrawerMenu: VFC<{
                       <Link href={`/account/edit`}>
                         <NavItemMobile>{t('navbar.user.edit')}</NavItemMobile>
                       </Link>
-                      {topUp.allowTopUp && (
-                        <NavItemMobile
-                          onClick={
-                            topUp.addingFund ? undefined : () => topUp.addFund()
-                          }
-                          as="span"
-                        >
-                          {t('navbar.user.top-up')}
-                        </NavItemMobile>
-                      )}
                       <NavItemMobile onClick={signOutFn}>
                         {t('navbar.user.sign-out')}
                       </NavItemMobile>
@@ -283,7 +249,7 @@ const DrawerMenu: VFC<{
                     value={multiLang.locale}
                     onChange={(value) =>
                       push({ pathname: multiLang.pathname, query }, asPath, {
-                        locale: value,
+                        locale: value?.toString(),
                       })
                     }
                   />
@@ -332,13 +298,8 @@ const UserMenu: VFC<{
     address: string
     image: string | null
   }
-  topUp: {
-    allowTopUp: boolean
-    addFund: () => Promise<void>
-    addingFund: boolean
-  }
   signOutFn: () => void
-}> = ({ account, user, topUp, signOutFn }) => {
+}> = ({ account, user, signOutFn }) => {
   const { t } = useTranslation('components')
   return (
     <Menu>
@@ -363,14 +324,6 @@ const UserMenu: VFC<{
         <Link href="/account/edit">
           <MenuItem>{t('navbar.user.edit')}</MenuItem>
         </Link>
-        {topUp.allowTopUp && (
-          <MenuItem
-            isDisabled={topUp.addingFund}
-            onClick={() => topUp.addFund()}
-          >
-            {t('navbar.user.top-up')}
-          </MenuItem>
-        )}
         <MenuItem onClick={signOutFn}>{t('navbar.user.sign-out')}</MenuItem>
       </MenuList>
     </Menu>
@@ -382,30 +335,20 @@ type FormData = {
 }
 
 const Navbar: VFC<{
-  allowTopUp: boolean
-  disableMinting?: boolean
   logo?: {
     path: string
     width?: number
     height?: number
   }
-  router: {
-    asPath: string
-    query: any
-    push: (url: any, as?: any, options?: any) => Promise<boolean>
-    isReady: boolean
-    events: MittEmitter<'routeChangeStart'>
-  }
-  signer: Signer | undefined
   multiLang?: MultiLang
-}> = ({ allowTopUp, logo, router, multiLang, disableMinting, signer }) => {
+}> = ({ logo, multiLang }) => {
   const { t } = useTranslation('components')
   const { address, isLoggedIn, logout, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
-  const { asPath, query, push, isReady } = router
+  const { asPath, query, push, isReady, events } = useRouter()
   const { register, setValue, handleSubmit } = useForm<FormData>()
-  const [addFund, { loading: addingFund }] = useAddFund(signer)
   const [cookies] = useCookies()
+  const { openConnectModal } = useConnectModal()
   const lastNotification = cookies[`lastNotification-${address}`]
   const {
     data: accountData,
@@ -430,18 +373,18 @@ const Navbar: VFC<{
   }, [isReady, setValue, query.search])
 
   useEffect(() => {
-    router.events.on('routeChangeStart', refetch)
+    events.on('routeChangeStart', refetch)
     return () => {
-      router.events.off('routeChangeStart', refetch)
+      events.off('routeChangeStart', refetch)
     }
-  }, [router.events, refetch])
+  }, [events, refetch])
 
   const onSubmit = handleSubmit((data) => {
     if (data.search) query.search = data.search
     else delete query.search
     delete query.skip // reset pagination
     delete query.page // reset pagination
-    if (router.asPath.startsWith('/explore')) return push({ query })
+    if (asPath.startsWith('/explore')) return push({ query })
     return push({ pathname: '/explore', query })
   })
 
@@ -478,19 +421,17 @@ const Navbar: VFC<{
               {t('navbar.explore')}
             </Text>
           </Flex>
-          {!disableMinting && (
-            <Flex
-              as={Link}
-              href="/create"
-              color="brand.black"
-              align="center"
-              _hover={{ color: 'gray.500' }}
-            >
-              <Text as="span" variant="button2">
-                {t('navbar.create')}
-              </Text>
-            </Flex>
-          )}
+          <Flex
+            as={Link}
+            href="/create"
+            color="brand.black"
+            align="center"
+            _hover={{ color: 'gray.500' }}
+          >
+            <Text as="span" variant="button2">
+              {t('navbar.create')}
+            </Text>
+          </Flex>
           {account ? (
             <HStack spacing={2}>
               <ActivityMenu account={account.address} />
@@ -533,7 +474,6 @@ const Navbar: VFC<{
               </Link>
               <UserMenu
                 account={account.address}
-                topUp={{ allowTopUp, addFund, addingFund }}
                 user={account}
                 signOutFn={() => logout().then(disconnect)}
               />
@@ -545,12 +485,9 @@ const Navbar: VFC<{
               loadingText={t('navbar.signing-in')}
             />
           ) : (
-            <ConnectButton
-              accountStatus="address"
-              chainStatus="none"
-              showBalance={false}
-              label={t('navbar.sign-in')}
-            />
+            <Button onClick={openConnectModal} colorScheme="brand">
+              {t('navbar.sign-in')}
+            </Button>
           )}
           {multiLang && (
             <Flex display={{ base: 'none', lg: 'flex' }} align="center">
@@ -560,7 +497,7 @@ const Navbar: VFC<{
                 value={multiLang.locale}
                 onChange={(value) =>
                   push({ pathname: multiLang.pathname, query }, asPath, {
-                    locale: value,
+                    locale: value?.toString(),
                   })
                 }
               />
@@ -571,10 +508,7 @@ const Navbar: VFC<{
           <DrawerMenu
             account={account?.address}
             logo={logo}
-            router={router}
             multiLang={multiLang}
-            topUp={{ allowTopUp, addFund, addingFund }}
-            disableMinting={disableMinting}
             signOutFn={() => logout().then(disconnect)}
           />
         </Flex>

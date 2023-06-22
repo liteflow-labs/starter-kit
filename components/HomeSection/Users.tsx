@@ -1,10 +1,10 @@
 import UserCard from 'components/User/UserCard'
 import { convertUserWithCover } from 'convert'
 import environment from 'environment'
-import { useOrderByAddress } from 'hooks/useOrderByAddress'
+import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
-import { useFetchUsersQuery } from '../../graphql'
+import { FetchUsersQuery, useFetchUsersQuery } from '../../graphql'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import HomeGridSection from './Grid'
 
@@ -21,12 +21,16 @@ const UsersHomeSection: FC<Props> = () => {
   })
   useHandleQueryError(usersQuery)
 
-  const users = useMemo(
-    () => usersQuery.data?.users?.nodes || [],
-    [usersQuery.data?.users?.nodes],
+  const userData = useMemo(
+    () => usersQuery.data || usersQuery.previousData,
+    [usersQuery.data, usersQuery.previousData],
   )
 
-  const orderedUsers = useOrderByAddress(environment.HOME_USERS, users)
+  const orderedUsers = useOrderByKey(
+    environment.HOME_USERS,
+    userData?.users?.nodes || [],
+    (user) => user.address,
+  )
 
   return (
     <HomeGridSection
@@ -34,11 +38,11 @@ const UsersHomeSection: FC<Props> = () => {
         href: '/explore/users',
         title: t('home.users.explore'),
       }}
-      isLoading={usersQuery.loading}
+      isLoading={usersQuery.loading && !userData}
       items={orderedUsers}
-      itemRender={(user: typeof users[0]) => (
-        <UserCard user={convertUserWithCover(user, user.address)} />
-      )}
+      itemRender={(
+        user: NonNullable<FetchUsersQuery['users']>['nodes'][number],
+      ) => <UserCard user={convertUserWithCover(user, user.address)} />}
       title={t('home.users.title')}
     />
   )

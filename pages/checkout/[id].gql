@@ -26,8 +26,18 @@ query Checkout($id: UUID!) {
   }
 }
 
-query FetchAssetForCheckout($id: String!, $address: Address, $now: Datetime!) {
-  asset(id: $id) {
+query FetchAssetForCheckout(
+  $chainId: Int!
+  $collectionAddress: Address!
+  $tokenId: String!
+  $address: Address
+  $now: Datetime!
+) {
+  asset(
+    chainId: $chainId
+    collectionAddress: $collectionAddress
+    tokenId: $tokenId
+  ) {
     id
     chainId
     collectionAddress

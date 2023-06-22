@@ -31,7 +31,7 @@ import {
   convertUser,
 } from '../../../convert'
 import environment from '../../../environment'
-import { useBidOnAssetQuery, useFeesForBidQuery } from '../../../graphql'
+import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
@@ -52,7 +52,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
   const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useBidOnAssetQuery({
+  const { data, loading, previousData } = useBidOnAssetQuery({
     variables: {
       id: assetId,
       now: date,
@@ -64,17 +64,17 @@ const BidPage: NextPage<Props> = ({ now }) => {
     onlyERC20: true,
   })
 
-  const fees = useFeesForBidQuery({
-    variables: {
-      id: assetId,
-    },
-  })
-
-  const feesPerTenThousand = fees.data?.orderFees.valuePerTenThousand || 0
+  const currencyData = useMemo(
+    () => currencyRes.data || currencyRes.previousData,
+    [currencyRes.data, currencyRes.previousData],
+  )
 
   const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
-  const asset = useMemo(() => data?.asset, [data])
+  const asset = useMemo(
+    () => data?.asset || previousData?.asset,
+    [data, previousData],
+  )
 
   const auction = useMemo(
     () => (asset?.auctions.nodes[0] ? asset.auctions.nodes[0] : undefined),
@@ -82,8 +82,8 @@ const BidPage: NextPage<Props> = ({ now }) => {
   )
   const currencies = useMemo(
     () =>
-      auction ? [auction.currency] : currencyRes.data?.currencies?.nodes || [],
-    [auction, currencyRes],
+      auction ? [auction.currency] : currencyData?.currencies?.nodes || [],
+    [auction, currencyData],
   )
 
   const highestBid = useMemo(() => auction?.bestBid.nodes[0], [auction])
@@ -124,7 +124,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {loading || !asset ? (
+            {!asset ? (
               <SkeletonTokenCard />
             ) : (
               <TokenCard
@@ -203,14 +203,15 @@ const BidPage: NextPage<Props> = ({ now }) => {
               </>
             )}
 
-            {loading || !asset ? (
+            {!asset ? (
               <SkeletonForm items={2} />
             ) : asset.collection.standard === 'ERC721' ? (
               <OfferFormBid
                 signer={signer}
                 account={address}
-                assetId={asset.id}
                 chainId={asset.chainId}
+                collectionAddress={asset.collectionAddress}
+                tokenId={asset.tokenId}
                 multiple={false}
                 owner={asset.ownerships.nodes[0]?.ownerAddress}
                 currencies={currencies}
@@ -219,15 +220,14 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 auctionId={auction?.id}
                 auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-                feesPerTenThousand={feesPerTenThousand}
-                allowTopUp={environment.ALLOW_TOP_UP}
               />
             ) : (
               <OfferFormBid
                 signer={signer}
                 account={address}
-                assetId={asset.id}
                 chainId={asset.chainId}
+                collectionAddress={asset.collectionAddress}
+                tokenId={asset.tokenId}
                 multiple={true}
                 supply={asset.quantity}
                 currencies={currencies}
@@ -236,8 +236,6 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 auctionId={auction?.id}
                 auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
                 offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
-                feesPerTenThousand={feesPerTenThousand}
-                allowTopUp={environment.ALLOW_TOP_UP}
               />
             )}
           </Flex>

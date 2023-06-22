@@ -26,14 +26,12 @@ import {
   WagmiConfig,
 } from 'wagmi'
 import getClient from '../client'
-import Banner from '../components/Banner/Banner'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
 import { chains, client } from '../connectors'
 import environment from '../environment'
 import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
-import useSigner from '../hooks/useSigner'
 import { theme } from '../styles/theme'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
@@ -43,7 +41,6 @@ NProgress.configure({ showSpinner: false })
 
 function Layout({ children }: PropsWithChildren<{}>) {
   const router = useRouter()
-  const signer = useSigner()
   const { address } = useAccount()
   const userProfileLink = useMemo(
     () => (address ? `/users/${address}` : '/login'),
@@ -55,7 +52,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
         explore: 'Explore',
         create: 'Create',
         profile: 'Profile',
-        referral: 'Referral',
         support: 'Support',
         terms: 'Terms',
         privacy: 'Privacy',
@@ -64,7 +60,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
         explore: '検索',
         create: '作成',
         profile: 'プロフィール',
-        referral: '紹介',
         support: 'サポート',
         terms: '利用規約',
         privacy: 'プライバシーポリシー',
@@ -73,7 +68,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
         explore: '探讨',
         create: '创造',
         profile: '资料',
-        referral: '转介',
         support: '支持',
         terms: '条款',
         privacy: '隐私',
@@ -82,7 +76,6 @@ function Layout({ children }: PropsWithChildren<{}>) {
         explore: 'Explorar',
         create: 'Crear',
         profile: 'Perfil',
-        referral: 'Recomendación',
         support: 'Apoyo',
         terms: 'Letra chica',
         privacy: 'Privacidad',
@@ -91,11 +84,8 @@ function Layout({ children }: PropsWithChildren<{}>) {
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
       { href: '/explore', label: texts[locale].explore },
-      environment.MINTABLE_COLLECTIONS.length > 0
-        ? { href: '/create', label: texts[locale].create }
-        : undefined,
+      { href: '/create', label: texts[locale].create },
       { href: userProfileLink, label: texts[locale].profile },
-      { href: '/referral', label: texts[locale].referral },
       { href: '/', label: texts[locale].support },
       { href: '/', label: texts[locale].terms },
       { href: '/', label: texts[locale].privacy },
@@ -105,17 +95,8 @@ function Layout({ children }: PropsWithChildren<{}>) {
   }, [router.locale, userProfileLink])
 
   return (
-    <Box mt={12}>
-      <Banner />
+    <Box>
       <Navbar
-        allowTopUp={environment.ALLOW_TOP_UP}
-        router={{
-          asPath: router.asPath,
-          isReady: router.isReady,
-          push: router.push,
-          query: router.query,
-          events: router.events,
-        }}
         multiLang={{
           locale: router.locale,
           pathname: router.pathname,
@@ -126,11 +107,9 @@ function Layout({ children }: PropsWithChildren<{}>) {
             { label: 'Spanish', value: 'es-mx' },
           ],
         }}
-        signer={signer}
-        disableMinting={environment.MINTABLE_COLLECTIONS.length === 0}
       />
       {children}
-      <Footer name="Acme, Inc." links={footerLinks} />
+      <Footer name={environment.META_COMPANY_NAME} links={footerLinks} />
     </Box>
   )
 }
@@ -218,19 +197,16 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
   return (
     <ErrorBoundary>
       <Head
-        title="Acme NFT Marketplace"
-        description="The Web3 as a Service Company"
+        title={environment.META_TITLE}
+        description={environment.META_DESCRIPTION}
       >
-        <meta
-          name="keywords"
-          content="NFT, marketplace, platform, white-label, blockchain"
-        />
+        <meta name="keywords" content={environment.META_KEYWORDS} />
 
-        <meta name="author" content="Acme, Inc." />
-        <meta name="application-name" content="Acme NFT Marketplace" />
+        <meta name="author" content={environment.META_COMPANY_NAME} />
+        <meta name="application-name" content={environment.META_TITLE} />
 
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://demo.liteflow.com" />
+        <meta property="og:url" content={environment.BASE_URL} />
 
         <meta name="twitter:card" content="summary" />
       </Head>
@@ -245,7 +221,12 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
         >
           <CookiesProvider cookies={cookies}>
             <ChakraProvider theme={theme}>
-              <LiteflowProvider endpoint={environment.GRAPHQL_URL}>
+              <LiteflowProvider
+                endpoint={`${
+                  process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
+                  'https://api.liteflow.com'
+                }/${environment.LITEFLOW_API_KEY}/graphql`}
+              >
                 <AccountProvider>
                   <Layout>
                     <Component {...pageProps} />

@@ -35,5 +35,6 @@ module.exports = {
     '@typescript-eslint/ban-types': 'off',
     '@next/next/no-html-link-for-pages': ['error', `${__dirname}/pages`],
     'react-hooks/exhaustive-deps': 'error',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
 }

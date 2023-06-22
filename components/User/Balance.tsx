@@ -1,39 +1,22 @@
-import { Button, Flex, Heading, Icon, Text, VStack } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
-import { useAddFund, useBalance } from '@nft/hooks'
+import { Flex, Heading, Icon, Text, VStack } from '@chakra-ui/react'
 import { IoWalletOutline } from '@react-icons/all-files/io5/IoWalletOutline'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, HTMLAttributes, SyntheticEvent, useCallback } from 'react'
+import { FC, HTMLAttributes } from 'react'
+import useBalance from '../../hooks/useBalance'
 import Price from '../Price/Price'
 
 const Balance: FC<
   HTMLAttributes<any> & {
-    signer: Signer | undefined
     account: string | null | undefined
     currency: {
       id: string
       decimals: number
       symbol: string
     }
-    allowTopUp?: boolean
   }
-> = ({ signer, account, currency, allowTopUp }) => {
+> = ({ account, currency }) => {
   const { t } = useTranslation('components')
-  const [balance, { loading: balanceLoading }] = useBalance(
-    account,
-    currency?.id,
-  )
-  const [addFund, { loading: addingFunds }] = useAddFund(signer)
-
-  const handleAddFund = useCallback(
-    async (e: SyntheticEvent) => {
-      e.stopPropagation()
-      e.preventDefault()
-      if (!signer) return
-      void addFund()
-    },
-    [signer, addFund],
-  )
+  const [balance] = useBalance(account, currency?.id)
 
   return (
     <VStack align="flex-start" spacing={4} mb={6}>
@@ -61,13 +44,6 @@ const Balance: FC<
           </Heading>
         )}
       </Flex>
-      {allowTopUp && !balanceLoading && (
-        <Button isLoading={addingFunds} onClick={(e) => handleAddFund(e)}>
-          <Text as="span" isTruncated>
-            {t('user.balance.add-funds')}
-          </Text>
-        </Button>
-      )}
     </VStack>
   )
 }

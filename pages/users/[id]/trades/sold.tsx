@@ -14,7 +14,6 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
-import { dateFromNow } from '@nft/hooks'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -42,6 +41,7 @@ import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
+import { dateFromNow } from '../../../../utils'
 
 type Props = {
   now: string
@@ -58,7 +58,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useFetchUserTradeSoldQuery({
+  const { data, loading, previousData } = useFetchUserTradeSoldQuery({
     variables: {
       address: userAddress,
       limit,
@@ -74,9 +74,10 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
+  const tradeData = useMemo(() => data || previousData, [data, previousData])
   const trades = useMemo(
-    () => (data?.trades?.nodes || []).map(convertTrade),
-    [data],
+    () => (tradeData?.trades?.nodes || []).map(convertTrade),
+    [tradeData],
   )
   return (
     <LargeLayout>
@@ -156,7 +157,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading ? (
+          {loading && !tradeData ? (
             <Loader />
           ) : trades.length == 0 ? (
             <Empty
@@ -235,14 +236,12 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
                         )}
                       </Td>
                       <Td>
-                        <Link href={`/users/${item.buyerAddress}`}>
-                          <Avatar
-                            address={item.buyer.address}
-                            image={item.buyer.image}
-                            name={item.buyer.name}
-                            verified={item.buyer.verified}
-                          />
-                        </Link>
+                        <Avatar
+                          address={item.buyer.address}
+                          image={item.buyer.image}
+                          name={item.buyer.name}
+                          verified={item.buyer.verified}
+                        />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td>
@@ -275,7 +274,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={data?.trades?.totalCount || 0}
+            total={tradeData?.trades?.totalCount || 0}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (

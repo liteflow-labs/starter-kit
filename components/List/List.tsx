@@ -35,7 +35,7 @@ export function ListItem({
   ...props
 }: ListItemProps): JSX.Element {
   return (
-    <Stack as="li" padding={2} {...props}>
+    <Stack {...props} as="li" padding={2}>
       <Flex align="center" gap={3}>
         {image && (
           <Flex
@@ -55,7 +55,7 @@ export function ListItem({
         <Flex flex={1} align="center" gap={4}>
           <Box w="full" overflow="hidden">
             <Text
-              as="p"
+              as="div"
               variant="text-sm"
               color="gray.500"
               noOfLines={1}
@@ -65,7 +65,7 @@ export function ListItem({
             </Text>
             {subtitle && (
               <Text
-                as="p"
+                as="div"
                 variant="text-sm"
                 color="gray.500"
                 noOfLines={1}
@@ -76,7 +76,7 @@ export function ListItem({
             )}
             {caption && (
               <Text
-                as="p"
+                as="div"
                 variant="text-sm"
                 color="gray.500"
                 noOfLines={1}

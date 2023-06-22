@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
-import { formatDate } from '@nft/hooks'
 import { Events } from '@nft/webhook'
+import { formatDate } from '../utils'
 
 export default function AuctionEndedWonBuyer({
   asset,

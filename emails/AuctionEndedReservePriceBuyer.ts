@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatDate } from '@nft/hooks'
 import { Events } from '@nft/webhook'
 import environment from '../environment'
+import { formatDate } from '../utils'
 
 export default function AuctionEndedReservePriceBuyer({
   asset,
