@@ -26,6 +26,7 @@ import {
   WagmiConfig,
 } from 'wagmi'
 import getClient from '../client'
+import Banner from '../components/Banner/Banner'
 import Footer from '../components/Footer/Footer'
 import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
@@ -95,7 +96,8 @@ function Layout({ children }: PropsWithChildren<{}>) {
   }, [router.locale, userProfileLink])
 
   return (
-    <Box>
+    <Box mt={12}>
+      <Banner />
       <Navbar
         multiLang={{
           locale: router.locale,
