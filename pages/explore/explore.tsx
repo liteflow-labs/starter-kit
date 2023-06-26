@@ -74,16 +74,13 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const { data: totalCountData, previousData: totalCountPreviousData } =
-    useFetchAllErc721And1155TotalCountQuery({
-      variables: {
-        filter: convertFilterToAssetFilter(filter, date),
-      },
-      ssr: false,
-    })
-  const totalCount =
-    totalCountData?.assets?.totalCount ||
-    totalCountPreviousData?.assets?.totalCount
+  const { data: totalCountData } = useFetchAllErc721And1155TotalCountQuery({
+    variables: {
+      filter: convertFilterToAssetFilter(filter, date),
+    },
+    ssr: false,
+  })
+  const totalCount = totalCountData?.assets?.totalCount
 
   const assetsData = useMemo(() => data || previousData, [data, previousData])
 
