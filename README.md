@@ -10,7 +10,13 @@ The Marketplace template includes the following features:
   - Mint ERC-721
   - Mint ERC-1155
   - Creator's royalties support
-- Featured NFTs on the home page
+- Homepage content customization
+  - Featured NFTs
+  - Notable collections
+  - Notable users
+  - Auctions
+  - Notable NFTs
+  - Resources
 - Search system
   - Search NFTs
   - Search collections
@@ -89,7 +95,6 @@ The Marketplace template showcases the following additional paid features:
 - Unlockable content for NFTs
 - Multi currency support
 - Advanced fee customization support
-- Referral system
 
 ## Libraries used
 
