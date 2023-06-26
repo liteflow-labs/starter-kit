@@ -79,6 +79,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
       variables: {
         filter: convertFilterToAssetFilter(filter, date),
       },
+      ssr: false,
     })
   const totalCount =
     totalCountData?.assets?.totalCount ||
