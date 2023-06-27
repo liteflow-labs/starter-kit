@@ -67,11 +67,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
-  const {
-    data: collectionData,
-    loading,
-    previousData: previousCollectionData,
-  } = useFetchCollectionDetailsQuery({
+  const { data: collectionData, loading } = useFetchCollectionDetailsQuery({
     variables: {
       collectionAddress: collectionAddress,
       chainId: chainId,
@@ -82,22 +78,19 @@ const CollectionPage: FC<Props> = ({ now }) => {
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery()
-  const {
-    data,
-    loading: assetLoading,
-    previousData,
-  } = useFetchCollectionAssetsQuery({
-    variables: {
-      collectionAddress,
-      now: date,
-      currentAccount: address || '',
-      limit,
-      offset,
-      orderBy,
-      chainId: chainId,
-      filter: convertFilterToAssetFilter(filter, date),
-    },
-  })
+  const { data: assetData, loading: assetLoading } =
+    useFetchCollectionAssetsQuery({
+      variables: {
+        collectionAddress,
+        now: date,
+        currentAccount: address || '',
+        limit,
+        offset,
+        orderBy,
+        chainId: chainId,
+        filter: convertFilterToAssetFilter(filter, date),
+      },
+    })
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -130,13 +123,9 @@ const CollectionPage: FC<Props> = ({ now }) => {
     () =>
       collectionData?.collection
         ? convertCollectionFull(collectionData.collection)
-        : previousCollectionData?.collection
-        ? convertCollectionFull(previousCollectionData.collection)
         : null,
-    [collectionData, previousCollectionData],
+    [collectionData],
   )
-
-  const assetData = useMemo(() => data || previousData, [data, previousData])
 
   const changeOrder = useCallback(
     async (orderBy: any) => {

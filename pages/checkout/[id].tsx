@@ -52,10 +52,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   const date = useMemo(() => new Date(now), [now])
   const offerQuery = useCheckoutQuery({ variables: { id: offerId } })
 
-  const offer = useMemo(
-    () => offerQuery.data?.offer || offerQuery.previousData?.offer,
-    [offerQuery.data, offerQuery.previousData],
-  )
+  const offer = offerQuery.data?.offer
 
   const assetQuery = useFetchAssetForCheckoutQuery({
     variables: {
