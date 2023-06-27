@@ -182,7 +182,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
-              {loading || !collectionsData ? (
+              {loading && !collectionsData ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact

@@ -169,7 +169,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {loading || !assetsData ? (
+              {loading && !assetsData ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact

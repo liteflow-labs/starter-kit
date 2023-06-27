@@ -107,7 +107,7 @@ const UsersPage: NextPage<Props> = () => {
               />
             </Box>
           </Flex>
-          {loading || !usersData ? (
+          {loading && !usersData ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact

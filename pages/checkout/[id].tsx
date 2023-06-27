@@ -121,7 +121,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {assetQuery.loading || !asset ? (
+            {!asset ? (
               <SkeletonTokenCard />
             ) : (
               <TokenCard
@@ -147,7 +147,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
               <Heading as="h5" variant="heading3" color="gray.500">
                 {t('offers.checkout.from')}
               </Heading>
-              {offerQuery.loading || !offer ? (
+              {!offer ? (
                 <SkeletonImageAndText />
               ) : (
                 <Avatar
@@ -164,7 +164,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                 {t('offers.checkout.on-sale')}
               </Heading>
               <Flex align="center" gap={3}>
-                {offerQuery.loading || !offer ? (
+                {!offer ? (
                   <SkeletonImageAndText large />
                 ) : (
                   <>
@@ -207,7 +207,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
             </Stack>
             <Box as="hr" my={8} />
 
-            {offerQuery.loading || !offer ? (
+            {!offer ? (
               <Skeleton width="200px" height="40px" />
             ) : (
               <OfferFormCheckout

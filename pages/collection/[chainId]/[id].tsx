@@ -227,7 +227,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-          {assetLoading || !assetData ? (
+          {assetLoading && !assetData ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
@@ -239,7 +239,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             >
               <SkeletonTokenCard />
             </SkeletonGrid>
-          ) : assetData.assets?.totalCount === 0 ? (
+          ) : assetData?.assets?.totalCount === 0 ? (
             <Flex align="center" justify="center" h="full" py={12}>
               <Empty
                 title={t('collection.empty.title')}
@@ -256,7 +256,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
                   : { base: 1, sm: 2, md: 4, lg: 6 }
               }
             >
-              {assetData.assets?.nodes.map((x, i) => (
+              {assetData?.assets?.nodes.map((x, i) => (
                 <Flex key={i} justify="center" overflow="hidden">
                   <TokenCard
                     asset={convertAsset(x)}
