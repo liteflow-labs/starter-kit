@@ -110,7 +110,7 @@ The Marketplace template is based on the following tech stack
 
 ## Get started
 
-To get started, start by configuring your environmental variables in the `.env` file, referring to the `.env.example` file as a guide. 
+To get started, start by configuring your environmental variables in the `.env` file, referring to the `.env.example` file as a guide.
 For further customization, an optional option is to utilize the `environment.ts` file.
 
 Once done you can install all the dependencies with `npm i` then run
