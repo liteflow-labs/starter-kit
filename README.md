@@ -12,11 +12,10 @@ The Marketplace template includes the following features:
   - Creator's royalties support
 - Homepage content customization
   - Featured NFTs
-  - Notable collections
-  - Notable users
-  - Auctions
-  - Notable NFTs
-  - Resources
+  - Featured collections
+  - Featured users
+  - Auctions ending soon
+  - Custom section with featured elements
 - Search system
   - Search NFTs
   - Search collections
@@ -111,7 +110,8 @@ The Marketplace template is based on the following tech stack
 
 ## Get started
 
-To get started you will first need to set your environmental variables in the `.env` file based on the `.env.example` file.
+To get started, start by configuring your environmental variables in the `.env` file, referring to the `.env.example` file as a guide. 
+For further customization, an optional option is to utilize the `environment.ts` file.
 
 Once done you can install all the dependencies with `npm i` then run
 
