@@ -16,13 +16,16 @@ query FetchAccountDetail($address: Address!) {
 
 query FetchAccountMetadata($address: Address!, $now: Datetime!) {
   created: assets(
-    filter: { ownershipsExist: true, creatorAddress: { equalTo: $address } }
+    filter: {
+      quantity: { greaterThan: "0" }
+      creatorAddress: { equalTo: $address }
+    }
   ) {
     totalCount
   }
   onSale: assets(
     filter: {
-      ownershipsExist: true
+      quantity: { greaterThan: "0" }
       salesAndAuctions: {
         some: {
           creatorAddress: { equalTo: $address }

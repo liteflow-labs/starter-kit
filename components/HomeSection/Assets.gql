@@ -1,6 +1,6 @@
 query FetchDefaultAssetIds($limit: Int!) {
   assets(
-    filter: { ownershipsExist: true }
+    filter: { quantity: { greaterThan: "0" } }
     orderBy: CREATED_AT_DESC
     first: $limit
   ) {
@@ -20,7 +20,7 @@ query FetchAssets(
   $address: Address
 ) {
   assets(
-    filter: { ownershipsExist: true, id: { in: $assetIds } }
+    filter: { quantity: { greaterThan: "0" }, id: { in: $assetIds } }
     first: $limit
   ) {
     nodes {

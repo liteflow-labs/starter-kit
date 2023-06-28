@@ -8,7 +8,7 @@ query FetchOnSaleAssets(
 ) {
   onSale: assets(
     filter: {
-      ownershipsExist: true
+      quantity: { greaterThan: "0" }
       salesAndAuctions: {
         some: {
           creatorAddress: { equalTo: $address }
