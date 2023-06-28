@@ -21,14 +21,16 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { formatError, useAcceptOffer, useBalance } from '@nft/hooks'
+import { useAcceptOffer } from '@nft/hooks'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Offer } from '../../../graphql'
+import useBalance from '../../../hooks/useBalance'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import { formatError } from '../../../utils'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import AcceptOfferModal from '../../Modal/AcceptOffer'
 import Balance from '../../User/Balance'
@@ -51,7 +53,6 @@ type Props = {
   }
   onPurchased: () => void
   multiple?: boolean
-  allowTopUp: boolean
 }
 
 const OfferFormCheckout: FC<Props> = ({
@@ -63,7 +64,6 @@ const OfferFormCheckout: FC<Props> = ({
   offer,
   chainId,
   blockExplorer,
-  allowTopUp,
 }) => {
   const { t } = useTranslation('components')
   const [acceptOffer, { activeStep, transactionHash }] = useAcceptOffer(signer)
@@ -189,16 +189,7 @@ const OfferFormCheckout: FC<Props> = ({
       {/* There seems to be a rendering issue when signed in, account fetched and
       page is refreshed that will cause the <Alert /> component below to render weirdly.
       Wrapping the conditional with a div solves the issue */}
-      <div>
-        {account && (
-          <Balance
-            signer={signer}
-            account={account}
-            currency={currency}
-            allowTopUp={allowTopUp && !canPurchase}
-          />
-        )}
-      </div>
+      <div>{account && <Balance account={account} currency={currency} />}</div>
 
       <Alert status="info" borderRadius="xl" mb={8}>
         <AlertIcon />

@@ -16,7 +16,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
+import { useIsLoggedIn } from '@nft/hooks'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
@@ -42,6 +42,7 @@ import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
+import { dateFromNow, formatError } from '../../../../utils'
 
 type Props = {
   now: string
@@ -60,7 +61,7 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch, loading } = useFetchUserFixedPriceQuery({
+  const { data, refetch, loading, previousData } = useFetchUserFixedPriceQuery({
     variables: {
       address: userAddress,
       limit,
@@ -77,15 +78,16 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
     await refetch()
   }, [refetch, toast, t])
 
+  const offerData = useMemo(() => data || previousData, [data, previousData])
   const offers = useMemo(
     () =>
-      (data?.offers?.nodes || []).map((x) => ({
+      (offerData?.offers?.nodes || []).map((x) => ({
         ...convertSaleFull(x),
         createdAt: new Date(x.createdAt),
         asset: x.asset,
         ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
-    [data],
+    [offerData],
   )
 
   const changeOrder = useCallback(
@@ -173,7 +175,7 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading ? (
+          {loading && !offerData ? (
             <Loader />
           ) : offers.length == 0 ? (
             <Empty
@@ -302,7 +304,7 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={data?.offers?.totalCount || 0}
+            total={offerData?.offers?.totalCount || 0}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (

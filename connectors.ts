@@ -12,7 +12,6 @@ import {
   rainbowWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import invariant from 'ts-invariant'
 import { Chain, configureChains, Connector, createClient } from 'wagmi'
 import {
   bsc,
@@ -25,27 +24,9 @@ import {
 import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
 
-const supportedChains = [
-  mainnet,
-  goerli,
-  bscTestnet,
-  bsc,
-  polygon,
-  polygonMumbai,
-]
-const activatedChains =
-  environment.CHAIN_IDS.length > 0
-    ? environment.CHAIN_IDS
-    : [environment.CHAIN_ID]
-
-export const { chains, provider } = configureChains<Chain>(
-  activatedChains.map((x) => {
-    const chain = supportedChains.find((y) => y.id === x)
-    invariant(chain, `Chain ${x} is not supported`)
-    return chain
-  }),
-  [publicProvider()],
-)
+export const { chains, provider } = configureChains<Chain>(environment.CHAINS, [
+  publicProvider(),
+])
 
 // Copied from https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/wallets/getDefaultWallets.ts#L11
 // Only added the shimDisconnect option
@@ -69,7 +50,9 @@ const getDefaultWallets = ({
         rainbowWallet({ chains, shimDisconnect }),
         coinbaseWallet({ appName, chains }),
         metaMaskWallet({ chains, shimDisconnect }),
-        walletConnectWallet({ chains }),
+        environment.WALLET_CONNECT_PROJECT_ID
+          ? walletConnectWallet({ chains })
+          : undefined,
         braveWallet({ chains, shimDisconnect }),
         environment.MAGIC_API_KEY
           ? emailConnector({ chains, apiKey: environment.MAGIC_API_KEY })
@@ -85,7 +68,7 @@ const getDefaultWallets = ({
 }
 
 const { connectors } = getDefaultWallets({
-  appName: 'Acme',
+  appName: environment.META_TITLE,
   chains,
   shimDisconnect: true,
 })

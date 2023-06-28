@@ -1,8 +1,9 @@
-import { useToast } from '@chakra-ui/react'
+import { Box, useToast } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
+import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
 import Loader from '../../components/Loader'
@@ -23,12 +24,16 @@ const EditPage: NextPage = () => {
 
   const toast = useToast()
 
-  const { data, loading } = useGetAccountQuery({
+  const { data, loading, previousData } = useGetAccountQuery({
     variables: {
       address: address || '',
     },
     skip: !isLoggedIn,
   })
+  const account = useMemo(
+    () => data?.account || previousData?.account,
+    [data, previousData],
+  )
 
   const onSubmit = useCallback(
     async (address: string) => {
@@ -41,19 +46,27 @@ const EditPage: NextPage = () => {
     [toast, t, push],
   )
 
-  if (loading) return <Loader fullPage />
-  if (!data?.account) return <></>
+  if (!loading && !account) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head title="Account - Edit profile" />
 
       <AccountTemplate currentTab="edit-profile">
-        <UserFormEdit
-          signer={signer}
-          onUpdated={onSubmit}
-          uploadUrl={environment.UPLOAD_URL}
-          account={data.account}
-        />
+        {!account ? (
+          <Box mt={4}>
+            <Loader />
+          </Box>
+        ) : (
+          <UserFormEdit
+            signer={signer}
+            onUpdated={onSubmit}
+            uploadUrl={`${
+              process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
+              'https://api.liteflow.com'
+            }/${environment.LITEFLOW_API_KEY}/uploadToIPFS`}
+            account={account}
+          />
+        )}
       </AccountTemplate>
     </SmallLayout>
   )

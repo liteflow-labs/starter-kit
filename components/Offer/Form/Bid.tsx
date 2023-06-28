@@ -22,12 +22,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  formatDateDatetime,
-  formatError,
-  useBalance,
-  useCreateOffer,
-} from '@nft/hooks'
+import { useCreateOffer } from '@nft/hooks'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
@@ -35,8 +30,11 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
+import { useFeesQuery } from '../../../graphql'
+import useBalance from '../../../hooks/useBalance'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import { formatDateDatetime, formatError } from '../../../utils'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
@@ -62,15 +60,14 @@ type Props = {
     image: string
     name: string
   }[]
-  assetId: string
   chainId: number
+  collectionAddress: string
+  tokenId: string
   blockExplorer: BlockExplorer
   onCreated: (offerId: string) => void
   auctionId: string | undefined
   auctionValidity: number
   offerValidity: number
-  feesPerTenThousand: number
-  allowTopUp: boolean
 } & (
   | {
       multiple: true
@@ -88,15 +85,14 @@ const OfferFormBid: FC<Props> = (props) => {
     signer,
     account,
     currencies,
-    assetId,
     chainId,
+    collectionAddress,
+    tokenId,
     blockExplorer,
     onCreated,
     auctionId,
     auctionValidity,
     offerValidity,
-    feesPerTenThousand,
-    allowTopUp,
   } = props
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
   const toast = useToast()
@@ -156,14 +152,25 @@ const OfferFormBid: FC<Props> = (props) => {
   const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
+  const { data } = useFeesQuery({
+    variables: {
+      chainId,
+      collectionAddress,
+      tokenId,
+      currencyId: currency?.id || '',
+      quantity: quantityBN.toString(),
+      unitPrice: priceUnit.toString(),
+    },
+    skip: !currency?.id,
+  })
+  const feesPerTenThousand = useMemo(
+    () => data?.orderFees.valuePerTenThousand || 0,
+    [data],
+  )
+
   const totalPrice = useMemo(() => {
     return priceUnit.mul(quantityBN)
   }, [priceUnit, quantityBN])
-
-  const balanceZero = useMemo(() => {
-    if (!balance) return false
-    return balance.isZero()
-  }, [balance])
 
   const totalFees = useMemo(() => {
     if (!totalPrice) return BigNumber.from(0)
@@ -185,7 +192,7 @@ const OfferFormBid: FC<Props> = (props) => {
         type: 'BUY',
         quantity: quantityBN,
         unitPrice: priceUnit,
-        assetId: assetId,
+        assetId: [chainId, collectionAddress, tokenId].join('-'),
         currencyId: currency.id,
         takerAddress: props.multiple
           ? undefined // Keep the bid open for anyone that can fill it
@@ -404,12 +411,7 @@ const OfferFormBid: FC<Props> = (props) => {
 
       {account ? (
         <>
-          <Balance
-            signer={signer}
-            account={account}
-            currency={currency}
-            allowTopUp={allowTopUp && ((price && !canBid) || balanceZero)}
-          />
+          <Balance account={account} currency={currency} />
           <ButtonWithNetworkSwitch
             chainId={chainId}
             isDisabled={!canBid}

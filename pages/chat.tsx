@@ -21,7 +21,9 @@ const ChatPage: NextPage = () => {
     const res = accounts.get(address)
     if (res) return res
     const promise = request(
-      environment.GRAPHQL_URL,
+      `${
+        process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
+      }/${environment.LITEFLOW_API_KEY}/graphql`,
       gql`
         query LookupAccount($address: Address!) {
           account(address: $address) {

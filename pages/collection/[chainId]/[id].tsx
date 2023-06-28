@@ -12,7 +12,6 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import { removeEmptyFromObject } from '@nft/hooks'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
@@ -52,6 +51,7 @@ import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../layouts/large'
+import { removeEmptyFromObject } from '../../../utils'
 
 type Props = {
   now: string
@@ -67,7 +67,11 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
-  const { data: collectionData, loading } = useFetchCollectionDetailsQuery({
+  const {
+    data: collectionData,
+    loading,
+    previousData: previousCollectionData,
+  } = useFetchCollectionDetailsQuery({
     variables: {
       collectionAddress: collectionAddress,
       chainId: chainId,
@@ -78,7 +82,11 @@ const CollectionPage: FC<Props> = ({ now }) => {
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery()
-  const { data, loading: assetLoading } = useFetchCollectionAssetsQuery({
+  const {
+    data,
+    loading: assetLoading,
+    previousData,
+  } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
       now: date,
@@ -122,9 +130,13 @@ const CollectionPage: FC<Props> = ({ now }) => {
     () =>
       collectionData?.collection
         ? convertCollectionFull(collectionData.collection)
+        : previousCollectionData?.collection
+        ? convertCollectionFull(previousCollectionData.collection)
         : null,
-    [collectionData],
+    [collectionData, previousCollectionData],
   )
+
+  const assetData = useMemo(() => data || previousData, [data, previousData])
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -146,7 +158,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
 
       <CollectionHeader
         collection={collectionDetails || {}}
-        loading={loading}
+        loading={loading && !collectionDetails}
         reportEmail={environment.REPORT_EMAIL}
       />
 
@@ -215,7 +227,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-          {assetLoading || !data?.assets ? (
+          {assetLoading || !assetData ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
@@ -227,7 +239,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             >
               <SkeletonTokenCard />
             </SkeletonGrid>
-          ) : data.assets.totalCount === 0 ? (
+          ) : assetData.assets?.totalCount === 0 ? (
             <Flex align="center" justify="center" h="full" py={12}>
               <Empty
                 title={t('collection.empty.title')}
@@ -244,7 +256,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
                   : { base: 1, sm: 2, md: 4, lg: 6 }
               }
             >
-              {data.assets.nodes.map((x, i) => (
+              {assetData.assets?.nodes.map((x, i) => (
                 <Flex key={i} justify="center" overflow="hidden">
                   <TokenCard
                     asset={convertAsset(x)}
@@ -269,7 +281,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
               limit={limit}
               limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              total={data?.assets?.totalCount}
+              total={assetData?.assets?.totalCount}
               onPageChange={changePage}
               onLimitChange={changeLimit}
               result={{

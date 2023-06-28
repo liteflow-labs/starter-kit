@@ -244,33 +244,6 @@
       "pages_other": "de {{count}} páginas"
     }
   },
-  "referral": {
-    "title": "Referir un creador",
-    "description": "Invita nuevos creadores a la plataforma de {{platformName}} a través de tu link de referencia y gana un porcentaje de las ventas de los NFTs que ellos creen.",
-    "link": "Tu link de referencia",
-    "how": {
-      "title": "Cómo funciona",
-      "steps": [
-        "Copia y comparte tu link de referencia al creador que quieras invitar",
-        "El creador usa tu link para ingresar a la plataforma y crearse una cuenta (sólo aplica para cuentas nuevas)",
-        "Tus recompensas por referencia son asociadas con la cuenta del creador",
-        "Cada vez que se venda un NFT creador por el creador invitado recibirás una recompensas de referencia"
-      ]
-    },
-    "rewards": {
-      "title": "Recompensas por Referencia",
-      "primary": {
-        "title": "Venta inicial",
-        "description": "Ganarás un {{percentage}}% de las ventas.",
-        "tooltip": "La venta inicial es la primera venta que sucede después de crear un NFT."
-      },
-      "secondary": {
-        "title": "Ventas secundarias",
-        "description": "Ganarás un {{percentage}}% de las ventas.",
-        "tooltip": "Las ventas secundarias son todas las que ocurren después de la venta inicial."
-      }
-    }
-  },
   "user": {
     "auctions": {
       "nav": {

@@ -27,19 +27,17 @@ const HistoryList: VFC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
 
   const { data, loading, previousData } = useFetchAssetHistoryQuery({
     variables: {
-      id: [chainId, collectionAddress, tokenId].join('-'),
+      chainId,
+      collectionAddress,
+      tokenId,
     },
   })
+  const historyData = useMemo(() => data || previousData, [data, previousData])
   const blockExplorer = useBlockExplorer(chainId)
 
   const histories = useMemo(
-    () =>
-      (
-        data?.asset?.histories.nodes ||
-        previousData?.asset?.histories.nodes ||
-        []
-      ).map(convertHistories),
-    [data, previousData],
+    () => (historyData?.asset?.histories.nodes || []).map(convertHistories),
+    [historyData],
   )
 
   const ListItem = (history: typeof histories[number], i: number) => {
@@ -96,21 +94,20 @@ const HistoryList: VFC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
         return <LazyMintListItem {...history} key={i} />
     }
   }
-  return (
-    <List>
-      {loading ? (
-        <SkeletonList items={5}>
-          <SkeletonListItem image subtitle caption />
-        </SkeletonList>
-      ) : histories.length > 0 ? (
-        histories.map((history, i) => ListItem(history, i))
-      ) : (
-        <Text as="p" variant="text" color="gray.500">
-          {t('history.none')}
-        </Text>
-      )}
-    </List>
-  )
+
+  if (loading && !historyData)
+    return (
+      <SkeletonList items={5}>
+        <SkeletonListItem image subtitle caption />
+      </SkeletonList>
+    )
+  if (histories.length === 0)
+    return (
+      <Text as="p" variant="text" color="gray.500">
+        {t('history.none')}
+      </Text>
+    )
+  return <List>{histories.map((history, i) => ListItem(history, i))}</List>
 }
 
 export default HistoryList

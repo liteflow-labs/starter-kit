@@ -3,7 +3,6 @@ import {
   Divider,
   Flex,
   Heading,
-  HStack,
   Icon,
   IconButton,
   Menu,
@@ -13,7 +12,6 @@ import {
   Skeleton,
   Text,
 } from '@chakra-ui/react'
-import { formatAddress } from '@nft/hooks'
 import { FaDiscord } from '@react-icons/all-files/fa/FaDiscord'
 import { FaGlobe } from '@react-icons/all-files/fa/FaGlobe'
 import { FaTwitter } from '@react-icons/all-files/fa/FaTwitter'
@@ -29,6 +27,7 @@ import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 import ChakraLink from '../../components/Link/Link'
 import { chains } from '../../connectors'
+import { formatAddress } from '../../utils'
 
 type Props = {
   collection: Partial<{
@@ -173,11 +172,17 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
           )}
         </Box>
       </Flex>
-      <Flex pt={24} align="flex-start" justify="space-between" gap={4}>
-        <Box>
+      <Flex
+        flexDirection={{ base: 'column', sm: 'row' }}
+        pt={24}
+        align="flex-start"
+        justify="space-between"
+        gap={4}
+      >
+        <Box order={{ base: 1, sm: 0 }}>
           <Heading variant="title" pb={1}>
             {loading ? (
-              <Skeleton height="1em" width="200px" />
+              <Skeleton height="1em" width="200px" as="span" />
             ) : (
               collection.name
             )}
@@ -200,7 +205,11 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
           </Heading>
         </Box>
         {collection && (
-          <Flex justify="flex-end">
+          <Flex
+            justify="flex-end"
+            alignSelf={{ base: 'flex-end', sm: 'normal' }}
+            order={{ base: 0, sm: 1 }}
+          >
             <Flex gap={4}>
               {collection.address && (
                 <IconButton
@@ -284,7 +293,7 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
           </Truncate>
         </Box>
       )}
-      <HStack spacing={8} mt={4} flexWrap="wrap">
+      <Flex alignItems="center" rowGap={2} columnGap={8} mt={4} flexWrap="wrap">
         {blocks.map((block, i) =>
           block.type === 'separator' ? (
             <Divider orientation="vertical" height="40px" key={i} />
@@ -317,7 +326,7 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
             </Flex>
           ),
         )}
-      </HStack>
+      </Flex>
     </>
   )
 }

@@ -1,7 +1,7 @@
 import { Button, ButtonProps, useToast } from '@chakra-ui/react'
-import { formatError } from '@nft/hooks'
 import { PropsWithChildren, useCallback } from 'react'
 import { useNetwork, useSwitchNetwork } from 'wagmi'
+import { formatError } from '../../utils'
 
 const ButtonWithNetworkSwitch = ({
   children,

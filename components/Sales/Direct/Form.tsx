@@ -21,20 +21,16 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  CreateOfferStep,
-  formatDateDatetime,
-  formatError,
-  useCreateOffer,
-} from '@nft/hooks'
+import { CreateOfferStep, useCreateOffer } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
-import { Standard } from '../../../graphql'
+import { Standard, useFeesQuery } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import { formatDateDatetime, formatError } from '../../../utils'
 import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
@@ -49,8 +45,9 @@ type FormData = {
 }
 
 type Props = {
-  assetId: string
   chainId: number
+  collectionAddress: string
+  tokenId: string
   standard: Standard
   currencies: {
     name: string
@@ -59,7 +56,6 @@ type Props = {
     decimals: number
     symbol: string
   }[]
-  feesPerTenThousand: number
   royaltiesPerTenThousand: number
   quantityAvailable: BigNumber
   signer: (Signer & TypedDataSigner) | undefined
@@ -70,11 +66,11 @@ type Props = {
 }
 
 const SalesDirectForm: VFC<Props> = ({
-  assetId,
   chainId,
+  collectionAddress,
+  tokenId,
   standard,
   currencies,
-  feesPerTenThousand,
   royaltiesPerTenThousand,
   quantityAvailable,
   signer,
@@ -128,6 +124,22 @@ const SalesDirectForm: VFC<Props> = ({
   const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
+  const { data } = useFeesQuery({
+    variables: {
+      chainId,
+      collectionAddress,
+      tokenId,
+      currencyId: currency?.id || '',
+      quantity: quantityBN.toString(),
+      unitPrice: priceUnit.toString(),
+    },
+    skip: !currency?.id,
+  })
+  const feesPerTenThousand = useMemo(
+    () => data?.orderFees.valuePerTenThousand || 0,
+    [data],
+  )
+
   const amountFees = useMemo(() => {
     if (!price) return BigNumber.from(0)
     return priceUnit.mul(feesPerTenThousand).div(10000)
@@ -154,7 +166,7 @@ const SalesDirectForm: VFC<Props> = ({
         type: 'SALE',
         quantity: quantityBN,
         unitPrice: priceUnit,
-        assetId: assetId,
+        assetId: [chainId, collectionAddress, tokenId].join('-'),
         currencyId: currency.id,
         expiredAt: new Date(expiredAt),
       })

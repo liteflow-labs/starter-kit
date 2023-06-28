@@ -1,5 +1,14 @@
-query FetchAssetBids($id: String!, $now: Datetime!) {
-  asset(id: $id) {
+query FetchAssetBids(
+  $chainId: Int!
+  $collectionAddress: Address!
+  $tokenId: String!
+  $now: Datetime!
+) {
+  asset(
+    chainId: $chainId
+    collectionAddress: $collectionAddress
+    tokenId: $tokenId
+  ) {
     chainId
     collectionAddress
     tokenId

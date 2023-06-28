@@ -1,6 +1,5 @@
 import { GridItem, SimpleGrid, Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { isSameAddress } from '@nft/hooks'
 import { FC, useMemo } from 'react'
 import type { TabsEnum } from '../components/User/Profile/Navigation'
 import UserProfileNavigation from '../components/User/Profile/Navigation'
@@ -9,6 +8,7 @@ import {
   useFetchAccountDetailQuery,
   useFetchAccountMetadataQuery,
 } from '../graphql'
+import { isSameAddress } from '../utils'
 import Head from './Head'
 import UserProfileBanner from './User/Profile/Banner'
 import UserProfileInfo from './User/Profile/Info'
@@ -29,24 +29,32 @@ const UserProfileTemplate: FC<{
   loginUrlForReferral,
   children,
 }) => {
-  const { data } = useFetchAccountDetailQuery({
+  const { data, previousData } = useFetchAccountDetailQuery({
     variables: { address },
   })
-  const { data: metadata } = useFetchAccountMetadataQuery({
-    variables: { address, now },
-  })
+  const { data: metadata, previousData: previousMetadata } =
+    useFetchAccountMetadataQuery({ variables: { address, now } })
+
+  const accountData = useMemo(() => data || previousData, [data, previousData])
+
   const account = useMemo(
-    () => convertFullUser(data?.account || null, address),
-    [data, address],
+    () => convertFullUser(accountData?.account || null, address),
+    [accountData, address],
   )
+
+  const metadataData = useMemo(
+    () => metadata || previousMetadata,
+    [metadata, previousMetadata],
+  )
+
   const totals = useMemo(
     () =>
       new Map<TabsEnum, number | undefined>([
-        ['created', metadata?.created?.totalCount],
-        ['on-sale', metadata?.onSale?.totalCount],
-        ['owned', metadata?.owned?.totalCount],
+        ['created', metadataData?.created?.totalCount],
+        ['on-sale', metadataData?.onSale?.totalCount],
+        ['owned', metadataData?.owned?.totalCount],
       ]),
-    [metadata],
+    [metadataData],
   )
   return (
     <>

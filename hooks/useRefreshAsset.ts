@@ -14,8 +14,13 @@ export default function useRefreshAsset(
   const [_getAssetData] = useGetAssetDataForRefreshLazyQuery()
   const getAssetData = useCallback(
     async (assetId: string) => {
+      const [chainId, collectionAddress, tokenId] = assetId.split('-')
       const { data } = await _getAssetData({
-        variables: { assetId },
+        variables: {
+          chainId: chainId ? parseInt(chainId, 10) : 0,
+          collectionAddress: collectionAddress || '',
+          tokenId: tokenId || '',
+        },
         fetchPolicy: 'no-cache', // Disable the Apollo cache so that the polling gets the latest value
         // fetchPolicy: 'network-only', // with this fetch policy Apollo automatically executes a another query to refresh the Asset loaded by the main page
       })
@@ -50,11 +55,20 @@ export default function useRefreshAsset(
   const refreshAsset = useCallback(
     async (assetId: string) => {
       // fetch the last updated date of this asset
-      const { updatedAt: initialUpdatedAt } = await getAssetData(assetId)
+      const {
+        updatedAt: initialUpdatedAt,
+        chainId,
+        collectionAddress,
+        tokenId,
+      } = await getAssetData(assetId)
 
       // ask backend to refresh asset
       await refreshAssetMutation({
-        variables: { assetId },
+        variables: {
+          chainId,
+          collectionAddress,
+          tokenId,
+        },
       })
 
       // poll until asset is refreshed or poll timeout

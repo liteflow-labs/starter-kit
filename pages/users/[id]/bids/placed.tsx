@@ -15,7 +15,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
-import { dateFromNow, formatError, useIsLoggedIn } from '@nft/hooks'
+import { useIsLoggedIn } from '@nft/hooks'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
@@ -44,6 +44,7 @@ import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
+import { dateFromNow, formatError } from '../../../../utils'
 
 type Props = {
   now: string
@@ -62,7 +63,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch, loading } = useFetchUserBidsPlacedQuery({
+  const { data, refetch, loading, previousData } = useFetchUserBidsPlacedQuery({
     variables: {
       address: userAddress,
       limit,
@@ -71,13 +72,15 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
+  const bidData = useMemo(() => data || previousData, [data, previousData])
+
   const bids = useMemo(
     () =>
-      (data?.bids?.nodes || []).map((x) => ({
+      (bidData?.bids?.nodes || []).map((x) => ({
         ...convertBidFull(x),
         asset: x.asset,
       })),
-    [data],
+    [bidData],
   )
 
   const onCanceled = useCallback(async () => {
@@ -164,7 +167,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading ? (
+          {loading && !bidData ? (
             <Loader />
           ) : bids.length == 0 ? (
             <Empty
@@ -291,7 +294,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={data?.bids?.totalCount || 0}
+            total={bidData?.bids?.totalCount || 0}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (

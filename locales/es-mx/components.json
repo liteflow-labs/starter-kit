@@ -805,9 +805,8 @@
       "bio": "Bio"
     },
     "referral": {
-      "title": "Referir a un creador",
-      "description": "Comparte tu código de referencia para invitar nuevos creadores y ganar recompensas.",
-      "how": "Cómo funciona"
+      "title": "Referir a un amigo",
+      "description": "Comparta su enlace de referencia para incorporar un nuevo usuario."
     },
     "navigation": {
       "on-sale": "En Venta",

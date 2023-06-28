@@ -10,10 +10,10 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatDate } from '@nft/hooks'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { VFC } from 'react'
+import { formatDate } from '../../../../utils'
 import Link from '../../../Link/Link'
 import Price from '../../../Price/Price'
 import WalletAddress from '../../../Wallet/Address'
