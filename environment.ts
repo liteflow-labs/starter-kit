@@ -20,7 +20,7 @@ const environment = {
   LITEFLOW_API_KEY: process.env.NEXT_PUBLIC_LITEFLOW_API_KEY,
 
   // Email address for end users to send reports to
-  REPORT_EMAIL: `contact@domain.tld`,
+  REPORT_EMAIL: `contact@liteflow.com`,
 
   // Number of items per page
   PAGINATION_LIMIT: 12,
