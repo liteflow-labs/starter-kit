@@ -13,7 +13,7 @@ query FetchFeaturedAssets(
   $now: Datetime!
   $address: Address
 ) {
-  assets(filter: { ownershipsExist: true, id: { in: $featuredIds } }) {
+  assets(filter: { quantity: { greaterThan: "0" }, id: { in: $featuredIds } }) {
     nodes {
       id
       chainId
