@@ -16,7 +16,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { ReactElement, useCallback, useMemo, useState, VFC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatError } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Link from '../../Link/Link'
 import AcceptAuctionModal from '../../Modal/AcceptAuction'
 import Price from '../../Price/Price'
@@ -150,7 +150,7 @@ const SaleAuctionInfo: VFC<Props> = ({
         icon: <Icon as={BiBadgeCheck} h={6} w={6} color="white" />,
         title: t('sales.auction.info.with-reserve.title'),
         action: (
-          <ButtonWithNetworkSwitch
+          <ConnectButtonWithNetworkSwitch
             chainId={chainId}
             variant="outline"
             colorScheme="gray"
@@ -162,7 +162,7 @@ const SaleAuctionInfo: VFC<Props> = ({
             <Text as="span" isTruncated>
               {t('sales.auction.info.with-reserve.action')}
             </Text>
-          </ButtonWithNetworkSwitch>
+          </ConnectButtonWithNetworkSwitch>
         ),
       }
     }
