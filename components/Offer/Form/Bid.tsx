@@ -33,7 +33,7 @@ import useBalance from '../../../hooks/useBalance'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatDateDatetime, formatError } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import Select from '../../Select/Select'
@@ -407,7 +407,7 @@ const OfferFormBid: FC<Props> = (props) => {
       </div>
 
       {account && <Balance account={account} currency={currency} />}
-      <ButtonWithNetworkSwitch
+      <ConnectButtonWithNetworkSwitch
         chainId={chainId}
         isLoading={isSubmitting}
         isDisabled={!canBid}
@@ -417,7 +417,7 @@ const OfferFormBid: FC<Props> = (props) => {
         <Text as="span" isTruncated>
           {t('offer.form.bid.submit')}
         </Text>
-      </ButtonWithNetworkSwitch>
+      </ConnectButtonWithNetworkSwitch>
 
       <CreateOfferModal
         isOpen={createOfferIsOpen}

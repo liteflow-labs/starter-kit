@@ -10,7 +10,7 @@ import {
 import useAccount from '../../hooks/useAccount'
 import { formatError } from '../../utils'
 
-const ButtonWithNetworkSwitch = ({
+const ConnectButtonWithNetworkSwitch = ({
   children,
   chainId,
   ...props
@@ -71,4 +71,4 @@ const ButtonWithNetworkSwitch = ({
 
   return <Button {...props}>{children}</Button>
 }
-export default ButtonWithNetworkSwitch
+export default ConnectButtonWithNetworkSwitch

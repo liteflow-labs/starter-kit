@@ -27,7 +27,7 @@ import { useForm, useWatch } from 'react-hook-form'
 import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatError } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Dropzone from '../../Dropzone/Dropzone'
 import CreateCollectibleModal from '../../Modal/CreateCollectible'
 import Select from '../../Select/Select'
@@ -353,7 +353,7 @@ const TokenFormCreate: FC<Props> = ({
         required
         error={errors.category}
       />
-      <ButtonWithNetworkSwitch
+      <ConnectButtonWithNetworkSwitch
         chainId={collection.chainId}
         isLoading={activeStep !== CreateNftStep.INITIAL}
         type="submit"
@@ -361,7 +361,7 @@ const TokenFormCreate: FC<Props> = ({
         <Text as="span" isTruncated>
           {t('token.form.create.submit')}
         </Text>
-      </ButtonWithNetworkSwitch>
+      </ConnectButtonWithNetworkSwitch>
       <CreateCollectibleModal
         isOpen={createCollectibleIsOpen}
         onClose={createCollectibleOnClose}

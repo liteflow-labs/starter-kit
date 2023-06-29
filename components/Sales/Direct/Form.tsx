@@ -31,7 +31,7 @@ import { Standard, useFeesQuery } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatDateDatetime, formatError } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import Price from '../../Price/Price'
@@ -465,7 +465,7 @@ const SalesDirectForm: VFC<Props> = ({
         )}
       </Stack>
 
-      <ButtonWithNetworkSwitch
+      <ConnectButtonWithNetworkSwitch
         chainId={chainId}
         isLoading={activeStep !== CreateOfferStep.INITIAL}
         size="lg"
@@ -475,7 +475,7 @@ const SalesDirectForm: VFC<Props> = ({
         <Text as="span" isTruncated>
           {t('sales.direct.form.submit')}
         </Text>
-      </ButtonWithNetworkSwitch>
+      </ConnectButtonWithNetworkSwitch>
 
       <CreateOfferModal
         isOpen={isOpen}

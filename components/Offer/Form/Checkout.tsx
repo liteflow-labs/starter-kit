@@ -29,7 +29,7 @@ import useBalance from '../../../hooks/useBalance'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatError } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import AcceptOfferModal from '../../Modal/AcceptOffer'
 import Balance from '../../User/Balance'
 import Summary from '../Summary'
@@ -197,7 +197,7 @@ const OfferFormCheckout: FC<Props> = ({
           </AlertDescription>
         </Box>
       </Alert>
-      <ButtonWithNetworkSwitch
+      <ConnectButtonWithNetworkSwitch
         chainId={chainId}
         isDisabled={!canPurchase}
         isLoading={isSubmitting}
@@ -207,7 +207,7 @@ const OfferFormCheckout: FC<Props> = ({
         <Text as="span" isTruncated>
           {t('offer.form.checkout.submit')}
         </Text>
-      </ButtonWithNetworkSwitch>
+      </ConnectButtonWithNetworkSwitch>
 
       <AcceptOfferModal
         isOpen={acceptOfferIsOpen}
