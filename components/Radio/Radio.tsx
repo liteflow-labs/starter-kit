@@ -11,7 +11,7 @@ type IProps<T = string> = RadioProps & {
 }
 
 const Radio: FC<IProps> = ({ choice, ...props }) => {
-  const { getInputProps, getCheckboxProps } = useRadio(props)
+  const { getInputProps, getRadioProps } = useRadio(props)
   return (
     <Box
       as="label"
@@ -48,7 +48,7 @@ const Radio: FC<IProps> = ({ choice, ...props }) => {
         pr={4}
         transition="all 0.3s ease-in-out"
         shadow={props.isChecked ? 'md' : 'sm'}
-        {...getCheckboxProps()}
+        {...getRadioProps()}
       >
         {choice.icon && (
           <Box
