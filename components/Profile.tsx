@@ -1,6 +1,6 @@
 import { GridItem, SimpleGrid, Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { FC, useMemo } from 'react'
+import { FC, PropsWithChildren, useMemo } from 'react'
 import type { TabsEnum } from '../components/User/Profile/Navigation'
 import UserProfileNavigation from '../components/User/Profile/Navigation'
 import { convertFullUser } from '../convert'
@@ -13,14 +13,16 @@ import Head from './Head'
 import UserProfileBanner from './User/Profile/Banner'
 import UserProfileInfo from './User/Profile/Info'
 
-const UserProfileTemplate: FC<{
-  now: Date
-  signer: Signer | undefined
-  currentAccount: string | null | undefined
-  address: string
-  currentTab: TabsEnum
-  loginUrlForReferral?: string
-}> = ({
+const UserProfileTemplate: FC<
+  PropsWithChildren<{
+    now: Date
+    signer: Signer | undefined
+    currentAccount: string | null | undefined
+    address: string
+    currentTab: TabsEnum
+    loginUrlForReferral?: string
+  }>
+> = ({
   now,
   signer,
   currentAccount,
