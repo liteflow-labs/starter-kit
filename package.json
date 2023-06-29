@@ -17,7 +17,7 @@
     "@apollo/client": "^3.7.14",
     "@bugsnag/js": "^7.18.0",
     "@bugsnag/plugin-react": "^7.18.0",
-    "@chakra-ui/react": "^1.8.9",
+    "@chakra-ui/react": "^2.7.1",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
