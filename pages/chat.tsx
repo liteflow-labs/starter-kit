@@ -9,7 +9,6 @@ import environment from '../environment'
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import useSigner from '../hooks/useSigner'
 import LargeLayout from '../layouts/large'
-import { theme } from '../styles/theme'
 
 const accounts = new Map<string, Promise<Account>>()
 
@@ -58,7 +57,8 @@ const ChatPage: NextPage = () => {
       >
         <ChatProvider
           signer={signer as any}
-          theme={theme}
+          // TODO: theme.styles.global({ colorMode }).body.bg usage needs to be fixed on Chat repository
+          // theme={theme}
           lookupAddress={lookupAddress}
         >
           <ChatComponent />
