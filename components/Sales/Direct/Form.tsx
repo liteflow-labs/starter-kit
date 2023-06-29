@@ -470,7 +470,7 @@ const SalesDirectForm: VFC<Props> = ({
         isLoading={activeStep !== CreateOfferStep.INITIAL}
         size="lg"
         type="submit"
-        isFullWidth
+        width="full"
       >
         <Text as="span" isTruncated>
           {t('sales.direct.form.submit')}

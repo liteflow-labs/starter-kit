@@ -196,7 +196,7 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
             {...register('website')}
           />
         </FormControl>
-        <Button size="lg" isLoading={isSubmitting} type="submit" isFullWidth>
+        <Button size="lg" isLoading={isSubmitting} type="submit" width="full">
           <Text as="span" isTruncated>
             {t('user.form.edit.submit')}
           </Text>

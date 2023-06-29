@@ -40,7 +40,7 @@ const SaleDirectModal: VFC<Props> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
-      <Button size="lg" onClick={onOpen} isFullWidth>
+      <Button size="lg" onClick={onOpen} width="full">
         <Text as="span" isTruncated>
           {t('sales.direct.modal.button')}
         </Text>

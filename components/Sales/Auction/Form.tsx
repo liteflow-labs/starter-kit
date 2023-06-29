@@ -250,7 +250,7 @@ const SalesAuctionForm: VFC<Props> = ({
         </Box>
       </Alert>
 
-      <Button isLoading={loading} size="lg" isFullWidth type="submit">
+      <Button isLoading={loading} size="lg" width="full" type="submit">
         <Text as="span" isTruncated>
           {t('sales.auction.form.submit')}
         </Text>

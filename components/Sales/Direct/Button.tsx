@@ -41,7 +41,7 @@ const SaleDirectButton: VFC<Props> = ({
         variant="outline"
         colorScheme="gray"
         size="lg"
-        isFullWidth
+        width="full"
       >
         <Text as="span" isTruncated>
           {t('sales.direct.button.place-bid')}
@@ -55,7 +55,12 @@ const SaleDirectButton: VFC<Props> = ({
     if (!sales[0]) return
     if (ownAllSupply) return
     return (
-      <Button as={Link} href={`/checkout/${sales[0].id}`} size="lg" isFullWidth>
+      <Button
+        as={Link}
+        href={`/checkout/${sales[0].id}`}
+        size="lg"
+        width="full"
+      >
         <Text as="span" isTruncated>
           {t('sales.direct.button.buy')}
         </Text>
@@ -85,7 +90,7 @@ const SaleDirectButton: VFC<Props> = ({
         variant="outline"
         colorScheme="gray"
         bgColor="white"
-        isFullWidth
+        width="full"
         rightIcon={<HiArrowNarrowRight />}
       >
         <Text as="span" isTruncated>
