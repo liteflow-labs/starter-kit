@@ -25,7 +25,7 @@ import { CreateOfferStep, useCreateOffer } from '@nft/hooks'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
-import { useEffect, useMemo, VFC } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Standard, useFeesQuery } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
@@ -65,7 +65,7 @@ type Props = {
   onCreated: (offerId: string) => void
 }
 
-const SalesDirectForm: VFC<Props> = ({
+const SalesDirectForm: FC<Props> = ({
   chainId,
   collectionAddress,
   tokenId,
