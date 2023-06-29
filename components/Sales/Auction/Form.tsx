@@ -145,8 +145,8 @@ const SalesAuctionForm: VFC<Props> = ({
             <FormLabel htmlFor="price" m={0}>
               {t('sales.auction.form.price.label')}
             </FormLabel>
-            <FormHelperText>({currency.symbol})</FormHelperText>
-            <FormHelperText>
+            <FormHelperText m={0}>({currency.symbol})</FormHelperText>
+            <FormHelperText m={0}>
               {t('sales.auction.form.price.info')}
             </FormHelperText>
           </HStack>

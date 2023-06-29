@@ -213,7 +213,7 @@ const SalesDirectForm: VFC<Props> = ({
           <FormLabel htmlFor="price" m={0}>
             {t('sales.direct.form.price.label')}
           </FormLabel>
-          <FormHelperText>({currency.symbol})</FormHelperText>
+          <FormHelperText m={0}>({currency.symbol})</FormHelperText>
         </HStack>
         <InputGroup>
           <NumberInput
@@ -269,7 +269,7 @@ const SalesDirectForm: VFC<Props> = ({
             <FormLabel htmlFor="quantity" m={0}>
               {t('sales.direct.form.quantity.label')}
             </FormLabel>
-            <FormHelperText>
+            <FormHelperText m={0}>
               ({t('sales.direct.form.quantity.suffix')})
             </FormHelperText>
           </HStack>
@@ -312,7 +312,7 @@ const SalesDirectForm: VFC<Props> = ({
             <FormErrorMessage>{errors.quantity.message}</FormErrorMessage>
           )}
           {quantityAvailable && (
-            <FormHelperText>
+            <FormHelperText m={0}>
               <Text as="p" variant="text" color="gray.500">
                 {t('sales.direct.form.available', {
                   count: quantityAvailable.toNumber(),
@@ -328,7 +328,7 @@ const SalesDirectForm: VFC<Props> = ({
           <FormLabel htmlFor="expiredAt" m={0}>
             {t('sales.direct.form.expiration.label')}
           </FormLabel>
-          <FormHelperText>
+          <FormHelperText m={0}>
             <Tooltip
               label={
                 <Text as="span" variant="caption" color="brand.black">

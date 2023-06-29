@@ -249,7 +249,7 @@ const OfferFormBid: FC<Props> = (props) => {
           <FormLabel htmlFor="bid" m={0}>
             {t('offer.form.bid.price.label')}
           </FormLabel>
-          <FormHelperText>({currency.symbol})</FormHelperText>
+          <FormHelperText m={0}>({currency.symbol})</FormHelperText>
         </HStack>
         <InputGroup>
           <NumberInput
@@ -303,7 +303,7 @@ const OfferFormBid: FC<Props> = (props) => {
             <FormLabel htmlFor="quantity" m={0}>
               {t('offer.form.bid.quantity.label')}
             </FormLabel>
-            <FormHelperText>
+            <FormHelperText m={0}>
               ({t('offer.form.bid.quantity.suffix')})
             </FormHelperText>
           </HStack>
@@ -345,7 +345,7 @@ const OfferFormBid: FC<Props> = (props) => {
           {errors.quantity && (
             <FormErrorMessage>{errors.quantity.message}</FormErrorMessage>
           )}
-          <FormHelperText>
+          <FormHelperText m={0}>
             <Text as="p" variant="text" color="gray.500">
               {t('offer.form.bid.supply', {
                 count: parseInt(props.supply, 10),
@@ -360,7 +360,7 @@ const OfferFormBid: FC<Props> = (props) => {
           <FormLabel htmlFor="expiredAt" m={0}>
             {t('offer.form.bid.expiration.label')}
           </FormLabel>
-          <FormHelperText>
+          <FormHelperText m={0}>
             <Tooltip
               label={
                 <Text as="span" variant="caption" color="brand.black">

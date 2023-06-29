@@ -186,7 +186,7 @@ const TokenFormCreate: FC<Props> = ({
             <FormLabel m={0}>
               {t('token.form.create.unlockable.label')}
             </FormLabel>
-            <FormHelperText>
+            <FormHelperText m={0}>
               {t('token.form.create.unlockable.hint')}
             </FormHelperText>
           </HStack>
@@ -235,7 +235,7 @@ const TokenFormCreate: FC<Props> = ({
           <FormLabel htmlFor="description" m={0}>
             {t('token.form.create.description.label')}
           </FormLabel>
-          <FormHelperText>
+          <FormHelperText m={0}>
             {t('token.form.create.description.info')}
           </FormHelperText>
         </HStack>
@@ -290,7 +290,7 @@ const TokenFormCreate: FC<Props> = ({
           <FormLabel htmlFor="royalties" m={0}>
             {t('token.form.create.royalties.label')}
           </FormLabel>
-          <FormHelperText>
+          <FormHelperText m={0}>
             {t('token.form.create.royalties.info')}
           </FormHelperText>
         </HStack>

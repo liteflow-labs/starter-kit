@@ -1,6 +1,13 @@
 import { extendTheme } from '@chakra-ui/react'
 
 export const theme = extendTheme({
+  styles: {
+    global: {
+      '*::placeholder': {
+        color: 'gray.400',
+      },
+    },
+  },
   breakPoints: {
     sm: '640px',
     md: '768px',

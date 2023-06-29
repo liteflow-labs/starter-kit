@@ -124,7 +124,7 @@ const OfferFormCheckout: FC<Props> = ({
             <FormLabel htmlFor="quantity" m={0}>
               {t('offer.form.checkout.quantity.label')}
             </FormLabel>
-            <FormHelperText>
+            <FormHelperText m={0}>
               {t('offer.form.checkout.quantity.suffix')}
             </FormHelperText>
           </HStack>
@@ -167,7 +167,7 @@ const OfferFormCheckout: FC<Props> = ({
           {errors.quantity && (
             <FormErrorMessage>{errors.quantity.message}</FormErrorMessage>
           )}
-          <FormHelperText>
+          <FormHelperText m={0}>
             <Text as="p" variant="text" color="gray.500">
               {t('offer.form.checkout.available', {
                 count: parseInt(offer.availableQuantity, 10),

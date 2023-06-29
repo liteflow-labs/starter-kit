@@ -91,7 +91,7 @@ const BidAcceptModal: VFC<Props> = ({
                     <FormLabel htmlFor="quantity" m={0}>
                       {t('bid.modal.accept.quantity.label')}
                     </FormLabel>
-                    <FormHelperText>
+                    <FormHelperText m={0}>
                       {t('bid.modal.accept.quantity.suffix')}
                     </FormHelperText>
                   </HStack>

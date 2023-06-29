@@ -134,7 +134,7 @@ const Dropzone: FC<IProps> = ({
           <FormLabel htmlFor={name} m={0}>
             {label}
           </FormLabel>
-          {labelInfo && <FormHelperText>{labelInfo}</FormHelperText>}
+          {labelInfo && <FormHelperText m={0}>{labelInfo}</FormHelperText>}
         </HStack>
       )}
       <Stack
@@ -197,7 +197,6 @@ const Dropzone: FC<IProps> = ({
             as="span"
             variant="heading3"
             color="gray.500"
-            mb={3}
             w="full"
             textAlign="center"
             isTruncated
@@ -209,7 +208,6 @@ const Dropzone: FC<IProps> = ({
             as="span"
             variant="heading3"
             color="gray.500"
-            mb={3}
             w="full"
             textAlign="center"
             isTruncated
