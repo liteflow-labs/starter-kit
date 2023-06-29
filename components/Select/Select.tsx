@@ -16,7 +16,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
-import { HTMLAttributes, ReactElement, useMemo } from 'react'
+import { HTMLAttributes, JSX, ReactElement, useMemo } from 'react'
 import { Control, Controller, FieldError } from 'react-hook-form'
 import Image from '../Image/Image'
 

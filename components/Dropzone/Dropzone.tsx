@@ -14,6 +14,7 @@ import useTranslation from 'next-translate/useTranslation'
 import {
   FC,
   InputHTMLAttributes,
+  JSX,
   ReactNode,
   SyntheticEvent,
   useCallback,
