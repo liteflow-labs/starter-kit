@@ -134,7 +134,7 @@ const Dropzone: FC<IProps> = ({
           <FormLabel htmlFor={name} m={0}>
             {label}
           </FormLabel>
-          {labelInfo && <FormHelperText m={0}>{labelInfo}</FormHelperText>}
+          {labelInfo && <FormHelperText>{labelInfo}</FormHelperText>}
         </HStack>
       )}
       <Stack

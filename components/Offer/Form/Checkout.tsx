@@ -15,6 +15,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -117,7 +118,7 @@ const OfferFormCheckout: FC<Props> = ({
   })
 
   return (
-    <form onSubmit={onSubmit}>
+    <Stack as="form" onSubmit={onSubmit} w="full" spacing={8}>
       {multiple && (
         <FormControl isInvalid={!!errors.quantity}>
           <HStack spacing={1} mb={2}>
@@ -167,7 +168,7 @@ const OfferFormCheckout: FC<Props> = ({
           {errors.quantity && (
             <FormErrorMessage>{errors.quantity.message}</FormErrorMessage>
           )}
-          <FormHelperText m={0}>
+          <FormHelperText>
             <Text as="p" variant="text" color="gray.500">
               {t('offer.form.checkout.available', {
                 count: parseInt(offer.availableQuantity, 10),
@@ -176,19 +177,18 @@ const OfferFormCheckout: FC<Props> = ({
           </FormHelperText>
         </FormControl>
       )}
-      <Summary
-        currency={currency}
-        price={priceUnit}
-        quantity={quantityBN}
-        isSingle={!multiple}
-      />
+      <div>
+        <Summary
+          currency={currency}
+          price={priceUnit}
+          quantity={quantityBN}
+          isSingle={!multiple}
+        />
+      </div>
 
-      {/* There seems to be a rendering issue when signed in, account fetched and
-      page is refreshed that will cause the <Alert /> component below to render weirdly.
-      Wrapping the conditional with a div solves the issue */}
-      <div>{account && <Balance account={account} currency={currency} />}</div>
+      {account && <Balance account={account} currency={currency} />}
 
-      <Alert status="info" borderRadius="xl" mb={8}>
+      <Alert status="info" borderRadius="xl">
         <AlertIcon />
         <Box fontSize="sm">
           <AlertTitle>{t('offer.form.checkout.ownership.title')}</AlertTitle>
@@ -197,6 +197,7 @@ const OfferFormCheckout: FC<Props> = ({
           </AlertDescription>
         </Box>
       </Alert>
+
       <ConnectButtonWithNetworkSwitch
         chainId={chainId}
         isDisabled={!canPurchase}
@@ -217,7 +218,7 @@ const OfferFormCheckout: FC<Props> = ({
         blockExplorer={blockExplorer}
         transactionHash={transactionHash}
       />
-    </form>
+    </Stack>
   )
 }
 

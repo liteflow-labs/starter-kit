@@ -391,7 +391,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   <Heading as="h4" variant="heading2" color="brand.black">
                     {t('asset.detail.description')}
                   </Heading>
-                  <Stack borderRadius="2xl" p={3} borderWidth="1px" mt={4}>
+                  <Stack borderRadius="2xl" p={3} borderWidth="1px">
                     <Text
                       as="p"
                       variant="text-sm"
@@ -413,7 +413,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   borderRadius="2xl"
                   p={3}
                   borderWidth="1px"
-                  mt={8}
                   align="flex-start"
                   spacing={3}
                 >

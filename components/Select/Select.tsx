@@ -91,7 +91,7 @@ const Select = <T extends any>({
             <FormLabel htmlFor={name} m={0}>
               {label}
             </FormLabel>
-            {labelInfo && <FormHelperText>{labelInfo}</FormHelperText>}
+            {labelInfo && <FormHelperText m={0}>{labelInfo}</FormHelperText>}
           </HStack>
         )}
         {hint && (

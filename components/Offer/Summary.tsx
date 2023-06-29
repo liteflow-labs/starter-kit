@@ -64,7 +64,7 @@ const Summary: FC<
           />
         </Heading>
       )}
-      <Heading as={Flex} variant="heading3" color="gray.500" mb={8}>
+      <Heading as={Flex} variant="heading3" color="gray.500">
         {t('offer.summary.total')}
         <Text
           as={Price}

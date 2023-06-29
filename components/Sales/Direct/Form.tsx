@@ -312,7 +312,7 @@ const SalesDirectForm: VFC<Props> = ({
             <FormErrorMessage>{errors.quantity.message}</FormErrorMessage>
           )}
           {quantityAvailable && (
-            <FormHelperText m={0}>
+            <FormHelperText>
               <Text as="p" variant="text" color="gray.500">
                 {t('sales.direct.form.available', {
                   count: quantityAvailable.toNumber(),

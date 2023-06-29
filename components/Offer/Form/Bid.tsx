@@ -345,7 +345,7 @@ const OfferFormBid: FC<Props> = (props) => {
           {errors.quantity && (
             <FormErrorMessage>{errors.quantity.message}</FormErrorMessage>
           )}
-          <FormHelperText m={0}>
+          <FormHelperText>
             <Text as="p" variant="text" color="gray.500">
               {t('offer.form.bid.supply', {
                 count: parseInt(props.supply, 10),
