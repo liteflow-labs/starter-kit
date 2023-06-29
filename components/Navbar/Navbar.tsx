@@ -4,7 +4,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  As,
   Box,
   Button,
   Divider,
@@ -57,14 +56,10 @@ type MultiLang = {
 }
 
 // Mobile navigation item
-const NavItemMobile: FC<HTMLAttributes<any> & { as?: As<any> | undefined }> = ({
-  children,
-  as = 'span',
-  ...props
-}) => {
+const NavItemMobile: FC<HTMLAttributes<any>> = ({ children, ...props }) => {
   return (
     <Box
-      as={as}
+      as="span"
       display="block"
       py={2}
       pr={4}
