@@ -15,7 +15,6 @@ import {
   FC,
   InputHTMLAttributes,
   JSX,
-  ReactNode,
   SyntheticEvent,
   useCallback,
   useEffect,
@@ -42,7 +41,10 @@ type IProps = InputHTMLAttributes<any> & {
   error?: FieldError | undefined
   labelInfo?: string | JSX.Element
   multiple?: boolean
-  children: (context: { hasPreview: boolean }) => ReactNode
+  context: {
+    replace: string
+    chose: string
+  }
 }
 
 const Dropzone: FC<IProps> = ({
@@ -61,7 +63,7 @@ const Dropzone: FC<IProps> = ({
   labelInfo,
   multiple,
   onChange,
-  children,
+  context,
 }) => {
   const { t } = useTranslation('components')
   const [file, setFile] = useState<File>()
@@ -88,11 +90,11 @@ const Dropzone: FC<IProps> = ({
   })
 
   const onDrop = useCallback(
-    async (acceptedFiles) => {
+    async (acceptedFiles: File[]) => {
       if (!acceptedFiles[0]) return
       setFile(acceptedFiles[0])
       onChangeController(acceptedFiles[0])
-      onChange && onChange(acceptedFiles[0])
+      onChange && onChange(acceptedFiles[0] as any)
     },
     [setFile, onChangeController, onChange],
   )
@@ -219,7 +221,7 @@ const Dropzone: FC<IProps> = ({
         )}
         <Button variant="outline" colorScheme="gray" onClick={emptyHandler}>
           <Text as="span" isTruncated>
-            {children({ hasPreview: !!preview })}
+            {preview ? context.replace : context.chose}
           </Text>
         </Button>
         <Box textAlign="center">

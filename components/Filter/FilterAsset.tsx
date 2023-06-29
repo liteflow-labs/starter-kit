@@ -165,7 +165,7 @@ const FilterAsset: NextPage<Props> = ({
   }, [propertySearch, traitsData])
 
   const addTrait = useCallback(
-    (type, value) => {
+    (type: string, value: string) => {
       const existingValues =
         filterResult.traits.find((x) => x.type === type)?.values || []
       onFilterChange({
@@ -186,7 +186,7 @@ const FilterAsset: NextPage<Props> = ({
   )
 
   const removeTrait = useCallback(
-    (type, value) => {
+    (type: string, value: string) => {
       const existingValues =
         filterResult.traits.find((x) => x.type === type)?.values || []
       const traits = filterResult.traits.filter((x) => x.type !== type)

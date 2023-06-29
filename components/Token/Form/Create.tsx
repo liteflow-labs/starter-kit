@@ -173,13 +173,11 @@ const TokenFormCreate: FC<Props> = ({
         error={errors.content}
         onChange={(e) => handleFileDrop(e as unknown as File)}
         value={res.content as any}
-      >
-        {({ hasPreview }) =>
-          hasPreview
-            ? t('token.form.create.file.file.replace')
-            : t('token.form.create.file.file.chose')
-        }
-      </Dropzone>
+        context={{
+          replace: t('token.form.create.file.file.replace'),
+          chose: t('token.form.create.file.file.chose'),
+        }}
+      />
       {activateUnlockableContent && (
         <FormControl>
           <HStack spacing={1} mb={2}>
@@ -207,13 +205,11 @@ const TokenFormCreate: FC<Props> = ({
           control={control}
           error={errors.preview}
           value={res.preview as any}
-        >
-          {({ hasPreview }) =>
-            hasPreview
-              ? t('token.form.create.preview.file.replace')
-              : t('token.form.create.preview.file.chose')
-          }
-        </Dropzone>
+          context={{
+            replace: t('token.form.create.preview.file.replace'),
+            chose: t('token.form.create.preview.file.chose'),
+          }}
+        />
       )}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel htmlFor="name">

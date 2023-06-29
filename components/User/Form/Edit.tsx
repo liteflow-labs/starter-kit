@@ -105,13 +105,11 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
         rounded
         withPlaceholder
         value={account.image || undefined}
-      >
-        {({ hasPreview }) =>
-          hasPreview
-            ? t('user.form.edit.image.file.replace')
-            : t('user.form.edit.image.file.chose')
-        }
-      </Dropzone>
+        context={{
+          replace: t('user.form.edit.image.file.replace'),
+          chose: t('user.form.edit.image.file.chose'),
+        }}
+      />
       <Stack spacing={8}>
         <Dropzone
           label={t('user.form.edit.cover.label')}
@@ -123,13 +121,11 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
           control={control}
           withPlaceholder
           value={account.cover || undefined}
-        >
-          {({ hasPreview }) =>
-            hasPreview
-              ? t('user.form.edit.cover.file.replace')
-              : t('user.form.edit.cover.file.chose')
-          }
-        </Dropzone>
+          context={{
+            replace: t('user.form.edit.cover.file.replace'),
+            chose: t('user.form.edit.cover.file.chose'),
+          }}
+        />
         <FormControl>
           <FormLabel htmlFor="name">{t('user.form.edit.name.label')}</FormLabel>
           <Input
