@@ -494,14 +494,12 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 index={tabIndex}
                 colorScheme="brand"
                 overflowX="auto"
-                overflowY="hidden"
               >
-                <TabList>
+                <TabList gap={4}>
                   {tabs.map((tab) => (
                     <Tab
                       key={tab}
                       as={Link}
-                      whiteSpace="nowrap"
                       href={`/tokens/${assetId}?filter=${tab}`}
                       onClick={(e) => {
                         e.preventDefault()
@@ -513,6 +511,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                           },
                         )
                       }}
+                      whiteSpace="nowrap"
                     >
                       <Text as="span" variant="subtitle1">
                         {t(`asset.detail.tabs.${tab}`)}

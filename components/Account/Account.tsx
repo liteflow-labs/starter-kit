@@ -41,17 +41,14 @@ const AccountTemplate: FC<{
         defaultIndex={defaultIndex}
         colorScheme="brand"
         overflowX="auto"
-        overflowY="hidden"
       >
-        <TabList>
+        <TabList gap={4}>
           {tabs.map((tab, index) => (
-            <Link key={index} href={tab.href} whiteSpace="nowrap" mr={4}>
-              <Tab>
-                <Text as="span" variant="subtitle1">
-                  {tab.title}
-                </Text>
-              </Tab>
-            </Link>
+            <Tab key={index} as={Link} href={tab.href} whiteSpace="nowrap">
+              <Text as="span" variant="subtitle1">
+                {tab.title}
+              </Text>
+            </Tab>
           ))}
         </TabList>
       </Tabs>

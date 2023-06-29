@@ -28,36 +28,37 @@ const ExploreTemplate: FC<{
         pb={{ base: 2.5, md: 0 }}
         overflowX="auto"
       >
-        <TabList>
-          <Link href={`/explore${searchParam}`} whiteSpace="nowrap" mr={4}>
-            <Tab borderColor="gray.200" pb={4} color="gray.500">
-              <Text as="span" variant="subtitle1">
-                {t('explore.tabs.nfts')}
-              </Text>
-            </Tab>
-          </Link>
-          <Link
+        <TabList gap={4}>
+          <Tab
+            as={Link}
+            href={`/explore${searchParam}`}
+            pb={4}
+            whiteSpace="nowrap"
+          >
+            <Text as="span" variant="subtitle1">
+              {t('explore.tabs.nfts')}
+            </Text>
+          </Tab>
+          <Tab
+            as={Link}
             href={`/explore/collections${searchParam}`}
+            pb={4}
             whiteSpace="nowrap"
-            mr={4}
           >
-            <Tab borderColor="gray.200" pb={4} color="gray.500">
-              <Text as="span" variant="subtitle1">
-                {t('explore.tabs.collections')}
-              </Text>
-            </Tab>
-          </Link>
-          <Link
+            <Text as="span" variant="subtitle1">
+              {t('explore.tabs.collections')}
+            </Text>
+          </Tab>
+          <Tab
+            as={Link}
             href={`/explore/users${searchParam}`}
+            pb={4}
             whiteSpace="nowrap"
-            mr={4}
           >
-            <Tab borderColor="gray.200" pb={4} color="gray.500">
-              <Text as="span" variant="subtitle1">
-                {t('explore.tabs.users')}
-              </Text>
-            </Tab>
-          </Link>
+            <Text as="span" variant="subtitle1">
+              {t('explore.tabs.users')}
+            </Text>
+          </Tab>
         </TabList>
       </Tabs>
       {children}
