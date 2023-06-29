@@ -17,7 +17,7 @@ const UsersHomeSection: FC<Props> = () => {
       userIds: environment.HOME_USERS || '',
       limit: environment.PAGINATION_LIMIT,
     },
-    skip: !environment.HOME_USERS,
+    skip: !environment.HOME_USERS.length,
   })
   useHandleQueryError(usersQuery)
 
