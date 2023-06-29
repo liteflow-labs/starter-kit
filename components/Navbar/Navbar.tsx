@@ -35,7 +35,7 @@ import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
+import { FC, HTMLAttributes, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
 import { useDisconnect } from 'wagmi'
@@ -82,7 +82,7 @@ const NavItemMobile: FC<HTMLAttributes<any>> = ({ children, ...props }) => {
 }
 
 // Mobile navigation
-const DrawerMenu: VFC<{
+const DrawerMenu: FC<{
   account: string | null | undefined
   logo?: {
     path: string
@@ -259,7 +259,7 @@ const DrawerMenu: VFC<{
 }
 
 // Activity menu for desktop. Only visible when signed in
-const ActivityMenu: VFC<{ account: string }> = ({ account }) => {
+const ActivityMenu: FC<{ account: string }> = ({ account }) => {
   const { t } = useTranslation('components')
   return (
     <Menu>
@@ -287,7 +287,7 @@ const ActivityMenu: VFC<{ account: string }> = ({ account }) => {
 }
 
 // Account menu for desktop. Only visible when signed in
-const UserMenu: VFC<{
+const UserMenu: FC<{
   account: string
   user: {
     address: string
@@ -329,7 +329,7 @@ type FormData = {
   search: string
 }
 
-const Navbar: VFC<{
+const Navbar: FC<{
   logo?: {
     path: string
     width?: number

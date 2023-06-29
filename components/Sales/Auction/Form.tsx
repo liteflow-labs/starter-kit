@@ -28,7 +28,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useCreateAuction } from '@nft/hooks'
 import useTranslation from 'next-translate/useTranslation'
-import { useEffect, useMemo, VFC } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatError, getHumanizedDate } from '../../../utils'
@@ -56,7 +56,7 @@ type Props = {
   onCreated: (id: string) => void
 }
 
-const SalesAuctionForm: VFC<Props> = ({
+const SalesAuctionForm: FC<Props> = ({
   signer,
   assetId,
   currencies,

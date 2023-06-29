@@ -1,7 +1,7 @@
 import { Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
 import WalletAddress from '../../Wallet/Address'
@@ -15,7 +15,7 @@ export type Props = {
   quantity: string
 }
 
-const OwnersModalItem: VFC<Props> = ({
+const OwnersModalItem: FC<Props> = ({
   address,
   image,
   name,

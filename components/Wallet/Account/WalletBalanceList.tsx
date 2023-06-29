@@ -1,6 +1,6 @@
 import { Flex, Stack, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Image from '../../Image/Image'
 import List, { ListItem } from '../../List/List'
 import WalletBalance from './WalletBalance'
@@ -16,7 +16,7 @@ type IProps = {
   account: string
 }
 
-const WalletBalanceList: VFC<IProps> = ({ account, currencies }) => {
+const WalletBalanceList: FC<IProps> = ({ account, currencies }) => {
   const { t } = useTranslation('components')
   if (currencies.length === 0)
     return (

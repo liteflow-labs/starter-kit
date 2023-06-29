@@ -1,7 +1,7 @@
 import { Button, Icon, Text } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Link from '../../Link/Link'
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
   ownAllSupply: boolean
 }
 
-const SaleOpenButton: VFC<Props> = ({ assetId, isHomepage, ownAllSupply }) => {
+const SaleOpenButton: FC<Props> = ({ assetId, isHomepage, ownAllSupply }) => {
   const { t } = useTranslation('components')
 
   if (ownAllSupply && isHomepage)

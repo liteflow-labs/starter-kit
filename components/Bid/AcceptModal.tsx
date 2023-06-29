@@ -27,7 +27,7 @@ import {
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { FaImages } from '@react-icons/all-files/fa/FaImages'
 import useTranslation from 'next-translate/useTranslation'
-import { useEffect, useMemo, VFC } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 export type Props = {
@@ -41,7 +41,7 @@ export type Props = {
   acceptBid: (quantity?: BigNumberish) => Promise<void>
 }
 
-const BidAcceptModal: VFC<Props> = ({
+const BidAcceptModal: FC<Props> = ({
   bid,
   acceptBid,
   isOpen,

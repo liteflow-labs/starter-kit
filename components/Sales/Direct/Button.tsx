@@ -2,7 +2,7 @@ import { Button, Flex, Text } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import Link from '../../Link/Link'
 import type { Props as ModalProps } from './Modal'
@@ -20,7 +20,7 @@ export type Props = {
   onOfferCanceled: (id: string) => Promise<void>
 }
 
-const SaleDirectButton: VFC<Props> = ({
+const SaleDirectButton: FC<Props> = ({
   assetId,
   chainId,
   blockExplorer,

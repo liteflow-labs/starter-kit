@@ -14,7 +14,7 @@ import { CancelOfferStep, useCancelOffer } from '@nft/hooks'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import { ReactElement, useCallback, useMemo, VFC } from 'react'
+import { FC, ReactElement, useCallback, useMemo } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatError, isSameAddress } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
@@ -46,7 +46,7 @@ export type Props = {
 }
 
 // TODO: the logic of this component doesn't seems right. The component mostly renders nothing
-const SaleDirectInfo: VFC<Props> = ({
+const SaleDirectInfo: FC<Props> = ({
   assetId,
   chainId,
   blockExplorer,

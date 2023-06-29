@@ -1,6 +1,6 @@
 import { Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Link from '../Link/Link'
 import WalletAddress from '../Wallet/Address'
 import AccountImage from '../Wallet/Image'
@@ -13,7 +13,7 @@ type Props = {
   size?: number
 }
 
-const Avatar: VFC<Props> = ({ address, name, image, verified, size = 8 }) => {
+const Avatar: FC<Props> = ({ address, name, image, verified, size = 8 }) => {
   return (
     <Link display="block" flexShrink={0} href={`/users/${address}`}>
       <Flex align="center" gap={2}>

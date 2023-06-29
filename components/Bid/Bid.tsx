@@ -17,7 +17,7 @@ import {
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { SyntheticEvent, useMemo, VFC } from 'react'
+import { FC, SyntheticEvent, useMemo } from 'react'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import {
   dateFromNow,
@@ -64,7 +64,7 @@ export type Props = {
   onCanceled: (id: string) => Promise<void>
 }
 
-const Bid: VFC<Props> = ({
+const Bid: FC<Props> = ({
   bid,
   chainId,
   signer,

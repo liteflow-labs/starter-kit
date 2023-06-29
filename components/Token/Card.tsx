@@ -18,7 +18,7 @@ import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDots
 import Countdown from 'components/Countdown/Countdown'
 import environment from 'environment'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, useState, VFC } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { chains } from '../../connectors'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
@@ -86,7 +86,7 @@ export type Props = {
   hasMultiCurrency: boolean
 }
 
-const TokenCard: VFC<Props> = ({
+const TokenCard: FC<Props> = ({
   asset,
   creator,
   auction,

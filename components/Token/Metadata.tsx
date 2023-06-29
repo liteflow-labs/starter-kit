@@ -2,7 +2,7 @@ import { Flex, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { IoImageOutline } from '@react-icons/all-files/io5/IoImageOutline'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import { Standard } from '../../graphql'
 import Avatar from '../User/Avatar'
 import OwnersModal from './Owners/Modal'
@@ -32,7 +32,7 @@ export type Props = {
   isOpenCollection: boolean
 }
 
-const TokenMetadata: VFC<Props> = ({
+const TokenMetadata: FC<Props> = ({
   assetId,
   standard,
   creator,

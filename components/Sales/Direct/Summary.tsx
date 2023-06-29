@@ -2,7 +2,7 @@ import { Box, Flex, Heading, Icon } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import { formatDate } from '../../../utils'
 import Image from '../../Image/Image'
 import Price from '../../Price/Price'
@@ -21,7 +21,7 @@ type Props = {
   }[]
 }
 
-const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
+const SaleDirectSummary: FC<Props> = ({ sales, isSingle }) => {
   const { t } = useTranslation('components')
   const salesWithUniqueCurrency = useMemo(() => {
     return sales.reduce(

@@ -1,7 +1,7 @@
 import { Button, Text } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Link from '../../Link/Link'
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 }
 
 // TODO: This component needs refactoring, please look at the storybook to see all the possible variants of this component with this API
-const SaleAuctionButton: VFC<Props> = ({
+const SaleAuctionButton: FC<Props> = ({
   assetId,
   isOwner,
   isHomepage,

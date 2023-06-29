@@ -15,6 +15,7 @@ import 'nprogress/nprogress.css'
 import React, {
   ComponentType,
   Fragment,
+  JSX,
   PropsWithChildren,
   useEffect,
   useMemo,

@@ -1,7 +1,7 @@
 import { Flex, Heading, Tab, TabList, Tabs, Text } from '@chakra-ui/react'
 import LargeLayout from 'layouts/large'
 import useTranslation from 'next-translate/useTranslation'
-import { FC } from 'react'
+import { FC, JSX } from 'react'
 import Link from './Link/Link'
 
 const ExploreTemplate: FC<{

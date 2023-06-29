@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
-import { useEffect, useState, VFC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Image from '../Image/Image'
 
 const getUnlockedContentUrls = (
@@ -36,7 +36,7 @@ const getUnlockedContentUrls = (
   }
 }
 
-const TokenMedia: VFC<{
+const TokenMedia: FC<{
   imageUrl: string
   animationUrl: string | null | undefined
   unlockedContent: { url: string; mimetype: string | null } | null | undefined

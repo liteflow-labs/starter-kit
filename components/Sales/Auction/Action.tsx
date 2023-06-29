@@ -7,7 +7,7 @@ import {
   useAuctionStatus,
 } from '@nft/hooks'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useMemo, VFC } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import { formatError } from '../../../utils'
 import Link from '../../Link/Link'
@@ -32,7 +32,7 @@ export type Props = {
   onAuctionAccepted: (id: string) => void
 }
 
-const SaleAuctionAction: VFC<Props> = ({
+const SaleAuctionAction: FC<Props> = ({
   signer,
   auction,
   bestBid,

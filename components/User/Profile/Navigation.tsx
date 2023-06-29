@@ -1,6 +1,6 @@
 import { Tab, TabList, Tabs, Tag, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import Link from '../../Link/Link'
 
 export type TabsEnum =
@@ -25,7 +25,7 @@ type Tab = {
   href: string
 }
 
-const UserProfileNavigation: VFC<IProps> = ({
+const UserProfileNavigation: FC<IProps> = ({
   baseUrl,
   showPrivateTabs,
   currentTab,

@@ -1,6 +1,6 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Image from '../../Image/Image'
 
 export type Props = {
@@ -9,7 +9,7 @@ export type Props = {
   }[]
 }
 
-const SaleOpenSummary: VFC<Props> = ({ currencies }) => {
+const SaleOpenSummary: FC<Props> = ({ currencies }) => {
   const { t } = useTranslation('components')
   return (
     <Stack spacing={3}>

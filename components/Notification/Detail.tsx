@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { JSX, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import { AccountVerificationStatus, NotificationAction } from '../../graphql'
 import { dateFromNow } from '../../utils'
