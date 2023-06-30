@@ -98,7 +98,7 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
         label={t('user.form.edit.image.label')}
         heading={t('user.form.edit.image.heading')}
         hint={t('user.form.edit.image.hint')}
-        acceptTypes="image/jpeg,image/png,image/gif,image/webp"
+        acceptTypes={{ 'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'] }}
         maxSize={10000000} // 10 MB
         name="image"
         control={control}
@@ -115,7 +115,9 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
           label={t('user.form.edit.cover.label')}
           heading={t('user.form.edit.cover.heading')}
           hint={t('user.form.edit.cover.hint')}
-          acceptTypes="image/jpeg,image/png,image/gif,image/webp"
+          acceptTypes={{
+            'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+          }}
           maxSize={10000000} // 10 MB
           name="cover"
           control={control}

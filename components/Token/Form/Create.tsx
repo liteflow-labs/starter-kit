@@ -166,7 +166,10 @@ const TokenFormCreate: FC<Props> = ({
         heading={t('token.form.create.file.heading')}
         hint={t('token.form.create.file.hint')}
         name="content"
-        acceptTypes="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm"
+        acceptTypes={{
+          'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+          'video/*': ['.mp4', '.webm'],
+        }}
         maxSize={100000000} // 100 MB
         required
         control={control}
@@ -199,7 +202,9 @@ const TokenFormCreate: FC<Props> = ({
           heading={t('token.form.create.preview.heading')}
           hint={t('token.form.create.preview.hint')}
           name="preview"
-          acceptTypes="image/jpeg,image/png,image/gif,image/webp"
+          acceptTypes={{
+            'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+          }}
           maxSize={100000000} // 100 MB
           required
           control={control}

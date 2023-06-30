@@ -21,7 +21,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { ErrorCode, useDropzone } from 'react-dropzone'
+import { Accept, ErrorCode, useDropzone } from 'react-dropzone'
 import { Control, FieldError, useController } from 'react-hook-form'
 
 const GIF_SIZE_LIMIT = 5_000_000
@@ -33,7 +33,7 @@ type IProps = InputHTMLAttributes<any> & {
   hint: string
   rounded?: boolean
   maxSize: number
-  acceptTypes?: string
+  acceptTypes: Accept
   withPlaceholder?: boolean
   value?: string | File
   control: Control<any, object>
@@ -106,7 +106,7 @@ const Dropzone: FC<IProps> = ({
     isDragActive,
     isDragReject,
   } = useDropzone({
-    accept: acceptTypes || 'image/*',
+    accept: acceptTypes,
     maxFiles: 1,
     maxSize,
     onDrop,
@@ -228,12 +228,9 @@ const Dropzone: FC<IProps> = ({
           <Text as="p" variant="text-sm" color="gray.500">
             {hint}
           </Text>
-          {acceptTypes?.includes('image/gif') ||
-          acceptTypes?.includes('image/*') ? (
-            <Text as="p" variant="text-sm" color="gray.500">
-              {t('dropzone.gifLimit')}
-            </Text>
-          ) : undefined}
+          <Text as="p" variant="text-sm" color="gray.500">
+            {t('dropzone.gifLimit')}
+          </Text>
         </Box>
       </Stack>
       {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
