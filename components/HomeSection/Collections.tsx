@@ -32,7 +32,7 @@ const CollectionsHomeSection: FC<Props> = () => {
       } as CollectionFilter,
       limit: environment.PAGINATION_LIMIT,
     },
-    skip: !environment.HOME_COLLECTIONS,
+    skip: !environment.HOME_COLLECTIONS.length,
   })
   useHandleQueryError(collectionsQuery)
 

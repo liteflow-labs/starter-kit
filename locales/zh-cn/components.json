@@ -6,6 +6,13 @@
       "edit-profile": "编辑个人资料"
     }
   },
+  "network": {
+    "button": {
+      "sign-in": "登录",
+      "signing-in": "登录中...",
+      "switch-network": "交换网络"
+    }
+  },
   "bid": {
     "list": {
       "none": "无出价"

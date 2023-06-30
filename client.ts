@@ -20,7 +20,10 @@ export default function getClient(
     uri: `${
       process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
     }/${environment.LITEFLOW_API_KEY}/graphql`,
-    headers: authorization ? { authorization: `Bearer ${authorization}` } : {},
+    headers: {
+      ...(authorization ? { authorization: `Bearer ${authorization}` } : {}),
+      origin: environment.BASE_URL,
+    },
     cache: new InMemoryCache({
       typePolicies: {
         Account: {
@@ -40,6 +43,7 @@ export default function getClient(
         fetchPolicy: 'cache-and-network',
       },
     },
+    ssrForceFetchDelay: 100,
   })
   return _client
 }
