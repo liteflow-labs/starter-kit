@@ -22,6 +22,19 @@ import CancelOfferModal from '../../Modal/CancelOffer'
 import Price from '../../Price/Price'
 import SaleOpenEdit from '../Open/Info'
 
+type Sale = {
+  id: string
+  unitPrice: BigNumber
+  expiredAt: Date | null | undefined
+  maker: {
+    address: string
+  }
+  currency: {
+    decimals: number
+    symbol: string
+  }
+}
+
 export type Props = {
   assetId: string
   chainId: number
@@ -30,18 +43,7 @@ export type Props = {
   isHomepage: boolean
   signer: Signer | undefined
   currentAccount: string | null | undefined
-  sales: {
-    id: string
-    unitPrice: BigNumber
-    expiredAt: Date | null | undefined
-    maker: {
-      address: string
-    }
-    currency: {
-      decimals: number
-      symbol: string
-    }
-  }[]
+  sales: Sale[]
   onOfferCanceled: (id: string) => Promise<void>
 }
 
@@ -63,7 +65,7 @@ const SaleDirectInfo: FC<Props> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleCancel = useCallback(
-    async (sale: (typeof sales)[0]) => {
+    async (sale: Sale) => {
       if (!confirm(t('sales.direct.info.cancel-confirmation'))) return
       try {
         onOpen()
