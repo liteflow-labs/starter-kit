@@ -35,7 +35,7 @@
     "jwt-decode": "^3.1.2",
     "next": "^13.4.7",
     "next-translate": "^1.4.0",
-    "nextjs-google-analytics": "^1.2.1",
+    "nextjs-google-analytics": "^2.3.3",
     "nodemailer": "^6.9.3",
     "nprogress": "^0.2.0",
     "numbro": "^2.3.6",
