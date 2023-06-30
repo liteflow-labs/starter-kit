@@ -21,7 +21,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/units": "^5.7.0",
-    "@everipedia/wagmi-magic-connector": "^0.12.0",
+    "@everipedia/wagmi-magic-connector": "^1.0.2",
     "@metamask/jazzicon": "^2.0.0",
     "@nft/chat": "^0.1.12",
     "@nft/hooks": "^1.0.0-beta.13",

@@ -10,6 +10,10 @@ import {
 
 invariant(process.env.NEXT_PUBLIC_BASE_URL, 'Base url is not defined')
 invariant(process.env.NEXT_PUBLIC_LITEFLOW_API_KEY, 'API key is not defined')
+invariant(
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+  'Wallet connect project id is not defined',
+)
 
 const environment = {
   /**
@@ -89,7 +93,7 @@ const environment = {
     polygonMumbai,
   ],
 
-  // (Optional) Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
+  // Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
   WALLET_CONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
 
   // (Optional) Magic API Key, you can get one at https://magic.link/
