@@ -40,7 +40,7 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
     [historyData],
   )
 
-  const ListItem = (history: typeof histories[number], i: number) => {
+  const ListItem = (history: (typeof histories)[number], i: number) => {
     switch (history.action) {
       case 'LISTING':
         invariant(history.unitPrice, 'unitPrice is required')

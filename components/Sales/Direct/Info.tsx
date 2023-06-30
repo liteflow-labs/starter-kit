@@ -63,7 +63,7 @@ const SaleDirectInfo: FC<Props> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleCancel = useCallback(
-    async (sale: typeof sales[0]) => {
+    async (sale: (typeof sales)[0]) => {
       if (!confirm(t('sales.direct.info.cancel-confirmation'))) return
       try {
         onOpen()
