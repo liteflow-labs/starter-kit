@@ -3,7 +3,7 @@ import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
 import { LiteflowProvider } from '@nft/hooks'
-import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import dayjs from 'dayjs'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
@@ -22,9 +22,9 @@ import React, {
 } from 'react'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import {
-  useAccount as useWagmiAccount,
-  useDisconnect,
   WagmiConfig,
+  useDisconnect,
+  useAccount as useWagmiAccount,
 } from 'wagmi'
 import getClient from '../client'
 import Footer from '../components/Footer/Footer'

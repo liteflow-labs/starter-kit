@@ -1,4 +1,4 @@
-import { Flex, Link as ChakraLink, LinkProps } from '@chakra-ui/react'
+import { Link as ChakraLink, Flex, LinkProps } from '@chakra-ui/react'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import NextLink from 'next/link'
 import { forwardRef } from 'react'
