@@ -212,7 +212,7 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
         <meta name="twitter:card" content="summary" />
       </Head>
       <GoogleAnalytics strategy="lazyOnload" />
-      <WagmiConfig client={client}>
+      <WagmiConfig config={client}>
         <RainbowKitProvider
           chains={chains}
           theme={lightTheme({

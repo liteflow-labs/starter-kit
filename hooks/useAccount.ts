@@ -1,9 +1,8 @@
-import { Signer } from '@ethersproject/abstract-signer'
 import { useAuthenticate, useIsLoggedIn } from '@nft/hooks'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
 import { useCallback, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
-import { Connector, useAccount as useWagmiAccount } from 'wagmi'
+import { Connector, WalletClient, useAccount as useWagmiAccount } from 'wagmi'
 
 type AccountDetail = {
   isLoggedIn: boolean
@@ -22,6 +21,18 @@ const COOKIE_OPTIONS = {
   secure: true,
   sameSite: true,
   path: '/',
+}
+
+class Signer {
+  constructor(public wallet: WalletClient) {}
+
+  async getAddress() {
+    return this.wallet.account.address
+  }
+
+  signMessage(message: string) {
+    return this.wallet.signMessage({ message, account: this.wallet.account })
+  }
 }
 
 export default function useAccount(): AccountDetail {
@@ -61,13 +72,14 @@ export default function useAccount(): AccountDetail {
   }
 
   const login = useCallback(
-    async (connector: Connector<any, any, Signer>) => {
-      const signer = await connector.getSigner()
+    async (connector: Connector) => {
+      const wallet = await connector.getWalletClient()
+      const signer = new Signer(wallet)
       const currentAddress = (await signer.getAddress()).toLowerCase()
       if (jwt && currentAddress === jwt.address) {
         return setAuthenticationToken(jwt.token)
       }
-      const { jwtToken } = await authenticate(signer)
+      const { jwtToken } = await authenticate(signer as any)
 
       const newJwt = jwtDecode<JwtPayload>(jwtToken)
       setCookie(COOKIE_JWT_TOKEN, jwtToken, {

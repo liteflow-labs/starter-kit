@@ -1,9 +1,4 @@
-import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector'
-import {
-  connectorsForWallets,
-  Wallet,
-  WalletList,
-} from '@rainbow-me/rainbowkit'
+import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import {
   braveWallet,
   coinbaseWallet,
@@ -12,31 +7,24 @@ import {
   rainbowWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import { Chain, configureChains, Connector, createClient } from 'wagmi'
-import {
-  bsc,
-  bscTestnet,
-  goerli,
-  mainnet,
-  polygon,
-  polygonMumbai,
-} from 'wagmi/chains'
+import { Chain, configureChains, createConfig } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
 
-export const { chains, provider } = configureChains<Chain>(environment.CHAINS, [
-  publicProvider(),
-])
+export const { chains, publicClient, webSocketPublicClient } =
+  configureChains<Chain>(environment.CHAINS, [publicProvider()])
 
 // Copied from https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/wallets/getDefaultWallets.ts#L11
 // Only added the shimDisconnect option
 const getDefaultWallets = ({
   appName,
   chains,
+  projectId,
   shimDisconnect,
 }: {
   appName: string
   chains: Chain[]
+  projectId: string
   shimDisconnect?: boolean
 }): {
   connectors: ReturnType<typeof connectorsForWallets>
@@ -47,16 +35,11 @@ const getDefaultWallets = ({
       groupName: 'Popular',
       wallets: [
         injectedWallet({ chains, shimDisconnect }),
-        rainbowWallet({ chains, shimDisconnect }),
+        rainbowWallet({ chains, projectId, shimDisconnect }),
         coinbaseWallet({ appName, chains }),
-        metaMaskWallet({ chains, shimDisconnect }),
-        environment.WALLET_CONNECT_PROJECT_ID
-          ? walletConnectWallet({ chains })
-          : undefined,
+        metaMaskWallet({ chains, projectId, shimDisconnect }),
+        walletConnectWallet({ chains, projectId }),
         braveWallet({ chains, shimDisconnect }),
-        environment.MAGIC_API_KEY
-          ? emailConnector({ chains, apiKey: environment.MAGIC_API_KEY })
-          : undefined,
       ].filter(Boolean),
     },
   ]
@@ -69,52 +52,14 @@ const getDefaultWallets = ({
 
 const { connectors } = getDefaultWallets({
   appName: environment.META_TITLE,
+  projectId: environment.WALLET_CONNECT_PROJECT_ID,
   chains,
   shimDisconnect: true,
 })
 
-export const client = createClient({
+export const client = createConfig({
   autoConnect: true,
-  provider,
   connectors: connectors,
+  publicClient,
+  webSocketPublicClient,
 })
-
-function emailConnector({
-  chains,
-  apiKey,
-}: {
-  chains: any[]
-  apiKey: string
-}): Wallet {
-  return {
-    id: 'magic',
-    name: 'Magic',
-    iconUrl: '/magic.svg',
-    iconBackground: '#fff',
-    createConnector: () => {
-      const connector = new MagicConnectConnector({
-        chains: chains,
-        options: {
-          apiKey: apiKey,
-          networks: [
-            { chainId: mainnet.id, rpcUrl: 'https://rpc.ankr.com/eth' },
-            { chainId: goerli.id, rpcUrl: 'https://rpc.ankr.com/eth_goerli' },
-            { chainId: polygon.id, rpcUrl: 'https://rpc.ankr.com/polygon' },
-            {
-              chainId: polygonMumbai.id,
-              rpcUrl: 'https://rpc.ankr.com/polygon_mumbai',
-            },
-            { chainId: bsc.id, rpcUrl: 'https://rpc.ankr.com/bsc' },
-            {
-              chainId: bscTestnet.id,
-              rpcUrl: 'https://rpc.ankr.com/bsc_testnet_chapel',
-            },
-          ],
-        },
-      }) as unknown as Connector
-      return {
-        connector,
-      }
-    },
-  }
-}

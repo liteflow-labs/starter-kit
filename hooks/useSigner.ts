@@ -1,6 +1,6 @@
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { useMemo } from 'react'
-import { useSigner as useOriginalSigner } from 'wagmi'
+import { useWalletClient } from 'wagmi'
 import useAccount from './useAccount'
 
 /**
@@ -9,12 +9,13 @@ import useAccount from './useAccount'
  * @returns (Signer & TypedDataSigner) | undefined
  */
 export default function useSigner(): (Signer & TypedDataSigner) | undefined {
-  const { data } = useOriginalSigner()
+  const { data } = useWalletClient()
   const { isLoggedIn } = useAccount()
 
   return useMemo(() => {
     if (!isLoggedIn) return
     if (!data) return
-    return (data as Signer & TypedDataSigner) || undefined
+    // TODO: change to correct type
+    return (data as any) || undefined
   }, [isLoggedIn, data])
 }
