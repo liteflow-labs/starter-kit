@@ -140,7 +140,7 @@ const TokenMedia: FC<{
         src={image}
         alt={defaultText}
         onError={() => setImageError(true)}
-        layout="fill"
+        fill
         objectFit={fill ? 'cover' : 'contain'}
         sizes={sizes}
         unoptimized={unlockedContent?.mimetype === 'image/gif'}

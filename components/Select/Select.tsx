@@ -126,6 +126,7 @@ const Select = <T,>({
                   <>
                     {selectedChoice.image && (
                       <Box
+                        position="relative"
                         h={6}
                         w={6}
                         overflow="hidden"
@@ -135,9 +136,9 @@ const Select = <T,>({
                       >
                         <Image
                           src={selectedChoice.image}
-                          width={24}
-                          height={24}
                           alt={''}
+                          fill
+                          sizes="22px"
                           objectFit="cover"
                         />
                       </Box>
@@ -180,6 +181,7 @@ const Select = <T,>({
                     <Flex align="center" gap={2}>
                       {choice.image && (
                         <Box
+                          position="relative"
                           h={6}
                           w={6}
                           overflow="hidden"
@@ -189,9 +191,9 @@ const Select = <T,>({
                         >
                           <Image
                             src={choice.image}
-                            width={24}
-                            height={24}
                             alt={''}
+                            fill
+                            sizes="22px"
                             objectFit="cover"
                           />
                         </Box>

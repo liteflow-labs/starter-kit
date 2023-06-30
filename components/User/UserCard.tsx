@@ -1,9 +1,9 @@
 import { Box, Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
-import Image from 'components/Image/Image'
-import Link from 'components/Link/Link'
 import { FC } from 'react'
 import { formatAddress } from '../../utils'
+import Image from '../Image/Image'
+import Link from '../Link/Link'
 import AccountImage from '../Wallet/Image'
 
 type Props = {
@@ -32,14 +32,14 @@ const UserCard: FC<Props> = ({ user }) => {
             <Image
               src={user.cover}
               alt={user.name || 'User cover image'}
-              layout="fill"
-              objectFit="cover"
+              fill
               sizes="
               (min-width: 80em) 292px,
               (min-width: 62em) 25vw,
               (min-width: 48em) 33vw,
               (min-width: 30em) 50vw,
               100vw"
+              objectFit="cover"
             />
           ) : (
             <Box bg="gray.100" height="full" />

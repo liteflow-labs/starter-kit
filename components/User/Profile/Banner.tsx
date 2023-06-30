@@ -28,12 +28,11 @@ const UserProfileBanner: FC<Props> = ({ cover, image, address, name }) => {
         <Image
           src={cover}
           alt={name || address}
-          layout="fill"
-          objectFit="cover"
-          rounded="xl"
+          fill
           sizes="
           (min-width: 80em) 1216px,
           100vw"
+          objectFit="cover"
         />
       )}
       <Flex

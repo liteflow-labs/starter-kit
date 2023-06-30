@@ -288,6 +288,8 @@ const OfferFormBid: FC<Props> = (props) => {
               alt={currency.symbol}
               width={24}
               height={24}
+              w={6}
+              h={6}
               objectFit="cover"
             />
           </InputRightElement>

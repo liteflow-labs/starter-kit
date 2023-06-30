@@ -174,6 +174,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
                     </Heading>
                     <Flex align="center" gap={3}>
                       <Flex
+                        position="relative"
                         align="center"
                         justify="center"
                         h={8}
@@ -185,8 +186,8 @@ const BidPage: NextPage<Props> = ({ now }) => {
                         <Image
                           src={highestBid.currency.image}
                           alt={`${highestBid.currency.symbol} Logo`}
-                          width={32}
-                          height={32}
+                          fill
+                          sizes="30px"
                           objectFit="cover"
                         />
                       </Flex>

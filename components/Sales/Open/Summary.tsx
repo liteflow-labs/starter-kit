@@ -19,6 +19,7 @@ const SaleOpenSummary: FC<Props> = ({ currencies }) => {
       <Flex _first={{ ml: 0 }}>
         {currencies.map((currency, i) => (
           <Flex
+            position="relative"
             as="span"
             align="center"
             justify="center"
@@ -34,8 +35,8 @@ const SaleOpenSummary: FC<Props> = ({ currencies }) => {
             <Image
               src={currency.image}
               alt="Currency Logo"
-              width={32}
-              height={32}
+              fill
+              sizes="30px"
               objectFit="cover"
             />
           </Flex>

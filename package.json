@@ -33,7 +33,7 @@
     "embla-carousel-react": "^8.0.0-rc07",
     "graphql-request": "^5.0.0",
     "jwt-decode": "^3.1.2",
-    "next": "^12.3.4",
+    "next": "^13.4.7",
     "next-translate": "^1.4.0",
     "nextjs-google-analytics": "^1.2.1",
     "nodemailer": "^6.9.0",

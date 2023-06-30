@@ -60,6 +60,7 @@ const SaleAuctionInProgress: FC<Props> = ({ auction, bestBid }) => {
         </Heading>
         <Flex gap={2}>
           <Flex
+            position="relative"
             as="span"
             h={8}
             w={8}
@@ -73,8 +74,8 @@ const SaleAuctionInProgress: FC<Props> = ({ auction, bestBid }) => {
               <Image
                 src={currency.image}
                 alt={currency.symbol}
-                width={32}
-                height={32}
+                fill
+                sizes="30px"
                 objectFit="cover"
               />
             )}

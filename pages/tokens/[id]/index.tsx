@@ -425,6 +425,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                       alt={chainId.toString()}
                       width={20}
                       height={20}
+                      w={5}
+                      h={5}
                     />
                     <Text variant="subtitle2" ml={1}>
                       {chain?.name}

@@ -111,8 +111,7 @@ const TokenHeader: FC<Props> = ({
               animationUrl={asset.animationUrl}
               unlockedContent={asset.unlockedContent}
               defaultText={asset.name}
-              fill={true}
-              // sizes determined from the homepage
+              fill
               sizes="
               (min-width: 30em) 384px,
               100vw"

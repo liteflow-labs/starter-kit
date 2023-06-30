@@ -170,8 +170,7 @@ const TokenCard: FC<Props> = ({
               animationUrl={asset.animationUrl}
               unlockedContent={asset.unlockedContent}
               defaultText={asset.name}
-              fill={true}
-              // sizes determined from the explorer page
+              fill
               sizes="
             (min-width: 80em) 292px,
             (min-width: 62em) 25vw,
@@ -219,6 +218,8 @@ const TokenCard: FC<Props> = ({
             alt={asset.collection.chainId.toString()}
             width={24}
             height={24}
+            w={6}
+            h={6}
           />
         </Flex>
       )}

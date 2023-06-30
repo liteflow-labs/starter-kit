@@ -34,9 +34,11 @@ const WalletBalanceList: FC<IProps> = ({ account, currencies }) => {
           image={
             <Image
               src={x.image}
+              alt={x.symbol}
               width={40}
               height={40}
-              alt={x.symbol}
+              w={10}
+              h={10}
               objectFit="cover"
             />
           }

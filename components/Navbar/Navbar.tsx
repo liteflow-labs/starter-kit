@@ -130,6 +130,8 @@ const DrawerMenu: FC<{
                 alt="Logo"
                 width={logo?.width || 139}
                 height={logo?.height || 32}
+                w={logo?.width ? `${logo.width}px` : '139px'}
+                h={logo?.height ? `${logo.height}px` : '32px'}
               />
             </Link>
           </DrawerHeader>
@@ -393,6 +395,8 @@ const Navbar: FC<{
               alt="Logo"
               width={logo?.width || 139}
               height={logo?.height || 32}
+              w={logo?.width ? `${logo.width}px` : '139px'}
+              h={logo?.height ? `${logo.height}px` : '32px'}
             />
           </Flex>
         </Flex>

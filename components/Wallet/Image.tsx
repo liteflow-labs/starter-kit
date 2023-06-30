@@ -29,6 +29,8 @@ const AccountImage: FC<{
       alt={address}
       width={size || defaultSize}
       height={size || defaultSize}
+      w={size ? `${size}px` : defaultSize / 4}
+      h={size ? `${size}px` : defaultSize / 4}
       objectFit="cover"
       {...props}
     />
