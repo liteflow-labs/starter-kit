@@ -20,7 +20,7 @@ import { HTMLAttributes, JSX, ReactElement, useMemo } from 'react'
 import { Control, Controller, FieldError } from 'react-hook-form'
 import Image from '../Image/Image'
 
-type IProps<T extends any> = HTMLAttributes<any> & {
+type IProps<T> = HTMLAttributes<any> & {
   selectWidth?: string | number
   dropdownMaxHeight?: string | number
   label?: string
@@ -43,7 +43,7 @@ type IProps<T extends any> = HTMLAttributes<any> & {
   sortAlphabetically?: boolean
 }
 
-const Select = <T extends any>({
+const Select = <T,>({
   selectWidth,
   dropdownMaxHeight,
   label,
