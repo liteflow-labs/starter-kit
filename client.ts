@@ -43,6 +43,7 @@ export default function getClient(
         fetchPolicy: 'cache-and-network',
       },
     },
+    ssrForceFetchDelay: 100,
   })
   return _client
 }
