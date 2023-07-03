@@ -115,10 +115,10 @@ const environment = {
    * NFT Mint Behavior
    */
   // Enable/disable the lazy minting feature. If enabled, the NFTs will be minted on the first sale
-  LAZYMINT: true,
+  LAZYMINT: false,
 
   // Enable/disable the unlockable content feature. If enabled, the NFTs will have unlockable content only accessible to owners
-  UNLOCKABLE_CONTENT: true,
+  UNLOCKABLE_CONTENT: false,
 }
 
 export default environment
