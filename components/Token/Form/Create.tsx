@@ -110,7 +110,6 @@ const TokenFormCreate: FC<Props> = ({
       createCollectibleOnOpen()
       if (parseFloat(data.royalties) > maxRoyalties)
         throw new Error('Royalties too high')
-      debugger
       const assetId = await createNFT(
         {
           chain: collection.chainId,
