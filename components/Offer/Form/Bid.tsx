@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -24,7 +23,6 @@ import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { toAddress } from '@liteflow/core'
 import { useCreateOffer } from '@liteflow/react'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
@@ -36,7 +34,7 @@ import useBalance from '../../../hooks/useBalance'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatDateDatetime, formatError } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
 import Select from '../../Select/Select'
@@ -98,7 +96,6 @@ const OfferFormBid: FC<Props> = (props) => {
   } = props
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
   const toast = useToast()
-  const { openConnectModal } = useConnectModal()
   const {
     isOpen: createOfferIsOpen,
     onOpen: createOfferOnOpen,
@@ -417,28 +414,18 @@ const OfferFormBid: FC<Props> = (props) => {
         />
       </div>
 
-      {account ? (
-        <>
-          <Balance account={account} currency={currency} />
-          <ButtonWithNetworkSwitch
-            chainId={chainId}
-            isDisabled={!canBid}
-            isLoading={isSubmitting}
-            size="lg"
-            type="submit"
-          >
-            <Text as="span" isTruncated>
-              {t('offer.form.bid.submit')}
-            </Text>
-          </ButtonWithNetworkSwitch>
-        </>
-      ) : (
-        <Button size="lg" type="button" onClick={openConnectModal}>
-          <Text as="span" isTruncated>
-            {t('offer.form.bid.submit')}
-          </Text>
-        </Button>
-      )}
+      {account && <Balance account={account} currency={currency} />}
+      <ConnectButtonWithNetworkSwitch
+        chainId={chainId}
+        isLoading={isSubmitting}
+        isDisabled={!canBid}
+        size="lg"
+        type="submit"
+      >
+        <Text as="span" isTruncated>
+          {t('offer.form.bid.submit')}
+        </Text>
+      </ConnectButtonWithNetworkSwitch>
 
       <CreateOfferModal
         isOpen={createOfferIsOpen}

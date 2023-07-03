@@ -14,7 +14,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useCallback, VFC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatDate, formatError, isSameAddress } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
 import CancelOfferModal from '../../Modal/CancelOffer'
@@ -143,7 +143,7 @@ const SaleDirectModalItem: VFC<Props> = ({
         action={
           !!currentAccount &&
           isSameAddress(sale.maker.address, currentAccount) ? (
-            <ButtonWithNetworkSwitch
+            <ConnectButtonWithNetworkSwitch
               chainId={chainId}
               variant="outline"
               colorScheme="gray"
@@ -154,7 +154,7 @@ const SaleDirectModalItem: VFC<Props> = ({
               <Text as="span" isTruncated>
                 {t('sales.direct.modal-item.cancel')}
               </Text>
-            </ButtonWithNetworkSwitch>
+            </ConnectButtonWithNetworkSwitch>
           ) : (
             <Button as={Link} href={`/checkout/${sale.id}`}>
               <Text as="span" isTruncated>

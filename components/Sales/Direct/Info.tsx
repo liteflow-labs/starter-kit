@@ -17,7 +17,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { ReactElement, useCallback, useMemo, VFC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatError, isSameAddress } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import CancelOfferModal from '../../Modal/CancelOffer'
 import Price from '../../Price/Price'
 import SaleOpenEdit from '../Open/Info'
@@ -132,7 +132,7 @@ const SaleDirectInfo: VFC<Props> = ({
             )}
           </Heading>
         </Flex>
-        <ButtonWithNetworkSwitch
+        <ConnectButtonWithNetworkSwitch
           chainId={chainId}
           variant="outline"
           colorScheme="gray"
@@ -144,7 +144,7 @@ const SaleDirectInfo: VFC<Props> = ({
           <Text as="span" isTruncated>
             {t('sales.direct.info.cancel')}
           </Text>
-        </ButtonWithNetworkSwitch>
+        </ConnectButtonWithNetworkSwitch>
         <CancelOfferModal
           isOpen={isOpen}
           onClose={onClose}
