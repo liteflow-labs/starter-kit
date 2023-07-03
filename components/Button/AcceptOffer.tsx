@@ -38,7 +38,7 @@ export default function AcceptOfferButton({
   const handleAcceptOffer = useCallback(async () => {
     try {
       onOpen()
-      await accept(offer, quantity)
+      await accept(offer.id, quantity)
       await onAccepted()
     } catch (e) {
       onError(e as Error)

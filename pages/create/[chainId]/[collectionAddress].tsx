@@ -173,10 +173,6 @@ const CreatePage: NextPage = ({}) => {
               signer={signer}
               collection={collection}
               categories={categories}
-              uploadUrl={`${
-                process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
-                'https://api.liteflow.com'
-              }/${environment.LITEFLOW_API_KEY}/uploadToIPFS`}
               blockExplorer={blockExplorer}
               onCreated={onCreated}
               onInputChange={setFormData}

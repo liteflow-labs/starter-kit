@@ -32,7 +32,7 @@ export default function CancelOfferButton({
   const handleCancelOffer = useCallback(async () => {
     try {
       onOpen()
-      await cancel({ id: offerId })
+      await cancel(offerId)
       await onCanceled()
     } catch (e) {
       onError(e as Error)

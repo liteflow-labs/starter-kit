@@ -56,7 +56,6 @@ type Props = {
   }
   categories: { id: string; title: string }[]
   blockExplorer: BlockExplorer
-  uploadUrl: string
   activateUnlockableContent: boolean
   maxRoyalties: number
   onCreated: (id: string) => void
@@ -69,7 +68,6 @@ const TokenFormCreate: FC<Props> = ({
   collection,
   categories,
   blockExplorer,
-  uploadUrl,
   activateUnlockableContent,
   maxRoyalties,
   onCreated,
@@ -101,9 +99,7 @@ const TokenFormCreate: FC<Props> = ({
   useEffect(() => onInputChange(res), [res, onInputChange])
 
   // const [transform] = useFileTransformer()
-  const [createNFT, { activeStep, transactionHash }] = useCreateNFT(signer, {
-    uploadUrl,
-  })
+  const [createNFT, { activeStep, transactionHash }] = useCreateNFT(signer)
 
   const handleFileDrop = (file: File) => {
     if (!file) return
@@ -117,6 +113,7 @@ const TokenFormCreate: FC<Props> = ({
       createCollectibleOnOpen()
       if (parseFloat(data.royalties) > maxRoyalties)
         throw new Error('Royalties too high')
+      debugger
       const assetId = await createNFT(
         {
           chain: collection.chainId,

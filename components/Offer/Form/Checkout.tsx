@@ -107,7 +107,7 @@ const OfferFormCheckout: FC<Props> = ({
     if (!offer) throw new Error('offer falsy')
     try {
       acceptOfferOnOpen()
-      await acceptOffer(offer, quantity)
+      await acceptOffer(offer.id, quantity)
       onPurchased()
     } catch (e) {
       toast({

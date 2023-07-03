@@ -63,7 +63,7 @@ const SaleDirectModalItem: VFC<Props> = ({
     if (!confirm(t('sales.direct.modal-item.cancel-confirmation'))) return
     try {
       onOpen()
-      await cancelOffer(sale)
+      await cancelOffer(sale.id)
       await onOfferCanceled(sale.id)
     } catch (e) {
       toast({

@@ -67,7 +67,7 @@ const SaleDirectInfo: VFC<Props> = ({
       if (!confirm(t('sales.direct.info.cancel-confirmation'))) return
       try {
         onOpen()
-        await cancelOffer(sale)
+        await cancelOffer(sale.id)
         await onOfferCanceled(sale.id)
       } catch (e) {
         toast({

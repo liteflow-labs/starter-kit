@@ -120,7 +120,7 @@ const Bid: VFC<Props> = ({
     try {
       acceptOfferOnOpen()
       confirmAcceptOnClose()
-      await acceptOffer(bid, quantity || bid.availableQuantity)
+      await acceptOffer(bid.id, quantity || bid.availableQuantity)
       await onAccepted(bid.id)
     } catch (e) {
       toast({
@@ -139,7 +139,7 @@ const Bid: VFC<Props> = ({
     if (activeCancelOfferStep !== CancelOfferStep.INITIAL) return
     try {
       cancelOfferOnOpen()
-      await cancelOffer(bid)
+      await cancelOffer(bid.id)
       await onCanceled(bid.id)
     } catch (e) {
       toast({
