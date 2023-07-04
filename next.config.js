@@ -18,8 +18,12 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config) => {
-    config.resolve.fallback = { fs: false, net: false, tls: false }
+  webpack: (config, options) => {
+    if (!options.isServer) {
+      if (!config.resolve) config.resolve = {}
+      if (!config.resolve.fallback) config.resolve.fallback = {}
+      config.resolve.fallback.fs = false
+    }
     return config
   },
   reactStrictMode: true,
