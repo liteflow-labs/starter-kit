@@ -24,8 +24,10 @@ import {
 import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
 
-export const { chains, publicClient, webSocketPublicClient } =
-  configureChains<Chain>(environment.CHAINS, [publicProvider()])
+export const { chains, publicClient } = configureChains<Chain>(
+  environment.CHAINS,
+  [publicProvider()],
+)
 
 // Copied from https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/wallets/getDefaultWallets.ts#L11
 // Only added the shimDisconnect option
@@ -77,7 +79,6 @@ export const client = createConfig({
   autoConnect: true,
   connectors: connectors,
   publicClient,
-  webSocketPublicClient,
 })
 
 function emailConnector({
