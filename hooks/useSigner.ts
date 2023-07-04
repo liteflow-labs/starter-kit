@@ -1,6 +1,7 @@
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
+import { providers } from 'ethers'
 import { useMemo } from 'react'
-import { useWalletClient } from 'wagmi'
+import { useWalletClient, type WalletClient } from 'wagmi'
 import useAccount from './useAccount'
 
 /**
@@ -8,14 +9,27 @@ import useAccount from './useAccount'
  * be used to sign messages or transactions
  * @returns (Signer & TypedDataSigner) | undefined
  */
+
+export function walletClientToSigner(walletClient: WalletClient) {
+  const { account, chain, transport } = walletClient
+  const network = {
+    chainId: chain.id,
+    name: chain.name,
+    ensAddress: chain.contracts?.ensRegistry?.address,
+  }
+  // TODO: check transport type
+  const provider = new providers.Web3Provider(transport as any, network)
+  const signer = provider.getSigner(account.address)
+  return signer
+}
+
 export default function useSigner(): (Signer & TypedDataSigner) | undefined {
-  const { data } = useWalletClient()
+  const { data: walletClient } = useWalletClient()
   const { isLoggedIn } = useAccount()
 
   return useMemo(() => {
     if (!isLoggedIn) return
-    if (!data) return
-    // TODO: change to correct type
-    return (data as any) || undefined
-  }, [isLoggedIn, data])
+    if (!walletClient) return
+    return walletClientToSigner(walletClient)
+  }, [isLoggedIn, walletClient])
 }
