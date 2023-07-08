@@ -34,7 +34,11 @@ import {
   convertUser,
 } from '../../convert'
 import environment from '../../environment'
-import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
+import {
+  AssetsOrderBy,
+  useFetchAllErc721And1155Query,
+  useFetchAllErc721And1155TotalCountQuery,
+} from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
@@ -69,6 +73,13 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
       filter: convertFilterToAssetFilter(filter, date),
     },
   })
+  const { data: totalCountData } = useFetchAllErc721And1155TotalCountQuery({
+    variables: {
+      filter: convertFilterToAssetFilter(filter, date),
+    },
+    ssr: false,
+  })
+  const totalCount = totalCountData?.assets?.totalCount
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -179,8 +190,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                 >
                   <SkeletonTokenCard />
                 </SkeletonGrid>
-              ) : assetsData?.assets?.totalCount &&
-                assetsData.assets.totalCount > 0 ? (
+              ) : assetsData?.assets && assetsData.assets.nodes.length > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -222,7 +232,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   limit={limit}
                   limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  total={assetsData?.assets?.totalCount}
+                  total={totalCount}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}
                   result={{
