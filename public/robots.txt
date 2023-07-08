@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Crawl-Delay: 10
+Disallow: /_next/image
+Disallow: /api/

@@ -5,7 +5,7 @@ import { AcceptOfferStep, useAcceptOffer } from '@nft/hooks'
 import { PropsWithChildren, useCallback } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import AcceptOfferModal from '../Modal/AcceptOffer'
-import ButtonWithNetworkSwitch from './SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from './ConnectWithNetworkSwitch'
 
 type Props = Omit<ButtonProps, 'onClick' | 'disabled'> & {
   signer: Signer | undefined
@@ -49,14 +49,14 @@ export default function AcceptOfferButton({
 
   return (
     <>
-      <ButtonWithNetworkSwitch
+      <ConnectButtonWithNetworkSwitch
         chainId={chainId}
         {...props}
         isLoading={activeStep !== AcceptOfferStep.INITIAL}
         onClick={handleAcceptOffer}
       >
         {children}
-      </ButtonWithNetworkSwitch>
+      </ConnectButtonWithNetworkSwitch>
       <AcceptOfferModal
         isOpen={isOpen}
         onClose={onClose}

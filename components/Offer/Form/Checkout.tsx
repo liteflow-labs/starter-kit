@@ -4,7 +4,6 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
-  Button,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -22,7 +21,6 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { useAcceptOffer } from '@nft/hooks'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
@@ -31,7 +29,7 @@ import useBalance from '../../../hooks/useBalance'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatError } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import AcceptOfferModal from '../../Modal/AcceptOffer'
 import Balance from '../../User/Balance'
 import Summary from '../Summary'
@@ -68,7 +66,6 @@ const OfferFormCheckout: FC<Props> = ({
   const { t } = useTranslation('components')
   const [acceptOffer, { activeStep, transactionHash }] = useAcceptOffer(signer)
   const toast = useToast()
-  const { openConnectModal } = useConnectModal()
   const {
     isOpen: acceptOfferIsOpen,
     onOpen: acceptOfferOnOpen,
@@ -200,25 +197,17 @@ const OfferFormCheckout: FC<Props> = ({
           </AlertDescription>
         </Box>
       </Alert>
-      {account ? (
-        <ButtonWithNetworkSwitch
-          chainId={chainId}
-          isDisabled={!!account && !canPurchase}
-          isLoading={isSubmitting}
-          size="lg"
-          type="submit"
-        >
-          <Text as="span" isTruncated>
-            {t('offer.form.checkout.submit')}
-          </Text>
-        </ButtonWithNetworkSwitch>
-      ) : (
-        <Button size="lg" type="button" onClick={openConnectModal}>
-          <Text as="span" isTruncated>
-            {t('offer.form.checkout.submit')}
-          </Text>
-        </Button>
-      )}
+      <ConnectButtonWithNetworkSwitch
+        chainId={chainId}
+        isDisabled={!canPurchase}
+        isLoading={isSubmitting}
+        size="lg"
+        type="submit"
+      >
+        <Text as="span" isTruncated>
+          {t('offer.form.checkout.submit')}
+        </Text>
+      </ConnectButtonWithNetworkSwitch>
 
       <AcceptOfferModal
         isOpen={acceptOfferIsOpen}

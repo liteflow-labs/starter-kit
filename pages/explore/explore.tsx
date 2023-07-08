@@ -63,7 +63,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   const filter = useAssetFilterFromQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
-  const { data, previousData, loading } = useFetchAllErc721And1155Query({
+  const { data: assetsData, loading } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
       address: address || '',
@@ -73,7 +73,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
       filter: convertFilterToAssetFilter(filter, date),
     },
   })
-
   const { data: totalCountData } = useFetchAllErc721And1155TotalCountQuery({
     variables: {
       filter: convertFilterToAssetFilter(filter, date),
@@ -81,8 +80,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     ssr: false,
   })
   const totalCount = totalCountData?.assets?.totalCount
-
-  const assetsData = useMemo(() => data || previousData, [data, previousData])
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -181,7 +178,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {loading || !assetsData ? (
+              {loading && !assetsData ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact

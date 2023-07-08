@@ -1,5 +1,4 @@
 import {
-  Button,
   Checkbox,
   FormControl,
   FormErrorMessage,
@@ -22,14 +21,13 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { CreateNftStep, useCreateNFT } from '@nft/hooks'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatError } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Dropzone from '../../Dropzone/Dropzone'
 import CreateCollectibleModal from '../../Modal/CreateCollectible'
 import Select from '../../Select/Select'
@@ -77,7 +75,6 @@ const TokenFormCreate: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
-  const { openConnectModal } = useConnectModal()
   const {
     isOpen: createCollectibleIsOpen,
     onOpen: createCollectibleOnOpen,
@@ -356,23 +353,15 @@ const TokenFormCreate: FC<Props> = ({
         required
         error={errors.category}
       />
-      {signer ? (
-        <ButtonWithNetworkSwitch
-          chainId={collection.chainId}
-          isLoading={activeStep !== CreateNftStep.INITIAL}
-          type="submit"
-        >
-          <Text as="span" isTruncated>
-            {t('token.form.create.submit')}
-          </Text>
-        </ButtonWithNetworkSwitch>
-      ) : (
-        <Button type="button" onClick={openConnectModal}>
-          <Text as="span" isTruncated>
-            {t('token.form.create.submit')}
-          </Text>
-        </Button>
-      )}
+      <ConnectButtonWithNetworkSwitch
+        chainId={collection.chainId}
+        isLoading={activeStep !== CreateNftStep.INITIAL}
+        type="submit"
+      >
+        <Text as="span" isTruncated>
+          {t('token.form.create.submit')}
+        </Text>
+      </ConnectButtonWithNetworkSwitch>
       <CreateCollectibleModal
         isOpen={createCollectibleIsOpen}
         onClose={createCollectibleOnClose}
