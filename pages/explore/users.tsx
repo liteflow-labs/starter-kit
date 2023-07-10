@@ -9,7 +9,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import Head from '../../components/Head'
@@ -48,7 +48,7 @@ const UsersPage: NextPage<Props> = () => {
   const orderBy = useOrderByQuery<AccountsOrderBy>('CREATED_AT_DESC')
   const { limit, offset, page } = usePaginateQuery()
   const search = useQueryParamSingle('search')
-  const { data, loading, previousData } = useFetchExploreUsersQuery({
+  const { data: usersData, loading } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
@@ -69,8 +69,6 @@ const UsersPage: NextPage<Props> = () => {
   )
 
   const [changePage, changeLimit] = usePaginate()
-
-  const usersData = useMemo(() => data || previousData, [data, previousData])
 
   return (
     <>
@@ -107,7 +105,7 @@ const UsersPage: NextPage<Props> = () => {
               />
             </Box>
           </Flex>
-          {loading || !usersData ? (
+          {loading && !usersData ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact

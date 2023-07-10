@@ -34,7 +34,11 @@ import {
   convertUser,
 } from '../../convert'
 import environment from '../../environment'
-import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
+import {
+  AssetsOrderBy,
+  useFetchAllErc721And1155Query,
+  useFetchAllErc721And1155TotalCountQuery,
+} from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   Filter,
@@ -59,7 +63,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   const filter = useAssetFilterFromQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
-  const { data, previousData, loading } = useFetchAllErc721And1155Query({
+  const { data: assetsData, loading } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
       address: address || '',
@@ -69,8 +73,13 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
       filter: convertFilterToAssetFilter(filter, date),
     },
   })
-
-  const assetsData = useMemo(() => data || previousData, [data, previousData])
+  const { data: totalCountData } = useFetchAllErc721And1155TotalCountQuery({
+    variables: {
+      filter: convertFilterToAssetFilter(filter, date),
+    },
+    ssr: false,
+  })
+  const totalCount = totalCountData?.assets?.totalCount
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -169,7 +178,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {loading || !assetsData ? (
+              {loading && !assetsData ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact
@@ -181,8 +190,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                 >
                   <SkeletonTokenCard />
                 </SkeletonGrid>
-              ) : assetsData?.assets?.totalCount &&
-                assetsData.assets.totalCount > 0 ? (
+              ) : assetsData?.assets && assetsData.assets.nodes.length > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -224,7 +232,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   limit={limit}
                   limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  total={assetsData?.assets?.totalCount}
+                  total={totalCount}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}
                   result={{

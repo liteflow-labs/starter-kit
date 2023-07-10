@@ -22,7 +22,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../components/Empty/Empty'
 import FilterCollection, {
   NoFilter,
@@ -58,7 +58,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   const { limit, offset, page } = usePaginateQuery()
   const filter = useCollectionFilterFromQuery()
   const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
-  const { data, loading, previousData } = useFetchExploreCollectionsQuery({
+  const { data: collectionsData, loading } = useFetchExploreCollectionsQuery({
     variables: {
       limit,
       offset,
@@ -101,10 +101,6 @@ const CollectionsPage: NextPage<Props> = ({}) => {
     [replace, pathname, query, toast],
   )
 
-  const collectionsData = useMemo(
-    () => data || previousData,
-    [data, previousData],
-  )
   const hasFilter = chains.length > 1
 
   return (
@@ -182,7 +178,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
-              {loading || !collectionsData ? (
+              {loading && !collectionsData ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact
