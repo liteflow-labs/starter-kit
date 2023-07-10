@@ -1,49 +1,44 @@
 import { Box } from '@chakra-ui/react'
-import { Account, Chat, ChatProvider } from '@nft/chat'
-import environment from 'environment'
-import request, { gql } from 'graphql-request'
-import useSigner from 'hooks/useSigner'
 import { NextPage } from 'next'
-import { useCallback } from 'react'
 import Head from '../components/Head'
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import LargeLayout from '../layouts/large'
 
-const accounts = new Map<string, Promise<Account>>()
+// const accounts = new Map<string, Promise<Account>>()
 
 const ChatPage: NextPage = () => {
-  const signer = useSigner()
+  // const signer = useSigner()
   useLoginRedirect()
 
-  const lookupAddress = useCallback(async (address: string) => {
-    const res = accounts.get(address)
-    if (res) return res
-    const promise = request<{
-      account: {
-        name?: string
-        image?: string
-      }
-    }>(
-      `${
-        process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
-      }/${environment.LITEFLOW_API_KEY}/graphql`,
-      gql`
-        query LookupAccount($address: Address!) {
-          account(address: $address) {
-            name
-            image
-          }
-        }
-      `,
-      { address: address.toLowerCase() },
-    ).then(({ account }) => ({
-      name: account?.name || undefined,
-      avatar: account?.image || undefined,
-    }))
+  // const lookupAddress = useCallback(async (address: string) => {
+  //   const res = accounts.get(address)
+  //   if (res) return res
+  //   const promise = request<{
+  //     account: {
+  //       name?: string
+  //       image?: string
+  //     }
+  //   }>(
+  //     `${
+  //       process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
+  //     }/${environment.LITEFLOW_API_KEY}/graphql`,
+  //     gql`
+  //       query LookupAccount($address: Address!) {
+  //         account(address: $address) {
+  //           name
+  //           image
+  //         }
+  //       }
+  //     `,
+  //     { address: address.toLowerCase() },
+  //   ).then(({ account }) => ({
+  //     name: account?.name || undefined,
+  //     avatar: account?.image || undefined,
+  //   }))
 
-    accounts.set(address, promise)
-    return promise
-  }, [])
+  //   accounts.set(address, promise)
+  //   return promise
+  // }, [])
 
   return (
     <LargeLayout>
@@ -59,14 +54,13 @@ const ChatPage: NextPage = () => {
         overflow="hidden"
         mx={{ base: -6, lg: 0 }}
       >
-        <ChatProvider
+        {/* <ChatProvider
           signer={signer as any}
-          // TODO: theme.styles.global({ colorMode }).body.bg usage needs to be fixed on Chat repository
-          // theme={theme}
+          theme={theme}
           lookupAddress={lookupAddress}
         >
           <Chat />
-        </ChatProvider>
+        </ChatProvider> */}
       </Box>
     </LargeLayout>
   )
