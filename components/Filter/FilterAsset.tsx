@@ -101,6 +101,7 @@ const FilterAsset: NextPage<Props> = ({
           ? ({ chainId: { in: filterResult.chains } } as CurrencyFilter)
           : (undefined as unknown as InputMaybe<CurrencyFilter>),
     },
+    ssr: false,
   })
   const currencies = useMemo(
     () => currencyData?.currencies?.nodes || [],
@@ -131,6 +132,7 @@ const FilterAsset: NextPage<Props> = ({
       } as CollectionFilter,
     },
     skip: !!selectedCollection,
+    ssr: false,
   })
 
   const collectionData = useMemo(
@@ -154,6 +156,7 @@ const FilterAsset: NextPage<Props> = ({
       chainId: (collection && collection.chainId) || 0,
     },
     skip: !collection,
+    ssr: false,
   })
 
   const traits = useMemo(() => {
