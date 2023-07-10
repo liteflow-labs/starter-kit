@@ -6,6 +6,13 @@
       "edit-profile": "Editar perfil"
     }
   },
+  "network": {
+    "button": {
+      "sign-in": "Iniciar sesión",
+      "signing-in": "Iniciando sesión...",
+      "switch-network": "Cambiar red"
+    }
+  },
   "bid": {
     "list": {
       "none": "Sin ofertas"

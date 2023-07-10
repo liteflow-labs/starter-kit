@@ -25,7 +25,7 @@ import {
   formatError,
   isSameAddress,
 } from '../../utils'
-import ButtonWithNetworkSwitch from '../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../Button/ConnectWithNetworkSwitch'
 import Link from '../Link/Link'
 import { ListItem } from '../List/List'
 import AcceptOfferModal from '../Modal/AcceptOffer'
@@ -240,7 +240,7 @@ const Bid: VFC<Props> = ({
         action={
           <>
             {canAccept && (
-              <ButtonWithNetworkSwitch
+              <ConnectButtonWithNetworkSwitch
                 chainId={chainId}
                 w={{ base: 'full', md: 'auto' }}
                 isLoading={activeAcceptOfferStep !== AcceptOfferStep.INITIAL}
@@ -253,10 +253,10 @@ const Bid: VFC<Props> = ({
                 <Text as="span" isTruncated>
                   {t('bid.detail.accept')}
                 </Text>
-              </ButtonWithNetworkSwitch>
+              </ConnectButtonWithNetworkSwitch>
             )}
             {canCancel && (
-              <ButtonWithNetworkSwitch
+              <ConnectButtonWithNetworkSwitch
                 chainId={chainId}
                 variant="outline"
                 colorScheme="gray"
@@ -267,7 +267,7 @@ const Bid: VFC<Props> = ({
                 <Text as="span" isTruncated>
                   {t('bid.detail.cancel')}
                 </Text>
-              </ButtonWithNetworkSwitch>
+              </ConnectButtonWithNetworkSwitch>
             )}
           </>
         }

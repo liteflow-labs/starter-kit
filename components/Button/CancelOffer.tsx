@@ -4,7 +4,7 @@ import { CancelOfferStep, useCancelOffer } from '@nft/hooks'
 import { PropsWithChildren, useCallback } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import CancelOfferModal from '../Modal/CancelOffer'
-import ButtonWithNetworkSwitch from './SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from './ConnectWithNetworkSwitch'
 
 type Props = Omit<ButtonProps, 'onClick' | 'disabled'> & {
   signer: Signer | undefined
@@ -43,14 +43,14 @@ export default function CancelOfferButton({
 
   return (
     <>
-      <ButtonWithNetworkSwitch
+      <ConnectButtonWithNetworkSwitch
         chainId={chainId}
         {...props}
         isLoading={activeStep !== CancelOfferStep.INITIAL}
         onClick={handleCancelOffer}
       >
         {children}
-      </ButtonWithNetworkSwitch>
+      </ConnectButtonWithNetworkSwitch>
       <CancelOfferModal
         isOpen={isOpen}
         onClose={onClose}
