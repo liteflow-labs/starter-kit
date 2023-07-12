@@ -2,6 +2,7 @@ import invariant from 'ts-invariant'
 import {
   bsc,
   bscTestnet,
+  Chain,
   goerli as ethereumGoerli,
   mainnet as ethereumMainnet,
   polygon,
@@ -87,6 +88,32 @@ const environment = {
     bsc,
     polygon,
     polygonMumbai,
+    {
+      // TODO: need to add chain icon to public/chains/1891.png
+      name: 'LightLink Pegasus Testnet',
+      network: 'lightlink-pegasus',
+      testnet: true,
+      id: 1891,
+      nativeCurrency: {
+        decimals: 18,
+        name: 'Ether',
+        symbol: 'ETH',
+      },
+      rpcUrls: {
+        default: {
+          http: ['https://replicator-01.pegasus.lightlink.io/rpc/v1'],
+        },
+        public: {
+          http: ['https://replicator-01.pegasus.lightlink.io/rpc/v1'],
+        },
+      },
+      blockExplorers: {
+        default: {
+          name: 'LightLink Pegasus Explorer',
+          url: 'https://pegasus.lightlink.io',
+        },
+      },
+    } as Chain,
   ],
 
   // (Optional) Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
