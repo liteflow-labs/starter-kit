@@ -146,6 +146,7 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
             (min-width: 80em) 1216px,
             100vw"
             borderRadius={{ base: 0, sm: '2xl' }}
+            objectFit="cover"
           />
         )}
         <Box
