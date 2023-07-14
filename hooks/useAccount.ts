@@ -1,8 +1,8 @@
-import { useAuthenticate, useIsLoggedIn } from '@nft/hooks'
+import { useAuthenticate, useIsLoggedIn } from '@liteflow/react'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
 import { useCallback, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
-import { Connector, WalletClient, useAccount as useWagmiAccount } from 'wagmi'
+import { Connector, useAccount as useWagmiAccount, WalletClient } from 'wagmi'
 
 type AccountDetail = {
   isLoggedIn: boolean

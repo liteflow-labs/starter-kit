@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAuctionStatus } from '@nft/hooks'
+import { useAuctionStatus } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 

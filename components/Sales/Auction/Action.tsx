@@ -5,7 +5,7 @@ import {
   AcceptAuctionStep,
   useAcceptAuction,
   useAuctionStatus,
-} from '@nft/hooks'
+} from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useMemo } from 'react'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'

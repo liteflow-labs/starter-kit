@@ -10,7 +10,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { useInvitation, useIsLoggedIn } from '@nft/hooks'
+import { useInvitation, useIsLoggedIn } from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
 import { HiOutlineGlobeAlt } from '@react-icons/all-files/hi/HiOutlineGlobeAlt'

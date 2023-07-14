@@ -21,7 +21,8 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CreateOfferStep, useCreateOffer } from '@nft/hooks'
+import { toAddress } from '@liteflow/core'
+import { CreateOfferStep, useCreateOffer } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
@@ -52,6 +53,7 @@ type Props = {
   currencies: {
     name: string
     id: string
+    address: string | null
     image: string
     decimals: number
     symbol: string
@@ -165,9 +167,13 @@ const SalesDirectForm: FC<Props> = ({
       const id = await createAndPublishOffer({
         type: 'SALE',
         quantity: quantityBN,
-        unitPrice: priceUnit,
-        assetId: [chainId, collectionAddress, tokenId].join('-'),
-        currencyId: currency.id,
+        chain: chainId,
+        collection: toAddress(collectionAddress),
+        token: tokenId,
+        unitPrice: {
+          amount: priceUnit,
+          currency: currency.address ? toAddress(currency.address) : null,
+        },
         expiredAt: new Date(expiredAt),
       })
 
