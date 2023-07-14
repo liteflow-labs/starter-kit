@@ -20,7 +20,8 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
-import { CreateNftStep, useCreateNFT } from '@nft/hooks'
+import { toAddress } from '@liteflow/core'
+import { CreateNftStep, useCreateNFT } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -53,7 +54,6 @@ type Props = {
   }
   categories: { id: string; title: string }[]
   blockExplorer: BlockExplorer
-  uploadUrl: string
   activateUnlockableContent: boolean
   maxRoyalties: number
   onCreated: (id: string) => void
@@ -66,7 +66,6 @@ const TokenFormCreate: FC<Props> = ({
   collection,
   categories,
   blockExplorer,
-  uploadUrl,
   activateUnlockableContent,
   maxRoyalties,
   onCreated,
@@ -97,9 +96,7 @@ const TokenFormCreate: FC<Props> = ({
   useEffect(() => onInputChange(res), [res, onInputChange])
 
   // const [transform] = useFileTransformer()
-  const [createNFT, { activeStep, transactionHash }] = useCreateNFT(signer, {
-    uploadUrl,
-  })
+  const [createNFT, { activeStep, transactionHash }] = useCreateNFT(signer)
 
   const handleFileDrop = (file: File) => {
     if (!file) return
@@ -113,19 +110,26 @@ const TokenFormCreate: FC<Props> = ({
       createCollectibleOnOpen()
       if (parseFloat(data.royalties) > maxRoyalties)
         throw new Error('Royalties too high')
-      const assetId = await createNFT({
-        chainId: collection.chainId,
-        collectionAddress: collection.address,
-        name: data.name,
-        description: data.description,
-        content: data.content,
-        preview: data.preview,
-        isAnimation: data.isAnimation,
-        isPrivate: data.isPrivate,
-        amount: collection.standard === 'ERC1155' ? parseInt(data.amount) : 1,
-        royalties: parseFloat(data.royalties),
-        traits: [{ type: 'Category', value: data.category }],
-      })
+      const assetId = await createNFT(
+        {
+          chain: collection.chainId,
+          collection: toAddress(collection.address),
+          supply: collection.standard === 'ERC1155' ? parseInt(data.amount) : 1,
+          royalties: parseFloat(data.royalties),
+          metadata: {
+            name: data.name,
+            description: data.description,
+            attributes: [{ traitType: 'Category', value: data.category }],
+            media: {
+              content: data.content,
+              preview: data.preview,
+              isAnimation: data.isAnimation,
+              isPrivate: data.isPrivate,
+            },
+          },
+        },
+        activateLazyMint,
+      )
 
       onCreated(assetId)
     } catch (e) {

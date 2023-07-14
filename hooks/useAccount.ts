@@ -1,5 +1,5 @@
 import { Signer } from '@ethersproject/abstract-signer'
-import { useAuthenticate, useIsLoggedIn } from '@nft/hooks'
+import { useAuthenticate, useIsLoggedIn } from '@liteflow/react'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
 import { useCallback, useMemo } from 'react'
 import { useCookies } from 'react-cookie'

@@ -2,7 +2,7 @@ import { ApolloProvider } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
-import { LiteflowProvider } from '@nft/hooks'
+import { LiteflowProvider } from '@liteflow/react'
 import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import dayjs from 'dayjs'
@@ -222,10 +222,8 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
           <CookiesProvider cookies={cookies}>
             <ChakraProvider theme={theme}>
               <LiteflowProvider
-                endpoint={`${
-                  process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
-                  'https://api.liteflow.com'
-                }/${environment.LITEFLOW_API_KEY}/graphql`}
+                apiKey={environment.LITEFLOW_API_KEY}
+                endpoint={process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL}
               >
                 <AccountProvider>
                   <Layout>

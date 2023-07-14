@@ -20,7 +20,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { useAcceptOffer } from '@nft/hooks'
+import { useAcceptOffer } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
@@ -104,7 +104,7 @@ const OfferFormCheckout: FC<Props> = ({
     if (!offer) throw new Error('offer falsy')
     try {
       acceptOfferOnOpen()
-      await acceptOffer(offer, quantity)
+      await acceptOffer(offer.id, quantity)
       onPurchased()
     } catch (e) {
       toast({

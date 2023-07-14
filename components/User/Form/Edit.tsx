@@ -9,7 +9,7 @@ import {
   Textarea,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { useUpdateAccount } from '@nft/hooks'
+import { useUpdateAccount } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -40,11 +40,10 @@ type Props = {
     | 'twitter'
     | 'website'
   >
-  uploadUrl: string
   onUpdated: (address: string) => void
 }
 
-const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
+const UserFormEdit: FC<Props> = ({ signer, account, onUpdated }) => {
   const { t } = useTranslation('components')
   const {
     control,
@@ -78,7 +77,7 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
     })
   }, [account, reset])
 
-  const [editAccount] = useUpdateAccount(signer, { uploadUrl })
+  const [editAccount] = useUpdateAccount(signer)
 
   const onSubmit = handleSubmit(async (data) => {
     const address = await editAccount(data)

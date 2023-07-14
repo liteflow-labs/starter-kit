@@ -26,10 +26,12 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useCreateAuction } from '@nft/hooks'
+import { toAddress } from '@liteflow/core'
+import { useCreateAuction } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useMemo, VFC } from 'react'
 import { useForm } from 'react-hook-form'
+import invariant from 'ts-invariant'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatError, getHumanizedDate } from '../../../utils'
 import Image from '../../Image/Image'
@@ -48,6 +50,7 @@ type Props = {
   currencies: {
     name: string
     id: string
+    address: string
     image: string
     decimals: number
     symbol: string
@@ -98,13 +101,21 @@ const SalesAuctionForm: VFC<Props> = ({
   const onSubmit = handleSubmit(async (data) => {
     if (loading) return
 
+    const [chain, collection, token] = assetId.split('-')
+    invariant(chain)
+    invariant(collection)
+    invariant(token)
     try {
       const auctionId = await createAuction({
-        assetId,
+        chain: parseInt(chain, 10),
+        collection: toAddress(collection),
+        token,
         endAt: new Date(data.endAt),
         auctionValiditySeconds: auctionValidity,
-        reserveAmount: (priceUnit || BigNumber.from(0)).toString(),
-        currencyId: currency.id,
+        reservePrice: {
+          amount: (priceUnit || BigNumber.from(0)).toString(),
+          currency: toAddress(currency.address),
+        },
       })
 
       onCreated(auctionId)
