@@ -10,7 +10,9 @@ import useAccount from './useAccount'
  * @returns (Signer & TypedDataSigner) | undefined
  */
 
-export function walletClientToSigner(walletClient: WalletClient) {
+export function walletClientToSigner(
+  walletClient: WalletClient,
+): providers.JsonRpcSigner {
   const { account, chain, transport } = walletClient
   const network = {
     chainId: chain.id,
