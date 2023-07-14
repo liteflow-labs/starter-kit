@@ -2,7 +2,8 @@ import { useAuthenticate, useIsLoggedIn } from '@liteflow/react'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
 import { useCallback, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
-import { Connector, WalletClient, useAccount as useWagmiAccount } from 'wagmi'
+import { Connector, useAccount as useWagmiAccount } from 'wagmi'
+import { walletClientToSigner } from './useSigner'
 
 type AccountDetail = {
   isLoggedIn: boolean
@@ -21,18 +22,6 @@ const COOKIE_OPTIONS = {
   secure: true,
   sameSite: true,
   path: '/',
-}
-
-class Signer {
-  constructor(public wallet: WalletClient) {}
-
-  async getAddress() {
-    return this.wallet.account.address
-  }
-
-  signMessage(message: string) {
-    return this.wallet.signMessage({ message, account: this.wallet.account })
-  }
 }
 
 export default function useAccount(): AccountDetail {
@@ -67,7 +56,7 @@ export default function useAccount(): AccountDetail {
   const login = useCallback(
     async (connector: Connector) => {
       const wallet = await connector.getWalletClient()
-      const signer = new Signer(wallet)
+      const signer = walletClientToSigner(wallet)
       const currentAddress = (await signer.getAddress()).toLowerCase()
       if (jwt && currentAddress === jwt.address) {
         return setAuthenticationToken(jwt.token)

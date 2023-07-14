@@ -13,14 +13,9 @@ import useAccount from './useAccount'
 export function walletClientToSigner(
   walletClient: WalletClient,
 ): providers.JsonRpcSigner {
-  const { account, chain, transport } = walletClient
-  const network = {
-    chainId: chain.id,
-    name: chain.name,
-    ensAddress: chain.contracts?.ensRegistry?.address,
-  }
+  const { account, transport } = walletClient
   // TODO: check transport type
-  const provider = new providers.Web3Provider(transport as any, network)
+  const provider = new providers.Web3Provider(transport as any)
   const signer = provider.getSigner(account.address)
   return signer
 }
