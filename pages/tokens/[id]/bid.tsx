@@ -19,7 +19,9 @@ import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
 import BackButton from '../../../components/Navbar/BackButton'
-import OfferFormBid from '../../../components/Offer/Form/Bid'
+import OfferFormBid, {
+  type BidCurrency,
+} from '../../../components/Offer/Form/Bid'
 import Price from '../../../components/Price/Price'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
@@ -86,9 +88,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
     [auction, currencyData],
   )
 
-  const bidCurrencies = currencies as (typeof currencies[number] & {
-    address: string
-  })[]
+  const bidCurrencies = currencies as BidCurrency[]
 
   const highestBid = useMemo(() => auction?.bestBid.nodes[0], [auction])
 

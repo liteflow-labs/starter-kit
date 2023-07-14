@@ -49,17 +49,19 @@ type FormData = {
   auctionExpirationDate: string
 }
 
+export type BidCurrency = {
+  id: string
+  address: string
+  decimals: number
+  symbol: string
+  image: string
+  name: string
+}
+
 type Props = {
   signer: (Signer & TypedDataSigner) | undefined
   account: string | null | undefined
-  currencies: {
-    id: string
-    address: string
-    decimals: number
-    symbol: string
-    image: string
-    name: string
-  }[]
+  currencies: BidCurrency[]
   chainId: number
   collectionAddress: string
   tokenId: string
