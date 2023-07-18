@@ -61,7 +61,7 @@ export default function useAccount(): AccountDetail {
       if (jwt && currentAddress === jwt.address) {
         return setAuthenticationToken(jwt.token)
       }
-      const { jwtToken } = await authenticate(signer as any)
+      const { jwtToken } = await authenticate(signer)
 
       const newJwt = jwtDecode<JwtPayload>(jwtToken)
       setCookie(COOKIE_JWT_TOKEN, jwtToken, {

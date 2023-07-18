@@ -1,7 +1,9 @@
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
+import { ExternalProvider } from '@ethersproject/providers'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
-import { useWalletClient, type WalletClient } from 'wagmi'
+import type { WalletClient } from 'wagmi'
+import { useWalletClient } from 'wagmi'
 import useAccount from './useAccount'
 
 /**
@@ -14,8 +16,7 @@ export function walletClientToSigner(
   walletClient: WalletClient,
 ): providers.JsonRpcSigner {
   const { account, transport } = walletClient
-  // TODO: check transport type
-  const provider = new providers.Web3Provider(transport as any)
+  const provider = new providers.Web3Provider(transport as ExternalProvider)
   const signer = provider.getSigner(account.address)
   return signer
 }
