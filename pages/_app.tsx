@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
-import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
+import { Box, ChakraProvider } from '@chakra-ui/react'
 import { LiteflowProvider } from '@liteflow/react'
 import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -118,7 +118,6 @@ function AccountProvider(props: PropsWithChildren<{}>) {
   const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
   const { push } = useRouter()
-  const toast = useToast()
 
   const { connector } = useWagmiAccount({
     async onConnect({ connector }) {
@@ -126,10 +125,6 @@ function AccountProvider(props: PropsWithChildren<{}>) {
       try {
         await login(connector)
       } catch (e: any) {
-        toast({
-          title: e.reason || e.message || e.toString(),
-          status: 'warning',
-        })
         disconnect()
       }
     },
