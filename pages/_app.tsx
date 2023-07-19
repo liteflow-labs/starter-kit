@@ -117,6 +117,7 @@ function Layout({ children }: PropsWithChildren<{}>) {
 function AccountProvider(props: PropsWithChildren<{}>) {
   const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
+  const { push } = useRouter()
   const toast = useToast()
 
   const { connector } = useWagmiAccount({
@@ -150,8 +151,8 @@ function AccountProvider(props: PropsWithChildren<{}>) {
   const client = useMemo(
     // The client needs to be reset when the jwtToken changes but only on the client as the server will
     // always have the same token and will rerender this app multiple times and needs to preserve the cache
-    () => getClient(jwtToken, typeof window !== 'undefined'),
-    [jwtToken],
+    () => getClient(jwtToken, typeof window !== 'undefined', push),
+    [jwtToken, push],
   )
 
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
