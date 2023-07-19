@@ -17,7 +17,7 @@ let _client: ApolloClient<NormalizedCacheObject>
 export default function getClient(
   authorization: string | null,
   forceReset = false,
-  push: Router['push'],
+  push?: Router['push'],
 ): ApolloClient<NormalizedCacheObject> {
   const errorLink = onError(({ graphQLErrors, networkError, response }) => {
     if (graphQLErrors)
@@ -27,11 +27,11 @@ export default function getClient(
         ),
       )
     if (networkError) {
-      void push('500')
+      if (push) void push('500')
       return console.log(`[Network error]: ${networkError}`)
     }
     // Only notify the user if absolutely no data came back
-    if (!response || !response.data) {
+    if (push && (!response || !response.data)) {
       void push('404')
     }
   })
