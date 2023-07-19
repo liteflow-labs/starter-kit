@@ -12,7 +12,7 @@ import {
 import { BigNumber } from '@ethersproject/bignumber'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Link from '../../../Link/Link'
 import Price from '../../../Price/Price'
 import WalletAddress from '../../../Wallet/Address'
@@ -35,10 +35,7 @@ type Props = {
   }
 }
 
-const SaleAuctionIncompleteReservePrice: VFC<Props> = ({
-  isOwner,
-  bestBid,
-}) => {
+const SaleAuctionIncompleteReservePrice: FC<Props> = ({ isOwner, bestBid }) => {
   const { t } = useTranslation('components')
   return (
     <Stack spacing={8}>

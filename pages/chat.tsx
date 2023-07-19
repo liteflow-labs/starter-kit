@@ -1,6 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import type { Account } from '@nft/chat'
-import { Chat as ChatComponent, ChatProvider } from '@nft/chat'
+import { Account, Chat, ChatProvider } from '@nft/chat'
 import request, { gql } from 'graphql-request'
 import { NextPage } from 'next'
 import { useCallback } from 'react'
@@ -20,7 +19,12 @@ const ChatPage: NextPage = () => {
   const lookupAddress = useCallback(async (address: string) => {
     const res = accounts.get(address)
     if (res) return res
-    const promise = request(
+    const promise = request<{
+      account: {
+        name?: string
+        image?: string
+      }
+    }>(
       `${
         process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
       }/${environment.LITEFLOW_API_KEY}/graphql`,
@@ -57,11 +61,11 @@ const ChatPage: NextPage = () => {
         mx={{ base: -6, lg: 0 }}
       >
         <ChatProvider
-          signer={signer as any}
+          signer={signer}
           theme={theme}
           lookupAddress={lookupAddress}
         >
-          <ChatComponent />
+          <Chat />
         </ChatProvider>
       </Box>
     </LargeLayout>

@@ -11,7 +11,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, VFC } from 'react'
+import { FC, useCallback } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatDate, formatError, isSameAddress } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
@@ -46,7 +46,7 @@ export type Props = {
   onOfferCanceled: (id: string) => Promise<void>
 }
 
-const SaleDirectModalItem: VFC<Props> = ({
+const SaleDirectModalItem: FC<Props> = ({
   blockExplorer,
   sale,
   chainId,

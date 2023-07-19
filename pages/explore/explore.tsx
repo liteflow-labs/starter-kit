@@ -41,8 +41,8 @@ import {
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
-  convertFilterToAssetFilter,
   Filter,
+  convertFilterToAssetFilter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../hooks/useAssetFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'

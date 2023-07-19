@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import List from '../../List/List'
 import type { Props as ItemProps } from './ModalItem'
@@ -28,7 +28,7 @@ export type Props = {
   onOfferCanceled: (id: string) => Promise<void>
 }
 
-const SaleDirectModal: VFC<Props> = ({
+const SaleDirectModal: FC<Props> = ({
   blockExplorer,
   signer,
   currentAccount,
@@ -40,7 +40,7 @@ const SaleDirectModal: VFC<Props> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
-      <Button size="lg" onClick={onOpen} isFullWidth>
+      <Button size="lg" onClick={onOpen} width="full">
         <Text as="span" isTruncated>
           {t('sales.direct.modal.button')}
         </Text>

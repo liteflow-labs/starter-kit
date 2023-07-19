@@ -170,27 +170,28 @@ const TokenFormCreate: FC<Props> = ({
         heading={t('token.form.create.file.heading')}
         hint={t('token.form.create.file.hint')}
         name="content"
-        acceptTypes="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm"
+        acceptTypes={{
+          'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+          'video/*': ['.mp4', '.webm'],
+        }}
         maxSize={100000000} // 100 MB
         required
         control={control}
         error={errors.content}
         onChange={(e) => handleFileDrop(e as unknown as File)}
         value={res.content as any}
-      >
-        {({ hasPreview }) =>
-          hasPreview
-            ? t('token.form.create.file.file.replace')
-            : t('token.form.create.file.file.chose')
-        }
-      </Dropzone>
+        context={{
+          replace: t('token.form.create.file.file.replace'),
+          chose: t('token.form.create.file.file.chose'),
+        }}
+      />
       {activateUnlockableContent && (
         <FormControl>
           <HStack spacing={1} mb={2}>
             <FormLabel m={0}>
               {t('token.form.create.unlockable.label')}
             </FormLabel>
-            <FormHelperText>
+            <FormHelperText m={0}>
               {t('token.form.create.unlockable.hint')}
             </FormHelperText>
           </HStack>
@@ -205,19 +206,19 @@ const TokenFormCreate: FC<Props> = ({
           heading={t('token.form.create.preview.heading')}
           hint={t('token.form.create.preview.hint')}
           name="preview"
-          acceptTypes="image/jpeg,image/png,image/gif,image/webp"
+          acceptTypes={{
+            'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+          }}
           maxSize={100000000} // 100 MB
           required
           control={control}
           error={errors.preview}
           value={res.preview as any}
-        >
-          {({ hasPreview }) =>
-            hasPreview
-              ? t('token.form.create.preview.file.replace')
-              : t('token.form.create.preview.file.chose')
-          }
-        </Dropzone>
+          context={{
+            replace: t('token.form.create.preview.file.replace'),
+            chose: t('token.form.create.preview.file.chose'),
+          }}
+        />
       )}
       <FormControl isInvalid={!!errors.name}>
         <FormLabel htmlFor="name">
@@ -239,7 +240,7 @@ const TokenFormCreate: FC<Props> = ({
           <FormLabel htmlFor="description" m={0}>
             {t('token.form.create.description.label')}
           </FormLabel>
-          <FormHelperText>
+          <FormHelperText m={0}>
             {t('token.form.create.description.info')}
           </FormHelperText>
         </HStack>
@@ -294,7 +295,7 @@ const TokenFormCreate: FC<Props> = ({
           <FormLabel htmlFor="royalties" m={0}>
             {t('token.form.create.royalties.label')}
           </FormLabel>
-          <FormHelperText>
+          <FormHelperText m={0}>
             {t('token.form.create.royalties.info')}
           </FormHelperText>
         </HStack>

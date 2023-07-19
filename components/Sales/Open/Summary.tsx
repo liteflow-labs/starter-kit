@@ -1,6 +1,6 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Image from '../../Image/Image'
 
 export type Props = {
@@ -9,7 +9,7 @@ export type Props = {
   }[]
 }
 
-const SaleOpenSummary: VFC<Props> = ({ currencies }) => {
+const SaleOpenSummary: FC<Props> = ({ currencies }) => {
   const { t } = useTranslation('components')
   return (
     <Stack spacing={3}>
@@ -19,6 +19,7 @@ const SaleOpenSummary: VFC<Props> = ({ currencies }) => {
       <Flex _first={{ ml: 0 }}>
         {currencies.map((currency, i) => (
           <Flex
+            position="relative"
             as="span"
             align="center"
             justify="center"
@@ -34,8 +35,8 @@ const SaleOpenSummary: VFC<Props> = ({ currencies }) => {
             <Image
               src={currency.image}
               alt="Currency Logo"
-              width={32}
-              height={32}
+              fill
+              sizes="30px"
               objectFit="cover"
             />
           </Flex>

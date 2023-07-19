@@ -92,6 +92,7 @@ const CreatePage: NextPage = () => {
                   cursor="pointer"
                 >
                   <Box
+                    position="relative"
                     w={32}
                     h={32}
                     rounded="2xl"
@@ -102,8 +103,8 @@ const CreatePage: NextPage = () => {
                       <Image
                         src={image}
                         alt={name}
-                        width={128}
-                        height={128}
+                        fill
+                        sizes="128px"
                         objectFit="cover"
                       />
                     )}

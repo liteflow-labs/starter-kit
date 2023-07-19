@@ -18,13 +18,13 @@ import { SiInstagram } from '@react-icons/all-files/si/SiInstagram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
 import linkify from 'components/Linkify/Linkify'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useEffect, useState, VFC } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import useAccount from '../../../hooks/useAccount'
 import { formatError } from '../../../utils'
 import Link from '../../Link/Link'
 import WalletAddress from '../../Wallet/Address'
 
-const UserProfileInfo: VFC<{
+const UserProfileInfo: FC<{
   signer: Signer | undefined
   address: string
   name: string | null | undefined

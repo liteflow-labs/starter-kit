@@ -8,14 +8,14 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 
 type Props = {
   // TODO: Remove props as it is used only to put a margin, this margin should be handled in one of the parent component
   isOwner: boolean
 }
 
-const SaleAuctionIncompleteNoBids: VFC<Props> = ({ isOwner }) => {
+const SaleAuctionIncompleteNoBids: FC<Props> = ({ isOwner }) => {
   const { t } = useTranslation('components')
   return (
     <Stack spacing={8}>

@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { FaTag } from '@react-icons/all-files/fa/FaTag'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
-import { VFC } from 'react'
+import { FC } from 'react'
 import { formatDate } from '../../../utils'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
@@ -26,7 +26,7 @@ type IProps = {
   } | null
 }
 
-const ListingListItem: VFC<IProps> = ({
+const ListingListItem: FC<IProps> = ({
   currency,
   fromAddress,
   from,

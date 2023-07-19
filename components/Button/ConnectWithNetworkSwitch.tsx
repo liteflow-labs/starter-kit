@@ -1,11 +1,11 @@
 import { Button, ButtonProps, useToast } from '@chakra-ui/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import useTranslation from 'next-translate/useTranslation'
-import { PropsWithChildren, useCallback } from 'react'
+import { JSX, PropsWithChildren, useCallback } from 'react'
 import {
-  useAccount as useWagmiAccount,
   useNetwork,
   useSwitchNetwork,
+  useAccount as useWagmiAccount,
 } from 'wagmi'
 import useAccount from '../../hooks/useAccount'
 import { formatError } from '../../utils'

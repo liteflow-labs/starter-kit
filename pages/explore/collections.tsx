@@ -39,8 +39,8 @@ import {
   useFetchExploreCollectionsQuery,
 } from '../../graphql'
 import useCollectionFilterFromQuery, {
-  convertFilterToCollectionFilter,
   Filter,
+  convertFilterToCollectionFilter,
 } from '../../hooks/useCollectionFilterFromQuery'
 import useCollectionFilterState from '../../hooks/useCollectionFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'

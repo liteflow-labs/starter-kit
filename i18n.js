@@ -4,5 +4,4 @@ module.exports = {
   pages: {
     '*': ['templates', 'components'],
   },
-  loadLocaleFrom: async (lang, ns) => require(`./locales/${lang}/${ns}.json`),
 }

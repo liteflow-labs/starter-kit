@@ -1,9 +1,9 @@
-import { Signer } from '@ethersproject/abstract-signer'
 import { useAuthenticate, useIsLoggedIn } from '@liteflow/react'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
 import { useCallback, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 import { Connector, useAccount as useWagmiAccount } from 'wagmi'
+import { walletClientToSigner } from './useSigner'
 
 type AccountDetail = {
   isLoggedIn: boolean
@@ -25,14 +25,7 @@ const COOKIE_OPTIONS = {
 }
 
 export default function useAccount(): AccountDetail {
-  const { isConnected, isReconnecting } = useWagmiAccount({
-    // FIXME: Implements dummy onConnect and onDisconnect functions to prevent a bug only present with React 17 where other onConnect and onDisconnect in the same component (eg: AccountProvider) are not triggered if another useWagmiAccount doesn't implement those functions.
-    // See https://github.com/liteflow-labs/starter-kit/pull/230#issuecomment-1477409307 for more info.
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onConnect: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onDisconnect: () => {},
-  })
+  const { isConnected, isReconnecting } = useWagmiAccount()
   const [authenticate, { setAuthenticationToken, resetAuthenticationToken }] =
     useAuthenticate()
   const [cookies, setCookie, removeCookie] = useCookies<string, COOKIES>([
@@ -61,8 +54,9 @@ export default function useAccount(): AccountDetail {
   }
 
   const login = useCallback(
-    async (connector: Connector<any, any, Signer>) => {
-      const signer = await connector.getSigner()
+    async (connector: Connector) => {
+      const wallet = await connector.getWalletClient()
+      const signer = walletClientToSigner(wallet)
       const currentAddress = (await signer.getAddress()).toLowerCase()
       if (jwt && currentAddress === jwt.address) {
         return setAuthenticationToken(jwt.token)

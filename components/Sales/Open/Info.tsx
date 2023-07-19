@@ -3,7 +3,7 @@ import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
 import Link from 'next/link'
-import { VFC } from 'react'
+import { FC } from 'react'
 
 type Props = {
   assetId: string
@@ -11,7 +11,7 @@ type Props = {
   isHomepage: boolean
 }
 
-const SaleOpenInfo: VFC<Props> = ({ assetId, isOwner, isHomepage }) => {
+const SaleOpenInfo: FC<Props> = ({ assetId, isOwner, isHomepage }) => {
   const { t } = useTranslation('components')
   if (!isOwner) return null
   if (isHomepage) return null
