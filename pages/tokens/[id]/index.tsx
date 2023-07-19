@@ -391,7 +391,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   <Heading as="h4" variant="heading2" color="brand.black">
                     {t('asset.detail.description')}
                   </Heading>
-                  <Stack borderRadius="2xl" p={3} borderWidth="1px" mt={4}>
+                  <Stack borderRadius="2xl" p={3} borderWidth="1px">
                     <Text
                       as="p"
                       variant="text-sm"
@@ -413,7 +413,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   borderRadius="2xl"
                   p={3}
                   borderWidth="1px"
-                  mt={8}
                   align="flex-start"
                   spacing={3}
                 >
@@ -426,6 +425,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                       alt={chainId.toString()}
                       width={20}
                       height={20}
+                      w={5}
+                      h={5}
                     />
                     <Text variant="subtitle2" ml={1}>
                       {chain?.name}
@@ -494,14 +495,12 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 index={tabIndex}
                 colorScheme="brand"
                 overflowX="auto"
-                overflowY="hidden"
               >
-                <TabList>
+                <TabList gap={4}>
                   {tabs.map((tab) => (
                     <Tab
                       key={tab}
                       as={Link}
-                      whiteSpace="nowrap"
                       href={`/tokens/${assetId}?filter=${tab}`}
                       onClick={(e) => {
                         e.preventDefault()
@@ -513,6 +512,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                           },
                         )
                       }}
+                      whiteSpace="nowrap"
                     >
                       <Text as="span" variant="subtitle1">
                         {t(`asset.detail.tabs.${tab}`)}

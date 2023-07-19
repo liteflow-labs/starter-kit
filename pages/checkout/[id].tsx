@@ -166,6 +166,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                 ) : (
                   <>
                     <Flex
+                      position="relative"
                       as="span"
                       border="1px"
                       borderColor="gray.200"
@@ -178,8 +179,8 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                       <Image
                         src={offer.currency.image}
                         alt={`${offer.currency.symbol} Logo`}
-                        width={32}
-                        height={32}
+                        fill
+                        sizes="30px"
                         objectFit="cover"
                       />
                     </Flex>

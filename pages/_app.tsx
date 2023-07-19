@@ -3,7 +3,7 @@ import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import { Box, ChakraProvider } from '@chakra-ui/react'
 import { LiteflowProvider } from '@liteflow/react'
-import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import dayjs from 'dayjs'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
@@ -15,15 +15,16 @@ import 'nprogress/nprogress.css'
 import React, {
   ComponentType,
   Fragment,
+  JSX,
   PropsWithChildren,
   useEffect,
   useMemo,
 } from 'react'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import {
-  useAccount as useWagmiAccount,
-  useDisconnect,
   WagmiConfig,
+  useDisconnect,
+  useAccount as useWagmiAccount,
 } from 'wagmi'
 import getClient from '../client'
 import Footer from '../components/Footer/Footer'
@@ -207,7 +208,7 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
         <meta name="twitter:card" content="summary" />
       </Head>
       <GoogleAnalytics strategy="lazyOnload" />
-      <WagmiConfig client={client}>
+      <WagmiConfig config={client}>
         <RainbowKitProvider
           chains={chains}
           theme={lightTheme({

@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react'
-import { FC } from 'react'
+import { FC, PropsWithChildren } from 'react'
 
-const SmallLayout: FC = (props) => (
+const SmallLayout: FC<PropsWithChildren> = ({ children, ...props }) => (
   <Box
     as="main"
     mx="auto"
@@ -10,6 +10,8 @@ const SmallLayout: FC = (props) => (
     px={{ base: 6, lg: 8 }}
     pb={10}
     {...props}
-  />
+  >
+    {children}
+  </Box>
 )
 export default SmallLayout

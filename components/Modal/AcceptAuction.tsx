@@ -270,7 +270,7 @@ const AcceptAuctionModal: FC<Props> = ({
             isExternal
             variant="outline"
             colorScheme="gray"
-            isFullWidth
+            width="full"
             rightIcon={<HiOutlineExternalLink />}
             isDisabled={!transactionHash}
           >

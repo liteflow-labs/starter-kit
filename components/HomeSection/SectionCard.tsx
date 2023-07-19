@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
-import Image from 'components/Image/Image'
 import { FC } from 'react'
+import Image from '../Image/Image'
 import Link from '../Link/Link'
 
 export type Props = {
@@ -33,12 +33,12 @@ const HomeSectionCard: FC<Props> = ({
             <Image
               src={image}
               alt={title}
-              layout="fill"
-              objectFit="cover"
+              fill
               sizes="
               (min-width: 80em) 292px,
               (min-width: 62em) 25vw,
               50vw"
+              objectFit="cover"
             />
           ) : (
             <Box bg="gray.200" height="full" />

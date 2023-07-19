@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { IoChevronBackSharp } from '@react-icons/all-files/io5/IoChevronBackSharp'
 import { IoChevronForward } from '@react-icons/all-files/io5/IoChevronForward'
-import { useMemo } from 'react'
+import { JSX, useMemo } from 'react'
 
 export type IProp = {
   limit: number

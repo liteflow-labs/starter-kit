@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { VFC } from 'react'
+import { FC } from 'react'
 import SaleAuctionIncompleteNoBids from './Incomplete/FailedNoBids'
 import SaleAuctionIncompleteReservePrice from './Incomplete/FailedReservePrice'
 import SaleAuctionIncompleteSuccess from './Incomplete/Successfully'
@@ -37,7 +37,7 @@ export type Props = {
   endedWithReserve: boolean
 }
 
-const SaleAuctionSummary: VFC<Props> = ({
+const SaleAuctionSummary: FC<Props> = ({
   auction,
   bestBid,
   isOwner,

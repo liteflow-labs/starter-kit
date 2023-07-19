@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Image from '../../Image/Image'
 import AccountImage from '../../Wallet/Image'
 
@@ -10,7 +10,7 @@ type Props = {
   name: string | null | undefined
 }
 
-const UserProfileBanner: VFC<Props> = ({ cover, image, address, name }) => {
+const UserProfileBanner: FC<Props> = ({ cover, image, address, name }) => {
   if (!address) throw new Error('account is falsy')
 
   return (
@@ -28,12 +28,11 @@ const UserProfileBanner: VFC<Props> = ({ cover, image, address, name }) => {
         <Image
           src={cover}
           alt={name || address}
-          layout="fill"
-          objectFit="cover"
-          rounded="xl"
+          fill
           sizes="
           (min-width: 80em) 1216px,
           100vw"
+          objectFit="cover"
         />
       )}
       <Flex

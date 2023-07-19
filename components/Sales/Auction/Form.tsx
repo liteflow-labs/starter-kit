@@ -29,7 +29,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { toAddress } from '@liteflow/core'
 import { useCreateAuction } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
-import { useEffect, useMemo, VFC } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
@@ -59,7 +59,7 @@ type Props = {
   onCreated: (id: string) => void
 }
 
-const SalesAuctionForm: VFC<Props> = ({
+const SalesAuctionForm: FC<Props> = ({
   signer,
   assetId,
   currencies,
@@ -156,8 +156,8 @@ const SalesAuctionForm: VFC<Props> = ({
             <FormLabel htmlFor="price" m={0}>
               {t('sales.auction.form.price.label')}
             </FormLabel>
-            <FormHelperText>({currency.symbol})</FormHelperText>
-            <FormHelperText>
+            <FormHelperText m={0}>({currency.symbol})</FormHelperText>
+            <FormHelperText m={0}>
               {t('sales.auction.form.price.info')}
             </FormHelperText>
           </HStack>
@@ -199,6 +199,8 @@ const SalesAuctionForm: VFC<Props> = ({
                 alt={currency.symbol}
                 width={24}
                 height={24}
+                w={6}
+                h={6}
                 objectFit="cover"
               />
             </InputRightElement>
@@ -261,7 +263,7 @@ const SalesAuctionForm: VFC<Props> = ({
         </Box>
       </Alert>
 
-      <Button isLoading={loading} size="lg" isFullWidth type="submit">
+      <Button isLoading={loading} size="lg" width="full" type="submit">
         <Text as="span" isTruncated>
           {t('sales.auction.form.submit')}
         </Text>

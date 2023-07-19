@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { HiOutlinePlus } from '@react-icons/all-files/hi/HiOutlinePlus'
-import { FC } from 'react'
+import { FC, JSX } from 'react'
 import Link from '../Link/Link'
 
 type EmptyTypes = {

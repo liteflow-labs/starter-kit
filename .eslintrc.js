@@ -15,7 +15,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier',
     'next',
-    'plugin:react-hooks/recommended',
   ],
   root: true,
   env: {
@@ -30,7 +29,6 @@ module.exports = {
     '@typescript-eslint/await-thenable': 'error',
     'deprecation/deprecation': 'error',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars-experimental': 'error',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/ban-types': 'off',
     '@next/next/no-html-link-for-pages': ['error', `${__dirname}/pages`],

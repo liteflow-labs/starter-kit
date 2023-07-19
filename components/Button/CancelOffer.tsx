@@ -1,7 +1,7 @@
 import { ButtonProps, useDisclosure } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
-import { PropsWithChildren, useCallback } from 'react'
+import { JSX, PropsWithChildren, useCallback } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import CancelOfferModal from '../Modal/CancelOffer'
 import ConnectButtonWithNetworkSwitch from './ConnectWithNetworkSwitch'
