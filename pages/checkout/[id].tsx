@@ -37,7 +37,7 @@ import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
 
 type Props = {
-  now: string
+  now: Date
 }
 
 const CheckoutPage: NextPage<Props> = ({ now }) => {
@@ -49,14 +49,13 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
 
   const { address } = useAccount()
 
-  const date = useMemo(() => new Date(now), [now])
   const offerQuery = useCheckoutQuery({ variables: { id: offerId } })
 
   const offer = offerQuery.data?.offer
 
   const assetQuery = useFetchAssetForCheckoutQuery({
     variables: {
-      now: date,
+      now,
       address: address || '',
       chainId: offer?.asset.chainId || 0,
       collectionAddress: offer?.asset.collectionAddress || '',

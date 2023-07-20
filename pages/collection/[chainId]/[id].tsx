@@ -54,7 +54,7 @@ import LargeLayout from '../../../layouts/large'
 import { removeEmptyFromObject } from '../../../utils'
 
 type Props = {
-  now: string
+  now: Date
 }
 
 const CollectionPage: FC<Props> = ({ now }) => {
@@ -65,7 +65,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const collectionAddress = useRequiredQueryParamSingle('id')
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
-  const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
   const { data: collectionData, loading } = useFetchCollectionDetailsQuery({
     variables: {
@@ -82,13 +81,13 @@ const CollectionPage: FC<Props> = ({ now }) => {
     useFetchCollectionAssetsQuery({
       variables: {
         collectionAddress,
-        now: date,
+        now,
         currentAccount: address || '',
         limit,
         offset,
         orderBy,
         chainId: chainId,
-        filter: convertFilterToAssetFilter(filter, date),
+        filter: convertFilterToAssetFilter(filter, now),
       },
     })
 

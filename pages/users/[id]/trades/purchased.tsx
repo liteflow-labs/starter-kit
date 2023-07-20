@@ -47,7 +47,7 @@ import LargeLayout from '../../../../layouts/large'
 import { dateFromNow } from '../../../../utils'
 
 type Props = {
-  now: string
+  now: Date
 }
 
 const TradePurchasedPage: NextPage<Props> = ({ now }) => {
@@ -60,7 +60,6 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const date = useMemo(() => new Date(now), [now])
   const { data, loading, previousData } = useFetchUserTradePurchasedQuery({
     variables: {
       address: userAddress,
@@ -86,7 +85,7 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={date}
+        now={now}
         signer={signer}
         currentAccount={address}
         address={userAddress}

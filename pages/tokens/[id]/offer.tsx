@@ -47,14 +47,7 @@ import SmallLayout from '../../../layouts/small'
 import { isSameAddress } from '../../../utils'
 
 type Props = {
-  assetId: string
-  now: string
-  currentAccount: string | null
-  meta: {
-    title: string
-    description: string
-    image: string
-  }
+  now: Date
 }
 
 enum SaleType {
@@ -81,13 +74,12 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     [assetId],
   )
 
-  const date = useMemo(() => new Date(now), [now])
   const { data, loading, previousData } = useOfferForAssetQuery({
     variables: {
       chainId: chainId ? parseInt(chainId, 10) : 0,
       collectionAddress: collectionAddress || '',
       tokenId: tokenId || '',
-      now: date,
+      now,
       address: address || '',
     },
   })

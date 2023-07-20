@@ -27,7 +27,7 @@ import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
 
 type Props = {
-  now: string
+  now: Date
 }
 
 const CreatedPage: NextPage<Props> = ({ now }) => {
@@ -40,7 +40,6 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const date = useMemo(() => new Date(now), [now])
   const { data, loading, previousData } = useFetchCreatedAssetsQuery({
     variables: {
       address: userAddress,
@@ -48,7 +47,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
       limit,
       offset,
       orderBy,
-      now: date,
+      now,
     },
   })
 
@@ -81,7 +80,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={date}
+        now={now}
         signer={signer}
         currentAccount={address}
         address={userAddress}

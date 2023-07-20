@@ -47,7 +47,7 @@ import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
 type Props = {
-  now: string
+  now: Date
 }
 
 const BidPlacedPage: NextPage<Props> = ({ now }) => {
@@ -62,7 +62,6 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
-  const date = useMemo(() => new Date(now), [now])
   const { data, refetch, loading, previousData } = useFetchUserBidsPlacedQuery({
     variables: {
       address: userAddress,
@@ -100,7 +99,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={date}
+        now={now}
         signer={signer}
         currentAccount={address}
         address={userAddress}

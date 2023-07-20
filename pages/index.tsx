@@ -6,22 +6,21 @@ import FeaturedHomeSection from 'components/HomeSection/Featured'
 import ResourcesHomeSection from 'components/HomeSection/Resources'
 import UsersHomeSection from 'components/HomeSection/Users'
 import { NextPage } from 'next'
-import { useMemo } from 'react'
 import LargeLayout from '../layouts/large'
 
 type Props = {
-  now: number
+  now: Date
 }
+
 const HomePage: NextPage<Props> = ({ now }) => {
-  const date = useMemo(() => new Date(now), [now])
   return (
     <LargeLayout>
       <Stack spacing={12}>
-        <FeaturedHomeSection date={date} />
+        <FeaturedHomeSection date={now} />
         <CollectionsHomeSection />
         <UsersHomeSection />
-        <AuctionsHomeSection date={date} />
-        <AssetsHomeSection date={date} />
+        <AuctionsHomeSection date={now} />
+        <AssetsHomeSection date={now} />
         <ResourcesHomeSection />
       </Stack>
     </LargeLayout>

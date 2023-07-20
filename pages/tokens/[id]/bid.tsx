@@ -42,7 +42,7 @@ import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
 
 type Props = {
-  now: string
+  now: Date
 }
 
 const BidPage: NextPage<Props> = ({ now }) => {
@@ -53,11 +53,10 @@ const BidPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   const assetId = useRequiredQueryParamSingle('id')
 
-  const date = useMemo(() => new Date(now), [now])
   const { data, loading, previousData } = useBidOnAssetQuery({
     variables: {
       id: assetId,
-      now: date,
+      now,
       address: address || '',
     },
   })

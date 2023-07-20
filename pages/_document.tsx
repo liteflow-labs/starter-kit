@@ -56,14 +56,11 @@ class MyDocument extends Document {
     const jwt = context.req?.cookies?.[COOKIE_JWT_TOKEN] || null
     // the `getClient` needs to be reset on every request as early as possible and before any rendering
     const apolloClient = getClient(jwt, true)
-    // Generate the now time, rounded to the second to avoid re-rendering on the client
-    // TOFIX: find a better way to share the time between the app and document
-    const now = new Date(Math.floor(Date.now() / 1000) * 1000)
     // properly type the AppTree with the props from MyApp
     const AppTree = context.AppTree as typeof context.AppTree &
       ComponentType<AppInitialProps<MyAppProps>>
     // This renders the page and wait for all requests to be resolved
-    await getDataFromTree(<AppTree pageProps={{ jwt, now }} />) // This `defaultGetInitialProps` should be as late as possible and after the data are resolved by `getDataFromTree`
+    await getDataFromTree(<AppTree pageProps={{ jwt }} />) // This `defaultGetInitialProps` should be as late as possible and after the data are resolved by `getDataFromTree`
     const initialProps = await context.defaultGetInitialProps(context)
     return {
       ...initialProps,

@@ -65,7 +65,7 @@ import LargeLayout from '../../../layouts/large'
 import { formatError } from '../../../utils'
 
 type Props = {
-  now: string
+  now: Date
 }
 
 enum AssetTabs {
@@ -89,13 +89,12 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   invariant(tokenId, 'tokenId is required')
   const chainId = parseInt(_chainId, 10)
 
-  const date = useMemo(() => new Date(nowProp), [nowProp])
   const { data, refetch, loading, previousData } = useFetchAssetQuery({
     variables: {
       chainId,
       collectionAddress,
       tokenId,
-      now: date,
+      now: nowProp,
       address: address || '',
     },
   })
@@ -524,7 +523,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               <Box h={96} overflowY="auto" py={6}>
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
-                    now={date}
+                    now={nowProp}
                     chainId={chainId}
                     collectionAddress={collectionAddress}
                     tokenId={tokenId}

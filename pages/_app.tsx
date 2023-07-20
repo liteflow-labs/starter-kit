@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
-import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
+import { Box, ChakraProvider, useConst, useToast } from '@chakra-ui/react'
 import { LiteflowProvider } from '@liteflow/react'
 import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -158,9 +158,10 @@ function AccountProvider(props: PropsWithChildren<{}>) {
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>
 }
 
-export type MyAppProps = { jwt: string | null; now: Date }
+export type MyAppProps = { jwt: string | null }
 
 function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
+  const mountTime = useConst(() => new Date())
   const router = useRouter()
   dayjs.locale(router.locale)
   usePageViews()
@@ -228,7 +229,7 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
               >
                 <AccountProvider>
                   <Layout>
-                    <Component {...pageProps} />
+                    <Component {...pageProps} now={mountTime} />
                   </Layout>
                 </AccountProvider>
               </LiteflowProvider>
@@ -251,15 +252,11 @@ MyApp.getInitialProps = async (
     appContext,
   )) as AppInitialProps<{}> // force type of props to empty object instead of any so TS will properly require MyAppProps to be returned by this function
   const jwt = appContext.ctx.req?.cookies?.[COOKIE_JWT_TOKEN] || null
-  // Generate the now time, rounded to the second to avoid re-rendering on the client
-  // TOFIX: find a better way to share the time between the app and document
-  const now = new Date(Math.floor(Date.now() / 1000) * 1000)
   return {
     ...initialProps,
     pageProps: {
       ...initialProps.pageProps,
       jwt,
-      now,
     },
   }
 }
