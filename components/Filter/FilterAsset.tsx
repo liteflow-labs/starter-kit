@@ -123,7 +123,6 @@ const FilterAsset: NextPage<Props> = ({
     variables: {
       limit: 8,
       offset: 0,
-      orderBy: ['TOTAL_VOLUME_DESC'],
       filter: {
         name: { includesInsensitive: collectionSearch } as StringFilter,
         ...(filterResult.chains.length
