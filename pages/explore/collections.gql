@@ -2,13 +2,13 @@ query FetchExploreCollections(
   $limit: Int!
   $offset: Int!
   $orderBy: [CollectionsOrderBy!]
-  $filter: [CollectionFilter!]
+  $filter: CollectionFilter!
 ) {
   collections(
     first: $limit
     offset: $offset
     orderBy: $orderBy
-    filter: { and: $filter }
+    filter: $filter
   ) {
     nodes {
       chainId

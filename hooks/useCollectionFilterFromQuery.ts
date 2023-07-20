@@ -24,12 +24,13 @@ const searchFilter = (search: string): CollectionFilter =>
 
 export const convertFilterToCollectionFilter = (
   filter: Filter,
-): CollectionFilter[] => {
-  const queryFilter = []
-  if (filter.chains && filter.chains.length > 0)
-    queryFilter.push(chainFilter(filter.chains))
-  if (filter.search) queryFilter.push(searchFilter(filter.search))
-  return queryFilter
+): CollectionFilter => {
+  return {
+    ...(filter.chains && filter.chains.length > 0
+      ? chainFilter(filter.chains)
+      : {}),
+    ...searchFilter(filter.search || ''),
+  } as CollectionFilter
 }
 
 const parseToInt = (value?: string): number => {
