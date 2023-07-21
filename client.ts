@@ -6,7 +6,7 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
-import { Router } from 'next/router'
+import { Dispatch, SetStateAction } from 'react'
 import environment from './environment'
 
 const isServer = typeof window === 'undefined'
@@ -17,7 +17,7 @@ let _client: ApolloClient<NormalizedCacheObject>
 export default function getClient(
   authorization: string | null,
   forceReset = false,
-  push?: Router['push'],
+  setErrorCode?: Dispatch<SetStateAction<404 | 500 | null>>,
 ): ApolloClient<NormalizedCacheObject> {
   const errorLink = onError(({ graphQLErrors, networkError, response }) => {
     if (graphQLErrors)
@@ -27,12 +27,12 @@ export default function getClient(
         ),
       )
     if (networkError) {
-      if (push) void push('500')
+      if (setErrorCode) setErrorCode(500)
       return console.log(`[Network error]: ${networkError}`)
     }
     // Only notify the user if absolutely no data came back
-    if (push && (!response || !response.data)) {
-      void push('404')
+    if (setErrorCode && (!response || !response.data)) {
+      setErrorCode(404)
     }
   })
 

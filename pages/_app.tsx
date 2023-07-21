@@ -14,11 +14,14 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import React, {
   ComponentType,
+  Dispatch,
   Fragment,
   JSX,
   PropsWithChildren,
+  SetStateAction,
   useEffect,
   useMemo,
+  useState,
 } from 'react'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import {
@@ -34,6 +37,7 @@ import { chains, client } from '../connectors'
 import environment from '../environment'
 import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import { theme } from '../styles/theme'
+import Error from './_error'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
 require('dayjs/locale/es-mx')
@@ -115,10 +119,12 @@ function Layout({ children }: PropsWithChildren<{}>) {
   )
 }
 
-function AccountProvider(props: PropsWithChildren<{}>) {
+function AccountProvider({
+  onError,
+  children,
+}: PropsWithChildren<{ onError: Dispatch<SetStateAction<404 | 500 | null>> }>) {
   const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
-  const { push } = useRouter()
 
   const { connector } = useWagmiAccount({
     async onConnect({ connector }) {
@@ -147,16 +153,17 @@ function AccountProvider(props: PropsWithChildren<{}>) {
   const client = useMemo(
     // The client needs to be reset when the jwtToken changes but only on the client as the server will
     // always have the same token and will rerender this app multiple times and needs to preserve the cache
-    () => getClient(jwtToken, typeof window !== 'undefined', push),
-    [jwtToken, push],
+    () => getClient(jwtToken, typeof window !== 'undefined', onError),
+    [jwtToken, onError],
   )
 
-  return <ApolloProvider client={client}>{props.children}</ApolloProvider>
+  return <ApolloProvider client={client}>{children}</ApolloProvider>
 }
 
 export type MyAppProps = { jwt: string | null; now: Date }
 
 function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
+  const [errorCode, setErrorCode] = useState<404 | 500 | null>(null)
   const router = useRouter()
   dayjs.locale(router.locale)
   usePageViews()
@@ -222,9 +229,13 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
                 apiKey={environment.LITEFLOW_API_KEY}
                 endpoint={process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL}
               >
-                <AccountProvider>
+                <AccountProvider onError={setErrorCode}>
                   <Layout>
-                    <Component {...pageProps} />
+                    {errorCode ? (
+                      <Error statusCode={errorCode} />
+                    ) : (
+                      <Component {...pageProps} />
+                    )}
                   </Layout>
                 </AccountProvider>
               </LiteflowProvider>
