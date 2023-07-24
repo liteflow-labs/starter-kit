@@ -27,7 +27,7 @@ query FetchAsset(
     }
     name
     description
-    traits {
+    traits(orderBy: TYPE_ASC) {
       nodes {
         type
         value
