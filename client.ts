@@ -4,9 +4,9 @@ import {
   HttpLink,
   InMemoryCache,
   NormalizedCacheObject,
+  ServerError,
 } from '@apollo/client'
-import { onError } from '@apollo/client/link/error'
-import { Dispatch, SetStateAction } from 'react'
+import { onError as linkOnError } from '@apollo/client/link/error'
 import environment from './environment'
 
 const isServer = typeof window === 'undefined'
@@ -17,23 +17,24 @@ let _client: ApolloClient<NormalizedCacheObject>
 export default function getClient(
   authorization: string | null,
   forceReset = false,
-  setErrorCode?: Dispatch<SetStateAction<404 | 500 | null>>,
+  onError?: (status: number) => void,
 ): ApolloClient<NormalizedCacheObject> {
-  const errorLink = onError(({ graphQLErrors, networkError, response }) => {
+  const errorLink = linkOnError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
       graphQLErrors.forEach(({ message, locations, path }) =>
-        console.log(
+        console.error(
           `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
         ),
       )
-    if (networkError) {
-      if (setErrorCode) setErrorCode(500)
-      return console.log(`[Network error]: ${networkError}`)
-    }
-    // Only notify the user if absolutely no data came back
-    if (setErrorCode && (!response || !response.data)) {
-      setErrorCode(404)
-    }
+    if (!networkError) return
+    const { statusCode } = networkError as ServerError
+    if (
+      statusCode === 404 || // Not found
+      statusCode === 402 || // Payment required
+      statusCode >= 500 || // Server error
+      statusCode < 600
+    )
+      return onError?.(statusCode)
   })
 
   const httpLink = new HttpLink({

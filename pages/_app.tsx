@@ -14,11 +14,9 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import React, {
   ComponentType,
-  Dispatch,
   Fragment,
   JSX,
   PropsWithChildren,
-  SetStateAction,
   useEffect,
   useMemo,
   useState,
@@ -120,9 +118,9 @@ function Layout({ children }: PropsWithChildren<{}>) {
 }
 
 function AccountProvider({
-  onError,
   children,
-}: PropsWithChildren<{ onError: Dispatch<SetStateAction<404 | 500 | null>> }>) {
+  onError,
+}: PropsWithChildren<{ onError: (code: number) => void }>) {
   const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
 
@@ -163,7 +161,7 @@ function AccountProvider({
 export type MyAppProps = { jwt: string | null; now: Date }
 
 function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
-  const [errorCode, setErrorCode] = useState<404 | 500 | null>(null)
+  const [errorCode, setErrorCode] = useState<number>()
   const router = useRouter()
   dayjs.locale(router.locale)
   usePageViews()
