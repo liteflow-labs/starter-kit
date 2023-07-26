@@ -1,7 +1,7 @@
 import { Flex, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import Link from '../../Link/Link'
 import Price from '../../Price/Price'
 
@@ -18,7 +18,7 @@ type Props = {
   showButton?: boolean
 }
 
-const SaleDirectCardFooter: VFC<Props> = ({
+const SaleDirectCardFooter: FC<Props> = ({
   saleId,
   numberOfSales,
   unitPrice,

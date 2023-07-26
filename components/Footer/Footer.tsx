@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 import Link from '../Link/Link'
 import LiteflowLogo from './LiteflowLogo'
 
@@ -12,7 +12,7 @@ type Props = {
   }[]
 }
 
-const Footer: VFC<Props> = ({ name, links }) => {
+const Footer: FC<Props> = ({ name, links }) => {
   const { t } = useTranslation('components')
   return (
     <>

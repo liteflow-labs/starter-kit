@@ -9,11 +9,9 @@ export type BlockExplorer = {
 }
 
 export function blockExplorer(chainId: number | undefined): BlockExplorer {
-  const explorer = chainId
-    ? chains.find((chain) => chain.id === chainId)?.blockExplorers?.[
-        'etherscan'
-      ]
-    : null
+  const chain = chains.find((chain) => chain.id === chainId)
+  const explorer =
+    chain?.blockExplorers?.['etherscan'] || chain?.blockExplorers?.default
 
   return {
     name: explorer?.name || '',

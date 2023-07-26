@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { AcceptOfferStep } from '@nft/hooks'
+import { AcceptOfferStep } from '@liteflow/react'
 import { CgArrowLongRight } from '@react-icons/all-files/cg/CgArrowLongRight'
 import { HiCheck } from '@react-icons/all-files/hi/HiCheck'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
@@ -206,7 +206,7 @@ const AcceptOfferModal: FC<Props> = ({
             isExternal
             variant="outline"
             colorScheme="gray"
-            isFullWidth
+            width="full"
             rightIcon={<HiOutlineExternalLink />}
             isDisabled={!transactionHash}
           >

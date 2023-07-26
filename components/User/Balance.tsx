@@ -19,7 +19,7 @@ const Balance: FC<
   const [balance] = useBalance(account, currency?.id)
 
   return (
-    <VStack align="flex-start" spacing={4} mb={6}>
+    <VStack align="flex-start" spacing={4}>
       <Flex
         display="inline-flex"
         wrap="wrap"

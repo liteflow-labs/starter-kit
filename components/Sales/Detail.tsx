@@ -1,8 +1,8 @@
 import { Stack } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumberish } from '@ethersproject/bignumber'
-import { useAuctionStatus } from '@nft/hooks'
-import { VFC } from 'react'
+import { useAuctionStatus } from '@liteflow/react'
+import { FC } from 'react'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import SaleAuctionButton from './Auction/Button'
 import type { Props as SaleAuctionInfoProps } from './Auction/Info'
@@ -58,7 +58,7 @@ export type Props = {
   onAuctionAccepted: (id: string) => Promise<void>
 }
 
-const SaleDetail: VFC<Props> = ({
+const SaleDetail: FC<Props> = ({
   assetId,
   chainId,
   blockExplorer,

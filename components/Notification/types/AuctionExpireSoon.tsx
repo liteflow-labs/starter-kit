@@ -1,5 +1,6 @@
 import { Text } from '@chakra-ui/react'
 import Trans from 'next-translate/Trans'
+import { JSX } from 'react'
 import Price from '../../Price/Price'
 
 export type IProps = {

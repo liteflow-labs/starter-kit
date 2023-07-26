@@ -4,7 +4,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  As,
   Box,
   Button,
   Divider,
@@ -36,7 +35,7 @@ import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { FC, HTMLAttributes, useEffect, useRef, VFC } from 'react'
+import { FC, HTMLAttributes, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForm } from 'react-hook-form'
 import { useDisconnect } from 'wagmi'
@@ -57,14 +56,10 @@ type MultiLang = {
 }
 
 // Mobile navigation item
-const NavItemMobile: FC<HTMLAttributes<any> & { as?: As<any> | undefined }> = ({
-  children,
-  as = 'span',
-  ...props
-}) => {
+const NavItemMobile: FC<HTMLAttributes<any>> = ({ children, ...props }) => {
   return (
     <Box
-      as={as}
+      as="span"
       display="block"
       py={2}
       pr={4}
@@ -87,7 +82,7 @@ const NavItemMobile: FC<HTMLAttributes<any> & { as?: As<any> | undefined }> = ({
 }
 
 // Mobile navigation
-const DrawerMenu: VFC<{
+const DrawerMenu: FC<{
   account: string | null | undefined
   logo?: {
     path: string
@@ -135,6 +130,8 @@ const DrawerMenu: VFC<{
                 alt="Logo"
                 width={logo?.width || 139}
                 height={logo?.height || 32}
+                w={logo?.width ? `${logo.width}px` : '139px'}
+                h={logo?.height ? `${logo.height}px` : '32px'}
               />
             </Link>
           </DrawerHeader>
@@ -264,7 +261,7 @@ const DrawerMenu: VFC<{
 }
 
 // Activity menu for desktop. Only visible when signed in
-const ActivityMenu: VFC<{ account: string }> = ({ account }) => {
+const ActivityMenu: FC<{ account: string }> = ({ account }) => {
   const { t } = useTranslation('components')
   return (
     <Menu>
@@ -292,7 +289,7 @@ const ActivityMenu: VFC<{ account: string }> = ({ account }) => {
 }
 
 // Account menu for desktop. Only visible when signed in
-const UserMenu: VFC<{
+const UserMenu: FC<{
   account: string
   user: {
     address: string
@@ -334,7 +331,7 @@ type FormData = {
   search: string
 }
 
-const Navbar: VFC<{
+const Navbar: FC<{
   logo?: {
     path: string
     width?: number
@@ -398,6 +395,8 @@ const Navbar: VFC<{
               alt="Logo"
               width={logo?.width || 139}
               height={logo?.height || 32}
+              w={logo?.width ? `${logo.width}px` : '139px'}
+              h={logo?.height ? `${logo.height}px` : '32px'}
             />
           </Flex>
         </Flex>

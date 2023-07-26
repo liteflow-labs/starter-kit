@@ -7,12 +7,11 @@ query FetchAllERC721And1155(
   $filter: [AssetFilter!]
 ) {
   assets(
-    filter: { ownershipsExist: true, and: $filter }
+    filter: { quantity: { greaterThan: "0" }, and: $filter }
     first: $limit
     offset: $offset
     orderBy: $orderBy
   ) {
-    totalCount
     nodes {
       id
       chainId
@@ -105,5 +104,11 @@ query FetchAllERC721And1155(
         }
       }
     }
+  }
+}
+
+query FetchAllERC721And1155TotalCount($filter: [AssetFilter!]) {
+  assets(filter: { quantity: { greaterThan: "0" }, and: $filter }) {
+    totalCount
   }
 }

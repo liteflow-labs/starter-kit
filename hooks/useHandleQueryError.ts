@@ -12,6 +12,6 @@ export default function useHandleQueryError({
   useEffect(() => {
     if (!error) return
     console.error(error)
-    toast({ title: t('error.500'), status: 'error' })
+    toast({ title: t('error.500.short'), status: 'error' })
   }, [error, t, toast])
 }

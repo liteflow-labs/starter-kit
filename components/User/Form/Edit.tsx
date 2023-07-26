@@ -9,7 +9,7 @@ import {
   Textarea,
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { useUpdateAccount } from '@nft/hooks'
+import { useUpdateAccount } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -40,11 +40,10 @@ type Props = {
     | 'twitter'
     | 'website'
   >
-  uploadUrl: string
   onUpdated: (address: string) => void
 }
 
-const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
+const UserFormEdit: FC<Props> = ({ signer, account, onUpdated }) => {
   const { t } = useTranslation('components')
   const {
     control,
@@ -78,7 +77,7 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
     })
   }, [account, reset])
 
-  const [editAccount] = useUpdateAccount(signer, { uploadUrl })
+  const [editAccount] = useUpdateAccount(signer)
 
   const onSubmit = handleSubmit(async (data) => {
     const address = await editAccount(data)
@@ -98,38 +97,36 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
         label={t('user.form.edit.image.label')}
         heading={t('user.form.edit.image.heading')}
         hint={t('user.form.edit.image.hint')}
-        acceptTypes="image/jpeg,image/png,image/gif,image/webp"
+        acceptTypes={{ 'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'] }}
         maxSize={10000000} // 10 MB
         name="image"
         control={control}
         rounded
         withPlaceholder
         value={account.image || undefined}
-      >
-        {({ hasPreview }) =>
-          hasPreview
-            ? t('user.form.edit.image.file.replace')
-            : t('user.form.edit.image.file.chose')
-        }
-      </Dropzone>
+        context={{
+          replace: t('user.form.edit.image.file.replace'),
+          chose: t('user.form.edit.image.file.chose'),
+        }}
+      />
       <Stack spacing={8}>
         <Dropzone
           label={t('user.form.edit.cover.label')}
           heading={t('user.form.edit.cover.heading')}
           hint={t('user.form.edit.cover.hint')}
-          acceptTypes="image/jpeg,image/png,image/gif,image/webp"
+          acceptTypes={{
+            'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+          }}
           maxSize={10000000} // 10 MB
           name="cover"
           control={control}
           withPlaceholder
           value={account.cover || undefined}
-        >
-          {({ hasPreview }) =>
-            hasPreview
-              ? t('user.form.edit.cover.file.replace')
-              : t('user.form.edit.cover.file.chose')
-          }
-        </Dropzone>
+          context={{
+            replace: t('user.form.edit.cover.file.replace'),
+            chose: t('user.form.edit.cover.file.chose'),
+          }}
+        />
         <FormControl>
           <FormLabel htmlFor="name">{t('user.form.edit.name.label')}</FormLabel>
           <Input
@@ -196,7 +193,7 @@ const UserFormEdit: FC<Props> = ({ signer, account, uploadUrl, onUpdated }) => {
             {...register('website')}
           />
         </FormControl>
-        <Button size="lg" isLoading={isSubmitting} type="submit" isFullWidth>
+        <Button size="lg" isLoading={isSubmitting} type="submit" width="full">
           <Text as="span" isTruncated>
             {t('user.form.edit.submit')}
           </Text>

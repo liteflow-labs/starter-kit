@@ -52,10 +52,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   const date = useMemo(() => new Date(now), [now])
   const offerQuery = useCheckoutQuery({ variables: { id: offerId } })
 
-  const offer = useMemo(
-    () => offerQuery.data?.offer || offerQuery.previousData?.offer,
-    [offerQuery.data, offerQuery.previousData],
-  )
+  const offer = offerQuery.data?.offer
 
   const assetQuery = useFetchAssetForCheckoutQuery({
     variables: {
@@ -121,7 +118,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {assetQuery.loading || !asset ? (
+            {!asset ? (
               <SkeletonTokenCard />
             ) : (
               <TokenCard
@@ -147,7 +144,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
               <Heading as="h5" variant="heading3" color="gray.500">
                 {t('offers.checkout.from')}
               </Heading>
-              {offerQuery.loading || !offer ? (
+              {!offer ? (
                 <SkeletonImageAndText />
               ) : (
                 <Avatar
@@ -164,11 +161,12 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                 {t('offers.checkout.on-sale')}
               </Heading>
               <Flex align="center" gap={3}>
-                {offerQuery.loading || !offer ? (
+                {!offer ? (
                   <SkeletonImageAndText large />
                 ) : (
                   <>
                     <Flex
+                      position="relative"
                       as="span"
                       border="1px"
                       borderColor="gray.200"
@@ -181,8 +179,8 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                       <Image
                         src={offer.currency.image}
                         alt={`${offer.currency.symbol} Logo`}
-                        width={32}
-                        height={32}
+                        fill
+                        sizes="30px"
                         objectFit="cover"
                       />
                     </Flex>
@@ -207,7 +205,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
             </Stack>
             <Box as="hr" my={8} />
 
-            {offerQuery.loading || !offer ? (
+            {!offer ? (
               <Skeleton width="200px" height="40px" />
             ) : (
               <OfferFormCheckout

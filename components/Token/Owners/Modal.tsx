@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { useEffect, useState, VFC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { convertOwnership } from '../../../convert'
 import { useFetchOwnersQuery } from '../../../graphql'
 import List, { ListItem } from '../../List/List'
@@ -37,11 +37,7 @@ export type Props = {
 
 const OwnerPaginationLimit = 8
 
-const OwnersModal: VFC<Props> = ({
-  assetId,
-  ownersPreview,
-  numberOfOwners,
-}) => {
+const OwnersModal: FC<Props> = ({ assetId, ownersPreview, numberOfOwners }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
@@ -121,6 +117,7 @@ const OwnersModal: VFC<Props> = ({
                   data?.ownerships?.totalCount ||
                   previousData?.ownerships?.totalCount
                 }
+                isLoading={loading}
                 onPageChange={setPage}
                 hideSelectors
                 result={{

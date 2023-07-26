@@ -14,7 +14,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
-import { useIsLoggedIn } from '@nft/hooks'
+import { useIsLoggedIn } from '@liteflow/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
@@ -204,11 +204,10 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                             alt={item.asset.name}
                             width={40}
                             height={40}
-                            layout="fixed"
-                            objectFit="cover"
-                            rounded="full"
                             h={10}
                             w={10}
+                            objectFit="cover"
+                            rounded="2xl"
                           />
                           <Flex
                             direction="column"
@@ -287,6 +286,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             onPageChange={changePage}
             page={page}
             total={bidData?.bids?.totalCount || 0}
+            isLoading={loading}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (

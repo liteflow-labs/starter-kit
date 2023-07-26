@@ -1,6 +1,15 @@
 {
   "error": {
-    "500": "We're sorry, something went wrong."
+    "404": {
+      "title": "Data Not Found",
+      "description": "Oops! We couldn't find the data you're looking for on our server. If the issue persists, feel free to contact our support team for assistance."
+    },
+    "500": {
+      "short": "We're sorry, something went wrong.",
+      "title": "Internal Server Error",
+      "description": "Oops! We encountered an unexpected issue on our server. If the issue persists, feel free to contact our support team for assistance."
+    },
+    "button": "Contact support"
   },
   "home": {
     "collections": {
@@ -240,8 +249,8 @@
     "result": {
       "label": "Results per page",
       "caption": "<0>{{from}}</0> - <0>{{to}}</0> of <0>{{total}}</0> results",
-      "pages_one": "of {{count}} page",
-      "pages_other": "of {{count}} pages"
+      "pages_one": "{{count}} page",
+      "pages_other": "{{count}} pages"
     }
   },
   "user": {

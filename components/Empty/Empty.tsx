@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { HiOutlinePlus } from '@react-icons/all-files/hi/HiOutlinePlus'
-import { FC } from 'react'
+import { FC, JSX } from 'react'
 import Link from '../Link/Link'
 
 type EmptyTypes = {
@@ -9,9 +9,17 @@ type EmptyTypes = {
   description?: string
   button?: string
   href?: string
+  isExternal?: boolean
 }
 
-const Empty: FC<EmptyTypes> = ({ icon, title, description, button, href }) => {
+const Empty: FC<EmptyTypes> = ({
+  icon,
+  title,
+  description,
+  button,
+  href,
+  isExternal,
+}) => {
   return (
     <Stack minH="460px" align="center" justify="center" spacing={8}>
       <Flex
@@ -36,7 +44,7 @@ const Empty: FC<EmptyTypes> = ({ icon, title, description, button, href }) => {
         )}
       </Stack>
       {href && button && (
-        <Button as={Link} href={href} size="lg">
+        <Button as={Link} href={href} isExternal={isExternal} size="lg">
           <Text as="span" isTruncated>
             {button}
           </Text>

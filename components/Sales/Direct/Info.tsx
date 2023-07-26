@@ -10,17 +10,30 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CancelOfferStep, useCancelOffer } from '@nft/hooks'
+import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import { ReactElement, useCallback, useMemo, VFC } from 'react'
+import { FC, ReactElement, useCallback, useMemo } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatError, isSameAddress } from '../../../utils'
-import ButtonWithNetworkSwitch from '../../Button/SwitchNetwork'
+import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import CancelOfferModal from '../../Modal/CancelOffer'
 import Price from '../../Price/Price'
 import SaleOpenEdit from '../Open/Info'
+
+type Sale = {
+  id: string
+  unitPrice: BigNumber
+  expiredAt: Date | null | undefined
+  maker: {
+    address: string
+  }
+  currency: {
+    decimals: number
+    symbol: string
+  }
+}
 
 export type Props = {
   assetId: string
@@ -30,23 +43,12 @@ export type Props = {
   isHomepage: boolean
   signer: Signer | undefined
   currentAccount: string | null | undefined
-  sales: {
-    id: string
-    unitPrice: BigNumber
-    expiredAt: Date | null | undefined
-    maker: {
-      address: string
-    }
-    currency: {
-      decimals: number
-      symbol: string
-    }
-  }[]
+  sales: Sale[]
   onOfferCanceled: (id: string) => Promise<void>
 }
 
 // TODO: the logic of this component doesn't seems right. The component mostly renders nothing
-const SaleDirectInfo: VFC<Props> = ({
+const SaleDirectInfo: FC<Props> = ({
   assetId,
   chainId,
   blockExplorer,
@@ -63,11 +65,11 @@ const SaleDirectInfo: VFC<Props> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleCancel = useCallback(
-    async (sale: typeof sales[0]) => {
+    async (sale: Sale) => {
       if (!confirm(t('sales.direct.info.cancel-confirmation'))) return
       try {
         onOpen()
-        await cancelOffer(sale)
+        await cancelOffer(sale.id)
         await onOfferCanceled(sale.id)
       } catch (e) {
         toast({
@@ -132,7 +134,7 @@ const SaleDirectInfo: VFC<Props> = ({
             )}
           </Heading>
         </Flex>
-        <ButtonWithNetworkSwitch
+        <ConnectButtonWithNetworkSwitch
           chainId={chainId}
           variant="outline"
           colorScheme="gray"
@@ -144,7 +146,7 @@ const SaleDirectInfo: VFC<Props> = ({
           <Text as="span" isTruncated>
             {t('sales.direct.info.cancel')}
           </Text>
-        </ButtonWithNetworkSwitch>
+        </ConnectButtonWithNetworkSwitch>
         <CancelOfferModal
           isOpen={isOpen}
           onClose={onClose}

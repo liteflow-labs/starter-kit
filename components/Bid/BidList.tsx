@@ -2,7 +2,7 @@ import { Text } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
-import { Fragment, useMemo, VFC } from 'react'
+import { FC, Fragment, useMemo } from 'react'
 import { convertBidFull } from '../../convert'
 import { useFetchAssetBidsQuery, useFetchAuctionBidsQuery } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
@@ -26,7 +26,7 @@ type Props = {
   onCanceled: (id: string) => Promise<void>
 }
 
-const BidList: VFC<Props> = ({
+const BidList: FC<Props> = ({
   now,
   chainId,
   collectionAddress,
