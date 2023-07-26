@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
-import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
+import { Box, ChakraProvider } from '@chakra-ui/react'
 import { LiteflowProvider } from '@liteflow/react'
 import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -19,6 +19,7 @@ import React, {
   PropsWithChildren,
   useEffect,
   useMemo,
+  useState,
 } from 'react'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import {
@@ -34,6 +35,7 @@ import { chains, client } from '../connectors'
 import environment from '../environment'
 import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import { theme } from '../styles/theme'
+import Error from './_error'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
 require('dayjs/locale/es-mx')
@@ -115,10 +117,12 @@ function Layout({ children }: PropsWithChildren<{}>) {
   )
 }
 
-function AccountProvider(props: PropsWithChildren<{}>) {
+function AccountProvider({
+  children,
+  onError,
+}: PropsWithChildren<{ onError: (code: number) => void }>) {
   const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
-  const toast = useToast()
 
   const { connector } = useWagmiAccount({
     async onConnect({ connector }) {
@@ -126,10 +130,6 @@ function AccountProvider(props: PropsWithChildren<{}>) {
       try {
         await login(connector)
       } catch (e: any) {
-        toast({
-          title: e.reason || e.message || e.toString(),
-          status: 'warning',
-        })
         disconnect()
       }
     },
@@ -151,16 +151,17 @@ function AccountProvider(props: PropsWithChildren<{}>) {
   const client = useMemo(
     // The client needs to be reset when the jwtToken changes but only on the client as the server will
     // always have the same token and will rerender this app multiple times and needs to preserve the cache
-    () => getClient(jwtToken, typeof window !== 'undefined'),
-    [jwtToken],
+    () => getClient(jwtToken, typeof window !== 'undefined', onError),
+    [jwtToken, onError],
   )
 
-  return <ApolloProvider client={client}>{props.children}</ApolloProvider>
+  return <ApolloProvider client={client}>{children}</ApolloProvider>
 }
 
 export type MyAppProps = { jwt: string | null; now: Date }
 
 function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
+  const [errorCode, setErrorCode] = useState<number>()
   const router = useRouter()
   dayjs.locale(router.locale)
   usePageViews()
@@ -226,9 +227,13 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
                 apiKey={environment.LITEFLOW_API_KEY}
                 endpoint={process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL}
               >
-                <AccountProvider>
+                <AccountProvider onError={setErrorCode}>
                   <Layout>
-                    <Component {...pageProps} />
+                    {errorCode ? (
+                      <Error statusCode={errorCode} />
+                    ) : (
+                      <Component {...pageProps} />
+                    )}
                   </Layout>
                 </AccountProvider>
               </LiteflowProvider>
