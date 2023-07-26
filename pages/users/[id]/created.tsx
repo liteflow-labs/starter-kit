@@ -110,6 +110,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
             limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
             page,
             total: assetData?.created?.totalCount || 0,
+            isLoading: loading,
             onPageChange: changePage,
             onLimitChange: changeLimit,
             result: {
