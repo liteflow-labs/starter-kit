@@ -61,9 +61,9 @@ export default function Pagination({
   const pages = useMemo(
     () =>
       isMobile
-        ? new Array(3)
+        ? new Array(1)
             .fill(0)
-            .map((_, i) => page - 1 + i)
+            .map((_, i) => page + i)
             .filter((x) => x > 0 && x <= totalPage)
         : new Array(5)
             .fill(0)
@@ -76,7 +76,7 @@ export default function Pagination({
   return (
     <Flex
       direction={{ base: hideSelectors ? 'row' : 'column', md: 'row' }}
-      align="center"
+      align={{ base: 'flex-end', sm: 'center' }}
       justify="space-between"
       w="full"
       gap={{ base: 6, md: 3 }}
@@ -84,10 +84,10 @@ export default function Pagination({
       {...props}
     >
       <Flex
-        align={{ base: 'flex-start', sm: 'center' }}
+        align="center"
         gap={6}
-        w={{ base: 'full', sm: 'auto' }}
-        direction={{ base: 'column', sm: 'row' }}
+        w="auto"
+        display={{ base: 'none', sm: 'flex' }}
       >
         {!hideSelectors && (
           <Flex
@@ -115,13 +115,7 @@ export default function Pagination({
             </Select>
           </Flex>
         )}
-        <Text
-          as="span"
-          variant="text-sm"
-          color="gray.500"
-          mt={{ base: 'auto', sm: 0 }}
-          w="full"
-        >
+        <Text as="span" variant="text-sm" color="gray.500" w="full">
           {result.caption({
             from: (page - 1) * limit + 1,
             to: Math.min((page - 1) * limit + limit, total || Infinity),
