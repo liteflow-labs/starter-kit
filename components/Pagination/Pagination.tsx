@@ -7,6 +7,7 @@ import {
   Icon,
   IconButton,
   Select,
+  Skeleton,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
@@ -28,6 +29,7 @@ export type IProp = {
     }) => string | JSX.Element
     pages: (context: { total: number }) => string | JSX.Element
   }
+  isLoading: boolean
   hideSelectors?: boolean
   limits?: number[]
   onLimitChange?: (limit: string) => void
@@ -39,6 +41,7 @@ export default function Pagination({
   page,
   result,
   total,
+  isLoading,
   hideSelectors,
   limits,
   onLimitChange,
@@ -72,7 +75,17 @@ export default function Pagination({
     [isMobile, page, totalPage],
   )
 
-  if (!total) return <></>
+  if (isLoading)
+    return (
+      <Flex
+        align={{ base: 'flex-end', sm: 'center' }}
+        justify={isMobile ? 'flex-end' : 'space-between'}
+      >
+        {!isMobile && <Skeleton w={3 / 8} h={10} />}
+        <Skeleton w={isMobile ? 5 / 8 : 2 / 8} h={8} />
+      </Flex>
+    )
+
   return (
     <Flex
       direction={{ base: hideSelectors ? 'row' : 'column', md: 'row' }}
@@ -119,7 +132,7 @@ export default function Pagination({
           {result.caption({
             from: (page - 1) * limit + 1,
             to: Math.min((page - 1) * limit + limit, total || Infinity),
-            total: total,
+            total: total || 0,
           })}
         </Text>
       </Flex>

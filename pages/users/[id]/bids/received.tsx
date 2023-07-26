@@ -286,6 +286,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             onPageChange={changePage}
             page={page}
             total={bidData?.bids?.totalCount || 0}
+            isLoading={loading}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (
