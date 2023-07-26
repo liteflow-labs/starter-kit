@@ -1,11 +1,11 @@
-import { useEffect, useRef, VFC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import Image from '../Image/Image'
 
 const Jazzicon = require('@metamask/jazzicon')
 
 export const defaultSize = 32
 
-const AccountImage: VFC<{
+const AccountImage: FC<{
   address: string
   image: string | null | undefined
   size?: number
@@ -29,6 +29,8 @@ const AccountImage: VFC<{
       alt={address}
       width={size || defaultSize}
       height={size || defaultSize}
+      w={size ? `${size}px` : defaultSize / 4}
+      h={size ? `${size}px` : defaultSize / 4}
       objectFit="cover"
       {...props}
     />

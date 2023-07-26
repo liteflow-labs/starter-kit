@@ -14,7 +14,7 @@ import {
   Spinner,
   Text,
 } from '@chakra-ui/react'
-import { CancelOfferStep } from '@nft/hooks'
+import { CancelOfferStep } from '@liteflow/react'
 import { CgArrowLongRight } from '@react-icons/all-files/cg/CgArrowLongRight'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import useTranslation from 'next-translate/useTranslation'
@@ -119,7 +119,7 @@ const CancelOfferModal: FC<Props> = ({
             isExternal
             variant="outline"
             colorScheme="gray"
-            isFullWidth
+            width="full"
             rightIcon={<HiOutlineExternalLink />}
             isDisabled={!transactionHash}
           >

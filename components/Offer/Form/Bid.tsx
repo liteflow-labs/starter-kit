@@ -21,7 +21,8 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useCreateOffer } from '@nft/hooks'
+import { toAddress } from '@liteflow/core'
+import { useCreateOffer } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
@@ -48,16 +49,19 @@ type FormData = {
   auctionExpirationDate: string
 }
 
+export type BidCurrency = {
+  id: string
+  address: string
+  decimals: number
+  symbol: string
+  image: string
+  name: string
+}
+
 type Props = {
   signer: (Signer & TypedDataSigner) | undefined
   account: string | null | undefined
-  currencies: {
-    id: string
-    decimals: number
-    symbol: string
-    image: string
-    name: string
-  }[]
+  currencies: BidCurrency[]
   chainId: number
   collectionAddress: string
   tokenId: string
@@ -188,13 +192,19 @@ const OfferFormBid: FC<Props> = (props) => {
       const id = await createOffer({
         type: 'BUY',
         quantity: quantityBN,
-        unitPrice: priceUnit,
-        assetId: [chainId, collectionAddress, tokenId].join('-'),
-        currencyId: currency.id,
-        takerAddress: props.multiple
+        unitPrice: {
+          amount: priceUnit,
+          currency: toAddress(currency.address),
+        },
+        chain: chainId,
+        collection: toAddress(collectionAddress),
+        token: tokenId,
+        taker: props.multiple
           ? undefined // Keep the bid open for anyone that can fill it
-          : props.owner?.toLowerCase(),
-        expiredAt: auctionId ? null : new Date(expiredAt),
+          : props.owner
+          ? toAddress(props.owner)
+          : undefined,
+        expiredAt: auctionId ? undefined : new Date(expiredAt),
         auctionId,
       })
 
@@ -249,7 +259,7 @@ const OfferFormBid: FC<Props> = (props) => {
           <FormLabel htmlFor="bid" m={0}>
             {t('offer.form.bid.price.label')}
           </FormLabel>
-          <FormHelperText>({currency.symbol})</FormHelperText>
+          <FormHelperText m={0}>({currency.symbol})</FormHelperText>
         </HStack>
         <InputGroup>
           <NumberInput
@@ -288,6 +298,8 @@ const OfferFormBid: FC<Props> = (props) => {
               alt={currency.symbol}
               width={24}
               height={24}
+              w={6}
+              h={6}
               objectFit="cover"
             />
           </InputRightElement>
@@ -303,7 +315,7 @@ const OfferFormBid: FC<Props> = (props) => {
             <FormLabel htmlFor="quantity" m={0}>
               {t('offer.form.bid.quantity.label')}
             </FormLabel>
-            <FormHelperText>
+            <FormHelperText m={0}>
               ({t('offer.form.bid.quantity.suffix')})
             </FormHelperText>
           </HStack>
@@ -360,7 +372,7 @@ const OfferFormBid: FC<Props> = (props) => {
           <FormLabel htmlFor="expiredAt" m={0}>
             {t('offer.form.bid.expiration.label')}
           </FormLabel>
-          <FormHelperText>
+          <FormHelperText m={0}>
             <Tooltip
               label={
                 <Text as="span" variant="caption" color="brand.black">

@@ -1,3 +1,4 @@
+import { JSX } from 'react'
 import ReactLinkify from 'react-linkify'
 import Link from '../Link/Link'
 

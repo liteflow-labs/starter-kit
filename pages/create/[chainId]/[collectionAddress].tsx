@@ -9,7 +9,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useConfig } from '@nft/hooks'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
@@ -52,7 +51,6 @@ const CreatePage: NextPage = ({}) => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const { address } = useAccount()
-  const { data: config } = useConfig()
   const toast = useToast()
   const { data, loading, previousData } = useFetchAccountAndCollectionQuery({
     variables: {
@@ -175,16 +173,12 @@ const CreatePage: NextPage = ({}) => {
               signer={signer}
               collection={collection}
               categories={categories}
-              uploadUrl={`${
-                process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
-                'https://api.liteflow.com'
-              }/${environment.LITEFLOW_API_KEY}/uploadToIPFS`}
               blockExplorer={blockExplorer}
               onCreated={onCreated}
               onInputChange={setFormData}
-              activateUnlockableContent={config?.hasUnlockableContent || false}
+              activateUnlockableContent={environment.UNLOCKABLE_CONTENT}
               maxRoyalties={environment.MAX_ROYALTIES}
-              activateLazyMint={config?.hasLazyMint || false}
+              activateLazyMint={environment.LAZYMINT}
             />
           )}
         </GridItem>

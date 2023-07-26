@@ -27,7 +27,7 @@ const WalletAccount: FC<{
             {t('wallet.wallet.deposit.description')}
           </Text>
         </div>
-        <Button variant="outline" colorScheme="gray" isFullWidth>
+        <Button variant="outline" colorScheme="gray" width="full">
           <Text as="span" isTruncated>
             <WalletAddress address={account} isCopyable />
           </Text>

@@ -2,7 +2,7 @@ import { Flex, Heading, Icon } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import Countdown from '../../../Countdown/Countdown'
 import Image from '../../../Image/Image'
 import Price from '../../../Price/Price'
@@ -27,7 +27,7 @@ type Props = {
     | undefined
 }
 
-const SaleAuctionInProgress: VFC<Props> = ({ auction, bestBid }) => {
+const SaleAuctionInProgress: FC<Props> = ({ auction, bestBid }) => {
   const { t } = useTranslation('components')
   const bidTitle = useMemo(
     () =>
@@ -60,6 +60,7 @@ const SaleAuctionInProgress: VFC<Props> = ({ auction, bestBid }) => {
         </Heading>
         <Flex gap={2}>
           <Flex
+            position="relative"
             as="span"
             h={8}
             w={8}
@@ -73,8 +74,8 @@ const SaleAuctionInProgress: VFC<Props> = ({ auction, bestBid }) => {
               <Image
                 src={currency.image}
                 alt={currency.symbol}
-                width={32}
-                height={32}
+                fill
+                sizes="30px"
                 objectFit="cover"
               />
             )}

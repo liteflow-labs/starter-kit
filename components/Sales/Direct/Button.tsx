@@ -2,7 +2,7 @@ import { Button, Flex, Text } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import Link from '../../Link/Link'
 import type { Props as ModalProps } from './Modal'
@@ -20,7 +20,7 @@ export type Props = {
   onOfferCanceled: (id: string) => Promise<void>
 }
 
-const SaleDirectButton: VFC<Props> = ({
+const SaleDirectButton: FC<Props> = ({
   assetId,
   chainId,
   blockExplorer,
@@ -41,7 +41,7 @@ const SaleDirectButton: VFC<Props> = ({
         variant="outline"
         colorScheme="gray"
         size="lg"
-        isFullWidth
+        width="full"
       >
         <Text as="span" isTruncated>
           {t('sales.direct.button.place-bid')}
@@ -55,7 +55,12 @@ const SaleDirectButton: VFC<Props> = ({
     if (!sales[0]) return
     if (ownAllSupply) return
     return (
-      <Button as={Link} href={`/checkout/${sales[0].id}`} size="lg" isFullWidth>
+      <Button
+        as={Link}
+        href={`/checkout/${sales[0].id}`}
+        size="lg"
+        width="full"
+      >
         <Text as="span" isTruncated>
           {t('sales.direct.button.buy')}
         </Text>
@@ -85,7 +90,7 @@ const SaleDirectButton: VFC<Props> = ({
         variant="outline"
         colorScheme="gray"
         bgColor="white"
-        isFullWidth
+        width="full"
         rightIcon={<HiArrowNarrowRight />}
       >
         <Text as="span" isTruncated>

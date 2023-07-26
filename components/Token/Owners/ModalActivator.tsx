@@ -1,5 +1,5 @@
 import { Flex, Text } from '@chakra-ui/react'
-import { ButtonHTMLAttributes, VFC } from 'react'
+import { ButtonHTMLAttributes, FC } from 'react'
 import AccountImage from '../../Wallet/Image'
 
 export type Props = ButtonHTMLAttributes<any> & {
@@ -11,7 +11,7 @@ export type Props = ButtonHTMLAttributes<any> & {
   numberOfOwners: number
 }
 
-const OwnersModalActivator: VFC<Props> = ({
+const OwnersModalActivator: FC<Props> = ({
   owners,
   numberOfOwners,
   ...props

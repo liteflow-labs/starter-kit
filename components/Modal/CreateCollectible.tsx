@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { CreateNftStep } from '@nft/hooks'
+import { CreateNftStep } from '@liteflow/react'
 import { CgArrowLongRight } from '@react-icons/all-files/cg/CgArrowLongRight'
 import { HiCheck } from '@react-icons/all-files/hi/HiCheck'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
@@ -243,7 +243,7 @@ const CreateCollectibleModal: FC<Props> = ({
               isExternal
               variant="outline"
               colorScheme="gray"
-              isFullWidth
+              width="full"
               rightIcon={<HiOutlineExternalLink />}
               isDisabled={!transactionHash}
             >

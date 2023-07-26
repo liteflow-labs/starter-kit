@@ -11,6 +11,10 @@ import {
 
 invariant(process.env.NEXT_PUBLIC_BASE_URL, 'Base url is not defined')
 invariant(process.env.NEXT_PUBLIC_LITEFLOW_API_KEY, 'API key is not defined')
+invariant(
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+  'Wallet connect project id is not defined',
+)
 
 const environment = {
   /**
@@ -116,7 +120,7 @@ const environment = {
     } as Chain,
   ],
 
-  // (Optional) Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
+  // Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
   WALLET_CONNECT_PROJECT_ID: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
 
   // (Optional) Magic API Key, you can get one at https://magic.link/
@@ -137,6 +141,15 @@ const environment = {
 
   // Keywords of the marketplace to place in the SEO keywords
   META_KEYWORDS: 'NFT, marketplace, platform, blockchain, liteflow',
+
+  /**
+   * NFT Mint Behavior
+   */
+  // Enable/disable the lazy minting feature. If enabled, the NFTs will be minted on the first sale
+  LAZYMINT: false,
+
+  // Enable/disable the unlockable content feature. If enabled, the NFTs will have unlockable content only accessible to owners
+  UNLOCKABLE_CONTENT: false,
 }
 
 export default environment

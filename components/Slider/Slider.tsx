@@ -7,7 +7,6 @@ import { FC, HTMLAttributes, useCallback, useEffect, useState } from 'react'
 const Slider: FC<HTMLAttributes<any>> = ({ children }) => {
   const [viewportRef, embla] = useEmblaCarousel({
     align: 'start',
-    speed: 5,
     slidesToScroll: 1,
     inViewThreshold: 1,
     containScroll: 'trimSnaps',

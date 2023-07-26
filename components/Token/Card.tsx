@@ -18,7 +18,7 @@ import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDots
 import Countdown from 'components/Countdown/Countdown'
 import environment from 'environment'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, useState, VFC } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { chains } from '../../connectors'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
@@ -86,7 +86,7 @@ export type Props = {
   hasMultiCurrency: boolean
 }
 
-const TokenCard: VFC<Props> = ({
+const TokenCard: FC<Props> = ({
   asset,
   creator,
   auction,
@@ -170,8 +170,7 @@ const TokenCard: VFC<Props> = ({
               animationUrl={asset.animationUrl}
               unlockedContent={asset.unlockedContent}
               defaultText={asset.name}
-              fill={true}
-              // sizes determined from the explorer page
+              fill
               sizes="
             (min-width: 80em) 292px,
             (min-width: 62em) 25vw,
@@ -219,6 +218,8 @@ const TokenCard: VFC<Props> = ({
             alt={asset.collection.chainId.toString()}
             width={24}
             height={24}
+            w={6}
+            h={6}
           />
         </Flex>
       )}

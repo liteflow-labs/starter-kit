@@ -2,7 +2,7 @@ import { Box, Flex, Heading, Icon } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import { formatDate } from '../../../utils'
 import Image from '../../Image/Image'
 import Price from '../../Price/Price'
@@ -21,7 +21,7 @@ type Props = {
   }[]
 }
 
-const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
+const SaleDirectSummary: FC<Props> = ({ sales, isSingle }) => {
   const { t } = useTranslation('components')
   const salesWithUniqueCurrency = useMemo(() => {
     return sales.reduce(
@@ -41,6 +41,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
         if (!sales[0]) return
         return (
           <Box
+            position="relative"
             h={8}
             w={8}
             overflow="hidden"
@@ -51,8 +52,8 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
             <Image
               src={sales[0].currency.image}
               alt={`${sales[0].currency.symbol} Logo`}
-              width={32}
-              height={32}
+              fill
+              sizes="30px"
               objectFit="cover"
             />
           </Box>
@@ -63,6 +64,7 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
           <Flex _first={{ ml: 0 }}>
             {salesWithUniqueCurrency.map((x, i) => (
               <Box
+                position="relative"
                 h={8}
                 w={8}
                 overflow="hidden"
@@ -75,8 +77,8 @@ const SaleDirectSummary: VFC<Props> = ({ sales, isSingle }) => {
                 <Image
                   src={x.currency.image}
                   alt={`${x.currency.symbol} Logo`}
-                  width={32}
-                  height={32}
+                  fill
+                  sizes="30px"
                   objectFit="cover"
                 />
               </Box>

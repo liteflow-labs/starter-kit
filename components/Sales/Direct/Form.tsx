@@ -21,11 +21,12 @@ import {
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CreateOfferStep, useCreateOffer } from '@nft/hooks'
+import { toAddress } from '@liteflow/core'
+import { CreateOfferStep, useCreateOffer } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
-import { useEffect, useMemo, VFC } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Standard, useFeesQuery } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
@@ -52,6 +53,7 @@ type Props = {
   currencies: {
     name: string
     id: string
+    address: string | null
     image: string
     decimals: number
     symbol: string
@@ -65,7 +67,7 @@ type Props = {
   onCreated: (offerId: string) => void
 }
 
-const SalesDirectForm: VFC<Props> = ({
+const SalesDirectForm: FC<Props> = ({
   chainId,
   collectionAddress,
   tokenId,
@@ -165,9 +167,13 @@ const SalesDirectForm: VFC<Props> = ({
       const id = await createAndPublishOffer({
         type: 'SALE',
         quantity: quantityBN,
-        unitPrice: priceUnit,
-        assetId: [chainId, collectionAddress, tokenId].join('-'),
-        currencyId: currency.id,
+        chain: chainId,
+        collection: toAddress(collectionAddress),
+        token: tokenId,
+        unitPrice: {
+          amount: priceUnit,
+          currency: currency.address ? toAddress(currency.address) : null,
+        },
         expiredAt: new Date(expiredAt),
       })
 
@@ -213,7 +219,7 @@ const SalesDirectForm: VFC<Props> = ({
           <FormLabel htmlFor="price" m={0}>
             {t('sales.direct.form.price.label')}
           </FormLabel>
-          <FormHelperText>({currency.symbol})</FormHelperText>
+          <FormHelperText m={0}>({currency.symbol})</FormHelperText>
         </HStack>
         <InputGroup>
           <NumberInput
@@ -254,6 +260,8 @@ const SalesDirectForm: VFC<Props> = ({
               alt={currency.symbol}
               width={24}
               height={24}
+              w={6}
+              h={6}
               objectFit="cover"
             />
           </InputRightElement>
@@ -269,7 +277,7 @@ const SalesDirectForm: VFC<Props> = ({
             <FormLabel htmlFor="quantity" m={0}>
               {t('sales.direct.form.quantity.label')}
             </FormLabel>
-            <FormHelperText>
+            <FormHelperText m={0}>
               ({t('sales.direct.form.quantity.suffix')})
             </FormHelperText>
           </HStack>
@@ -328,7 +336,7 @@ const SalesDirectForm: VFC<Props> = ({
           <FormLabel htmlFor="expiredAt" m={0}>
             {t('sales.direct.form.expiration.label')}
           </FormLabel>
-          <FormHelperText>
+          <FormHelperText m={0}>
             <Tooltip
               label={
                 <Text as="span" variant="caption" color="brand.black">
@@ -470,7 +478,7 @@ const SalesDirectForm: VFC<Props> = ({
         isLoading={activeStep !== CreateOfferStep.INITIAL}
         size="lg"
         type="submit"
-        isFullWidth
+        width="full"
       >
         <Text as="span" isTruncated>
           {t('sales.direct.form.submit')}

@@ -1,8 +1,8 @@
 import { ButtonProps, useDisclosure } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumberish } from '@ethersproject/bignumber'
-import { AcceptOfferStep, useAcceptOffer } from '@nft/hooks'
-import { PropsWithChildren, useCallback } from 'react'
+import { AcceptOfferStep, useAcceptOffer } from '@liteflow/react'
+import { JSX, PropsWithChildren, useCallback } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import AcceptOfferModal from '../Modal/AcceptOffer'
 import ConnectButtonWithNetworkSwitch from './ConnectWithNetworkSwitch'
@@ -38,7 +38,7 @@ export default function AcceptOfferButton({
   const handleAcceptOffer = useCallback(async () => {
     try {
       onOpen()
-      await accept(offer, quantity)
+      await accept(offer.id, quantity)
       await onAccepted()
     } catch (e) {
       onError(e as Error)

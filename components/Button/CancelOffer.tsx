@@ -1,7 +1,7 @@
 import { ButtonProps, useDisclosure } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
-import { CancelOfferStep, useCancelOffer } from '@nft/hooks'
-import { PropsWithChildren, useCallback } from 'react'
+import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
+import { JSX, PropsWithChildren, useCallback } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import CancelOfferModal from '../Modal/CancelOffer'
 import ConnectButtonWithNetworkSwitch from './ConnectWithNetworkSwitch'
@@ -32,7 +32,7 @@ export default function CancelOfferButton({
   const handleCancelOffer = useCallback(async () => {
     try {
       onOpen()
-      await cancel({ id: offerId })
+      await cancel(offerId)
       await onCanceled()
     } catch (e) {
       onError(e as Error)

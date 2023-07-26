@@ -1,6 +1,6 @@
 import { Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import { convertHistories } from '../../convert'
 import { useFetchAssetHistoryQuery } from '../../graphql'
@@ -22,7 +22,7 @@ type IProps = {
   tokenId: string
 }
 
-const HistoryList: VFC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
+const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
   const { t } = useTranslation('components')
 
   const { data, loading, previousData } = useFetchAssetHistoryQuery({
@@ -40,7 +40,10 @@ const HistoryList: VFC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
     [historyData],
   )
 
-  const ListItem = (history: typeof histories[number], i: number) => {
+  const ListItem = (
+    history: ReturnType<typeof convertHistories>,
+    i: number,
+  ) => {
     switch (history.action) {
       case 'LISTING':
         invariant(history.unitPrice, 'unitPrice is required')

@@ -19,7 +19,9 @@ import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
 import BackButton from '../../../components/Navbar/BackButton'
-import OfferFormBid from '../../../components/Offer/Form/Bid'
+import OfferFormBid, {
+  type BidCurrency,
+} from '../../../components/Offer/Form/Bid'
 import Price from '../../../components/Price/Price'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
@@ -85,6 +87,8 @@ const BidPage: NextPage<Props> = ({ now }) => {
       auction ? [auction.currency] : currencyData?.currencies?.nodes || [],
     [auction, currencyData],
   )
+
+  const bidCurrencies = currencies as BidCurrency[]
 
   const highestBid = useMemo(() => auction?.bestBid.nodes[0], [auction])
 
@@ -174,6 +178,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
                     </Heading>
                     <Flex align="center" gap={3}>
                       <Flex
+                        position="relative"
                         align="center"
                         justify="center"
                         h={8}
@@ -185,8 +190,8 @@ const BidPage: NextPage<Props> = ({ now }) => {
                         <Image
                           src={highestBid.currency.image}
                           alt={`${highestBid.currency.symbol} Logo`}
-                          width={32}
-                          height={32}
+                          fill
+                          sizes="30px"
                           objectFit="cover"
                         />
                       </Flex>
@@ -214,7 +219,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 tokenId={asset.tokenId}
                 multiple={false}
                 owner={asset.ownerships.nodes[0]?.ownerAddress}
-                currencies={currencies}
+                currencies={bidCurrencies}
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}
                 auctionId={auction?.id}
@@ -230,7 +235,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 tokenId={asset.tokenId}
                 multiple={true}
                 supply={asset.quantity}
-                currencies={currencies}
+                currencies={bidCurrencies}
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}
                 auctionId={auction?.id}

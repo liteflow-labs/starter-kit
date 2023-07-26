@@ -9,11 +9,11 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAcceptAuction } from '@nft/hooks'
+import { useAcceptAuction } from '@liteflow/react'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import { ReactElement, useCallback, useMemo, useState, VFC } from 'react'
+import { FC, ReactElement, useCallback, useMemo, useState } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatError } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
@@ -44,7 +44,7 @@ export type Props = {
   onAuctionAccepted: (id: string) => Promise<void>
 }
 
-const SaleAuctionInfo: VFC<Props> = ({
+const SaleAuctionInfo: FC<Props> = ({
   signer,
   assetId,
   chainId,

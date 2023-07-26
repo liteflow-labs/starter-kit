@@ -13,11 +13,11 @@ import {
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Image from 'next/image'
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { chains } from '../../connectors'
 import { Filter } from '../../hooks/useCollectionFilterFromQuery'
+import Image from '../Image/Image'
 
 type Props = {
   filter: Filter
@@ -73,6 +73,8 @@ const FilterCollection: NextPage<Props> = ({ filter, onFilterChange }) => {
                         src={`/chains/${id}.svg`}
                         width={24}
                         height={24}
+                        w={6}
+                        h={6}
                         alt={name}
                       />
                       <Text
