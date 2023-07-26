@@ -1,11 +1,15 @@
 import {
+  Button,
+  ButtonGroup,
   Flex,
   FormLabel,
   HStack,
   Icon,
   IconButton,
   Select,
+  Skeleton,
   Text,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { IoChevronBackSharp } from '@react-icons/all-files/io5/IoChevronBackSharp'
 import { IoChevronForward } from '@react-icons/all-files/io5/IoChevronForward'
@@ -25,6 +29,7 @@ export type IProp = {
     }) => string | JSX.Element
     pages: (context: { total: number }) => string | JSX.Element
   }
+  isLoading: boolean
   hideSelectors?: boolean
   limits?: number[]
   onLimitChange?: (limit: string) => void
@@ -36,11 +41,13 @@ export default function Pagination({
   page,
   result,
   total,
+  isLoading,
   hideSelectors,
   limits,
   onLimitChange,
   ...props
 }: IProp): JSX.Element {
+  const isMobile = useBreakpointValue({ base: true, sm: false })
   const goTo = (newPage: number) => {
     if (!total) return
     if (page === newPage) return
@@ -54,23 +61,46 @@ export default function Pagination({
     () => (total ? Math.ceil(total / limit) : 1),
     [limit, total],
   )
+  const pages = useMemo(
+    () =>
+      isMobile
+        ? new Array(1)
+            .fill(0)
+            .map((_, i) => page + i)
+            .filter((x) => x > 0 && x <= totalPage)
+        : new Array(5)
+            .fill(0)
+            .map((_, i) => page - 2 + i)
+            .filter((x) => x > 0 && x <= totalPage),
+    [isMobile, page, totalPage],
+  )
 
-  if (!total) return <></>
+  if (isLoading)
+    return (
+      <Flex
+        align={{ base: 'flex-end', sm: 'center' }}
+        justify={isMobile ? 'flex-end' : 'space-between'}
+      >
+        {!isMobile && <Skeleton w={3 / 8} h={10} />}
+        <Skeleton w={isMobile ? 5 / 8 : 2 / 8} h={8} />
+      </Flex>
+    )
+
   return (
     <Flex
       direction={{ base: hideSelectors ? 'row' : 'column', md: 'row' }}
-      align={{ base: 'center', sm: 'flex-start' }}
-      justify={{ base: 'center', sm: 'space-between' }}
+      align={{ base: 'flex-end', sm: 'center' }}
+      justify="space-between"
       w="full"
       gap={{ base: 6, md: 3 }}
       flexWrap="wrap"
       {...props}
     >
       <Flex
-        align={{ base: 'flex-start', sm: 'center' }}
+        align="center"
         gap={6}
-        w={{ base: 'full', sm: 'auto' }}
-        direction={{ base: 'column', sm: 'row' }}
+        w="auto"
+        display={{ base: 'none', sm: 'flex' }}
       >
         {!hideSelectors && (
           <Flex
@@ -98,61 +128,35 @@ export default function Pagination({
             </Select>
           </Flex>
         )}
-        <Text
-          as="span"
-          variant="text-sm"
-          color="gray.500"
-          mt={{ base: 'auto', sm: 0 }}
-          w="full"
-        >
+        <Text as="span" variant="text-sm" color="gray.500" w="full">
           {result.caption({
             from: (page - 1) * limit + 1,
             to: Math.min((page - 1) * limit + limit, total || Infinity),
-            total: total,
+            total: total || 0,
           })}
         </Text>
       </Flex>
       <Flex
         as="nav"
-        justify={{ base: 'space-between', md: 'flex-end' }}
-        w={{ base: 'full', sm: 'auto' }}
+        justify="flex-end"
+        flexWrap="wrap"
+        flex="auto"
         gap={6}
         aria-label="Pagination"
       >
         {!hideSelectors && (
           <Flex align="center" gap={3}>
-            <Flex
-              position="relative"
-              direction={{
-                base: 'column',
-                sm: 'column',
-              }}
-            >
-              <Select
-                onChange={(e) => goTo(parseInt(e.target.value, 10))}
-                value={page.toString()}
-                cursor="pointer"
-                w="24"
-              >
-                {Array.from({ length: totalPage }, (_, i) => i + 1).map(
-                  (page) => (
-                    <option key={page} value={page}>
-                      {page.toString()}
-                    </option>
-                  ),
-                )}
-              </Select>
-            </Flex>
             <Text as="p" variant="text-sm" color="gray.500" w="full">
               {result.pages({ total: totalPage })}
             </Text>
           </Flex>
         )}
-        <Flex align="center" gap={4}>
+        <Flex align="center" flexWrap="wrap" gap={4}>
           <IconButton
             variant="outline"
             colorScheme="gray"
             rounded="full"
+            size="sm"
             aria-label="previous"
             icon={
               <Icon as={IoChevronBackSharp} h={5} w={5} aria-hidden="true" />
@@ -160,10 +164,24 @@ export default function Pagination({
             isDisabled={page === 1}
             onClick={() => goTo(page - 1)}
           />
+          <ButtonGroup>
+            {pages.map((pageNumber) => (
+              <Button
+                key={pageNumber}
+                size="sm"
+                variant="outline"
+                colorScheme={pageNumber === page ? 'brand' : 'gray'}
+                onClick={() => goTo(pageNumber)}
+              >
+                {pageNumber}
+              </Button>
+            ))}
+          </ButtonGroup>
           <IconButton
             variant="outline"
             colorScheme="gray"
             rounded="full"
+            size="sm"
             aria-label="next"
             icon={<Icon as={IoChevronForward} h={5} w={5} aria-hidden="true" />}
             isDisabled={page === totalPage}

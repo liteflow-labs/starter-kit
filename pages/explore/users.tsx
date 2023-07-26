@@ -142,6 +142,7 @@ const UsersPage: NextPage<Props> = () => {
               limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
               total={usersData?.users?.totalCount}
+              isLoading={loading}
               onPageChange={changePage}
               onLimitChange={changeLimit}
               result={{

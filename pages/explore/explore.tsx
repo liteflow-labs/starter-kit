@@ -73,12 +73,13 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
       filter: convertFilterToAssetFilter(filter, date),
     },
   })
-  const { data: totalCountData } = useFetchAllErc721And1155TotalCountQuery({
-    variables: {
-      filter: convertFilterToAssetFilter(filter, date),
-    },
-    ssr: false,
-  })
+  const { data: totalCountData, loading: paginationIsLoading } =
+    useFetchAllErc721And1155TotalCountQuery({
+      variables: {
+        filter: convertFilterToAssetFilter(filter, date),
+      },
+      ssr: false,
+    })
   const totalCount = totalCountData?.assets?.totalCount
 
   const { showFilters, toggleFilters, close, count } =
@@ -250,6 +251,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                     pages: (props) =>
                       t('pagination.result.pages', { count: props.total }),
                   }}
+                  isLoading={paginationIsLoading}
                 />
               </Box>
             </GridItem>

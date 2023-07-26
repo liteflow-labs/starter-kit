@@ -97,7 +97,6 @@ const TokenGrid = <Order extends string>({
           )}
         </SimpleGrid>
       )}
-      )
       <Box py="6" borderTop="1px" borderColor="gray.200">
         <Pagination {...pagination} />
       </Box>

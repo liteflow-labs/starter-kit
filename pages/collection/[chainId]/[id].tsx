@@ -271,6 +271,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
               limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
               total={assetData?.assets?.totalCount}
+              isLoading={assetLoading}
               onPageChange={changePage}
               onLimitChange={changeLimit}
               result={{

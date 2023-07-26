@@ -117,6 +117,7 @@ const OwnersModal: FC<Props> = ({ assetId, ownersPreview, numberOfOwners }) => {
                   data?.ownerships?.totalCount ||
                   previousData?.ownerships?.totalCount
                 }
+                isLoading={loading}
                 onPageChange={setPage}
                 hideSelectors
                 result={{
