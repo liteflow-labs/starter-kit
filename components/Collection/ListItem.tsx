@@ -91,6 +91,8 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
             alt={collection.name}
             width={32}
             height={32}
+            w={8}
+            h={8}
             objectFit="cover"
           />
         ) : (

@@ -16,11 +16,11 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
-import { HTMLAttributes, ReactElement, useMemo } from 'react'
+import { HTMLAttributes, JSX, ReactElement, useMemo } from 'react'
 import { Control, Controller, FieldError } from 'react-hook-form'
 import Image from '../Image/Image'
 
-type IProps<T extends any> = HTMLAttributes<any> & {
+type IProps<T> = HTMLAttributes<any> & {
   selectWidth?: string | number
   dropdownMaxHeight?: string | number
   label?: string
@@ -43,7 +43,7 @@ type IProps<T extends any> = HTMLAttributes<any> & {
   sortAlphabetically?: boolean
 }
 
-const Select = <T extends any>({
+const Select = <T,>({
   selectWidth,
   dropdownMaxHeight,
   label,
@@ -91,7 +91,7 @@ const Select = <T extends any>({
             <FormLabel htmlFor={name} m={0}>
               {label}
             </FormLabel>
-            {labelInfo && <FormHelperText>{labelInfo}</FormHelperText>}
+            {labelInfo && <FormHelperText m={0}>{labelInfo}</FormHelperText>}
           </HStack>
         )}
         {hint && (
@@ -126,6 +126,7 @@ const Select = <T extends any>({
                   <>
                     {selectedChoice.image && (
                       <Box
+                        position="relative"
                         h={6}
                         w={6}
                         overflow="hidden"
@@ -135,9 +136,9 @@ const Select = <T extends any>({
                       >
                         <Image
                           src={selectedChoice.image}
-                          width={24}
-                          height={24}
                           alt={''}
+                          fill
+                          sizes="22px"
                           objectFit="cover"
                         />
                       </Box>
@@ -180,6 +181,7 @@ const Select = <T extends any>({
                     <Flex align="center" gap={2}>
                       {choice.image && (
                         <Box
+                          position="relative"
                           h={6}
                           w={6}
                           overflow="hidden"
@@ -189,9 +191,9 @@ const Select = <T extends any>({
                         >
                           <Image
                             src={choice.image}
-                            width={24}
-                            height={24}
                             alt={''}
+                            fill
+                            sizes="22px"
                             objectFit="cover"
                           />
                         </Box>

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAuctionStatus } from '@nft/hooks'
+import { useAuctionStatus } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
-import { VFC } from 'react'
+import { FC } from 'react'
 
 export type Props = {
   auction: {
@@ -15,7 +15,7 @@ export type Props = {
   }
 }
 
-const SaleAuctionStatus: VFC<Props> = ({ auction, bestBid }) => {
+const SaleAuctionStatus: FC<Props> = ({ auction, bestBid }) => {
   const { t } = useTranslation('components')
   const { inProgress } = useAuctionStatus(auction, bestBid)
 

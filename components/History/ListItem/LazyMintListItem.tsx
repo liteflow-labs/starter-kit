@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { WiStars } from '@react-icons/all-files/wi/WiStars'
 import Trans from 'next-translate/Trans'
-import { VFC } from 'react'
+import { FC } from 'react'
 import { formatDate } from '../../../utils'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
@@ -19,7 +19,7 @@ type IProps = {
   } | null
 }
 
-const LazyMintListItem: VFC<IProps> = ({
+const LazyMintListItem: FC<IProps> = ({
   date,
   from,
   fromAddress,

@@ -1,11 +1,10 @@
 query SearchCollection(
   $filter: CollectionFilter!
-  $orderBy: [CollectionsOrderBy!]
   $limit: Int!
   $offset: Int!
 ) {
   collections(
-    orderBy: $orderBy
+    orderBy: TOTAL_VOLUME_DESC
     first: $limit
     offset: $offset
     filter: $filter

@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import { MintType, Standard } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
@@ -53,7 +53,7 @@ export type Props = {
   onAuctionAccepted: (id: string) => Promise<void>
 }
 
-const TokenHeader: VFC<Props> = ({
+const TokenHeader: FC<Props> = ({
   asset,
   currencies,
   creator,
@@ -111,8 +111,7 @@ const TokenHeader: VFC<Props> = ({
               animationUrl={asset.animationUrl}
               unlockedContent={asset.unlockedContent}
               defaultText={asset.name}
-              fill={true}
-              // sizes determined from the homepage
+              fill
               sizes="
               (min-width: 30em) 384px,
               100vw"

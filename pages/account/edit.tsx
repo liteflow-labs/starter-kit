@@ -8,7 +8,6 @@ import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
 import Loader from '../../components/Loader'
 import UserFormEdit from '../../components/User/Form/Edit'
-import environment from '../../environment'
 import { useGetAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useLoginRedirect from '../../hooks/useLoginRedirect'
@@ -60,10 +59,6 @@ const EditPage: NextPage = () => {
           <UserFormEdit
             signer={signer}
             onUpdated={onSubmit}
-            uploadUrl={`${
-              process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
-              'https://api.liteflow.com'
-            }/${environment.LITEFLOW_API_KEY}/uploadToIPFS`}
             account={account}
           />
         )}

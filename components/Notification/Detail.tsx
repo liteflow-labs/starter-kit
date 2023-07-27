@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { JSX, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import { AccountVerificationStatus, NotificationAction } from '../../graphql'
 import { dateFromNow } from '../../utils'
@@ -15,8 +15,8 @@ import {
   AuctionEndedReservePriceSeller,
   AuctionEndedWonBuyer,
   AuctionEndedWonSeller,
-  AuctionExpired,
   AuctionExpireSoon,
+  AuctionExpired,
   BidAccepted,
   BidCreated,
   BidExpired,
@@ -191,8 +191,8 @@ export default function NotificationDetail({
               <Image
                 src={content.image}
                 alt="Square Image"
-                width={56}
-                height={56}
+                fill
+                sizes="56px"
                 objectFit="cover"
               />
             </Box>

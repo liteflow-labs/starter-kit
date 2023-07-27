@@ -26,7 +26,6 @@ import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { convertCollection } from 'convert'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { chains } from '../../connectors'
@@ -41,6 +40,7 @@ import {
 } from '../../graphql'
 import { Filter, OfferFilter } from '../../hooks/useAssetFilterFromQuery'
 import CollectionListItem from '../Collection/ListItem'
+import Image from '../Image/Image'
 import List from '../List/List'
 import Select from '../Select/Select'
 
@@ -101,6 +101,7 @@ const FilterAsset: NextPage<Props> = ({
           ? ({ chainId: { in: filterResult.chains } } as CurrencyFilter)
           : (undefined as unknown as InputMaybe<CurrencyFilter>),
     },
+    ssr: false,
   })
   const currencies = useMemo(
     () => currencyData?.currencies?.nodes || [],
@@ -122,7 +123,6 @@ const FilterAsset: NextPage<Props> = ({
     variables: {
       limit: 8,
       offset: 0,
-      orderBy: ['TOTAL_VOLUME_DESC'],
       filter: {
         name: { includesInsensitive: collectionSearch } as StringFilter,
         ...(filterResult.chains.length
@@ -131,6 +131,7 @@ const FilterAsset: NextPage<Props> = ({
       } as CollectionFilter,
     },
     skip: !!selectedCollection,
+    ssr: false,
   })
 
   const collectionData = useMemo(
@@ -154,6 +155,7 @@ const FilterAsset: NextPage<Props> = ({
       chainId: (collection && collection.chainId) || 0,
     },
     skip: !collection,
+    ssr: false,
   })
 
   const traits = useMemo(() => {
@@ -165,7 +167,7 @@ const FilterAsset: NextPage<Props> = ({
   }, [propertySearch, traitsData])
 
   const addTrait = useCallback(
-    (type, value) => {
+    (type: string, value: string) => {
       const existingValues =
         filterResult.traits.find((x) => x.type === type)?.values || []
       onFilterChange({
@@ -186,7 +188,7 @@ const FilterAsset: NextPage<Props> = ({
   )
 
   const removeTrait = useCallback(
-    (type, value) => {
+    (type: string, value: string) => {
       const existingValues =
         filterResult.traits.find((x) => x.type === type)?.values || []
       const traits = filterResult.traits.filter((x) => x.type !== type)
@@ -242,6 +244,8 @@ const FilterAsset: NextPage<Props> = ({
                             src={`/chains/${id}.svg`}
                             width={24}
                             height={24}
+                            w={6}
+                            h={6}
                             alt={name}
                           />
                           <Text

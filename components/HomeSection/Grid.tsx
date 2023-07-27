@@ -9,7 +9,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
-import { FC } from 'react'
+import { FC, JSX } from 'react'
 import Link from '../Link/Link'
 import SkeletonGrid from '../Skeleton/Grid'
 import SkeletonTokenCard from '../Skeleton/TokenCard'

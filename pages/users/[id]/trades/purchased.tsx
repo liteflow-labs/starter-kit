@@ -200,11 +200,10 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
                               alt={item.asset.name}
                               width={40}
                               height={40}
-                              layout="fixed"
-                              objectFit="cover"
-                              rounded="full"
                               h={10}
                               w={10}
+                              objectFit="cover"
+                              rounded="2xl"
                             />
                             <Flex
                               direction="column"
@@ -283,6 +282,7 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
             onPageChange={changePage}
             page={page}
             total={tradeData?.trades?.totalCount || 0}
+            isLoading={loading}
             result={{
               label: t('pagination.result.label'),
               caption: (props) => (

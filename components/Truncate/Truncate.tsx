@@ -1,6 +1,6 @@
 import { chakra, Text, TextProps } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, useState } from 'react'
+import { JSX, useMemo, useState } from 'react'
 import linkify from '../Linkify/Linkify'
 
 type Props = {

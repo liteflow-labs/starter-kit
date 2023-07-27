@@ -8,7 +8,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { HiXCircle } from '@react-icons/all-files/hi/HiXCircle'
-import { PropsWithChildren } from 'react'
+import { JSX, PropsWithChildren } from 'react'
 
 export type ListItemProps = StackProps & {
   image?: JSX.Element

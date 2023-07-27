@@ -4,7 +4,7 @@ import { FaShoppingCart } from '@react-icons/all-files/fa/FaShoppingCart'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import Trans from 'next-translate/Trans'
-import { VFC } from 'react'
+import { FC } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatDate } from '../../../utils'
 import Link from '../../Link/Link'
@@ -36,7 +36,7 @@ type IProps = {
   blockExplorer: BlockExplorer
 }
 
-const PurchaseListItem: VFC<IProps> = ({
+const PurchaseListItem: FC<IProps> = ({
   currency,
   fromAddress,
   from,

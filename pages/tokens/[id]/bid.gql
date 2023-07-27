@@ -58,6 +58,7 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
           image
           name
           id
+          address
           decimals
           symbol
         }

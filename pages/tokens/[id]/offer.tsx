@@ -22,6 +22,7 @@ import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
+import type { BidCurrency } from '../../../components/Offer/Form/Bid'
 import Radio from '../../../components/Radio/Radio'
 import SalesAuctionForm from '../../../components/Sales/Auction/Form'
 import SalesDirectForm from '../../../components/Sales/Direct/Form'
@@ -121,6 +122,10 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     () => currencyData?.currencies?.nodes || [],
     [currencyData],
   )
+  const auctionCurrencies = useMemo(
+    () => currencies.filter((c) => c.address) as BidCurrency[],
+    [currencies],
+  )
 
   const saleOptions: [SaleOption, SaleOption] = useMemo(
     () => [
@@ -178,7 +183,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
         <SalesAuctionForm
           signer={signer}
           assetId={asset.id}
-          currencies={currencies.filter((c) => c.address)} // Keep only non-native currency for bids on auction
+          currencies={auctionCurrencies}
           auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
@@ -186,6 +191,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     invariant(true, 'Invalid sale type')
   }, [
     currencies,
+    auctionCurrencies,
     asset,
     sale,
     blockExplorer,

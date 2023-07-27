@@ -1,6 +1,6 @@
-import { HStack, Tab, TabList, Tabs, Tag, Text } from '@chakra-ui/react'
+import { Tab, TabList, Tabs, Tag, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo, VFC } from 'react'
+import { FC, useMemo } from 'react'
 import Link from '../../Link/Link'
 
 export type TabsEnum =
@@ -25,7 +25,7 @@ type Tab = {
   href: string
 }
 
-const UserProfileNavigation: VFC<IProps> = ({
+const UserProfileNavigation: FC<IProps> = ({
   baseUrl,
   showPrivateTabs,
   currentTab,
@@ -87,20 +87,20 @@ const UserProfileNavigation: VFC<IProps> = ({
       pb={{ base: 2.5, md: 0 }}
       overflowX="auto"
     >
-      <TabList>
+      <TabList gap={4}>
         {tabs.map((tab, index) => (
-          <Link key={index} href={tab.href} whiteSpace="nowrap" mr={4}>
-            <Tab borderColor="gray.200">
-              <HStack spacing={2}>
-                <Text as="span" variant="subtitle1">
-                  {tab.title}
-                </Text>
-                {tab.count !== undefined && (
-                  <Tag color="inherit">{tab.count}</Tag>
-                )}
-              </HStack>
-            </Tab>
-          </Link>
+          <Tab
+            key={index}
+            as={Link}
+            href={tab.href}
+            whiteSpace="nowrap"
+            gap={2}
+          >
+            <Text as="span" variant="subtitle1">
+              {tab.title}
+            </Text>
+            {tab.count !== undefined && <Tag color="inherit">{tab.count}</Tag>}
+          </Tab>
         ))}
       </TabList>
     </Tabs>

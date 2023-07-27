@@ -10,7 +10,12 @@ The Marketplace template includes the following features:
   - Mint ERC-721
   - Mint ERC-1155
   - Creator's royalties support
-- Featured NFTs on the home page
+- Homepage content customization
+  - Featured NFTs
+  - Featured collections
+  - Featured users
+  - Auctions ending soon
+  - Custom section with featured elements
 - Search system
   - Search NFTs
   - Search collections
@@ -89,7 +94,6 @@ The Marketplace template showcases the following additional paid features:
 - Unlockable content for NFTs
 - Multi currency support
 - Advanced fee customization support
-- Referral system
 
 ## Libraries used
 
@@ -106,7 +110,8 @@ The Marketplace template is based on the following tech stack
 
 ## Get started
 
-To get started you will first need to set your environmental variables in the `.env` file based on the `.env.example` file.
+To get started, start by configuring your environmental variables in the `.env` file, referring to the `.env.example` file as a guide.
+For further customization, an optional option is to utilize the `environment.ts` file.
 
 Once done you can install all the dependencies with `npm i` then run
 
