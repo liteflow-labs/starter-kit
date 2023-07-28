@@ -23,10 +23,16 @@ import {
 } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+
+const providers = [publicProvider()]
+// add alchemy provider as fallback if ALCHEMY_API_KEY is set
+if (environment.ALCHEMY_API_KEY)
+  providers.push(alchemyProvider({ apiKey: environment.ALCHEMY_API_KEY }))
 
 export const { chains, publicClient } = configureChains<Chain>(
   environment.CHAINS,
-  [publicProvider()],
+  providers,
 )
 
 // Copied from https://github.com/rainbow-me/rainbowkit/blob/main/packages/rainbowkit/src/wallets/getDefaultWallets.ts#L11

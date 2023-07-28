@@ -19,6 +19,8 @@ export default function getClient(
   forceReset = false,
   onError?: (status: number) => void,
 ): ApolloClient<NormalizedCacheObject> {
+  if (_client && !forceReset) return _client
+
   const errorLink = linkOnError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
       graphQLErrors.forEach(({ message, locations, path }) =>
@@ -41,18 +43,13 @@ export default function getClient(
     uri: `${
       process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
     }/${environment.LITEFLOW_API_KEY}/graphql`,
-  })
-
-  if (_client && !forceReset) return _client
-
-  _client = new ApolloClient({
-    uri: `${
-      process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
-    }/${environment.LITEFLOW_API_KEY}/graphql`,
     headers: {
       ...(authorization ? { authorization: `Bearer ${authorization}` } : {}),
       origin: environment.BASE_URL,
     },
+  })
+
+  _client = new ApolloClient({
     cache: new InMemoryCache({
       typePolicies: {
         Account: {
