@@ -76,6 +76,7 @@ const environment = {
     '0x4f379eb8bf6c83fa3aabf27a31be94d825e5de06',
     '0x6da89d36ba7cd6c371629b0724c2e17abf4049ee',
     '0x09ea03548b97aa045043ff55f5bd9505f2f135eb',
+    '0x4ffa469c9a7f71a967e31884a5a64cf5916f905a',
   ],
 
   // List of tokens randomized to be featured on the homepage with the following format: [chainId]-[contractAddress]-[tokenId]
