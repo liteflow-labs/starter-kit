@@ -86,6 +86,7 @@ export default function Pagination({
       </Flex>
     )
 
+  if (total === 0) return <></>
   return (
     <Flex
       direction={{ base: hideSelectors ? 'row' : 'column', md: 'row' }}

@@ -320,6 +320,8 @@ const FilterAsset: NextPage<Props> = ({
                     alt={currency.symbol}
                     width={24}
                     height={24}
+                    w={6}
+                    h={6}
                     objectFit="cover"
                   />
                   <Text ml="2">{currency.symbol}</Text>
@@ -391,6 +393,8 @@ const FilterAsset: NextPage<Props> = ({
                           alt={currency.symbol}
                           width={24}
                           height={24}
+                          w={6}
+                          h={6}
                           objectFit="cover"
                         />
                       </InputRightElement>
@@ -447,6 +451,8 @@ const FilterAsset: NextPage<Props> = ({
                             alt={currency.symbol}
                             width={24}
                             height={24}
+                            w={6}
+                            h={6}
                             objectFit="cover"
                           />
                         </InputRightElement>
