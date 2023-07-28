@@ -1,4 +1,4 @@
-import { Box, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
+import { Box, Divider, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { ReactElement } from 'react'
 import Empty from '../Empty/Empty'
@@ -97,9 +97,8 @@ const TokenGrid = <Order extends string>({
           )}
         </SimpleGrid>
       )}
-      <Box py="6" borderTop="1px" borderColor="gray.200">
-        <Pagination {...pagination} />
-      </Box>
+      <Divider display={pagination.total === 0 ? 'none' : 'block'} />
+      <Pagination {...pagination} />
     </Stack>
   )
 }
