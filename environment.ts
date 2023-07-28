@@ -60,10 +60,10 @@ const environment = {
   HOME_COLLECTIONS: [
     '1-0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
     '1-0xed5af388653567af2f388e6224dc7c4b3241c544',
-    '1-0x60e4d786628fea6478f785a6d7e704777c86a7c6',
-    '1-0x306b1ea3ecdf94ab739f1910bbda052ed4a9f949',
     '1-0x8a90cab2b38dba80c64b7734e58ee1db38b8992e',
     '1-0x1a92f7381b9f03921564a437210bb9396471050c',
+    '1-0x60e4d786628fea6478f785a6d7e704777c86a7c6',
+    '1-0x306b1ea3ecdf94ab739f1910bbda052ed4a9f949',
     '1-0xe785e82358879f061bc3dcac6f0444462d4b5330',
     '1-0x39ee2c7b3cb80254225884ca001f57118c8f21b6',
   ],
@@ -71,10 +71,10 @@ const environment = {
   // Ordered list of users to be featured on the homepage with the following format: [address]
   HOME_USERS: [
     '0x4b595014f7b45789c3f4e79324ae6d8090a6c8b5',
-    '0x8108457554bc5822dc55b8adaa421ffeb970e09d',
-    '0x5e7760acf5d659278747b95da2ab2b5ea7171615',
     '0x8533f3ffe30c9cf449cc112850e7ec815070509d',
-    '0x49027ef8931082ca59f0037b80a4f518d500bc4f',
+    '0x4f379eb8bf6c83fa3aabf27a31be94d825e5de06',
+    '0x6da89d36ba7cd6c371629b0724c2e17abf4049ee',
+    '0x09ea03548b97aa045043ff55f5bd9505f2f135eb',
   ],
 
   // List of tokens randomized to be featured on the homepage with the following format: [chainId]-[contractAddress]-[tokenId]
