@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Flex,
   SimpleGrid,
   Text,
@@ -56,6 +57,7 @@ const UsersPage: NextPage<Props> = () => {
       filter: search ? searchFilter(search) : [],
     },
   })
+  const totalCount = usersData?.users?.totalCount
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -129,39 +131,36 @@ const UsersPage: NextPage<Props> = () => {
               ))}
             </SimpleGrid>
           ) : (
-            <Flex align="center" justify="center" h="full" py={12}>
-              <Empty
-                title={t('explore.users.empty.title')}
-                description={t('explore.users.empty.description')}
-              />
-            </Flex>
-          )}
-          <Box py="6" borderTop="1px" borderColor="gray.200">
-            <Pagination
-              limit={limit}
-              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-              page={page}
-              total={usersData?.users?.totalCount}
-              isLoading={loading}
-              onPageChange={changePage}
-              onLimitChange={changeLimit}
-              result={{
-                label: t('pagination.result.label'),
-                caption: (props) => (
-                  <Trans
-                    ns="templates"
-                    i18nKey="pagination.result.caption"
-                    values={props}
-                    components={[
-                      <Text as="span" color="brand.black" key="text" />,
-                    ]}
-                  />
-                ),
-                pages: (props) =>
-                  t('pagination.result.pages', { count: props.total }),
-              }}
+            <Empty
+              title={t('explore.users.empty.title')}
+              description={t('explore.users.empty.description')}
             />
-          </Box>
+          )}
+          <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
+          <Pagination
+            limit={limit}
+            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+            page={page}
+            total={totalCount}
+            isLoading={loading}
+            onPageChange={changePage}
+            onLimitChange={changeLimit}
+            result={{
+              label: t('pagination.result.label'),
+              caption: (props) => (
+                <Trans
+                  ns="templates"
+                  i18nKey="pagination.result.caption"
+                  values={props}
+                  components={[
+                    <Text as="span" color="brand.black" key="text" />,
+                  ]}
+                />
+              ),
+              pages: (props) =>
+                t('pagination.result.pages', { count: props.total }),
+            }}
+          />
         </>
       </ExploreTemplate>
     </>
