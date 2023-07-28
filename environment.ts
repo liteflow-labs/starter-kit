@@ -54,6 +54,7 @@ const environment = {
     '1-0x8a90cab2b38dba80c64b7734e58ee1db38b8992e-1095',
     '1-0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d-1068',
     '1-0xe785e82358879f061bc3dcac6f0444462d4b5330-1038',
+    '1-0x1a92f7381b9f03921564a437210bb9396471050c-1036',
   ],
 
   // Ordered list of collections to be featured on the homepage with the following format: [chainId]-[contractAddress]
@@ -106,8 +107,6 @@ const environment = {
     '1-0x8821bee2ba0df28761afff119d66390d594cd280-1029',
     '1-0x248139afb8d3a2e16154fbe4fb528a3a214fd8e7-1006',
     '1-0x248139afb8d3a2e16154fbe4fb528a3a214fd8e7-103',
-    '137-0x670fd103b1a08628e9557cd66b87ded841115190-10000',
-    '137-0x670fd103b1a08628e9557cd66b87ded841115190-10038',
   ],
 
   /**
