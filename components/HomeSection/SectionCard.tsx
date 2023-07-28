@@ -28,7 +28,7 @@ const HomeSectionCard: FC<Props> = ({
         w="full"
         overflow="hidden"
       >
-        <Box height="7.5rem">
+        <Box position="relative" height="7.5rem">
           {image ? (
             <Image
               src={image}
