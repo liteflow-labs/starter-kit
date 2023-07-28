@@ -22,7 +22,8 @@ const WalletBalance: FC<{
         speed="0.65s"
       />
     )
-  return <Price amount={balance || 0} currency={currency} />
+  if (!balance) return '-'
+  return <Price amount={balance} currency={currency} />
 }
 
 export default WalletBalance
