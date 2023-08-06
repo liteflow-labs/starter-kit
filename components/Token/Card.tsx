@@ -16,10 +16,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { HiClock } from '@react-icons/all-files/hi/HiClock'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import Countdown from 'components/Countdown/Countdown'
-import environment from 'environment'
+import { EnvironmentContext } from 'environment'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo, useState } from 'react'
-import { chains } from '../../connectors'
+import { FC, useContext, useMemo, useState } from 'react'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
 import SaleAuctionCardFooter from '../Sales/Auction/CardFooter'
@@ -95,14 +94,15 @@ const TokenCard: FC<Props> = ({
   displayCreator = false,
   hasMultiCurrency,
 }) => {
+  const { CHAINS, REPORT_EMAIL } = useContext(EnvironmentContext)
   const { t } = useTranslation('templates')
   const href = asset.id ? `/tokens/${asset.id}` : '#'
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const [isHovered, setIsHovered] = useState(false)
 
   const chainName = useMemo(
-    () => chains.find((x) => x.id === asset.collection.chainId)?.name,
-    [asset.collection.chainId],
+    () => CHAINS.find((x) => x.id === asset.collection.chainId)?.name,
+    [asset.collection.chainId, CHAINS],
   )
 
   const footer = useMemo(() => {
@@ -261,7 +261,7 @@ const TokenCard: FC<Props> = ({
             </MenuButton>
             <MenuList>
               <Link
-                href={`mailto:${environment.REPORT_EMAIL}?subject=${encodeURI(
+                href={`mailto:${REPORT_EMAIL}?subject=${encodeURI(
                   t('asset.detail.menu.report.subject'),
                 )}&body=${encodeURI(
                   t('asset.detail.menu.report.body', asset),

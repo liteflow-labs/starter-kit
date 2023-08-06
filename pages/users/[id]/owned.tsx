@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
 import {
@@ -12,7 +12,7 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
+import { EnvironmentContext } from '../../../environment'
 import {
   AssetDetailFragment,
   OwnershipsOrderBy,
@@ -31,6 +31,7 @@ type Props = {
 }
 
 const OwnedPage: NextPage<Props> = ({ now }) => {
+  const { PAGINATION_LIMIT, BASE_URL } = useContext(EnvironmentContext)
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { pathname, replace, query } = useRouter()
@@ -87,7 +88,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
         currentAccount={address}
         address={userAddress}
         currentTab="owned"
-        loginUrlForReferral={environment.BASE_URL + '/login'}
+        loginUrlForReferral={BASE_URL + '/login'}
       >
         <TokenGrid<OwnershipsOrderBy>
           loading={loading && !assetData}
@@ -108,7 +109,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
           }}
           pagination={{
             limit,
-            limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
+            limits: [PAGINATION_LIMIT, 24, 36, 48],
             page,
             total: assetData?.owned?.totalCount || 0,
             isLoading: loading,

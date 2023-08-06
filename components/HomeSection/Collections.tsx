@@ -1,9 +1,9 @@
 import CollectionCard from 'components/Collection/CollectionCard'
 import { convertCollection } from 'convert'
-import environment from 'environment'
+import { EnvironmentContext } from 'environment'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC, useContext, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import {
   CollectionFilter,
@@ -16,11 +16,12 @@ import HomeGridSection from './Grid'
 type Props = {}
 
 const CollectionsHomeSection: FC<Props> = () => {
+  const { HOME_COLLECTIONS, PAGINATION_LIMIT } = useContext(EnvironmentContext)
   const { t } = useTranslation('templates')
   const collectionsQuery = useFetchCollectionsQuery({
     variables: {
       filter: {
-        or: environment.HOME_COLLECTIONS.map((x) => x.split('-')).map(
+        or: HOME_COLLECTIONS.map((x) => x.split('-')).map(
           ([chainId, collectionAddress]) => {
             invariant(chainId && collectionAddress, 'invalid collection')
             return {
@@ -30,9 +31,9 @@ const CollectionsHomeSection: FC<Props> = () => {
           },
         ),
       } as CollectionFilter,
-      limit: environment.PAGINATION_LIMIT,
+      limit: PAGINATION_LIMIT,
     },
-    skip: !environment.HOME_COLLECTIONS.length,
+    skip: !HOME_COLLECTIONS.length,
   })
   useHandleQueryError(collectionsQuery)
 
@@ -42,7 +43,7 @@ const CollectionsHomeSection: FC<Props> = () => {
   )
 
   const orderedCollections = useOrderByKey(
-    environment.HOME_COLLECTIONS,
+    HOME_COLLECTIONS,
     collectionData?.collections?.nodes || [],
     (collection) => [collection.chainId, collection.address].join('-'),
   )

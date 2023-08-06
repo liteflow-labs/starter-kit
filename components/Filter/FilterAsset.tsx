@@ -26,9 +26,9 @@ import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { convertCollection } from 'convert'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { chains } from '../../connectors'
+import { EnvironmentContext } from '../../environment'
 import {
   CollectionFilter,
   CurrencyFilter,
@@ -74,6 +74,7 @@ const FilterAsset: NextPage<Props> = ({
   noChain,
   onFilterChange,
 }) => {
+  const { CHAINS } = useContext(EnvironmentContext)
   const { t } = useTranslation('components')
   const isSmall = useBreakpointValue({ base: true, sm: false })
 
@@ -220,7 +221,7 @@ const FilterAsset: NextPage<Props> = ({
     <Stack spacing={8} as="form" onSubmit={handleSubmit(onFilterChange)}>
       <Accordion allowMultiple defaultIndex={isSmall ? [] : [2]}>
         {noChain ||
-          (chains.length > 1 && (
+          (CHAINS.length > 1 && (
             <AccordionItem>
               <AccordionButton>
                 <Heading variant="heading2" flex="1" textAlign="left">
@@ -237,7 +238,7 @@ const FilterAsset: NextPage<Props> = ({
                   }
                 >
                   <Stack spacing={1}>
-                    {chains.map(({ id, name }, i) => (
+                    {CHAINS.map(({ id, name }, i) => (
                       <Checkbox key={i} value={id}>
                         <Flex gap={2} alignItems="center">
                           <Image

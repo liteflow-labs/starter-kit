@@ -21,7 +21,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import CancelOfferButton from '../../../../components/Button/CancelOffer'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
@@ -32,7 +32,7 @@ import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import { convertBidFull } from '../../../../convert'
-import environment from '../../../../environment'
+import { EnvironmentContext } from '../../../../environment'
 import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsPlacedQuery,
@@ -51,6 +51,7 @@ type Props = {
 }
 
 const BidPlacedPage: NextPage<Props> = ({ now }) => {
+  const { BASE_URL, PAGINATION_LIMIT } = useContext(EnvironmentContext)
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -105,7 +106,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
         currentAccount={address}
         address={userAddress}
         currentTab="bids"
-        loginUrlForReferral={environment.BASE_URL + '/login'}
+        loginUrlForReferral={BASE_URL + '/login'}
       >
         <Stack spacing={6}>
           <Flex
@@ -289,7 +290,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
 
           <Pagination
             limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+            limits={[PAGINATION_LIMIT, 24, 36, 48]}
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}

@@ -17,7 +17,7 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useCallback, useContext, useMemo } from 'react'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
 import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
@@ -35,7 +35,7 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
+import { EnvironmentContext } from '../../../environment'
 import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
@@ -43,8 +43,8 @@ import {
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
-  Filter,
   convertFilterToAssetFilter,
+  Filter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../../hooks/useAssetFilterState'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
@@ -59,6 +59,7 @@ type Props = {
 }
 
 const CollectionPage: FC<Props> = ({ now }) => {
+  const { REPORT_EMAIL, PAGINATION_LIMIT } = useContext(EnvironmentContext)
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
@@ -150,7 +151,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       <CollectionHeader
         collection={collectionDetails || {}}
         loading={loading && !collectionDetails}
-        reportEmail={environment.REPORT_EMAIL}
+        reportEmail={REPORT_EMAIL}
       />
 
       <Flex py="6" justifyContent="space-between">
@@ -220,7 +221,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
           {assetLoading && !assetData ? (
             <SkeletonGrid
-              items={environment.PAGINATION_LIMIT}
+              items={PAGINATION_LIMIT}
               compact
               columns={
                 showFilters
@@ -268,7 +269,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
           <Pagination
             limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+            limits={[PAGINATION_LIMIT, 24, 36, 48]}
             page={page}
             total={totalCount}
             isLoading={assetLoading}
