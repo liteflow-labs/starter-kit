@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
 
 export default function AuctionBidExpired({
   asset,
@@ -32,7 +31,7 @@ export default function AuctionBidExpired({
     <br/>
     You can place an open bid for this NFT at anytime. To do so just click the link below that will redirect you to it.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Go to the NFT page</a><br/>`,
   }

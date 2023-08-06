@@ -1,5 +1,4 @@
 import { Events } from '@nft/webhook'
-import environment from '../environment'
 import { formatDate } from '../utils'
 
 export default function AuctionEndedNoBids({
@@ -29,7 +28,7 @@ export default function AuctionEndedNoBids({
       expireAt,
     )}</strong>, the auction will be canceled.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Create a new sale</a><br/>`,
   }

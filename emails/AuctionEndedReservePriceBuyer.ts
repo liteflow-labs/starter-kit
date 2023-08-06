@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
 import { formatDate } from '../utils'
 
 export default function AuctionEndedReservePriceBuyer({
@@ -34,7 +33,7 @@ export default function AuctionEndedReservePriceBuyer({
     <br/>
     Keep an eye on this NFT as the owner might list it for sale again!<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Go to the NFT page</a><br/>`,
   }

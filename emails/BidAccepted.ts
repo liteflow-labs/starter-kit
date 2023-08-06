@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
 
 export default function BidAccepted({
   unitPrice,
@@ -39,6 +38,8 @@ export default function BidAccepted({
     <br/>      
     The NFT ownership has been transferred. No additional actions are required on your side.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${asset.id}">View my NFT</a><br/>`,
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
+      asset.id
+    }">View my NFT</a><br/>`,
   }
 }

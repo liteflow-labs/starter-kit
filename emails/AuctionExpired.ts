@@ -1,5 +1,4 @@
 import { Events } from '@nft/webhook'
-import environment from '../environment'
 
 export default function AuctionExpired({
   asset,
@@ -21,7 +20,7 @@ export default function AuctionExpired({
     <br/>
     You can create a new sale for this NFT at anytime.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Create a new sale</a><br/>`,
   }
