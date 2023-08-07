@@ -154,16 +154,26 @@ const environment = {
    * NFT Mint Behavior
    */
   // Enable/disable the lazy minting feature. If enabled, the NFTs will be minted on the first sale
-  LAZYMINT: false,
+  LAZYMINT: true,
 
   // Enable/disable the unlockable content feature. If enabled, the NFTs will have unlockable content only accessible to owners
-  UNLOCKABLE_CONTENT: false,
+  UNLOCKABLE_CONTENT: true,
 }
 
 export type Environment = typeof environment
 
 export const EnvironmentContext = createContext<Environment>({} as Environment)
 
-const getEnvironment = async (): Promise<Environment> => environment
+const getEnvironment = async (): Promise<Environment> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/detect`,
+    { headers: { 'Content-type': 'application/json' } },
+  )
+  const metadata = await response.json()
+  return {
+    ...environment,
+    ...metadata,
+  }
+}
 
 export default getEnvironment
