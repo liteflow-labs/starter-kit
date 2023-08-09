@@ -38,11 +38,9 @@ export default function DropCard({ drop, timeline }: Props) {
     <Box
       as={Link}
       href={`/collection/${drop.collection.chainId}/${drop.collection.address}/drop`}
-      borderWidth={{ base: '0px', md: '1px' }}
-      borderTopWidth="1px"
-      borderBottomWidth="1px"
+      borderWidth="1px"
       borderColor="gray.200"
-      borderRadius={{ base: 'none', md: '2xl' }}
+      borderRadius="2xl"
       w="full"
       overflow="hidden"
       position="relative"
