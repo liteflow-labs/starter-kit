@@ -1,0 +1,93 @@
+query FetchDrops($now: Datetime!, $limit: Int!, $offset: Int!) {
+  inProgressAndUpComing: collections(
+    orderBy: [DROPS_MIN_START_DATE_ASC]
+    filter: {
+      dropsExist: true
+      drops: { some: { endDate: { greaterThan: $now } } }
+    }
+  ) {
+    nodes {
+      cover
+      image
+      address
+      chainId
+      name
+      deployer {
+        address
+        name
+        username
+        verification {
+          status
+        }
+      }
+      firstDrop: drops(orderBy: [START_DATE_ASC], first: 1) {
+        nodes {
+          startDate
+        }
+      }
+      allDrops: drops {
+        nodes {
+          supply
+        }
+      }
+      lastDrop: drops(orderBy: [START_DATE_DESC], first: 1) {
+        nodes {
+          id
+          endDate
+          unitPrice
+          currency {
+            id
+            decimals
+            symbol
+            image
+          }
+        }
+      }
+    }
+  }
+  ended: collections(
+    orderBy: [DROPS_MIN_START_DATE_ASC]
+    filter: {
+      dropsExist: true
+      drops: { every: { endDate: { lessThanOrEqualTo: $now } } }
+    }
+    first: $limit
+    offset: $offset
+  ) {
+    nodes {
+      cover
+      image
+      address
+      chainId
+      name
+      deployer {
+        address
+        name
+        username
+        verification {
+          status
+        }
+      }
+      allDrops: drops {
+        nodes {
+          supply
+        }
+      }
+      lastDrop: drops(orderBy: [START_DATE_DESC], first: 1) {
+        nodes {
+          id
+          startDate
+          endDate
+          unitPrice
+          currency {
+            id
+            decimals
+            symbol
+            image
+          }
+        }
+      }
+    }
+    totalCount
+  }
+}
