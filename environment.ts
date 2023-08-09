@@ -93,6 +93,37 @@ const environment = {
     polygon,
     polygonMumbai,
     {
+      // TODO: need to add chain icon to public/chains/1890.png
+      name: 'LightLink Phoenix',
+      network: 'lightlink-phoenix',
+      id: 1890,
+      nativeCurrency: {
+        decimals: 18,
+        name: 'Ether',
+        symbol: 'ETH',
+      },
+      rpcUrls: {
+        default: {
+          http: [
+            'https://replicator-01.phoenix.lightlink.io/rpc/v1',
+            'https://replicator-02.phoenix.lightlink.io/rpc/v1',
+          ],
+        },
+        public: {
+          http: [
+            'https://replicator-01.phoenix.lightlink.io/rpc/v1',
+            'https://replicator-02.phoenix.lightlink.io/rpc/v1',
+          ],
+        },
+      },
+      blockExplorers: {
+        default: {
+          name: 'LightLink Phoenix Explorer',
+          url: 'https://phoenix.lightlink.io',
+        },
+      },
+    } as Chain,
+    {
       // TODO: need to add chain icon to public/chains/1891.png
       name: 'LightLink Pegasus Testnet',
       network: 'lightlink-pegasus',
@@ -105,10 +136,16 @@ const environment = {
       },
       rpcUrls: {
         default: {
-          http: ['https://replicator-01.pegasus.lightlink.io/rpc/v1'],
+          http: [
+            'https://replicator-01.pegasus.lightlink.io/rpc/v1',
+            'https://replicator-02.pegasus.lightlink.io/rpc/v1',
+          ],
         },
         public: {
-          http: ['https://replicator-01.pegasus.lightlink.io/rpc/v1'],
+          http: [
+            'https://replicator-01.pegasus.lightlink.io/rpc/v1',
+            'https://replicator-02.pegasus.lightlink.io/rpc/v1',
+          ],
         },
       },
       blockExplorers: {
@@ -149,7 +186,7 @@ const environment = {
    * NFT Mint Behavior
    */
   // Enable/disable the lazy minting feature. If enabled, the NFTs will be minted on the first sale
-  LAZYMINT: false,
+  LAZYMINT: true,
 
   // Enable/disable the unlockable content feature. If enabled, the NFTs will have unlockable content only accessible to owners
   UNLOCKABLE_CONTENT: false,
