@@ -1,12 +1,14 @@
 import { getAddress, isAddress } from '@ethersproject/address'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import isBetween from 'dayjs/plugin/isBetween'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
 dayjs.extend(relativeTime)
 dayjs.extend(duration)
+dayjs.extend(isBetween)
 
 export const isSameAddress = (addressA: string, addressB: string): boolean => {
   return addressA.toLowerCase() === addressB.toLowerCase()
@@ -41,6 +43,18 @@ export const formatDateDatetime = (date: Date | string): string => {
 
 export const getHumanizedDate = (second: number): string => {
   return dayjs.duration(second, 'seconds').humanize()
+}
+
+export const dateIsBefore = (now: Date, startDate: Date): boolean => {
+  return dayjs(now).isBefore(dayjs(startDate))
+}
+
+export const dateIsBetween = (
+  now: Date,
+  startDate: Date,
+  endDate: Date,
+): boolean => {
+  return dayjs(now).isBetween(dayjs(startDate), dayjs(endDate))
 }
 
 export const formatError = (error: unknown): string | undefined => {

@@ -1,8 +1,5 @@
-import dayjs from 'dayjs'
-import isBetween from 'dayjs/plugin/isBetween'
 import { useMemo } from 'react'
-
-dayjs.extend(isBetween)
+import { dateIsBefore, dateIsBetween } from '../utils'
 
 export enum Timeline {
   UPCOMING = 'upcoming',
@@ -20,8 +17,8 @@ type HookArgs = {
 
 export default function useDropTimeline({ now, drop }: HookArgs): Timeline {
   return useMemo(() => {
-    if (dayjs(now).isBefore(dayjs(drop.startDate))) return Timeline.UPCOMING
-    if (dayjs(now).isBetween(dayjs(drop.startDate), dayjs(drop.endDate)))
+    if (dateIsBefore(now, drop.startDate)) return Timeline.UPCOMING
+    if (dateIsBetween(now, drop.startDate, drop.endDate))
       return Timeline.INPROGRESS
     return Timeline.ENDED
   }, [drop.endDate, drop.startDate, now])

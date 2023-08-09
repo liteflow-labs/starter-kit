@@ -2,6 +2,7 @@
 // This file will be removed when the whole migration of the components is finalized
 
 import { BigNumber } from '@ethersproject/bignumber'
+import invariant from 'ts-invariant'
 import {
   Account,
   AccountVerification,
@@ -14,6 +15,7 @@ import {
   CollectionStats,
   CollectionTraitValue,
   Currency,
+  Drop,
   Maybe,
   Offer,
   OfferOpenBuy,
@@ -117,6 +119,185 @@ export const convertAssetWithSupplies = (
           currency: bestBid.currency,
         }
       : undefined,
+  }
+}
+
+export const convertDropActive = (
+  inProgressAndUpComing: Pick<
+    Collection,
+    'address' | 'chainId' | 'name' | 'image' | 'cover'
+  > & {
+    deployer: Pick<Account, 'address' | 'name' | 'username'> & {
+      verification: Maybe<Pick<AccountVerification, 'status'>>
+    }
+  } & {
+    firstDrop: NonNullable<{ nodes: Array<Pick<Drop, 'startDate'>> }>
+  } & {
+    allDrops: NonNullable<{ nodes: Array<Pick<Drop, 'supply'>> }>
+  } & {
+    lastDrop: NonNullable<{
+      nodes: Array<
+        Pick<Drop, 'id' | 'endDate' | 'unitPrice'> & {
+          currency: {
+            id: string
+            decimals: number
+            symbol: string
+            image: string
+          }
+        }
+      >
+    }>
+  },
+): {
+  id: string
+  startDate: Date
+  endDate: Date
+  unitPrice: string
+  supply: number
+  collection: {
+    address: string
+    chainId: number
+    cover: string | null
+    image: string | null
+    name: string
+    deployer: {
+      address: string
+      name: string | null
+      username: string | null
+      verified: boolean
+    }
+  }
+  currency: {
+    id: string
+    decimals: number
+    symbol: string
+    image: string
+  }
+} => {
+  const totalSupply = inProgressAndUpComing.allDrops.nodes.reduce(
+    (acc, drop) => {
+      if (drop.supply === null) return Infinity
+      return acc + BigNumber.from(drop.supply).toNumber()
+    },
+    0,
+  )
+
+  invariant(inProgressAndUpComing.lastDrop.nodes[0], 'lastDrop is required')
+  invariant(inProgressAndUpComing.firstDrop.nodes[0], 'firstDrop is required')
+  return {
+    id: inProgressAndUpComing.lastDrop.nodes[0].id,
+    startDate: inProgressAndUpComing.firstDrop.nodes[0].startDate,
+    endDate: inProgressAndUpComing.lastDrop.nodes[0].endDate,
+    unitPrice: inProgressAndUpComing.lastDrop.nodes[0].unitPrice,
+    supply: totalSupply,
+    collection: {
+      address: inProgressAndUpComing.address,
+      chainId: inProgressAndUpComing.chainId,
+      cover: inProgressAndUpComing.cover,
+      image: inProgressAndUpComing.image,
+      name: inProgressAndUpComing.name,
+      deployer: {
+        address: inProgressAndUpComing.deployer.address,
+        name: inProgressAndUpComing.deployer.name,
+        username: inProgressAndUpComing.deployer.username,
+        verified:
+          inProgressAndUpComing.deployer.verification?.status === 'VALIDATED',
+      },
+    },
+    currency: {
+      id: inProgressAndUpComing.lastDrop.nodes[0].currency.id,
+      decimals: inProgressAndUpComing.lastDrop.nodes[0].currency.decimals,
+      symbol: inProgressAndUpComing.lastDrop.nodes[0].currency.symbol,
+      image: inProgressAndUpComing.lastDrop.nodes[0].currency.image,
+    },
+  }
+}
+
+export const convertDropEnded = (
+  inProgressAndUpComing: Pick<
+    Collection,
+    'address' | 'chainId' | 'name' | 'image' | 'cover'
+  > & {
+    deployer: Pick<Account, 'address' | 'name' | 'username'> & {
+      verification: Maybe<Pick<AccountVerification, 'status'>>
+    }
+  } & {
+    allDrops: NonNullable<{ nodes: Array<Pick<Drop, 'supply'>> }>
+  } & {
+    lastDrop: NonNullable<{
+      nodes: Array<
+        Pick<Drop, 'id' | 'startDate' | 'endDate' | 'unitPrice'> & {
+          currency: {
+            id: string
+            decimals: number
+            symbol: string
+            image: string
+          }
+        }
+      >
+    }>
+  },
+): {
+  id: string
+  startDate: Date
+  endDate: Date
+  unitPrice: string
+  supply: number
+  collection: {
+    address: string
+    chainId: number
+    cover: string | null
+    image: string | null
+    name: string
+    deployer: {
+      address: string
+      name: string | null
+      username: string | null
+      verified: boolean
+    }
+  }
+  currency: {
+    id: string
+    decimals: number
+    symbol: string
+    image: string
+  }
+} => {
+  const totalSupply = inProgressAndUpComing.allDrops.nodes.reduce(
+    (acc, drop) => {
+      if (drop.supply === null) return Infinity
+      return acc + BigNumber.from(drop.supply).toNumber()
+    },
+    0,
+  )
+
+  invariant(inProgressAndUpComing.lastDrop.nodes[0], 'lastDrop is required')
+  return {
+    id: inProgressAndUpComing.lastDrop.nodes[0].id,
+    startDate: inProgressAndUpComing.lastDrop.nodes[0].startDate,
+    endDate: inProgressAndUpComing.lastDrop.nodes[0].endDate,
+    unitPrice: inProgressAndUpComing.lastDrop.nodes[0].unitPrice,
+    supply: totalSupply,
+    collection: {
+      address: inProgressAndUpComing.address,
+      chainId: inProgressAndUpComing.chainId,
+      cover: inProgressAndUpComing.cover,
+      image: inProgressAndUpComing.image,
+      name: inProgressAndUpComing.name,
+      deployer: {
+        address: inProgressAndUpComing.deployer.address,
+        name: inProgressAndUpComing.deployer.name,
+        username: inProgressAndUpComing.deployer.username,
+        verified:
+          inProgressAndUpComing.deployer.verification?.status === 'VALIDATED',
+      },
+    },
+    currency: {
+      id: inProgressAndUpComing.lastDrop.nodes[0].currency.id,
+      decimals: inProgressAndUpComing.lastDrop.nodes[0].currency.decimals,
+      symbol: inProgressAndUpComing.lastDrop.nodes[0].currency.symbol,
+      image: inProgressAndUpComing.lastDrop.nodes[0].currency.image,
+    },
   }
 }
 
