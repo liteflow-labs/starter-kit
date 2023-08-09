@@ -1,16 +1,19 @@
-import { Heading, SimpleGrid } from '@chakra-ui/react'
+import { Box, Heading, SimpleGrid, Text } from '@chakra-ui/react'
 import { Timeline } from 'hooks/useDropTimeline'
 import { NextPage } from 'next'
+import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo } from 'react'
 import DropCard from '../components/Drop/DropCard'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
+import Pagination from '../components/Pagination/Pagination'
 import SkeletonDropCard from '../components/Skeleton/DropCard'
 import SkeletonGrid from '../components/Skeleton/Grid'
 import { convertDropActive, convertDropEnded } from '../convert'
 import environment from '../environment'
 import { useFetchDropsQuery } from '../graphql'
+import usePaginate from '../hooks/usePaginate'
 import usePaginateQuery from '../hooks/usePaginateQuery'
 import LargeLayout from '../layouts/large'
 import { dateIsBefore, dateIsBetween } from '../utils'
@@ -22,7 +25,8 @@ type Props = {
 const DropsPage: NextPage<Props> = ({ now }) => {
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
-  const { limit, offset } = usePaginateQuery()
+  const { page, limit, offset } = usePaginateQuery()
+  const [changePage, changeLimit] = usePaginate()
 
   const { data, loading } = useFetchDropsQuery({
     variables: { now: date, limit, offset },
@@ -132,6 +136,33 @@ const DropsPage: NextPage<Props> = ({ now }) => {
               </SimpleGrid>
             </>
           )}
+
+          <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              total={data?.ended?.totalCount || 0}
+              isLoading={loading}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              result={{
+                label: t('pagination.result.label'),
+                caption: (props) => (
+                  <Trans
+                    ns="templates"
+                    i18nKey="pagination.result.caption"
+                    values={props}
+                    components={[
+                      <Text as="span" color="brand.black" key="text" />,
+                    ]}
+                  />
+                ),
+                pages: (props) =>
+                  t('pagination.result.pages', { count: props.total }),
+              }}
+            />
+          </Box>
         </>
       )}
     </LargeLayout>
