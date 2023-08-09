@@ -9,6 +9,7 @@ import Head from '../components/Head'
 import SkeletonDropCard from '../components/Skeleton/DropCard'
 import SkeletonGrid from '../components/Skeleton/Grid'
 import { convertDropActive, convertDropEnded } from '../convert'
+import environment from '../environment'
 import { useFetchDropsQuery } from '../graphql'
 import usePaginateQuery from '../hooks/usePaginateQuery'
 import LargeLayout from '../layouts/large'
@@ -83,10 +84,11 @@ const DropsPage: NextPage<Props> = ({ now }) => {
         </SkeletonGrid>
       ) : isEmpty ? (
         <Empty
-          title={t('token.grid.empty.title')}
-          description={t('token.grid.empty.description')}
-          button={t('token.grid.empty.action')}
-          href="/explore"
+          title={t('drops.empty.title')}
+          description={t('drops.empty.description')}
+          button={t('drops.empty.action')}
+          href={`mailto:${environment.REPORT_EMAIL}`}
+          isExternal
         />
       ) : (
         <>
@@ -117,7 +119,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
           {endedDrops.length > 0 && (
             <>
               <Heading as="h2" variant="subtitle" color="brand.black" mb={4}>
-                Past Drops
+                {t('drops.past-drops')}
               </Heading>
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} w="full">
                 {endedDrops.map((drop) => (

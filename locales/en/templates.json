@@ -79,7 +79,13 @@
     }
   },
   "drops": {
-    "title": "Drops"
+    "title": "Drops",
+    "empty": {
+      "title": "Do your drop on the platform?",
+      "description": "Contact the support to create your first drop on the platform!",
+      "action": "Contact support"
+    },
+    "past-drops": "Past Drops"
   },
   "collection": {
     "filter": "Filters",
