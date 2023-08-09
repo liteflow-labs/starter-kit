@@ -42,20 +42,20 @@ const Countdown: FC<
         {d > 0 && (
           <Box {...boxStyle}>
             <Text variant="subtitle2">{d}</Text>
-            <Text variant="caption">days</Text>
+            <Text variant="caption">{t('countdown.day-long')}</Text>
           </Box>
         )}
         <Box {...boxStyle}>
           <Text variant="subtitle2">{`0${h}`.slice(-2)}</Text>
-          <Text variant="caption">hrs</Text>
+          <Text variant="caption">{t('countdown.hour-long')}</Text>
         </Box>
         <Box {...boxStyle}>
           <Text variant="subtitle2">{`0${m}`.slice(-2)}</Text>
-          <Text variant="caption">mins</Text>
+          <Text variant="caption">{t('countdown.min-long')}</Text>
         </Box>
         <Box {...boxStyle}>
           <Text variant="subtitle2">{`0${s}`.slice(-2)}</Text>
-          <Text variant="caption">secs</Text>
+          <Text variant="caption">{t('countdown.sec-long')}</Text>
         </Box>
       </Flex>
     )

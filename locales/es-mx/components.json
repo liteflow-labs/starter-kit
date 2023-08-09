@@ -64,9 +64,13 @@
   },
   "countdown": {
     "day": "{{value}}d",
+    "day-long": "días",
     "hour": "{{value}}h",
+    "hour-long": "hrs",
     "min": "{{value}}m",
-    "sec": "{{value}}s"
+    "min-long": "mnts",
+    "sec": "{{value}}s",
+    "sec-long": "sgs"
   },
   "drop": {
     "timeline": {

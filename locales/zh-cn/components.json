@@ -64,9 +64,13 @@
   },
   "countdown": {
     "day": "{{value}} 天",
+    "day-long": "天",
     "hour": "{{value}} 小时",
+    "hour-long": "小时",
     "min": "{{value}} 分钟",
-    "sec": "{{value}} 秒"
+    "min-long": "分钟",
+    "sec": "{{value}} 秒",
+    "sec-long": "秒"
   },
   "drop": {
     "timeline": {

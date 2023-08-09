@@ -64,9 +64,13 @@
   },
   "countdown": {
     "day": "{{value}}日",
+    "day-long": "日々",
     "hour": "{{value}}時間",
+    "hour-long": "時間",
     "min": "{{value}}分",
-    "sec": "{{value}}秒"
+    "min-long": "分",
+    "sec": "{{value}}秒",
+    "sec-long": "秒"
   },
   "drop": {
     "timeline": {
