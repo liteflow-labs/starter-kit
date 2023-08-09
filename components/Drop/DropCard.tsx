@@ -13,6 +13,7 @@ import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Price from 'components/Price/Price'
 import { convertDropActive } from 'convert'
+import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { useMemo } from 'react'
 import { Timeline } from '../../hooks/useDropTimeline'
@@ -28,11 +29,13 @@ type Props = {
 }
 
 export default function DropCard({ drop, timeline }: Props) {
+  const { t } = useTranslation('components')
+
   const timelineText = useMemo(() => {
-    if (timeline === Timeline.UPCOMING) return 'Upcoming'
-    if (timeline === Timeline.INPROGRESS) return 'In progress'
-    return 'Ended'
-  }, [timeline])
+    if (timeline === Timeline.UPCOMING) return t('drop.timeline.upcoming')
+    if (timeline === Timeline.INPROGRESS) return t('drop.timeline.in-progress')
+    return t('drop.timeline.ended')
+  }, [t, timeline])
 
   return (
     <Box
@@ -117,9 +120,11 @@ export default function DropCard({ drop, timeline }: Props) {
 
           <Flex alignItems="center" gap={1.5}>
             <Text variant="button2" color="white">
-              By{' '}
-              {drop.collection.deployer.name ||
-                formatAddress(drop.collection.deployer.address, 10)}
+              {t('drop.by', {
+                address:
+                  drop.collection.deployer.name ||
+                  formatAddress(drop.collection.deployer.address, 10),
+              })}
             </Text>
             {drop.collection.deployer?.verified && (
               <Icon as={HiBadgeCheck} color="brand.500" h={4} w={4} />
@@ -129,10 +134,12 @@ export default function DropCard({ drop, timeline }: Props) {
           <Flex alignItems="center" gap={2}>
             <Text variant="caption" color="white">
               {drop.supply === Infinity
-                ? 'Open edition'
-                : `${numbro(drop.supply).format({
-                    thousandSeparated: true,
-                  })} items`}
+                ? t('drop.supply.infinite')
+                : t('drop.supply.available', {
+                    count: numbro(drop.supply).format({
+                      thousandSeparated: true,
+                    }),
+                  })}
             </Text>
             <Divider orientation="vertical" h={4} />
             <Stack alignItems="center" direction="row" spacing={1}>

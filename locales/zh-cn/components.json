@@ -68,6 +68,19 @@
     "min": "{{value}} 分钟",
     "sec": "{{value}} 秒"
   },
+  "drop": {
+    "timeline": {
+      "upcoming": "即将推出",
+      "in-progress": "进行中",
+      "ended": "结束"
+    },
+    "by": "截至 {{address}}",
+    "supply": {
+      "available_one": "{{count}} 物品",
+      "available_other": "{{count}} 项目",
+      "infinite": "开放版"
+    }
+  },
   "dropzone": {
     "required": "此字段为必填字段",
     "gifTooLarge": "GIF 文件太大。最大大小为 5MB。",

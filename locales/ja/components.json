@@ -68,6 +68,19 @@
     "min": "{{value}}分",
     "sec": "{{value}}秒"
   },
+  "drop": {
+    "timeline": {
+      "upcoming": "今後の予定",
+      "in-progress": "進行中",
+      "ended": "終了しました"
+    },
+    "by": "までに {{address}}",
+    "supply": {
+      "available_one": "{{count}} アイテム",
+      "available_other": "{{count}} アイテム",
+      "infinite": "オープン版"
+    }
+  },
   "dropzone": {
     "required": "必須の項目です",
     "gifTooLarge": "GIFファイルが大きすぎます。最大サイズは5MBです。",

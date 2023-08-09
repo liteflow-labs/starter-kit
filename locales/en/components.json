@@ -68,6 +68,19 @@
     "min": "{{value}}m",
     "sec": "{{value}}s"
   },
+  "drop": {
+    "timeline": {
+      "upcoming": "Upcoming",
+      "in-progress": "In progress",
+      "ended": "Ended"
+    },
+    "by": "By {{address}}",
+    "supply": {
+      "available_one": "{{count}} item",
+      "available_other": "{{count}} items",
+      "infinite": "Open edition"
+    }
+  },
   "dropzone": {
     "required": "This field is required.",
     "gifTooLarge": "GIF file is too large. Max size is 5MB.",

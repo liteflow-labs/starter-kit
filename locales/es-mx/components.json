@@ -68,6 +68,19 @@
     "min": "{{value}}m",
     "sec": "{{value}}s"
   },
+  "drop": {
+    "timeline": {
+      "upcoming": "Próximos",
+      "in-progress": "En curso",
+      "ended": "Terminado"
+    },
+    "by": "Por {{address}}",
+    "supply": {
+      "available_one": "{{count}} artículo",
+      "available_other": "{{count}} elementos",
+      "infinite": "Edición abierta"
+    }
+  },
   "dropzone": {
     "required": "Este campo es obligatorio.",
     "gifTooLarge": "El archivo GIF es demasiado grande. El tamaño máximo es de 5 MB.",
