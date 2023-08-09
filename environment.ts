@@ -126,6 +126,9 @@ const environment = {
   // (Optional) Magic API Key, you can get one at https://magic.link/
   MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
 
+  // (Optional) Alchemy API key to activate fallback if public providers are not responsive
+  ALCHEMY_API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
+
   /**
    * SEO Configuration
    */

@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Flex,
   Grid,
   GridItem,
@@ -91,6 +92,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
         filter: convertFilterToAssetFilter(filter, date),
       },
     })
+  const totalCount = assetData?.assets?.totalCount
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -228,13 +230,11 @@ const CollectionPage: FC<Props> = ({ now }) => {
             >
               <SkeletonTokenCard />
             </SkeletonGrid>
-          ) : assetData?.assets?.totalCount === 0 ? (
-            <Flex align="center" justify="center" h="full" py={12}>
-              <Empty
-                title={t('collection.empty.title')}
-                description={t('collection.empty.description')}
-              />
-            </Flex>
+          ) : totalCount === 0 ? (
+            <Empty
+              title={t('collection.empty.title')}
+              description={t('collection.empty.description')}
+            />
           ) : (
             <SimpleGrid
               flexWrap="wrap"
@@ -265,31 +265,31 @@ const CollectionPage: FC<Props> = ({ now }) => {
               ))}
             </SimpleGrid>
           )}
-          <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
-            <Pagination
-              limit={limit}
-              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-              page={page}
-              total={assetData?.assets?.totalCount}
-              onPageChange={changePage}
-              onLimitChange={changeLimit}
-              result={{
-                label: t('pagination.result.label'),
-                caption: (props) => (
-                  <Trans
-                    ns="templates"
-                    i18nKey="pagination.result.caption"
-                    values={props}
-                    components={[
-                      <Text as="span" color="brand.black" key="text" />,
-                    ]}
-                  />
-                ),
-                pages: (props) =>
-                  t('pagination.result.pages', { count: props.total }),
-              }}
-            />
-          </Box>
+          <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
+          <Pagination
+            limit={limit}
+            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+            page={page}
+            total={totalCount}
+            isLoading={assetLoading}
+            onPageChange={changePage}
+            onLimitChange={changeLimit}
+            result={{
+              label: t('pagination.result.label'),
+              caption: (props) => (
+                <Trans
+                  ns="templates"
+                  i18nKey="pagination.result.caption"
+                  values={props}
+                  components={[
+                    <Text as="span" color="brand.black" key="text" />,
+                  ]}
+                />
+              ),
+              pages: (props) =>
+                t('pagination.result.pages', { count: props.total }),
+            }}
+          />
         </GridItem>
       </Grid>
     </LargeLayout>
