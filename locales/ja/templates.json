@@ -78,6 +78,9 @@
       }
     }
   },
+  "drops": {
+    "title": "ドロップ"
+  },
   "collection": {
     "filter": "フィルター",
     "card": {

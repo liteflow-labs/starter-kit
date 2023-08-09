@@ -78,6 +78,9 @@
       }
     }
   },
+  "drops": {
+    "drops": "滴"
+  },
   "collection": {
     "filter": "过滤 器",
     "card": {
