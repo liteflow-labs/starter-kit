@@ -2,11 +2,17 @@ query FetchCollectionTraits($chainId: Int!, $address: Address!) {
   collection(chainId: $chainId, address: $address) {
     chainId
     address
-    traitsOfCollection(first: 50, orderBy: [TYPE_ASC]) {
+    traitsOfCollection(
+      first: 50 # TODO: implement pagination
+      orderBy: [TYPE_ASC]
+    ) {
       nodes {
         type
         numberOfValues
-        values(first: 50, orderBy: [NUMBER_OF_ASSETS_DESC, VALUE_ASC]) {
+        values(
+          first: 50 # TODO: implement pagination
+          orderBy: [NUMBER_OF_ASSETS_DESC, VALUE_ASC]
+        ) {
           nodes {
             value
             numberOfAssets
