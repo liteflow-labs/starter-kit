@@ -17,6 +17,7 @@ import {
   Currency,
   Drop,
   Maybe,
+  MintType,
   Offer,
   OfferOpenBuy,
   OfferOpenSale,
@@ -441,6 +442,116 @@ export const convertCollectionFull = (
     floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
     totalOwners: collection.numberOfOwners,
     supply: collection.supply,
+  }
+}
+
+export const convertCollectionDropDetail = (
+  collection: Pick<
+    Collection,
+    | 'address'
+    | 'chainId'
+    | 'name'
+    | 'description'
+    | 'image'
+    | 'cover'
+    | 'twitter'
+    | 'discord'
+    | 'website'
+    | 'mintType'
+  > & {
+    deployer: Pick<Account, 'address' | 'name' | 'username'> & {
+      verification: Maybe<Pick<AccountVerification, 'status'>>
+    }
+  },
+): {
+  address: string
+  chainId: number
+  name: string
+  description: string | null
+  image: string | null
+  cover: string | null
+  twitter: string | null
+  discord: string | null
+  website: string | null
+  deployer: {
+    address: string
+    name: string | null
+    username: string | null
+    verified: boolean
+  }
+  mintType: MintType
+} => {
+  return {
+    address: collection.address,
+    chainId: collection.chainId,
+    name: collection.name,
+    description: collection.description,
+    image: collection.image,
+    cover: collection.cover,
+    twitter: collection.twitter,
+    discord: collection.discord,
+    website: collection.website,
+    mintType: collection.mintType,
+    deployer: {
+      address: collection.deployer.address,
+      name: collection.deployer.name,
+      username: collection.deployer.username,
+      verified: collection.deployer?.verification?.status === 'VALIDATED',
+    },
+  }
+}
+
+export const convertDropDetail = (
+  drop: Pick<
+    Drop,
+    | 'id'
+    | 'name'
+    | 'startDate'
+    | 'endDate'
+    | 'unitPrice'
+    | 'minted'
+    | 'supply'
+    | 'maxQuantityPerWallet'
+    | 'isAllowed'
+    | 'maxQuantity'
+  > & {
+    currency: Pick<Currency, 'id' | 'image' | 'symbol' | 'decimals'>
+  },
+): {
+  id: string
+  name: string
+  startDate: Date
+  endDate: Date
+  unitPrice: string
+  minted: string
+  supply: string | null
+  maxQuantityPerWallet: string | null
+  isAllowed: boolean
+  maxQuantity: string | null
+  currency: {
+    id: string
+    decimals: number
+    symbol: string
+    image: string
+  }
+} => {
+  return {
+    id: drop.id,
+    name: drop.name,
+    startDate: drop.startDate,
+    endDate: drop.endDate,
+    unitPrice: drop.unitPrice,
+    minted: drop.minted,
+    supply: drop.supply || null,
+    maxQuantityPerWallet: drop.maxQuantityPerWallet || null,
+    isAllowed: drop.isAllowed,
+    maxQuantity: drop.maxQuantity || null,
+    currency: {
+      id: drop.currency.id,
+      decimals: drop.currency.decimals,
+      symbol: drop.currency.symbol,
+      image: drop.currency.image,
+    },
   }
 }
 
