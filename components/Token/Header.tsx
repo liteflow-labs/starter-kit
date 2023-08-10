@@ -21,6 +21,9 @@ import TokenMetadata from '../Token/Metadata'
 export type Props = {
   asset: {
     id: string
+    chainId: number
+    collectionAddress: string
+    tokenId: string
     name: string
     image: string
     animationUrl: string | null | undefined
@@ -135,7 +138,9 @@ const TokenHeader: FC<Props> = ({
           </Heading>
         </Stack>
         <TokenMetadata
-          assetId={asset.id}
+          chainId={asset.chainId}
+          collectionAddress={asset.collectionAddress}
+          tokenId={asset.tokenId}
           creator={creator}
           owners={owners}
           numberOfOwners={numberOfOwners}
