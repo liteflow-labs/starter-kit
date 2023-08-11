@@ -2,6 +2,7 @@ query FetchCollectionsForMint {
   collections(
     filter: { mintType: { equalTo: PUBLIC } }
     orderBy: CREATED_AT_ASC
+    first: 100 # TODO: implement pagination
   ) {
     nodes {
       chainId

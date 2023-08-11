@@ -347,7 +347,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             <SkeletonProperty items={3} />
           ) : (
             <TokenMetadata
-              assetId={asset.id}
+              chainId={asset.chainId}
+              collectionAddress={asset.collectionAddress}
+              tokenId={asset.tokenId}
               creator={creator}
               owners={owners}
               numberOfOwners={asset.ownerships.totalCount}

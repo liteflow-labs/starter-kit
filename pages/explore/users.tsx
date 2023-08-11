@@ -49,7 +49,7 @@ const UsersPage: NextPage<Props> = () => {
   const orderBy = useOrderByQuery<AccountsOrderBy>('CREATED_AT_DESC')
   const { limit, offset, page } = usePaginateQuery()
   const search = useQueryParamSingle('search')
-  const { data: usersData, loading } = useFetchExploreUsersQuery({
+  const { data: usersData, loading: _loading } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
@@ -57,6 +57,7 @@ const UsersPage: NextPage<Props> = () => {
       filter: search ? searchFilter(search) : [],
     },
   })
+  const loading = _loading && !usersData
   const totalCount = usersData?.users?.totalCount
 
   const changeOrder = useCallback(
@@ -107,7 +108,7 @@ const UsersPage: NextPage<Props> = () => {
               />
             </Box>
           </Flex>
-          {loading && !usersData ? (
+          {loading ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact

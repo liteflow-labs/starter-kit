@@ -79,7 +79,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery()
-  const { data: assetData, loading: assetLoading } =
+  const { data: assetData, loading: _assetLoading } =
     useFetchCollectionAssetsQuery({
       variables: {
         collectionAddress,
@@ -92,6 +92,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
         filter: convertFilterToAssetFilter(filter, date),
       },
     })
+  const assetLoading = _assetLoading && !assetData
   const totalCount = assetData?.assets?.totalCount
 
   const { showFilters, toggleFilters, close, count } =
@@ -218,7 +219,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-          {assetLoading && !assetData ? (
+          {assetLoading ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
