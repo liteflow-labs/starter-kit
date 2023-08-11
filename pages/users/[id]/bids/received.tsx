@@ -63,18 +63,23 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch, loading, previousData } =
-    useFetchUserBidsReceivedQuery({
-      variables: {
-        address: userAddress,
-        limit,
-        offset,
-        orderBy,
-        now: date,
-      },
-    })
+  const {
+    data,
+    refetch,
+    loading: _loading,
+    previousData,
+  } = useFetchUserBidsReceivedQuery({
+    variables: {
+      address: userAddress,
+      limit,
+      offset,
+      orderBy,
+      now: date,
+    },
+  })
 
   const bidData = useMemo(() => data || previousData, [data, previousData])
+  const loading = _loading && !bidData
 
   const bids = useMemo(
     () =>
@@ -170,7 +175,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading && !bidData ? (
+          {loading ? (
             <Loader />
           ) : bids.length == 0 ? (
             <Empty
@@ -285,7 +290,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={bidData?.bids?.totalCount || 0}
+            total={bidData?.bids?.totalCount}
             isLoading={loading}
             result={{
               label: t('pagination.result.label'),

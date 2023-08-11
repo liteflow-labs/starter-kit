@@ -58,6 +58,8 @@ const OwnersModal: FC<Props> = ({
       offset: (page - 1) * OwnerPaginationLimit,
     },
   })
+  const totalCount =
+    data?.ownerships?.totalCount || previousData?.ownerships?.totalCount
   // Reset pagination when the limit change or the modal visibility changes
   useEffect(() => setPage(1), [isOpen])
   return (
@@ -123,11 +125,8 @@ const OwnersModal: FC<Props> = ({
               <Pagination
                 limit={OwnerPaginationLimit}
                 page={page}
-                total={
-                  data?.ownerships?.totalCount ||
-                  previousData?.ownerships?.totalCount
-                }
-                isLoading={loading}
+                total={totalCount}
+                isLoading={loading && totalCount === undefined}
                 onPageChange={setPage}
                 hideSelectors
                 result={{

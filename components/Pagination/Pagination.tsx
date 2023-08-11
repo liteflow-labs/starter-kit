@@ -18,7 +18,7 @@ import { JSX, useMemo } from 'react'
 export type IProp = {
   limit: number
   page: number
-  total?: number
+  total: number | undefined
   onPageChange: (page: number) => void
   result: {
     label: string
@@ -75,7 +75,7 @@ export default function Pagination({
     [isMobile, page, totalPage],
   )
 
-  if (isLoading)
+  if (isLoading || total === undefined)
     return (
       <Flex
         align={{ base: 'flex-end', sm: 'center' }}

@@ -250,7 +250,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   pages: (props) =>
                     t('pagination.result.pages', { count: props.total }),
                 }}
-                isLoading={paginationIsLoading}
+                isLoading={paginationIsLoading && totalCount === undefined}
               />
             </GridItem>
           </Grid>
