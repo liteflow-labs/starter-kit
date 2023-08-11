@@ -173,7 +173,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading && !bidData ? (
+          {loading ? (
             <Loader />
           ) : bids.length == 0 ? (
             <Empty

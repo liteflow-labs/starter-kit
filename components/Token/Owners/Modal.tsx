@@ -126,7 +126,7 @@ const OwnersModal: FC<Props> = ({
                 limit={OwnerPaginationLimit}
                 page={page}
                 total={totalCount}
-                isLoading={loading && totalCount === undefined}
+                isLoading={loading}
                 onPageChange={setPage}
                 hideSelectors
                 result={{
