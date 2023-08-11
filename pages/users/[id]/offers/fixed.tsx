@@ -74,7 +74,6 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
       orderBy,
     },
   })
-  const loading = _loading && !offerData
 
   const onCanceled = useCallback(async () => {
     toast({
@@ -95,6 +94,7 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
       })),
     [offerData],
   )
+  const loading = _loading && !offerData
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
