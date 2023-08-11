@@ -26,7 +26,14 @@ import {
 export const convertAsset = (
   asset: Pick<
     Asset,
-    'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
+    | 'id'
+    | 'chainId'
+    | 'collectionAddress'
+    | 'tokenId'
+    | 'animationUrl'
+    | 'image'
+    | 'name'
+    | 'unlockedContent'
   > & {
     collection: Pick<Collection, 'address' | 'name' | 'chainId'>
     owned: Maybe<Pick<Ownership, 'quantity'>>
@@ -40,6 +47,9 @@ export const convertAsset = (
   },
 ): {
   id: string
+  chainId: number
+  collectionAddress: string
+  tokenId: string
   animationUrl: string | null | undefined
   image: string
   name: string
@@ -63,6 +73,9 @@ export const convertAsset = (
   const bestBid = asset.bestBid?.nodes[0]
   return {
     id: asset.id,
+    chainId: asset.chainId,
+    collectionAddress: asset.collectionAddress,
+    tokenId: asset.tokenId,
     animationUrl: asset.animationUrl,
     image: asset.image,
     name: asset.name,
@@ -97,6 +110,9 @@ export const convertAssetWithSupplies = (
   const bestBid = asset.bestBid?.nodes[0]
   return {
     id: asset.id,
+    chainId: asset.chainId,
+    collectionAddress: asset.collectionAddress,
+    tokenId: asset.tokenId,
     animationUrl: asset.animationUrl,
     image: asset.image,
     unlockedContent: asset.unlockedContent,

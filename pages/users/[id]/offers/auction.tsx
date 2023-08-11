@@ -64,7 +64,12 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch, loading, previousData } = useFetchUserAuctionsQuery({
+  const {
+    data,
+    refetch,
+    loading: _loading,
+    previousData,
+  } = useFetchUserAuctionsQuery({
     variables: {
       address: userAddress,
       limit,
@@ -74,6 +79,7 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
   })
 
   const auctionData = useMemo(() => data || previousData, [data, previousData])
+  const loading = _loading && !auctionData
 
   const auctions = useMemo(
     () =>
@@ -179,7 +185,7 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading && !auctionData ? (
+          {loading ? (
             <Loader />
           ) : auctions.length == 0 ? (
             <Empty
@@ -271,7 +277,7 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={auctionData?.auctions?.totalCount || 0}
+            total={auctionData?.auctions?.totalCount}
             isLoading={loading}
             result={{
               label: t('pagination.result.label'),

@@ -27,7 +27,10 @@ query FetchAsset(
     }
     name
     description
-    traits(orderBy: TYPE_ASC) {
+    traits(
+      orderBy: TYPE_ASC
+      first: 100 # TODO: implement pagination
+    ) {
       nodes {
         type
         value
@@ -97,6 +100,7 @@ query FetchAsset(
     sales(
       orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
       filter: { expiredAt: { greaterThan: $now } }
+      first: 100 # TODO: implement pagination
     ) {
       nodes {
         id

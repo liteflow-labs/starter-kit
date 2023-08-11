@@ -19,7 +19,8 @@ const ConnectButtonWithNetworkSwitch = ({
     chainId?: number
   }
 >): JSX.Element => {
-  const { isLoading, leftIcon, rightIcon, type, ...restProps } = props
+  const { isDisabled, isLoading, leftIcon, rightIcon, type, ...restProps } =
+    props
   const { t } = useTranslation('components')
   const { chain } = useNetwork()
   const { address } = useWagmiAccount()

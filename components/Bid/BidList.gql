@@ -15,6 +15,7 @@ query FetchAssetBids(
     bids(
       orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
       filter: { expiredAt: { greaterThan: $now } }
+      first: 100 # TODO: implement pagination
     ) {
       nodes {
         id
@@ -51,6 +52,7 @@ query FetchAuctionBids($auctionId: UUID!, $now: Datetime!) {
     offers(
       orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
       filter: { signature: { isNull: false }, expiredAt: { greaterThan: $now } }
+      first: 100 # TODO: implement pagination
     ) {
       nodes {
         id
