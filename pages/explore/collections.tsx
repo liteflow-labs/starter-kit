@@ -59,14 +59,16 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   const { limit, offset, page } = usePaginateQuery()
   const filter = useCollectionFilterFromQuery()
   const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
-  const { data: collectionsData, loading } = useFetchExploreCollectionsQuery({
-    variables: {
-      limit,
-      offset,
-      orderBy,
-      filter: convertFilterToCollectionFilter(filter),
-    },
-  })
+  const { data: collectionsData, loading: _loading } =
+    useFetchExploreCollectionsQuery({
+      variables: {
+        limit,
+        offset,
+        orderBy,
+        filter: convertFilterToCollectionFilter(filter),
+      },
+    })
+  const loading = _loading && !collectionsData
   const totalCount = collectionsData?.collections?.totalCount
 
   const { showFilters, toggleFilters, close, count } =
@@ -180,7 +182,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
-              {loading && !collectionsData ? (
+              {loading ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact

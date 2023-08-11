@@ -61,7 +61,12 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, refetch, loading, previousData } = useFetchUserFixedPriceQuery({
+  const {
+    data,
+    refetch,
+    loading: _loading,
+    previousData,
+  } = useFetchUserFixedPriceQuery({
     variables: {
       address: userAddress,
       limit,
@@ -89,6 +94,7 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
       })),
     [offerData],
   )
+  const loading = _loading && !offerData
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -175,7 +181,7 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading && !offerData ? (
+          {loading ? (
             <Loader />
           ) : offers.length == 0 ? (
             <Empty
@@ -303,7 +309,7 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
-            total={offerData?.offers?.totalCount || 0}
+            total={offerData?.offers?.totalCount}
             isLoading={loading}
             result={{
               label: t('pagination.result.label'),
