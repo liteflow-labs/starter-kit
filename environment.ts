@@ -93,7 +93,6 @@ const environment = {
     polygon,
     polygonMumbai,
     {
-      // TODO: need to add chain icon to public/chains/1890.png
       name: 'LightLink Phoenix',
       network: 'lightlink-phoenix',
       id: 1890,
@@ -124,7 +123,6 @@ const environment = {
       },
     } as Chain,
     {
-      // TODO: need to add chain icon to public/chains/1891.png
       name: 'LightLink Pegasus Testnet',
       network: 'lightlink-pegasus',
       testnet: true,
