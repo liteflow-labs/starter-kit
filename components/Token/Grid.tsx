@@ -1,4 +1,5 @@
 import { Box, Divider, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
+import environment from 'environment'
 import useTranslation from 'next-translate/useTranslation'
 import { ReactElement } from 'react'
 import Empty from '../Empty/Empty'
@@ -18,6 +19,7 @@ type IProps<Order extends string> = {
     numberOfSales: number
     hasMultiCurrency: boolean
   })[]
+  loading: boolean
   orderBy: {
     value: Order
     choices: {
@@ -27,7 +29,6 @@ type IProps<Order extends string> = {
     onSort: (orderBy: any) => Promise<void>
   }
   pagination: PaginationProps
-  loading: boolean
 }
 
 const TokenGrid = <Order extends string>({
@@ -51,21 +52,18 @@ const TokenGrid = <Order extends string>({
       </Box>
       {loading ? (
         <SkeletonGrid
-          items={pagination.limit}
+          items={
+            pagination.withoutLimit
+              ? environment.PAGINATION_LIMIT
+              : pagination.limit
+          }
           compact
           spacing={{ base: 4, lg: 3, xl: 4 }}
           columns={{ base: 1, sm: 2, md: 3 }}
         >
           <SkeletonTokenCard />
         </SkeletonGrid>
-      ) : assets.length === 0 ? (
-        <Empty
-          title={t('token.grid.empty.title')}
-          description={t('token.grid.empty.description')}
-          button={t('token.grid.empty.action')}
-          href="/explore"
-        />
-      ) : (
+      ) : assets.length > 0 ? (
         <SimpleGrid
           flexWrap="wrap"
           spacing={{ base: 4, lg: 3, xl: 4 }}
@@ -96,8 +94,21 @@ const TokenGrid = <Order extends string>({
             ),
           )}
         </SimpleGrid>
+      ) : (
+        <Empty
+          title={t('token.grid.empty.title')}
+          description={t('token.grid.empty.description')}
+          button={t('token.grid.empty.action')}
+          href="/explore"
+        />
       )}
-      <Divider display={pagination.total === 0 ? 'none' : 'block'} />
+      <Divider
+        display={
+          loading || pagination.hasNextPage || pagination.hasPreviousPage
+            ? 'block'
+            : 'none'
+        }
+      />
       <Pagination {...pagination} />
     </Stack>
   )
