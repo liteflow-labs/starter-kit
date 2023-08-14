@@ -35,7 +35,7 @@ export default function Pagination({
   onPageChange,
   ...props
 }: IProp) {
-  const { t } = useTranslation('templates')
+  const { t } = useTranslation('components')
 
   if (hasPreviousPage === undefined || hasNextPage === undefined)
     return (
@@ -59,7 +59,7 @@ export default function Pagination({
       {!hideSelectors && (
         <Flex gap={3} display={{ base: 'none', sm: 'flex' }}>
           <HStack spacing={1} minWidth="max">
-            <FormLabel m={0}>{t('pagination.result.label')}</FormLabel>
+            <FormLabel m={0}>{t('pagination.label')}</FormLabel>
           </HStack>
           <Select
             cursor="pointer"

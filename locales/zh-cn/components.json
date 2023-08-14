@@ -491,6 +491,9 @@
       }
     }
   },
+  "pagination": {
+    "label": "每页结果数"
+  },
   "referral": {
     "form": {
       "connect": "登录以生成您的推荐链接",
