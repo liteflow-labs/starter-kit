@@ -9,7 +9,9 @@ import OwnersModal from './Owners/Modal'
 import Supply from './Supply'
 
 export type Props = {
-  assetId: string
+  chainId: number
+  collectionAddress: string
+  tokenId: string
   standard: Standard
   creator:
     | {
@@ -33,7 +35,9 @@ export type Props = {
 }
 
 const TokenMetadata: FC<Props> = ({
-  assetId,
+  chainId,
+  collectionAddress,
+  tokenId,
   standard,
   creator,
   owners,
@@ -79,7 +83,9 @@ const TokenMetadata: FC<Props> = ({
             {t('token.metadata.owners')}
           </Heading>
           <OwnersModal
-            assetId={assetId}
+            chainId={chainId}
+            collectionAddress={collectionAddress}
+            tokenId={tokenId}
             ownersPreview={owners}
             numberOfOwners={numberOfOwners}
           />

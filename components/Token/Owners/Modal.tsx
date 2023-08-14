@@ -24,7 +24,9 @@ import OwnersModalActivator from './ModalActivator'
 import OwnersModalItem from './ModalItem'
 
 export type Props = {
-  assetId: string
+  chainId: number
+  collectionAddress: string
+  tokenId: string
   ownersPreview: {
     address: string
     image: string | null | undefined
@@ -37,17 +39,27 @@ export type Props = {
 
 const OwnerPaginationLimit = 8
 
-const OwnersModal: FC<Props> = ({ assetId, ownersPreview, numberOfOwners }) => {
+const OwnersModal: FC<Props> = ({
+  chainId,
+  collectionAddress,
+  tokenId,
+  ownersPreview,
+  numberOfOwners,
+}) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
   const { data, loading, previousData } = useFetchOwnersQuery({
     variables: {
-      assetId,
+      chainId,
+      collectionAddress,
+      tokenId,
       limit: OwnerPaginationLimit,
       offset: (page - 1) * OwnerPaginationLimit,
     },
   })
+  const totalCount =
+    data?.ownerships?.totalCount || previousData?.ownerships?.totalCount
   // Reset pagination when the limit change or the modal visibility changes
   useEffect(() => setPage(1), [isOpen])
   return (
@@ -113,10 +125,7 @@ const OwnersModal: FC<Props> = ({ assetId, ownersPreview, numberOfOwners }) => {
               <Pagination
                 limit={OwnerPaginationLimit}
                 page={page}
-                total={
-                  data?.ownerships?.totalCount ||
-                  previousData?.ownerships?.totalCount
-                }
+                total={totalCount}
                 isLoading={loading}
                 onPageChange={setPage}
                 hideSelectors
