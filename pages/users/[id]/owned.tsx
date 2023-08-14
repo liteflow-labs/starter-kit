@@ -1,6 +1,4 @@
-import { Text } from '@chakra-ui/react'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
@@ -41,7 +39,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading, previousData } = useFetchOwnedAssetsQuery({
+  const { data } = useFetchOwnedAssetsQuery({
     variables: {
       address: userAddress,
       currentAddress: address || '',
@@ -52,18 +50,9 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const changeOrder = useCallback(
-    async (orderBy: any) => {
-      await replace({ pathname, query: { ...query, orderBy } })
-    },
-    [replace, pathname, query],
-  )
-
-  const assetData = useMemo(() => data || previousData, [data, previousData])
-
   const assets = useMemo(
     () =>
-      (assetData?.owned?.nodes || [])
+      (data?.owned?.nodes || [])
         .map((x) => x.asset)
         .filter((x): x is AssetDetailFragment => !!x)
         .map((x) => ({
@@ -76,7 +65,24 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
           numberOfSales: x.firstSale.totalCount,
           hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
         })),
-    [assetData],
+    [data?.owned?.nodes],
+  )
+
+  const changeOrder = useCallback(
+    async (orderBy: any) => {
+      await replace({ pathname, query: { ...query, orderBy } })
+    },
+    [replace, pathname, query],
+  )
+
+  const hasNextPage = useMemo(
+    () => data?.owned?.pageInfo.hasNextPage,
+    [data?.owned?.pageInfo.hasNextPage],
+  )
+
+  const hasPreviousPage = useMemo(
+    () => data?.owned?.pageInfo.hasPreviousPage,
+    [data?.owned?.pageInfo.hasPreviousPage],
   )
 
   return (
@@ -90,8 +96,8 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
         loginUrlForReferral={environment.BASE_URL + '/login'}
       >
         <TokenGrid<OwnershipsOrderBy>
-          loading={loading && !assetData}
           assets={assets}
+          loading={data === undefined}
           orderBy={{
             value: orderBy,
             choices: [
@@ -110,25 +116,10 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
             limit,
             limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
             page,
-            total: assetData?.owned?.totalCount || 0,
-            isLoading: loading,
             onPageChange: changePage,
             onLimitChange: changeLimit,
-            result: {
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            },
+            hasNextPage,
+            hasPreviousPage,
           }}
         />
       </UserProfileTemplate>
