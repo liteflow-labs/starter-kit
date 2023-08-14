@@ -10,10 +10,8 @@ import {
   ModalContent,
   ModalHeader,
   SimpleGrid,
-  Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
@@ -79,21 +77,18 @@ const CollectionPage: FC<Props> = ({ now }) => {
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery()
-  const { data: assetData, loading: _assetLoading } =
-    useFetchCollectionAssetsQuery({
-      variables: {
-        collectionAddress,
-        now: date,
-        currentAccount: address || '',
-        limit,
-        offset,
-        orderBy,
-        chainId: chainId,
-        filter: convertFilterToAssetFilter(filter, date),
-      },
-    })
-  const assetLoading = _assetLoading && !assetData
-  const totalCount = assetData?.assets?.totalCount
+  const { data: assetData } = useFetchCollectionAssetsQuery({
+    variables: {
+      collectionAddress,
+      now: date,
+      currentAccount: address || '',
+      limit,
+      offset,
+      orderBy,
+      chainId: chainId,
+      filter: convertFilterToAssetFilter(filter, date),
+    },
+  })
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -142,6 +137,16 @@ const CollectionPage: FC<Props> = ({ now }) => {
   )
 
   const [changePage, changeLimit] = usePaginate()
+
+  const hasNextPage = useMemo(
+    () => assetData?.assets?.pageInfo.hasNextPage,
+    [assetData?.assets?.pageInfo.hasNextPage],
+  )
+
+  const hasPreviousPage = useMemo(
+    () => assetData?.assets?.pageInfo.hasPreviousPage,
+    [assetData?.assets?.pageInfo.hasPreviousPage],
+  )
 
   if (!loading && !collectionDetails) return <Error statusCode={404} />
   return (
@@ -219,7 +224,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-          {assetLoading ? (
+          {assetData === undefined ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
@@ -231,12 +236,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             >
               <SkeletonTokenCard />
             </SkeletonGrid>
-          ) : totalCount === 0 ? (
-            <Empty
-              title={t('collection.empty.title')}
-              description={t('collection.empty.description')}
-            />
-          ) : (
+          ) : assetData.assets && assetData.assets.nodes.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing="4"
@@ -246,7 +246,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
                   : { base: 1, sm: 2, md: 4, lg: 6 }
               }
             >
-              {assetData?.assets?.nodes.map((x, i) => (
+              {assetData.assets.nodes.map((x, i) => (
                 <Flex key={i} justify="center" overflow="hidden">
                   <TokenCard
                     asset={convertAsset(x)}
@@ -265,31 +265,28 @@ const CollectionPage: FC<Props> = ({ now }) => {
                 </Flex>
               ))}
             </SimpleGrid>
+          ) : (
+            <Empty
+              title={t('collection.empty.title')}
+              description={t('collection.empty.description')}
+            />
           )}
-          <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
+          <Divider
+            my="6"
+            display={
+              assetData === undefined || hasNextPage || hasPreviousPage
+                ? 'block'
+                : 'none'
+            }
+          />
           <Pagination
             limit={limit}
             limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
             page={page}
-            total={totalCount}
-            isLoading={assetLoading}
             onPageChange={changePage}
             onLimitChange={changeLimit}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
+            hasNextPage={hasNextPage}
+            hasPreviousPage={hasPreviousPage}
           />
         </GridItem>
       </Grid>
