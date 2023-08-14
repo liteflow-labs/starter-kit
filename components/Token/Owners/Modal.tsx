@@ -13,9 +13,8 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { convertOwnership } from '../../../convert'
 import { useFetchOwnersQuery } from '../../../graphql'
 import List, { ListItem } from '../../List/List'
@@ -49,7 +48,7 @@ const OwnersModal: FC<Props> = ({
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
-  const { data, loading, previousData } = useFetchOwnersQuery({
+  const { data, loading } = useFetchOwnersQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -58,10 +57,20 @@ const OwnersModal: FC<Props> = ({
       offset: (page - 1) * OwnerPaginationLimit,
     },
   })
-  const totalCount =
-    data?.ownerships?.totalCount || previousData?.ownerships?.totalCount
+
   // Reset pagination when the limit change or the modal visibility changes
   useEffect(() => setPage(1), [isOpen])
+
+  const hasNextPage = useMemo(
+    () => data?.ownerships?.pageInfo.hasNextPage,
+    [data?.ownerships?.pageInfo.hasNextPage],
+  )
+
+  const hasPreviousPage = useMemo(
+    () => data?.ownerships?.pageInfo.hasPreviousPage,
+    [data?.ownerships?.pageInfo.hasPreviousPage],
+  )
+
   return (
     <>
       <OwnersModalActivator
@@ -123,27 +132,11 @@ const OwnersModal: FC<Props> = ({
           <ModalFooter>
             <Box pt="4">
               <Pagination
-                limit={OwnerPaginationLimit}
                 page={page}
-                total={totalCount}
-                isLoading={loading}
                 onPageChange={setPage}
-                hideSelectors
-                result={{
-                  label: t('pagination.result.label'),
-                  caption: (props) => (
-                    <Trans
-                      ns="templates"
-                      i18nKey="pagination.result.caption"
-                      values={props}
-                      components={[
-                        <Text as="span" color="brand.black" key="text" />,
-                      ]}
-                    />
-                  ),
-                  pages: (props) =>
-                    t('pagination.result.pages', { count: props.total }),
-                }}
+                hasNextPage={hasNextPage}
+                hasPreviousPage={hasPreviousPage}
+                withoutLimit
               />
             </Box>
           </ModalFooter>
