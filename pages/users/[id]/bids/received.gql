@@ -15,7 +15,10 @@ query FetchUserBidsReceived(
       asset: { ownerships: { some: { ownerAddress: { equalTo: $address } } } }
     }
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       id
       amount
