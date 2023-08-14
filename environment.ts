@@ -2,6 +2,7 @@ import invariant from 'ts-invariant'
 import {
   bsc,
   bscTestnet,
+  Chain,
   goerli as ethereumGoerli,
   mainnet as ethereumMainnet,
   polygon,
@@ -91,6 +92,67 @@ const environment = {
     bsc,
     polygon,
     polygonMumbai,
+    {
+      name: 'LightLink Phoenix',
+      network: 'lightlink-phoenix',
+      id: 1890,
+      nativeCurrency: {
+        decimals: 18,
+        name: 'Ether',
+        symbol: 'ETH',
+      },
+      rpcUrls: {
+        default: {
+          http: [
+            'https://replicator-01.phoenix.lightlink.io/rpc/v1',
+            'https://replicator-02.phoenix.lightlink.io/rpc/v1',
+          ],
+        },
+        public: {
+          http: [
+            'https://replicator-01.phoenix.lightlink.io/rpc/v1',
+            'https://replicator-02.phoenix.lightlink.io/rpc/v1',
+          ],
+        },
+      },
+      blockExplorers: {
+        default: {
+          name: 'LightLink Phoenix Explorer',
+          url: 'https://phoenix.lightlink.io',
+        },
+      },
+    } as Chain,
+    {
+      name: 'LightLink Pegasus Testnet',
+      network: 'lightlink-pegasus',
+      testnet: true,
+      id: 1891,
+      nativeCurrency: {
+        decimals: 18,
+        name: 'Ether',
+        symbol: 'ETH',
+      },
+      rpcUrls: {
+        default: {
+          http: [
+            'https://replicator-01.pegasus.lightlink.io/rpc/v1',
+            'https://replicator-02.pegasus.lightlink.io/rpc/v1',
+          ],
+        },
+        public: {
+          http: [
+            'https://replicator-01.pegasus.lightlink.io/rpc/v1',
+            'https://replicator-02.pegasus.lightlink.io/rpc/v1',
+          ],
+        },
+      },
+      blockExplorers: {
+        default: {
+          name: 'LightLink Pegasus Explorer',
+          url: 'https://pegasus.lightlink.io',
+        },
+      },
+    } as Chain,
   ],
 
   // Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
