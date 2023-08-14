@@ -14,24 +14,26 @@ import { IoChevronForward } from '@react-icons/all-files/io5/IoChevronForward'
 import useTranslation from 'next-translate/useTranslation'
 
 export type IProp = {
-  limit: number
-  limits?: number[]
   page: number
   hasNextPage: boolean | undefined
   hasPreviousPage: boolean | undefined
-  hideSelectors?: boolean
-  onLimitChange?: (limit: string) => void
   onPageChange: (page: number) => void
-}
+} & (
+  | {
+      withoutLimit: true
+    }
+  | {
+      withoutLimit?: false
+      limit: number
+      limits: number[]
+      onLimitChange: (limit: string) => void
+    }
+)
 
 export default function Pagination({
-  limit,
-  limits,
   page,
   hasNextPage,
   hasPreviousPage,
-  hideSelectors,
-  onLimitChange,
   onPageChange,
   ...props
 }: IProp) {
@@ -48,7 +50,7 @@ export default function Pagination({
   if (!hasNextPage && !hasPreviousPage) return null
   return (
     <Flex
-      direction={{ base: hideSelectors ? 'row' : 'column', sm: 'row' }}
+      direction={{ base: props.withoutLimit ? 'row' : 'column', sm: 'row' }}
       align={{ base: 'flex-end', sm: 'center' }}
       justify="space-between"
       w="full"
@@ -56,7 +58,7 @@ export default function Pagination({
       flexWrap="wrap"
       {...props}
     >
-      {!hideSelectors && (
+      {!props.withoutLimit && (
         <Flex gap={3} display={{ base: 'none', sm: 'flex' }}>
           <HStack spacing={1} minWidth="max">
             <FormLabel m={0}>{t('pagination.label')}</FormLabel>
@@ -64,10 +66,10 @@ export default function Pagination({
           <Select
             cursor="pointer"
             w="24"
-            onChange={(e) => onLimitChange?.(e.target.value)}
-            value={limit.toString()}
+            onChange={(e) => props.onLimitChange(e.target.value)}
+            value={props.limit.toString()}
           >
-            {limits?.map((limit) => (
+            {props.limits.map((limit) => (
               <option key={limit.toString()} value={limit.toString()}>
                 {limit.toString()}
               </option>
