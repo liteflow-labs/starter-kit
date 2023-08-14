@@ -11,7 +11,6 @@ import {
   ModalHeader,
   SimpleGrid,
   Spacer,
-  Text,
   useBreakpointValue,
   useToast,
 } from '@chakra-ui/react'
@@ -20,10 +19,9 @@ import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
 import { convertCollection } from 'convert'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import FilterCollection, {
   NoFilter,
@@ -59,17 +57,14 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   const { limit, offset, page } = usePaginateQuery()
   const filter = useCollectionFilterFromQuery()
   const orderBy = useOrderByQuery<CollectionsOrderBy>('TOTAL_VOLUME_DESC')
-  const { data: collectionsData, loading: _loading } =
-    useFetchExploreCollectionsQuery({
-      variables: {
-        limit,
-        offset,
-        orderBy,
-        filter: convertFilterToCollectionFilter(filter),
-      },
-    })
-  const loading = _loading && !collectionsData
-  const totalCount = collectionsData?.collections?.totalCount
+  const { data: collectionsData } = useFetchExploreCollectionsQuery({
+    variables: {
+      limit,
+      offset,
+      orderBy,
+      filter: convertFilterToCollectionFilter(filter),
+    },
+  })
 
   const { showFilters, toggleFilters, close, count } =
     useCollectionFilterState(filter)
@@ -103,6 +98,16 @@ const CollectionsPage: NextPage<Props> = ({}) => {
       }
     },
     [replace, pathname, query, toast],
+  )
+
+  const hasNextPage = useMemo(
+    () => collectionsData?.collections?.pageInfo.hasNextPage,
+    [collectionsData?.collections?.pageInfo.hasNextPage],
+  )
+
+  const hasPreviousPage = useMemo(
+    () => collectionsData?.collections?.pageInfo.hasPreviousPage,
+    [collectionsData?.collections?.pageInfo.hasPreviousPage],
   )
 
   const hasFilter = chains.length > 1
@@ -182,7 +187,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
-              {loading ? (
+              {collectionsData === undefined ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact
@@ -194,7 +199,8 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                 >
                   <SkeletonCollectionCard />
                 </SkeletonGrid>
-              ) : (collectionsData?.collections?.nodes || []).length > 0 ? (
+              ) : collectionsData.collections &&
+                collectionsData.collections.nodes.length > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -204,7 +210,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                       : { sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {collectionsData?.collections?.nodes.map((collection, i) => (
+                  {collectionsData.collections.nodes.map((collection, i) => (
                     <CollectionCard
                       collection={convertCollection(collection)}
                       key={i}
@@ -217,30 +223,24 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   description={t('explore.collections.empty.description')}
                 />
               )}
-              <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
+              <Divider
+                my="6"
+                display={
+                  collectionsData === undefined ||
+                  hasNextPage ||
+                  hasPreviousPage
+                    ? 'block'
+                    : 'none'
+                }
+              />
               <Pagination
                 limit={limit}
                 limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
                 page={page}
-                total={totalCount}
-                isLoading={loading}
                 onPageChange={changePage}
                 onLimitChange={changeLimit}
-                result={{
-                  label: t('pagination.result.label'),
-                  caption: (props) => (
-                    <Trans
-                      ns="templates"
-                      i18nKey="pagination.result.caption"
-                      values={props}
-                      components={[
-                        <Text as="span" color="brand.black" key="text" />,
-                      ]}
-                    />
-                  ),
-                  pages: (props) =>
-                    t('pagination.result.pages', { count: props.total }),
-                }}
+                hasNextPage={hasNextPage}
+                hasPreviousPage={hasPreviousPage}
               />
             </GridItem>
           </Grid>
