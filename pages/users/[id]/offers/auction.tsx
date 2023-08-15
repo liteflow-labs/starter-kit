@@ -106,16 +106,6 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  const hasNextPage = useMemo(
-    () => data?.auctions?.pageInfo.hasNextPage,
-    [data?.auctions?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => data?.auctions?.pageInfo.hasPreviousPage,
-    [data?.auctions?.pageInfo.hasPreviousPage],
-  )
-
   return (
     <LargeLayout>
       <UserProfileTemplate
@@ -277,8 +267,8 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
             page={page}
             onPageChange={changePage}
             onLimitChange={changeLimit}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
+            hasNextPage={data?.auctions?.pageInfo.hasNextPage}
+            hasPreviousPage={data?.auctions?.pageInfo.hasPreviousPage}
           />
         </Stack>
       </UserProfileTemplate>

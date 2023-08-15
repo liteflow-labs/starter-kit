@@ -95,16 +95,6 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  const hasNextPage = useMemo(
-    () => data?.bids?.pageInfo.hasNextPage,
-    [data?.bids?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => data?.bids?.pageInfo.hasPreviousPage,
-    [data?.bids?.pageInfo.hasPreviousPage],
-  )
-
   return (
     <LargeLayout>
       <UserProfileTemplate
@@ -300,8 +290,8 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
             page={page}
             onPageChange={changePage}
             onLimitChange={changeLimit}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
+            hasNextPage={data?.bids?.pageInfo.hasNextPage}
+            hasPreviousPage={data?.bids?.pageInfo.hasPreviousPage}
           />
         </Stack>
       </UserProfileTemplate>

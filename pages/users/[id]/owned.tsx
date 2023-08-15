@@ -75,16 +75,6 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  const hasNextPage = useMemo(
-    () => data?.owned?.pageInfo.hasNextPage,
-    [data?.owned?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => data?.owned?.pageInfo.hasPreviousPage,
-    [data?.owned?.pageInfo.hasPreviousPage],
-  )
-
   return (
     <LargeLayout>
       <UserProfileTemplate
@@ -118,8 +108,8 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
             page,
             onPageChange: changePage,
             onLimitChange: changeLimit,
-            hasNextPage,
-            hasPreviousPage,
+            hasNextPage: data?.owned?.pageInfo.hasNextPage,
+            hasPreviousPage: data?.owned?.pageInfo.hasPreviousPage,
           }}
         />
       </UserProfileTemplate>

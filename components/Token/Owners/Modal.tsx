@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { convertOwnership } from '../../../convert'
 import { useFetchOwnersQuery } from '../../../graphql'
 import List, { ListItem } from '../../List/List'
@@ -60,16 +60,6 @@ const OwnersModal: FC<Props> = ({
 
   // Reset pagination when the limit change or the modal visibility changes
   useEffect(() => setPage(1), [isOpen])
-
-  const hasNextPage = useMemo(
-    () => data?.ownerships?.pageInfo.hasNextPage,
-    [data?.ownerships?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => data?.ownerships?.pageInfo.hasPreviousPage,
-    [data?.ownerships?.pageInfo.hasPreviousPage],
-  )
 
   return (
     <>
@@ -134,8 +124,8 @@ const OwnersModal: FC<Props> = ({
               <Pagination
                 page={page}
                 onPageChange={setPage}
-                hasNextPage={hasNextPage}
-                hasPreviousPage={hasPreviousPage}
+                hasNextPage={data?.ownerships?.pageInfo.hasNextPage}
+                hasPreviousPage={data?.ownerships?.pageInfo.hasPreviousPage}
                 withoutLimit
               />
             </Box>

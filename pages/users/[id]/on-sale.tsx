@@ -74,16 +74,6 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  const hasNextPage = useMemo(
-    () => data?.onSale?.pageInfo.hasNextPage,
-    [data?.onSale?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => data?.onSale?.pageInfo.hasPreviousPage,
-    [data?.onSale?.pageInfo.hasPreviousPage],
-  )
-
   return (
     <LargeLayout>
       <UserProfileTemplate
@@ -117,8 +107,8 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
             page,
             onPageChange: changePage,
             onLimitChange: changeLimit,
-            hasNextPage,
-            hasPreviousPage,
+            hasNextPage: data?.onSale?.pageInfo.hasNextPage,
+            hasPreviousPage: data?.onSale?.pageInfo.hasPreviousPage,
           }}
         />
       </UserProfileTemplate>

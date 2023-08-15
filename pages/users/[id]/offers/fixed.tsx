@@ -95,16 +95,6 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  const hasNextPage = useMemo(
-    () => data?.offers?.pageInfo.hasNextPage,
-    [data?.offers?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => data?.offers?.pageInfo.hasPreviousPage,
-    [data?.offers?.pageInfo.hasPreviousPage],
-  )
-
   return (
     <LargeLayout>
       <UserProfileTemplate
@@ -310,8 +300,8 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
             page={page}
             onPageChange={changePage}
             onLimitChange={changeLimit}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
+            hasNextPage={data?.offers?.pageInfo.hasNextPage}
+            hasPreviousPage={data?.offers?.pageInfo.hasPreviousPage}
           />
         </Stack>
       </UserProfileTemplate>

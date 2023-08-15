@@ -78,16 +78,6 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  const hasNextPage = useMemo(
-    () => data?.trades?.pageInfo.hasNextPage,
-    [data?.trades?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => data?.trades?.pageInfo.hasPreviousPage,
-    [data?.trades?.pageInfo.hasPreviousPage],
-  )
-
   return (
     <LargeLayout>
       <UserProfileTemplate
@@ -281,8 +271,8 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
             page={page}
             onPageChange={changePage}
             onLimitChange={changeLimit}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
+            hasNextPage={data?.trades?.pageInfo.hasNextPage}
+            hasPreviousPage={data?.trades?.pageInfo.hasPreviousPage}
           />
         </Stack>
       </UserProfileTemplate>
