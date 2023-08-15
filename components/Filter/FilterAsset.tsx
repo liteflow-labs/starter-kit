@@ -47,6 +47,7 @@ import Select from '../Select/Select'
 type Props = {
   filter: Filter
   selectedCollection?: { chainId: number; address: string }
+  noChain?: boolean
   onFilterChange: (filter: Filter) => void
 }
 
@@ -70,6 +71,7 @@ const offerTypes = [
 const FilterAsset: NextPage<Props> = ({
   filter,
   selectedCollection,
+  noChain,
   onFilterChange,
 }) => {
   const { t } = useTranslation('components')
@@ -218,53 +220,54 @@ const FilterAsset: NextPage<Props> = ({
     <Stack spacing={8} as="form" onSubmit={handleSubmit(onFilterChange)}>
       <Accordion
         allowMultiple
-        defaultIndex={isSmall ? [] : [chains.length > 1 ? 3 : 2]}
+        defaultIndex={isSmall ? [] : [noChain ? 2 : chains.length > 1 ? 3 : 2]}
       >
-        {chains.length > 1 && (
-          <AccordionItem>
-            <AccordionButton>
-              <Heading variant="heading2" flex="1" textAlign="left">
-                {t('filters.assets.chains.label')}
-              </Heading>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel>
-              <CheckboxGroup
-                value={filterResult.chains}
-                defaultValue={[]}
-                onChange={(value) =>
-                  propagateFilter({ chains: value as number[] })
-                }
-              >
-                <Stack spacing={1}>
-                  {chains.map(({ id, name }, i) => (
-                    <Checkbox key={i} value={id}>
-                      <Flex gap={2} alignItems="center">
-                        <Image
-                          src={`/chains/${id}.svg`}
-                          width={24}
-                          height={24}
-                          w={6}
-                          h={6}
-                          alt={name}
-                        />
-                        <Text
-                          variant="subtitle2"
-                          color="black"
-                          noOfLines={1}
-                          wordBreak="break-word"
-                          title={name}
-                        >
-                          {name}
-                        </Text>
-                      </Flex>
-                    </Checkbox>
-                  ))}
-                </Stack>
-              </CheckboxGroup>
-            </AccordionPanel>
-          </AccordionItem>
-        )}
+        {noChain ||
+          (chains.length > 1 && (
+            <AccordionItem>
+              <AccordionButton>
+                <Heading variant="heading2" flex="1" textAlign="left">
+                  {t('filters.assets.chains.label')}
+                </Heading>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel>
+                <CheckboxGroup
+                  value={filterResult.chains}
+                  defaultValue={[]}
+                  onChange={(value) =>
+                    propagateFilter({ chains: value as number[] })
+                  }
+                >
+                  <Stack spacing={1}>
+                    {chains.map(({ id, name }, i) => (
+                      <Checkbox key={i} value={id}>
+                        <Flex gap={2} alignItems="center">
+                          <Image
+                            src={`/chains/${id}.svg`}
+                            width={24}
+                            height={24}
+                            w={6}
+                            h={6}
+                            alt={name}
+                          />
+                          <Text
+                            variant="subtitle2"
+                            color="black"
+                            noOfLines={1}
+                            wordBreak="break-word"
+                            title={name}
+                          >
+                            {name}
+                          </Text>
+                        </Flex>
+                      </Checkbox>
+                    ))}
+                  </Stack>
+                </CheckboxGroup>
+              </AccordionPanel>
+            </AccordionItem>
+          ))}
         <AccordionItem>
           <AccordionButton>
             <Heading variant="heading2" flex="1" textAlign="left">
