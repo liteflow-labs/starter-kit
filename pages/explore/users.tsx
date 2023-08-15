@@ -42,7 +42,7 @@ const searchFilter = (search: string): AccountFilter =>
 
 const UsersPage: NextPage<Props> = () => {
   const { query, pathname, push } = useRouter()
-  const isSmall = useBreakpointValue({ base: true, md: false })
+  const isSmall = useBreakpointValue({ base: true, md: false }, { ssr: false })
   const { t } = useTranslation('templates')
   const orderBy = useOrderByQuery<AccountsOrderBy>('CREATED_AT_DESC')
   const { limit, offset, page } = usePaginateQuery()

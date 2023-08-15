@@ -51,7 +51,7 @@ type Props = {
 
 const ExplorePage: NextPage<Props> = ({ now }) => {
   const { query, pathname, push } = useRouter()
-  const isSmall = useBreakpointValue({ base: true, md: false })
+  const isSmall = useBreakpointValue({ base: true, md: false }, { ssr: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
