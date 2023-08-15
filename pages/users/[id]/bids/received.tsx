@@ -99,7 +99,6 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={date}
         signer={signer}
         currentAccount={address}
         address={userAddress}

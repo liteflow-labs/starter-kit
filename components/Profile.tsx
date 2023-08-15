@@ -4,10 +4,7 @@ import { FC, PropsWithChildren, useMemo } from 'react'
 import type { TabsEnum } from '../components/User/Profile/Navigation'
 import UserProfileNavigation from '../components/User/Profile/Navigation'
 import { convertFullUser } from '../convert'
-import {
-  useFetchAccountDetailQuery,
-  useFetchAccountMetadataQuery,
-} from '../graphql'
+import { useFetchAccountDetailQuery } from '../graphql'
 import { isSameAddress } from '../utils'
 import Head from './Head'
 import UserProfileBanner from './User/Profile/Banner'
@@ -15,7 +12,6 @@ import UserProfileInfo from './User/Profile/Info'
 
 const UserProfileTemplate: FC<
   PropsWithChildren<{
-    now: Date
     signer: Signer | undefined
     currentAccount: string | null | undefined
     address: string
@@ -23,7 +19,6 @@ const UserProfileTemplate: FC<
     loginUrlForReferral?: string
   }>
 > = ({
-  now,
   signer,
   currentAccount,
   address,
@@ -34,8 +29,6 @@ const UserProfileTemplate: FC<
   const { data, previousData } = useFetchAccountDetailQuery({
     variables: { address },
   })
-  const { data: metadata, previousData: previousMetadata } =
-    useFetchAccountMetadataQuery({ variables: { address, now } })
 
   const accountData = useMemo(() => data || previousData, [data, previousData])
 
@@ -44,20 +37,6 @@ const UserProfileTemplate: FC<
     [accountData, address],
   )
 
-  const metadataData = useMemo(
-    () => metadata || previousMetadata,
-    [metadata, previousMetadata],
-  )
-
-  const totals = useMemo(
-    () =>
-      new Map<TabsEnum, number | undefined>([
-        ['created', metadataData?.created?.totalCount],
-        ['on-sale', metadataData?.onSale?.totalCount],
-        ['owned', metadataData?.owned?.totalCount],
-      ]),
-    [metadataData],
-  )
   return (
     <>
       <Head
@@ -96,7 +75,6 @@ const UserProfileTemplate: FC<
                 !!currentAccount && isSameAddress(currentAccount, address)
               }
               currentTab={currentTab}
-              totals={totals}
             />
             {children}
           </Stack>
