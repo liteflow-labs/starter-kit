@@ -125,7 +125,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
     [collectionData],
   )
 
-  const assets = useMemo(() => assetData?.assets?.nodes, [assetData])
+  const assets = assetData?.assets?.nodes
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -139,16 +139,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
   )
 
   const [changePage, changeLimit] = usePaginate()
-
-  const hasNextPage = useMemo(
-    () => assetData?.assets?.pageInfo.hasNextPage,
-    [assetData?.assets?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => assetData?.assets?.pageInfo.hasPreviousPage,
-    [assetData?.assets?.pageInfo.hasPreviousPage],
-  )
 
   if (!loading && !collectionDetails) return <Error statusCode={404} />
   return (
@@ -281,8 +271,8 @@ const CollectionPage: FC<Props> = ({ now }) => {
               page={page}
               onPageChange={changePage}
               onLimitChange={changeLimit}
-              hasNextPage={hasNextPage}
-              hasPreviousPage={hasPreviousPage}
+              hasNextPage={assetData?.assets?.pageInfo.hasNextPage}
+              hasPreviousPage={assetData?.assets?.pageInfo.hasPreviousPage}
             />
           )}
         </GridItem>
