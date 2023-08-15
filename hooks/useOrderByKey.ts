@@ -6,8 +6,9 @@ export function useOrderByKey<T>(
   convertFn: (item: T) => string,
 ): T[] | undefined {
   return useMemo(() => {
-    return keys?.reduce((prev, value) => {
-      const item = items?.find((x) => convertFn(x) === value)
+    if (!keys || !items) return undefined
+    return keys.reduce((prev, value) => {
+      const item = items.find((x) => convertFn(x) === value)
       return item ? [...prev, item] : prev
     }, [] as T[])
   }, [keys, items, convertFn])
