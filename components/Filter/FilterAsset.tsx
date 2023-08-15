@@ -75,7 +75,10 @@ const FilterAsset: NextPage<Props> = ({
   onFilterChange,
 }) => {
   const { t } = useTranslation('components')
-  const isSmall = useBreakpointValue({ base: true, sm: false }, { ssr: false })
+  const isSmall = useBreakpointValue(
+    { base: true, sm: false },
+    { fallback: 'sm' },
+  )
 
   const {
     register,

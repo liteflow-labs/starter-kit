@@ -51,7 +51,10 @@ type Props = {}
 
 const CollectionsPage: NextPage<Props> = ({}) => {
   const { pathname, push, query, replace } = useRouter()
-  const isSmall = useBreakpointValue({ base: true, md: false }, { ssr: false })
+  const isSmall = useBreakpointValue(
+    { base: true, md: false },
+    { fallback: 'md' },
+  )
   const { t } = useTranslation('templates')
   const toast = useToast()
   const { limit, offset, page } = usePaginateQuery()
