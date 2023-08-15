@@ -8,7 +8,7 @@ import {
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import Head from '../../components/Head'
@@ -67,19 +67,9 @@ const UsersPage: NextPage<Props> = () => {
     [push, pathname, query],
   )
 
-  const users = useMemo(() => usersData?.users?.nodes, [usersData])
+  const users = usersData?.users?.nodes
 
   const [changePage, changeLimit] = usePaginate()
-
-  const hasNextPage = useMemo(
-    () => usersData?.users?.pageInfo.hasNextPage,
-    [usersData?.users?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => usersData?.users?.pageInfo.hasPreviousPage,
-    [usersData?.users?.pageInfo.hasPreviousPage],
-  )
 
   return (
     <>
@@ -153,8 +143,8 @@ const UsersPage: NextPage<Props> = () => {
               page={page}
               onPageChange={changePage}
               onLimitChange={changeLimit}
-              hasNextPage={hasNextPage}
-              hasPreviousPage={hasPreviousPage}
+              hasNextPage={usersData?.users?.pageInfo.hasNextPage}
+              hasPreviousPage={usersData?.users?.pageInfo.hasPreviousPage}
             />
           )}
         </>

@@ -98,7 +98,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const assets = useMemo(() => assetsData?.assets?.nodes, [assetsData])
+  const assets = assetsData?.assets?.nodes
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -112,16 +112,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   )
 
   const [changePage, changeLimit] = usePaginate()
-
-  const hasNextPage = useMemo(
-    () => assetsData?.assets?.pageInfo.hasNextPage,
-    [assetsData?.assets?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => assetsData?.assets?.pageInfo.hasPreviousPage,
-    [assetsData?.assets?.pageInfo.hasPreviousPage],
-  )
 
   return (
     <>
@@ -236,8 +226,8 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   page={page}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}
-                  hasNextPage={hasNextPage}
-                  hasPreviousPage={hasPreviousPage}
+                  hasNextPage={assetsData?.assets?.pageInfo.hasNextPage}
+                  hasPreviousPage={assetsData?.assets?.pageInfo.hasPreviousPage}
                 />
               )}
             </GridItem>

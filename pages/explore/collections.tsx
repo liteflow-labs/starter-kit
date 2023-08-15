@@ -21,7 +21,7 @@ import { convertCollection } from 'convert'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../components/Empty/Empty'
 import FilterCollection, {
   NoFilter,
@@ -81,10 +81,8 @@ const CollectionsPage: NextPage<Props> = ({}) => {
     [push, pathname],
   )
 
-  const collections = useMemo(
-    () => collectionsData?.collections?.nodes,
-    [collectionsData],
-  )
+  const collections = collectionsData?.collections?.nodes
+  const hasFilter = chains.length > 1
 
   const [changePage, changeLimit] = usePaginate()
 
@@ -104,18 +102,6 @@ const CollectionsPage: NextPage<Props> = ({}) => {
     },
     [replace, pathname, query, toast],
   )
-
-  const hasNextPage = useMemo(
-    () => collectionsData?.collections?.pageInfo.hasNextPage,
-    [collectionsData?.collections?.pageInfo.hasNextPage],
-  )
-
-  const hasPreviousPage = useMemo(
-    () => collectionsData?.collections?.pageInfo.hasPreviousPage,
-    [collectionsData?.collections?.pageInfo.hasPreviousPage],
-  )
-
-  const hasFilter = chains.length > 1
 
   return (
     <>
@@ -238,8 +224,12 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   page={page}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}
-                  hasNextPage={hasNextPage}
-                  hasPreviousPage={hasPreviousPage}
+                  hasNextPage={
+                    collectionsData?.collections?.pageInfo.hasNextPage
+                  }
+                  hasPreviousPage={
+                    collectionsData?.collections?.pageInfo.hasPreviousPage
+                  }
                 />
               )}
             </GridItem>
