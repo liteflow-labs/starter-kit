@@ -12,7 +12,7 @@ export default function useAssetFilterState(filter: Filter): {
     { base: false, md: true },
     { fallback: 'md' },
   )
-  const [showFilters, setShowFilters] = useState(display)
+  const [showFilters, setShowFilters] = useState(!!display)
   const filterCount = useMemo(() => {
     let count = filter.traits.length
     if (filter.chains.length > 0) count += 1
@@ -23,7 +23,7 @@ export default function useAssetFilterState(filter: Filter): {
     return count
   }, [filter])
 
-  useEffect(() => setShowFilters(display), [display, setShowFilters])
+  useEffect(() => setShowFilters(!!display), [display, setShowFilters])
 
   return {
     showFilters: showFilters,
