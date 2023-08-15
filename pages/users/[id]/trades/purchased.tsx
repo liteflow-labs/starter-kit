@@ -272,15 +272,17 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
               description={t('user.trade-purchased.table.empty.description')}
             />
           )}
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            hasNextPage={data?.trades?.pageInfo.hasNextPage}
-            hasPreviousPage={data?.trades?.pageInfo.hasPreviousPage}
-          />
+          {trades?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={data?.trades?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.trades?.pageInfo.hasPreviousPage}
+            />
+          )}
         </Stack>
       </UserProfileTemplate>
     </LargeLayout>

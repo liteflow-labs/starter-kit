@@ -261,15 +261,17 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
               description={t('user.auctions.table.empty.description')}
             />
           )}
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            hasNextPage={data?.auctions?.pageInfo.hasNextPage}
-            hasPreviousPage={data?.auctions?.pageInfo.hasPreviousPage}
-          />
+          {auctions?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={data?.auctions?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.auctions?.pageInfo.hasPreviousPage}
+            />
+          )}
         </Stack>
       </UserProfileTemplate>
     </LargeLayout>

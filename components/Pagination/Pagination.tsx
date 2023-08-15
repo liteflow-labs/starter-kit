@@ -12,6 +12,7 @@ import {
 import { IoChevronBackSharp } from '@react-icons/all-files/io5/IoChevronBackSharp'
 import { IoChevronForward } from '@react-icons/all-files/io5/IoChevronForward'
 import useTranslation from 'next-translate/useTranslation'
+import { JSX } from 'react'
 
 export type IProp = {
   page: number
@@ -36,7 +37,7 @@ export default function Pagination({
   hasPreviousPage,
   onPageChange,
   ...props
-}: IProp) {
+}: IProp): JSX.Element {
   const { t } = useTranslation('components')
 
   if (hasPreviousPage === undefined || hasNextPage === undefined)
@@ -47,7 +48,6 @@ export default function Pagination({
       </Flex>
     )
 
-  if (!hasNextPage && !hasPreviousPage) return null
   return (
     <Flex
       direction={{ base: props.withoutLimit ? 'row' : 'column', sm: 'row' }}

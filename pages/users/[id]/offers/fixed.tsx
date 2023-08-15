@@ -294,15 +294,17 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
               description={t('user.fixed.table.empty.description')}
             />
           )}
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            hasNextPage={data?.offers?.pageInfo.hasNextPage}
-            hasPreviousPage={data?.offers?.pageInfo.hasPreviousPage}
-          />
+          {offers?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={data?.offers?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.offers?.pageInfo.hasPreviousPage}
+            />
+          )}
         </Stack>
       </UserProfileTemplate>
     </LargeLayout>

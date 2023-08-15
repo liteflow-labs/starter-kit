@@ -148,23 +148,18 @@ const UsersPage: NextPage<Props> = () => {
               description={t('explore.users.empty.description')}
             />
           )}
-          <Divider
-            my="6"
-            display={
-              users === undefined || hasNextPage || hasPreviousPage
-                ? 'block'
-                : 'none'
-            }
-          />
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            hasNextPage={hasNextPage}
-            hasPreviousPage={hasPreviousPage}
-          />
+          <Divider my="6" display={users?.length !== 0 ? 'block' : 'none'} />
+          {users?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={hasNextPage}
+              hasPreviousPage={hasPreviousPage}
+            />
+          )}
         </>
       </ExploreTemplate>
     </>

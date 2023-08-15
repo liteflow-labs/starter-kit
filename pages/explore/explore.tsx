@@ -230,21 +230,19 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               )}
               <Divider
                 my="6"
-                display={
-                  assets === undefined || hasNextPage || hasPreviousPage
-                    ? 'block'
-                    : 'none'
-                }
+                display={assets?.length !== 0 ? 'block' : 'none'}
               />
-              <Pagination
-                limit={limit}
-                limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-                page={page}
-                onPageChange={changePage}
-                onLimitChange={changeLimit}
-                hasNextPage={hasNextPage}
-                hasPreviousPage={hasPreviousPage}
-              />
+              {assets?.length !== 0 && (
+                <Pagination
+                  limit={limit}
+                  limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+                  page={page}
+                  onPageChange={changePage}
+                  onLimitChange={changeLimit}
+                  hasNextPage={hasNextPage}
+                  hasPreviousPage={hasPreviousPage}
+                />
+              )}
             </GridItem>
           </Grid>
         </>

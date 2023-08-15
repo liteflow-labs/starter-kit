@@ -102,16 +102,8 @@ const TokenGrid = <Order extends string>({
           href="/explore"
         />
       )}
-      <Divider
-        display={
-          assets === undefined ||
-          pagination.hasNextPage ||
-          pagination.hasPreviousPage
-            ? 'block'
-            : 'none'
-        }
-      />
-      <Pagination {...pagination} />
+      <Divider display={assets?.length !== 0 ? 'block' : 'none'} />
+      {assets?.length !== 0 && <Pagination {...pagination} />}
     </Stack>
   )
 }
