@@ -69,7 +69,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
-  const { data: collectionData, loading } = useFetchCollectionDetailsQuery({
+  const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
       collectionAddress: collectionAddress,
       chainId: chainId,
@@ -143,14 +143,14 @@ const CollectionPage: FC<Props> = ({ now }) => {
 
   const [changePage, changeLimit] = usePaginate()
 
-  if (!loading && !collectionDetails) return <Error statusCode={404} />
+  if (collectionData?.collection === null) return <Error statusCode={404} />
   return (
     <LargeLayout>
       <Head title="Explore collection" />
 
       <CollectionHeader
-        collection={collectionDetails || {}}
-        loading={loading && !collectionDetails}
+        collection={collectionDetails || {}} // TODO: update collectionHeader
+        loading={!collectionDetails}
         reportEmail={environment.REPORT_EMAIL}
       />
 

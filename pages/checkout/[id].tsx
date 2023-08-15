@@ -65,7 +65,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     skip: !offer,
   })
 
-  const asset = useMemo(() => assetQuery?.data?.asset, [assetQuery.data])
+  const asset = assetQuery?.data?.asset
   const priceUnit = useMemo(
     () => (offer ? BigNumber.from(offer.unitPrice) : undefined),
     [offer],
@@ -86,9 +86,8 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${asset.id}`)
   }, [asset, toast, t, push])
 
-  if (!offerQuery.loading) {
-    if (!offer) return <Error statusCode={404} />
-    if (!assetQuery.loading && !asset) return <Error statusCode={404} />
+  if (!offerQuery.data?.offer === null || assetQuery.data?.asset === null) {
+    return <Error statusCode={404} />
   }
   return (
     <SmallLayout>

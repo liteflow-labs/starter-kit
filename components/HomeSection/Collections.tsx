@@ -36,11 +36,9 @@ const CollectionsHomeSection: FC<Props> = () => {
   })
   useHandleQueryError(collectionsQuery)
 
-  const collectionData = collectionsQuery.data
-
   const orderedCollections = useOrderByKey(
     environment.HOME_COLLECTIONS,
-    collectionData?.collections?.nodes || [],
+    collectionsQuery.data?.collections?.nodes,
     (collection) => [collection.chainId, collection.address].join('-'),
   )
 
@@ -50,7 +48,6 @@ const CollectionsHomeSection: FC<Props> = () => {
         href: '/explore/collections',
         title: t('home.collections.explore'),
       }}
-      isLoading={collectionsQuery.loading && !collectionData}
       items={orderedCollections}
       itemRender={(
         collection: NonNullable<

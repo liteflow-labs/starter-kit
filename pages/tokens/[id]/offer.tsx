@@ -82,7 +82,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   )
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useOfferForAssetQuery({
+  const { data } = useOfferForAssetQuery({
     variables: {
       chainId: chainId ? parseInt(chainId, 10) : 0,
       collectionAddress: collectionAddress || '',
@@ -195,7 +195,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     onCreated,
   ])
 
-  if (!loading && !asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head

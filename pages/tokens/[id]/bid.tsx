@@ -54,7 +54,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
   const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading } = useBidOnAssetQuery({
+  const { data } = useBidOnAssetQuery({
     variables: {
       id: assetId,
       now: date,
@@ -92,7 +92,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${assetId}`)
   }, [toast, t, push, assetId])
 
-  if (!loading && !asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head

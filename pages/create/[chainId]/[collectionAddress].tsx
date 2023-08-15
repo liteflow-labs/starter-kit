@@ -52,7 +52,7 @@ const CreatePage: NextPage = ({}) => {
   const { back, push } = useRouter()
   const { address } = useAccount()
   const toast = useToast()
-  const { data, loading } = useFetchAccountAndCollectionQuery({
+  const { data } = useFetchAccountAndCollectionQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -119,7 +119,7 @@ const CreatePage: NextPage = ({}) => {
     [push, t, toast],
   )
 
-  if (!loading && !collection) return <Error statusCode={404} />
+  if (data?.collection === null) return <Error statusCode={404} />
   return (
     <Layout>
       <BackButton onClick={back} />

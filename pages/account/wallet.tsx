@@ -12,19 +12,19 @@ import SmallLayout from '../../layouts/small'
 const WalletPage: NextPage = () => {
   const { address } = useAccount()
   useLoginRedirect()
-  const { data: currencyData, loading } = useWalletCurrenciesQuery()
+  const { data: currencyData } = useWalletCurrenciesQuery()
 
-  if (!loading && !currencyData) return <Error statusCode={404} />
+  if (currencyData?.currencies === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head title="Account - Wallet" />
       <AccountTemplate currentTab="wallet">
-        {!currencyData || !address ? (
+        {!currencyData?.currencies || !address ? (
           <Loader fullPage />
         ) : (
           <WalletAccount
             account={address}
-            currencies={currencyData.currencies?.nodes || []}
+            currencies={currencyData.currencies.nodes}
           />
         )}
       </AccountTemplate>

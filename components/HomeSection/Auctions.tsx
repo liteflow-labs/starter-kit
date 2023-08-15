@@ -1,5 +1,5 @@
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -22,15 +22,9 @@ const AuctionsHomeSection: FC<Props> = ({ date }) => {
     variables: { now: date, address: address || '' },
   })
   useHandleQueryError(auctionAssetsQuery)
-  const auctionData = auctionAssetsQuery.data
-  const auctions = useMemo(
-    () => auctionData?.auctions?.nodes || [],
-    [auctionData],
-  )
   return (
     <HomeGridSection
-      isLoading={auctionAssetsQuery.loading && !auctionData}
-      items={auctions}
+      items={auctionAssetsQuery.data?.auctions?.nodes}
       itemRender={(
         item: NonNullable<FetchAuctionsQuery['auctions']>['nodes'][number],
       ) => (

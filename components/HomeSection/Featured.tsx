@@ -46,14 +46,11 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
   useHandleQueryError(featureAssetsQuery)
   useHandleQueryError(currenciesQuery)
 
-  const assetData = featureAssetsQuery.data
-
   const featured = useOrderByKey(
     environment.FEATURED_TOKEN,
-    assetData?.assets?.nodes || [],
+    featureAssetsQuery.data?.assets?.nodes,
     (asset) => asset.id,
   )
-  const currencyData = currenciesQuery.data
 
   const reloadInfo = useCallback(async () => {
     void featureAssetsQuery.refetch()
@@ -65,7 +62,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
         <TokenHeader
           key={asset.id}
           asset={convertAssetWithSupplies(asset)}
-          currencies={currencyData?.currencies?.nodes || []}
+          currencies={currenciesQuery.data?.currencies?.nodes || []}
           auction={
             asset.auctions.nodes[0]
               ? convertAuctionFull(asset.auctions.nodes[0])
@@ -87,10 +84,10 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
           onAuctionAccepted={reloadInfo}
         />
       )),
-    [featured, address, signer, reloadInfo, currencyData],
+    [featured, address, signer, reloadInfo, currenciesQuery],
   )
 
-  if (featureAssetsQuery.loading && !assetData)
+  if (!featuredAssets)
     return (
       <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>
         <Box my="auto" p={{ base: 6, md: 12 }} textAlign="center">
@@ -107,7 +104,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
         </Stack>
       </SimpleGrid>
     )
-  if (!featuredAssets || featuredAssets.length === 0) return null
+  if (featuredAssets.length === 0) return null
   if (featuredAssets.length === 1) return <header>{featuredAssets}</header>
   return (
     <header>

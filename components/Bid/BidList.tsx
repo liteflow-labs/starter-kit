@@ -41,7 +41,7 @@ const BidList: FC<Props> = ({
   onCanceled,
 }) => {
   const { t } = useTranslation('components')
-  const bidResults = useFetchAssetBidsQuery({
+  const { data: assetBids } = useFetchAssetBidsQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -50,7 +50,7 @@ const BidList: FC<Props> = ({
     },
     skip: !!auctionId,
   })
-  const auctionBidResult = useFetchAuctionBidsQuery({
+  const { data: auctionBids } = useFetchAuctionBidsQuery({
     variables: {
       auctionId: auctionId || '',
       now,
@@ -61,10 +61,10 @@ const BidList: FC<Props> = ({
 
   const bids = useMemo(() => {
     const list = auctionId
-      ? auctionBidResult.data?.auction?.offers.nodes
-      : bidResults.data?.asset?.bids.nodes
+      ? auctionBids?.auction?.offers.nodes
+      : assetBids?.asset?.bids.nodes
     return list?.map(convertBidFull)
-  }, [auctionId, auctionBidResult.data, bidResults.data])
+  }, [auctionId, auctionBids, assetBids])
 
   if (bids === undefined)
     return (
