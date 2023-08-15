@@ -25,7 +25,7 @@ const FilterNav: FC<Props> = ({
   onClear,
 }) => {
   const { t } = useTranslation('components')
-  const isSmall = useBreakpointValue({ base: true, md: false })
+  const isSmall = useBreakpointValue({ base: true, md: false }, { ssr: false })
   return (
     <HStack spacing={4}>
       <Button onClick={toggleFilters} colorScheme="gray" variant="outline">

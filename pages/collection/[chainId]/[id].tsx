@@ -62,7 +62,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
     parse: parseInt,
   })
   const collectionAddress = useRequiredQueryParamSingle('id')
-  const isSmall = useBreakpointValue({ base: true, md: false })
+  const isSmall = useBreakpointValue({ base: true, md: false }, { ssr: false })
   const { t } = useTranslation('templates')
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()

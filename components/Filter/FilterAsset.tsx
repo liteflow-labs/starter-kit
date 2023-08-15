@@ -75,7 +75,7 @@ const FilterAsset: NextPage<Props> = ({
   onFilterChange,
 }) => {
   const { t } = useTranslation('components')
-  const isSmall = useBreakpointValue({ base: true, sm: false })
+  const isSmall = useBreakpointValue({ base: true, sm: false }, { ssr: false })
 
   const {
     register,
@@ -218,7 +218,10 @@ const FilterAsset: NextPage<Props> = ({
 
   return (
     <Stack spacing={8} as="form" onSubmit={handleSubmit(onFilterChange)}>
-      <Accordion allowMultiple defaultIndex={isSmall ? [] : [2]}>
+      <Accordion
+        allowMultiple
+        defaultIndex={isSmall ? [] : [noChain ? 2 : chains.length > 1 ? 3 : 2]}
+      >
         {noChain ||
           (chains.length > 1 && (
             <AccordionItem>
