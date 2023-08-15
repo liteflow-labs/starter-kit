@@ -491,6 +491,9 @@
       }
     }
   },
+  "pagination": {
+    "label": "ページあたりの結果"
+  },
   "referral": {
     "form": {
       "connect": "サインインして紹介リンクを生成する",

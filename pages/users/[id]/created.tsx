@@ -1,6 +1,4 @@
-import { Text } from '@chakra-ui/react'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
@@ -41,7 +39,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading, previousData } = useFetchCreatedAssetsQuery({
+  const { data } = useFetchCreatedAssetsQuery({
     variables: {
       address: userAddress,
       currentAddress: address || '',
@@ -52,18 +50,9 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const changeOrder = useCallback(
-    async (orderBy: any) => {
-      await replace({ pathname, query: { ...query, orderBy } })
-    },
-    [replace, pathname, query],
-  )
-
-  const assetData = useMemo(() => data || previousData, [data, previousData])
-
   const assets = useMemo(
     () =>
-      (assetData?.created?.nodes || [])
+      data?.created?.nodes
         .filter((x): x is AssetDetailFragment => !!x)
         .map((x) => ({
           ...convertAsset(x),
@@ -75,7 +64,14 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
           numberOfSales: x.firstSale.totalCount,
           hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
         })),
-    [assetData],
+    [data],
+  )
+
+  const changeOrder = useCallback(
+    async (orderBy: any) => {
+      await replace({ pathname, query: { ...query, orderBy } })
+    },
+    [replace, pathname, query],
   )
 
   return (
@@ -90,7 +86,6 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
       >
         <TokenGrid<AssetsOrderBy>
           assets={assets}
-          loading={loading && !assetData}
           orderBy={{
             value: orderBy,
             choices: [
@@ -109,25 +104,10 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
             limit,
             limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
             page,
-            total: assetData?.created?.totalCount || 0,
-            isLoading: loading,
             onPageChange: changePage,
             onLimitChange: changeLimit,
-            result: {
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            },
+            hasNextPage: data?.created?.pageInfo.hasNextPage,
+            hasPreviousPage: data?.created?.pageInfo.hasPreviousPage,
           }}
         />
       </UserProfileTemplate>

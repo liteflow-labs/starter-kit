@@ -10,7 +10,10 @@ query FetchUserBidsPlaced(
     offset: $offset
     filter: { makerAddress: { equalTo: $address } }
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       id
       unitPrice

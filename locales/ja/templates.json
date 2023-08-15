@@ -245,14 +245,6 @@
       }
     }
   },
-  "pagination": {
-    "result": {
-      "label": "ページあたりの結果",
-      "caption": "<0>{{from}}</0> - <0>{{to}}</0> の <0>{{total}}</0> 結果",
-      "pages_one": "{{count}}ページ",
-      "pages_other": "{{count}}ページ"
-    }
-  },
   "user": {
     "auctions": {
       "nav": {

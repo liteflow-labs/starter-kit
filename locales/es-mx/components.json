@@ -491,6 +491,9 @@
       }
     }
   },
+  "pagination": {
+    "label": "Resultados por página"
+  },
   "referral": {
     "form": {
       "connect": "Inicia sesión para generar tu link de referencia",

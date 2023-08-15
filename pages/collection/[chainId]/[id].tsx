@@ -10,10 +10,8 @@ import {
   ModalContent,
   ModalHeader,
   SimpleGrid,
-  Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
@@ -79,21 +77,18 @@ const CollectionPage: FC<Props> = ({ now }) => {
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery()
-  const { data: assetData, loading: _assetLoading } =
-    useFetchCollectionAssetsQuery({
-      variables: {
-        collectionAddress,
-        now: date,
-        currentAccount: address || '',
-        limit,
-        offset,
-        orderBy,
-        chainId: chainId,
-        filter: convertFilterToAssetFilter(filter, date),
-      },
-    })
-  const assetLoading = _assetLoading && !assetData
-  const totalCount = assetData?.assets?.totalCount
+  const { data: assetData } = useFetchCollectionAssetsQuery({
+    variables: {
+      collectionAddress,
+      now: date,
+      currentAccount: address || '',
+      limit,
+      offset,
+      orderBy,
+      chainId: chainId,
+      filter: convertFilterToAssetFilter(filter, date),
+    },
+  })
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -126,9 +121,11 @@ const CollectionPage: FC<Props> = ({ now }) => {
     () =>
       collectionData?.collection
         ? convertCollectionFull(collectionData.collection)
-        : null,
+        : undefined,
     [collectionData],
   )
+
+  const assets = assetData?.assets?.nodes
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -219,7 +216,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-          {assetLoading ? (
+          {assets === undefined ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
@@ -231,12 +228,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             >
               <SkeletonTokenCard />
             </SkeletonGrid>
-          ) : totalCount === 0 ? (
-            <Empty
-              title={t('collection.empty.title')}
-              description={t('collection.empty.description')}
-            />
-          ) : (
+          ) : assets.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing="4"
@@ -246,7 +238,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
                   : { base: 1, sm: 2, md: 4, lg: 6 }
               }
             >
-              {assetData?.assets?.nodes.map((x, i) => (
+              {assets.map((x, i) => (
                 <Flex key={i} justify="center" overflow="hidden">
                   <TokenCard
                     asset={convertAsset(x)}
@@ -265,32 +257,24 @@ const CollectionPage: FC<Props> = ({ now }) => {
                 </Flex>
               ))}
             </SimpleGrid>
+          ) : (
+            <Empty
+              title={t('collection.empty.title')}
+              description={t('collection.empty.description')}
+            />
           )}
-          <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            page={page}
-            total={totalCount}
-            isLoading={assetLoading}
-            onPageChange={changePage}
-            onLimitChange={changeLimit}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          <Divider my="6" display={assets?.length !== 0 ? 'block' : 'none'} />
+          {assets?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={assetData?.assets?.pageInfo.hasNextPage}
+              hasPreviousPage={assetData?.assets?.pageInfo.hasPreviousPage}
+            />
+          )}
         </GridItem>
       </Grid>
     </LargeLayout>

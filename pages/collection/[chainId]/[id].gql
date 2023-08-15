@@ -53,10 +53,9 @@ query FetchCollectionAssets(
     first: $limit
     offset: $offset
   ) {
-    totalCount
     pageInfo {
       hasNextPage
-      endCursor
+      hasPreviousPage
     }
     nodes {
       id

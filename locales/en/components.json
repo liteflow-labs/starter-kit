@@ -491,6 +491,9 @@
       }
     }
   },
+  "pagination": {
+    "label": "Results per page"
+  },
   "referral": {
     "form": {
       "connect": "Sign in to generate your referral link",
