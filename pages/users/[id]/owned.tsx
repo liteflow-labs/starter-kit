@@ -52,7 +52,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
 
   const assets = useMemo(
     () =>
-      (data?.owned?.nodes || [])
+      data?.owned?.nodes
         .map((x) => x.asset)
         .filter((x): x is AssetDetailFragment => !!x)
         .map((x) => ({
@@ -87,7 +87,6 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
       >
         <TokenGrid<OwnershipsOrderBy>
           assets={assets}
-          loading={data === undefined}
           orderBy={{
             value: orderBy,
             choices: [

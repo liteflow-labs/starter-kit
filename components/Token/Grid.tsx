@@ -12,14 +12,15 @@ import type { Props as NFTCardProps } from './Card'
 import NFTCard from './Card'
 
 type IProps<Order extends string> = {
-  assets: (NFTCardProps['asset'] & {
-    auction: NFTCardProps['auction']
-    creator: NFTCardProps['creator']
-    sale: NFTCardProps['sale']
-    numberOfSales: number
-    hasMultiCurrency: boolean
-  })[]
-  loading: boolean
+  assets:
+    | (NFTCardProps['asset'] & {
+        auction: NFTCardProps['auction']
+        creator: NFTCardProps['creator']
+        sale: NFTCardProps['sale']
+        numberOfSales: number
+        hasMultiCurrency: boolean
+      })[]
+    | undefined
   orderBy: {
     value: Order
     choices: {
@@ -33,7 +34,6 @@ type IProps<Order extends string> = {
 
 const TokenGrid = <Order extends string>({
   assets,
-  loading,
   orderBy,
   pagination,
 }: IProps<Order>): ReactElement => {
@@ -50,7 +50,7 @@ const TokenGrid = <Order extends string>({
           inlineLabel
         />
       </Box>
-      {loading ? (
+      {assets === undefined ? (
         <SkeletonGrid
           items={
             pagination.withoutLimit
@@ -104,7 +104,9 @@ const TokenGrid = <Order extends string>({
       )}
       <Divider
         display={
-          loading || pagination.hasNextPage || pagination.hasPreviousPage
+          assets === undefined ||
+          pagination.hasNextPage ||
+          pagination.hasPreviousPage
             ? 'block'
             : 'none'
         }

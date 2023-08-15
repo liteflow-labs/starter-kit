@@ -173,9 +173,9 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {data === undefined ? (
+          {offers === undefined ? (
             <Loader />
-          ) : data.offers && data.offers.nodes.length > 0 ? (
+          ) : offers.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>

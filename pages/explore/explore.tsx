@@ -98,6 +98,11 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
+  const assets = useMemo(
+    () => assetsData?.assets?.nodes,
+    [assetsData?.assets?.nodes],
+  )
+
   const changeOrder = useCallback(
     async (orderBy: any) => {
       await push(
@@ -176,7 +181,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-              {assetsData === undefined ? (
+              {assets === undefined ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact
@@ -188,7 +193,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                 >
                   <SkeletonTokenCard />
                 </SkeletonGrid>
-              ) : assetsData.assets && assetsData.assets.nodes.length > 0 ? (
+              ) : assets.length > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -198,7 +203,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                       : { sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {assetsData.assets.nodes.map((x, i) => (
+                  {assets.map((x, i) => (
                     <Flex key={i} justify="center" overflow="hidden">
                       <TokenCard
                         asset={convertAsset(x)}
@@ -226,7 +231,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               <Divider
                 my="6"
                 display={
-                  assetsData === undefined || hasNextPage || hasPreviousPage
+                  assets === undefined || hasNextPage || hasPreviousPage
                     ? 'block'
                     : 'none'
                 }

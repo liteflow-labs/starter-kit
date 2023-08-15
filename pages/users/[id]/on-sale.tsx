@@ -52,7 +52,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
 
   const assets = useMemo(
     () =>
-      (data?.onSale?.nodes || [])
+      data?.onSale?.nodes
         .filter((x): x is AssetDetailFragment => !!x)
         .map((x) => ({
           ...convertAsset(x),
@@ -86,7 +86,6 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
       >
         <TokenGrid<AssetsOrderBy>
           assets={assets}
-          loading={data === undefined}
           orderBy={{
             value: orderBy,
             choices: [

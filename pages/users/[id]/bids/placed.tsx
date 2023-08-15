@@ -73,7 +73,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
 
   const bids = useMemo(
     () =>
-      (data?.bids?.nodes || []).map((x) => ({
+      data?.bids?.nodes.map((x) => ({
         ...convertBidFull(x),
         asset: x.asset,
       })),
@@ -165,9 +165,9 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {data === undefined ? (
+          {bids === undefined ? (
             <Loader />
-          ) : data.bids && data.bids.nodes.length > 0 ? (
+          ) : bids.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>

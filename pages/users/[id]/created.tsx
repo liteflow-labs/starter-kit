@@ -52,7 +52,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
 
   const assets = useMemo(
     () =>
-      (data?.created?.nodes || [])
+      data?.created?.nodes
         .filter((x): x is AssetDetailFragment => !!x)
         .map((x) => ({
           ...convertAsset(x),
@@ -86,7 +86,6 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
       >
         <TokenGrid<AssetsOrderBy>
           assets={assets}
-          loading={data === undefined}
           orderBy={{
             value: orderBy,
             choices: [

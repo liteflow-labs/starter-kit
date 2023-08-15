@@ -176,9 +176,9 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {data === undefined ? (
+          {auctions === undefined ? (
             <Loader />
-          ) : data.auctions && data.auctions.nodes.length > 0 ? (
+          ) : auctions.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>

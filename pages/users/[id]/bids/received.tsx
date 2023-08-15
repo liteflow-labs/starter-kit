@@ -166,9 +166,9 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {data === undefined ? (
+          {bids === undefined ? (
             <Loader />
-          ) : data.bids && data.bids.nodes.length > 0 ? (
+          ) : bids.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>

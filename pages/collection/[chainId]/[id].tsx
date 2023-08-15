@@ -121,8 +121,13 @@ const CollectionPage: FC<Props> = ({ now }) => {
     () =>
       collectionData?.collection
         ? convertCollectionFull(collectionData.collection)
-        : null,
+        : undefined,
     [collectionData],
+  )
+
+  const assets = useMemo(
+    () => assetData?.assets?.nodes,
+    [assetData?.assets?.nodes],
   )
 
   const changeOrder = useCallback(
@@ -224,7 +229,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-          {assetData === undefined ? (
+          {assets === undefined ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
@@ -236,7 +241,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             >
               <SkeletonTokenCard />
             </SkeletonGrid>
-          ) : assetData.assets && assetData.assets.nodes.length > 0 ? (
+          ) : assets.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing="4"
@@ -246,7 +251,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
                   : { base: 1, sm: 2, md: 4, lg: 6 }
               }
             >
-              {assetData.assets.nodes.map((x, i) => (
+              {assets.map((x, i) => (
                 <Flex key={i} justify="center" overflow="hidden">
                   <TokenCard
                     asset={convertAsset(x)}
@@ -274,7 +279,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           <Divider
             my="6"
             display={
-              assetData === undefined || hasNextPage || hasPreviousPage
+              assets === undefined || hasNextPage || hasPreviousPage
                 ? 'block'
                 : 'none'
             }

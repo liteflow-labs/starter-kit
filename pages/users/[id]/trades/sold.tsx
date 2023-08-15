@@ -156,9 +156,9 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {data === undefined ? (
+          {trades === undefined ? (
             <Loader />
-          ) : data.trades && data.trades.nodes.length > 0 ? (
+          ) : trades.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>

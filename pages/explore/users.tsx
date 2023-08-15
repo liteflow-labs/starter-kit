@@ -67,6 +67,11 @@ const UsersPage: NextPage<Props> = () => {
     [push, pathname, query],
   )
 
+  const users = useMemo(
+    () => usersData?.users?.nodes,
+    [usersData?.users?.nodes],
+  )
+
   const [changePage, changeLimit] = usePaginate()
 
   const hasNextPage = useMemo(
@@ -114,7 +119,7 @@ const UsersPage: NextPage<Props> = () => {
               />
             </Box>
           </Flex>
-          {usersData === undefined ? (
+          {users === undefined ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
@@ -123,14 +128,14 @@ const UsersPage: NextPage<Props> = () => {
             >
               <SkeletonUserCard />
             </SkeletonGrid>
-          ) : usersData.users && usersData.users.nodes.length > 0 ? (
+          ) : users.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}
               columns={{ sm: 2, md: 4, lg: 6 }}
               py={6}
             >
-              {usersData.users.nodes.map((user, i) => (
+              {users.map((user, i) => (
                 <UserCard
                   key={i}
                   user={convertUserWithCover(user, user.address)}
@@ -146,7 +151,7 @@ const UsersPage: NextPage<Props> = () => {
           <Divider
             my="6"
             display={
-              usersData === undefined || hasNextPage || hasPreviousPage
+              users === undefined || hasNextPage || hasPreviousPage
                 ? 'block'
                 : 'none'
             }

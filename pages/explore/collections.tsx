@@ -81,6 +81,11 @@ const CollectionsPage: NextPage<Props> = ({}) => {
     [push, pathname],
   )
 
+  const collections = useMemo(
+    () => collectionsData?.collections?.nodes,
+    [collectionsData?.collections?.nodes],
+  )
+
   const [changePage, changeLimit] = usePaginate()
 
   const changeOrder = useCallback(
@@ -187,7 +192,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               </GridItem>
             )}
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
-              {collectionsData === undefined ? (
+              {collections === undefined ? (
                 <SkeletonGrid
                   items={environment.PAGINATION_LIMIT}
                   compact
@@ -199,8 +204,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                 >
                   <SkeletonCollectionCard />
                 </SkeletonGrid>
-              ) : collectionsData.collections &&
-                collectionsData.collections.nodes.length > 0 ? (
+              ) : collections.length > 0 ? (
                 <SimpleGrid
                   flexWrap="wrap"
                   spacing="4"
@@ -210,7 +214,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                       : { sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {collectionsData.collections.nodes.map((collection, i) => (
+                  {collections.map((collection, i) => (
                     <CollectionCard
                       collection={convertCollection(collection)}
                       key={i}
@@ -226,9 +230,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               <Divider
                 my="6"
                 display={
-                  collectionsData === undefined ||
-                  hasNextPage ||
-                  hasPreviousPage
+                  collections === undefined || hasNextPage || hasPreviousPage
                     ? 'block'
                     : 'none'
                 }
