@@ -74,14 +74,14 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
 
   const auctions = useMemo(
     () =>
-      (data?.auctions?.nodes || []).map((x) => ({
+      data?.auctions?.nodes.map((x) => ({
         ...convertAuctionWithBestBid(x),
         ...convertAuctionFull(x),
         asset: x.asset,
         createdAt: new Date(x.createdAt),
         ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
-    [data?.auctions?.nodes],
+    [data],
   )
 
   const onAuctionAccepted = useCallback(async () => {

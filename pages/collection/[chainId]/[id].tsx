@@ -125,10 +125,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
     [collectionData],
   )
 
-  const assets = useMemo(
-    () => assetData?.assets?.nodes,
-    [assetData?.assets?.nodes],
-  )
+  const assets = useMemo(() => assetData?.assets?.nodes, [assetData])
 
   const changeOrder = useCallback(
     async (orderBy: any) => {

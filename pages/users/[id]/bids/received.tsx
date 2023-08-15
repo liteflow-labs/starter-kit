@@ -74,11 +74,11 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
 
   const bids = useMemo(
     () =>
-      (data?.bids?.nodes || []).map((x) => ({
+      data?.bids?.nodes.map((x) => ({
         ...convertBidFull(x),
         asset: x.asset,
       })),
-    [data?.bids?.nodes],
+    [data],
   )
 
   const onAccepted = useCallback(async () => {

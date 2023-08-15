@@ -67,10 +67,7 @@ const UsersPage: NextPage<Props> = () => {
     [push, pathname, query],
   )
 
-  const users = useMemo(
-    () => usersData?.users?.nodes,
-    [usersData?.users?.nodes],
-  )
+  const users = useMemo(() => usersData?.users?.nodes, [usersData])
 
   const [changePage, changeLimit] = usePaginate()
 

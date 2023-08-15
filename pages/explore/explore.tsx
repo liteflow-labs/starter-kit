@@ -98,10 +98,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const assets = useMemo(
-    () => assetsData?.assets?.nodes,
-    [assetsData?.assets?.nodes],
-  )
+  const assets = useMemo(() => assetsData?.assets?.nodes, [assetsData])
 
   const changeOrder = useCallback(
     async (orderBy: any) => {

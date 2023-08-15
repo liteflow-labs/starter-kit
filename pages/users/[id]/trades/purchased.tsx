@@ -69,10 +69,7 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const trades = useMemo(
-    () => (data?.trades?.nodes || []).map(convertTrade),
-    [data?.trades?.nodes],
-  )
+  const trades = useMemo(() => data?.trades?.nodes.map(convertTrade), [data])
 
   const changeOrder = useCallback(
     async (orderBy: any) => {

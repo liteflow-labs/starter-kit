@@ -77,7 +77,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
         ...convertBidFull(x),
         asset: x.asset,
       })),
-    [data?.bids?.nodes],
+    [data],
   )
 
   const onCanceled = useCallback(async () => {

@@ -64,7 +64,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
           numberOfSales: x.firstSale.totalCount,
           hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
         })),
-    [data?.onSale?.nodes],
+    [data],
   )
 
   const changeOrder = useCallback(

@@ -83,7 +83,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
 
   const collections = useMemo(
     () => collectionsData?.collections?.nodes,
-    [collectionsData?.collections?.nodes],
+    [collectionsData],
   )
 
   const [changePage, changeLimit] = usePaginate()

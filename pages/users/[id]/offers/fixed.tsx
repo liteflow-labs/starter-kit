@@ -79,13 +79,13 @@ const FixedPricePage: NextPage<Props> = ({ now }) => {
 
   const offers = useMemo(
     () =>
-      (data?.offers?.nodes || []).map((x) => ({
+      data?.offers?.nodes.map((x) => ({
         ...convertSaleFull(x),
         createdAt: new Date(x.createdAt),
         asset: x.asset,
         ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
-    [data?.offers?.nodes],
+    [data],
   )
 
   const changeOrder = useCallback(
