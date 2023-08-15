@@ -13,32 +13,3 @@ query FetchAccountDetail($address: Address!) {
     }
   }
 }
-
-query FetchAccountMetadata($address: Address!, $now: Datetime!) {
-  created: assets(
-    filter: {
-      quantity: { greaterThan: "0" }
-      creatorAddress: { equalTo: $address }
-    }
-  ) {
-    totalCount
-  }
-  onSale: assets(
-    filter: {
-      quantity: { greaterThan: "0" }
-      salesAndAuctions: {
-        some: {
-          creatorAddress: { equalTo: $address }
-          endAt: { greaterThan: $now }
-        }
-      }
-    }
-  ) {
-    totalCount
-  }
-  owned: ownerships(
-    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
-  ) {
-    totalCount
-  }
-}
