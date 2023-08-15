@@ -11,7 +11,7 @@ import {
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'

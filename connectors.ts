@@ -21,9 +21,9 @@ import {
   polygon,
   polygonMumbai,
 } from 'wagmi/chains'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import environment from './environment'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
 
 const providers = [publicProvider()]
 // add alchemy provider as fallback if ALCHEMY_API_KEY is set

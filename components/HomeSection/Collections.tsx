@@ -3,7 +3,7 @@ import { convertCollection } from 'convert'
 import environment from 'environment'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import invariant from 'ts-invariant'
 import {
   CollectionFilter,
