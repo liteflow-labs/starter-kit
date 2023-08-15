@@ -36,10 +36,7 @@ const CollectionsHomeSection: FC<Props> = () => {
   })
   useHandleQueryError(collectionsQuery)
 
-  const collectionData = useMemo(
-    () => collectionsQuery.data || collectionsQuery.previousData,
-    [collectionsQuery.data, collectionsQuery.previousData],
-  )
+  const collectionData = collectionsQuery.data
 
   const orderedCollections = useOrderByKey(
     environment.HOME_COLLECTIONS,

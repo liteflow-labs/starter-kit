@@ -59,28 +59,14 @@ const BidList: FC<Props> = ({
   })
   const blockExplorer = useBlockExplorer(chainId)
 
-  const result = useMemo(
-    () => (auctionId ? auctionBidResult : bidResults),
-    [auctionId, auctionBidResult, bidResults],
-  )
-
-  const bidData = useMemo(
-    () => bidResults.data || bidResults.previousData,
-    [bidResults.data, bidResults.previousData],
-  )
-
-  const auctionBidData = useMemo(
-    () => auctionBidResult.data || auctionBidResult.previousData,
-    [auctionBidResult.data, auctionBidResult.previousData],
-  )
   const bids = useMemo(() => {
     const list = auctionId
-      ? auctionBidData?.auction?.offers.nodes || []
-      : bidData?.asset?.bids.nodes || []
-    return list.map(convertBidFull)
-  }, [auctionId, auctionBidData, bidData])
+      ? auctionBidResult.data?.auction?.offers.nodes
+      : bidResults.data?.asset?.bids.nodes
+    return list?.map(convertBidFull)
+  }, [auctionId, auctionBidResult.data, bidResults.data])
 
-  if (result.loading && !bidData)
+  if (bids === undefined)
     return (
       <SkeletonList items={5}>
         <SkeletonListItem image subtitle caption />

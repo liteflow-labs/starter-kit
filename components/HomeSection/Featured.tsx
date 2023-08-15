@@ -46,20 +46,14 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
   useHandleQueryError(featureAssetsQuery)
   useHandleQueryError(currenciesQuery)
 
-  const assetData = useMemo(
-    () => featureAssetsQuery.data || featureAssetsQuery.previousData,
-    [featureAssetsQuery.data, featureAssetsQuery.previousData],
-  )
+  const assetData = featureAssetsQuery.data
 
   const featured = useOrderByKey(
     environment.FEATURED_TOKEN,
     assetData?.assets?.nodes || [],
     (asset) => asset.id,
   )
-  const currencyData = useMemo(
-    () => currenciesQuery.data || currenciesQuery.previousData,
-    [currenciesQuery.data, currenciesQuery.previousData],
-  )
+  const currencyData = currenciesQuery.data
 
   const reloadInfo = useCallback(async () => {
     void featureAssetsQuery.refetch()

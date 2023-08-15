@@ -52,7 +52,7 @@ const CreatePage: NextPage = ({}) => {
   const { back, push } = useRouter()
   const { address } = useAccount()
   const toast = useToast()
-  const { data, loading, previousData } = useFetchAccountAndCollectionQuery({
+  const { data, loading } = useFetchAccountAndCollectionQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -60,15 +60,8 @@ const CreatePage: NextPage = ({}) => {
     },
   })
 
-  const collection = useMemo(
-    () => data?.collection || previousData?.collection,
-    [data, previousData],
-  )
-
-  const account = useMemo(
-    () => data?.account || previousData?.account,
-    [data, previousData],
-  )
+  const collection = data?.collection
+  const account = data?.account
 
   const [formData, setFormData] = useState<Partial<FormData>>()
 

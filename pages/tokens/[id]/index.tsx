@@ -90,7 +90,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const chainId = parseInt(_chainId, 10)
 
   const date = useMemo(() => new Date(nowProp), [nowProp])
-  const { data, refetch, loading, previousData } = useFetchAssetQuery({
+  const { data, refetch, loading } = useFetchAssetQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -101,10 +101,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   })
   const chainCurrency = useChainCurrencies(chainId, { onlyERC20: true })
 
-  const asset = useMemo(
-    () => data?.asset || previousData?.asset,
-    [data, previousData],
-  )
+  const asset = data?.asset
 
   const blockExplorer = useBlockExplorer(chainId)
 

@@ -42,10 +42,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     skip: environment.HOME_TOKENS.length > 0,
   })
   useHandleQueryError(defaultAssetQuery)
-  const defaultAssetData = useMemo(
-    () => defaultAssetQuery.data || defaultAssetQuery.previousData,
-    [defaultAssetQuery.data, defaultAssetQuery.previousData],
-  )
+  const defaultAssetData = defaultAssetQuery.data
 
   const assetIds = useMemo(() => {
     if (environment.HOME_TOKENS.length > 0) {
@@ -80,10 +77,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     },
   })
   useHandleQueryError(assetsQuery)
-  const assetData = useMemo(
-    () => assetsQuery.data || assetsQuery.previousData,
-    [assetsQuery.data, assetsQuery.previousData],
-  )
+  const assetData = assetsQuery.data
 
   const assets = useOrderByKey(
     assetIds,

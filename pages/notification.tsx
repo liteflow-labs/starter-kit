@@ -31,7 +31,11 @@ const NotificationPage: NextPage = ({}) => {
   useLoginRedirect()
   const [_, setCookies] = useCookies()
 
-  const { data, fetchMore, loading, previousData } = useGetNotificationsQuery({
+  const {
+    data: notificationData,
+    fetchMore,
+    loading,
+  } = useGetNotificationsQuery({
     variables: {
       cursor: null,
       address: address || '',
@@ -39,19 +43,8 @@ const NotificationPage: NextPage = ({}) => {
     skip: !address,
   })
 
-  const notificationData = useMemo(
-    () => data || previousData,
-    [data, previousData],
-  )
-  const notifications = useMemo(
-    () => notificationData?.notifications?.nodes || [],
-    [notificationData],
-  )
-
-  const hasNextPage = useMemo(
-    () => data?.notifications?.pageInfo.hasNextPage,
-    [data],
-  )
+  const notifications = notificationData?.notifications?.nodes || []
+  const hasNextPage = notificationData?.notifications?.pageInfo.hasNextPage
 
   const loadMore = useCallback(async () => {
     try {

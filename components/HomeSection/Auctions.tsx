@@ -22,10 +22,7 @@ const AuctionsHomeSection: FC<Props> = ({ date }) => {
     variables: { now: date, address: address || '' },
   })
   useHandleQueryError(auctionAssetsQuery)
-  const auctionData = useMemo(
-    () => auctionAssetsQuery.data || auctionAssetsQuery.previousData,
-    [auctionAssetsQuery.data, auctionAssetsQuery.previousData],
-  )
+  const auctionData = auctionAssetsQuery.data
   const auctions = useMemo(
     () => auctionData?.auctions?.nodes || [],
     [auctionData],

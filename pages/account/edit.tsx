@@ -23,16 +23,13 @@ const EditPage: NextPage = () => {
 
   const toast = useToast()
 
-  const { data, loading, previousData } = useGetAccountQuery({
+  const { data, loading } = useGetAccountQuery({
     variables: {
       address: address || '',
     },
     skip: !isLoggedIn,
   })
-  const account = useMemo(
-    () => data?.account || previousData?.account,
-    [data, previousData],
-  )
+  const account = data?.account
 
   const onSubmit = useCallback(
     async (address: string) => {

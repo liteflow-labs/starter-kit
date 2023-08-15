@@ -25,14 +25,13 @@ type IProps = {
 const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
   const { t } = useTranslation('components')
 
-  const { data, loading, previousData } = useFetchAssetHistoryQuery({
+  const { data: historyData, loading } = useFetchAssetHistoryQuery({
     variables: {
       chainId,
       collectionAddress,
       tokenId,
     },
   })
-  const historyData = useMemo(() => data || previousData, [data, previousData])
   const blockExplorer = useBlockExplorer(chainId)
 
   const histories = useMemo(

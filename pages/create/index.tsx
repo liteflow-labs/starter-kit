@@ -33,12 +33,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
 const CreatePage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back } = useRouter()
-  const { data, previousData } = useFetchCollectionsForMintQuery()
+  const { data } = useFetchCollectionsForMintQuery()
 
-  const collections = useMemo(
-    () => data?.collections || previousData?.collections,
-    [data, previousData],
-  )
+  const collections = data?.collections
 
   return (
     <Layout>

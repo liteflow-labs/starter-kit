@@ -21,10 +21,7 @@ const UsersHomeSection: FC<Props> = () => {
   })
   useHandleQueryError(usersQuery)
 
-  const userData = useMemo(
-    () => usersQuery.data || usersQuery.previousData,
-    [usersQuery.data, usersQuery.previousData],
-  )
+  const userData = usersQuery.data
 
   const orderedUsers = useOrderByKey(
     environment.HOME_USERS,
