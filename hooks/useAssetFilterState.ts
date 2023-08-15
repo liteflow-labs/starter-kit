@@ -8,8 +8,10 @@ export default function useAssetFilterState(filter: Filter): {
   close: () => void
   count: number
 } {
-  const display =
-    useBreakpointValue({ base: false, md: true }, { ssr: false }) || false
+  const display = useBreakpointValue(
+    { base: false, md: true },
+    { fallback: 'md' },
+  )
   const [showFilters, setShowFilters] = useState(display)
   const filterCount = useMemo(() => {
     let count = filter.traits.length
