@@ -42,11 +42,7 @@ import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow } from '../../../../utils'
 
-type Props = {
-  now: string
-}
-
-const TradeSoldPage: NextPage<Props> = ({ now }) => {
+const TradeSoldPage: NextPage = () => {
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -56,7 +52,6 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const date = useMemo(() => new Date(now), [now])
   const { data } = useFetchUserTradeSoldQuery({
     variables: {
       address: userAddress,
@@ -78,7 +73,6 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={date}
         signer={signer}
         currentAccount={address}
         address={userAddress}
