@@ -53,8 +53,8 @@ type Props = {
     floorPriceCurrencySymbol: string | null
     totalOwners: number
     supply: number
-  }>
-  loading: boolean
+  }> // TODO: add undefined type
+  loading: boolean // TODO: to delete
   reportEmail: string
 }
 

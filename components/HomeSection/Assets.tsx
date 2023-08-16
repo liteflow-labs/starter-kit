@@ -65,30 +65,28 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       }
       return randomTokens
     }
-    return (defaultAssetData?.assets?.nodes || []).map((x) => x.id)
+    return defaultAssetData?.assets?.nodes.map((x) => x.id)
   }, [defaultAssetData, date])
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {
       now: date,
       limit: environment.PAGINATION_LIMIT,
-      assetIds: assetIds,
+      assetIds: assetIds || [],
       address: address || '',
     },
+    skip: assetIds === undefined,
   })
   useHandleQueryError(assetsQuery)
   const assetData = assetsQuery.data
 
   const assets = useOrderByKey(
     assetIds,
-    assetData?.assets?.nodes || [],
+    assetData?.assets?.nodes,
     (asset) => asset.id,
   )
 
-  if (
-    (defaultAssetQuery.loading && !defaultAssetData) ||
-    (assetsQuery.loading && !assetData)
-  )
+  if (!assets)
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />

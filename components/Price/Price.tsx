@@ -14,8 +14,6 @@ const Price: FC<
   }
 > = ({ amount, currency, averageFrom, ...props }) => {
   const amountFormatted = useMemo(() => {
-    if (!currency) return ''
-
     const averageIsBiggerThanValue =
       !!averageFrom &&
       BigNumber.from(amount).gte(
@@ -31,7 +29,6 @@ const Price: FC<
       average: averageIsBiggerThanValue,
     })
   }, [amount, currency, averageFrom])
-  if (!currency) return null
 
   return (
     <span {...props}>

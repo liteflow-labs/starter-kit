@@ -23,7 +23,7 @@ const EditPage: NextPage = () => {
 
   const toast = useToast()
 
-  const { data, loading } = useGetAccountQuery({
+  const { data } = useGetAccountQuery({
     variables: {
       address: address || '',
     },
@@ -42,7 +42,7 @@ const EditPage: NextPage = () => {
     [toast, t, push],
   )
 
-  if (!loading && !account) return <Error statusCode={404} />
+  if (account === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head title="Account - Edit profile" />

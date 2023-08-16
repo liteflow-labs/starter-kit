@@ -78,7 +78,7 @@ const NotificationPage: NextPage = ({}) => {
         {t('notifications.title')}
       </Heading>
       <Stack spacing={6} mt={12}>
-        {(notifications || []).map((notification) => (
+        {notifications.map((notification) => (
           <NotificationDetail
             key={notification.id}
             currentAccount={address || null}

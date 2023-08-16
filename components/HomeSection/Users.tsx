@@ -21,11 +21,9 @@ const UsersHomeSection: FC<Props> = () => {
   })
   useHandleQueryError(usersQuery)
 
-  const userData = usersQuery.data
-
   const orderedUsers = useOrderByKey(
     environment.HOME_USERS,
-    userData?.users?.nodes || [],
+    usersQuery.data?.users?.nodes,
     (user) => user.address,
   )
 
@@ -35,7 +33,6 @@ const UsersHomeSection: FC<Props> = () => {
         href: '/explore/users',
         title: t('home.users.explore'),
       }}
-      isLoading={usersQuery.loading && !userData}
       items={orderedUsers}
       itemRender={(
         user: NonNullable<FetchUsersQuery['users']>['nodes'][number],

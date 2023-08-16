@@ -90,7 +90,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const chainId = parseInt(_chainId, 10)
 
   const date = useMemo(() => new Date(nowProp), [nowProp])
-  const { data, refetch, loading } = useFetchAssetQuery({
+  const { data, refetch } = useFetchAssetQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -194,7 +194,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [refetch, refreshAsset, toast],
   )
 
-  if (!loading && !asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <LargeLayout>
       <Head
@@ -227,7 +227,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               100vw"
               />
             )}
-            {asset && asset.hasUnlockableContent && (
+            {asset?.hasUnlockableContent && (
               <Flex
                 w="full"
                 mt={3}
