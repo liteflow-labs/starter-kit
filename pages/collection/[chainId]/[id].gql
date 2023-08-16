@@ -19,6 +19,13 @@ query FetchCollectionDetails($collectionAddress: Address!, $chainId: Int!) {
         status
       }
     }
+  }
+}
+
+query FetchCollectionMetrics($collectionAddress: Address!, $chainId: Int!) {
+  collection(address: $collectionAddress, chainId: $chainId) {
+    address
+    chainId
     numberOfOwners
     supply
     floorPrice {

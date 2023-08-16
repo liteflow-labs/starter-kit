@@ -30,103 +30,104 @@ import { chains } from '../../connectors'
 import { formatAddress } from '../../utils'
 
 type Props = {
-  collection: Partial<{
-    address: string
-    chainId: number
-    name: string | null
-    description: string | null
-    image: string | null
-    cover: string | null
-    twitter: string | null
-    discord: string | null
-    website: string | null
-    deployerAddress: string
-    deployer: {
-      address: string
-      name: string | null
-      username: string | null
-      verified: boolean
-    } | null
-    totalVolume: string
-    totalVolumeCurrencySymbol: string
-    floorPrice: string | null
-    floorPriceCurrencySymbol: string | null
-    totalOwners: number
-    supply: number
-  }> // TODO: add undefined type
-  loading: boolean // TODO: to delete
+  collection:
+    | {
+        address: string
+        chainId: number
+        name: string
+        description: string | null
+        image: string | null
+        cover: string | null
+        twitter: string | null
+        discord: string | null
+        website: string | null
+        deployer: {
+          address: string
+          name: string | null
+          username: string | null
+          verified: boolean
+        }
+      }
+    | undefined
+  metrics:
+    | {
+        totalVolume: string
+        totalVolumeCurrencySymbol: string
+        floorPrice: string | null
+        floorPriceCurrencySymbol: string | null
+        totalOwners: number
+        supply: number
+      }
+    | undefined
   reportEmail: string
 }
 
-const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
+const CollectionHeader: FC<Props> = ({ collection, metrics, reportEmail }) => {
   const { t } = useTranslation('templates')
-  const blockExplorer = useBlockExplorer(collection.chainId)
-  const chain = useMemo(
-    () => chains.find((x) => x.id === collection.chainId),
-    [collection.chainId],
-  )
+  const blockExplorer = useBlockExplorer(collection?.chainId)
 
-  const blocks = useMemo(
-    () => [
-      {
-        name: t('collection.header.data-labels.total-volume'),
-        value:
-          numbro(collection.totalVolume).format({
-            thousandSeparated: true,
-            trimMantissa: true,
-            mantissa: 4,
-          }) +
-          ' ' +
-          collection.totalVolumeCurrencySymbol,
-        title: `${collection.totalVolume} ${collection.totalVolumeCurrencySymbol}`,
-      },
-      {
-        name: t('collection.header.data-labels.floor-price'),
-        value: collection.floorPrice
-          ? numbro(collection.floorPrice).format({
+  const blocks = useMemo(() => {
+    const chain = chains.find((x) => x.id === collection?.chainId)
+    return [
+      metrics
+        ? {
+            name: t('collection.header.data-labels.total-volume'),
+            value:
+              numbro(metrics.totalVolume).format({
+                thousandSeparated: true,
+                trimMantissa: true,
+                mantissa: 4,
+              }) +
+              ' ' +
+              metrics.totalVolumeCurrencySymbol,
+            title: `${metrics.totalVolume} ${metrics.totalVolumeCurrencySymbol}`,
+          }
+        : undefined,
+      metrics
+        ? {
+            name: t('collection.header.data-labels.floor-price'),
+            value: metrics.floorPrice
+              ? numbro(metrics.floorPrice).format({
+                  thousandSeparated: true,
+                  trimMantissa: true,
+                  mantissa: 4,
+                }) +
+                ' ' +
+                metrics.floorPriceCurrencySymbol
+              : '-',
+            title: `${metrics.floorPrice || '-'} ${
+              metrics.floorPriceCurrencySymbol
+            }`,
+          }
+        : undefined,
+      metrics
+        ? {
+            name: t('collection.header.data-labels.owners'),
+            value: numbro(metrics.totalOwners).format({
               thousandSeparated: true,
-              trimMantissa: true,
-              mantissa: 4,
-            }) +
-            ' ' +
-            collection.floorPriceCurrencySymbol
-          : '-',
-        title: `${collection.floorPrice || '-'} ${
-          collection.floorPriceCurrencySymbol
-        }`,
-      },
-      {
-        name: t('collection.header.data-labels.owners'),
-        value: numbro(collection.totalOwners).format({
-          thousandSeparated: true,
-        }),
-        title: collection?.totalOwners?.toString(),
-      },
-      {
-        name: t('collection.header.data-labels.items'),
-        value: numbro(collection.supply).format({ thousandSeparated: true }),
-        title: collection?.supply?.toString(),
-      },
+            }),
+            title: metrics.totalOwners?.toString(),
+          }
+        : undefined,
+      metrics
+        ? {
+            name: t('collection.header.data-labels.items'),
+            value: numbro(metrics.supply).format({ thousandSeparated: true }),
+            title: metrics.supply?.toString(),
+          }
+        : undefined,
       {
         type: 'separator',
       },
-      {
-        name: t('collection.header.data-labels.chain'),
-        value: chain?.name,
-        title: chain?.name,
-      },
-    ],
-    [
-      collection.floorPrice,
-      collection.floorPriceCurrencySymbol,
-      collection.supply,
-      collection.totalOwners,
-      collection.totalVolume,
-      collection.totalVolumeCurrencySymbol,
-      chain,
-      t,
-    ],
-  )
+      chain
+        ? {
+            name: t('collection.header.data-labels.chain'),
+            value: chain.name,
+            title: chain.name,
+          }
+        : undefined,
+    ]
+  }, [metrics, collection, t])
 
   return (
     <>
@@ -137,10 +138,10 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
         rounded={{ base: 'none', sm: '2xl' }}
         bg="gray.200"
       >
-        {collection.cover && (
+        {collection?.cover && (
           <Image
             src={collection.cover}
-            alt={collection?.name || ''}
+            alt={collection.name}
             fill
             sizes="
             (min-width: 80em) 1216px,
@@ -161,10 +162,10 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
           borderColor="white"
           bg="gray.200"
         >
-          {collection.image && (
+          {collection && collection.image && (
             <Image
               src={collection.image}
-              alt={collection?.name || ''}
+              alt={collection.name}
               fill
               sizes="124px"
               objectFit="cover"
@@ -181,7 +182,7 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
       >
         <Box order={{ base: 1, sm: 0 }}>
           <Heading variant="title" pb={1}>
-            {loading ? (
+            {!collection ? (
               <Skeleton height="1em" width="200px" as="span" />
             ) : (
               collection.name
@@ -191,14 +192,14 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
             {t('collection.header.by')}{' '}
             <Text
               as={Link}
-              href={`/users/${collection.deployerAddress}`}
+              href={`/users/${collection?.deployer.address}`}
               color="brand.black"
             >
               <Text as="span" color="">
-                {collection.deployer?.name ||
-                  formatAddress(collection.deployerAddress, 10)}
+                {collection?.deployer.name ||
+                  formatAddress(collection?.deployer.address, 10)}
               </Text>
-              {collection.deployer?.verified && (
+              {collection?.deployer.verified && (
                 <Icon as={HiBadgeCheck} color="brand.500" boxSize={5} />
               )}
             </Text>
@@ -211,18 +212,16 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
             order={{ base: 0, sm: 1 }}
           >
             <Flex gap={4}>
-              {collection.address && (
-                <IconButton
-                  as={Link}
-                  aria-label={`Visit ${blockExplorer.name}`}
-                  icon={<Etherscan boxSize={5} />}
-                  rounded="full"
-                  variant="outline"
-                  colorScheme="gray"
-                  href={blockExplorer.address(collection.address)}
-                  isExternal
-                />
-              )}
+              <IconButton
+                as={Link}
+                aria-label={`Visit ${blockExplorer.name}`}
+                icon={<Etherscan boxSize={5} />}
+                rounded="full"
+                variant="outline"
+                colorScheme="gray"
+                href={blockExplorer.address(collection.address)}
+                isExternal
+              />
               {collection.website && (
                 <IconButton
                   as={Link}
@@ -286,7 +285,7 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
           </Flex>
         )}
       </Flex>
-      {collection.description && (
+      {collection?.description && (
         <Box mt={4}>
           <Truncate size="lg" color="gray.500" length={200}>
             {collection.description}
@@ -295,33 +294,34 @@ const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
       )}
       <Flex alignItems="center" rowGap={2} columnGap={8} mt={4} flexWrap="wrap">
         {blocks.map((block, i) =>
-          block.type === 'separator' ? (
+          block?.type === 'separator' ? (
             <Divider orientation="vertical" height="40px" key={i} />
           ) : (
             <Flex key={i} flexDirection="column" justifyContent="center" py={2}>
-              {loading ? (
-                <Skeleton height="1em" width="100px" mb={2} />
+              {!block ? (
+                <>
+                  <Skeleton height="1em" width="100px" mb={2} />
+                  <Skeleton height="1em" width="50px" />
+                </>
               ) : (
-                <Text
-                  variant="button1"
-                  title={block.title}
-                  color="brand.black"
-                  isTruncated
-                >
-                  {block.value}
-                </Text>
-              )}
-              {loading ? (
-                <Skeleton height="1em" width="50px" />
-              ) : (
-                <Text
-                  variant="subtitle2"
-                  title={block.name}
-                  isTruncated
-                  color="gray.500"
-                >
-                  {block.name}
-                </Text>
+                <>
+                  <Text
+                    variant="button1"
+                    title={block.title}
+                    color="brand.black"
+                    isTruncated
+                  >
+                    {block.value}
+                  </Text>
+                  <Text
+                    variant="subtitle2"
+                    title={block?.name}
+                    isTruncated
+                    color="gray.500"
+                  >
+                    {block?.name}
+                  </Text>
+                </>
               )}
             </Flex>
           ),

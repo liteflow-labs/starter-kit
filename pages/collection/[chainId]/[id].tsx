@@ -30,6 +30,7 @@ import {
   convertAsset,
   convertAuctionWithBestBid,
   convertCollectionFull,
+  convertCollectionMetrics,
   convertSale,
   convertUser,
 } from '../../../convert'
@@ -38,6 +39,7 @@ import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
+  useFetchCollectionMetricsQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
@@ -71,10 +73,18 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { address } = useAccount()
   const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
-      collectionAddress: collectionAddress,
-      chainId: chainId,
+      collectionAddress,
+      chainId,
     },
   })
+
+  const { data: collectionMetricsData } = useFetchCollectionMetricsQuery({
+    variables: {
+      collectionAddress,
+      chainId,
+    },
+  })
+
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>(
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
@@ -129,6 +139,13 @@ const CollectionPage: FC<Props> = ({ now }) => {
   )
 
   const assets = assetData?.assets?.nodes
+  const collectionMetrics = useMemo(
+    () =>
+      collectionMetricsData?.collection
+        ? convertCollectionMetrics(collectionMetricsData.collection)
+        : undefined,
+    [collectionMetricsData],
+  )
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -149,8 +166,8 @@ const CollectionPage: FC<Props> = ({ now }) => {
       <Head title="Explore collection" />
 
       <CollectionHeader
-        collection={collectionDetails || {}} // TODO: update collectionHeader
-        loading={!collectionDetails}
+        collection={collectionDetails}
+        metrics={collectionMetrics}
         reportEmail={environment.REPORT_EMAIL}
       />
 
