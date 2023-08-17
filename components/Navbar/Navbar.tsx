@@ -347,14 +347,20 @@ const Navbar: FC<{
   const [cookies] = useCookies()
   const { openConnectModal } = useConnectModal()
   const lastNotification = cookies[`lastNotification-${address}`]
-  const { data: accountData, refetch } = useNavbarAccountQuery({
+  const {
+    data: accountData,
+    refetch,
+    previousData: previousAccountData, // previous data logic needed to avoid flickering navbar when lastNotification value changes
+  } = useNavbarAccountQuery({
     variables: {
       account: address?.toLowerCase() || '',
       lastNotification: new Date(lastNotification || 0),
     },
     skip: !isLoggedIn,
   })
-  const account = accountData?.account
+  const account = isLoggedIn
+    ? accountData?.account || previousAccountData?.account
+    : undefined
 
   useEffect(() => {
     if (!isReady) return
