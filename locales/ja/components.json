@@ -81,6 +81,16 @@
     "collections": {
       "chains": {
         "label": "鎖"
+      },
+      "empty": {
+        "title": "コレクションが見つかりません",
+        "description": "フィルターを更新して、より多くのコレクションを見つけてください。"
+      }
+    },
+    "traits": {
+      "empty": {
+        "title": "特性が見つかりません",
+        "description": "フィルターを更新して、より多くの特性を見つけてください。"
       }
     },
     "assets": {

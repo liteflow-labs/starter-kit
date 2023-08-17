@@ -81,6 +81,16 @@
     "collections": {
       "chains": {
         "label": "链"
+      },
+      "empty": {
+        "title": "未找到收藏",
+        "description": "请更新筛选条件来查找更多收藏。"
+      }
+    },
+    "traits": {
+      "empty": {
+        "title": "未发现特征",
+        "description": "更新您的过滤器以发现更多特征。"
       }
     },
     "assets": {
