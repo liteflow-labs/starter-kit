@@ -1,7 +1,6 @@
 import { Box, useToast } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 import AccountTemplate from '../../components/Account/Account'
@@ -29,7 +28,6 @@ const EditPage: NextPage = () => {
     },
     skip: !isLoggedIn,
   })
-  const account = data?.account
 
   const onSubmit = useCallback(
     async (address: string) => {
@@ -42,13 +40,12 @@ const EditPage: NextPage = () => {
     [toast, t, push],
   )
 
-  if (account === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head title="Account - Edit profile" />
 
       <AccountTemplate currentTab="edit-profile">
-        {!account ? (
+        {!data?.account ? (
           <Box mt={4}>
             <Loader />
           </Box>
@@ -56,7 +53,7 @@ const EditPage: NextPage = () => {
           <UserFormEdit
             signer={signer}
             onUpdated={onSubmit}
-            account={account}
+            account={data.account}
           />
         )}
       </AccountTemplate>
