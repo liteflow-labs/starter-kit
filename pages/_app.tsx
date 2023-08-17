@@ -220,22 +220,22 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
 
   return (
     <ErrorBoundary>
-      <Head
-        title={environment.META_TITLE}
-        description={environment.META_DESCRIPTION}
-      >
-        <meta name="keywords" content={environment.META_KEYWORDS} />
-
-        <meta name="author" content={environment.META_COMPANY_NAME} />
-        <meta name="application-name" content={environment.META_TITLE} />
-
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={environment.BASE_URL} />
-
-        <meta name="twitter:card" content="summary" />
-      </Head>
-      <GoogleAnalytics strategy="lazyOnload" />
       <EnvironmentContext.Provider value={environment}>
+        <Head
+          title={environment.META_TITLE}
+          description={environment.META_DESCRIPTION}
+        >
+          <meta name="keywords" content={environment.META_KEYWORDS} />
+
+          <meta name="author" content={environment.META_COMPANY_NAME} />
+          <meta name="application-name" content={environment.META_TITLE} />
+
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content={environment.BASE_URL} />
+
+          <meta name="twitter:card" content="summary" />
+        </Head>
+        <GoogleAnalytics strategy="lazyOnload" />
         <WagmiConfig config={client}>
           <RainbowKitProvider
             chains={chains}
@@ -289,7 +289,7 @@ MyApp.getInitialProps = async (
       ...initialProps.pageProps,
       jwt,
       now,
-      environment: await getEnvironment(),
+      environment: await getEnvironment(appContext.ctx.req),
     },
   }
 }

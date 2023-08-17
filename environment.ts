@@ -1,3 +1,4 @@
+import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
@@ -164,11 +165,17 @@ export type Environment = typeof environment
 
 export const EnvironmentContext = createContext<Environment>({} as Environment)
 
-const getEnvironment = async (): Promise<Environment> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/detect`,
-    { headers: { 'Content-type': 'application/json' } },
-  )
+const getEnvironment = async (
+  req: NextIncomingMessage | undefined,
+): Promise<Environment> => {
+  const host = req
+    ? `${req.headers['x-forwarded-proto'] || 'https'}://${
+        req.headers['x-forwarded-host'] || req.headers['host']
+      }`
+    : window.location.origin
+  const response = await fetch(`${host}/api/detect`, {
+    headers: { 'Content-type': 'application/json' },
+  })
   const metadata = await response.json()
   return {
     ...environment,
