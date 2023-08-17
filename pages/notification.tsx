@@ -41,6 +41,7 @@ const NotificationPage: NextPage = ({}) => {
       cursor: null,
       address: address || '',
     },
+    notifyOnNetworkStatusChange: true,
     skip: !address,
   })
 
