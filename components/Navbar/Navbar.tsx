@@ -354,7 +354,7 @@ const Navbar: FC<{
     },
     skip: !isLoggedIn,
   })
-  const account = isLoggedIn ? accountData?.account : undefined
+  const account = accountData?.account
 
   useEffect(() => {
     if (!isReady) return
