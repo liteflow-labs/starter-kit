@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import {
   Button,
   Flex,
@@ -34,7 +35,7 @@ const NotificationPage: NextPage = ({}) => {
   const {
     data: notificationData,
     fetchMore,
-    loading,
+    networkStatus,
   } = useGetNotificationsQuery({
     variables: {
       cursor: null,
@@ -80,7 +81,7 @@ const NotificationPage: NextPage = ({}) => {
       </Heading>
       <Stack spacing={6} mt={12}>
         {!notifications ? (
-          <SkeletonList items={5} gap={6}>
+          <SkeletonList items={12} gap={6}>
             <Flex align="center" gap={4}>
               <Skeleton height="56px" width="56px" borderRadius="full" />
               <Flex flex={1} gap={1} direction="column">
@@ -98,7 +99,10 @@ const NotificationPage: NextPage = ({}) => {
               />
             ))}
             {hasNextPage && (
-              <Button isLoading={loading} onClick={loadMore}>
+              <Button
+                isLoading={networkStatus === NetworkStatus.fetchMore}
+                onClick={loadMore}
+              >
                 <Text as="span" isTruncated>
                   {t('notifications.loadMore')}
                 </Text>
