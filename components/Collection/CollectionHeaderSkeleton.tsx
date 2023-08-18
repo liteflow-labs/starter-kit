@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Skeleton, SkeletonText } from '@chakra-ui/react'
+import { Box, Skeleton, SkeletonText } from '@chakra-ui/react'
 import { FC } from 'react'
 
 const CollectionHeaderSkeleton: FC = () => {
@@ -30,29 +30,6 @@ const CollectionHeaderSkeleton: FC = () => {
         width="200px"
         mt={4}
       />
-      <Flex alignItems="center" rowGap={2} columnGap={8} mt={4} flexWrap="wrap">
-        <Flex flexDirection="column" justifyContent="center" py={2}>
-          <Skeleton height="1em" width="100px" mb={2} />
-          <Skeleton height="1em" width="50px" />
-        </Flex>
-        <Flex flexDirection="column" justifyContent="center" py={2}>
-          <Skeleton height="1em" width="100px" mb={2} />
-          <Skeleton height="1em" width="50px" />
-        </Flex>
-        <Flex flexDirection="column" justifyContent="center" py={2}>
-          <Skeleton height="1em" width="100px" mb={2} />
-          <Skeleton height="1em" width="50px" />
-        </Flex>
-        <Flex flexDirection="column" justifyContent="center" py={2}>
-          <Skeleton height="1em" width="100px" mb={2} />
-          <Skeleton height="1em" width="50px" />
-        </Flex>
-        <Divider orientation="vertical" height="40px" />
-        <Flex flexDirection="column" justifyContent="center" py={2}>
-          <Skeleton height="1em" width="100px" mb={2} />
-          <Skeleton height="1em" width="50px" />
-        </Flex>
-      </Flex>
     </>
   )
 }

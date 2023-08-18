@@ -18,6 +18,8 @@ import { useRouter } from 'next/router'
 import { FC, useCallback, useMemo } from 'react'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
 import CollectionHeaderSkeleton from '../../../components/Collection/CollectionHeaderSkeleton'
+import CollectionMetrics from '../../../components/Collection/CollectionMetrics'
+import CollectionMetricsSkeleton from '../../../components/Collection/CollectionMetricsSkeleton'
 import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
 import FilterNav from '../../../components/Filter/FilterNav'
@@ -171,9 +173,14 @@ const CollectionPage: FC<Props> = ({ now }) => {
       ) : (
         <CollectionHeader
           collection={collectionDetails}
-          metrics={collectionMetrics}
           reportEmail={environment.REPORT_EMAIL}
         />
+      )}
+
+      {!collectionMetrics ? (
+        <CollectionMetricsSkeleton />
+      ) : (
+        <CollectionMetrics chainId={chainId} metrics={collectionMetrics} />
       )}
 
       <Flex py="6" justifyContent="space-between">

@@ -9,7 +9,6 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Skeleton,
   Text,
 } from '@chakra-ui/react'
 import { FaDiscord } from '@react-icons/all-files/fa/FaDiscord'
@@ -19,13 +18,11 @@ import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import useBlockExplorer from 'hooks/useBlockExplorer'
 import useTranslation from 'next-translate/useTranslation'
-import numbro from 'numbro'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import Etherscan from '../../components/Icons/Etherscan'
 import Image from '../../components/Image/Image'
 import Link from '../../components/Link/Link'
 import Truncate from '../../components/Truncate/Truncate'
-import { chains } from '../../connectors'
 import { formatAddress } from '../../utils'
 
 type Props = {
@@ -46,86 +43,12 @@ type Props = {
       verified: boolean
     }
   }
-  metrics:
-    | {
-        totalVolume: string
-        totalVolumeCurrencySymbol: string
-        floorPrice: string | null
-        floorPriceCurrencySymbol: string | null
-        totalOwners: number
-        supply: number
-      }
-    | undefined
   reportEmail: string
 }
 
-const CollectionHeader: FC<Props> = ({ collection, metrics, reportEmail }) => {
+const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
   const { t } = useTranslation('templates')
   const blockExplorer = useBlockExplorer(collection.chainId)
-
-  const blocks = useMemo(() => {
-    const chain = chains.find((x) => x.id === collection.chainId)
-    return [
-      metrics
-        ? {
-            name: t('collection.header.data-labels.total-volume'),
-            value:
-              numbro(metrics.totalVolume).format({
-                thousandSeparated: true,
-                trimMantissa: true,
-                mantissa: 4,
-              }) +
-              ' ' +
-              metrics.totalVolumeCurrencySymbol,
-            title: `${metrics.totalVolume} ${metrics.totalVolumeCurrencySymbol}`,
-          }
-        : undefined,
-      metrics
-        ? {
-            name: t('collection.header.data-labels.floor-price'),
-            value: metrics.floorPrice
-              ? numbro(metrics.floorPrice).format({
-                  thousandSeparated: true,
-                  trimMantissa: true,
-                  mantissa: 4,
-                }) +
-                ' ' +
-                metrics.floorPriceCurrencySymbol
-              : '-',
-            title: `${metrics.floorPrice || '-'} ${
-              metrics.floorPriceCurrencySymbol
-            }`,
-          }
-        : undefined,
-      metrics
-        ? {
-            name: t('collection.header.data-labels.owners'),
-            value: numbro(metrics.totalOwners).format({
-              thousandSeparated: true,
-            }),
-            title: metrics.totalOwners?.toString(),
-          }
-        : undefined,
-      metrics
-        ? {
-            name: t('collection.header.data-labels.items'),
-            value: numbro(metrics.supply).format({ thousandSeparated: true }),
-            title: metrics.supply?.toString(),
-          }
-        : undefined,
-      {
-        type: 'separator',
-      },
-      chain
-        ? {
-            name: t('collection.header.data-labels.chain'),
-            value: chain.name,
-            title: chain.name,
-          }
-        : undefined,
-    ]
-  }, [metrics, collection, t])
-
   return (
     <>
       <Flex
@@ -283,41 +206,6 @@ const CollectionHeader: FC<Props> = ({ collection, metrics, reportEmail }) => {
           </Truncate>
         </Box>
       )}
-      <Flex alignItems="center" rowGap={2} columnGap={8} mt={4} flexWrap="wrap">
-        {blocks.map((block, i) =>
-          block?.type === 'separator' ? (
-            <Divider orientation="vertical" height="40px" key={i} />
-          ) : (
-            <Flex key={i} flexDirection="column" justifyContent="center" py={2}>
-              {!block ? (
-                <>
-                  <Skeleton height="1em" width="100px" mb={2} />
-                  <Skeleton height="1em" width="50px" />
-                </>
-              ) : (
-                <>
-                  <Text
-                    variant="button1"
-                    title={block.title}
-                    color="brand.black"
-                    isTruncated
-                  >
-                    {block.value}
-                  </Text>
-                  <Text
-                    variant="subtitle2"
-                    title={block?.name}
-                    isTruncated
-                    color="gray.500"
-                  >
-                    {block?.name}
-                  </Text>
-                </>
-              )}
-            </Flex>
-          ),
-        )}
-      </Flex>
     </>
   )
 }
