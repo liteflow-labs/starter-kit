@@ -228,7 +228,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             <ModalBody>
               <FilterAsset
                 noChain
-                selectedCollection={{ chainId, address: collectionAddress }}
+                currentCollection={{ chainId, address: collectionAddress }}
                 onFilterChange={updateFilter}
                 filter={filter}
               />
@@ -241,7 +241,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           <GridItem as="aside">
             <FilterAsset
               noChain
-              selectedCollection={{ chainId, address: collectionAddress }}
+              currentCollection={{ chainId, address: collectionAddress }}
               onFilterChange={updateFilter}
               filter={filter}
             />
