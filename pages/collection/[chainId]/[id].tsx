@@ -17,6 +17,9 @@ import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { FC, useCallback, useMemo } from 'react'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
+import CollectionHeaderSkeleton from '../../../components/Collection/CollectionHeaderSkeleton'
+import CollectionMetrics from '../../../components/Collection/CollectionMetrics'
+import CollectionMetricsSkeleton from '../../../components/Collection/CollectionMetricsSkeleton'
 import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
 import FilterNav from '../../../components/Filter/FilterNav'
@@ -30,6 +33,7 @@ import {
   convertAsset,
   convertAuctionWithBestBid,
   convertCollectionFull,
+  convertCollectionMetrics,
   convertSale,
   convertUser,
 } from '../../../convert'
@@ -38,6 +42,7 @@ import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
+  useFetchCollectionMetricsQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
@@ -71,10 +76,18 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { address } = useAccount()
   const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
-      collectionAddress: collectionAddress,
-      chainId: chainId,
+      collectionAddress,
+      chainId,
     },
   })
+
+  const { data: collectionMetricsData } = useFetchCollectionMetricsQuery({
+    variables: {
+      collectionAddress,
+      chainId,
+    },
+  })
+
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>(
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
@@ -129,6 +142,13 @@ const CollectionPage: FC<Props> = ({ now }) => {
   )
 
   const assets = assetData?.assets?.nodes
+  const collectionMetrics = useMemo(
+    () =>
+      collectionMetricsData?.collection
+        ? convertCollectionMetrics(collectionMetricsData.collection)
+        : undefined,
+    [collectionMetricsData],
+  )
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -148,11 +168,20 @@ const CollectionPage: FC<Props> = ({ now }) => {
     <LargeLayout>
       <Head title="Explore collection" />
 
-      <CollectionHeader
-        collection={collectionDetails || {}} // TODO: update collectionHeader
-        loading={!collectionDetails}
-        reportEmail={environment.REPORT_EMAIL}
-      />
+      {!collectionDetails ? (
+        <CollectionHeaderSkeleton />
+      ) : (
+        <CollectionHeader
+          collection={collectionDetails}
+          reportEmail={environment.REPORT_EMAIL}
+        />
+      )}
+
+      {!collectionMetrics ? (
+        <CollectionMetricsSkeleton />
+      ) : (
+        <CollectionMetrics chainId={chainId} metrics={collectionMetrics} />
+      )}
 
       <Flex py="6" justifyContent="space-between">
         <FilterNav
