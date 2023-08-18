@@ -148,7 +148,7 @@ const FilterByCollection: FC<Props> = ({
           </InputGroup>
           <List>
             {!collections ? (
-              new Array(4)
+              new Array(8)
                 .fill(0)
                 .map((_, index) => (
                   <ListItem

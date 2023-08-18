@@ -107,7 +107,7 @@ const FilterByTrait: FC<Props> = ({
 
   if (!collection) return null
   return !traits ? (
-    new Array(4).fill(0).map((_, index) => (
+    new Array(10).fill(0).map((_, index) => (
       <AccordionItem
         display="flex"
         alignItems="center"
