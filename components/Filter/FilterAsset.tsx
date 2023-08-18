@@ -26,7 +26,7 @@ import FilterByTrait from './FilterBy/Trait'
 
 type Props = {
   filter: Filter
-  selectedCollection?: { chainId: number; address: string }
+  currentCollection?: { chainId: number; address: string }
   noChain?: boolean
   onFilterChange: (filter: Filter) => void
 }
@@ -50,7 +50,7 @@ const offerTypes = [
 
 const FilterAsset: NextPage<Props> = ({
   filter,
-  selectedCollection,
+  currentCollection,
   noChain,
   onFilterChange,
 }) => {
@@ -78,7 +78,7 @@ const FilterAsset: NextPage<Props> = ({
 
   const [collection, setCollection] = useState<
     { chainId: number; address: string } | undefined
-  >(undefined)
+  >(currentCollection)
   const [propertySearch, setPropertySearch] = useState('')
 
   const propagateFilter = useCallback(
@@ -184,7 +184,7 @@ const FilterAsset: NextPage<Props> = ({
         />
         <FilterByCollection
           formValues={formValues}
-          selectedCollection={selectedCollection}
+          selectedCollection={currentCollection}
           onFilterChange={propagateFilter}
           setCollection={setCollection}
           setPropertySearch={setPropertySearch}
