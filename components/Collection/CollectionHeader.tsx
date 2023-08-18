@@ -17,38 +17,35 @@ import { FaGlobe } from '@react-icons/all-files/fa/FaGlobe'
 import { FaTwitter } from '@react-icons/all-files/fa/FaTwitter'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
-import Etherscan from 'components/Icons/Etherscan'
-import Image from 'components/Image/Image'
-import Link from 'components/Link/Link'
-import Truncate from 'components/Truncate/Truncate'
 import useBlockExplorer from 'hooks/useBlockExplorer'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
-import ChakraLink from '../../components/Link/Link'
+import Etherscan from '../../components/Icons/Etherscan'
+import Image from '../../components/Image/Image'
+import Link from '../../components/Link/Link'
+import Truncate from '../../components/Truncate/Truncate'
 import { chains } from '../../connectors'
 import { formatAddress } from '../../utils'
 
 type Props = {
-  collection:
-    | {
-        address: string
-        chainId: number
-        name: string
-        description: string | null
-        image: string | null
-        cover: string | null
-        twitter: string | null
-        discord: string | null
-        website: string | null
-        deployer: {
-          address: string
-          name: string | null
-          username: string | null
-          verified: boolean
-        }
-      }
-    | undefined
+  collection: {
+    address: string
+    chainId: number
+    name: string
+    description: string | null
+    image: string | null
+    cover: string | null
+    twitter: string | null
+    discord: string | null
+    website: string | null
+    deployer: {
+      address: string
+      name: string | null
+      username: string | null
+      verified: boolean
+    }
+  }
   metrics:
     | {
         totalVolume: string
@@ -64,10 +61,10 @@ type Props = {
 
 const CollectionHeader: FC<Props> = ({ collection, metrics, reportEmail }) => {
   const { t } = useTranslation('templates')
-  const blockExplorer = useBlockExplorer(collection?.chainId)
+  const blockExplorer = useBlockExplorer(collection.chainId)
 
   const blocks = useMemo(() => {
-    const chain = chains.find((x) => x.id === collection?.chainId)
+    const chain = chains.find((x) => x.id === collection.chainId)
     return [
       metrics
         ? {
@@ -138,7 +135,7 @@ const CollectionHeader: FC<Props> = ({ collection, metrics, reportEmail }) => {
         rounded={{ base: 'none', sm: '2xl' }}
         bg="gray.200"
       >
-        {collection?.cover && (
+        {collection.cover && (
           <Image
             src={collection.cover}
             alt={collection.name}
@@ -162,7 +159,7 @@ const CollectionHeader: FC<Props> = ({ collection, metrics, reportEmail }) => {
           borderColor="white"
           bg="gray.200"
         >
-          {collection && collection.image && (
+          {collection.image && (
             <Image
               src={collection.image}
               alt={collection.name}
@@ -182,108 +179,102 @@ const CollectionHeader: FC<Props> = ({ collection, metrics, reportEmail }) => {
       >
         <Box order={{ base: 1, sm: 0 }}>
           <Heading variant="title" pb={1}>
-            {!collection ? (
-              <Skeleton height="1em" width="200px" as="span" />
-            ) : (
-              collection.name
-            )}
+            {collection.name}
           </Heading>
           <Heading color="gray.500" variant="heading1">
             {t('collection.header.by')}{' '}
             <Text
               as={Link}
-              href={`/users/${collection?.deployer.address}`}
+              href={`/users/${collection.deployer.address}`}
               color="brand.black"
             >
               <Text as="span" color="">
                 {collection?.deployer.name ||
-                  formatAddress(collection?.deployer.address, 10)}
+                  formatAddress(collection.deployer.address, 10)}
               </Text>
-              {collection?.deployer.verified && (
+              {collection.deployer.verified && (
                 <Icon as={HiBadgeCheck} color="brand.500" boxSize={5} />
               )}
             </Text>
           </Heading>
         </Box>
-        {collection && (
-          <Flex
-            justify="flex-end"
-            alignSelf={{ base: 'flex-end', sm: 'normal' }}
-            order={{ base: 0, sm: 1 }}
-          >
-            <Flex gap={4}>
+        <Flex
+          justify="flex-end"
+          alignSelf={{ base: 'flex-end', sm: 'normal' }}
+          order={{ base: 0, sm: 1 }}
+        >
+          <Flex gap={4}>
+            <IconButton
+              as={Link}
+              aria-label={`Visit ${blockExplorer.name}`}
+              icon={<Etherscan boxSize={5} />}
+              rounded="full"
+              variant="outline"
+              colorScheme="gray"
+              href={blockExplorer.address(collection.address)}
+              isExternal
+            />
+            {collection.website && (
               <IconButton
                 as={Link}
-                aria-label={`Visit ${blockExplorer.name}`}
-                icon={<Etherscan boxSize={5} />}
+                aria-label="Visit Website"
+                icon={<FaGlobe />}
                 rounded="full"
                 variant="outline"
                 colorScheme="gray"
-                href={blockExplorer.address(collection.address)}
+                href={collection.website}
                 isExternal
               />
-              {collection.website && (
-                <IconButton
-                  as={Link}
-                  aria-label="Visit Website"
-                  icon={<FaGlobe />}
-                  rounded="full"
-                  variant="outline"
-                  colorScheme="gray"
-                  href={collection.website}
-                  isExternal
-                />
-              )}
-              {collection.discord && (
-                <IconButton
-                  as={Link}
-                  aria-label="Visit Discord"
-                  icon={<FaDiscord />}
-                  rounded="full"
-                  variant="outline"
-                  colorScheme="gray"
-                  href={collection.discord}
-                  isExternal
-                />
-              )}
-              {collection.twitter && (
-                <IconButton
-                  as={Link}
-                  aria-label="Visit Twitter"
-                  icon={<FaTwitter />}
-                  rounded="full"
-                  variant="outline"
-                  colorScheme="gray"
-                  href={collection.twitter}
-                  isExternal
-                />
-              )}
-            </Flex>
-            <Divider orientation="vertical" h="40px" mx={4} />
-            <Menu autoSelect={false}>
-              <MenuButton
-                as={IconButton}
+            )}
+            {collection.discord && (
+              <IconButton
+                as={Link}
+                aria-label="Visit Discord"
+                icon={<FaDiscord />}
+                rounded="full"
                 variant="outline"
                 colorScheme="gray"
-                rounded="full"
-                aria-label="activator"
-                icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
+                href={collection.discord}
+                isExternal
               />
-              <MenuList>
-                <ChakraLink
-                  href={`mailto:${reportEmail}?subject=${encodeURI(
-                    'Report a collection',
-                  )}&body=${encodeURI(
-                    `I would like to report the following collection "${collection.name}" (#${collection.address})\nReason: `,
-                  )}`}
-                  isExternal
-                >
-                  <MenuItem>{t('collection.header.menu.report')}</MenuItem>
-                </ChakraLink>
-              </MenuList>
-            </Menu>
+            )}
+            {collection.twitter && (
+              <IconButton
+                as={Link}
+                aria-label="Visit Twitter"
+                icon={<FaTwitter />}
+                rounded="full"
+                variant="outline"
+                colorScheme="gray"
+                href={collection.twitter}
+                isExternal
+              />
+            )}
           </Flex>
-        )}
+          <Divider orientation="vertical" h="40px" mx={4} />
+          <Menu autoSelect={false}>
+            <MenuButton
+              as={IconButton}
+              variant="outline"
+              colorScheme="gray"
+              rounded="full"
+              aria-label="activator"
+              icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
+            />
+            <MenuList>
+              <Link
+                href={`mailto:${reportEmail}?subject=${encodeURI(
+                  'Report a collection',
+                )}&body=${encodeURI(
+                  `I would like to report the following collection "${collection.name}" (#${collection.address})\nReason: `,
+                )}`}
+                isExternal
+              >
+                <MenuItem>{t('collection.header.menu.report')}</MenuItem>
+              </Link>
+            </MenuList>
+          </Menu>
+        </Flex>
       </Flex>
       {collection?.description && (
         <Box mt={4}>

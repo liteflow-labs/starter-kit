@@ -17,6 +17,7 @@ import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { FC, useCallback, useMemo } from 'react'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
+import CollectionHeaderSkeleton from '../../../components/Collection/CollectionHeaderSkeleton'
 import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
 import FilterNav from '../../../components/Filter/FilterNav'
@@ -165,11 +166,15 @@ const CollectionPage: FC<Props> = ({ now }) => {
     <LargeLayout>
       <Head title="Explore collection" />
 
-      <CollectionHeader
-        collection={collectionDetails}
-        metrics={collectionMetrics}
-        reportEmail={environment.REPORT_EMAIL}
-      />
+      {!collectionDetails ? (
+        <CollectionHeaderSkeleton />
+      ) : (
+        <CollectionHeader
+          collection={collectionDetails}
+          metrics={collectionMetrics}
+          reportEmail={environment.REPORT_EMAIL}
+        />
+      )}
 
       <Flex py="6" justifyContent="space-between">
         <FilterNav
