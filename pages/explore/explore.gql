@@ -12,6 +12,10 @@ query FetchAllERC721And1155(
     offset: $offset
     orderBy: $orderBy
   ) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       id
       chainId
@@ -104,11 +108,5 @@ query FetchAllERC721And1155(
         }
       }
     }
-  }
-}
-
-query FetchAllERC721And1155TotalCount($filter: [AssetFilter!]) {
-  assets(filter: { quantity: { greaterThan: "0" }, and: $filter }) {
-    totalCount
   }
 }

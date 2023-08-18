@@ -10,6 +10,10 @@ query FetchExploreUsers(
     orderBy: $orderBy
     filter: { isImported: { equalTo: false }, and: $filter }
   ) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       username
       address
@@ -20,6 +24,5 @@ query FetchExploreUsers(
         status
       }
     }
-    totalCount
   }
 }

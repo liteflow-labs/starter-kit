@@ -81,6 +81,16 @@
     "collections": {
       "chains": {
         "label": "Chain"
+      },
+      "empty": {
+        "title": "No Collections Found",
+        "description": "Update your filters to find more collections."
+      }
+    },
+    "traits": {
+      "empty": {
+        "title": "No Traits Found",
+        "description": "Update your filters to find more traits."
       }
     },
     "assets": {
@@ -490,6 +500,9 @@
         "available_other": "{{count}} editions available"
       }
     }
+  },
+  "pagination": {
+    "label": "Results per page"
   },
   "referral": {
     "form": {

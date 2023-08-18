@@ -3,7 +3,7 @@ import { convertCollection } from 'convert'
 import environment from 'environment'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import invariant from 'ts-invariant'
 import {
   CollectionFilter,
@@ -36,14 +36,9 @@ const CollectionsHomeSection: FC<Props> = () => {
   })
   useHandleQueryError(collectionsQuery)
 
-  const collectionData = useMemo(
-    () => collectionsQuery.data || collectionsQuery.previousData,
-    [collectionsQuery.data, collectionsQuery.previousData],
-  )
-
   const orderedCollections = useOrderByKey(
     environment.HOME_COLLECTIONS,
-    collectionData?.collections?.nodes || [],
+    collectionsQuery.data?.collections?.nodes,
     (collection) => [collection.chainId, collection.address].join('-'),
   )
 
@@ -53,7 +48,6 @@ const CollectionsHomeSection: FC<Props> = () => {
         href: '/explore/collections',
         title: t('home.collections.explore'),
       }}
-      isLoading={collectionsQuery.loading && !collectionData}
       items={orderedCollections}
       itemRender={(
         collection: NonNullable<

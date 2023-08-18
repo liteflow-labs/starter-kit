@@ -25,18 +25,17 @@ type IProps = {
 const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
   const { t } = useTranslation('components')
 
-  const { data, loading, previousData } = useFetchAssetHistoryQuery({
+  const { data: historyData } = useFetchAssetHistoryQuery({
     variables: {
       chainId,
       collectionAddress,
       tokenId,
     },
   })
-  const historyData = useMemo(() => data || previousData, [data, previousData])
   const blockExplorer = useBlockExplorer(chainId)
 
   const histories = useMemo(
-    () => (historyData?.asset?.histories.nodes || []).map(convertHistories),
+    () => historyData?.asset?.histories.nodes.map(convertHistories),
     [historyData],
   )
 
@@ -98,7 +97,7 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
     }
   }
 
-  if (loading && !historyData)
+  if (!histories)
     return (
       <SkeletonList items={5}>
         <SkeletonListItem image subtitle caption />

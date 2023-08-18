@@ -19,7 +19,10 @@ query FetchOwners(
       OWNER_ADDRESS_ASC
     ]
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       quantity
       ownerAddress

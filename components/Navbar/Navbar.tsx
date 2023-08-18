@@ -350,7 +350,7 @@ const Navbar: FC<{
   const {
     data: accountData,
     refetch,
-    previousData: previousAccountData,
+    previousData: previousAccountData, // previous data logic needed to avoid flickering navbar when lastNotification value changes
   } = useNavbarAccountQuery({
     variables: {
       account: address?.toLowerCase() || '',

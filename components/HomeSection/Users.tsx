@@ -3,7 +3,7 @@ import { convertUserWithCover } from 'convert'
 import environment from 'environment'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import { FetchUsersQuery, useFetchUsersQuery } from '../../graphql'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import HomeGridSection from './Grid'
@@ -21,14 +21,9 @@ const UsersHomeSection: FC<Props> = () => {
   })
   useHandleQueryError(usersQuery)
 
-  const userData = useMemo(
-    () => usersQuery.data || usersQuery.previousData,
-    [usersQuery.data, usersQuery.previousData],
-  )
-
   const orderedUsers = useOrderByKey(
     environment.HOME_USERS,
-    userData?.users?.nodes || [],
+    usersQuery.data?.users?.nodes,
     (user) => user.address,
   )
 
@@ -38,7 +33,6 @@ const UsersHomeSection: FC<Props> = () => {
         href: '/explore/users',
         title: t('home.users.explore'),
       }}
-      isLoading={usersQuery.loading && !userData}
       items={orderedUsers}
       itemRender={(
         user: NonNullable<FetchUsersQuery['users']>['nodes'][number],
