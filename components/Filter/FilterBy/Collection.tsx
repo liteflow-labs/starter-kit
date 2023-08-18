@@ -31,16 +31,16 @@ import List, { ListItem } from '../../List/List'
 type Props = {
   formValues: UseFormReturn<Filter, any, undefined>
   selectedCollection?: { chainId: number; address: string }
+  onCollectionChange: (data?: { chainId: number; address: string }) => void
   onFilterChange: (data?: Partial<Filter>) => void
-  setCollection: (data?: { chainId: number; address: string }) => void
   setPropertySearch: (value: string) => void
 }
 
 const FilterByCollection: FC<Props> = ({
   formValues: { watch },
   selectedCollection,
+  onCollectionChange,
   onFilterChange,
-  setCollection,
   setPropertySearch,
 }) => {
   const { t } = useTranslation('components')
@@ -67,7 +67,7 @@ const FilterByCollection: FC<Props> = ({
   const collection = useMemo(() => {
     if (selectedCollection) return selectedCollection
     if (!filterResult.collection) {
-      setCollection(undefined)
+      onCollectionChange(undefined)
       return
     }
     const [chainId, address] = filterResult.collection.split('-')
@@ -75,11 +75,16 @@ const FilterByCollection: FC<Props> = ({
     const collection = collections?.find(
       (x) => x.address === address && x.chainId === parseInt(chainId, 10),
     )
-    setCollection(
+    onCollectionChange(
       collection ? { chainId: collection.chainId, address } : undefined,
     )
     return collection
-  }, [collections, filterResult.collection, selectedCollection, setCollection])
+  }, [
+    collections,
+    filterResult.collection,
+    selectedCollection,
+    onCollectionChange,
+  ])
 
   return collection ? (
     <AccordionItem>
