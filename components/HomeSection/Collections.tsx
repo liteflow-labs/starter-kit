@@ -42,6 +42,7 @@ const CollectionsHomeSection: FC<Props> = () => {
     (collection) => [collection.chainId, collection.address].join('-'),
   )
 
+  if (!environment.HOME_COLLECTIONS.length) return null
   return (
     <HomeGridSection
       explore={{
