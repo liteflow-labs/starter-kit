@@ -35,7 +35,9 @@ type Props = {
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
   const signer = useSigner()
   const { address } = useAccount()
-  const currenciesQuery = useFetchCurrenciesForBidsQuery()
+  const currenciesQuery = useFetchCurrenciesForBidsQuery({
+    skip: !environment.FEATURED_TOKEN.length,
+  })
   const featureAssetsQuery = useFetchFeaturedAssetsQuery({
     variables: {
       featuredIds: environment.FEATURED_TOKEN,
