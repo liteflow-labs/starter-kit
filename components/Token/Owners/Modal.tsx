@@ -48,7 +48,7 @@ const OwnersModal: FC<Props> = ({
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
-  const { data, loading } = useFetchOwnersQuery({
+  const { data } = useFetchOwnersQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -102,7 +102,7 @@ const OwnersModal: FC<Props> = ({
             minHeight={{ base: '', md: 'lg' }}
           >
             <List>
-              {loading
+              {!data
                 ? new Array(OwnerPaginationLimit)
                     .fill(0)
                     .map((_, index) => (
@@ -112,7 +112,7 @@ const OwnersModal: FC<Props> = ({
                         label={<SkeletonText noOfLines={2} width="32" />}
                       />
                     ))
-                : data?.ownerships?.nodes
+                : data.ownerships?.nodes
                     .map(convertOwnership)
                     .map((owner) => (
                       <OwnersModalItem key={owner.address} {...owner} />

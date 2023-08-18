@@ -122,7 +122,7 @@ const FilterAsset: NextPage<Props> = ({
 
   const [collectionSearch, setCollectionSearch] = useState('')
   const [propertySearch, setPropertySearch] = useState('')
-  const collectionResult = useSearchCollectionQuery({
+  const { data: collectionData } = useSearchCollectionQuery({
     variables: {
       limit: 8,
       offset: 0,
@@ -136,11 +136,6 @@ const FilterAsset: NextPage<Props> = ({
     skip: !!selectedCollection,
     ssr: false,
   })
-
-  const collectionData = useMemo(
-    () => collectionResult.data || collectionResult.previousData,
-    [collectionResult.data, collectionResult.previousData],
-  )
 
   const collection = useMemo(() => {
     if (selectedCollection) return selectedCollection

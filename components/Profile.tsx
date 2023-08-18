@@ -26,11 +26,9 @@ const UserProfileTemplate: FC<
   loginUrlForReferral,
   children,
 }) => {
-  const { data, previousData } = useFetchAccountDetailQuery({
+  const { data: accountData } = useFetchAccountDetailQuery({
     variables: { address },
   })
-
-  const accountData = useMemo(() => data || previousData, [data, previousData])
 
   const account = useMemo(
     () => convertFullUser(accountData?.account || null, address),
