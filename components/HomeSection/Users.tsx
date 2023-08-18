@@ -27,6 +27,7 @@ const UsersHomeSection: FC<Props> = () => {
     (user) => user.address,
   )
 
+  if (!environment.HOME_USERS.length) return null
   return (
     <HomeGridSection
       explore={{
