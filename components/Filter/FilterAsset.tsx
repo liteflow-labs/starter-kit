@@ -185,8 +185,8 @@ const FilterAsset: NextPage<Props> = ({
         <FilterByCollection
           formValues={formValues}
           selectedCollection={currentCollection}
+          onCollectionChange={setCollection}
           onFilterChange={propagateFilter}
-          setCollection={setCollection}
           setPropertySearch={setPropertySearch}
         />
         <FilterByTrait
