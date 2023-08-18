@@ -50,11 +50,10 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
-  const offerQuery = useCheckoutQuery({ variables: { id: offerId } })
+  const { data: offerData } = useCheckoutQuery({ variables: { id: offerId } })
+  const offer = offerData?.offer
 
-  const offer = offerQuery.data?.offer
-
-  const assetQuery = useFetchAssetForCheckoutQuery({
+  const { data: assetData } = useFetchAssetForCheckoutQuery({
     variables: {
       now: date,
       address: address || '',
@@ -64,8 +63,8 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     },
     skip: !offer,
   })
+  const asset = assetData?.asset
 
-  const asset = assetQuery?.data?.asset
   const priceUnit = useMemo(
     () => (offer ? BigNumber.from(offer.unitPrice) : undefined),
     [offer],
@@ -86,7 +85,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${asset.id}`)
   }, [asset, toast, t, push])
 
-  if (!offerQuery.data?.offer === null || assetQuery.data?.asset === null) {
+  if (offer === null || asset === null) {
     return <Error statusCode={404} />
   }
   return (

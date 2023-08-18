@@ -213,74 +213,82 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             {!asset ? (
               <Skeleton width="100%" height="100%" />
             ) : (
-              <TokenMedia
-                imageUrl={asset.image}
-                animationUrl={asset.animationUrl}
-                unlockedContent={
-                  showPreview ? undefined : asset.unlockedContent
-                }
-                defaultText={asset.name}
-                controls
-                sizes="
+              <>
+                <TokenMedia
+                  imageUrl={asset.image}
+                  animationUrl={asset.animationUrl}
+                  unlockedContent={
+                    showPreview ? undefined : asset.unlockedContent
+                  }
+                  defaultText={asset.name}
+                  controls
+                  sizes="
               (min-width: 80em) 500px,
               (min-width: 48em) 50vw,
               100vw"
-              />
-            )}
-            {asset?.hasUnlockableContent && (
-              <Flex
-                w="full"
-                mt={3}
-                direction={{ base: 'column', lg: 'row' }}
-                justify={{
-                  base: 'center',
-                  lg: isOwner ? 'space-between' : 'center',
-                }}
-                align="center"
-                gap={4}
-              >
-                <Flex align="center" gap={1.5}>
-                  <Heading as="h3" variant="heading3" color="brand.black">
-                    {t('asset.detail.unlockable.title')}
-                  </Heading>
-                  <Tooltip
-                    label={
-                      <Text as="span" variant="caption" color="brand.black">
-                        {t('asset.detail.unlockable.tooltip')}
-                      </Text>
-                    }
-                    placement="top"
-                    rounded="xl"
-                    shadow="lg"
-                    p={3}
-                    bg="white"
+                />
+                {asset.hasUnlockableContent && (
+                  <Flex
+                    w="full"
+                    mt={3}
+                    direction={{ base: 'column', lg: 'row' }}
+                    justify={{
+                      base: 'center',
+                      lg: isOwner ? 'space-between' : 'center',
+                    }}
+                    align="center"
+                    gap={4}
                   >
-                    <span>
-                      <Icon
-                        as={FaInfoCircle}
-                        color="gray.400"
-                        h={4}
-                        w={4}
-                        cursor="pointer"
-                      />
-                    </span>
-                  </Tooltip>
-                </Flex>
-                {isOwner && (
-                  <Flex as={FormControl} w="auto" align="center">
-                    <FormLabel mb={0} htmlFor="show-preview">
+                    <Flex align="center" gap={1.5}>
                       <Heading as="h3" variant="heading3" color="brand.black">
-                        {t('asset.detail.show-preview')}
+                        {t('asset.detail.unlockable.title')}
                       </Heading>
-                    </FormLabel>
-                    <Switch
-                      id="show-preview"
-                      isChecked={showPreview}
-                      onChange={(event) => setShowPreview(event.target.checked)}
-                    />
+                      <Tooltip
+                        label={
+                          <Text as="span" variant="caption" color="brand.black">
+                            {t('asset.detail.unlockable.tooltip')}
+                          </Text>
+                        }
+                        placement="top"
+                        rounded="xl"
+                        shadow="lg"
+                        p={3}
+                        bg="white"
+                      >
+                        <span>
+                          <Icon
+                            as={FaInfoCircle}
+                            color="gray.400"
+                            h={4}
+                            w={4}
+                            cursor="pointer"
+                          />
+                        </span>
+                      </Tooltip>
+                    </Flex>
+                    {isOwner && (
+                      <Flex as={FormControl} w="auto" align="center">
+                        <FormLabel mb={0} htmlFor="show-preview">
+                          <Heading
+                            as="h3"
+                            variant="heading3"
+                            color="brand.black"
+                          >
+                            {t('asset.detail.show-preview')}
+                          </Heading>
+                        </FormLabel>
+                        <Switch
+                          id="show-preview"
+                          isChecked={showPreview}
+                          onChange={(event) =>
+                            setShowPreview(event.target.checked)
+                          }
+                        />
+                      </Flex>
+                    )}
                   </Flex>
                 )}
-              </Flex>
+              </>
             )}
           </Center>
         </AspectRatio>
