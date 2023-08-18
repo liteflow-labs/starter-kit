@@ -215,17 +215,10 @@ export const convertCollectionFull = (
     | 'twitter'
     | 'discord'
     | 'website'
-    | 'deployerAddress'
-    | 'numberOfOwners'
-    | 'supply'
-  > & { floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>> } & {
-    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
-  } & {
-    deployer: Maybe<
-      Pick<Account, 'address' | 'name' | 'username'> & {
-        verification: Maybe<Pick<AccountVerification, 'status'>>
-      }
-    >
+  > & {
+    deployer: Pick<Account, 'address' | 'name' | 'username'> & {
+      verification: Maybe<Pick<AccountVerification, 'status'>>
+    }
   },
 ): {
   address: string
@@ -237,19 +230,12 @@ export const convertCollectionFull = (
   twitter: string | null
   discord: string | null
   website: string | null
-  deployerAddress: string
   deployer: {
     address: string
     name: string | null
     username: string | null
     verified: boolean
-  } | null
-  totalVolume: string
-  totalVolumeCurrencySymbol: string
-  floorPrice: string | null
-  floorPriceCurrencySymbol: string | null
-  totalOwners: number
-  supply: number
+  }
 } => {
   return {
     address: collection.address,
@@ -261,16 +247,31 @@ export const convertCollectionFull = (
     twitter: collection.twitter,
     discord: collection.discord,
     website: collection.website,
-    deployerAddress: collection.deployerAddress,
-    deployer: collection.deployer
-      ? {
-          address: collection.deployer.address,
-          name: collection.deployer.name,
-          username: collection.deployer.username,
-          verified: collection.deployer?.verification?.status === 'VALIDATED',
-        }
-      : null,
-    totalVolume: collection.totalVolume?.valueInRef,
+    deployer: {
+      address: collection.deployer.address,
+      name: collection.deployer.name,
+      username: collection.deployer.username,
+      verified: collection.deployer?.verification?.status === 'VALIDATED',
+    },
+  }
+}
+
+export const convertCollectionMetrics = (
+  collection: Pick<Collection, 'numberOfOwners' | 'supply'> & {
+    floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+  } & {
+    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
+  },
+): {
+  totalVolume: string
+  totalVolumeCurrencySymbol: string
+  floorPrice: string | null
+  floorPriceCurrencySymbol: string | null
+  totalOwners: number
+  supply: number
+} => {
+  return {
+    totalVolume: collection.totalVolume.valueInRef,
     totalVolumeCurrencySymbol: collection.totalVolume.refCode,
     floorPrice: collection.floorPrice?.valueInRef || null,
     floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
