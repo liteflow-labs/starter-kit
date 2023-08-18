@@ -42,6 +42,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
       now: date,
       address: address || '',
     },
+    skip: !environment.FEATURED_TOKEN.length,
   })
   useHandleQueryError(featureAssetsQuery)
   useHandleQueryError(currenciesQuery)
@@ -87,6 +88,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
     [featured, address, signer, reloadInfo, currenciesQuery],
   )
 
+  if (!environment.FEATURED_TOKEN.length) return null
   if (!featuredAssets)
     return (
       <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>
