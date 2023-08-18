@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import {
   Button,
   Flex,
@@ -34,23 +35,25 @@ const NotificationPage: NextPage = ({}) => {
   const {
     data: notificationData,
     fetchMore,
-    loading,
+    networkStatus,
   } = useGetNotificationsQuery({
     variables: {
       cursor: null,
       address: address || '',
     },
+    notifyOnNetworkStatusChange: true,
     skip: !address,
   })
 
-  const notifications = notificationData?.notifications?.nodes || []
+  const notifications = notificationData?.notifications?.nodes
   const hasNextPage = notificationData?.notifications?.pageInfo.hasNextPage
+  const endCursor = notificationData?.notifications?.pageInfo.endCursor
 
   const loadMore = useCallback(async () => {
     try {
       await fetchMore({
         variables: {
-          cursor: notificationData?.notifications?.pageInfo.endCursor,
+          cursor: endCursor,
         },
         updateQuery: concatToQuery('notifications'),
       })
@@ -60,7 +63,7 @@ const NotificationPage: NextPage = ({}) => {
         status: 'error',
       })
     }
-  }, [notificationData?.notifications?.pageInfo.endCursor, fetchMore, toast])
+  }, [endCursor, fetchMore, toast])
 
   useEffect(() => {
     if (!address) return
@@ -78,15 +81,8 @@ const NotificationPage: NextPage = ({}) => {
         {t('notifications.title')}
       </Heading>
       <Stack spacing={6} mt={12}>
-        {notifications.map((notification) => (
-          <NotificationDetail
-            key={notification.id}
-            currentAccount={address || null}
-            {...notification}
-          />
-        ))}
-        {loading && (
-          <SkeletonList items={5} gap={6}>
+        {!notifications ? (
+          <SkeletonList items={12} gap={6}>
             <Flex align="center" gap={4}>
               <Skeleton height="56px" width="56px" borderRadius="full" />
               <Flex flex={1} gap={1} direction="column">
@@ -94,15 +90,27 @@ const NotificationPage: NextPage = ({}) => {
               </Flex>
             </Flex>
           </SkeletonList>
-        )}
-        {hasNextPage && (
-          <Button isLoading={loading} onClick={loadMore}>
-            <Text as="span" isTruncated>
-              {t('notifications.loadMore')}
-            </Text>
-          </Button>
-        )}
-        {!loading && notifications.length === 0 && (
+        ) : notifications.length > 0 ? (
+          <>
+            {notifications.map((notification) => (
+              <NotificationDetail
+                key={notification.id}
+                currentAccount={address || null}
+                {...notification}
+              />
+            ))}
+            {hasNextPage && (
+              <Button
+                isLoading={networkStatus === NetworkStatus.fetchMore}
+                onClick={loadMore}
+              >
+                <Text as="span" isTruncated>
+                  {t('notifications.loadMore')}
+                </Text>
+              </Button>
+            )}
+          </>
+        ) : (
           <Empty
             icon={<Icon as={FaBell} color="brand.500" h={9} w={9} />}
             title={t('notifications.empty.title')}

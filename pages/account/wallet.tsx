@@ -1,5 +1,4 @@
 import { NextPage } from 'next'
-import Error from 'next/error'
 import AccountTemplate from '../../components/Account/Account'
 import Head from '../../components/Head'
 import Loader from '../../components/Loader'
@@ -14,7 +13,6 @@ const WalletPage: NextPage = () => {
   useLoginRedirect()
   const { data: currencyData } = useWalletCurrenciesQuery()
 
-  if (currencyData?.currencies === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head title="Account - Wallet" />

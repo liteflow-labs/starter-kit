@@ -59,7 +59,6 @@ const CreatePage: NextPage = ({}) => {
       account: address || '',
     },
   })
-
   const collection = data?.collection
   const account = data?.account
 
@@ -119,7 +118,7 @@ const CreatePage: NextPage = ({}) => {
     [push, t, toast],
   )
 
-  if (data?.collection === null) return <Error statusCode={404} />
+  if (collection === null) return <Error statusCode={404} />
   return (
     <Layout>
       <BackButton onClick={back} />
