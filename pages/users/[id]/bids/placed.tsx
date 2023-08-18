@@ -18,7 +18,6 @@ import {
 import { useIsLoggedIn } from '@liteflow/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
@@ -46,11 +45,7 @@ import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
-type Props = {
-  now: string
-}
-
-const BidPlacedPage: NextPage<Props> = ({ now }) => {
+const BidPlacedPage: NextPage = () => {
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -62,13 +57,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
-  const date = useMemo(() => new Date(now), [now])
-  const {
-    data,
-    refetch,
-    loading: _loading,
-    previousData,
-  } = useFetchUserBidsPlacedQuery({
+  const { data, refetch } = useFetchUserBidsPlacedQuery({
     variables: {
       address: userAddress,
       limit,
@@ -77,16 +66,13 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const bidData = useMemo(() => data || previousData, [data, previousData])
-  const loading = _loading && !bidData
-
   const bids = useMemo(
     () =>
-      (bidData?.bids?.nodes || []).map((x) => ({
+      data?.bids?.nodes.map((x) => ({
         ...convertBidFull(x),
         asset: x.asset,
       })),
-    [bidData],
+    [data],
   )
 
   const onCanceled = useCallback(async () => {
@@ -103,10 +89,10 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
     },
     [replace, pathname, query],
   )
+
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={date}
         signer={signer}
         currentAccount={address}
         address={userAddress}
@@ -173,15 +159,9 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading ? (
+          {bids === undefined ? (
             <Loader />
-          ) : bids.length == 0 ? (
-            <Empty
-              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
-              title={t('user.bid-placed.table.empty.title')}
-              description={t('user.bid-placed.table.empty.description')}
-            />
-          ) : (
+          ) : bids.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>
@@ -291,32 +271,24 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
                 </Tbody>
               </Table>
             </TableContainer>
+          ) : (
+            <Empty
+              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
+              title={t('user.bid-placed.table.empty.title')}
+              description={t('user.bid-placed.table.empty.description')}
+            />
           )}
-
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            onLimitChange={changeLimit}
-            onPageChange={changePage}
-            page={page}
-            total={bidData?.bids?.totalCount}
-            isLoading={loading}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          {bids?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={data?.bids?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.bids?.pageInfo.hasPreviousPage}
+            />
+          )}
         </Stack>
       </UserProfileTemplate>
     </LargeLayout>

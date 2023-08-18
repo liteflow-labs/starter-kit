@@ -10,6 +10,10 @@ query FetchExploreCollections(
     orderBy: $orderBy
     filter: { and: $filter }
   ) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       chainId
       address
@@ -26,6 +30,5 @@ query FetchExploreCollections(
         valueInRef
       }
     }
-    totalCount
   }
 }

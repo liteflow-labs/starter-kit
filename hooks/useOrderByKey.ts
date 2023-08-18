@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
 
 export function useOrderByKey<T>(
-  keys: string[],
-  items: T[],
+  keys: string[] | undefined,
+  items: T[] | undefined,
   convertFn: (item: T) => string,
-): T[] {
+): T[] | undefined {
   return useMemo(() => {
-    if (!keys) return []
+    if (!keys || !items) return undefined
     return keys.reduce((prev, value) => {
-      const item = (items || []).find((x) => convertFn(x) === value)
+      const item = items.find((x) => convertFn(x) === value)
       return item ? [...prev, item] : prev
     }, [] as T[])
   }, [keys, items, convertFn])

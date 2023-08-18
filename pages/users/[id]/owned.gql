@@ -12,7 +12,10 @@ query FetchOwnedAssets(
     offset: $offset
     orderBy: $orderBy
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       asset {
         ...AssetDetail

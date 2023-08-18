@@ -41,7 +41,7 @@ const BidList: FC<Props> = ({
   onCanceled,
 }) => {
   const { t } = useTranslation('components')
-  const bidResults = useFetchAssetBidsQuery({
+  const { data: assetBids } = useFetchAssetBidsQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -50,7 +50,7 @@ const BidList: FC<Props> = ({
     },
     skip: !!auctionId,
   })
-  const auctionBidResult = useFetchAuctionBidsQuery({
+  const { data: auctionBids } = useFetchAuctionBidsQuery({
     variables: {
       auctionId: auctionId || '',
       now,
@@ -59,28 +59,14 @@ const BidList: FC<Props> = ({
   })
   const blockExplorer = useBlockExplorer(chainId)
 
-  const result = useMemo(
-    () => (auctionId ? auctionBidResult : bidResults),
-    [auctionId, auctionBidResult, bidResults],
-  )
-
-  const bidData = useMemo(
-    () => bidResults.data || bidResults.previousData,
-    [bidResults.data, bidResults.previousData],
-  )
-
-  const auctionBidData = useMemo(
-    () => auctionBidResult.data || auctionBidResult.previousData,
-    [auctionBidResult.data, auctionBidResult.previousData],
-  )
   const bids = useMemo(() => {
     const list = auctionId
-      ? auctionBidData?.auction?.offers.nodes || []
-      : bidData?.asset?.bids.nodes || []
-    return list.map(convertBidFull)
-  }, [auctionId, auctionBidData, bidData])
+      ? auctionBids?.auction?.offers.nodes
+      : assetBids?.asset?.bids.nodes
+    return list?.map(convertBidFull)
+  }, [auctionId, auctionBids, assetBids])
 
-  if (result.loading && !bidData)
+  if (bids === undefined)
     return (
       <SkeletonList items={5}>
         <SkeletonListItem image subtitle caption />
