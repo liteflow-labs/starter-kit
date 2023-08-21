@@ -286,9 +286,9 @@ const SalesDirectForm: FC<Props> = ({
               clampValueOnBlur={false}
               min={1}
               max={
-                quantityAvailable.lte(Number.MAX_SAFE_INTEGER)
+                quantityAvailable.lte(Number.MAX_SAFE_INTEGER - 1)
                   ? quantityAvailable.toNumber()
-                  : Number.MAX_SAFE_INTEGER
+                  : Number.POSITIVE_INFINITY - 1
               }
               allowMouseWheel
               w="full"
@@ -325,9 +325,9 @@ const SalesDirectForm: FC<Props> = ({
             <FormHelperText>
               <Text as="p" variant="text" color="gray.500">
                 {t('sales.direct.form.available', {
-                  count: quantityAvailable.lte(Number.MAX_SAFE_INTEGER)
+                  count: quantityAvailable.lte(Number.MAX_SAFE_INTEGER - 1)
                     ? quantityAvailable.toNumber()
-                    : Number.MAX_SAFE_INTEGER,
+                    : Number.MAX_SAFE_INTEGER - 1,
                 })}
               </Text>
             </FormHelperText>

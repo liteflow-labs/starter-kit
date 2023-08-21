@@ -56,9 +56,9 @@ const PurchaseListItem: FC<IProps> = ({
           ns="components"
           i18nKey="history.purchase.purchased"
           values={{
-            count: quantity.lte(Number.MAX_SAFE_INTEGER)
+            count: quantity.lte(Number.MAX_SAFE_INTEGER - 1)
               ? quantity.toNumber()
-              : Number.MAX_SAFE_INTEGER,
+              : Number.MAX_SAFE_INTEGER - 1,
           }}
           components={[
             <Text

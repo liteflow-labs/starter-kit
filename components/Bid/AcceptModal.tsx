@@ -98,9 +98,9 @@ const BidAcceptModal: FC<Props> = ({
                       clampValueOnBlur={false}
                       min={1}
                       max={
-                        maxQuantity.lte(Number.MAX_SAFE_INTEGER)
+                        maxQuantity.lte(Number.MAX_SAFE_INTEGER - 1)
                           ? maxQuantity.toNumber()
-                          : Number.MAX_SAFE_INTEGER
+                          : Number.MAX_SAFE_INTEGER - 1
                       }
                       allowMouseWheel
                       w="full"
@@ -161,9 +161,9 @@ const BidAcceptModal: FC<Props> = ({
                 <Heading as="h5" variant="heading3" color="brand.black">
                   <Text fontWeight="semibold">
                     {t('bid.modal.accept.owned.unit', {
-                      count: totalOwned.lte(Number.MAX_SAFE_INTEGER)
+                      count: totalOwned.lte(Number.MAX_SAFE_INTEGER - 1)
                         ? totalOwned.toNumber()
-                        : Number.MAX_SAFE_INTEGER,
+                        : Number.MAX_SAFE_INTEGER - 1,
                     })}
                   </Text>
                 </Heading>
