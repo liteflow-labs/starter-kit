@@ -62,9 +62,7 @@ const BidAcceptModal: FC<Props> = ({
   })
   const maxQuantity = useMemo(
     () =>
-      totalOwned.lt(bid.availableQuantity)
-        ? totalOwned.toNumber()
-        : bid.availableQuantity.toNumber(),
+      totalOwned.lt(bid.availableQuantity) ? totalOwned : bid.availableQuantity,
     [bid, totalOwned],
   )
 
@@ -99,7 +97,11 @@ const BidAcceptModal: FC<Props> = ({
                     <NumberInput
                       clampValueOnBlur={false}
                       min={1}
-                      max={maxQuantity}
+                      max={
+                        maxQuantity.lte(Number.MAX_SAFE_INTEGER)
+                          ? maxQuantity.toNumber()
+                          : Number.MAX_SAFE_INTEGER
+                      }
                       allowMouseWheel
                       w="full"
                       onChange={(x) => setValue('quantity', x)}
@@ -110,12 +112,10 @@ const BidAcceptModal: FC<Props> = ({
                         {...register('quantity', {
                           required: t('bid.modal.accept.validation.required'),
                           validate: (value) => {
-                            if (
-                              parseInt(value, 10) < 1 ||
-                              parseInt(value, 10) > maxQuantity
-                            ) {
+                            const valueBN = BigNumber.from(value)
+                            if (valueBN.lt(1) || valueBN.gt(maxQuantity)) {
                               return t('bid.modal.accept.validation.in-range', {
-                                max: maxQuantity,
+                                max: maxQuantity.toString(),
                               })
                             }
                             if (!/^\d+$/.test(value)) {
@@ -138,7 +138,7 @@ const BidAcceptModal: FC<Props> = ({
                   <FormHelperText>
                     <Text as="p" variant="text" color="gray.500">
                       {t('bid.modal.accept.quantity.available', {
-                        count: bid.availableQuantity.toNumber(),
+                        count: bid.availableQuantity.toString(),
                       })}
                     </Text>
                   </FormHelperText>
@@ -161,7 +161,9 @@ const BidAcceptModal: FC<Props> = ({
                 <Heading as="h5" variant="heading3" color="brand.black">
                   <Text fontWeight="semibold">
                     {t('bid.modal.accept.owned.unit', {
-                      count: totalOwned.toNumber(),
+                      count: totalOwned.lte(Number.MAX_SAFE_INTEGER)
+                        ? totalOwned.toNumber()
+                        : Number.MAX_SAFE_INTEGER,
                     })}
                   </Text>
                 </Heading>

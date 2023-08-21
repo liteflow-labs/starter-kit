@@ -126,7 +126,9 @@ const SaleDirectModalItem: FC<Props> = ({
             </span>
             <span>
               {t('sales.direct.modal-item.available', {
-                count: sale.availableQuantity.toNumber(),
+                count: sale.availableQuantity.lte(Number.MAX_SAFE_INTEGER)
+                  ? sale.availableQuantity.toNumber()
+                  : Number.MAX_SAFE_INTEGER,
               })}
             </span>
           </Flex>

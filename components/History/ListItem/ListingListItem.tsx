@@ -41,7 +41,11 @@ const ListingListItem: FC<IProps> = ({
         <Trans
           ns="components"
           i18nKey="history.listing.listed"
-          values={{ count: quantity.toNumber() }}
+          values={{
+            count: quantity.lte(Number.MAX_SAFE_INTEGER)
+              ? quantity.toNumber()
+              : Number.MAX_SAFE_INTEGER,
+          }}
           components={[
             <Text
               as="span"
