@@ -285,7 +285,11 @@ const SalesDirectForm: FC<Props> = ({
             <NumberInput
               clampValueOnBlur={false}
               min={1}
-              max={quantityAvailable?.toNumber()}
+              max={
+                quantityAvailable.lte(Number.MAX_SAFE_INTEGER - 1)
+                  ? quantityAvailable.toNumber()
+                  : Number.POSITIVE_INFINITY - 1
+              }
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
@@ -296,12 +300,10 @@ const SalesDirectForm: FC<Props> = ({
                 {...register('quantity', {
                   required: t('sales.direct.form.validation.required'),
                   validate: (value) => {
-                    if (
-                      parseFloat(value) < 1 ||
-                      parseFloat(value) > quantityAvailable?.toNumber()
-                    ) {
+                    const valueBN = BigNumber.from(value)
+                    if (valueBN.lt(1) || valueBN.gt(quantityAvailable)) {
                       return t('sales.direct.form.validation.in-range', {
-                        max: quantityAvailable?.toNumber(),
+                        max: quantityAvailable.toString(),
                       })
                     }
                     if (!/^\d+$/.test(value)) {
@@ -323,7 +325,9 @@ const SalesDirectForm: FC<Props> = ({
             <FormHelperText>
               <Text as="p" variant="text" color="gray.500">
                 {t('sales.direct.form.available', {
-                  count: quantityAvailable.toNumber(),
+                  count: quantityAvailable.lte(Number.MAX_SAFE_INTEGER - 1)
+                    ? quantityAvailable.toNumber()
+                    : Number.MAX_SAFE_INTEGER - 1,
                 })}
               </Text>
             </FormHelperText>
