@@ -7,7 +7,7 @@ import {
   Icon,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputRightElement,
   SkeletonCircle,
   SkeletonText,
   Stack,
@@ -114,14 +114,14 @@ const FilterByCollection: FC<Props> = ({
             />
           )}
           <InputGroup>
-            <InputLeftElement pointerEvents="none">
-              <Icon as={HiOutlineSearch} w={6} h={6} color="gray.400" />
-            </InputLeftElement>
             <Input
               placeholder={t('filters.assets.properties.search.placeholder')}
               type="search"
               onChange={(e) => setPropertySearch(e.target.value)}
             />
+            <InputRightElement pointerEvents="none">
+              <Icon as={HiOutlineSearch} w={6} h={6} color="black" />
+            </InputRightElement>
           </InputGroup>
         </Stack>
       </AccordionPanel>
@@ -137,14 +137,14 @@ const FilterByCollection: FC<Props> = ({
       <AccordionPanel>
         <Stack spacing={4}>
           <InputGroup>
-            <InputLeftElement pointerEvents="none">
-              <Icon as={HiOutlineSearch} w={6} h={6} color="gray.400" />
-            </InputLeftElement>
             <Input
               placeholder={t('filters.assets.collections.search.placeholder')}
               type="search"
               onChange={(e) => setCollectionSearch(e.target.value)}
             />
+            <InputRightElement pointerEvents="none">
+              <Icon as={HiOutlineSearch} w={6} h={6} color="black" />
+            </InputRightElement>
           </InputGroup>
           <List>
             {!collections ? (

@@ -19,7 +19,7 @@ import {
   IconButton,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputRightElement,
   Menu,
   MenuButton,
   MenuItem,
@@ -402,10 +402,14 @@ const Navbar: FC<{
         </Flex>
         <Flex as="form" my="auto" grow={1} onSubmit={onSubmit}>
           <InputGroup>
-            <InputLeftElement pointerEvents="none">
-              <Icon as={HiOutlineSearch} w={6} h={6} color="gray.400" />
-            </InputLeftElement>
-            <Input placeholder={t('navbar.search')} {...register('search')} />
+            <Input
+              placeholder={t('navbar.search')}
+              type="search"
+              {...register('search')}
+            />
+            <InputRightElement cursor="pointer" onClick={onSubmit}>
+              <Icon as={HiOutlineSearch} w={6} h={6} color="black" />
+            </InputRightElement>
           </InputGroup>
         </Flex>
         <Flex display={{ base: 'none', lg: 'flex' }} align="center" gap={6}>
