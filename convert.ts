@@ -29,7 +29,14 @@ import {
 export const convertAsset = (
   asset: Pick<
     Asset,
-    'id' | 'animationUrl' | 'image' | 'name' | 'unlockedContent'
+    | 'id'
+    | 'chainId'
+    | 'collectionAddress'
+    | 'tokenId'
+    | 'animationUrl'
+    | 'image'
+    | 'name'
+    | 'unlockedContent'
   > & {
     collection: Pick<Collection, 'address' | 'name' | 'chainId'>
     owned: Maybe<Pick<Ownership, 'quantity'>>
@@ -43,6 +50,9 @@ export const convertAsset = (
   },
 ): {
   id: string
+  chainId: number
+  collectionAddress: string
+  tokenId: string
   animationUrl: string | null | undefined
   image: string
   name: string
@@ -66,6 +76,9 @@ export const convertAsset = (
   const bestBid = asset.bestBid?.nodes[0]
   return {
     id: asset.id,
+    chainId: asset.chainId,
+    collectionAddress: asset.collectionAddress,
+    tokenId: asset.tokenId,
     animationUrl: asset.animationUrl,
     image: asset.image,
     name: asset.name,
@@ -100,6 +113,9 @@ export const convertAssetWithSupplies = (
   const bestBid = asset.bestBid?.nodes[0]
   return {
     id: asset.id,
+    chainId: asset.chainId,
+    collectionAddress: asset.collectionAddress,
+    tokenId: asset.tokenId,
     animationUrl: asset.animationUrl,
     image: asset.image,
     unlockedContent: asset.unlockedContent,
@@ -381,17 +397,10 @@ export const convertCollectionFull = (
     | 'twitter'
     | 'discord'
     | 'website'
-    | 'deployerAddress'
-    | 'numberOfOwners'
-    | 'supply'
-  > & { floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>> } & {
-    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
-  } & {
-    deployer: Maybe<
-      Pick<Account, 'address' | 'name' | 'username'> & {
-        verification: Maybe<Pick<AccountVerification, 'status'>>
-      }
-    >
+  > & {
+    deployer: Pick<Account, 'address' | 'name' | 'username'> & {
+      verification: Maybe<Pick<AccountVerification, 'status'>>
+    }
   },
 ): {
   address: string
@@ -403,19 +412,12 @@ export const convertCollectionFull = (
   twitter: string | null
   discord: string | null
   website: string | null
-  deployerAddress: string
   deployer: {
     address: string
     name: string | null
     username: string | null
     verified: boolean
-  } | null
-  totalVolume: string
-  totalVolumeCurrencySymbol: string
-  floorPrice: string | null
-  floorPriceCurrencySymbol: string | null
-  totalOwners: number
-  supply: number
+  }
 } => {
   return {
     address: collection.address,
@@ -427,16 +429,31 @@ export const convertCollectionFull = (
     twitter: collection.twitter,
     discord: collection.discord,
     website: collection.website,
-    deployerAddress: collection.deployerAddress,
-    deployer: collection.deployer
-      ? {
-          address: collection.deployer.address,
-          name: collection.deployer.name,
-          username: collection.deployer.username,
-          verified: collection.deployer?.verification?.status === 'VALIDATED',
-        }
-      : null,
-    totalVolume: collection.totalVolume?.valueInRef,
+    deployer: {
+      address: collection.deployer.address,
+      name: collection.deployer.name,
+      username: collection.deployer.username,
+      verified: collection.deployer?.verification?.status === 'VALIDATED',
+    },
+  }
+}
+
+export const convertCollectionMetrics = (
+  collection: Pick<Collection, 'numberOfOwners' | 'supply'> & {
+    floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
+  } & {
+    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
+  },
+): {
+  totalVolume: string
+  totalVolumeCurrencySymbol: string
+  floorPrice: string | null
+  floorPriceCurrencySymbol: string | null
+  totalOwners: number
+  supply: number
+} => {
+  return {
+    totalVolume: collection.totalVolume.valueInRef,
     totalVolumeCurrencySymbol: collection.totalVolume.refCode,
     floorPrice: collection.floorPrice?.valueInRef || null,
     floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,

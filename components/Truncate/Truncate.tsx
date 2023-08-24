@@ -27,7 +27,11 @@ export default function Truncate({
   )
   return (
     <>
-      <Text variant={size === 'lg' ? 'text' : 'text-sm'} color={color}>
+      <Text
+        variant={size === 'lg' ? 'text' : 'text-sm'}
+        color={color}
+        whiteSpace="pre-wrap"
+      >
         {isOpen ? linkify(children) : truncate}
         {children.length > length && !isOpen && (
           <chakra.button

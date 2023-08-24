@@ -98,6 +98,16 @@
     "collections": {
       "chains": {
         "label": "Cadena"
+      },
+      "empty": {
+        "title": "No se encontraron colecciones",
+        "description": "Actualiza tus filtros para encontrar más colecciones."
+      }
+    },
+    "traits": {
+      "empty": {
+        "title": "No se encontraron rasgos",
+        "description": "Actualiza tus filtros para encontrar más rasgos."
       }
     },
     "assets": {
@@ -508,6 +518,9 @@
         "available_other": "{{count}} ediciones disponibles"
       }
     }
+  },
+  "pagination": {
+    "label": "Resultados por página"
   },
   "referral": {
     "form": {

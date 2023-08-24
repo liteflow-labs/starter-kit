@@ -254,14 +254,6 @@
       }
     }
   },
-  "pagination": {
-    "result": {
-      "label": "Results per page",
-      "caption": "<0>{{from}}</0> - <0>{{to}}</0> of <0>{{total}}</0> results",
-      "pages_one": "{{count}} page",
-      "pages_other": "{{count}} pages"
-    }
-  },
   "user": {
     "auctions": {
       "nav": {

@@ -6,6 +6,9 @@ export const theme = extendTheme({
       '*::placeholder': {
         color: 'gray.400',
       },
+      '*::-webkit-search-cancel-button': {
+        cursor: 'pointer',
+      },
     },
   },
   breakPoints: {

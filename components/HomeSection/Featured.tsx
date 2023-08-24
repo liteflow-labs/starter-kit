@@ -35,30 +35,24 @@ type Props = {
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
   const signer = useSigner()
   const { address } = useAccount()
-  const currenciesQuery = useFetchCurrenciesForBidsQuery()
+  const currenciesQuery = useFetchCurrenciesForBidsQuery({
+    skip: !environment.FEATURED_TOKEN.length,
+  })
   const featureAssetsQuery = useFetchFeaturedAssetsQuery({
     variables: {
       featuredIds: environment.FEATURED_TOKEN,
       now: date,
       address: address || '',
     },
+    skip: !environment.FEATURED_TOKEN.length,
   })
   useHandleQueryError(featureAssetsQuery)
   useHandleQueryError(currenciesQuery)
 
-  const assetData = useMemo(
-    () => featureAssetsQuery.data || featureAssetsQuery.previousData,
-    [featureAssetsQuery.data, featureAssetsQuery.previousData],
-  )
-
   const featured = useOrderByKey(
     environment.FEATURED_TOKEN,
-    assetData?.assets?.nodes || [],
+    featureAssetsQuery.data?.assets?.nodes,
     (asset) => asset.id,
-  )
-  const currencyData = useMemo(
-    () => currenciesQuery.data || currenciesQuery.previousData,
-    [currenciesQuery.data, currenciesQuery.previousData],
   )
 
   const reloadInfo = useCallback(async () => {
@@ -71,7 +65,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
         <TokenHeader
           key={asset.id}
           asset={convertAssetWithSupplies(asset)}
-          currencies={currencyData?.currencies?.nodes || []}
+          currencies={currenciesQuery.data?.currencies?.nodes || []}
           auction={
             asset.auctions.nodes[0]
               ? convertAuctionFull(asset.auctions.nodes[0])
@@ -93,10 +87,11 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
           onAuctionAccepted={reloadInfo}
         />
       )),
-    [featured, address, signer, reloadInfo, currencyData],
+    [featured, address, signer, reloadInfo, currenciesQuery],
   )
 
-  if (featureAssetsQuery.loading && !assetData)
+  if (!environment.FEATURED_TOKEN.length) return null
+  if (!featuredAssets)
     return (
       <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>
         <Box my="auto" p={{ base: 6, md: 12 }} textAlign="center">
@@ -113,7 +108,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
         </Stack>
       </SimpleGrid>
     )
-  if (!featuredAssets || featuredAssets.length === 0) return null
+  if (featuredAssets.length === 0) return null
   if (featuredAssets.length === 1) return <header>{featuredAssets}</header>
   return (
     <header>

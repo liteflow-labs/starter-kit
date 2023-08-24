@@ -1,12 +1,11 @@
 import {
   Box,
+  Divider,
   Flex,
   SimpleGrid,
-  Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
@@ -43,12 +42,15 @@ const searchFilter = (search: string): AccountFilter =>
 
 const UsersPage: NextPage<Props> = () => {
   const { query, pathname, push } = useRouter()
-  const isSmall = useBreakpointValue({ base: true, md: false })
+  const isSmall = useBreakpointValue(
+    { base: true, md: false },
+    { fallback: 'md' },
+  )
   const { t } = useTranslation('templates')
   const orderBy = useOrderByQuery<AccountsOrderBy>('CREATED_AT_DESC')
   const { limit, offset, page } = usePaginateQuery()
   const search = useQueryParamSingle('search')
-  const { data: usersData, loading } = useFetchExploreUsersQuery({
+  const { data: usersData } = useFetchExploreUsersQuery({
     variables: {
       limit,
       offset,
@@ -67,6 +69,8 @@ const UsersPage: NextPage<Props> = () => {
     },
     [push, pathname, query],
   )
+
+  const users = usersData?.users?.nodes
 
   const [changePage, changeLimit] = usePaginate()
 
@@ -105,7 +109,7 @@ const UsersPage: NextPage<Props> = () => {
               />
             </Box>
           </Flex>
-          {loading && !usersData ? (
+          {users === undefined ? (
             <SkeletonGrid
               items={environment.PAGINATION_LIMIT}
               compact
@@ -114,14 +118,14 @@ const UsersPage: NextPage<Props> = () => {
             >
               <SkeletonUserCard />
             </SkeletonGrid>
-          ) : (usersData?.users?.nodes || []).length > 0 ? (
+          ) : users.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing={4}
               columns={{ sm: 2, md: 4, lg: 6 }}
               py={6}
             >
-              {usersData?.users?.nodes.map((user, i) => (
+              {users.map((user, i) => (
                 <UserCard
                   key={i}
                   user={convertUserWithCover(user, user.address)}
@@ -129,39 +133,23 @@ const UsersPage: NextPage<Props> = () => {
               ))}
             </SimpleGrid>
           ) : (
-            <Flex align="center" justify="center" h="full" py={12}>
-              <Empty
-                title={t('explore.users.empty.title')}
-                description={t('explore.users.empty.description')}
-              />
-            </Flex>
+            <Empty
+              title={t('explore.users.empty.title')}
+              description={t('explore.users.empty.description')}
+            />
           )}
-          <Box py="6" borderTop="1px" borderColor="gray.200">
+          <Divider my="6" display={users?.length !== 0 ? 'block' : 'none'} />
+          {users?.length !== 0 && (
             <Pagination
               limit={limit}
               limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              total={usersData?.users?.totalCount}
-              isLoading={loading}
               onPageChange={changePage}
               onLimitChange={changeLimit}
-              result={{
-                label: t('pagination.result.label'),
-                caption: (props) => (
-                  <Trans
-                    ns="templates"
-                    i18nKey="pagination.result.caption"
-                    values={props}
-                    components={[
-                      <Text as="span" color="brand.black" key="text" />,
-                    ]}
-                  />
-                ),
-                pages: (props) =>
-                  t('pagination.result.pages', { count: props.total }),
-              }}
+              hasNextPage={usersData?.users?.pageInfo.hasNextPage}
+              hasPreviousPage={usersData?.users?.pageInfo.hasPreviousPage}
             />
-          </Box>
+          )}
         </>
       </ExploreTemplate>
     </>
