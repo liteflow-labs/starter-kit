@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
 import { formatDate } from '../utils'
 
 export default function AuctionEndedWonSeller({
@@ -37,7 +36,7 @@ export default function AuctionEndedWonSeller({
       expireAt,
     )}</strong> to confirm the sale. After that the auction and its bids will be canceled.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Confirm the sale</a><br/>`,
   }

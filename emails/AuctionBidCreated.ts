@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
 
 export default function AuctionBidCreated({
   asset,
@@ -33,6 +32,8 @@ export default function AuctionBidCreated({
     <br/>      
     To view the bid click the link below.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${asset.id}">View the bid</a><br/>`,
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
+      asset.id
+    }">View the bid</a><br/>`,
   }
 }
