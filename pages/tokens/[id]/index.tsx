@@ -32,7 +32,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
@@ -44,7 +44,6 @@ import SkeletonProperty from '../../../components/Skeleton/Property'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
 import TraitList from '../../../components/Trait/TraitList'
-import { chains } from '../../../connectors'
 import {
   convertAuctionFull,
   convertBidFull,
@@ -53,7 +52,7 @@ import {
   convertTraits,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
+import { EnvironmentContext } from '../../../environment'
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
@@ -76,6 +75,7 @@ enum AssetTabs {
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
+  const { CHAINS, REPORT_EMAIL } = useContext(EnvironmentContext)
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
@@ -122,7 +122,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     () => asset?.collection.standard === 'ERC721',
     [asset],
   )
-  const chain = useMemo(() => chains.find((x) => x.id === chainId), [chainId])
+  const chain = useMemo(
+    () => CHAINS.find((x) => x.id === chainId),
+    [CHAINS, chainId],
+  )
 
   const traits = useMemo(
     () => asset && asset.traits.nodes.length > 0 && convertTraits(asset),
@@ -326,9 +329,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                       {t('asset.detail.menu.refresh-metadata')}
                     </MenuItem>
                     <Link
-                      href={`mailto:${
-                        environment.REPORT_EMAIL
-                      }?subject=${encodeURI(
+                      href={`mailto:${REPORT_EMAIL}?subject=${encodeURI(
                         t('asset.detail.menu.report.subject'),
                       )}&body=${encodeURI(
                         t('asset.detail.menu.report.body', asset),

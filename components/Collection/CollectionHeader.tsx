@@ -24,9 +24,9 @@ import Truncate from 'components/Truncate/Truncate'
 import useBlockExplorer from 'hooks/useBlockExplorer'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
-import { FC, useMemo } from 'react'
+import { FC, useContext, useMemo } from 'react'
 import ChakraLink from '../../components/Link/Link'
-import { chains } from '../../connectors'
+import { EnvironmentContext } from '../../environment'
 import { formatAddress } from '../../utils'
 
 type Props = {
@@ -59,11 +59,12 @@ type Props = {
 }
 
 const CollectionHeader: FC<Props> = ({ collection, loading, reportEmail }) => {
+  const { CHAINS } = useContext(EnvironmentContext)
   const { t } = useTranslation('templates')
   const blockExplorer = useBlockExplorer(collection.chainId)
   const chain = useMemo(
-    () => chains.find((x) => x.id === collection.chainId),
-    [collection.chainId],
+    () => CHAINS.find((x) => x.id === collection.chainId),
+    [collection.chainId, CHAINS],
   )
 
   const blocks = useMemo(

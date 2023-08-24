@@ -17,7 +17,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import FilterAsset, { NoFilter } from '../../components/Filter/FilterAsset'
@@ -34,7 +34,7 @@ import {
   convertSale,
   convertUser,
 } from '../../convert'
-import environment from '../../environment'
+import { EnvironmentContext } from '../../environment'
 import {
   AssetsOrderBy,
   useFetchAllErc721And1155Query,
@@ -42,8 +42,8 @@ import {
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
-  Filter,
   convertFilterToAssetFilter,
+  Filter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../hooks/useAssetFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
@@ -56,6 +56,7 @@ type Props = {
 }
 
 const ExplorePage: NextPage<Props> = ({ now }) => {
+  const { PAGINATION_LIMIT } = useContext(EnvironmentContext)
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
@@ -182,7 +183,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
               {loading && !assetsData ? (
                 <SkeletonGrid
-                  items={environment.PAGINATION_LIMIT}
+                  items={PAGINATION_LIMIT}
                   compact
                   columns={
                     showFilters
@@ -230,7 +231,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
               <Pagination
                 limit={limit}
-                limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+                limits={[PAGINATION_LIMIT, 24, 36, 48]}
                 page={page}
                 total={totalCount}
                 onPageChange={changePage}

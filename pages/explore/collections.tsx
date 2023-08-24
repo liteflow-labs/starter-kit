@@ -23,7 +23,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import Empty from '../../components/Empty/Empty'
 import FilterCollection, {
   NoFilter,
@@ -33,15 +33,14 @@ import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
 import SkeletonCollectionCard from '../../components/Skeleton/CollectionCard'
 import SkeletonGrid from '../../components/Skeleton/Grid'
-import { chains } from '../../connectors'
-import environment from '../../environment'
+import { EnvironmentContext } from '../../environment'
 import {
   CollectionsOrderBy,
   useFetchExploreCollectionsQuery,
 } from '../../graphql'
 import useCollectionFilterFromQuery, {
-  Filter,
   convertFilterToCollectionFilter,
+  Filter,
 } from '../../hooks/useCollectionFilterFromQuery'
 import useCollectionFilterState from '../../hooks/useCollectionFilterState'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
@@ -52,6 +51,7 @@ import { formatError, removeEmptyFromObject } from '../../utils'
 type Props = {}
 
 const CollectionsPage: NextPage<Props> = ({}) => {
+  const { CHAINS, PAGINATION_LIMIT } = useContext(EnvironmentContext)
   const { pathname, push, query, replace } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
@@ -103,7 +103,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
     [replace, pathname, query, toast],
   )
 
-  const hasFilter = chains.length > 1
+  const hasFilter = CHAINS.length > 1
 
   return (
     <>
@@ -182,7 +182,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
               {loading && !collectionsData ? (
                 <SkeletonGrid
-                  items={environment.PAGINATION_LIMIT}
+                  items={PAGINATION_LIMIT}
                   compact
                   columns={
                     showFilters
@@ -218,7 +218,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
               <Pagination
                 limit={limit}
-                limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+                limits={[PAGINATION_LIMIT, 24, 36, 48]}
                 page={page}
                 total={totalCount}
                 isLoading={loading}

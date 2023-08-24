@@ -7,7 +7,7 @@ import {
   Spacer,
   Stack,
 } from '@chakra-ui/react'
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useCallback, useContext, useMemo } from 'react'
 import {
   convertAssetWithSupplies,
   convertAuctionFull,
@@ -16,7 +16,7 @@ import {
   convertSaleFull,
   convertUser,
 } from '../../convert'
-import environment from '../../environment'
+import { EnvironmentContext } from '../../environment'
 import {
   useFetchCurrenciesForBidsQuery,
   useFetchFeaturedAssetsQuery,
@@ -33,12 +33,13 @@ type Props = {
 }
 
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
+  const { FEATURED_TOKEN } = useContext(EnvironmentContext)
   const signer = useSigner()
   const { address } = useAccount()
   const currenciesQuery = useFetchCurrenciesForBidsQuery()
   const featureAssetsQuery = useFetchFeaturedAssetsQuery({
     variables: {
-      featuredIds: environment.FEATURED_TOKEN,
+      featuredIds: FEATURED_TOKEN,
       now: date,
       address: address || '',
     },
@@ -52,7 +53,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
   )
 
   const featured = useOrderByKey(
-    environment.FEATURED_TOKEN,
+    FEATURED_TOKEN,
     assetData?.assets?.nodes || [],
     (asset) => asset.id,
   )

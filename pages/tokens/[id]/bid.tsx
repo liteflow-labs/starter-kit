@@ -14,7 +14,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
@@ -32,7 +32,7 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
+import { EnvironmentContext } from '../../../environment'
 import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
@@ -46,6 +46,8 @@ type Props = {
 }
 
 const BidPage: NextPage<Props> = ({ now }) => {
+  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
+    useContext(EnvironmentContext)
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
@@ -223,8 +225,8 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}
                 auctionId={auction?.id}
-                auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
-                offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+                auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
+                offerValidity={OFFER_VALIDITY_IN_SECONDS}
               />
             ) : (
               <OfferFormBid
@@ -239,8 +241,8 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}
                 auctionId={auction?.id}
-                auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
-                offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+                auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
+                offerValidity={OFFER_VALIDITY_IN_SECONDS}
               />
             )}
           </Flex>

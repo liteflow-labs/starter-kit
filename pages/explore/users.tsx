@@ -10,7 +10,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import Head from '../../components/Head'
@@ -20,7 +20,7 @@ import SkeletonGrid from '../../components/Skeleton/Grid'
 import SkeletonUserCard from '../../components/Skeleton/UserCard'
 import UserCard from '../../components/User/UserCard'
 import { convertUserWithCover } from '../../convert'
-import environment from '../../environment'
+import { EnvironmentContext } from '../../environment'
 import {
   AccountFilter,
   AccountsOrderBy,
@@ -43,6 +43,7 @@ const searchFilter = (search: string): AccountFilter =>
   } as AccountFilter)
 
 const UsersPage: NextPage<Props> = () => {
+  const { PAGINATION_LIMIT } = useContext(EnvironmentContext)
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue({ base: true, md: false })
   const { t } = useTranslation('templates')
@@ -109,7 +110,7 @@ const UsersPage: NextPage<Props> = () => {
           </Flex>
           {loading && !usersData ? (
             <SkeletonGrid
-              items={environment.PAGINATION_LIMIT}
+              items={PAGINATION_LIMIT}
               compact
               columns={{ sm: 2, md: 4, lg: 6 }}
               py={6}
@@ -139,7 +140,7 @@ const UsersPage: NextPage<Props> = () => {
           <Divider my="6" display={totalCount === 0 ? 'none' : 'block'} />
           <Pagination
             limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+            limits={[PAGINATION_LIMIT, 24, 36, 48]}
             page={page}
             total={totalCount}
             isLoading={loading}

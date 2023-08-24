@@ -13,7 +13,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
 import SkeletonForm from '../../../components/Skeleton/Form'
@@ -22,7 +22,7 @@ import type { Props as NFTCardProps } from '../../../components/Token/Card'
 import TokenCard from '../../../components/Token/Card'
 import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
-import environment from '../../../environment'
+import { EnvironmentContext } from '../../../environment'
 import { useFetchAccountAndCollectionQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
@@ -43,6 +43,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
 )
 
 const CreatePage: NextPage = ({}) => {
+  const { UNLOCKABLE_CONTENT, LAZYMINT, MAX_ROYALTIES } =
+    useContext(EnvironmentContext)
   const signer = useSigner()
   const collectionAddress = useRequiredQueryParamSingle('collectionAddress')
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
@@ -176,9 +178,9 @@ const CreatePage: NextPage = ({}) => {
               blockExplorer={blockExplorer}
               onCreated={onCreated}
               onInputChange={setFormData}
-              activateUnlockableContent={environment.UNLOCKABLE_CONTENT}
-              maxRoyalties={environment.MAX_ROYALTIES}
-              activateLazyMint={environment.LAZYMINT}
+              activateUnlockableContent={UNLOCKABLE_CONTENT}
+              maxRoyalties={MAX_ROYALTIES}
+              activateLazyMint={LAZYMINT}
             />
           )}
         </GridItem>

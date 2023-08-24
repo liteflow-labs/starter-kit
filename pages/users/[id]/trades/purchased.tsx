@@ -20,7 +20,7 @@ import { NextPage } from 'next'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -31,7 +31,7 @@ import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
 import { convertTrade } from '../../../../convert'
-import environment from '../../../../environment'
+import { EnvironmentContext } from '../../../../environment'
 import {
   TradesOrderBy,
   useFetchUserTradePurchasedQuery,
@@ -51,6 +51,7 @@ type Props = {
 }
 
 const TradePurchasedPage: NextPage<Props> = ({ now }) => {
+  const { BASE_URL, PAGINATION_LIMIT, CHAINS } = useContext(EnvironmentContext)
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -91,7 +92,7 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
         currentAccount={address}
         address={userAddress}
         currentTab="trades"
-        loginUrlForReferral={environment.BASE_URL + '/login'}
+        loginUrlForReferral={BASE_URL + '/login'}
       >
         <Stack spacing={6}>
           <Flex
@@ -256,9 +257,10 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
                           aria-label="external link"
                           as={Link}
                           href={
-                            blockExplorer(item.asset?.chainId).transaction(
-                              item.transactionHash,
-                            ) || '#'
+                            blockExplorer(
+                              CHAINS,
+                              item.asset?.chainId,
+                            ).transaction(item.transactionHash) || '#'
                           }
                           isExternal
                           variant="outline"
@@ -277,7 +279,7 @@ const TradePurchasedPage: NextPage<Props> = ({ now }) => {
 
           <Pagination
             limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+            limits={[PAGINATION_LIMIT, 24, 36, 48]}
             onLimitChange={changeLimit}
             onPageChange={changePage}
             page={page}
