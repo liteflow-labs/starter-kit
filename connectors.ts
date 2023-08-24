@@ -25,7 +25,6 @@ import {
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { Environment } from './environment'
-import environment from './environment'
 
 type ClientWithChain = {
   client: Config<any>

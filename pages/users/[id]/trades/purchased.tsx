@@ -46,7 +46,7 @@ import LargeLayout from '../../../../layouts/large'
 import { dateFromNow } from '../../../../utils'
 
 const TradePurchasedPage: NextPage = () => {
-  const { BASE_URL, PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { BASE_URL, PAGINATION_LIMIT, CHAINS } = useContext(EnvironmentContext)
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
