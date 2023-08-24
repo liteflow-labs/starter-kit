@@ -43,10 +43,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     skip: HOME_TOKENS.length > 0,
   })
   useHandleQueryError(defaultAssetQuery)
-  const defaultAssetData = useMemo(
-    () => defaultAssetQuery.data || defaultAssetQuery.previousData,
-    [defaultAssetQuery.data, defaultAssetQuery.previousData],
-  )
+  const defaultAssetData = defaultAssetQuery.data
 
   const assetIds = useMemo(() => {
     if (HOME_TOKENS.length > 0) {
@@ -73,26 +70,21 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     variables: {
       now: date,
       limit: PAGINATION_LIMIT,
-      assetIds: assetIds,
+      assetIds: assetIds || [],
       address: address || '',
     },
+    skip: assetIds === undefined,
   })
   useHandleQueryError(assetsQuery)
-  const assetData = useMemo(
-    () => assetsQuery.data || assetsQuery.previousData,
-    [assetsQuery.data, assetsQuery.previousData],
-  )
+  const assetData = assetsQuery.data
 
   const assets = useOrderByKey(
     assetIds,
-    assetData?.assets?.nodes || [],
+    assetData?.assets?.nodes,
     (asset) => asset.id,
   )
 
-  if (
-    (defaultAssetQuery.loading && !defaultAssetData) ||
-    (assetsQuery.loading && !assetData)
-  )
+  if (!assets)
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />

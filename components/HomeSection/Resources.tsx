@@ -31,7 +31,6 @@ const ResourcesHomeSection: FC<Props> = () => {
 
   return (
     <HomeGridSection
-      isLoading={false}
       items={items}
       itemRender={(item: ItemProps) => (
         <HomeSectionCard

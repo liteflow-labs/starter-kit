@@ -13,7 +13,6 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useState } from 'react'
 import { convertOwnership } from '../../../convert'
@@ -24,7 +23,9 @@ import OwnersModalActivator from './ModalActivator'
 import OwnersModalItem from './ModalItem'
 
 export type Props = {
-  assetId: string
+  chainId: number
+  collectionAddress: string
+  tokenId: string
   ownersPreview: {
     address: string
     image: string | null | undefined
@@ -37,19 +38,29 @@ export type Props = {
 
 const OwnerPaginationLimit = 8
 
-const OwnersModal: FC<Props> = ({ assetId, ownersPreview, numberOfOwners }) => {
+const OwnersModal: FC<Props> = ({
+  chainId,
+  collectionAddress,
+  tokenId,
+  ownersPreview,
+  numberOfOwners,
+}) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
-  const { data, loading, previousData } = useFetchOwnersQuery({
+  const { data } = useFetchOwnersQuery({
     variables: {
-      assetId,
+      chainId,
+      collectionAddress,
+      tokenId,
       limit: OwnerPaginationLimit,
       offset: (page - 1) * OwnerPaginationLimit,
     },
   })
+
   // Reset pagination when the limit change or the modal visibility changes
   useEffect(() => setPage(1), [isOpen])
+
   return (
     <>
       <OwnersModalActivator
@@ -91,7 +102,7 @@ const OwnersModal: FC<Props> = ({ assetId, ownersPreview, numberOfOwners }) => {
             minHeight={{ base: '', md: 'lg' }}
           >
             <List>
-              {loading
+              {!data
                 ? new Array(OwnerPaginationLimit)
                     .fill(0)
                     .map((_, index) => (
@@ -101,7 +112,7 @@ const OwnersModal: FC<Props> = ({ assetId, ownersPreview, numberOfOwners }) => {
                         label={<SkeletonText noOfLines={2} width="32" />}
                       />
                     ))
-                : data?.ownerships?.nodes
+                : data.ownerships?.nodes
                     .map(convertOwnership)
                     .map((owner) => (
                       <OwnersModalItem key={owner.address} {...owner} />
@@ -111,30 +122,11 @@ const OwnersModal: FC<Props> = ({ assetId, ownersPreview, numberOfOwners }) => {
           <ModalFooter>
             <Box pt="4">
               <Pagination
-                limit={OwnerPaginationLimit}
                 page={page}
-                total={
-                  data?.ownerships?.totalCount ||
-                  previousData?.ownerships?.totalCount
-                }
-                isLoading={loading}
                 onPageChange={setPage}
-                hideSelectors
-                result={{
-                  label: t('pagination.result.label'),
-                  caption: (props) => (
-                    <Trans
-                      ns="templates"
-                      i18nKey="pagination.result.caption"
-                      values={props}
-                      components={[
-                        <Text as="span" color="brand.black" key="text" />,
-                      ]}
-                    />
-                  ),
-                  pages: (props) =>
-                    t('pagination.result.pages', { count: props.total }),
-                }}
+                hasNextPage={data?.ownerships?.pageInfo.hasNextPage}
+                hasPreviousPage={data?.ownerships?.pageInfo.hasPreviousPage}
+                withoutLimit
               />
             </Box>
           </ModalFooter>

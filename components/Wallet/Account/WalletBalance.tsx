@@ -11,8 +11,8 @@ const WalletBalance: FC<{
     symbol: string
   }
 }> = ({ account, currency }) => {
-  const [balance, { loading }] = useBalance(account, currency.id)
-  if (loading)
+  const [balance] = useBalance(account, currency.id)
+  if (!balance)
     return (
       <Spinner
         color="brand.500"
@@ -22,7 +22,6 @@ const WalletBalance: FC<{
         speed="0.65s"
       />
     )
-  if (!balance) return '-'
   return <Price amount={balance} currency={currency} />
 }
 

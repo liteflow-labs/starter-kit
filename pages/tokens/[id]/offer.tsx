@@ -84,7 +84,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   )
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading, previousData } = useOfferForAssetQuery({
+  const { data } = useOfferForAssetQuery({
     variables: {
       chainId: chainId ? parseInt(chainId, 10) : 0,
       collectionAddress: collectionAddress || '',
@@ -96,12 +96,9 @@ const OfferPage: NextPage<Props> = ({ now }) => {
 
   const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
-  const currencyRes = useChainCurrencies(data?.asset?.chainId)
+  const { data: currencyData } = useChainCurrencies(data?.asset?.chainId)
 
-  const asset = useMemo(
-    () => data?.asset || previousData?.asset,
-    [data, previousData],
-  )
+  const asset = data?.asset
 
   const royaltiesPerTenThousand =
     asset?.royalties.reduce((sum, { value }) => sum + value, 0) || 0
@@ -116,10 +113,6 @@ const OfferPage: NextPage<Props> = ({ now }) => {
       ? isSameAddress(asset.creator.address.toLowerCase(), address)
       : false
 
-  const currencyData = useMemo(
-    () => currencyRes.data || currencyRes.previousData,
-    [currencyRes.data, currencyRes.previousData],
-  )
   const currencies = useMemo(
     () => currencyData?.currencies?.nodes || [],
     [currencyData],
@@ -206,7 +199,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     AUCTION_VALIDITY_IN_SECONDS,
   ])
 
-  if (!loading && !asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head

@@ -10,7 +10,10 @@ query FetchUserTradeSold(
     offset: $offset
     filter: { sellerAddress: { equalTo: $address } }
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       transactionHash
       timestamp

@@ -20,22 +20,15 @@ type Props = {
     title: string
     href: string
   }
-  isLoading: boolean
-  items: Array<any>
+  items: Array<any> | undefined
   itemRender: (item: any) => JSX.Element
   title: string
 }
 
 const ITEM_PER_LINE = 4
 
-const HomeGridSection: FC<Props> = ({
-  explore,
-  isLoading,
-  items,
-  itemRender,
-  title,
-}) => {
-  if (isLoading)
+const HomeGridSection: FC<Props> = ({ explore, items, itemRender, title }) => {
+  if (!items)
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
@@ -44,7 +37,7 @@ const HomeGridSection: FC<Props> = ({
         </SkeletonGrid>
       </Stack>
     )
-  if (!items || items.length === 0) return null
+  if (items.length === 0) return null
   return (
     <Stack spacing={6}>
       <Flex flexWrap="wrap" align="center" justify="space-between" gap={4}>

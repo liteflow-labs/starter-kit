@@ -56,7 +56,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
   const assetId = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading, previousData } = useBidOnAssetQuery({
+  const { data } = useBidOnAssetQuery({
     variables: {
       id: assetId,
       now: date,
@@ -64,21 +64,13 @@ const BidPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const currencyRes = useChainCurrencies(data?.asset?.chainId, {
+  const { data: currencyData } = useChainCurrencies(data?.asset?.chainId, {
     onlyERC20: true,
   })
 
-  const currencyData = useMemo(
-    () => currencyRes.data || currencyRes.previousData,
-    [currencyRes.data, currencyRes.previousData],
-  )
-
   const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
-  const asset = useMemo(
-    () => data?.asset || previousData?.asset,
-    [data, previousData],
-  )
+  const asset = data?.asset
 
   const auction = useMemo(
     () => (asset?.auctions.nodes[0] ? asset.auctions.nodes[0] : undefined),
@@ -102,7 +94,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${assetId}`)
   }, [toast, t, push, assetId])
 
-  if (!loading && !asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head
