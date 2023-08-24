@@ -1,8 +1,8 @@
-import { Text, VStack } from '@chakra-ui/react'
+import { StyleProps, VStack } from '@chakra-ui/react'
 import { FC } from 'react'
 import DropListItem from './ListItem'
 
-type Props = {
+type Props = StyleProps & {
   drops: {
     id: string
     name: string
@@ -21,18 +21,13 @@ type Props = {
   }[]
 }
 
-const DropMintSchedule: FC<Props> = ({ drops }) => {
+const DropMintSchedule: FC<Props> = ({ drops, ...props }) => {
   return (
-    <>
-      <Text variant="subtitle1" px={4} mt={8} mb={4}>
-        Minting Schedule
-      </Text>
-      <VStack align="stretch" spacing={3}>
-        {drops.map((drop, index) => (
-          <DropListItem key={drop.id} drop={drop} isOpen={index === 0} />
-        ))}
-      </VStack>
-    </>
+    <VStack align="stretch" spacing={3} {...props}>
+      {drops.map((drop, index) => (
+        <DropListItem key={drop.id} drop={drop} isOpen={index === 0} />
+      ))}
+    </VStack>
   )
 }
 

@@ -51,11 +51,8 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
       allowMultiple
       defaultIndex={isOpen ? [0] : undefined}
       width="full"
-      borderWidth={{ base: '0px', sm: '1px' }}
-      borderTopWidth="1px"
-      borderBottomWidth="1px"
-      borderColor="grayAlpha.700"
-      borderRadius={{ base: 'none', sm: '2xl' }}
+      borderWidth="1px"
+      borderRadius="2xl"
     >
       <AccordionItem p={0} border="none">
         {({ isExpanded }) => (
@@ -71,7 +68,7 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                   flexDirection="column"
                   width={10}
                   h={10}
-                  bg="grayAlpha.800"
+                  bg="brand.50"
                   rounded="lg"
                   flexShrink={0}
                 >
@@ -91,20 +88,20 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                   >
                     {drop.name}
                   </Text>
-                  <Text variant="body2" color="grayAlpha.500">
+                  <Text variant="text-sm" color="gray.500">
                     Price:{' '}
                     <Price amount={drop.unitPrice} currency={drop.currency} />
                   </Text>
-                  <Text variant="body2" color="grayAlpha.500">
+                  <Text variant="text-sm" color="gray.500">
                     Starts: {formatDate(drop.startDate)}
                   </Text>
                   {isExpanded && (
                     <>
-                      <Text variant="body2" color="grayAlpha.500">
+                      <Text variant="text-sm" color="gray.500">
                         Ends: {formatDate(drop.endDate)}
                       </Text>
                       {drop.supply && (
-                        <Text variant="body2" color="grayAlpha.500">
+                        <Text variant="text-sm" color="gray.500">
                           Supply:{' '}
                           {numbro(drop.supply).format({
                             thousandSeparated: true,
@@ -112,7 +109,7 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                         </Text>
                       )}
                       {drop.maxQuantityPerWallet && (
-                        <Text variant="body2" color="grayAlpha.500">
+                        <Text variant="text-sm" color="gray.500">
                           Mint limit:{' '}
                           {numbro(drop.maxQuantityPerWallet).format({
                             thousandSeparated: true,
@@ -128,7 +125,7 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                 <Text as="span" variant="caption">
                   <Badge
                     variant="outline"
-                    colorScheme={drop.isAllowed ? 'green' : 'grayAlpha'}
+                    colorScheme={drop.isAllowed ? 'green' : 'gray'}
                     px={2}
                     py={1}
                     borderRadius="2xl"

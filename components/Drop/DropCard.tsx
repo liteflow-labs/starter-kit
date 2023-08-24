@@ -42,7 +42,6 @@ export default function DropCard({ drop, timeline }: Props) {
       as={Link}
       href={`/collection/${drop.collection.chainId}/${drop.collection.address}/drop`}
       borderWidth="1px"
-      borderColor="gray.200"
       borderRadius="2xl"
       w="full"
       overflow="hidden"
@@ -56,7 +55,7 @@ export default function DropCard({ drop, timeline }: Props) {
           content: '""',
           position: 'absolute',
           inset: 0,
-          bg: 'rgba(0,0,0,0.8)',
+          bg: 'rgba(0,0,0,0.7)',
         }}
         bg="gray.100"
       >
@@ -92,8 +91,7 @@ export default function DropCard({ drop, timeline }: Props) {
       <Box
         overflow="hidden"
         rounded="2xl"
-        border="2px solid"
-        borderColor="gray.200"
+        borderWidth="2px"
         position="relative"
         w={timeline === Timeline.ENDED ? 14 : '72px'}
         h={timeline === Timeline.ENDED ? 14 : '72px'}
@@ -164,7 +162,8 @@ export default function DropCard({ drop, timeline }: Props) {
           aria-label="Drop detail"
           icon={<Icon as={HiArrowNarrowRight} boxSize={4} />}
           placeSelf="flex-end"
-          colorScheme="whiteAlpha"
+          color="white"
+          _hover={{ bg: 'whiteAlpha.200' }}
         />
       </Flex>
     </Box>

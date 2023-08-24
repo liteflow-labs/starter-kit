@@ -24,6 +24,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import ChakraLink from '../../components/Link/Link'
 import Truncate from '../../components/Truncate/Truncate'
+import { chains } from '../../connectors'
 import { convertCollectionDropDetail } from '../../convert'
 import { formatAddress } from '../../utils'
 
@@ -35,6 +36,7 @@ type Props = {
 const DropHeader: FC<Props> = ({ collection, reportEmail }) => {
   const { t } = useTranslation('templates')
   const blockExplorer = useBlockExplorer(collection?.chainId)
+  const chain = chains.find((x) => x.id === collection?.chainId)
   if (!collection) return null
   return (
     <>
@@ -65,7 +67,7 @@ const DropHeader: FC<Props> = ({ collection, reportEmail }) => {
           h={32}
           rounded="2xl"
           overflow="hidden"
-          border="2px solid"
+          borderWidth="2px"
           borderColor="white"
           bg="gray.200"
         >
@@ -197,6 +199,14 @@ const DropHeader: FC<Props> = ({ collection, reportEmail }) => {
           </Truncate>
         </Box>
       )}
+      <Flex flexDirection="column" mt={4}>
+        <Text variant="button1" color="brand.black">
+          {chain?.name || '-'}
+        </Text>
+        <Text variant="subtitle2" color="gray.500">
+          {t('collection.header.data-labels.chain')}
+        </Text>
+      </Flex>
     </>
   )
 }

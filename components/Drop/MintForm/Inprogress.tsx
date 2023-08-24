@@ -14,7 +14,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import ConnectButtonWithNetworkSwitch from 'components/Button/ConnectWithNetworkSwitch'
 import useAccount from 'hooks/useAccount'
 import useBlockExplorer from 'hooks/useBlockExplorer'
-import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import numbro from 'numbro'
 import { FC, JSX, useMemo } from 'react'
@@ -53,7 +52,6 @@ type Props = {
 }
 
 const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
-  const { t } = useTranslation('components')
   const toast = useToast()
   const { push } = useRouter()
   const { address } = useAccount()
@@ -105,11 +103,9 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
   return (
     <>
       <Box
-        borderWidth={{ base: '0px', sm: '1px' }}
-        borderTopWidth="1px"
-        borderBottomWidth="1px"
-        borderColor="grayAlpha.700"
-        borderRadius={{ base: 'none', sm: '2xl' }}
+        borderWidth="1px"
+        borderRadius="2xl"
+        bg="brand.50"
         width="full"
         overflow="hidden"
       >
@@ -118,15 +114,14 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
           spacing={4}
           width="full"
           p={4}
-          bg="grayAlpha.800"
           alignItems="center"
         >
           <Flex flexDirection="column" gap={1} width="full">
-            <Heading variant="headline5" title={drop.name} noOfLines={1}>
+            <Heading variant="heading2" title={drop.name} noOfLines={1}>
               {drop.name}
             </Heading>
             <HStack alignItems="center" spacing={1}>
-              <Text variant="subtitle2" color="grayAlpha.500" mr={2}>
+              <Text variant="subtitle2" color="gray.500" mr={2}>
                 Price:
               </Text>
               <Image
@@ -143,7 +138,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
             </HStack>
             {drop.supply && (
               <HStack alignItems="center" spacing={1}>
-                <Text variant="subtitle2" color="grayAlpha.500" mr={2}>
+                <Text variant="subtitle2" color="gray.500" mr={2}>
                   Supply:
                 </Text>
                 <Text variant="subtitle2">
@@ -155,7 +150,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
             )}
             {drop.maxQuantityPerWallet && (
               <HStack alignItems="center" spacing={1}>
-                <Text variant="subtitle2" color="grayAlpha.500" mr={2}>
+                <Text variant="subtitle2" color="gray.500" mr={2}>
                   Mint limit:
                 </Text>
                 <Text variant="subtitle2">
@@ -169,17 +164,8 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
           </Flex>
           <Flex flexDirection="column" alignItems="flex-end" gap={3} w="full">
             <Flex as="form" onSubmit={onSubmit} noValidate w="full" gap={3}>
-              <Flex
-                alignItems="center"
-                justifyContent="space-between"
-                bg="grayAlpha.900"
-                rounded="full"
-                p={2}
-                flex={{ base: 1, md: 'none' }}
-              >
+              <Flex alignItems="center" gap={2}>
                 <Button
-                  display="flex"
-                  variant="unstyled"
                   size="xs"
                   onClick={() => setValue('quantity', quantity - 1)}
                   isDisabled={quantity === 1}
@@ -190,8 +176,6 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
                   {quantity}
                 </Text>
                 <Button
-                  display="flex"
-                  variant="unstyled"
                   size="xs"
                   onClick={() => setValue('quantity', quantity + 1)}
                   isDisabled={
@@ -219,12 +203,12 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
                 }
               >
                 <Text as="span" isTruncated>
-                  {t('bid.detail.accept')}
+                  {mintedOut ? 'Minted out' : 'Mint'}
                 </Text>
               </ConnectButtonWithNetworkSwitch>
             </Flex>
             {!drop.isAllowed && (
-              <Text variant="caption">
+              <Text variant="caption" color="gray.500">
                 You’re not eligible for this mint stage
               </Text>
             )}

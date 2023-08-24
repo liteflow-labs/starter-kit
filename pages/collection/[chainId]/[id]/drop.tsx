@@ -1,4 +1,4 @@
-import { Heading } from '@chakra-ui/react'
+import { SimpleGrid } from '@chakra-ui/react'
 import DropHeader from 'components/Drop/DropHeader'
 import DropMintForm from 'components/Drop/MintForm'
 import environment from 'environment'
@@ -62,20 +62,20 @@ const DropDetail: NextPage = () => {
     return <Error statusCode={404} />
   return (
     <LargeLayout>
-      <Head title={t('drops.title')} />
-      <Heading as="h1" variant="title" color="brand.black" mb={4}>
-        {t('drops.title')}
-      </Heading>
+      <Head title={collectionDropDetail?.name || t('drops.title')} />
       <DropHeader
         collection={collectionDropDetail}
         reportEmail={environment.REPORT_EMAIL}
       />
       <DropProgress drops={drops} />
-      <DropMintForm
-        collection={{ address: collectionAddress, chainId }}
-        drops={drops}
-      />
-      <DropMintSchedule drops={drops} />
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} width="full">
+        <DropMintForm
+          order={{ base: 1, md: 2 }}
+          collection={{ address: collectionAddress, chainId }}
+          drops={drops}
+        />
+        <DropMintSchedule order={{ base: 2, md: 1 }} drops={drops} />
+      </SimpleGrid>
     </LargeLayout>
   )
 }

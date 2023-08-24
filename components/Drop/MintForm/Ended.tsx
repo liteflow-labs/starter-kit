@@ -31,11 +31,9 @@ const MintFormEnded: FC<Props> = ({ collection, drops }): JSX.Element => {
   )
   return (
     <Box
-      borderWidth={{ base: '0px', sm: '1px' }}
-      borderTopWidth="1px"
-      borderBottomWidth="1px"
-      borderColor="grayAlpha.700"
-      borderRadius={{ base: 'none', sm: '2xl' }}
+      borderWidth="1px"
+      borderRadius="2xl"
+      bg="brand.50"
       width="full"
       overflow="hidden"
     >
@@ -44,13 +42,12 @@ const MintFormEnded: FC<Props> = ({ collection, drops }): JSX.Element => {
         spacing={4}
         width="full"
         p={4}
-        bg="grayAlpha.800"
         alignItems="center"
       >
         <Box gap={1} width="full">
-          <Heading variant="headline5">Mint ended</Heading>
+          <Heading variant="heading2">Mint ended</Heading>
           <HStack alignItems="center" spacing={1}>
-            <Text variant="subtitle2" color="grayAlpha.500" mr={2}>
+            <Text variant="subtitle2" color="gray.500" mr={2}>
               Minted:
             </Text>
             <Text variant="subtitle2">

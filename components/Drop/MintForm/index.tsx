@@ -1,4 +1,4 @@
-import { VStack } from '@chakra-ui/react'
+import { StyleProps, VStack } from '@chakra-ui/react'
 import { FC, useMemo } from 'react'
 import { convertDropDetail } from '../../../convert'
 import useNow from '../../../hooks/useNow'
@@ -7,7 +7,7 @@ import MintFormEnded from './Ended'
 import MintFormInprogress from './Inprogress'
 import MintFormUpcoming from './Upcoming'
 
-type Props = {
+type Props = StyleProps & {
   collection: {
     address: string
     chainId: number
@@ -15,7 +15,7 @@ type Props = {
   drops: ReturnType<typeof convertDropDetail>[]
 }
 
-const DropMintForm: FC<Props> = ({ collection, drops }) => {
+const DropMintForm: FC<Props> = ({ collection, drops, ...props }) => {
   const now = useNow()
 
   const inprogressDrops = useMemo(
@@ -44,7 +44,7 @@ const DropMintForm: FC<Props> = ({ collection, drops }) => {
   }, [drops, inprogressDrops, upcomingDrops, collection])
 
   return (
-    <VStack align="stretch" spacing={3}>
+    <VStack align="stretch" spacing={3} {...props}>
       {dropsToRender}
     </VStack>
   )

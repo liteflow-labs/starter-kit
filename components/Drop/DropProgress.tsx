@@ -37,7 +37,7 @@ const DropProgress: FC<Props> = ({ drops }) => {
   }, [totalMinted, totalSupply])
 
   return (
-    <Flex flexDirection="column" py={8} px={4} gap={2} width="full">
+    <Flex flexDirection="column" py={8} gap={2} width="full">
       <SimpleGrid columns={2} spacing={3}>
         <Text variant="subtitle1">
           {mintPercentage
@@ -61,7 +61,6 @@ const DropProgress: FC<Props> = ({ drops }) => {
       </SimpleGrid>
       <Progress
         colorScheme="brand"
-        bg="gray.800"
         rounded="full"
         size="xs"
         value={mintPercentage}
