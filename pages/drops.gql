@@ -54,6 +54,10 @@ query FetchDrops($now: Datetime!, $limit: Int!, $offset: Int!) {
     first: $limit
     offset: $offset
   ) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       cover
       image
@@ -88,6 +92,5 @@ query FetchDrops($now: Datetime!, $limit: Int!, $offset: Int!) {
         }
       }
     }
-    totalCount
   }
 }

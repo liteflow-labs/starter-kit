@@ -1,7 +1,6 @@
-import { Box, Heading, SimpleGrid, Text } from '@chakra-ui/react'
+import { Divider, Heading, SimpleGrid } from '@chakra-ui/react'
 import { Timeline } from 'hooks/useDropTimeline'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo } from 'react'
 import DropCard from '../components/Drop/DropCard'
@@ -137,32 +136,21 @@ const DropsPage: NextPage<Props> = ({ now }) => {
             </>
           )}
 
-          <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
+          <Divider
+            my="6"
+            display={endedDrops.length !== 0 ? 'block' : 'none'}
+          />
+          {endedDrops.length !== 0 && (
             <Pagination
               limit={limit}
               limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              total={data?.ended?.totalCount || 0}
-              isLoading={loading}
               onPageChange={changePage}
               onLimitChange={changeLimit}
-              result={{
-                label: t('pagination.result.label'),
-                caption: (props) => (
-                  <Trans
-                    ns="templates"
-                    i18nKey="pagination.result.caption"
-                    values={props}
-                    components={[
-                      <Text as="span" color="brand.black" key="text" />,
-                    ]}
-                  />
-                ),
-                pages: (props) =>
-                  t('pagination.result.pages', { count: props.total }),
-              }}
+              hasNextPage={data?.ended?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.ended?.pageInfo.hasPreviousPage}
             />
-          </Box>
+          )}
         </>
       )}
     </LargeLayout>
