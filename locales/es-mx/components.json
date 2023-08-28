@@ -96,6 +96,14 @@
       "maxQuantityPerWallet": "Mint limit: {{maxQuantityPerWallet}} per wallet",
       "eligible": "Eligible",
       "notEligible": "Not eligible"
+    },
+    "form": {
+      "ended": {
+        "title": "Mint ended",
+        "minted": "Minted:",
+        "totalMinted": "{{totalMinted}} items",
+        "viewCollection": "View collection"
+      }
     }
   },
   "dropzone": {
