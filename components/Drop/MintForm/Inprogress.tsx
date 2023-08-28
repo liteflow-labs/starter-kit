@@ -14,6 +14,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import ConnectButtonWithNetworkSwitch from 'components/Button/ConnectWithNetworkSwitch'
 import useAccount from 'hooks/useAccount'
 import useBlockExplorer from 'hooks/useBlockExplorer'
+import Trans from 'next-translate/Trans'
+import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import numbro from 'numbro'
 import { FC, JSX, useMemo } from 'react'
@@ -52,6 +54,7 @@ type Props = {
 }
 
 const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
+  const { t } = useTranslation('components')
   const toast = useToast()
   const { push } = useRouter()
   const { address } = useAccount()
@@ -122,7 +125,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
             </Heading>
             <HStack alignItems="center" spacing={1}>
               <Text variant="subtitle2" color="gray.500" mr={2}>
-                Price:
+                {t('drop.form.in-progress.price')}
               </Text>
               <Image
                 src={drop.currency.image}
@@ -139,7 +142,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
             {drop.supply && (
               <HStack alignItems="center" spacing={1}>
                 <Text variant="subtitle2" color="gray.500" mr={2}>
-                  Supply:
+                  {t('drop.form.in-progress.supply')}
                 </Text>
                 <Text variant="subtitle2">
                   {numbro(drop.supply).format({
@@ -151,13 +154,16 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
             {drop.maxQuantityPerWallet && (
               <HStack alignItems="center" spacing={1}>
                 <Text variant="subtitle2" color="gray.500" mr={2}>
-                  Mint limit:
+                  {t('drop.form.in-progress.mintLimit')}
                 </Text>
                 <Text variant="subtitle2">
-                  {numbro(drop.maxQuantityPerWallet).format({
-                    thousandSeparated: true,
-                  })}{' '}
-                  per wallet
+                  {t('drop.form.in-progress.limit', {
+                    maxQuantityPerWallet: numbro(
+                      drop.maxQuantityPerWallet,
+                    ).format({
+                      thousandSeparated: true,
+                    }),
+                  })}
                 </Text>
               </HStack>
             )}
@@ -203,13 +209,15 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
                 }
               >
                 <Text as="span" isTruncated>
-                  {mintedOut ? 'Minted out' : 'Mint'}
+                  {mintedOut
+                    ? t('drop.form.in-progress.mintedOut')
+                    : t('drop.form.in-progress.mint')}
                 </Text>
               </ConnectButtonWithNetworkSwitch>
             </Flex>
             {!drop.isAllowed && (
               <Text variant="caption" color="gray.500">
-                You’re not eligible for this mint stage
+                {t('drop.form.in-progress.notEligible')}
               </Text>
             )}
           </Flex>
@@ -217,7 +225,11 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
         <Divider />
         <Flex alignItems="center" justifyContent="center" px={4} py={3}>
           <Text variant="subtitle2">
-            Ends in <Countdown date={drop.endDate} />
+            <Trans
+              ns="components"
+              i18nKey="drop.form.in-progress.endsIn"
+              components={[<Countdown date={drop.endDate} key="countdown" />]}
+            />
           </Text>
         </Flex>
       </Box>

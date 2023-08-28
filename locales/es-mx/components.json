@@ -104,6 +104,16 @@
         "totalMinted": "{{totalMinted}} items",
         "viewCollection": "View collection"
       },
+      "in-progress": {
+        "price": "Price:",
+        "supply": "Supply:",
+        "mintLimit": "Mint limit:",
+        "limit": "{{maxQuantityPerWallet}} per wallet",
+        "mintedOut": "Minted out",
+        "mint": "Mint",
+        "notEligible": "You're not eligible for this mint stage",
+        "endsIn": "Ends in <0/>"
+      },
       "upcoming": {
         "price": "Price:",
         "supply": "Supply:",
