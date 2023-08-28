@@ -74,19 +74,28 @@
   },
   "drop": {
     "timeline": {
-      "upcoming": "即将推出",
-      "in-progress": "进行中",
-      "ended": "结束"
+      "upcoming": "Upcoming",
+      "in-progress": "In progress",
+      "ended": "Ended"
     },
-    "by": "截至 {{address}}",
+    "by": "By {{address}}",
     "supply": {
-      "available_one": "{{count}} 物品",
-      "available_other": "{{count}} 项目",
-      "infinite": "开放版"
+      "available_one": "{{count}} item",
+      "available_other": "{{count}} items",
+      "infinite": "Open edition"
     },
     "progress": {
       "percentage": "{{percentage}}% minted",
       "minted": "Minted"
+    },
+    "listItem": {
+      "price": "Price: <0/>",
+      "startDate": "Starts: {{startDate}}",
+      "endDate": "Ends: {{endDate}}",
+      "supply": "Supply: {{supply}}",
+      "maxQuantityPerWallet": "Mint limit: {{maxQuantityPerWallet}} per wallet",
+      "eligible": "Eligible",
+      "notEligible": "Not eligible"
     }
   },
   "dropzone": {

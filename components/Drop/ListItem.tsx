@@ -9,6 +9,8 @@ import {
   Text,
 } from '@chakra-ui/react'
 import dayjs from 'dayjs'
+import Trans from 'next-translate/Trans'
+import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 import Price from '../../components/Price/Price'
@@ -37,14 +39,15 @@ type Props = {
 }
 
 const DropListItem: FC<Props> = ({ drop, isOpen }) => {
+  const { t } = useTranslation('components')
   const now = useNow()
   const timeline = useDropTimeline({ now, drop })
 
   const timelineText = useMemo(() => {
-    if (timeline === Timeline.UPCOMING) return 'Upcoming'
-    if (timeline === Timeline.INPROGRESS) return 'In progress'
-    return 'Ended'
-  }, [timeline])
+    if (timeline === Timeline.UPCOMING) return t('drop.timeline.upcoming')
+    if (timeline === Timeline.INPROGRESS) return t('drop.timeline.in-progress')
+    return t('drop.timeline.ended')
+  }, [t, timeline])
 
   return (
     <Accordion
@@ -89,32 +92,48 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                     {drop.name}
                   </Text>
                   <Text variant="text-sm" color="gray.500">
-                    Price:{' '}
-                    <Price amount={drop.unitPrice} currency={drop.currency} />
+                    <Trans
+                      ns="components"
+                      i18nKey="drop.listItem.price"
+                      components={[
+                        <Price
+                          amount={drop.unitPrice}
+                          currency={drop.currency}
+                          key="price"
+                        />,
+                      ]}
+                    />
                   </Text>
                   <Text variant="text-sm" color="gray.500">
-                    Starts: {formatDate(drop.startDate)}
+                    {t('drop.listItem.startDate', {
+                      startDate: formatDate(drop.startDate),
+                    })}
                   </Text>
                   {isExpanded && (
                     <>
                       <Text variant="text-sm" color="gray.500">
-                        Ends: {formatDate(drop.endDate)}
+                        {t('drop.listItem.endDate', {
+                          endDate: formatDate(drop.endDate),
+                        })}
                       </Text>
                       {drop.supply && (
                         <Text variant="text-sm" color="gray.500">
-                          Supply:{' '}
-                          {numbro(drop.supply).format({
-                            thousandSeparated: true,
+                          {t('drop.listItem.supply', {
+                            supply: numbro(drop.supply).format({
+                              thousandSeparated: true,
+                            }),
                           })}
                         </Text>
                       )}
                       {drop.maxQuantityPerWallet && (
                         <Text variant="text-sm" color="gray.500">
-                          Mint limit:{' '}
-                          {numbro(drop.maxQuantityPerWallet).format({
-                            thousandSeparated: true,
-                          })}{' '}
-                          per wallet
+                          {t('drop.listItem.maxQuantityPerWallet', {
+                            maxQuantityPerWallet: numbro(
+                              drop.maxQuantityPerWallet,
+                            ).format({
+                              thousandSeparated: true,
+                            }),
+                          })}
                         </Text>
                       )}
                     </>
@@ -131,7 +150,9 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                     borderRadius="2xl"
                     textTransform="none"
                   >
-                    {drop.isAllowed ? 'Eligible' : 'Not eligible'}
+                    {drop.isAllowed
+                      ? t('drop.listItem.eligible')
+                      : t('drop.listItem.notEligible')}
                   </Badge>
                 </Text>
                 <Text as="span" variant="caption" ml={{ base: 'auto', sm: 0 }}>
