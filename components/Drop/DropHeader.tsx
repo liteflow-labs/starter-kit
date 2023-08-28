@@ -100,7 +100,7 @@ const DropHeader: FC<Props> = ({ collection, reportEmail }) => {
               href={`/users/${collection.deployer.address}`}
               color="brand.black"
             >
-              <Text as="span" color="">
+              <Text as="span">
                 {collection.deployer.name ||
                   formatAddress(collection.deployer.address, 10)}
               </Text>
