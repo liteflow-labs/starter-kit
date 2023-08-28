@@ -8,6 +8,8 @@ import {
   SimpleGrid,
   Text,
 } from '@chakra-ui/react'
+import Trans from 'next-translate/Trans'
+import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, JSX } from 'react'
 import Countdown from '../../Countdown/Countdown'
@@ -30,6 +32,7 @@ type Props = {
 }
 
 const MintFormUpcoming: FC<Props> = ({ drop }): JSX.Element => {
+  const { t } = useTranslation('components')
   return (
     <Box
       borderWidth="1px"
@@ -51,7 +54,7 @@ const MintFormUpcoming: FC<Props> = ({ drop }): JSX.Element => {
           </Heading>
           <HStack alignItems="center" spacing={1}>
             <Text variant="subtitle2" color="gray.500" mr={2}>
-              Price:
+              {t('drop.form.upcoming.price')}
             </Text>
             <Image
               src={drop.currency.image}
@@ -66,7 +69,7 @@ const MintFormUpcoming: FC<Props> = ({ drop }): JSX.Element => {
           {drop.supply && (
             <HStack alignItems="center" spacing={1}>
               <Text variant="subtitle2" color="gray.500" mr={2}>
-                Supply:
+                {t('drop.form.upcoming.supply')}
               </Text>
               <Text variant="subtitle2">
                 {numbro(drop.supply).format({
@@ -78,23 +81,28 @@ const MintFormUpcoming: FC<Props> = ({ drop }): JSX.Element => {
           {drop.maxQuantityPerWallet && (
             <HStack alignItems="center" spacing={1}>
               <Text variant="subtitle2" color="gray.500" mr={2}>
-                Mint limit:
+                {t('drop.form.upcoming.mintLimit')}
               </Text>
               <Text variant="subtitle2">
-                {numbro(drop.maxQuantityPerWallet).format({
-                  thousandSeparated: true,
-                })}{' '}
-                per wallet
+                {t('drop.form.upcoming.limit', {
+                  limit: numbro(drop.maxQuantityPerWallet).format({
+                    thousandSeparated: true,
+                  }),
+                })}
               </Text>
             </HStack>
           )}
         </Flex>
-        <Button isDisabled>Minting soon</Button>
+        <Button isDisabled>{t('drop.form.upcoming.disabled')}</Button>
       </SimpleGrid>
       <Divider />
       <Flex alignItems="center" justifyContent="center" px={4} py={3}>
         <Text variant="subtitle2">
-          Starts in <Countdown date={drop.startDate} />
+          <Trans
+            ns="components"
+            i18nKey="drop.form.upcoming.startsIn"
+            components={[<Countdown date={drop.startDate} key="countdown" />]}
+          />
         </Text>
       </Flex>
     </Box>

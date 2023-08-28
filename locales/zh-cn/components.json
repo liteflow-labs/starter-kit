@@ -103,6 +103,14 @@
         "minted": "Minted:",
         "totalMinted": "{{totalMinted}} items",
         "viewCollection": "View collection"
+      },
+      "upcoming": {
+        "price": "Price:",
+        "supply": "Supply:",
+        "mintLimit": "Mint limit:",
+        "limit": "{{maxQuantityPerWallet}} per wallet",
+        "disabled": "Minting soon",
+        "startsIn": "Starts in <0/>"
       }
     }
   },
