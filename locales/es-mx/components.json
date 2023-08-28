@@ -83,6 +83,10 @@
       "available_one": "{{count}} artículo",
       "available_other": "{{count}} elementos",
       "infinite": "Edición abierta"
+    },
+    "progress": {
+      "percentage": "{{percentage}}% minted",
+      "minted": "Minted"
     }
   },
   "dropzone": {

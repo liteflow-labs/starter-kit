@@ -1,5 +1,6 @@
 import { Flex, Progress, SimpleGrid, Text } from '@chakra-ui/react'
 import BigNumber from 'bignumber.js'
+import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 
@@ -11,6 +12,8 @@ type Props = {
 }
 
 const DropProgress: FC<Props> = ({ drops }) => {
+  const { t } = useTranslation('components')
+
   const totalMinted = useMemo(
     () =>
       drops.reduce((acc, drop) => {
@@ -41,11 +44,13 @@ const DropProgress: FC<Props> = ({ drops }) => {
       <SimpleGrid columns={2} spacing={3}>
         <Text variant="subtitle1">
           {mintPercentage
-            ? `${numbro(mintPercentage).format({
-                trimMantissa: true,
-                mantissa: 2,
-              })}% minted`
-            : 'Minted'}
+            ? t('drop.progress.percentage', {
+                percentage: numbro(mintPercentage).format({
+                  trimMantissa: true,
+                  mantissa: 2,
+                }),
+              })
+            : t('drop.progress.minted')}
         </Text>
         <Text variant="subtitle1" textAlign="end">{`${numbro(
           totalMinted,
