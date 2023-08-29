@@ -11,6 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useMintDrop } from '@liteflow/react'
 import ConnectButtonWithNetworkSwitch from 'components/Button/ConnectWithNetworkSwitch'
 import useAccount from 'hooks/useAccount'
 import useBlockExplorer from 'hooks/useBlockExplorer'
@@ -20,10 +21,11 @@ import { useRouter } from 'next/router'
 import numbro from 'numbro'
 import { FC, JSX, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import useSigner from '../../../hooks/useSigner'
 import { formatError } from '../../../utils'
 import Countdown from '../../Countdown/Countdown'
 import Image from '../../Image/Image'
-import MintDropModal, { MintDropStep } from '../../Modal/MintDrop'
+import MintDropModal from '../../Modal/MintDrop'
 import Price from '../../Price/Price'
 
 type FormData = {
@@ -68,6 +70,9 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
     mode: 'all',
   })
 
+  const signer = useSigner()
+  const [mintDrop, { activeStep, transactionHash }] = useMintDrop(signer)
+
   const quantity = watch('quantity')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const blockExplorer = useBlockExplorer(collection.chainId)
@@ -80,14 +85,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       onOpen()
-      // TODO: to be removed and changed after adding useMintDrop hook to the SDK
-      console.log(data)
-      // await mintDrop({
-      //   dropId: drop.id,
-      //   chainId: collection.chainId,
-      //   collectionAddress: collection.address,
-      //   quantity: data.quantity.toString(),
-      // })
+      await mintDrop({ dropId: drop.id, quantity: data.quantity })
       await push(`/users/${address}`)
       toast({
         title: 'NFT was successfully minted',
@@ -233,13 +231,12 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
           </Text>
         </Flex>
       </Box>
-      {/* TODO: to be changed after adding useMintDrop hook to the SDK  */}
       <MintDropModal
         isOpen={isOpen}
         onClose={onClose}
-        step={MintDropStep.INITIAL}
+        step={activeStep}
         blockExplorer={blockExplorer}
-        transactionHash={''}
+        transactionHash={transactionHash}
       />
     </>
   )
