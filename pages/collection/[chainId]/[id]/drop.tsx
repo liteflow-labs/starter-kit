@@ -73,7 +73,7 @@ const DropDetail: NextPage = () => {
           reportEmail={environment.REPORT_EMAIL}
         />
       )}
-      {!drops ? (
+      {!dropsData ? (
         <DropDetailSkeleton />
       ) : (
         <>
