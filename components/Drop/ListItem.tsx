@@ -15,7 +15,6 @@ import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 import Price from '../../components/Price/Price'
 import useDropTimeline, { Timeline } from '../../hooks/useDropTimeline'
-import useNow from '../../hooks/useNow'
 import { formatDate } from '../../utils'
 
 type Props = {
@@ -40,8 +39,7 @@ type Props = {
 
 const DropListItem: FC<Props> = ({ drop, isOpen }) => {
   const { t } = useTranslation('components')
-  const now = useNow()
-  const timeline = useDropTimeline({ now, drop })
+  const timeline = useDropTimeline({ drop })
 
   const timelineText = useMemo(() => {
     if (timeline === Timeline.UPCOMING) return t('drop.timeline.upcoming')
