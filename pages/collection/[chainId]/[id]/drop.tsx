@@ -6,6 +6,8 @@ import type { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useMemo } from 'react'
+import DropDetailSkeleton from '../../../../components/Drop/DropDetailSkeleton'
+import DropHeaderSkeleton from '../../../../components/Drop/DropHeaderSkeleton'
 import DropMintSchedule from '../../../../components/Drop/DropMintSchedule'
 import DropProgress from '../../../../components/Drop/DropProgress'
 import Head from '../../../../components/Head'
@@ -63,19 +65,29 @@ const DropDetail: NextPage = () => {
   return (
     <LargeLayout>
       <Head title={collectionDropDetail?.name || t('drops.title')} />
-      <DropHeader
-        collection={collectionDropDetail}
-        reportEmail={environment.REPORT_EMAIL}
-      />
-      <DropProgress drops={drops} />
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} width="full">
-        <DropMintForm
-          order={{ base: 1, md: 2 }}
-          collection={{ address: collectionAddress, chainId }}
-          drops={drops}
+      {!collectionDropDetail ? (
+        <DropHeaderSkeleton />
+      ) : (
+        <DropHeader
+          collection={collectionDropDetail}
+          reportEmail={environment.REPORT_EMAIL}
         />
-        <DropMintSchedule order={{ base: 2, md: 1 }} drops={drops} />
-      </SimpleGrid>
+      )}
+      {!drops ? (
+        <DropDetailSkeleton />
+      ) : (
+        <>
+          <DropProgress drops={drops} />
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} width="full">
+            <DropMintForm
+              order={{ base: 1, md: 2 }}
+              collection={{ address: collectionAddress, chainId }}
+              drops={drops}
+            />
+            <DropMintSchedule order={{ base: 2, md: 1 }} drops={drops} />
+          </SimpleGrid>
+        </>
+      )}
     </LargeLayout>
   )
 }

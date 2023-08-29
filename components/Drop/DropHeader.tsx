@@ -199,7 +199,7 @@ const DropHeader: FC<Props> = ({ collection, reportEmail }) => {
           </Truncate>
         </Box>
       )}
-      <Flex flexDirection="column" mt={4}>
+      <Flex flexDirection="column" mt={4} py={2}>
         <Text variant="button1" color="brand.black">
           {chain?.name || '-'}
         </Text>
