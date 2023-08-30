@@ -243,7 +243,7 @@ const OfferFormBid: FC<Props> = (props) => {
           placeholder={t('offer.form.bid.currency.placeholder')}
           choices={currencies.map((x) => ({
             value: x.id,
-            label: x.symbol || '',
+            label: x.symbol,
             image: x.image,
             caption: x.name,
           }))}
