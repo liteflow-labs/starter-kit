@@ -238,7 +238,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       )}
       <Grid gap="6" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
         {showFilters && (
-          <GridItem as="aside">
+          <GridItem as="aside" overflow="hidden">
             <FilterAsset
               noChain
               currentCollection={{ chainId, address: collectionAddress }}

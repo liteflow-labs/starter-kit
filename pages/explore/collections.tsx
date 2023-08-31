@@ -173,7 +173,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
           )}
           <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
             {hasFilter && showFilters && !isSmall && (
-              <GridItem as="aside">
+              <GridItem as="aside" overflow="hidden">
                 <FilterCollection
                   onFilterChange={updateFilter}
                   filter={filter}
