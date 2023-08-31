@@ -104,14 +104,24 @@ const OfferFormBid: FC<Props> = (props) => {
     onClose: createOfferOnClose,
   } = useDisclosure()
 
-  const defaultAuctionExpirationValue = formatDateDatetime(
-    dayjs().add(auctionValidity, 'second').toISOString(),
+  const defaultAuctionExpirationValue = useMemo(
+    () =>
+      formatDateDatetime(dayjs().add(auctionValidity, 'second').toISOString()),
+    [auctionValidity],
   )
-  const defaultExpirationValue = formatDateDatetime(
-    dayjs().add(offerValidity, 'second').toISOString(),
+  const defaultExpirationValue = useMemo(
+    () =>
+      formatDateDatetime(dayjs().add(offerValidity, 'second').toISOString()),
+    [offerValidity],
   )
-  const minDate = formatDateDatetime(dayjs().add(1, 'day').toISOString())
-  const maxDate = formatDateDatetime(dayjs().add(1, 'year').toISOString())
+  const minDate = useMemo(
+    () => formatDateDatetime(dayjs().add(1, 'day').toISOString()),
+    [],
+  )
+  const maxDate = useMemo(
+    () => formatDateDatetime(dayjs().add(1, 'year').toISOString()),
+    [],
+  )
   const {
     register,
     handleSubmit,
