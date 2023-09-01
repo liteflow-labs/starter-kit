@@ -139,7 +139,7 @@ const SalesAuctionForm: FC<Props> = ({
             placeholder={t('sales.auction.form.currency.placeholder')}
             choices={currencies.map((x) => ({
               value: x.id,
-              label: x.symbol || '',
+              label: x.symbol,
               image: x.image,
               caption: x.name,
             }))}
