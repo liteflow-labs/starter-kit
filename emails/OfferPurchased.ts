@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
+import invariant from 'ts-invariant'
 
 export default function OfferPurchased({
   unitPrice,
@@ -15,6 +15,7 @@ export default function OfferPurchased({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (type !== 'SALE') return null
   if (!seller?.email) return null
   return {
@@ -35,7 +36,7 @@ export default function OfferPurchased({
     No additional actions are required on your side. The NFT ownership has been transferred and your wallet has been credited with the funds.<br/>
     <br/>
     <a href="${
-      environment.BASE_URL
+      process.env.NEXT_PUBLIC_BASE_URL
     }/account/wallet">Check my wallet balance</a>`,
   }
 }

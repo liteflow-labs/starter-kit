@@ -37,7 +37,6 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
 import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
@@ -50,6 +49,7 @@ import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../../hooks/useAssetFilterState'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
@@ -62,6 +62,7 @@ type Props = {
 }
 
 const CollectionPage: FC<Props> = ({ now }) => {
+  const { REPORT_EMAIL, PAGINATION_LIMIT } = useEnvironment()
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
@@ -173,7 +174,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       ) : (
         <CollectionHeader
           collection={collectionDetails}
-          reportEmail={environment.REPORT_EMAIL}
+          reportEmail={REPORT_EMAIL}
         />
       )}
 
@@ -250,7 +251,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
           {assets === undefined ? (
             <SkeletonGrid
-              items={environment.PAGINATION_LIMIT}
+              items={PAGINATION_LIMIT}
               compact
               columns={
                 showFilters
@@ -299,7 +300,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           {assets?.length !== 0 && (
             <Pagination
               limit={limit}
-              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
               onPageChange={changePage}
               onLimitChange={changeLimit}

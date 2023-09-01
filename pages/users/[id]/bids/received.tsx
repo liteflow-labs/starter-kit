@@ -31,12 +31,12 @@ import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
 import { convertBidFull } from '../../../../convert'
-import environment from '../../../../environment'
 import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsReceivedQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
+import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
@@ -50,6 +50,7 @@ type Props = {
 }
 
 const BidReceivedPage: NextPage<Props> = ({ now }) => {
+  const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -103,7 +104,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
         currentAccount={address}
         address={userAddress}
         currentTab="bids"
-        loginUrlForReferral={environment.BASE_URL + '/login'}
+        loginUrlForReferral={BASE_URL + '/login'}
       >
         <Stack spacing={6}>
           <Flex
@@ -276,7 +277,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
           {bids?.length !== 0 && (
             <Pagination
               limit={limit}
-              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
               onPageChange={changePage}
               onLimitChange={changeLimit}

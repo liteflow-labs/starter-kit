@@ -1,3 +1,4 @@
+import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
   bsc,
@@ -190,4 +191,10 @@ const environment = {
   UNLOCKABLE_CONTENT: false,
 }
 
-export default environment
+export type Environment = typeof environment
+
+export const EnvironmentContext = createContext<Environment>({} as Environment)
+
+const getEnvironment = async (): Promise<Environment> => environment
+
+export default getEnvironment

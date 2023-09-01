@@ -2,7 +2,7 @@ import { Divider, Flex, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
-import { chains } from '../../connectors'
+import useEnvironment from '../../hooks/useEnvironment'
 
 type Props = {
   chainId: number
@@ -17,10 +17,11 @@ type Props = {
 }
 
 const CollectionMetrics: FC<Props> = ({ chainId, metrics }) => {
+  const { CHAINS } = useEnvironment()
   const { t } = useTranslation('templates')
 
   const blocks = useMemo(() => {
-    const chain = chains.find((x) => x.id === chainId)
+    const chain = CHAINS.find((x) => x.id === chainId)
     return [
       {
         name: t('collection.header.data-labels.total-volume'),
@@ -70,7 +71,7 @@ const CollectionMetrics: FC<Props> = ({ chainId, metrics }) => {
         title: chain?.name || '-',
       },
     ]
-  }, [chainId, metrics, t])
+  }, [CHAINS, chainId, metrics, t])
 
   return (
     <Flex alignItems="center" rowGap={2} columnGap={8} mt={4} flexWrap="wrap">
