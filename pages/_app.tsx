@@ -43,7 +43,7 @@ require('dayjs/locale/es-mx')
 
 NProgress.configure({ showSpinner: false })
 
-function Layout({ children }: PropsWithChildren<{ environment: Environment }>) {
+function Layout({ children }: PropsWithChildren) {
   const { META_COMPANY_NAME } = useEnvironment()
   const router = useRouter()
   const { address } = useAccount()
@@ -248,7 +248,7 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
                   endpoint={process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL}
                 >
                   <AccountProvider onError={setErrorCode}>
-                    <Layout environment={environment}>
+                    <Layout>
                       {errorCode ? (
                         <Error statusCode={errorCode} />
                       ) : (
