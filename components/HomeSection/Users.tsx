@@ -2,16 +2,16 @@ import UserCard from 'components/User/UserCard'
 import { convertUserWithCover } from 'convert'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useContext } from 'react'
-import { EnvironmentContext } from '../../environment'
+import { FC } from 'react'
 import { FetchUsersQuery, useFetchUsersQuery } from '../../graphql'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import HomeGridSection from './Grid'
 
 type Props = {}
 
 const UsersHomeSection: FC<Props> = () => {
-  const { HOME_USERS, PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { HOME_USERS, PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('templates')
   const usersQuery = useFetchUsersQuery({
     variables: {

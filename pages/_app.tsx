@@ -17,7 +17,6 @@ import React, {
   Fragment,
   JSX,
   PropsWithChildren,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -35,6 +34,7 @@ import Navbar from '../components/Navbar/Navbar'
 import connectors from '../connectors'
 import getEnvironment, { Environment, EnvironmentContext } from '../environment'
 import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
+import useEnvironment from '../hooks/useEnvironment'
 import { theme } from '../styles/theme'
 import Error from './_error'
 require('dayjs/locale/ja')
@@ -44,7 +44,7 @@ require('dayjs/locale/es-mx')
 NProgress.configure({ showSpinner: false })
 
 function Layout({ children }: PropsWithChildren<{ environment: Environment }>) {
-  const { META_COMPANY_NAME } = useContext(EnvironmentContext)
+  const { META_COMPANY_NAME } = useEnvironment()
   const router = useRouter()
   const { address } = useAccount()
   const userProfileLink = useMemo(
@@ -123,7 +123,7 @@ function AccountProvider({
   children,
   onError,
 }: PropsWithChildren<{ onError: (code: number) => void }>) {
-  const { LITEFLOW_API_KEY, BASE_URL } = useContext(EnvironmentContext)
+  const { LITEFLOW_API_KEY, BASE_URL } = useEnvironment()
   const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
 

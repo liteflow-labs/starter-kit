@@ -13,7 +13,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
 import SkeletonForm from '../../../components/Skeleton/Form'
@@ -22,10 +22,10 @@ import type { Props as NFTCardProps } from '../../../components/Token/Card'
 import TokenCard from '../../../components/Token/Card'
 import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
-import { EnvironmentContext } from '../../../environment'
 import { useFetchAccountAndCollectionQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useLocalFileURL from '../../../hooks/useLocalFileURL'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -43,8 +43,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
 )
 
 const CreatePage: NextPage = ({}) => {
-  const { UNLOCKABLE_CONTENT, LAZYMINT, MAX_ROYALTIES } =
-    useContext(EnvironmentContext)
+  const { UNLOCKABLE_CONTENT, LAZYMINT, MAX_ROYALTIES } = useEnvironment()
   const signer = useSigner()
   const collectionAddress = useRequiredQueryParamSingle('collectionAddress')
   const chainId = useRequiredQueryParamSingle<number>('chainId', {

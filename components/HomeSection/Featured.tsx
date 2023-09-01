@@ -7,7 +7,7 @@ import {
   Spacer,
   Stack,
 } from '@chakra-ui/react'
-import { FC, useCallback, useContext, useMemo } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 import {
   convertAssetWithSupplies,
   convertAuctionFull,
@@ -16,12 +16,12 @@ import {
   convertSaleFull,
   convertUser,
 } from '../../convert'
-import { EnvironmentContext } from '../../environment'
 import {
   useFetchCurrenciesForBidsQuery,
   useFetchFeaturedAssetsQuery,
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import useSigner from '../../hooks/useSigner'
@@ -33,7 +33,7 @@ type Props = {
 }
 
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
-  const { FEATURED_TOKEN } = useContext(EnvironmentContext)
+  const { FEATURED_TOKEN } = useEnvironment()
   const signer = useSigner()
   const { address } = useAccount()
   const currenciesQuery = useFetchCurrenciesForBidsQuery({

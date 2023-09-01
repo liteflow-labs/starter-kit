@@ -15,10 +15,10 @@ import {
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { EnvironmentContext } from '../../environment'
 import { Filter, OfferFilter } from '../../hooks/useAssetFilterFromQuery'
+import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
 import FilterByCollection from './FilterBy/Collection'
 import FilterByPrice from './FilterBy/Price'
@@ -54,7 +54,7 @@ const FilterAsset: NextPage<Props> = ({
   noChain,
   onFilterChange,
 }) => {
-  const { CHAINS } = useContext(EnvironmentContext)
+  const { CHAINS } = useEnvironment()
   const { t } = useTranslation('components')
   const isSmall = useBreakpointValue(
     { base: true, sm: false },

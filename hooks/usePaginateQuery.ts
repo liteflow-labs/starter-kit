@@ -1,6 +1,5 @@
-import { useContext } from 'react'
 import invariant from 'ts-invariant'
-import { EnvironmentContext } from '../environment'
+import useEnvironment from './useEnvironment'
 import useQueryParamSingle from './useQueryParamSingle'
 
 type PaginateQuery = {
@@ -14,7 +13,7 @@ export default function usePaginateQuery({
 }: {
   defaultLimit?: number
 } = {}): PaginateQuery {
-  const { PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { PAGINATION_LIMIT } = useEnvironment()
   const page = useQueryParamSingle('page', {
     defaultValue: 1,
     parse: (value) => (value ? parseInt(value, 10) : 1),

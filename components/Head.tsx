@@ -1,6 +1,6 @@
 import NextHead from 'next/head'
-import { FC, PropsWithChildren, useContext } from 'react'
-import { EnvironmentContext } from '../environment'
+import { FC, PropsWithChildren } from 'react'
+import useEnvironment from '../hooks/useEnvironment'
 
 type Props = {
   title: string
@@ -14,7 +14,7 @@ const Head: FC<PropsWithChildren<Props>> = ({
   image,
   children,
 }) => {
-  const { META_TITLE, BASE_URL } = useContext(EnvironmentContext)
+  const { META_TITLE, BASE_URL } = useEnvironment()
   return (
     <NextHead>
       <title>

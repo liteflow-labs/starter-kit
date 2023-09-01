@@ -1,8 +1,8 @@
 import { Divider, Flex, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
-import { FC, useContext, useMemo } from 'react'
-import { EnvironmentContext } from '../../environment'
+import { FC, useMemo } from 'react'
+import useEnvironment from '../../hooks/useEnvironment'
 
 type Props = {
   chainId: number
@@ -17,7 +17,7 @@ type Props = {
 }
 
 const CollectionMetrics: FC<Props> = ({ chainId, metrics }) => {
-  const { CHAINS } = useContext(EnvironmentContext)
+  const { CHAINS } = useEnvironment()
   const { t } = useTranslation('templates')
 
   const blocks = useMemo(() => {
