@@ -1,7 +1,7 @@
 import { Box, Divider, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
-import { EnvironmentContext } from 'environment'
 import useTranslation from 'next-translate/useTranslation'
-import { ReactElement, useContext } from 'react'
+import { ReactElement } from 'react'
+import useEnvironment from '../../hooks/useEnvironment'
 import Empty from '../Empty/Empty'
 import type { IProp as PaginationProps } from '../Pagination/Pagination'
 import Pagination from '../Pagination/Pagination'
@@ -37,7 +37,7 @@ const TokenGrid = <Order extends string>({
   orderBy,
   pagination,
 }: IProps<Order>): ReactElement => {
-  const { PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('components')
   return (
     <Stack spacing={6}>

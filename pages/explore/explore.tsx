@@ -15,7 +15,7 @@ import {
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useContext, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import FilterAsset, { NoFilter } from '../../components/Filter/FilterAsset'
@@ -32,7 +32,6 @@ import {
   convertSale,
   convertUser,
 } from '../../convert'
-import { EnvironmentContext } from '../../environment'
 import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
@@ -40,6 +39,7 @@ import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../hooks/useAssetFilterState'
+import useEnvironment from '../../hooks/useEnvironment'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -50,7 +50,7 @@ type Props = {
 }
 
 const ExplorePage: NextPage<Props> = ({ now }) => {
-  const { PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { PAGINATION_LIMIT } = useEnvironment()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue(
     { base: true, md: false },
@@ -167,7 +167,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
           )}
           <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
             {showFilters && !isSmall && (
-              <GridItem as="aside">
+              <GridItem as="aside" overflow="hidden">
                 <FilterAsset onFilterChange={updateFilter} filter={filter} />
               </GridItem>
             )}

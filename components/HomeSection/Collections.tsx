@@ -1,22 +1,22 @@
 import CollectionCard from 'components/Collection/CollectionCard'
 import { convertCollection } from 'convert'
-import { EnvironmentContext } from 'environment'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useContext } from 'react'
+import { FC } from 'react'
 import invariant from 'ts-invariant'
 import {
   CollectionFilter,
   FetchCollectionsQuery,
   useFetchCollectionsQuery,
 } from '../../graphql'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import HomeGridSection from './Grid'
 
 type Props = {}
 
 const CollectionsHomeSection: FC<Props> = () => {
-  const { HOME_COLLECTIONS, PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { HOME_COLLECTIONS, PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('templates')
   const collectionsQuery = useFetchCollectionsQuery({
     variables: {

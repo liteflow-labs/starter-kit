@@ -18,7 +18,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
@@ -35,11 +35,11 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import { EnvironmentContext } from '../../../environment'
 import { useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -70,7 +70,7 @@ type SaleOption = {
 
 const OfferPage: NextPage<Props> = ({ now }) => {
   const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
-    useContext(EnvironmentContext)
+    useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()

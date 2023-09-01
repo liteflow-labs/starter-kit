@@ -16,9 +16,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { HiClock } from '@react-icons/all-files/hi/HiClock'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import Countdown from 'components/Countdown/Countdown'
-import { EnvironmentContext } from 'environment'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useContext, useMemo, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
+import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
 import SaleAuctionCardFooter from '../Sales/Auction/CardFooter'
@@ -94,7 +94,7 @@ const TokenCard: FC<Props> = ({
   displayCreator = false,
   hasMultiCurrency,
 }) => {
-  const { CHAINS, REPORT_EMAIL } = useContext(EnvironmentContext)
+  const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const { t } = useTranslation('templates')
   const href = asset.id ? `/tokens/${asset.id}` : '#'
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])

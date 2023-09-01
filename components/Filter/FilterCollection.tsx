@@ -13,10 +13,10 @@ import {
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useContext, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { EnvironmentContext } from '../../environment'
 import { Filter } from '../../hooks/useCollectionFilterFromQuery'
+import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
 
 type Props = {
@@ -30,7 +30,7 @@ export const NoFilter: Filter = {
 }
 
 const FilterCollection: NextPage<Props> = ({ filter, onFilterChange }) => {
-  const { CHAINS } = useContext(EnvironmentContext)
+  const { CHAINS } = useEnvironment()
   const { t } = useTranslation('components')
 
   const { handleSubmit, reset, watch } = useForm<Filter>({

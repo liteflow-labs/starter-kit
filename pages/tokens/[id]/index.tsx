@@ -32,7 +32,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
@@ -52,12 +52,11 @@ import {
   convertTraits,
   convertUser,
 } from '../../../convert'
-import { EnvironmentContext } from '../../../environment'
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
-import useNow from '../../../hooks/useNow'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
@@ -75,7 +74,7 @@ enum AssetTabs {
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
-  const { CHAINS, REPORT_EMAIL } = useContext(EnvironmentContext)
+  const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
@@ -139,18 +138,17 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [blockExplorer, collectionAddress, tokenId],
   )
 
-  const now = useNow()
   const auction = useMemo(() => {
     const first = asset?.auctions.nodes[0]
     if (!first) return
     const auction = convertAuctionFull(first)
     if (!auction) return
     // check if auction is expired
-    if (new Date(auction.expireAt) <= now) return
+    if (new Date(auction.expireAt) <= new Date()) return
     // check if auction has a winning offer
     if (!!auction.winningOffer?.id) return
     return auction
-  }, [asset, now])
+  }, [asset])
 
   const directSales = useMemo(
     () => asset?.sales.nodes.map(convertSaleFull) || [],

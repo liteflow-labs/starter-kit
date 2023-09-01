@@ -8,7 +8,7 @@ import {
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import Head from '../../components/Head'
@@ -18,12 +18,12 @@ import SkeletonGrid from '../../components/Skeleton/Grid'
 import SkeletonUserCard from '../../components/Skeleton/UserCard'
 import UserCard from '../../components/User/UserCard'
 import { convertUserWithCover } from '../../convert'
-import { EnvironmentContext } from '../../environment'
 import {
   AccountFilter,
   AccountsOrderBy,
   useFetchExploreUsersQuery,
 } from '../../graphql'
+import useEnvironment from '../../hooks/useEnvironment'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -41,7 +41,7 @@ const searchFilter = (search: string): AccountFilter =>
   } as AccountFilter)
 
 const UsersPage: NextPage<Props> = () => {
-  const { PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { PAGINATION_LIMIT } = useEnvironment()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue(
     { base: true, md: false },

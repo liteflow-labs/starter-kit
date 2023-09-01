@@ -1,4 +1,5 @@
 import { Events } from '@nft/webhook'
+import invariant from 'ts-invariant'
 
 export default function AuctionExpired({
   asset,
@@ -8,6 +9,7 @@ export default function AuctionExpired({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (!creator?.email) return null
   return {
     to: creator.email,

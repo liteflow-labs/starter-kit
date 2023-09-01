@@ -15,7 +15,7 @@ import {
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { FC, useCallback, useContext, useMemo } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
 import CollectionHeaderSkeleton from '../../../components/Collection/CollectionHeaderSkeleton'
 import CollectionMetrics from '../../../components/Collection/CollectionMetrics'
@@ -37,7 +37,6 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import { EnvironmentContext } from '../../../environment'
 import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
@@ -50,6 +49,7 @@ import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../../hooks/useAssetFilterState'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
@@ -62,7 +62,7 @@ type Props = {
 }
 
 const CollectionPage: FC<Props> = ({ now }) => {
-  const { REPORT_EMAIL, PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { REPORT_EMAIL, PAGINATION_LIMIT } = useEnvironment()
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
@@ -239,7 +239,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       )}
       <Grid gap="6" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
         {showFilters && (
-          <GridItem as="aside">
+          <GridItem as="aside" overflow="hidden">
             <FilterAsset
               noChain
               currentCollection={{ chainId, address: collectionAddress }}

@@ -1,6 +1,6 @@
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Chain } from 'wagmi'
-import { EnvironmentContext } from '../environment'
+import useEnvironment from './useEnvironment'
 
 export type BlockExplorer = {
   name: string
@@ -30,6 +30,6 @@ export function blockExplorer(
 export default function useBlockExplorer(
   chainId: number | undefined,
 ): BlockExplorer {
-  const { CHAINS } = useContext(EnvironmentContext)
+  const { CHAINS } = useEnvironment()
   return useMemo(() => blockExplorer(CHAINS, chainId), [CHAINS, chainId])
 }

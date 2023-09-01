@@ -21,7 +21,7 @@ import { convertCollection } from 'convert'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../components/Empty/Empty'
 import FilterCollection, {
   NoFilter,
@@ -31,7 +31,6 @@ import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
 import SkeletonCollectionCard from '../../components/Skeleton/CollectionCard'
 import SkeletonGrid from '../../components/Skeleton/Grid'
-import { EnvironmentContext } from '../../environment'
 import {
   CollectionsOrderBy,
   useFetchExploreCollectionsQuery,
@@ -41,6 +40,7 @@ import useCollectionFilterFromQuery, {
   convertFilterToCollectionFilter,
 } from '../../hooks/useCollectionFilterFromQuery'
 import useCollectionFilterState from '../../hooks/useCollectionFilterState'
+import useEnvironment from '../../hooks/useEnvironment'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -49,7 +49,7 @@ import { formatError, removeEmptyFromObject } from '../../utils'
 type Props = {}
 
 const CollectionsPage: NextPage<Props> = ({}) => {
-  const { CHAINS, PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { CHAINS, PAGINATION_LIMIT } = useEnvironment()
   const { pathname, push, query, replace } = useRouter()
   const isSmall = useBreakpointValue(
     { base: true, md: false },
@@ -173,7 +173,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
           )}
           <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
             {hasFilter && showFilters && !isSmall && (
-              <GridItem as="aside">
+              <GridItem as="aside" overflow="hidden">
                 <FilterCollection
                   onFilterChange={updateFilter}
                   filter={filter}
