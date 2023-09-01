@@ -63,7 +63,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       }
       return randomTokens
     }
-    return (defaultAssetData?.assets?.nodes || []).map((x) => x.id)
+    return defaultAssetData?.assets?.nodes.map((x) => x.id)
   }, [HOME_TOKENS, PAGINATION_LIMIT, defaultAssetData, date])
 
   const assetsQuery = useFetchAssetsQuery({
