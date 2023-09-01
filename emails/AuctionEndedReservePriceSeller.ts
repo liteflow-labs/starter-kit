@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
+import invariant from 'ts-invariant'
 import { formatDate } from '../utils'
 
 export default function AuctionEndedReservePriceSeller({
@@ -15,6 +16,7 @@ export default function AuctionEndedReservePriceSeller({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (!bestBid) return null
   const bidAmount = BigNumber.from(bestBid.unitPrice).mul(bestBid.quantity)
   if (bidAmount.gte(reserveAmount)) return null
