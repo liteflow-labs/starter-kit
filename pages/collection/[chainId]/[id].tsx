@@ -167,7 +167,11 @@ const CollectionPage: FC<Props> = ({ now }) => {
   if (collectionData?.collection === null) return <Error statusCode={404} />
   return (
     <LargeLayout>
-      <Head title="Explore collection" />
+      <Head
+        title={collectionData?.collection.name || ''}
+        description={collectionData?.collection.description || undefined}
+        image={collectionData?.collection.image || undefined}
+      />
 
       {!collectionDetails ? (
         <CollectionHeaderSkeleton />

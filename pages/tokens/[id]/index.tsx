@@ -199,7 +199,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   return (
     <LargeLayout>
       <Head
-        title={asset?.name || ''}
+        title={asset ? `${asset.name} - ${asset.collection.name}` : ''}
         description={asset?.description}
         image={asset?.image}
       />
