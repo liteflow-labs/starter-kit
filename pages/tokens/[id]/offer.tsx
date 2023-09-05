@@ -206,7 +206,9 @@ const OfferPage: NextPage<Props> = ({ now }) => {
         title={asset && t('offers.form.meta.title', asset)}
         description={asset && t('offers.form.meta.description', asset)}
         image={asset?.image}
-      />
+      >
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
 
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" my={12}>

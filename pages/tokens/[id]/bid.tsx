@@ -107,7 +107,10 @@ const BidPage: NextPage<Props> = ({ now }) => {
           })
         }
         image={asset?.image}
-      />
+      >
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
+
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" my={12}>
         {t('offers.bid.title')}
