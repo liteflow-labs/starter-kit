@@ -69,7 +69,7 @@ type SaleOption = {
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
-  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS, META_TITLE } =
+  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
     useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
