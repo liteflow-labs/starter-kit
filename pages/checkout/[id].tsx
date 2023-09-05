@@ -32,6 +32,7 @@ import {
 import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
+import useEnvironment from '../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
@@ -41,6 +42,7 @@ type Props = {
 }
 
 const CheckoutPage: NextPage<Props> = ({ now }) => {
+  const { META_TITLE } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
@@ -91,7 +93,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   return (
     <SmallLayout>
       <Head
-        title={asset ? t('offers.checkout.meta.title', asset) : ''}
+        title={asset ? t('offers.checkout.meta.title', asset) : META_TITLE}
         description={
           asset
             ? t('offers.checkout.meta.description', {

@@ -46,7 +46,7 @@ type Props = {
 }
 
 const BidPage: NextPage<Props> = ({ now }) => {
-  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
+  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS, META_TITLE } =
     useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -98,14 +98,14 @@ const BidPage: NextPage<Props> = ({ now }) => {
   return (
     <SmallLayout>
       <Head
-        title={asset ? t('offers.bid.meta.title', asset) : ''}
+        title={asset ? t('offers.bid.meta.title', asset) : META_TITLE}
         description={
           asset
             ? t('offers.bid.meta.description', {
                 name: asset.name,
                 creator: asset.creator.name || asset.creator.address,
               })
-            : ''
+            : undefined
         }
         image={asset?.image}
       />

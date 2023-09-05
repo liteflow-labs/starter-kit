@@ -69,7 +69,7 @@ type SaleOption = {
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
-  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
+  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS, META_TITLE } =
     useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -203,8 +203,10 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   return (
     <SmallLayout>
       <Head
-        title={asset ? t('offers.form.meta.title', asset) : ''}
-        description={asset ? t('offers.form.meta.description', asset) : ''}
+        title={asset ? t('offers.form.meta.title', asset) : META_TITLE}
+        description={
+          asset ? t('offers.form.meta.description', asset) : undefined
+        }
         image={asset?.image}
       />
 
