@@ -32,8 +32,8 @@ const Countdown: FC<Props> = ({ date, hideSeconds = false, isStyled }) => {
     const boxStyle = {
       w: 10,
       py: 0.5,
-      bg: 'rgba(107, 114, 128, 0.5)',
-      backdropFilter: 'blur(16px)',
+      background: 'rgba(107, 114, 128, 0.5)',
+      color: 'white',
       rounded: 'lg',
       textAlign: 'center' as any,
     }
