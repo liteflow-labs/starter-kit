@@ -1,5 +1,5 @@
 import { StyleProps, VStack } from '@chakra-ui/react'
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { convertDropDetail } from '../../../convert'
 import { dateIsBefore, dateIsBetween } from '../../../utils'
 import MintFormEnded from './Ended'
@@ -15,18 +15,24 @@ type Props = StyleProps & {
 }
 
 const DropMintForm: FC<Props> = ({ collection, drops, ...props }) => {
+  const [date, setDate] = useState(new Date())
+
+  useEffect(() => {
+    const interval = setInterval(() => setDate(new Date()), 1000)
+    return () => clearInterval(interval)
+  })
+
   const inprogressDrops = useMemo(
     () =>
       drops.filter((drop) =>
-        dateIsBetween(new Date(), drop.startDate, drop.endDate),
+        dateIsBetween(date, drop.startDate, drop.endDate),
       ) || [],
-    [drops],
+    [date, drops],
   )
 
   const upcomingDrops = useMemo(
-    () =>
-      drops.filter((drop) => dateIsBefore(new Date(), drop.startDate)) || [],
-    [drops],
+    () => drops.filter((drop) => dateIsBefore(date, drop.startDate)) || [],
+    [date, drops],
   )
 
   const dropsToRender = useMemo(() => {

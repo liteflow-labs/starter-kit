@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { dateIsBefore, dateIsBetween } from '../utils'
 
 export enum Timeline {
@@ -15,11 +15,17 @@ type HookArgs = {
 }
 
 export default function useDropTimeline({ drop }: HookArgs): Timeline {
+  const [date, setDate] = useState(new Date())
+
+  useEffect(() => {
+    const interval = setInterval(() => setDate(new Date()), 1000)
+    return () => clearInterval(interval)
+  })
+
   return useMemo(() => {
-    const now = new Date()
-    if (dateIsBefore(now, drop.startDate)) return Timeline.UPCOMING
-    if (dateIsBetween(now, drop.startDate, drop.endDate))
+    if (dateIsBefore(date, drop.startDate)) return Timeline.UPCOMING
+    if (dateIsBetween(date, drop.startDate, drop.endDate))
       return Timeline.INPROGRESS
     return Timeline.ENDED
-  }, [drop.endDate, drop.startDate])
+  }, [date, drop.endDate, drop.startDate])
 }
