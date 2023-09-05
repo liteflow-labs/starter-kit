@@ -61,6 +61,8 @@ const MintFormUpcoming: FC<Props> = ({ drop }): JSX.Element => {
               alt={drop.currency.symbol}
               width={12}
               height={12}
+              w={3}
+              h={3}
             />
             <Text variant="subtitle2">
               <Price amount={drop.unitPrice} currency={drop.currency} />
@@ -85,7 +87,9 @@ const MintFormUpcoming: FC<Props> = ({ drop }): JSX.Element => {
               </Text>
               <Text variant="subtitle2">
                 {t('drop.form.upcoming.limit', {
-                  limit: numbro(drop.maxQuantityPerWallet).format({
+                  maxQuantityPerWallet: numbro(
+                    drop.maxQuantityPerWallet,
+                  ).format({
                     thousandSeparated: true,
                   }),
                 })}
