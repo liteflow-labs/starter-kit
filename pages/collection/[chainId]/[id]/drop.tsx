@@ -1,15 +1,14 @@
 import { SimpleGrid } from '@chakra-ui/react'
-import DropHeader from 'components/Drop/DropHeader'
-import DropMintForm from 'components/Drop/MintForm'
-import environment from 'environment'
 import type { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useMemo } from 'react'
 import DropDetailSkeleton from '../../../../components/Drop/DropDetailSkeleton'
+import DropHeader from '../../../../components/Drop/DropHeader'
 import DropHeaderSkeleton from '../../../../components/Drop/DropHeaderSkeleton'
 import DropMintSchedule from '../../../../components/Drop/DropMintSchedule'
 import DropProgress from '../../../../components/Drop/DropProgress'
+import DropMintForm from '../../../../components/Drop/MintForm'
 import Head from '../../../../components/Head'
 import {
   convertCollectionDropDetail,
@@ -20,11 +19,13 @@ import {
   useFetchCollectionDropsQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
+import useEnvironment from '../../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../../layouts/large'
 
 const DropDetail: NextPage = () => {
   const { t } = useTranslation('templates')
+  const { REPORT_EMAIL } = useEnvironment()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
   })
@@ -70,7 +71,7 @@ const DropDetail: NextPage = () => {
       ) : (
         <DropHeader
           collection={collectionDropDetail}
-          reportEmail={environment.REPORT_EMAIL}
+          reportEmail={REPORT_EMAIL}
         />
       )}
       {!dropsData ? (

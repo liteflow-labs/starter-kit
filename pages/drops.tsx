@@ -1,5 +1,4 @@
 import { Divider, Heading, SimpleGrid } from '@chakra-ui/react'
-import { Timeline } from 'hooks/useDropTimeline'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo } from 'react'
@@ -10,8 +9,9 @@ import Pagination from '../components/Pagination/Pagination'
 import SkeletonDropCard from '../components/Skeleton/DropCard'
 import SkeletonGrid from '../components/Skeleton/Grid'
 import { convertDropActive, convertDropEnded } from '../convert'
-import environment from '../environment'
 import { useFetchDropsQuery } from '../graphql'
+import { Timeline } from '../hooks/useDropTimeline'
+import useEnvironment from '../hooks/useEnvironment'
 import usePaginate from '../hooks/usePaginate'
 import usePaginateQuery from '../hooks/usePaginateQuery'
 import LargeLayout from '../layouts/large'
@@ -23,6 +23,7 @@ type Props = {
 
 const DropsPage: NextPage<Props> = ({ now }) => {
   const { t } = useTranslation('templates')
+  const { PAGINATION_LIMIT, REPORT_EMAIL } = useEnvironment()
   const date = useMemo(() => new Date(now), [now])
   const { page, limit, offset } = usePaginateQuery()
   const [changePage, changeLimit] = usePaginate()
@@ -90,7 +91,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
           title={t('drops.empty.title')}
           description={t('drops.empty.description')}
           button={t('drops.empty.action')}
-          href={`mailto:${environment.REPORT_EMAIL}`}
+          href={`mailto:${REPORT_EMAIL}`}
           isExternal
         />
       ) : (
@@ -143,7 +144,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
           {endedDrops.length !== 0 && (
             <Pagination
               limit={limit}
-              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
               onPageChange={changePage}
               onLimitChange={changeLimit}
