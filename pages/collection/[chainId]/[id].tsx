@@ -62,7 +62,7 @@ type Props = {
 }
 
 const CollectionPage: FC<Props> = ({ now }) => {
-  const { REPORT_EMAIL, PAGINATION_LIMIT, META_TITLE } = useEnvironment()
+  const { REPORT_EMAIL, PAGINATION_LIMIT } = useEnvironment()
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
@@ -168,7 +168,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <Head
-        title={collectionData?.collection.name || META_TITLE}
+        title={collectionData?.collection.name}
         description={collectionData?.collection.description || undefined}
         image={collectionData?.collection.image || undefined}
       />

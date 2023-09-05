@@ -203,10 +203,8 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   return (
     <SmallLayout>
       <Head
-        title={asset ? t('offers.form.meta.title', asset) : META_TITLE}
-        description={
-          asset ? t('offers.form.meta.description', asset) : undefined
-        }
+        title={asset && t('offers.form.meta.title', asset)}
+        description={asset && t('offers.form.meta.description', asset)}
         image={asset?.image}
       />
 

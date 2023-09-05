@@ -4,7 +4,7 @@ import { FC, PropsWithChildren } from 'react'
 import useEnvironment from '../hooks/useEnvironment'
 
 type Props = {
-  title: string
+  title?: string
   description?: string
   image?: string
 }
@@ -18,8 +18,7 @@ const Head: FC<PropsWithChildren<Props>> = ({
   const { META_TITLE, META_DESCRIPTION, BASE_URL } = useEnvironment()
   const { asPath } = useRouter()
   const shortDescription = (description || META_DESCRIPTION).substring(0, 160)
-  const siteTitle =
-    title !== META_TITLE ? `${title} - ${META_TITLE}` : META_TITLE
+  const siteTitle = title ? `${title} - ${META_TITLE}` : META_TITLE
 
   // remove query string and hash from asPath
   const _pathSliceLength = Math.min.apply(Math, [

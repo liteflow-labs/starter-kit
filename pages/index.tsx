@@ -8,18 +8,16 @@ import UsersHomeSection from 'components/HomeSection/Users'
 import { NextPage } from 'next'
 import { useMemo } from 'react'
 import Head from '../components/Head'
-import useEnvironment from '../hooks/useEnvironment'
 import LargeLayout from '../layouts/large'
 
 type Props = {
   now: number
 }
 const HomePage: NextPage<Props> = ({ now }) => {
-  const { META_TITLE } = useEnvironment()
   const date = useMemo(() => new Date(now), [now])
   return (
     <LargeLayout>
-      <Head title={META_TITLE} />
+      <Head />
       <Stack spacing={12}>
         <FeaturedHomeSection date={date} />
         <CollectionsHomeSection />
