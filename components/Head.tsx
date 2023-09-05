@@ -1,4 +1,5 @@
 import NextHead from 'next/head'
+import { useRouter } from 'next/router'
 import { FC, PropsWithChildren } from 'react'
 import useEnvironment from '../hooks/useEnvironment'
 
@@ -15,9 +16,18 @@ const Head: FC<PropsWithChildren<Props>> = ({
   children,
 }) => {
   const { META_TITLE, META_DESCRIPTION, BASE_URL } = useEnvironment()
+  const { asPath } = useRouter()
   const shortDescription = (description || META_DESCRIPTION).substring(0, 160)
   const siteTitle =
     title !== META_TITLE ? `${title} - ${META_TITLE}` : META_TITLE
+
+  // remove query string and hash from asPath
+  const _pathSliceLength = Math.min.apply(Math, [
+    asPath.indexOf('?') > 0 ? asPath.indexOf('?') : asPath.length,
+    asPath.indexOf('#') > 0 ? asPath.indexOf('#') : asPath.length,
+  ])
+  const canonicalURL = BASE_URL + asPath.substring(0, _pathSliceLength)
+
   return (
     <NextHead>
       <title>{siteTitle}</title>
@@ -31,6 +41,7 @@ const Head: FC<PropsWithChildren<Props>> = ({
         name="twitter:image"
         content={image || `${BASE_URL}/twitter-card.jpg`}
       />
+      <link rel="canonical" href={canonicalURL} />
       {children}
     </NextHead>
   )
