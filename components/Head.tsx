@@ -1,6 +1,6 @@
 import NextHead from 'next/head'
 import { FC, PropsWithChildren } from 'react'
-import environment from '../environment'
+import useEnvironment from '../hooks/useEnvironment'
 
 type Props = {
   title: string
@@ -14,12 +14,13 @@ const Head: FC<PropsWithChildren<Props>> = ({
   image,
   children,
 }) => {
+  const { META_TITLE, BASE_URL } = useEnvironment()
   return (
     <NextHead>
       <title>
-        {title && title !== environment.META_TITLE
-          ? `${title} - ${environment.META_TITLE}`
-          : environment.META_TITLE}
+        {title && title !== META_TITLE
+          ? `${title} - ${META_TITLE}`
+          : META_TITLE}
       </title>
       <meta property="og:title" content={title} />
       <meta name="twitter:title" content={title} />
@@ -30,13 +31,10 @@ const Head: FC<PropsWithChildren<Props>> = ({
           <meta name="twitter:description" content={description} />
         </>
       )}
-      <meta
-        property="og:image"
-        content={image || `${environment.BASE_URL}/og-image.jpg`}
-      />
+      <meta property="og:image" content={image || `${BASE_URL}/og-image.jpg`} />
       <meta
         name="twitter:image"
-        content={image || `${environment.BASE_URL}/twitter-card.jpg`}
+        content={image || `${BASE_URL}/twitter-card.jpg`}
       />
       {children}
     </NextHead>

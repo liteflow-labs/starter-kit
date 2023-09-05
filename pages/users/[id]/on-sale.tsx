@@ -10,13 +10,13 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
 import {
   AssetDetailFragment,
   AssetsOrderBy,
   useFetchOnSaleAssetsQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
@@ -29,6 +29,7 @@ type Props = {
 }
 
 const OnSalePage: NextPage<Props> = ({ now }) => {
+  const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { pathname, replace, query } = useRouter()
@@ -81,7 +82,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
         currentAccount={address}
         address={userAddress}
         currentTab="on-sale"
-        loginUrlForReferral={environment.BASE_URL + '/login'}
+        loginUrlForReferral={BASE_URL + '/login'}
       >
         <TokenGrid<AssetsOrderBy>
           assets={assets}
@@ -101,7 +102,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
           }}
           pagination={{
             limit,
-            limits: [environment.PAGINATION_LIMIT, 24, 36, 48],
+            limits: [PAGINATION_LIMIT, 24, 36, 48],
             page,
             onPageChange: changePage,
             onLimitChange: changeLimit,

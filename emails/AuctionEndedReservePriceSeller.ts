@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
+import invariant from 'ts-invariant'
 import { formatDate } from '../utils'
 
 export default function AuctionEndedReservePriceSeller({
@@ -16,6 +16,7 @@ export default function AuctionEndedReservePriceSeller({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (!bestBid) return null
   const bidAmount = BigNumber.from(bestBid.unitPrice).mul(bestBid.quantity)
   if (bidAmount.gte(reserveAmount)) return null
@@ -38,7 +39,7 @@ export default function AuctionEndedReservePriceSeller({
       expireAt,
     )}</strong>, the auction and its bids will be canceled.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Create a new sale</a><br/>`,
   }

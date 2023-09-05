@@ -32,11 +32,11 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
 import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
@@ -46,6 +46,8 @@ type Props = {
 }
 
 const BidPage: NextPage<Props> = ({ now }) => {
+  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
+    useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
@@ -215,8 +217,8 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}
                 auctionId={auction?.id}
-                auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
-                offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+                auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
+                offerValidity={OFFER_VALIDITY_IN_SECONDS}
               />
             ) : (
               <OfferFormBid
@@ -231,8 +233,8 @@ const BidPage: NextPage<Props> = ({ now }) => {
                 blockExplorer={blockExplorer}
                 onCreated={onCreated}
                 auctionId={auction?.id}
-                auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
-                offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+                auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
+                offerValidity={OFFER_VALIDITY_IN_SECONDS}
               />
             )}
           </Flex>

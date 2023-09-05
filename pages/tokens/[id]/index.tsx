@@ -44,7 +44,6 @@ import SkeletonProperty from '../../../components/Skeleton/Property'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
 import TraitList from '../../../components/Trait/TraitList'
-import { chains } from '../../../connectors'
 import {
   convertAuctionFull,
   convertBidFull,
@@ -53,11 +52,11 @@ import {
   convertTraits,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
@@ -75,6 +74,7 @@ enum AssetTabs {
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
+  const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
@@ -118,7 +118,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     () => asset?.collection.standard === 'ERC721',
     [asset],
   )
-  const chain = useMemo(() => chains.find((x) => x.id === chainId), [chainId])
+  const chain = useMemo(
+    () => CHAINS.find((x) => x.id === chainId),
+    [CHAINS, chainId],
+  )
 
   const traits = useMemo(
     () => asset && asset.traits.nodes.length > 0 && convertTraits(asset),
@@ -329,9 +332,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                       {t('asset.detail.menu.refresh-metadata')}
                     </MenuItem>
                     <Link
-                      href={`mailto:${
-                        environment.REPORT_EMAIL
-                      }?subject=${encodeURI(
+                      href={`mailto:${REPORT_EMAIL}?subject=${encodeURI(
                         t('asset.detail.menu.report.subject'),
                       )}&body=${encodeURI(
                         t('asset.detail.menu.report.body', asset),

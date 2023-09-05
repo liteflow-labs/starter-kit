@@ -1,6 +1,5 @@
 import CollectionCard from 'components/Collection/CollectionCard'
 import { convertCollection } from 'convert'
-import environment from 'environment'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
@@ -10,17 +9,19 @@ import {
   FetchCollectionsQuery,
   useFetchCollectionsQuery,
 } from '../../graphql'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import HomeGridSection from './Grid'
 
 type Props = {}
 
 const CollectionsHomeSection: FC<Props> = () => {
+  const { HOME_COLLECTIONS, PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('templates')
   const collectionsQuery = useFetchCollectionsQuery({
     variables: {
       filter: {
-        or: environment.HOME_COLLECTIONS.map((x) => x.split('-')).map(
+        or: HOME_COLLECTIONS.map((x) => x.split('-')).map(
           ([chainId, collectionAddress]) => {
             invariant(chainId && collectionAddress, 'invalid collection')
             return {
@@ -30,19 +31,19 @@ const CollectionsHomeSection: FC<Props> = () => {
           },
         ),
       } as CollectionFilter,
-      limit: environment.PAGINATION_LIMIT,
+      limit: PAGINATION_LIMIT,
     },
-    skip: !environment.HOME_COLLECTIONS.length,
+    skip: !HOME_COLLECTIONS.length,
   })
   useHandleQueryError(collectionsQuery)
 
   const orderedCollections = useOrderByKey(
-    environment.HOME_COLLECTIONS,
+    HOME_COLLECTIONS,
     collectionsQuery.data?.collections?.nodes,
     (collection) => [collection.chainId, collection.address].join('-'),
   )
 
-  if (!environment.HOME_COLLECTIONS.length) return null
+  if (!HOME_COLLECTIONS.length) return null
   return (
     <HomeGridSection
       explore={{

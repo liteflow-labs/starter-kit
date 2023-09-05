@@ -35,11 +35,11 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
 import { useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useChainCurrencies from '../../../hooks/useChainCurrencies'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -69,6 +69,8 @@ type SaleOption = {
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
+  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
+    useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
@@ -167,7 +169,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
           quantityAvailable={quantityAvailable}
           signer={signer}
           isCreator={isCreator}
-          offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+          offerValidity={OFFER_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
       )
@@ -177,7 +179,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
           signer={signer}
           assetId={asset.id}
           currencies={auctionCurrencies}
-          auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
+          auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
       )
@@ -193,6 +195,8 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     signer,
     isCreator,
     onCreated,
+    OFFER_VALIDITY_IN_SECONDS,
+    AUCTION_VALIDITY_IN_SECONDS,
   ])
 
   if (asset === null) return <Error statusCode={404} />

@@ -1,11 +1,11 @@
 import { Icon } from '@chakra-ui/react'
 import { MdError } from '@react-icons/all-files/md/MdError'
 import Empty from 'components/Empty/Empty'
-import environment from 'environment'
 import { NextPage, NextPageContext } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useMemo } from 'react'
 import Head from '../components/Head'
+import useEnvironment from '../hooks/useEnvironment'
 import SmallLayout from '../layouts/small'
 
 interface Props {
@@ -13,6 +13,7 @@ interface Props {
 }
 
 const Error: NextPage<Props> = ({ statusCode }) => {
+  const { REPORT_EMAIL } = useEnvironment()
   const { t } = useTranslation('templates')
   const content = useMemo(() => {
     if (statusCode === 404) {
@@ -34,7 +35,7 @@ const Error: NextPage<Props> = ({ statusCode }) => {
         title={content.title}
         description={content.description}
         button={t('error.button')}
-        href={`mailto:${environment.REPORT_EMAIL}`}
+        href={`mailto:${REPORT_EMAIL}`}
         isExternal
       />
     </SmallLayout>
