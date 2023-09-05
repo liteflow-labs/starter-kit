@@ -24,8 +24,8 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import ChakraLink from '../../components/Link/Link'
 import Truncate from '../../components/Truncate/Truncate'
-import { chains } from '../../connectors'
 import { convertCollectionDropDetail } from '../../convert'
+import useEnvironment from '../../hooks/useEnvironment'
 import { formatAddress } from '../../utils'
 
 type Props = {
@@ -35,8 +35,9 @@ type Props = {
 
 const DropHeader: FC<Props> = ({ collection, reportEmail }) => {
   const { t } = useTranslation('templates')
+  const { CHAINS } = useEnvironment()
   const blockExplorer = useBlockExplorer(collection?.chainId)
-  const chain = chains.find((x) => x.id === collection?.chainId)
+  const chain = CHAINS.find((x) => x.id === collection?.chainId)
   if (!collection) return null
   return (
     <>
