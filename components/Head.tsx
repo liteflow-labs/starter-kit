@@ -14,24 +14,18 @@ const Head: FC<PropsWithChildren<Props>> = ({
   image,
   children,
 }) => {
-  const { META_TITLE, BASE_URL } = useEnvironment()
-  const shortDescription = description?.substring(0, 160)
+  const { META_TITLE, META_DESCRIPTION, BASE_URL } = useEnvironment()
+  const shortDescription = (description || META_DESCRIPTION).substring(0, 160)
+  const siteTitle =
+    title !== META_TITLE ? `${title} - ${META_TITLE}` : META_TITLE
   return (
     <NextHead>
-      <title>
-        {title && title !== META_TITLE
-          ? `${title} - ${META_TITLE}`
-          : META_TITLE}
-      </title>
-      <meta property="og:title" content={title} />
-      <meta name="twitter:title" content={title} />
-      {shortDescription && (
-        <>
-          <meta name="description" content={shortDescription} />
-          <meta property="og:description" content={shortDescription} />
-          <meta name="twitter:description" content={shortDescription} />
-        </>
-      )}
+      <title>{siteTitle}</title>
+      <meta property="og:title" content={siteTitle} />
+      <meta name="twitter:title" content={siteTitle} />
+      <meta name="description" content={shortDescription} />
+      <meta property="og:description" content={shortDescription} />
+      <meta name="twitter:description" content={shortDescription} />
       <meta property="og:image" content={image || `${BASE_URL}/og-image.jpg`} />
       <meta
         name="twitter:image"
