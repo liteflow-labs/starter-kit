@@ -29,12 +29,7 @@ query FetchUserBidsReceived(
       availableQuantity
       expiredAt
       createdAt
-      auction {
-        id
-        winningOffer {
-          id
-        }
-      }
+      auctionId
       maker {
         address
         name

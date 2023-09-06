@@ -207,7 +207,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                           >
                             <Text as="span" noOfLines={1}>
                               {item.asset.name}
-                              {item.auction && (
+                              {item.auctionId && (
                                 <Tag size="sm" ml={2}>
                                   {t('user.bid-received.auction')}
                                 </Tag>
@@ -246,7 +246,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>
                         {ownerLoggedIn &&
-                          (item.auction ? (
+                          (item.auctionId ? (
                             <Button
                               as={Link}
                               variant="outline"
