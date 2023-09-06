@@ -153,7 +153,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [asset],
   )
 
-  const bestBid = useMemo(
+  const bestAuctionBid = useMemo(
     () => asset?.auctions.nodes[0]?.offers.nodes.map(convertBidFull)[0],
     [asset],
   )
@@ -378,7 +378,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               isHomepage={false}
               isOwner={isOwner}
               auction={auction}
-              bestBid={bestBid}
+              bestAuctionBid={bestAuctionBid}
               directSales={directSales}
               ownAllSupply={ownAllSupply}
               onOfferCanceled={refresh}
