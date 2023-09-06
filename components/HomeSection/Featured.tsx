@@ -68,7 +68,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
                   ? convertAuctionFull(asset.auctions.nodes[0])
                   : undefined
               }
-              bestBid={
+              bestAuctionBid={
                 asset.auctions.nodes[0]?.bestBid?.nodes[0]
                   ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
                   : undefined
