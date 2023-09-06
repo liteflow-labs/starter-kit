@@ -30,8 +30,8 @@ const Head: FC<PropsWithChildren<Props>> = ({
   return (
     <NextHead>
       <title>{siteTitle}</title>
-      <meta property="og:title" content={siteTitle} />
-      <meta name="twitter:title" content={siteTitle} />
+      <meta property="og:title" content={title || META_TITLE} />
+      <meta name="twitter:title" content={title || META_TITLE} />
       <meta name="description" content={shortDescription} />
       <meta property="og:description" content={shortDescription} />
       <meta name="twitter:description" content={shortDescription} />
