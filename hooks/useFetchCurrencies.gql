@@ -1,8 +1,11 @@
 query FetchCurrencies {
   currencies(orderBy: CREATED_AT_ASC) {
     nodes {
-      image
       id
+      chainId
+      address
+      name
+      image
       decimals
       symbol
     }
