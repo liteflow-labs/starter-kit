@@ -91,14 +91,13 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   return (
     <SmallLayout>
       <Head
-        title={asset ? t('offers.checkout.meta.title', asset) : ''}
+        title={asset && t('offers.checkout.meta.title', asset)}
         description={
-          asset
-            ? t('offers.checkout.meta.description', {
-                name: asset.name,
-                creator: asset.creator.name || asset.creator.address,
-              })
-            : undefined
+          asset &&
+          t('offers.checkout.meta.description', {
+            name: asset.name,
+            creator: asset.creator.name || asset.creator.address,
+          })
         }
         image={asset?.image}
       />

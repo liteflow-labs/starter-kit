@@ -81,6 +81,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       chainId,
     },
   })
+  const collection = collectionData?.collection
 
   const { data: collectionMetricsData } = useFetchCollectionMetricsQuery({
     variables: {
@@ -135,11 +136,8 @@ const CollectionPage: FC<Props> = ({ now }) => {
   )
 
   const collectionDetails = useMemo(
-    () =>
-      collectionData?.collection
-        ? convertCollectionFull(collectionData.collection)
-        : undefined,
-    [collectionData],
+    () => (collection ? convertCollectionFull(collection) : undefined),
+    [collection],
   )
 
   const assets = assetData?.assets?.nodes
@@ -164,10 +162,14 @@ const CollectionPage: FC<Props> = ({ now }) => {
 
   const [changePage, changeLimit] = usePaginate()
 
-  if (collectionData?.collection === null) return <Error statusCode={404} />
+  if (collection === null) return <Error statusCode={404} />
   return (
     <LargeLayout>
-      <Head title="Explore collection" />
+      <Head
+        title={collection?.name}
+        description={collection?.description || undefined}
+        image={collection?.image || undefined}
+      />
 
       {!collectionDetails ? (
         <CollectionHeaderSkeleton />

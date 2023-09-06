@@ -39,8 +39,8 @@ const UserProfileTemplate: FC<
     <>
       <Head
         title={account?.name || address}
-        description={account?.description || ''}
-        image={account?.image || ''}
+        description={account?.description || undefined}
+        image={account?.image || undefined}
       />
       <UserProfileBanner
         address={address}
