@@ -198,6 +198,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                             w={10}
                             objectFit="cover"
                             rounded="2xl"
+                            flexShrink={0}
                           />
                           <Flex
                             direction="column"
