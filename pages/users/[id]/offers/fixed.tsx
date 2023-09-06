@@ -200,6 +200,7 @@ const FixedPricePage: NextPage = () => {
                             w={10}
                             objectFit="cover"
                             rounded="2xl"
+                            flexShrink={0}
                           />
                           <Flex
                             direction="column"

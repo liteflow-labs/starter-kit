@@ -55,7 +55,6 @@ import {
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -98,7 +97,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
       address: address || '',
     },
   })
-  const chainCurrency = useChainCurrencies(chainId, { onlyERC20: true })
 
   const asset = data?.asset
 
@@ -363,7 +361,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               isOpenCollection={asset.collection.mintType === 'PUBLIC'}
             />
           )}
-          {!asset ? (
+          {!asset || !data.currencies?.nodes ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
@@ -373,7 +371,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               assetId={asset.id}
               chainId={chainId}
               blockExplorer={blockExplorer}
-              currencies={chainCurrency.data?.currencies?.nodes || []}
+              currencies={data.currencies?.nodes}
               signer={signer}
               currentAccount={address}
               isSingle={isSingle}

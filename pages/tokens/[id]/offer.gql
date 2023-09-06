@@ -108,4 +108,18 @@ query OfferForAsset(
       }
     }
   }
+  currencies(
+    orderBy: CREATED_AT_ASC
+    filter: { chainId: { equalTo: $chainId } }
+  ) {
+    nodes {
+      id
+      chainId
+      address
+      decimals
+      symbol
+      name
+      image
+    }
+  }
 }
