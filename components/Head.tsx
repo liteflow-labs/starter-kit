@@ -1,6 +1,6 @@
 import NextHead from 'next/head'
 import { useRouter } from 'next/router'
-import { FC, PropsWithChildren } from 'react'
+import { FC, PropsWithChildren, useMemo } from 'react'
 import useEnvironment from '../hooks/useEnvironment'
 
 type Props = {
@@ -21,11 +21,13 @@ const Head: FC<PropsWithChildren<Props>> = ({
   const siteTitle = title ? `${title} - ${META_TITLE}` : META_TITLE
 
   // remove query string and hash from asPath
-  const _pathSliceLength = Math.min.apply(Math, [
-    asPath.indexOf('?') > 0 ? asPath.indexOf('?') : asPath.length,
-    asPath.indexOf('#') > 0 ? asPath.indexOf('#') : asPath.length,
-  ])
-  const canonicalURL = BASE_URL + asPath.substring(0, _pathSliceLength)
+  const canonicalURL = useMemo(() => {
+    const _pathSliceLength = Math.min.apply(Math, [
+      asPath.indexOf('?') > 0 ? asPath.indexOf('?') : asPath.length,
+      asPath.indexOf('#') > 0 ? asPath.indexOf('#') : asPath.length,
+    ])
+    return BASE_URL + asPath.substring(0, _pathSliceLength)
+  }, [BASE_URL, asPath])
 
   return (
     <NextHead>
