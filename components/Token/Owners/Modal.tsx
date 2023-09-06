@@ -14,9 +14,9 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { convertOwnership } from '../../../convert'
-import { useFetchOwnersQuery } from '../../../graphql'
+import { useFetchOwnersLazyQuery } from '../../../graphql'
 import List, { ListItem } from '../../List/List'
 import Pagination from '../../Pagination/Pagination'
 import OwnersModalActivator from './ModalActivator'
@@ -48,7 +48,8 @@ const OwnersModal: FC<Props> = ({
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
-  const { data } = useFetchOwnersQuery({
+
+  const [fetch, { data, called }] = useFetchOwnersLazyQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -58,6 +59,13 @@ const OwnersModal: FC<Props> = ({
     },
   })
 
+  const openOwners = useCallback(async () => {
+    onOpen()
+    if (!called) {
+      await fetch()
+    }
+  }, [called, fetch, onOpen])
+
   // Reset pagination when the limit change or the modal visibility changes
   useEffect(() => setPage(1), [isOpen])
 
@@ -66,7 +74,7 @@ const OwnersModal: FC<Props> = ({
       <OwnersModalActivator
         owners={ownersPreview}
         numberOfOwners={numberOfOwners}
-        onClick={onOpen}
+        onClick={openOwners}
       />
       <Modal
         isOpen={isOpen}
