@@ -15,6 +15,7 @@ import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
@@ -35,7 +36,6 @@ import {
 import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -54,18 +54,21 @@ const BidPage: NextPage<Props> = ({ now }) => {
   const toast = useToast()
   const { address } = useAccount()
   const assetId = useRequiredQueryParamSingle('id')
+  const [chainId, collectionAddress, tokenId] = useMemo(
+    () => assetId.split('-'),
+    [assetId],
+  )
+  invariant(chainId && collectionAddress && tokenId, 'Invalid asset id')
 
   const date = useMemo(() => new Date(now), [now])
   const { data } = useBidOnAssetQuery({
     variables: {
-      id: assetId,
+      chainId: parseInt(chainId, 10),
+      collectionAddress: collectionAddress,
+      tokenId: tokenId,
       now: date,
       address: address || '',
     },
-  })
-
-  const { data: currencyData } = useChainCurrencies(data?.asset?.chainId, {
-    onlyERC20: true,
   })
 
   const blockExplorer = useBlockExplorer(data?.asset?.chainId)
@@ -76,13 +79,13 @@ const BidPage: NextPage<Props> = ({ now }) => {
     () => (asset?.auctions.nodes[0] ? asset.auctions.nodes[0] : undefined),
     [asset],
   )
-  const currencies = useMemo(
+  const bidCurrencies = useMemo(
     () =>
-      auction ? [auction.currency] : currencyData?.currencies?.nodes || [],
-    [auction, currencyData],
+      (auction ? [auction.currency] : data?.currencies?.nodes) as
+        | BidCurrency[]
+        | undefined,
+    [auction, data],
   )
-
-  const bidCurrencies = currencies as BidCurrency[]
 
   const highestBid = useMemo(() => auction?.bestBid.nodes[0], [auction])
 
@@ -204,7 +207,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
               </>
             )}
 
-            {!asset ? (
+            {!asset || !bidCurrencies ? (
               <SkeletonForm items={2} />
             ) : asset.collection.standard === 'ERC721' ? (
               <OfferFormBid

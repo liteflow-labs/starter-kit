@@ -172,4 +172,18 @@ query FetchAsset(
       }
     }
   }
+  currencies(
+    orderBy: CREATED_AT_ASC
+    filter: { chainId: { equalTo: $chainId }, address: { isNull: false } }
+  ) {
+    nodes {
+      id
+      chainId
+      address
+      decimals
+      symbol
+      name
+      image
+    }
+  }
 }
