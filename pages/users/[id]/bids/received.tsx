@@ -253,7 +253,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                               colorScheme="gray"
                               href={`/tokens/${item.asset.id}`}
                             >
-                              {t('user.bid-received.actions.view-nft')}
+                              {t('user.bid-received.actions.view')}
                             </Button>
                           ) : (
                             <AcceptOfferButton
