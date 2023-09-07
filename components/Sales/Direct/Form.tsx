@@ -28,8 +28,9 @@ import dayjs from 'dayjs'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { Standard, useFeesQuery } from '../../../graphql'
+import { Standard } from '../../../graphql'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useFees from '../../../hooks/useFees'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatDateDatetime, formatError } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
@@ -134,20 +135,17 @@ const SalesDirectForm: FC<Props> = ({
   const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
-  const { data } = useFeesQuery({
-    variables: {
-      chainId,
-      collectionAddress,
-      tokenId,
-      currencyId: currency?.id || '',
-      quantity: quantityBN.toString(),
-      unitPrice: priceUnit.toString(),
-    },
-    skip: !currency?.id,
+  const { feesPerTenThousand: _feesPerTenThousand } = useFees({
+    chainId,
+    collectionAddress,
+    tokenId,
+    currencyId: currency?.id,
+    quantity: quantityBN,
+    unitPrice: priceUnit,
   })
   const feesPerTenThousand = useMemo(
-    () => data?.orderFees.valuePerTenThousand || 0,
-    [data],
+    () => _feesPerTenThousand ?? 0,
+    [_feesPerTenThousand],
   )
 
   const amountFees = useMemo(() => {
