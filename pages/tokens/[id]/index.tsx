@@ -139,7 +139,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const auction = useMemo(() => {
     const first = asset?.auctions.nodes[0]
     if (!first) return
-    const auction = convertAuctionFull(first)
+    const auction = {
+      ...convertAuctionFull(first),
+      bids: first.offers.nodes.map(convertBidFull),
+    }
     if (!auction) return
     // check if auction is expired
     if (new Date(auction.expireAt) <= new Date()) return
@@ -148,15 +151,14 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     return auction
   }, [asset])
 
+  const openBids = useMemo(() => asset?.bids.nodes.map(convertBidFull), [asset])
+
   const directSales = useMemo(
     () => asset?.sales.nodes.map(convertSaleFull) || [],
     [asset],
   )
 
-  const bestAuctionBid = useMemo(
-    () => asset?.auctions.nodes[0]?.offers.nodes.map(convertBidFull)[0],
-    [asset],
-  )
+  const bestAuctionBid = useMemo(() => auction?.bids[0], [auction?.bids])
 
   const creator = useMemo(
     () =>
@@ -167,6 +169,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const owners = useMemo(
     () => asset?.ownerships.nodes.map(convertOwnership) || [],
     [asset],
+  )
+
+  const bids = useMemo(
+    () => auction?.bids || openBids,
+    [auction?.bids, openBids],
   )
 
   const refresh = useCallback(async () => {
@@ -528,11 +535,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               <Box h={96} overflowY="auto" py={6}>
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
-                    now={date}
+                    bids={bids}
                     chainId={chainId}
-                    collectionAddress={collectionAddress}
-                    tokenId={tokenId}
-                    auctionId={auction?.id}
                     signer={signer}
                     account={address}
                     isSingle={isSingle}
