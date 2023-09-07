@@ -183,6 +183,7 @@ const OfferFormCheckout: FC<Props> = ({
           price={priceUnit}
           quantity={quantityBN}
           isSingle={!multiple}
+          noFees
         />
       </div>
 
