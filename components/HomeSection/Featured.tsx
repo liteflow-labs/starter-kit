@@ -16,12 +16,9 @@ import {
   convertSaleFull,
   convertUser,
 } from '../../convert'
-import environment from '../../environment'
-import {
-  useFetchCurrenciesForBidsQuery,
-  useFetchFeaturedAssetsQuery,
-} from '../../graphql'
+import { useFetchFeaturedAssetsQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import useSigner from '../../hooks/useSigner'
@@ -33,24 +30,23 @@ type Props = {
 }
 
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
+  const { FEATURED_TOKEN } = useEnvironment()
   const signer = useSigner()
   const { address } = useAccount()
-  const currenciesQuery = useFetchCurrenciesForBidsQuery({
-    skip: !environment.FEATURED_TOKEN.length,
-  })
   const featureAssetsQuery = useFetchFeaturedAssetsQuery({
     variables: {
-      featuredIds: environment.FEATURED_TOKEN,
+      featuredIds: FEATURED_TOKEN,
       now: date,
       address: address || '',
     },
-    skip: !environment.FEATURED_TOKEN.length,
+    skip: !FEATURED_TOKEN.length,
   })
   useHandleQueryError(featureAssetsQuery)
-  useHandleQueryError(currenciesQuery)
+
+  const currencies = featureAssetsQuery.data?.currencies?.nodes
 
   const featured = useOrderByKey(
-    environment.FEATURED_TOKEN,
+    FEATURED_TOKEN,
     featureAssetsQuery.data?.assets?.nodes,
     (asset) => asset.id,
   )
@@ -61,36 +57,38 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
 
   const featuredAssets = useMemo(
     () =>
-      featured?.map((asset) => (
-        <TokenHeader
-          key={asset.id}
-          asset={convertAssetWithSupplies(asset)}
-          currencies={currenciesQuery.data?.currencies?.nodes || []}
-          auction={
-            asset.auctions.nodes[0]
-              ? convertAuctionFull(asset.auctions.nodes[0])
-              : undefined
-          }
-          bestBid={
-            asset.auctions.nodes[0]?.bestBid?.nodes[0]
-              ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
-              : undefined
-          }
-          sales={asset.sales.nodes.map(convertSaleFull)}
-          creator={convertUser(asset.creator, asset.creator.address)}
-          owners={asset.ownerships.nodes.map(convertOwnership)}
-          numberOfOwners={asset.ownerships.totalCount}
-          isHomepage={true}
-          signer={signer}
-          currentAccount={address}
-          onOfferCanceled={reloadInfo}
-          onAuctionAccepted={reloadInfo}
-        />
-      )),
-    [featured, address, signer, reloadInfo, currenciesQuery],
+      featured && currencies
+        ? featured.map((asset) => (
+            <TokenHeader
+              key={asset.id}
+              asset={convertAssetWithSupplies(asset)}
+              currencies={currencies}
+              auction={
+                asset.auctions.nodes[0]
+                  ? convertAuctionFull(asset.auctions.nodes[0])
+                  : undefined
+              }
+              bestAuctionBid={
+                asset.auctions.nodes[0]?.bestBid?.nodes[0]
+                  ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
+                  : undefined
+              }
+              sales={asset.sales.nodes.map(convertSaleFull)}
+              creator={convertUser(asset.creator, asset.creator.address)}
+              owners={asset.ownerships.nodes.map(convertOwnership)}
+              numberOfOwners={asset.ownerships.totalCount}
+              isHomepage={true}
+              signer={signer}
+              currentAccount={address}
+              onOfferCanceled={reloadInfo}
+              onAuctionAccepted={reloadInfo}
+            />
+          ))
+        : undefined,
+    [featured, address, signer, reloadInfo, currencies],
   )
 
-  if (!environment.FEATURED_TOKEN.length) return null
+  if (!FEATURED_TOKEN.length) return null
   if (!featuredAssets)
     return (
       <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>

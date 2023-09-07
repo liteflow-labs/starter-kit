@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
+import invariant from 'ts-invariant'
 import { formatDate } from '../utils'
 
 export default function AuctionEndedReservePriceBuyer({
@@ -13,6 +13,7 @@ export default function AuctionEndedReservePriceBuyer({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (!bestBid) return null
   const bidAmount = BigNumber.from(bestBid.unitPrice).mul(bestBid.quantity)
   if (bidAmount.gte(reserveAmount)) return null
@@ -34,7 +35,7 @@ export default function AuctionEndedReservePriceBuyer({
     <br/>
     Keep an eye on this NFT as the owner might list it for sale again!<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Go to the NFT page</a><br/>`,
   }

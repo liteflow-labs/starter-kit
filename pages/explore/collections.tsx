@@ -31,8 +31,6 @@ import Pagination from '../../components/Pagination/Pagination'
 import Select from '../../components/Select/Select'
 import SkeletonCollectionCard from '../../components/Skeleton/CollectionCard'
 import SkeletonGrid from '../../components/Skeleton/Grid'
-import { chains } from '../../connectors'
-import environment from '../../environment'
 import {
   CollectionsOrderBy,
   useFetchExploreCollectionsQuery,
@@ -42,6 +40,7 @@ import useCollectionFilterFromQuery, {
   convertFilterToCollectionFilter,
 } from '../../hooks/useCollectionFilterFromQuery'
 import useCollectionFilterState from '../../hooks/useCollectionFilterState'
+import useEnvironment from '../../hooks/useEnvironment'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -50,6 +49,7 @@ import { formatError, removeEmptyFromObject } from '../../utils'
 type Props = {}
 
 const CollectionsPage: NextPage<Props> = ({}) => {
+  const { CHAINS, PAGINATION_LIMIT } = useEnvironment()
   const { pathname, push, query, replace } = useRouter()
   const isSmall = useBreakpointValue(
     { base: true, md: false },
@@ -85,7 +85,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   )
 
   const collections = collectionsData?.collections?.nodes
-  const hasFilter = chains.length > 1
+  const hasFilter = CHAINS.length > 1
 
   const [changePage, changeLimit] = usePaginate()
 
@@ -183,7 +183,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
             <GridItem gap={6} colSpan={hasFilter && showFilters ? 1 : 2}>
               {collections === undefined ? (
                 <SkeletonGrid
-                  items={environment.PAGINATION_LIMIT}
+                  items={PAGINATION_LIMIT}
                   compact
                   columns={
                     showFilters
@@ -223,7 +223,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
               {collections?.length !== 0 && (
                 <Pagination
                   limit={limit}
-                  limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+                  limits={[PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}

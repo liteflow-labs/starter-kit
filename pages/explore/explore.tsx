@@ -32,7 +32,6 @@ import {
   convertSale,
   convertUser,
 } from '../../convert'
-import environment from '../../environment'
 import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
@@ -40,6 +39,7 @@ import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../hooks/useAssetFilterState'
+import useEnvironment from '../../hooks/useEnvironment'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -50,6 +50,7 @@ type Props = {
 }
 
 const ExplorePage: NextPage<Props> = ({ now }) => {
+  const { PAGINATION_LIMIT } = useEnvironment()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue(
     { base: true, md: false },
@@ -173,7 +174,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
               {assets === undefined ? (
                 <SkeletonGrid
-                  items={environment.PAGINATION_LIMIT}
+                  items={PAGINATION_LIMIT}
                   compact
                   columns={
                     showFilters
@@ -225,7 +226,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
               {assets?.length !== 0 && (
                 <Pagination
                   limit={limit}
-                  limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+                  limits={[PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
                   onPageChange={changePage}
                   onLimitChange={changeLimit}

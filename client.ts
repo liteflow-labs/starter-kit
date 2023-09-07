@@ -7,7 +7,6 @@ import {
   ServerError,
 } from '@apollo/client'
 import { onError as linkOnError } from '@apollo/client/link/error'
-import environment from './environment'
 
 const isServer = typeof window === 'undefined'
 const windowApolloState = !isServer && window.__NEXT_DATA__.props.apolloState
@@ -15,7 +14,9 @@ const windowApolloState = !isServer && window.__NEXT_DATA__.props.apolloState
 let _client: ApolloClient<NormalizedCacheObject>
 
 export default function getClient(
+  apiKey: string,
   authorization: string | null,
+  origin: string,
   forceReset = false,
   onError?: (status: number) => void,
 ): ApolloClient<NormalizedCacheObject> {
@@ -42,10 +43,10 @@ export default function getClient(
   const httpLink = new HttpLink({
     uri: `${
       process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
-    }/${environment.LITEFLOW_API_KEY}/graphql`,
+    }/${apiKey}/graphql`,
     headers: {
       ...(authorization ? { authorization: `Bearer ${authorization}` } : {}),
-      origin: environment.BASE_URL,
+      origin,
     },
   })
 

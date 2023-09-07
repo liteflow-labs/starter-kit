@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
+import invariant from 'ts-invariant'
 
 export default function BidAccepted({
   unitPrice,
@@ -15,6 +15,7 @@ export default function BidAccepted({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (type !== 'BUY') return null
   if (!buyer?.email) return null
   return {
@@ -39,6 +40,8 @@ export default function BidAccepted({
     <br/>      
     The NFT ownership has been transferred. No additional actions are required on your side.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${asset.id}">View my NFT</a><br/>`,
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
+      asset.id
+    }">View my NFT</a><br/>`,
   }
 }
