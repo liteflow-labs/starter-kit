@@ -169,22 +169,20 @@ export const convertCollection = (
   }
 }
 
-export const convertTraits = (
-  asset: Parameters<typeof convertAsset>[0] & {
-    traits: {
-      nodes: Array<
-        Pick<AssetTrait, 'type' | 'value'> & {
-          collectionTraitValue: Maybe<
-            Pick<CollectionTraitValue, 'numberOfAssets'>
-          >
-        }
-      >
-    }
-    collection: {
-      supply: number
-    }
-  },
-): {
+export const convertTraits = (asset: {
+  traits: {
+    nodes: Array<
+      Pick<AssetTrait, 'type' | 'value'> & {
+        collectionTraitValue: Maybe<
+          Pick<CollectionTraitValue, 'numberOfAssets'>
+        >
+      }
+    >
+  }
+  collection: {
+    supply: number
+  }
+}): {
   type: string
   value: string
   percent: number
