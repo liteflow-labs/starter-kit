@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 import { convertOwnership } from '../../../convert'
 import { useFetchOwnersLazyQuery } from '../../../graphql'
 import List, { ListItem } from '../../List/List'
@@ -49,7 +49,7 @@ const OwnersModal: FC<Props> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
 
-  const [fetch, { data, called }] = useFetchOwnersLazyQuery({
+  const [fetch, { data }] = useFetchOwnersLazyQuery({
     variables: {
       chainId,
       collectionAddress,
@@ -61,13 +61,13 @@ const OwnersModal: FC<Props> = ({
 
   const openOwners = useCallback(async () => {
     onOpen()
-    if (!called) {
-      await fetch()
-    }
-  }, [called, fetch, onOpen])
+    await fetch()
+  }, [fetch, onOpen])
 
-  // Reset pagination when the limit change or the modal visibility changes
-  useEffect(() => setPage(1), [isOpen])
+  const closeOwners = useCallback(() => {
+    onClose()
+    setPage(1)
+  }, [onClose])
 
   return (
     <>
@@ -78,7 +78,7 @@ const OwnersModal: FC<Props> = ({
       />
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={closeOwners}
         isCentered
         size="xl"
         scrollBehavior="inside"
