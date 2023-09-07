@@ -342,21 +342,21 @@ const Navbar: FC<{
   const { t } = useTranslation('components')
   const { address, isLoggedIn, logout, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
-  const { asPath, query, push, isReady, events } = useRouter()
+  const { asPath, query, push, isReady } = useRouter()
   const { register, setValue, handleSubmit } = useForm<FormData>()
   const [cookies] = useCookies()
   const { openConnectModal } = useConnectModal()
   const lastNotification = cookies[`lastNotification-${address}`]
   const {
     data: accountData,
-    refetch,
     previousData: previousAccountData, // previous data logic needed to avoid flickering navbar when lastNotification value changes
   } = useNavbarAccountQuery({
     variables: {
       account: address?.toLowerCase() || '',
       lastNotification: new Date(lastNotification || 0),
     },
-    skip: !isLoggedIn,
+    skip: !isLoggedIn && !address,
+    pollInterval: 60_000,
   })
   const account = isLoggedIn
     ? accountData?.account || previousAccountData?.account
@@ -368,13 +368,6 @@ const Navbar: FC<{
     if (Array.isArray(query.search)) return setValue('search', '')
     setValue('search', query.search)
   }, [isReady, setValue, query.search])
-
-  useEffect(() => {
-    events.on('routeChangeStart', refetch)
-    return () => {
-      events.off('routeChangeStart', refetch)
-    }
-  }, [events, refetch])
 
   const onSubmit = handleSubmit((data) => {
     if (data.search) query.search = data.search
