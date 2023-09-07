@@ -20,7 +20,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
-import { BigNumber } from '@ethersproject/bignumber'
 import { toAddress } from '@liteflow/core'
 import { useCreateOffer } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
@@ -163,7 +162,7 @@ const OfferFormBid: FC<Props> = (props) => {
   const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
-  const { feesPerTenThousand: _feesPerTenThousand } = useFees({
+  const { feesPerTenThousand, loading: loadingFees } = useFees({
     chainId,
     collectionAddress,
     tokenId,
@@ -171,25 +170,18 @@ const OfferFormBid: FC<Props> = (props) => {
     quantity: quantityBN,
     unitPrice: priceUnit,
   })
-  const feesPerTenThousand = useMemo(
-    () => _feesPerTenThousand ?? 0,
-    [_feesPerTenThousand],
-  )
-
-  const totalPrice = useMemo(() => {
-    return priceUnit.mul(quantityBN)
-  }, [priceUnit, quantityBN])
-
-  const totalFees = useMemo(() => {
-    if (!totalPrice) return BigNumber.from(0)
-    return totalPrice.mul(feesPerTenThousand).div(10000)
-  }, [totalPrice, feesPerTenThousand])
 
   const canBid = useMemo(() => {
-    if (!balance) return false
-    if (!totalPrice) return true
+    if (
+      balance === undefined ||
+      feesPerTenThousand === undefined ||
+      loadingFees // disable creation of bid if fees are being fetched
+    )
+      return false
+    const totalPrice = priceUnit.mul(quantityBN)
+    const totalFees = totalPrice.mul(feesPerTenThousand).div(10000)
     return balance.gte(totalPrice.add(totalFees))
-  }, [balance, totalPrice, totalFees])
+  }, [balance, feesPerTenThousand, loadingFees, priceUnit, quantityBN])
 
   const onSubmit = handleSubmit(async ({ expiredAt }) => {
     if (!auctionId && !expiredAt) throw new Error('expiredAt is required')

@@ -13,6 +13,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Skeleton,
   Stack,
   Text,
   Tooltip,
@@ -135,7 +136,7 @@ const SalesDirectForm: FC<Props> = ({
   const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
-  const { feesPerTenThousand: _feesPerTenThousand } = useFees({
+  const { feesPerTenThousand, loading: loadingFees } = useFees({
     chainId,
     collectionAddress,
     tokenId,
@@ -143,22 +144,18 @@ const SalesDirectForm: FC<Props> = ({
     quantity: quantityBN,
     unitPrice: priceUnit,
   })
-  const feesPerTenThousand = useMemo(
-    () => _feesPerTenThousand ?? 0,
-    [_feesPerTenThousand],
-  )
 
   const amountFees = useMemo(() => {
-    if (!price) return BigNumber.from(0)
+    if (feesPerTenThousand === undefined) return
     return priceUnit.mul(feesPerTenThousand).div(10000)
-  }, [price, priceUnit, feesPerTenThousand])
+  }, [priceUnit, feesPerTenThousand])
 
   const amountRoyalties = useMemo(() => {
-    if (!price) return BigNumber.from(0)
     return priceUnit.mul(royaltiesPerTenThousand).div(10000)
-  }, [price, priceUnit, royaltiesPerTenThousand])
+  }, [priceUnit, royaltiesPerTenThousand])
 
   const priceWithFees = useMemo(() => {
+    if (amountFees === undefined) return
     return priceUnit.sub(amountFees).sub(isCreator ? 0 : amountRoyalties)
   }, [amountFees, priceUnit, amountRoyalties, isCreator])
 
@@ -387,17 +384,23 @@ const SalesDirectForm: FC<Props> = ({
       <Stack spacing={2}>
         {isSingle && (
           <>
-            <Text variant="text" color="gray.500">
-              {t('sales.direct.form.fees', { value: feesPerTenThousand / 100 })}
-              <Text
-                as={Price}
-                color="brand.black"
-                ml={1}
-                fontWeight="semibold"
-                amount={amountFees}
-                currency={currency}
-              />
-            </Text>
+            {feesPerTenThousand === undefined || amountFees === undefined ? (
+              <Skeleton noOfLines={1} height={4} width={200} mt={2} />
+            ) : (
+              <Text variant="text" color="gray.500">
+                {t('sales.direct.form.fees', {
+                  value: feesPerTenThousand / 100,
+                })}
+                <Text
+                  as={Price}
+                  color="brand.black"
+                  ml={1}
+                  fontWeight="semibold"
+                  amount={amountFees}
+                  currency={currency}
+                />
+              </Text>
+            )}
 
             <Text variant="text" color="gray.500">
               {t('sales.direct.form.royalties', {
@@ -412,25 +415,39 @@ const SalesDirectForm: FC<Props> = ({
                 currency={currency}
               />
             </Text>
+
+            {priceWithFees === undefined ? (
+              <Skeleton noOfLines={1} height={4} width={200} mt={2} />
+            ) : (
+              <Text variant="text" color="gray.500">
+                {t('sales.direct.form.receive-single')}
+                <Text
+                  as={Price}
+                  color="brand.black"
+                  ml={1}
+                  fontWeight="semibold"
+                  amount={priceWithFees}
+                  currency={currency}
+                />
+              </Text>
+            )}
           </>
         )}
 
-        <Text variant="text" color="gray.500">
-          {isSingle
-            ? t('sales.direct.form.receive-single')
-            : t('sales.direct.form.receive-multiple')}
-          <Text
-            as={Price}
-            color="brand.black"
-            ml={1}
-            fontWeight="semibold"
-            amount={isSingle ? priceWithFees : priceUnit}
-            currency={currency}
-          />
-        </Text>
-
         {!isSingle && (
           <>
+            <Text variant="text" color="gray.500">
+              {t('sales.direct.form.receive-multiple')}
+              <Text
+                as={Price}
+                color="brand.black"
+                ml={1}
+                fontWeight="semibold"
+                amount={priceUnit}
+                currency={currency}
+              />
+            </Text>
+
             <Text variant="text" color="gray.500">
               {t('sales.direct.form.quantity-for-sale')}
               <Text as="span" color="brand.black" ml={1} fontWeight="semibold">
@@ -440,19 +457,23 @@ const SalesDirectForm: FC<Props> = ({
               </Text>
             </Text>
 
-            <Text variant="text" color="gray.500">
-              {t('sales.direct.form.total-fees', {
-                value: feesPerTenThousand / 100,
-              })}
-              <Text
-                as={Price}
-                color="brand.black"
-                mx={1}
-                fontWeight="semibold"
-                amount={amountFees.mul(quantityBN)}
-                currency={currency}
-              />
-            </Text>
+            {feesPerTenThousand === undefined || amountFees === undefined ? (
+              <Skeleton noOfLines={1} height={4} width={200} mt={2} />
+            ) : (
+              <Text variant="text" color="gray.500">
+                {t('sales.direct.form.total-fees', {
+                  value: feesPerTenThousand / 100,
+                })}
+                <Text
+                  as={Price}
+                  color="brand.black"
+                  mx={1}
+                  fontWeight="semibold"
+                  amount={amountFees.mul(quantityBN)}
+                  currency={currency}
+                />
+              </Text>
+            )}
 
             <Text variant="text" color="gray.500">
               {t('sales.direct.form.total-royalties', {
@@ -468,17 +489,21 @@ const SalesDirectForm: FC<Props> = ({
               />
             </Text>
 
-            <Text variant="text" color="gray.500">
-              {t('sales.direct.form.total-receive')}
-              <Text
-                as={Price}
-                color="brand.black"
-                mx={1}
-                fontWeight="semibold"
-                amount={priceWithFees.mul(quantityBN)}
-                currency={currency}
-              />
-            </Text>
+            {priceWithFees === undefined ? (
+              <Skeleton noOfLines={1} height={4} width={200} mt={2} />
+            ) : (
+              <Text variant="text" color="gray.500">
+                {t('sales.direct.form.total-receive')}
+                <Text
+                  as={Price}
+                  color="brand.black"
+                  mx={1}
+                  fontWeight="semibold"
+                  amount={priceWithFees.mul(quantityBN)}
+                  currency={currency}
+                />
+              </Text>
+            )}
           </>
         )}
       </Stack>
@@ -486,6 +511,7 @@ const SalesDirectForm: FC<Props> = ({
       <ConnectButtonWithNetworkSwitch
         chainId={chainId}
         isLoading={activeStep !== CreateOfferStep.INITIAL}
+        isDisabled={loadingFees}
         size="lg"
         type="submit"
         width="full"
