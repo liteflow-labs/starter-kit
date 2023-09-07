@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Icon,
   Stack,
@@ -17,7 +18,6 @@ import {
 import { useIsLoggedIn } from '@liteflow/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
@@ -32,12 +32,12 @@ import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
 import { convertBidFull } from '../../../../convert'
-import environment from '../../../../environment'
 import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsReceivedQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
+import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
@@ -51,6 +51,7 @@ type Props = {
 }
 
 const BidReceivedPage: NextPage<Props> = ({ now }) => {
+  const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -62,26 +63,23 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
-  const { data, refetch, loading, previousData } =
-    useFetchUserBidsReceivedQuery({
-      variables: {
-        address: userAddress,
-        limit,
-        offset,
-        orderBy,
-        now,
-      },
-    })
-
-  const bidData = useMemo(() => data || previousData, [data, previousData])
+  const { data, refetch } = useFetchUserBidsReceivedQuery({
+    variables: {
+      address: userAddress,
+      limit,
+      offset,
+      orderBy,
+      now,
+    },
+  })
 
   const bids = useMemo(
     () =>
-      (bidData?.bids?.nodes || []).map((x) => ({
+      data?.bids?.nodes.map((x) => ({
         ...convertBidFull(x),
         asset: x.asset,
       })),
-    [bidData],
+    [data],
   )
 
   const onAccepted = useCallback(async () => {
@@ -102,12 +100,11 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={now}
         signer={signer}
         currentAccount={address}
         address={userAddress}
         currentTab="bids"
-        loginUrlForReferral={environment.BASE_URL + '/login'}
+        loginUrlForReferral={BASE_URL + '/login'}
       >
         <Stack spacing={6}>
           <Flex
@@ -169,15 +166,9 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading && !bidData ? (
+          {bids === undefined ? (
             <Loader />
-          ) : bids.length == 0 ? (
-            <Empty
-              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
-              title={t('user.bid-received.table.empty.title')}
-              description={t('user.bid-received.table.empty.description')}
-            />
-          ) : (
+          ) : bids.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>
@@ -207,6 +198,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                             w={10}
                             objectFit="cover"
                             rounded="2xl"
+                            flexShrink={0}
                           />
                           <Flex
                             direction="column"
@@ -215,6 +207,11 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                           >
                             <Text as="span" noOfLines={1}>
                               {item.asset.name}
+                              {item.auctionId && (
+                                <Tag size="sm" ml={2}>
+                                  {t('user.bid-received.auction')}
+                                </Tag>
+                              )}
                             </Text>
                             {item.availableQuantity.gt(1) && (
                               <Text
@@ -248,59 +245,62 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>
-                        {ownerLoggedIn && (
-                          <AcceptOfferButton
-                            variant="outline"
-                            colorScheme="gray"
-                            signer={signer}
-                            chainId={item.asset.chainId}
-                            offer={item}
-                            quantity={item.availableQuantity}
-                            onAccepted={onAccepted}
-                            onError={(e) =>
-                              toast({
-                                status: 'error',
-                                title: formatError(e),
-                              })
-                            }
-                            title={t('user.bid-received.accept.title')}
-                          >
-                            <Text as="span" isTruncated>
-                              {t('user.bid-received.actions.accept')}
-                            </Text>
-                          </AcceptOfferButton>
-                        )}
+                        {ownerLoggedIn &&
+                          (item.auctionId ? (
+                            <Button
+                              as={Link}
+                              variant="outline"
+                              colorScheme="gray"
+                              href={`/tokens/${item.asset.id}`}
+                            >
+                              {t('user.bid-received.actions.view')}
+                            </Button>
+                          ) : (
+                            <AcceptOfferButton
+                              variant="outline"
+                              colorScheme="gray"
+                              signer={signer}
+                              chainId={item.asset.chainId}
+                              offer={item}
+                              quantity={item.availableQuantity}
+                              onAccepted={onAccepted}
+                              onError={(e) =>
+                                toast({
+                                  status: 'error',
+                                  title: formatError(e),
+                                })
+                              }
+                              title={t('user.bid-received.accept.title')}
+                            >
+                              <Text as="span" isTruncated>
+                                {t('user.bid-received.actions.accept')}
+                              </Text>
+                            </AcceptOfferButton>
+                          ))}
                       </Td>
                     </Tr>
                   ))}
                 </Tbody>
               </Table>
             </TableContainer>
+          ) : (
+            <Empty
+              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
+              title={t('user.bid-received.table.empty.title')}
+              description={t('user.bid-received.table.empty.description')}
+            />
           )}
-
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            onLimitChange={changeLimit}
-            onPageChange={changePage}
-            page={page}
-            total={bidData?.bids?.totalCount || 0}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          {bids?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={data?.bids?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.bids?.pageInfo.hasPreviousPage}
+            />
+          )}
         </Stack>
       </UserProfileTemplate>
     </LargeLayout>

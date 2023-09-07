@@ -44,7 +44,6 @@ import SkeletonProperty from '../../../components/Skeleton/Property'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
 import TraitList from '../../../components/Trait/TraitList'
-import { chains } from '../../../connectors'
 import {
   convertAuctionFull,
   convertBidFull,
@@ -53,12 +52,10 @@ import {
   convertTraits,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useChainCurrencies from '../../../hooks/useChainCurrencies'
-import useNow from '../../../hooks/useNow'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
@@ -75,7 +72,8 @@ enum AssetTabs {
 
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
-const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
+const DetailPage: NextPage<Props> = ({ now }) => {
+  const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
@@ -89,21 +87,17 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   invariant(tokenId, 'tokenId is required')
   const chainId = parseInt(_chainId, 10)
 
-  const { data, refetch, loading, previousData } = useFetchAssetQuery({
+  const { data, refetch } = useFetchAssetQuery({
     variables: {
       chainId,
       collectionAddress,
       tokenId,
-      now: nowProp,
+      now,
       address: address || '',
     },
   })
-  const chainCurrency = useChainCurrencies(chainId, { onlyERC20: true })
 
-  const asset = useMemo(
-    () => data?.asset || previousData?.asset,
-    [data, previousData],
-  )
+  const asset = data?.asset
 
   const blockExplorer = useBlockExplorer(chainId)
 
@@ -121,7 +115,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     () => asset?.collection.standard === 'ERC721',
     [asset],
   )
-  const chain = useMemo(() => chains.find((x) => x.id === chainId), [chainId])
+  const chain = useMemo(
+    () => CHAINS.find((x) => x.id === chainId),
+    [CHAINS, chainId],
+  )
 
   const traits = useMemo(
     () => asset && asset.traits.nodes.length > 0 && convertTraits(asset),
@@ -138,28 +135,29 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [blockExplorer, collectionAddress, tokenId],
   )
 
-  const now = useNow()
   const auction = useMemo(() => {
     const first = asset?.auctions.nodes[0]
     if (!first) return
-    const auction = convertAuctionFull(first)
+    const auction = {
+      ...convertAuctionFull(first),
+      bids: first.offers.nodes.map(convertBidFull),
+    }
     if (!auction) return
     // check if auction is expired
-    if (new Date(auction.expireAt) <= now) return
+    if (new Date(auction.expireAt) <= new Date()) return
     // check if auction has a winning offer
     if (!!auction.winningOffer?.id) return
     return auction
-  }, [asset, now])
+  }, [asset])
+
+  const openBids = useMemo(() => asset?.bids.nodes.map(convertBidFull), [asset])
 
   const directSales = useMemo(
     () => asset?.sales.nodes.map(convertSaleFull) || [],
     [asset],
   )
 
-  const bestBid = useMemo(
-    () => asset?.auctions.nodes[0]?.offers.nodes.map(convertBidFull)[0],
-    [asset],
-  )
+  const bestAuctionBid = useMemo(() => auction?.bids[0], [auction?.bids])
 
   const creator = useMemo(
     () =>
@@ -170,6 +168,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const owners = useMemo(
     () => asset?.ownerships.nodes.map(convertOwnership) || [],
     [asset],
+  )
+
+  const bids = useMemo(
+    () => auction?.bids || openBids,
+    [auction?.bids, openBids],
   )
 
   const refresh = useCallback(async () => {
@@ -196,11 +199,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [refetch, refreshAsset, toast],
   )
 
-  if (!loading && !asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <LargeLayout>
       <Head
-        title={asset?.name || ''}
+        title={asset ? `${asset.name} - ${asset.collection.name}` : undefined}
         description={asset?.description}
         image={asset?.image}
       />
@@ -215,74 +218,82 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             {!asset ? (
               <Skeleton width="100%" height="100%" />
             ) : (
-              <TokenMedia
-                imageUrl={asset.image}
-                animationUrl={asset.animationUrl}
-                unlockedContent={
-                  showPreview ? undefined : asset.unlockedContent
-                }
-                defaultText={asset.name}
-                controls
-                sizes="
+              <>
+                <TokenMedia
+                  imageUrl={asset.image}
+                  animationUrl={asset.animationUrl}
+                  unlockedContent={
+                    showPreview ? undefined : asset.unlockedContent
+                  }
+                  defaultText={asset.name}
+                  controls
+                  sizes="
               (min-width: 80em) 500px,
               (min-width: 48em) 50vw,
               100vw"
-              />
-            )}
-            {asset && asset.hasUnlockableContent && (
-              <Flex
-                w="full"
-                mt={3}
-                direction={{ base: 'column', lg: 'row' }}
-                justify={{
-                  base: 'center',
-                  lg: isOwner ? 'space-between' : 'center',
-                }}
-                align="center"
-                gap={4}
-              >
-                <Flex align="center" gap={1.5}>
-                  <Heading as="h3" variant="heading3" color="brand.black">
-                    {t('asset.detail.unlockable.title')}
-                  </Heading>
-                  <Tooltip
-                    label={
-                      <Text as="span" variant="caption" color="brand.black">
-                        {t('asset.detail.unlockable.tooltip')}
-                      </Text>
-                    }
-                    placement="top"
-                    rounded="xl"
-                    shadow="lg"
-                    p={3}
-                    bg="white"
+                />
+                {asset.hasUnlockableContent && (
+                  <Flex
+                    w="full"
+                    mt={3}
+                    direction={{ base: 'column', lg: 'row' }}
+                    justify={{
+                      base: 'center',
+                      lg: isOwner ? 'space-between' : 'center',
+                    }}
+                    align="center"
+                    gap={4}
                   >
-                    <span>
-                      <Icon
-                        as={FaInfoCircle}
-                        color="gray.400"
-                        h={4}
-                        w={4}
-                        cursor="pointer"
-                      />
-                    </span>
-                  </Tooltip>
-                </Flex>
-                {isOwner && (
-                  <Flex as={FormControl} w="auto" align="center">
-                    <FormLabel mb={0} htmlFor="show-preview">
+                    <Flex align="center" gap={1.5}>
                       <Heading as="h3" variant="heading3" color="brand.black">
-                        {t('asset.detail.show-preview')}
+                        {t('asset.detail.unlockable.title')}
                       </Heading>
-                    </FormLabel>
-                    <Switch
-                      id="show-preview"
-                      isChecked={showPreview}
-                      onChange={(event) => setShowPreview(event.target.checked)}
-                    />
+                      <Tooltip
+                        label={
+                          <Text as="span" variant="caption" color="brand.black">
+                            {t('asset.detail.unlockable.tooltip')}
+                          </Text>
+                        }
+                        placement="top"
+                        rounded="xl"
+                        shadow="lg"
+                        p={3}
+                        bg="white"
+                      >
+                        <span>
+                          <Icon
+                            as={FaInfoCircle}
+                            color="gray.400"
+                            h={4}
+                            w={4}
+                            cursor="pointer"
+                          />
+                        </span>
+                      </Tooltip>
+                    </Flex>
+                    {isOwner && (
+                      <Flex as={FormControl} w="auto" align="center">
+                        <FormLabel mb={0} htmlFor="show-preview">
+                          <Heading
+                            as="h3"
+                            variant="heading3"
+                            color="brand.black"
+                          >
+                            {t('asset.detail.show-preview')}
+                          </Heading>
+                        </FormLabel>
+                        <Switch
+                          id="show-preview"
+                          isChecked={showPreview}
+                          onChange={(event) =>
+                            setShowPreview(event.target.checked)
+                          }
+                        />
+                      </Flex>
+                    )}
                   </Flex>
                 )}
-              </Flex>
+              </>
             )}
           </Center>
         </AspectRatio>
@@ -325,9 +336,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                       {t('asset.detail.menu.refresh-metadata')}
                     </MenuItem>
                     <Link
-                      href={`mailto:${
-                        environment.REPORT_EMAIL
-                      }?subject=${encodeURI(
+                      href={`mailto:${REPORT_EMAIL}?subject=${encodeURI(
                         t('asset.detail.menu.report.subject'),
                       )}&body=${encodeURI(
                         t('asset.detail.menu.report.body', asset),
@@ -346,7 +355,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             <SkeletonProperty items={3} />
           ) : (
             <TokenMetadata
-              assetId={asset.id}
+              chainId={asset.chainId}
+              collectionAddress={asset.collectionAddress}
+              tokenId={asset.tokenId}
               creator={creator}
               owners={owners}
               numberOfOwners={asset.ownerships.totalCount}
@@ -356,7 +367,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               isOpenCollection={asset.collection.mintType === 'PUBLIC'}
             />
           )}
-          {!asset ? (
+          {!asset || !data.currencies?.nodes ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
@@ -366,14 +377,14 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               assetId={asset.id}
               chainId={chainId}
               blockExplorer={blockExplorer}
-              currencies={chainCurrency.data?.currencies?.nodes || []}
+              currencies={data.currencies?.nodes}
               signer={signer}
               currentAccount={address}
               isSingle={isSingle}
               isHomepage={false}
               isOwner={isOwner}
               auction={auction}
-              bestBid={bestBid}
+              bestAuctionBid={bestAuctionBid}
               directSales={directSales}
               ownAllSupply={ownAllSupply}
               onOfferCanceled={refresh}
@@ -523,11 +534,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               <Box h={96} overflowY="auto" py={6}>
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
-                    now={nowProp}
+                    bids={bids}
                     chainId={chainId}
-                    collectionAddress={collectionAddress}
-                    tokenId={tokenId}
-                    auctionId={auction?.id}
                     signer={signer}
                     account={address}
                     isSingle={isSingle}

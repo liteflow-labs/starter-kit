@@ -1,16 +1,24 @@
 query FetchUserBidsPlaced(
   $limit: Int!
   $offset: Int!
-  $orderBy: [OfferOpenBuysOrderBy!]
+  $orderBy: [OffersOrderBy!]
   $address: Address!
 ) {
-  bids: offerOpenBuys(
+  bids: offers(
     orderBy: $orderBy
     first: $limit
     offset: $offset
-    filter: { makerAddress: { equalTo: $address } }
+    filter: {
+      type: { equalTo: BUY }
+      availableQuantity: { greaterThan: "0" }
+      signature: { isNull: false }
+      makerAddress: { equalTo: $address }
+    }
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       id
       unitPrice
@@ -18,6 +26,7 @@ query FetchUserBidsPlaced(
       availableQuantity
       expiredAt
       createdAt
+      auctionId
       maker {
         address
         name

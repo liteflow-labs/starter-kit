@@ -85,11 +85,19 @@ const SalesDirectForm: FC<Props> = ({
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const defaultExpirationValue = formatDateDatetime(
-    dayjs().add(offerValidity, 'second').toISOString(),
+  const defaultExpirationValue = useMemo(
+    () =>
+      formatDateDatetime(dayjs().add(offerValidity, 'second').toISOString()),
+    [offerValidity],
   )
-  const minDate = formatDateDatetime(dayjs().add(1, 'day').toISOString())
-  const maxDate = formatDateDatetime(dayjs().add(1, 'year').toISOString())
+  const minDate = useMemo(
+    () => formatDateDatetime(dayjs().add(1, 'day').toISOString()),
+    [],
+  )
+  const maxDate = useMemo(
+    () => formatDateDatetime(dayjs().add(1, 'year').toISOString()),
+    [],
+  )
 
   const {
     register,
@@ -202,7 +210,7 @@ const SalesDirectForm: FC<Props> = ({
           placeholder={t('sales.direct.form.currency.placeholder')}
           choices={currencies.map((x) => ({
             value: x.id,
-            label: x.symbol || '',
+            label: x.symbol,
             image: x.image,
             caption: x.name,
           }))}
@@ -285,7 +293,11 @@ const SalesDirectForm: FC<Props> = ({
             <NumberInput
               clampValueOnBlur={false}
               min={1}
-              max={quantityAvailable?.toNumber()}
+              max={
+                quantityAvailable.lte(Number.MAX_SAFE_INTEGER - 1)
+                  ? quantityAvailable.toNumber()
+                  : Number.POSITIVE_INFINITY - 1
+              }
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
@@ -296,12 +308,10 @@ const SalesDirectForm: FC<Props> = ({
                 {...register('quantity', {
                   required: t('sales.direct.form.validation.required'),
                   validate: (value) => {
-                    if (
-                      parseFloat(value) < 1 ||
-                      parseFloat(value) > quantityAvailable?.toNumber()
-                    ) {
+                    const valueBN = BigNumber.from(value)
+                    if (valueBN.lt(1) || valueBN.gt(quantityAvailable)) {
                       return t('sales.direct.form.validation.in-range', {
-                        max: quantityAvailable?.toNumber(),
+                        max: quantityAvailable.toString(),
                       })
                     }
                     if (!/^\d+$/.test(value)) {
@@ -323,7 +333,9 @@ const SalesDirectForm: FC<Props> = ({
             <FormHelperText>
               <Text as="p" variant="text" color="gray.500">
                 {t('sales.direct.form.available', {
-                  count: quantityAvailable.toNumber(),
+                  count: quantityAvailable.lte(Number.MAX_SAFE_INTEGER - 1)
+                    ? quantityAvailable.toNumber()
+                    : Number.MAX_SAFE_INTEGER - 1,
                 })}
               </Text>
             </FormHelperText>

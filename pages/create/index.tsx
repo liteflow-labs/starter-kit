@@ -11,7 +11,7 @@ import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCirc
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import React, { useMemo } from 'react'
+import React from 'react'
 import Empty from '../../components/Empty/Empty'
 import Head from '../../components/Head'
 import Image from '../../components/Image/Image'
@@ -33,12 +33,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
 const CreatePage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back } = useRouter()
-  const { data, previousData } = useFetchCollectionsForMintQuery()
+  const { data } = useFetchCollectionsForMintQuery()
 
-  const collections = useMemo(
-    () => data?.collections || previousData?.collections,
-    [data, previousData],
-  )
+  const collections = data?.collections
 
   return (
     <Layout>

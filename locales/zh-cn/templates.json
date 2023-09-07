@@ -1,6 +1,15 @@
 {
   "error": {
-    "500": "很抱歉，出了点问题。"
+    "404": {
+      "title": "未找到数据",
+      "description": "哎呀！ 我们在我们的服务器上找不到您要查找的数据。 如果问题仍然存在，请随时联系我们的支持团队寻求帮助。"
+    },
+    "500": {
+      "short": "很抱歉，出了点问题。",
+      "title": "内部服务器错误",
+      "description": "哎呀！ 我们的服务器遇到了意外问题。 如果问题仍然存在，请随时联系我们的支持团队寻求帮助。"
+    },
+    "button": "联系支持人员"
   },
   "home": {
     "collections": {
@@ -236,14 +245,6 @@
       }
     }
   },
-  "pagination": {
-    "result": {
-      "label": "每页结果数",
-      "caption": "第 <0>{{from}}</0> 至 <0>{{to}}</0> 条结果，共 <0>{{total}}</0> 条",
-      "pages_one": "共 {{count}} 页",
-      "pages_other": "共 {{count}} 页"
-    }
-  },
   "user": {
     "auctions": {
       "nav": {
@@ -318,8 +319,10 @@
         "accepted": "出价已接受"
       },
       "actions": {
-        "accept": "接受"
+        "accept": "接受",
+        "view": "查看 NFT"
       },
+      "auction": "拍卖",
       "orderBy": {
         "label": "排序方式",
         "values": {

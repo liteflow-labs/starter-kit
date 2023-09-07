@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import {
   Button,
   Flex,
@@ -11,7 +12,7 @@ import {
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
@@ -31,33 +32,28 @@ const NotificationPage: NextPage = ({}) => {
   useLoginRedirect()
   const [_, setCookies] = useCookies()
 
-  const { data, fetchMore, loading, previousData } = useGetNotificationsQuery({
+  const {
+    data: notificationData,
+    fetchMore,
+    networkStatus,
+  } = useGetNotificationsQuery({
     variables: {
       cursor: null,
       address: address || '',
     },
+    notifyOnNetworkStatusChange: true,
     skip: !address,
   })
 
-  const notificationData = useMemo(
-    () => data || previousData,
-    [data, previousData],
-  )
-  const notifications = useMemo(
-    () => notificationData?.notifications?.nodes || [],
-    [notificationData],
-  )
-
-  const hasNextPage = useMemo(
-    () => data?.notifications?.pageInfo.hasNextPage,
-    [data],
-  )
+  const notifications = notificationData?.notifications?.nodes
+  const hasNextPage = notificationData?.notifications?.pageInfo.hasNextPage
+  const endCursor = notificationData?.notifications?.pageInfo.endCursor
 
   const loadMore = useCallback(async () => {
     try {
       await fetchMore({
         variables: {
-          cursor: notificationData?.notifications?.pageInfo.endCursor,
+          cursor: endCursor,
         },
         updateQuery: concatToQuery('notifications'),
       })
@@ -67,7 +63,7 @@ const NotificationPage: NextPage = ({}) => {
         status: 'error',
       })
     }
-  }, [notificationData?.notifications?.pageInfo.endCursor, fetchMore, toast])
+  }, [endCursor, fetchMore, toast])
 
   useEffect(() => {
     if (!address) return
@@ -85,15 +81,8 @@ const NotificationPage: NextPage = ({}) => {
         {t('notifications.title')}
       </Heading>
       <Stack spacing={6} mt={12}>
-        {(notifications || []).map((notification) => (
-          <NotificationDetail
-            key={notification.id}
-            currentAccount={address || null}
-            {...notification}
-          />
-        ))}
-        {loading && (
-          <SkeletonList items={5} gap={6}>
+        {!notifications ? (
+          <SkeletonList items={12} gap={6}>
             <Flex align="center" gap={4}>
               <Skeleton height="56px" width="56px" borderRadius="full" />
               <Flex flex={1} gap={1} direction="column">
@@ -101,15 +90,27 @@ const NotificationPage: NextPage = ({}) => {
               </Flex>
             </Flex>
           </SkeletonList>
-        )}
-        {hasNextPage && (
-          <Button isLoading={loading} onClick={loadMore}>
-            <Text as="span" isTruncated>
-              {t('notifications.loadMore')}
-            </Text>
-          </Button>
-        )}
-        {!loading && notifications.length === 0 && (
+        ) : notifications.length > 0 ? (
+          <>
+            {notifications.map((notification) => (
+              <NotificationDetail
+                key={notification.id}
+                currentAccount={address || null}
+                {...notification}
+              />
+            ))}
+            {hasNextPage && (
+              <Button
+                isLoading={networkStatus === NetworkStatus.fetchMore}
+                onClick={loadMore}
+              >
+                <Text as="span" isTruncated>
+                  {t('notifications.loadMore')}
+                </Text>
+              </Button>
+            )}
+          </>
+        ) : (
           <Empty
             icon={<Icon as={FaBell} color="brand.500" h={9} w={9} />}
             title={t('notifications.empty.title')}

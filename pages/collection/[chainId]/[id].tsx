@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Flex,
   Grid,
   GridItem,
@@ -9,15 +10,16 @@ import {
   ModalContent,
   ModalHeader,
   SimpleGrid,
-  Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { FC, useCallback, useMemo } from 'react'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
+import CollectionHeaderSkeleton from '../../../components/Collection/CollectionHeaderSkeleton'
+import CollectionMetrics from '../../../components/Collection/CollectionMetrics'
+import CollectionMetricsSkeleton from '../../../components/Collection/CollectionMetricsSkeleton'
 import Empty from '../../../components/Empty/Empty'
 import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
 import FilterNav from '../../../components/Filter/FilterNav'
@@ -31,14 +33,15 @@ import {
   convertAsset,
   convertAuctionWithBestBid,
   convertCollectionFull,
+  convertCollectionMetrics,
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
 import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
+  useFetchCollectionMetricsQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
@@ -46,6 +49,7 @@ import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
 } from '../../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../../hooks/useAssetFilterState'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
@@ -58,38 +62,50 @@ type Props = {
 }
 
 const CollectionPage: FC<Props> = ({ now }) => {
+  const { REPORT_EMAIL, PAGINATION_LIMIT } = useEnvironment()
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
   })
   const collectionAddress = useRequiredQueryParamSingle('id')
-  const isSmall = useBreakpointValue({ base: true, md: false })
+  const isSmall = useBreakpointValue(
+    { base: true, md: false },
+    { fallback: 'md' },
+  )
   const { t } = useTranslation('templates')
   const { address } = useAccount()
-  const { data: collectionData, loading } = useFetchCollectionDetailsQuery({
+  const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
-      collectionAddress: collectionAddress,
-      chainId: chainId,
+      collectionAddress,
+      chainId,
     },
   })
+  const collection = collectionData?.collection
+
+  const { data: collectionMetricsData } = useFetchCollectionMetricsQuery({
+    variables: {
+      collectionAddress,
+      chainId,
+    },
+  })
+
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>(
     'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
   )
   const filter = useAssetFilterFromQuery()
-  const { data: assetData, loading: assetLoading } =
-    useFetchCollectionAssetsQuery({
-      variables: {
-        collectionAddress,
-        now,
-        currentAccount: address || '',
-        limit,
-        offset,
-        orderBy,
-        chainId: chainId,
-        filter: convertFilterToAssetFilter(filter, now),
-      },
-    })
+  const { data: assetData } = useFetchCollectionAssetsQuery({
+    variables: {
+      collectionAddress,
+      now,
+      currentAccount: address || '',
+      limit,
+      offset,
+      orderBy,
+      chainId: chainId,
+      filter: convertFilterToAssetFilter(filter, date),
+    },
+  })
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -119,11 +135,17 @@ const CollectionPage: FC<Props> = ({ now }) => {
   )
 
   const collectionDetails = useMemo(
+    () => (collection ? convertCollectionFull(collection) : undefined),
+    [collection],
+  )
+
+  const assets = assetData?.assets?.nodes
+  const collectionMetrics = useMemo(
     () =>
-      collectionData?.collection
-        ? convertCollectionFull(collectionData.collection)
-        : null,
-    [collectionData],
+      collectionMetricsData?.collection
+        ? convertCollectionMetrics(collectionMetricsData.collection)
+        : undefined,
+    [collectionMetricsData],
   )
 
   const changeOrder = useCallback(
@@ -139,16 +161,29 @@ const CollectionPage: FC<Props> = ({ now }) => {
 
   const [changePage, changeLimit] = usePaginate()
 
-  if (!loading && !collectionDetails) return <Error statusCode={404} />
+  if (collection === null) return <Error statusCode={404} />
   return (
     <LargeLayout>
-      <Head title="Explore collection" />
-
-      <CollectionHeader
-        collection={collectionDetails || {}}
-        loading={loading && !collectionDetails}
-        reportEmail={environment.REPORT_EMAIL}
+      <Head
+        title={collection?.name}
+        description={collection?.description || undefined}
+        image={collection?.image || undefined}
       />
+
+      {!collectionDetails ? (
+        <CollectionHeaderSkeleton />
+      ) : (
+        <CollectionHeader
+          collection={collectionDetails}
+          reportEmail={REPORT_EMAIL}
+        />
+      )}
+
+      {!collectionMetrics ? (
+        <CollectionMetricsSkeleton />
+      ) : (
+        <CollectionMetrics chainId={chainId} metrics={collectionMetrics} />
+      )}
 
       <Flex py="6" justifyContent="space-between">
         <FilterNav
@@ -195,7 +230,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             <ModalBody>
               <FilterAsset
                 noChain
-                selectedCollection={{ chainId, address: collectionAddress }}
+                currentCollection={{ chainId, address: collectionAddress }}
                 onFilterChange={updateFilter}
                 filter={filter}
               />
@@ -205,19 +240,19 @@ const CollectionPage: FC<Props> = ({ now }) => {
       )}
       <Grid gap="6" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
         {showFilters && (
-          <GridItem as="aside">
+          <GridItem as="aside" overflow="hidden">
             <FilterAsset
               noChain
-              selectedCollection={{ chainId, address: collectionAddress }}
+              currentCollection={{ chainId, address: collectionAddress }}
               onFilterChange={updateFilter}
               filter={filter}
             />
           </GridItem>
         )}
         <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
-          {assetLoading && !assetData ? (
+          {assets === undefined ? (
             <SkeletonGrid
-              items={environment.PAGINATION_LIMIT}
+              items={PAGINATION_LIMIT}
               compact
               columns={
                 showFilters
@@ -227,14 +262,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             >
               <SkeletonTokenCard />
             </SkeletonGrid>
-          ) : assetData?.assets?.totalCount === 0 ? (
-            <Flex align="center" justify="center" h="full" py={12}>
-              <Empty
-                title={t('collection.empty.title')}
-                description={t('collection.empty.description')}
-              />
-            </Flex>
-          ) : (
+          ) : assets.length > 0 ? (
             <SimpleGrid
               flexWrap="wrap"
               spacing="4"
@@ -244,7 +272,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
                   : { base: 1, sm: 2, md: 4, lg: 6 }
               }
             >
-              {assetData?.assets?.nodes.map((x, i) => (
+              {assets.map((x, i) => (
                 <Flex key={i} justify="center" overflow="hidden">
                   <TokenCard
                     asset={convertAsset(x)}
@@ -263,32 +291,24 @@ const CollectionPage: FC<Props> = ({ now }) => {
                 </Flex>
               ))}
             </SimpleGrid>
+          ) : (
+            <Empty
+              title={t('collection.empty.title')}
+              description={t('collection.empty.description')}
+            />
           )}
-          <Box mt="6" py="6" borderTop="1px" borderColor="gray.200">
+          <Divider my="6" display={assets?.length !== 0 ? 'block' : 'none'} />
+          {assets?.length !== 0 && (
             <Pagination
               limit={limit}
-              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              total={assetData?.assets?.totalCount}
               onPageChange={changePage}
               onLimitChange={changeLimit}
-              result={{
-                label: t('pagination.result.label'),
-                caption: (props) => (
-                  <Trans
-                    ns="templates"
-                    i18nKey="pagination.result.caption"
-                    values={props}
-                    components={[
-                      <Text as="span" color="brand.black" key="text" />,
-                    ]}
-                  />
-                ),
-                pages: (props) =>
-                  t('pagination.result.pages', { count: props.total }),
-              }}
+              hasNextPage={assetData?.assets?.pageInfo.hasNextPage}
+              hasPreviousPage={assetData?.assets?.pageInfo.hasPreviousPage}
             />
-          </Box>
+          )}
         </GridItem>
       </Grid>
     </LargeLayout>

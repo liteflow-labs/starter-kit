@@ -1,6 +1,15 @@
 {
   "error": {
-    "500": "Lo sentimos, algo salió mal."
+    "404": {
+      "title": "Datos no encontrados",
+      "description": "¡Ups! No pudimos encontrar los datos que está buscando en nuestro servidor. Si el problema persiste, no dude en ponerse en contacto con nuestro equipo de soporte para obtener ayuda."
+    },
+    "500": {
+      "short": "Lo sentimos, algo salió mal.",
+      "title": "Error Interno del Servidor",
+      "description": "¡Ups! Encontramos un problema inesperado en nuestro servidor. Si el problema persiste, no dude en ponerse en contacto con nuestro equipo de soporte para obtener ayuda."
+    },
+    "button": "Soporte de contacto"
   },
   "home": {
     "collections": {
@@ -236,14 +245,6 @@
       }
     }
   },
-  "pagination": {
-    "result": {
-      "label": "Resultados por página",
-      "caption": "<0>{{from}}</0> - <0>{{to}}</0> de <0>{{total}}</0> resultados",
-      "pages_one": "de {{count}} página",
-      "pages_other": "de {{count}} páginas"
-    }
-  },
   "user": {
     "auctions": {
       "nav": {
@@ -318,8 +319,10 @@
         "accepted": "Oferta Aceptada"
       },
       "actions": {
-        "accept": "Aceptar"
+        "accept": "Aceptar",
+        "view": "Ver NFT"
       },
+      "auction": "Subasta",
       "orderBy": {
         "label": "Ordenar por",
         "values": {

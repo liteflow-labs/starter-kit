@@ -17,12 +17,12 @@ import {
   convertSale,
   convertUser,
 } from '../../convert'
-import environment from '../../environment'
 import {
   useFetchAssetsQuery,
   useFetchDefaultAssetIdsQuery,
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Link from '../Link/Link'
@@ -35,29 +35,24 @@ type Props = {
 }
 
 const AssetsHomeSection: FC<Props> = ({ date }) => {
+  const { PAGINATION_LIMIT, HOME_TOKENS } = useEnvironment()
   const { address } = useAccount()
   const { t } = useTranslation('templates')
   const defaultAssetQuery = useFetchDefaultAssetIdsQuery({
-    variables: { limit: environment.PAGINATION_LIMIT },
-    skip: environment.HOME_TOKENS.length > 0,
+    variables: { limit: PAGINATION_LIMIT },
+    skip: HOME_TOKENS.length > 0,
   })
   useHandleQueryError(defaultAssetQuery)
-  const defaultAssetData = useMemo(
-    () => defaultAssetQuery.data || defaultAssetQuery.previousData,
-    [defaultAssetQuery.data, defaultAssetQuery.previousData],
-  )
+  const defaultAssetData = defaultAssetQuery.data
 
   const assetIds = useMemo(() => {
-    if (environment.HOME_TOKENS.length > 0) {
+    if (HOME_TOKENS.length > 0) {
       // Pseudo randomize the array based on the date's seconds
-      const tokens = [...environment.HOME_TOKENS]
+      const tokens = [...HOME_TOKENS]
 
       const seed = date.getTime() / 1000 // convert to seconds as date is currently truncated to the second
       const randomTokens: string[] = []
-      while (
-        tokens.length &&
-        randomTokens.length < environment.PAGINATION_LIMIT
-      ) {
+      while (tokens.length && randomTokens.length < PAGINATION_LIMIT) {
         // generate random based on seed and length of the remaining tokens array
         // It will change when seed changes (basically every request) and also on each iteration of the loop as length of tokens changes
         const randomIndex = seed % tokens.length
@@ -68,38 +63,33 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       }
       return randomTokens
     }
-    return (defaultAssetData?.assets?.nodes || []).map((x) => x.id)
-  }, [defaultAssetData, date])
+    return defaultAssetData?.assets?.nodes.map((x) => x.id)
+  }, [HOME_TOKENS, PAGINATION_LIMIT, defaultAssetData, date])
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {
       now: date,
-      limit: environment.PAGINATION_LIMIT,
-      assetIds: assetIds,
+      limit: PAGINATION_LIMIT,
+      assetIds: assetIds || [],
       address: address || '',
     },
+    skip: assetIds === undefined,
   })
   useHandleQueryError(assetsQuery)
-  const assetData = useMemo(
-    () => assetsQuery.data || assetsQuery.previousData,
-    [assetsQuery.data, assetsQuery.previousData],
-  )
+  const assetData = assetsQuery.data
 
   const assets = useOrderByKey(
     assetIds,
-    assetData?.assets?.nodes || [],
+    assetData?.assets?.nodes,
     (asset) => asset.id,
   )
 
-  if (
-    (defaultAssetQuery.loading && !defaultAssetData) ||
-    (assetsQuery.loading && !assetData)
-  )
+  if (!assets)
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />
         <SkeletonGrid
-          items={environment.PAGINATION_LIMIT}
+          items={PAGINATION_LIMIT}
           columns={{ sm: 2, md: 3, lg: 4 }}
         >
           <SkeletonTokenCard />

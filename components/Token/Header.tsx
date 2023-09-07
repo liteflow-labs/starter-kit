@@ -21,6 +21,9 @@ import TokenMetadata from '../Token/Metadata'
 export type Props = {
   asset: {
     id: string
+    chainId: number
+    collectionAddress: string
+    tokenId: string
     name: string
     image: string
     animationUrl: string | null | undefined
@@ -44,7 +47,7 @@ export type Props = {
   owners: TokenAssetProps['owners']
   numberOfOwners: TokenAssetProps['numberOfOwners']
   auction: SaleDetailProps['auction']
-  bestBid: SaleDetailProps['bestBid']
+  bestAuctionBid: SaleDetailProps['bestAuctionBid']
   sales: SaleDetailProps['directSales']
   isHomepage: boolean
   signer: Signer | undefined
@@ -60,7 +63,7 @@ const TokenHeader: FC<Props> = ({
   owners,
   numberOfOwners,
   auction,
-  bestBid,
+  bestAuctionBid,
   sales,
   isHomepage,
   signer,
@@ -135,7 +138,9 @@ const TokenHeader: FC<Props> = ({
           </Heading>
         </Stack>
         <TokenMetadata
-          assetId={asset.id}
+          chainId={asset.chainId}
+          collectionAddress={asset.collectionAddress}
+          tokenId={asset.tokenId}
           creator={creator}
           owners={owners}
           numberOfOwners={numberOfOwners}
@@ -154,7 +159,7 @@ const TokenHeader: FC<Props> = ({
           isSingle={isSingle}
           ownAllSupply={ownAllSupply}
           auction={auction}
-          bestBid={bestBid}
+          bestAuctionBid={bestAuctionBid}
           directSales={sales}
           signer={signer}
           currentAccount={currentAccount}

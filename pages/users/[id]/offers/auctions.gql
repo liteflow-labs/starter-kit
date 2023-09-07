@@ -10,7 +10,10 @@ query FetchUserAuctions(
     offset: $offset
     filter: { creatorAddress: { equalTo: $address } }
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       id
       endAt

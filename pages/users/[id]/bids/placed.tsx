@@ -18,7 +18,6 @@ import {
 import { useIsLoggedIn } from '@liteflow/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
@@ -32,12 +31,12 @@ import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import { convertBidFull } from '../../../../convert'
-import environment from '../../../../environment'
 import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsPlacedQuery,
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
+import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
@@ -46,11 +45,8 @@ import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
-type Props = {
-  now: Date
-}
-
-const BidPlacedPage: NextPage<Props> = ({ now }) => {
+const BidPlacedPage: NextPage = () => {
+  const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -62,7 +58,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
-  const { data, refetch, loading, previousData } = useFetchUserBidsPlacedQuery({
+  const { data, refetch } = useFetchUserBidsPlacedQuery({
     variables: {
       address: userAddress,
       limit,
@@ -71,15 +67,13 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const bidData = useMemo(() => data || previousData, [data, previousData])
-
   const bids = useMemo(
     () =>
-      (bidData?.bids?.nodes || []).map((x) => ({
+      data?.bids?.nodes.map((x) => ({
         ...convertBidFull(x),
         asset: x.asset,
       })),
-    [bidData],
+    [data],
   )
 
   const onCanceled = useCallback(async () => {
@@ -96,15 +90,15 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
     },
     [replace, pathname, query],
   )
+
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={now}
         signer={signer}
         currentAccount={address}
         address={userAddress}
         currentTab="bids"
-        loginUrlForReferral={environment.BASE_URL + '/login'}
+        loginUrlForReferral={BASE_URL + '/login'}
       >
         <Stack spacing={6}>
           <Flex
@@ -166,15 +160,9 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading && !bidData ? (
+          {bids === undefined ? (
             <Loader />
-          ) : bids.length == 0 ? (
-            <Empty
-              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
-              title={t('user.bid-placed.table.empty.title')}
-              description={t('user.bid-placed.table.empty.description')}
-            />
-          ) : (
+          ) : bids.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>
@@ -204,6 +192,7 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
                             w={10}
                             objectFit="cover"
                             rounded="2xl"
+                            flexShrink={0}
                           />
                           <Flex
                             direction="column"
@@ -212,6 +201,11 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
                           >
                             <Text as="span" noOfLines={1}>
                               {item.asset.name}
+                              {item.auctionId && (
+                                <Tag size="sm" ml={2}>
+                                  {t('user.bid-received.auction')}
+                                </Tag>
+                              )}
                             </Text>
                             {item.availableQuantity.gt(1) && (
                               <Text
@@ -284,31 +278,24 @@ const BidPlacedPage: NextPage<Props> = ({ now }) => {
                 </Tbody>
               </Table>
             </TableContainer>
+          ) : (
+            <Empty
+              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
+              title={t('user.bid-placed.table.empty.title')}
+              description={t('user.bid-placed.table.empty.description')}
+            />
           )}
-
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            onLimitChange={changeLimit}
-            onPageChange={changePage}
-            page={page}
-            total={bidData?.bids?.totalCount || 0}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          {bids?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={data?.bids?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.bids?.pageInfo.hasPreviousPage}
+            />
+          )}
         </Stack>
       </UserProfileTemplate>
     </LargeLayout>

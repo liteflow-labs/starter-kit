@@ -35,11 +35,10 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import environment from '../../../environment'
 import { useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useChainCurrencies from '../../../hooks/useChainCurrencies'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -62,6 +61,8 @@ type SaleOption = {
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
+  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
+    useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
@@ -73,12 +74,13 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     () => assetId.split('-'),
     [assetId],
   )
+  invariant(chainId && collectionAddress && tokenId, 'Invalid asset id')
 
-  const { data, loading, previousData } = useOfferForAssetQuery({
+  const { data } = useOfferForAssetQuery({
     variables: {
-      chainId: chainId ? parseInt(chainId, 10) : 0,
-      collectionAddress: collectionAddress || '',
-      tokenId: tokenId || '',
+      chainId: parseInt(chainId, 10),
+      collectionAddress: collectionAddress,
+      tokenId: tokenId,
       now,
       address: address || '',
     },
@@ -86,12 +88,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
 
   const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
-  const currencyRes = useChainCurrencies(data?.asset?.chainId)
-
-  const asset = useMemo(
-    () => data?.asset || previousData?.asset,
-    [data, previousData],
-  )
+  const asset = data?.asset
 
   const royaltiesPerTenThousand =
     asset?.royalties.reduce((sum, { value }) => sum + value, 0) || 0
@@ -106,16 +103,9 @@ const OfferPage: NextPage<Props> = ({ now }) => {
       ? isSameAddress(asset.creator.address.toLowerCase(), address)
       : false
 
-  const currencyData = useMemo(
-    () => currencyRes.data || currencyRes.previousData,
-    [currencyRes.data, currencyRes.previousData],
-  )
-  const currencies = useMemo(
-    () => currencyData?.currencies?.nodes || [],
-    [currencyData],
-  )
+  const currencies = data?.currencies?.nodes
   const auctionCurrencies = useMemo(
-    () => currencies.filter((c) => c.address) as BidCurrency[],
+    () => currencies?.filter((c) => c.address) as BidCurrency[] | undefined,
     [currencies],
   )
 
@@ -152,7 +142,8 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   }, [toast, t, push, assetId])
 
   const saleForm = useMemo(() => {
-    if (!currencies || !asset) return <SkeletonForm items={2} />
+    if (!currencies || !asset || !auctionCurrencies)
+      return <SkeletonForm items={2} />
     if (sale === SaleType.FIXED_PRICE)
       return (
         <SalesDirectForm
@@ -166,7 +157,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
           quantityAvailable={quantityAvailable}
           signer={signer}
           isCreator={isCreator}
-          offerValidity={environment.OFFER_VALIDITY_IN_SECONDS}
+          offerValidity={OFFER_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
       )
@@ -176,7 +167,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
           signer={signer}
           assetId={asset.id}
           currencies={auctionCurrencies}
-          auctionValidity={environment.AUCTION_VALIDITY_IN_SECONDS}
+          auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
       )
@@ -192,16 +183,20 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     signer,
     isCreator,
     onCreated,
+    OFFER_VALIDITY_IN_SECONDS,
+    AUCTION_VALIDITY_IN_SECONDS,
   ])
 
-  if (!loading && !asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head
-        title={asset ? t('offers.form.meta.title', asset) : ''}
-        description={asset ? t('offers.form.meta.description', asset) : ''}
+        title={asset && t('offers.form.meta.title', asset)}
+        description={asset && t('offers.form.meta.description', asset)}
         image={asset?.image}
-      />
+      >
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
 
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" my={12}>

@@ -18,7 +18,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useIsLoggedIn } from '@liteflow/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
@@ -36,9 +35,9 @@ import {
   convertAuctionFull,
   convertAuctionWithBestBid,
 } from '../../../../convert'
-import environment from '../../../../environment'
 import { AuctionsOrderBy, useFetchUserAuctionsQuery } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
+import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
@@ -47,11 +46,8 @@ import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
-type Props = {
-  now: Date
-}
-
-const AuctionPage: NextPage<Props> = ({ now }) => {
+const AuctionPage: NextPage = () => {
+  const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -63,7 +59,7 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
-  const { data, refetch, loading, previousData } = useFetchUserAuctionsQuery({
+  const { data, refetch } = useFetchUserAuctionsQuery({
     variables: {
       address: userAddress,
       limit,
@@ -72,18 +68,16 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const auctionData = useMemo(() => data || previousData, [data, previousData])
-
   const auctions = useMemo(
     () =>
-      (auctionData?.auctions?.nodes || []).map((x) => ({
+      data?.auctions?.nodes.map((x) => ({
         ...convertAuctionWithBestBid(x),
         ...convertAuctionFull(x),
         asset: x.asset,
         createdAt: new Date(x.createdAt),
         ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
       })),
-    [auctionData],
+    [data],
   )
 
   const onAuctionAccepted = useCallback(async () => {
@@ -111,12 +105,11 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={now}
         signer={signer}
         currentAccount={address}
         address={userAddress}
         currentTab="offers"
-        loginUrlForReferral={environment.BASE_URL + '/login'}
+        loginUrlForReferral={BASE_URL + '/login'}
       >
         <Stack spacing={6}>
           <Flex
@@ -178,15 +171,9 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading && !auctionData ? (
+          {auctions === undefined ? (
             <Loader />
-          ) : auctions.length == 0 ? (
-            <Empty
-              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
-              title={t('user.auctions.table.empty.title')}
-              description={t('user.auctions.table.empty.description')}
-            />
-          ) : (
+          ) : auctions.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>
@@ -216,6 +203,7 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
                             w={10}
                             objectFit="cover"
                             rounded="2xl"
+                            flexShrink={0}
                           />
                           <Flex
                             my="auto"
@@ -262,31 +250,24 @@ const AuctionPage: NextPage<Props> = ({ now }) => {
                 </Tbody>
               </Table>
             </TableContainer>
+          ) : (
+            <Empty
+              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
+              title={t('user.auctions.table.empty.title')}
+              description={t('user.auctions.table.empty.description')}
+            />
           )}
-
-          <Pagination
-            limit={limit}
-            limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
-            onLimitChange={changeLimit}
-            onPageChange={changePage}
-            page={page}
-            total={auctionData?.auctions?.totalCount || 0}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          {auctions?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={data?.auctions?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.auctions?.pageInfo.hasPreviousPage}
+            />
+          )}
         </Stack>
       </UserProfileTemplate>
     </LargeLayout>

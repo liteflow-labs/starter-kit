@@ -6,6 +6,7 @@ import FeaturedHomeSection from 'components/HomeSection/Featured'
 import ResourcesHomeSection from 'components/HomeSection/Resources'
 import UsersHomeSection from 'components/HomeSection/Users'
 import { NextPage } from 'next'
+import Head from '../components/Head'
 import LargeLayout from '../layouts/large'
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
 const HomePage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
+      <Head />
       <Stack spacing={12}>
         <FeaturedHomeSection date={now} />
         <CollectionsHomeSection />
