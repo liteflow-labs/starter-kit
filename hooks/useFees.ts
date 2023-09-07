@@ -28,22 +28,25 @@ export default function useFees({
     setLoading(true)
     const abortController = new AbortController()
     const debounce = setTimeout(async () => {
-      await fetchFees({
-        context: {
-          fetchOptions: {
-            signal: abortController.signal,
+      try {
+        await fetchFees({
+          context: {
+            fetchOptions: {
+              signal: abortController.signal,
+            },
           },
-        },
-        variables: {
-          chainId,
-          collectionAddress,
-          tokenId,
-          currencyId,
-          quantity: quantity.toString(),
-          unitPrice: unitPrice.toString(),
-        },
-      })
-      setLoading(false)
+          variables: {
+            chainId,
+            collectionAddress,
+            tokenId,
+            currencyId,
+            quantity: quantity.toString(),
+            unitPrice: unitPrice.toString(),
+          },
+        })
+      } finally {
+        setLoading(false)
+      }
     }, debounceTimeout)
     return () => {
       abortController.abort()
