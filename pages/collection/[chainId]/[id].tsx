@@ -103,7 +103,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       offset,
       orderBy,
       chainId: chainId,
-      filter: convertFilterToAssetFilter(filter, date),
+      filter: convertFilterToAssetFilter(filter, now),
     },
   })
 
