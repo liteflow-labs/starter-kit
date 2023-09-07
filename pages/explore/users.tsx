@@ -18,12 +18,12 @@ import SkeletonGrid from '../../components/Skeleton/Grid'
 import SkeletonUserCard from '../../components/Skeleton/UserCard'
 import UserCard from '../../components/User/UserCard'
 import { convertUserWithCover } from '../../convert'
-import environment from '../../environment'
 import {
   AccountFilter,
   AccountsOrderBy,
   useFetchExploreUsersQuery,
 } from '../../graphql'
+import useEnvironment from '../../hooks/useEnvironment'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
@@ -41,6 +41,7 @@ const searchFilter = (search: string): AccountFilter =>
   } as AccountFilter)
 
 const UsersPage: NextPage<Props> = () => {
+  const { PAGINATION_LIMIT } = useEnvironment()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue(
     { base: true, md: false },
@@ -111,7 +112,7 @@ const UsersPage: NextPage<Props> = () => {
           </Flex>
           {users === undefined ? (
             <SkeletonGrid
-              items={environment.PAGINATION_LIMIT}
+              items={PAGINATION_LIMIT}
               compact
               columns={{ sm: 2, md: 4, lg: 6 }}
               py={6}
@@ -142,7 +143,7 @@ const UsersPage: NextPage<Props> = () => {
           {users?.length !== 0 && (
             <Pagination
               limit={limit}
-              limits={[environment.PAGINATION_LIMIT, 24, 36, 48]}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
               onPageChange={changePage}
               onLimitChange={changeLimit}

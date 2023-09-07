@@ -2,21 +2,20 @@ import { Text } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, Fragment, useMemo } from 'react'
-import { convertBidFull } from '../../convert'
-import { useFetchAssetBidsQuery, useFetchAuctionBidsQuery } from '../../graphql'
+import { FC, Fragment } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import List from '../List/List'
 import SkeletonList from '../Skeleton/List'
 import SkeletonListItem from '../Skeleton/ListItem'
-import Bid from './Bid'
+import Bid, { type Props as BidProps } from './Bid'
 
 type Props = {
-  now: Date
+  bids:
+    | (BidProps['bid'] & {
+        currency: { id: string }
+      })[]
+    | undefined
   chainId: number
-  collectionAddress: string
-  tokenId: string
-  auctionId: string | undefined
   signer: Signer | undefined
   account: string | null | undefined
   isSingle: boolean
@@ -27,11 +26,8 @@ type Props = {
 }
 
 const BidList: FC<Props> = ({
-  now,
+  bids,
   chainId,
-  collectionAddress,
-  tokenId,
-  auctionId,
   signer,
   account,
   isSingle,
@@ -41,30 +37,7 @@ const BidList: FC<Props> = ({
   onCanceled,
 }) => {
   const { t } = useTranslation('components')
-  const { data: assetBids } = useFetchAssetBidsQuery({
-    variables: {
-      chainId,
-      collectionAddress,
-      tokenId,
-      now: now,
-    },
-    skip: !!auctionId,
-  })
-  const { data: auctionBids } = useFetchAuctionBidsQuery({
-    variables: {
-      auctionId: auctionId || '',
-      now,
-    },
-    skip: !auctionId,
-  })
   const blockExplorer = useBlockExplorer(chainId)
-
-  const bids = useMemo(() => {
-    const list = auctionId
-      ? auctionBids?.auction?.offers.nodes
-      : assetBids?.asset?.bids.nodes
-    return list?.map(convertBidFull)
-  }, [auctionId, auctionBids, assetBids])
 
   if (bids === undefined)
     return (

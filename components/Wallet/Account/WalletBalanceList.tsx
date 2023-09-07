@@ -42,9 +42,15 @@ const WalletBalanceList: FC<IProps> = ({ account, currencies }) => {
               objectFit="cover"
             />
           }
-          label={x.name}
+          label={x.symbol}
+          subtitle={x.name}
           action={
-            <Text as="span" color="brand.black" fontWeight="medium">
+            <Text
+              as="span"
+              color="brand.black"
+              fontWeight="medium"
+              float="right"
+            >
               <WalletBalance account={account} currency={x} />
             </Text>
           }

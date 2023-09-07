@@ -1,5 +1,5 @@
 import { Events } from '@nft/webhook'
-import environment from '../environment'
+import invariant from 'ts-invariant'
 
 export default function OfferExpired({
   asset,
@@ -9,6 +9,7 @@ export default function OfferExpired({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (!maker?.email) return null
   return {
     to: maker.email,
@@ -21,7 +22,7 @@ export default function OfferExpired({
     <br/>
     You can create a new sale for this NFT at anytime. To do so just click the link below that will redirect you to it.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Create a new sale</a><br/>`,
   }

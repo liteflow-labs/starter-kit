@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
-import environment from '../environment'
+import invariant from 'ts-invariant'
 
 export default function BidExpired({
   asset,
@@ -14,6 +14,7 @@ export default function BidExpired({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   const amount = BigNumber.from(quantity).mul(unitPrice)
   if (!maker?.email) return null
   return {
@@ -38,7 +39,7 @@ export default function BidExpired({
     <br/>
     You can place a new bid for this NFT at anytime. To do so just click the link below that will redirect you to it.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Place a new bid</a><br/>`,
   }

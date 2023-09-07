@@ -1,5 +1,5 @@
 import invariant from 'ts-invariant'
-import environment from '../environment'
+import useEnvironment from './useEnvironment'
 import useQueryParamSingle from './useQueryParamSingle'
 
 type PaginateQuery = {
@@ -9,18 +9,20 @@ type PaginateQuery = {
 }
 
 export default function usePaginateQuery({
-  defaultLimit = environment.PAGINATION_LIMIT,
+  defaultLimit,
 }: {
   defaultLimit?: number
 } = {}): PaginateQuery {
+  const { PAGINATION_LIMIT } = useEnvironment()
   const page = useQueryParamSingle('page', {
     defaultValue: 1,
     parse: (value) => (value ? parseInt(value, 10) : 1),
   })
   invariant(page, 'page is falsy')
   const limit = useQueryParamSingle('limit', {
-    defaultValue: defaultLimit,
-    parse: (value) => (value ? parseInt(value, 10) : defaultLimit),
+    defaultValue: defaultLimit || PAGINATION_LIMIT,
+    parse: (value) =>
+      value ? parseInt(value, 10) : defaultLimit || PAGINATION_LIMIT,
   })
   invariant(limit, 'limit is falsy')
   const offset = (page - 1) * limit
