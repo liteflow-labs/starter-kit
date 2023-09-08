@@ -41,9 +41,10 @@ type Props = {
     | 'website'
   >
   onUpdated: (address: string) => void
+  onError: (error: unknown) => void
 }
 
-const UserFormEdit: FC<Props> = ({ signer, account, onUpdated }) => {
+const UserFormEdit: FC<Props> = ({ signer, account, onUpdated, onError }) => {
   const { t } = useTranslation('components')
   const {
     control,
@@ -80,8 +81,12 @@ const UserFormEdit: FC<Props> = ({ signer, account, onUpdated }) => {
   const [editAccount] = useUpdateAccount(signer)
 
   const onSubmit = handleSubmit(async (data) => {
-    const address = await editAccount(data)
-    onUpdated(address)
+    try {
+      const address = await editAccount(data)
+      onUpdated(address)
+    } catch (error) {
+      onError(error)
+    }
   })
 
   return (
