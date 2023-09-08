@@ -71,7 +71,7 @@ export type Environment = {
 
   // List of tokens randomized to be featured on the homepage with the following format: [chainId]-[contractAddress]-[tokenId]
   // If empty, the tokens will be the last created ones
-  HOME_TOKENS: []
+  HOME_TOKENS: string[]
 
   /**
    * SEO Configuration
@@ -126,7 +126,23 @@ const getEnvironment = async (): Promise<Environment> => {
       maxRoyaltiesPerTenThousand: number
       offerValiditySeconds: number
       offerAuctionDeltaSeconds: number
-      metadata: any
+      metadata: Partial<{
+        REPORT_EMAIL: string
+
+        LOGO: string
+        FAVICON: string
+        BRAND_COLOR: string
+
+        FEATURED_TOKEN: string[]
+        HOME_COLLECTIONS: string[]
+        HOME_USERS: string[]
+        HOME_TOKENS: string[]
+
+        META_TITLE: string
+        META_KEYWORDS: string
+        META_DESCRIPTION: string
+        META_COMPANY_NAME: string
+      }>
     }
   }>(
     `${
@@ -147,7 +163,7 @@ const getEnvironment = async (): Promise<Environment> => {
   return {
     // Base configuration
     LITEFLOW_API_KEY: process.env.NEXT_PUBLIC_LITEFLOW_API_KEY,
-    REPORT_EMAIL: metadata.REPORT_EMAIL,
+    REPORT_EMAIL: metadata.REPORT_EMAIL || '',
     PAGINATION_LIMIT: 12,
     OFFER_VALIDITY_IN_SECONDS: offerValiditySeconds,
     AUCTION_VALIDITY_IN_SECONDS: offerAuctionDeltaSeconds,
@@ -229,15 +245,15 @@ const getEnvironment = async (): Promise<Environment> => {
     MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
     ALCHEMY_API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
     // Home page configuration
-    FEATURED_TOKEN: [],
-    HOME_COLLECTIONS: [],
-    HOME_USERS: [],
-    HOME_TOKENS: [],
+    FEATURED_TOKEN: metadata.FEATURED_TOKEN || [],
+    HOME_COLLECTIONS: metadata.HOME_COLLECTIONS || [],
+    HOME_USERS: metadata.HOME_USERS || [],
+    HOME_TOKENS: metadata.HOME_TOKENS || [],
     // SEO Configuration
     META_COMPANY_NAME: name,
-    META_TITLE: metadata.META_TITLE,
-    META_DESCRIPTION: metadata.META_DESCRIPTION,
-    META_KEYWORDS: metadata.META_KEYWORDS,
+    META_TITLE: metadata.META_TITLE || name,
+    META_DESCRIPTION: metadata.META_DESCRIPTION || name,
+    META_KEYWORDS: metadata.META_KEYWORDS || name,
     // NFT Mint Behavior
     LAZYMINT: hasLazyMint,
     UNLOCKABLE_CONTENT: hasUnlockableContent,
