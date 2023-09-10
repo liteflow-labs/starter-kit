@@ -1,3 +1,4 @@
+import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
@@ -216,16 +217,32 @@ const environment = {
    * NFT Mint Behavior
    */
   // Enable/disable the lazy minting feature. If enabled, the NFTs will be minted on the first sale
-  LAZYMINT: false,
+  LAZYMINT: true,
 
   // Enable/disable the unlockable content feature. If enabled, the NFTs will have unlockable content only accessible to owners
-  UNLOCKABLE_CONTENT: false,
+  UNLOCKABLE_CONTENT: true,
 }
 
 export type Environment = typeof environment
 
 export const EnvironmentContext = createContext<Environment>({} as Environment)
 
-const getEnvironment = async (): Promise<Environment> => environment
+const getEnvironment = async (
+  req: NextIncomingMessage | undefined,
+): Promise<Environment> => {
+  const host = req
+    ? `${req.headers['x-forwarded-proto'] || 'https'}://${
+        req.headers['x-forwarded-host'] || req.headers['host']
+      }`
+    : window.location.origin
+  const response = await fetch(`${host}/api/detect`, {
+    headers: { 'Content-type': 'application/json' },
+  })
+  const metadata = await response.json()
+  return {
+    ...environment,
+    ...metadata,
+  }
+}
 
 export default getEnvironment
