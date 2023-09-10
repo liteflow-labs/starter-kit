@@ -3,11 +3,12 @@ import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import { Box, ChakraProvider } from '@chakra-ui/react'
 import { LiteflowProvider } from '@liteflow/react'
-import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import dayjs from 'dayjs'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
 import App from 'next/app'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
@@ -17,25 +18,24 @@ import React, {
   Fragment,
   JSX,
   PropsWithChildren,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import {
-  useAccount as useWagmiAccount,
-  useDisconnect,
   WagmiConfig,
+  useDisconnect,
+  useAccount as useWagmiAccount,
 } from 'wagmi'
 import getClient from '../client'
 import Banner from '../components/Banner/Banner'
 import Footer from '../components/Footer/Footer'
-import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
 import connectors from '../connectors'
 import getEnvironment, { Environment, EnvironmentContext } from '../environment'
 import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
+import useEnvironment from '../hooks/useEnvironment'
 import { theme } from '../styles/theme'
 import Error from './_error'
 require('dayjs/locale/ja')
@@ -44,8 +44,8 @@ require('dayjs/locale/es-mx')
 
 NProgress.configure({ showSpinner: false })
 
-function Layout({ children }: PropsWithChildren<{ environment: Environment }>) {
-  const { META_COMPANY_NAME } = useContext(EnvironmentContext)
+function Layout({ children }: PropsWithChildren) {
+  const { META_COMPANY_NAME } = useEnvironment()
   const router = useRouter()
   const { address } = useAccount()
   const userProfileLink = useMemo(
@@ -125,7 +125,7 @@ function AccountProvider({
   children,
   onError,
 }: PropsWithChildren<{ onError: (code: number) => void }>) {
-  const { LITEFLOW_API_KEY, BASE_URL } = useContext(EnvironmentContext)
+  const { LITEFLOW_API_KEY, BASE_URL } = useEnvironment()
   const { login, jwtToken, logout } = useAccount()
   const { disconnect } = useDisconnect()
 
@@ -217,14 +217,10 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
     () => connectors(environment),
     [environment],
   )
-
   return (
     <ErrorBoundary>
       <EnvironmentContext.Provider value={environment}>
-        <Head
-          title={environment.META_TITLE}
-          description={environment.META_DESCRIPTION}
-        >
+        <Head>
           <meta name="keywords" content={environment.META_KEYWORDS} />
 
           <meta name="author" content={environment.META_COMPANY_NAME} />
@@ -251,7 +247,7 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
                   endpoint={process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL}
                 >
                   <AccountProvider onError={setErrorCode}>
-                    <Layout environment={environment}>
+                    <Layout>
                       {errorCode ? (
                         <Error statusCode={errorCode} />
                       ) : (

@@ -1,6 +1,16 @@
-query FetchOwners($assetId: String!, $offset: Int!, $limit: Int!) {
+query FetchOwners(
+  $chainId: Int!
+  $collectionAddress: Address!
+  $tokenId: String!
+  $offset: Int!
+  $limit: Int!
+) {
   ownerships(
-    filter: { assetId: { equalTo: $assetId } }
+    filter: {
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $collectionAddress }
+      tokenId: { equalTo: $tokenId }
+    }
     offset: $offset
     first: $limit
     orderBy: [
@@ -9,7 +19,10 @@ query FetchOwners($assetId: String!, $offset: Int!, $limit: Int!) {
       OWNER_ADDRESS_ASC
     ]
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       quantity
       ownerAddress

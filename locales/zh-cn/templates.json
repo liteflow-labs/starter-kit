@@ -245,14 +245,6 @@
       }
     }
   },
-  "pagination": {
-    "result": {
-      "label": "每页结果数",
-      "caption": "第 <0>{{from}}</0> 至 <0>{{to}}</0> 条结果，共 <0>{{total}}</0> 条",
-      "pages_one": "{{count}} 页",
-      "pages_other": "{{count}} 页"
-    }
-  },
   "user": {
     "auctions": {
       "nav": {
@@ -327,8 +319,10 @@
         "accepted": "出价已接受"
       },
       "actions": {
-        "accept": "接受"
+        "accept": "接受",
+        "view": "查看 NFT"
       },
+      "auction": "拍卖",
       "orderBy": {
         "label": "排序方式",
         "values": {

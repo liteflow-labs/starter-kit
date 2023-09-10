@@ -59,6 +59,7 @@ const UserProfileInfo: FC<{
   useEffect(() => {
     if (!isLoggedIn) return
     if (referralUrl) return
+    if (!ownerLoggedIn) return
     if (!loginUrlForReferral) return
     if (!signer) return
     if (creatingReferralLink) return
@@ -78,6 +79,7 @@ const UserProfileInfo: FC<{
     toast,
     signer,
     creatingReferralLink,
+    ownerLoggedIn,
   ])
 
   const handleReferralCopyLink = useCallback(() => {

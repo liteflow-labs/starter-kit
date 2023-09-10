@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
+import invariant from 'ts-invariant'
 
 export default function OfferPurchased({
   unitPrice,
@@ -14,6 +15,7 @@ export default function OfferPurchased({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (type !== 'SALE') return null
   if (!seller?.email) return null
   return {

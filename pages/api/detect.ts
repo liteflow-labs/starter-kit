@@ -1,5 +1,5 @@
-import { Client } from 'pg'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Client } from 'pg'
 
 export default async function detect(
   req: NextApiRequest,

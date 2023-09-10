@@ -14,7 +14,8 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { useCallback, useContext, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
@@ -32,11 +33,10 @@ import {
   convertSale,
   convertUser,
 } from '../../../convert'
-import { EnvironmentContext } from '../../../environment'
 import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useChainCurrencies from '../../../hooks/useChainCurrencies'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
@@ -47,50 +47,45 @@ type Props = {
 
 const BidPage: NextPage<Props> = ({ now }) => {
   const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
-    useContext(EnvironmentContext)
+    useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
   const { address } = useAccount()
   const assetId = useRequiredQueryParamSingle('id')
+  const [chainId, collectionAddress, tokenId] = useMemo(
+    () => assetId.split('-'),
+    [assetId],
+  )
+  invariant(chainId && collectionAddress && tokenId, 'Invalid asset id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data, loading, previousData } = useBidOnAssetQuery({
+  const { data } = useBidOnAssetQuery({
     variables: {
-      id: assetId,
+      chainId: parseInt(chainId, 10),
+      collectionAddress: collectionAddress,
+      tokenId: tokenId,
       now: date,
       address: address || '',
     },
   })
 
-  const currencyRes = useChainCurrencies(data?.asset?.chainId, {
-    onlyERC20: true,
-  })
-
-  const currencyData = useMemo(
-    () => currencyRes.data || currencyRes.previousData,
-    [currencyRes.data, currencyRes.previousData],
-  )
-
   const blockExplorer = useBlockExplorer(data?.asset?.chainId)
 
-  const asset = useMemo(
-    () => data?.asset || previousData?.asset,
-    [data, previousData],
-  )
+  const asset = data?.asset
 
   const auction = useMemo(
     () => (asset?.auctions.nodes[0] ? asset.auctions.nodes[0] : undefined),
     [asset],
   )
-  const currencies = useMemo(
+  const bidCurrencies = useMemo(
     () =>
-      auction ? [auction.currency] : currencyData?.currencies?.nodes || [],
-    [auction, currencyData],
+      (auction ? [auction.currency] : data?.currencies?.nodes) as
+        | BidCurrency[]
+        | undefined,
+    [auction, data],
   )
-
-  const bidCurrencies = currencies as BidCurrency[]
 
   const highestBid = useMemo(() => auction?.bestBid.nodes[0], [auction])
 
@@ -102,21 +97,23 @@ const BidPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${assetId}`)
   }, [toast, t, push, assetId])
 
-  if (!loading && !asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head
-        title={asset ? t('offers.bid.meta.title', asset) : ''}
+        title={asset && t('offers.bid.meta.title', asset)}
         description={
-          asset
-            ? t('offers.bid.meta.description', {
-                name: asset.name,
-                creator: asset.creator.name || asset.creator.address,
-              })
-            : ''
+          asset &&
+          t('offers.bid.meta.description', {
+            name: asset.name,
+            creator: asset.creator.name || asset.creator.address,
+          })
         }
         image={asset?.image}
-      />
+      >
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
+
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" my={12}>
         {t('offers.bid.title')}
@@ -210,7 +207,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
               </>
             )}
 
-            {!asset ? (
+            {!asset || !bidCurrencies ? (
               <SkeletonForm items={2} />
             ) : asset.collection.standard === 'ERC721' ? (
               <OfferFormBid

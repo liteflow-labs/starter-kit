@@ -3,9 +3,9 @@ import { MdError } from '@react-icons/all-files/md/MdError'
 import Empty from 'components/Empty/Empty'
 import { NextPage, NextPageContext } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import Head from '../components/Head'
-import { EnvironmentContext } from '../environment'
+import useEnvironment from '../hooks/useEnvironment'
 import SmallLayout from '../layouts/small'
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const Error: NextPage<Props> = ({ statusCode }) => {
-  const { REPORT_EMAIL } = useContext(EnvironmentContext)
+  const { REPORT_EMAIL } = useEnvironment()
   const { t } = useTranslation('templates')
   const content = useMemo(() => {
     if (statusCode === 404) {

@@ -17,10 +17,9 @@ import {
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
-import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useContext, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -31,10 +30,10 @@ import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
 import { convertTrade } from '../../../../convert'
-import { EnvironmentContext } from '../../../../environment'
 import { TradesOrderBy, useFetchUserTradeSoldQuery } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
+import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
@@ -43,12 +42,8 @@ import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow } from '../../../../utils'
 
-type Props = {
-  now: string
-}
-
-const TradeSoldPage: NextPage<Props> = ({ now }) => {
-  const { BASE_URL, PAGINATION_LIMIT, CHAINS } = useContext(EnvironmentContext)
+const TradeSoldPage: NextPage = () => {
+  const { BASE_URL, PAGINATION_LIMIT, CHAINS } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -58,8 +53,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const date = useMemo(() => new Date(now), [now])
-  const { data, loading, previousData } = useFetchUserTradeSoldQuery({
+  const { data } = useFetchUserTradeSoldQuery({
     variables: {
       address: userAddress,
       limit,
@@ -68,6 +62,8 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
     },
   })
 
+  const trades = useMemo(() => data?.trades?.nodes.map(convertTrade), [data])
+
   const changeOrder = useCallback(
     async (orderBy: any) => {
       await replace({ pathname, query: { ...query, orderBy } })
@@ -75,15 +71,9 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
     [replace, pathname, query],
   )
 
-  const tradeData = useMemo(() => data || previousData, [data, previousData])
-  const trades = useMemo(
-    () => (tradeData?.trades?.nodes || []).map(convertTrade),
-    [tradeData],
-  )
   return (
     <LargeLayout>
       <UserProfileTemplate
-        now={date}
         signer={signer}
         currentAccount={address}
         address={userAddress}
@@ -158,15 +148,9 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
             </Box>
           </Flex>
 
-          {loading && !tradeData ? (
+          {trades === undefined ? (
             <Loader />
-          ) : trades.length == 0 ? (
-            <Empty
-              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
-              title={t('user.trade-sold.table.empty.title')}
-              description={t('user.trade-sold.table.empty.description')}
-            />
-          ) : (
+          ) : trades.length > 0 ? (
             <TableContainer bg="white" shadow="base" rounded="lg">
               <Table>
                 <Thead>
@@ -197,6 +181,7 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
                               w={10}
                               objectFit="cover"
                               rounded="2xl"
+                              flexShrink={0}
                             />
                             <Flex
                               my="auto"
@@ -267,32 +252,24 @@ const TradeSoldPage: NextPage<Props> = ({ now }) => {
                 </Tbody>
               </Table>
             </TableContainer>
+          ) : (
+            <Empty
+              icon={<Icon as={HiOutlineSearch} w={8} h={8} color="gray.400" />}
+              title={t('user.trade-sold.table.empty.title')}
+              description={t('user.trade-sold.table.empty.description')}
+            />
           )}
-
-          <Pagination
-            limit={limit}
-            limits={[PAGINATION_LIMIT, 24, 36, 48]}
-            onLimitChange={changeLimit}
-            onPageChange={changePage}
-            page={page}
-            total={tradeData?.trades?.totalCount || 0}
-            isLoading={loading}
-            result={{
-              label: t('pagination.result.label'),
-              caption: (props) => (
-                <Trans
-                  ns="templates"
-                  i18nKey="pagination.result.caption"
-                  values={props}
-                  components={[
-                    <Text as="span" color="brand.black" key="text" />,
-                  ]}
-                />
-              ),
-              pages: (props) =>
-                t('pagination.result.pages', { count: props.total }),
-            }}
-          />
+          {trades?.length !== 0 && (
+            <Pagination
+              limit={limit}
+              limits={[PAGINATION_LIMIT, 24, 36, 48]}
+              page={page}
+              onPageChange={changePage}
+              onLimitChange={changeLimit}
+              hasNextPage={data?.trades?.pageInfo.hasNextPage}
+              hasPreviousPage={data?.trades?.pageInfo.hasPreviousPage}
+            />
+          )}
         </Stack>
       </UserProfileTemplate>
     </LargeLayout>

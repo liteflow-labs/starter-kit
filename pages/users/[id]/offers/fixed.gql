@@ -14,7 +14,10 @@ query FetchUserFixedPrice(
       makerAddress: { equalTo: $address }
     }
   ) {
-    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
     nodes {
       id
       unitPrice
@@ -44,7 +47,6 @@ query FetchUserFixedPrice(
         id
         name
         image
-        id
         decimals
         symbol
       }

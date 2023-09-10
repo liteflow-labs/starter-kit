@@ -245,14 +245,6 @@
       }
     }
   },
-  "pagination": {
-    "result": {
-      "label": "Resultados por página",
-      "caption": "<0>{{from}}</0> - <0>{{to}}</0> de <0>{{total}}</0> resultados",
-      "pages_one": "{{count}} página",
-      "pages_other": "{{count}} páginas"
-    }
-  },
   "user": {
     "auctions": {
       "nav": {
@@ -327,8 +319,10 @@
         "accepted": "Oferta Aceptada"
       },
       "actions": {
-        "accept": "Aceptar"
+        "accept": "Aceptar",
+        "view": "Ver NFT"
       },
+      "auction": "Subasta",
       "orderBy": {
         "label": "Ordenar por",
         "values": {

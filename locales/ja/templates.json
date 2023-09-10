@@ -245,14 +245,6 @@
       }
     }
   },
-  "pagination": {
-    "result": {
-      "label": "ページあたりの結果",
-      "caption": "<0>{{from}}</0> - <0>{{to}}</0> の <0>{{total}}</0> 結果",
-      "pages_one": "{{count}}ページ",
-      "pages_other": "{{count}}ページ"
-    }
-  },
   "user": {
     "auctions": {
       "nav": {
@@ -327,8 +319,10 @@
         "accepted": "入札受諾"
       },
       "actions": {
-        "accept": "受け入れる"
+        "accept": "受け入れる",
+        "view": "NFTを見る"
       },
+      "auction": "競売",
       "orderBy": {
         "label": "並び替え",
         "values": {

@@ -1,6 +1,7 @@
 import { Box, Divider, Flex, SimpleGrid, Stack } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { ReactElement } from 'react'
+import useEnvironment from '../../hooks/useEnvironment'
 import Empty from '../Empty/Empty'
 import type { IProp as PaginationProps } from '../Pagination/Pagination'
 import Pagination from '../Pagination/Pagination'
@@ -11,13 +12,15 @@ import type { Props as NFTCardProps } from './Card'
 import NFTCard from './Card'
 
 type IProps<Order extends string> = {
-  assets: (NFTCardProps['asset'] & {
-    auction: NFTCardProps['auction']
-    creator: NFTCardProps['creator']
-    sale: NFTCardProps['sale']
-    numberOfSales: number
-    hasMultiCurrency: boolean
-  })[]
+  assets:
+    | (NFTCardProps['asset'] & {
+        auction: NFTCardProps['auction']
+        creator: NFTCardProps['creator']
+        sale: NFTCardProps['sale']
+        numberOfSales: number
+        hasMultiCurrency: boolean
+      })[]
+    | undefined
   orderBy: {
     value: Order
     choices: {
@@ -27,15 +30,14 @@ type IProps<Order extends string> = {
     onSort: (orderBy: any) => Promise<void>
   }
   pagination: PaginationProps
-  loading: boolean
 }
 
 const TokenGrid = <Order extends string>({
   assets,
-  loading,
   orderBy,
   pagination,
 }: IProps<Order>): ReactElement => {
+  const { PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('components')
   return (
     <Stack spacing={6}>
@@ -49,23 +51,16 @@ const TokenGrid = <Order extends string>({
           inlineLabel
         />
       </Box>
-      {loading ? (
+      {assets === undefined ? (
         <SkeletonGrid
-          items={pagination.limit}
+          items={pagination.withoutLimit ? PAGINATION_LIMIT : pagination.limit}
           compact
           spacing={{ base: 4, lg: 3, xl: 4 }}
           columns={{ base: 1, sm: 2, md: 3 }}
         >
           <SkeletonTokenCard />
         </SkeletonGrid>
-      ) : assets.length === 0 ? (
-        <Empty
-          title={t('token.grid.empty.title')}
-          description={t('token.grid.empty.description')}
-          button={t('token.grid.empty.action')}
-          href="/explore"
-        />
-      ) : (
+      ) : assets.length > 0 ? (
         <SimpleGrid
           flexWrap="wrap"
           spacing={{ base: 4, lg: 3, xl: 4 }}
@@ -96,9 +91,16 @@ const TokenGrid = <Order extends string>({
             ),
           )}
         </SimpleGrid>
+      ) : (
+        <Empty
+          title={t('token.grid.empty.title')}
+          description={t('token.grid.empty.description')}
+          button={t('token.grid.empty.action')}
+          href="/explore"
+        />
       )}
-      <Divider display={pagination.total === 0 ? 'none' : 'block'} />
-      <Pagination {...pagination} />
+      <Divider display={assets?.length !== 0 ? 'block' : 'none'} />
+      {assets?.length !== 0 && <Pagination {...pagination} />}
     </Stack>
   )
 }

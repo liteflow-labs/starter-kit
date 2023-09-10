@@ -11,7 +11,10 @@ query FetchAssetHistory(
     chainId
     collectionAddress
     tokenId
-    histories(orderBy: DATE_DESC) {
+    histories(
+      orderBy: DATE_DESC
+      first: 100 # TODO: implement pagination
+    ) {
       nodes {
         action
         date

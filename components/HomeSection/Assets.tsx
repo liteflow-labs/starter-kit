@@ -10,19 +10,19 @@ import {
 } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useContext, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import {
   convertAsset,
   convertAuctionWithBestBid,
   convertSale,
   convertUser,
 } from '../../convert'
-import { EnvironmentContext } from '../../environment'
 import {
   useFetchAssetsQuery,
   useFetchDefaultAssetIdsQuery,
 } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Link from '../Link/Link'
@@ -35,7 +35,7 @@ type Props = {
 }
 
 const AssetsHomeSection: FC<Props> = ({ date }) => {
-  const { PAGINATION_LIMIT, HOME_TOKENS } = useContext(EnvironmentContext)
+  const { PAGINATION_LIMIT, HOME_TOKENS } = useEnvironment()
   const { address } = useAccount()
   const { t } = useTranslation('templates')
   const defaultAssetQuery = useFetchDefaultAssetIdsQuery({
@@ -43,10 +43,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
     skip: HOME_TOKENS.length > 0,
   })
   useHandleQueryError(defaultAssetQuery)
-  const defaultAssetData = useMemo(
-    () => defaultAssetQuery.data || defaultAssetQuery.previousData,
-    [defaultAssetQuery.data, defaultAssetQuery.previousData],
-  )
+  const defaultAssetData = defaultAssetQuery.data
 
   const assetIds = useMemo(() => {
     if (HOME_TOKENS.length > 0) {
@@ -66,33 +63,28 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       }
       return randomTokens
     }
-    return (defaultAssetData?.assets?.nodes || []).map((x) => x.id)
+    return defaultAssetData?.assets?.nodes.map((x) => x.id)
   }, [HOME_TOKENS, PAGINATION_LIMIT, defaultAssetData, date])
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {
       now: date,
       limit: PAGINATION_LIMIT,
-      assetIds: assetIds,
+      assetIds: assetIds || [],
       address: address || '',
     },
+    skip: assetIds === undefined,
   })
   useHandleQueryError(assetsQuery)
-  const assetData = useMemo(
-    () => assetsQuery.data || assetsQuery.previousData,
-    [assetsQuery.data, assetsQuery.previousData],
-  )
+  const assetData = assetsQuery.data
 
   const assets = useOrderByKey(
     assetIds,
-    assetData?.assets?.nodes || [],
+    assetData?.assets?.nodes,
     (asset) => asset.id,
   )
 
-  if (
-    (defaultAssetQuery.loading && !defaultAssetData) ||
-    (assetsQuery.loading && !assetData)
-  )
+  if (!assets)
     return (
       <Stack spacing={6}>
         <Skeleton noOfLines={1} height={8} width={200} />

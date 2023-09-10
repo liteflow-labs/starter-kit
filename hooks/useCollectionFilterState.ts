@@ -8,7 +8,8 @@ export default function useCollectionFilterState(filter: Filter): {
   close: () => void
   count: number
 } {
-  const display = useBreakpointValue({ base: false, md: true }) || false
+  const display =
+    useBreakpointValue({ base: false, md: true }, { fallback: 'md' }) || false
   const [showFilters, setShowFilters] = useState(display)
   const filterCount = useMemo(() => {
     let count = 0

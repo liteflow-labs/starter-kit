@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
+import invariant from 'ts-invariant'
 import { formatDate } from '../utils'
 
 export default function BidCreated({
@@ -16,6 +17,7 @@ export default function BidCreated({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (!taker?.email) return null
   return {
     to: taker.email,

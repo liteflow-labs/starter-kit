@@ -1,22 +1,22 @@
 import CollectionCard from 'components/Collection/CollectionCard'
 import { convertCollection } from 'convert'
-import { EnvironmentContext } from 'environment'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useContext, useMemo } from 'react'
+import { FC } from 'react'
 import invariant from 'ts-invariant'
 import {
   CollectionFilter,
   FetchCollectionsQuery,
   useFetchCollectionsQuery,
 } from '../../graphql'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import HomeGridSection from './Grid'
 
 type Props = {}
 
 const CollectionsHomeSection: FC<Props> = () => {
-  const { HOME_COLLECTIONS, PAGINATION_LIMIT } = useContext(EnvironmentContext)
+  const { HOME_COLLECTIONS, PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('templates')
   const collectionsQuery = useFetchCollectionsQuery({
     variables: {
@@ -37,24 +37,19 @@ const CollectionsHomeSection: FC<Props> = () => {
   })
   useHandleQueryError(collectionsQuery)
 
-  const collectionData = useMemo(
-    () => collectionsQuery.data || collectionsQuery.previousData,
-    [collectionsQuery.data, collectionsQuery.previousData],
-  )
-
   const orderedCollections = useOrderByKey(
     HOME_COLLECTIONS,
-    collectionData?.collections?.nodes || [],
+    collectionsQuery.data?.collections?.nodes,
     (collection) => [collection.chainId, collection.address].join('-'),
   )
 
+  if (!HOME_COLLECTIONS.length) return null
   return (
     <HomeGridSection
       explore={{
         href: '/explore/collections',
         title: t('home.collections.explore'),
       }}
-      isLoading={collectionsQuery.loading && !collectionData}
       items={orderedCollections}
       itemRender={(
         collection: NonNullable<

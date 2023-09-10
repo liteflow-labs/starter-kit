@@ -7,7 +7,7 @@ import {
   Spacer,
   Stack,
 } from '@chakra-ui/react'
-import { FC, useCallback, useContext, useMemo } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 import {
   convertAssetWithSupplies,
   convertAuctionFull,
@@ -16,12 +16,9 @@ import {
   convertSaleFull,
   convertUser,
 } from '../../convert'
-import { EnvironmentContext } from '../../environment'
-import {
-  useFetchCurrenciesForBidsQuery,
-  useFetchFeaturedAssetsQuery,
-} from '../../graphql'
+import { useFetchFeaturedAssetsQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
+import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import useSigner from '../../hooks/useSigner'
@@ -33,33 +30,25 @@ type Props = {
 }
 
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
-  const { FEATURED_TOKEN } = useContext(EnvironmentContext)
+  const { FEATURED_TOKEN } = useEnvironment()
   const signer = useSigner()
   const { address } = useAccount()
-  const currenciesQuery = useFetchCurrenciesForBidsQuery()
   const featureAssetsQuery = useFetchFeaturedAssetsQuery({
     variables: {
       featuredIds: FEATURED_TOKEN,
       now: date,
       address: address || '',
     },
+    skip: !FEATURED_TOKEN.length,
   })
   useHandleQueryError(featureAssetsQuery)
-  useHandleQueryError(currenciesQuery)
 
-  const assetData = useMemo(
-    () => featureAssetsQuery.data || featureAssetsQuery.previousData,
-    [featureAssetsQuery.data, featureAssetsQuery.previousData],
-  )
+  const currencies = featureAssetsQuery.data?.currencies?.nodes
 
   const featured = useOrderByKey(
     FEATURED_TOKEN,
-    assetData?.assets?.nodes || [],
+    featureAssetsQuery.data?.assets?.nodes,
     (asset) => asset.id,
-  )
-  const currencyData = useMemo(
-    () => currenciesQuery.data || currenciesQuery.previousData,
-    [currenciesQuery.data, currenciesQuery.previousData],
   )
 
   const reloadInfo = useCallback(async () => {
@@ -68,36 +57,39 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
 
   const featuredAssets = useMemo(
     () =>
-      featured?.map((asset) => (
-        <TokenHeader
-          key={asset.id}
-          asset={convertAssetWithSupplies(asset)}
-          currencies={currencyData?.currencies?.nodes || []}
-          auction={
-            asset.auctions.nodes[0]
-              ? convertAuctionFull(asset.auctions.nodes[0])
-              : undefined
-          }
-          bestBid={
-            asset.auctions.nodes[0]?.bestBid?.nodes[0]
-              ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
-              : undefined
-          }
-          sales={asset.sales.nodes.map(convertSaleFull)}
-          creator={convertUser(asset.creator, asset.creator.address)}
-          owners={asset.ownerships.nodes.map(convertOwnership)}
-          numberOfOwners={asset.ownerships.totalCount}
-          isHomepage={true}
-          signer={signer}
-          currentAccount={address}
-          onOfferCanceled={reloadInfo}
-          onAuctionAccepted={reloadInfo}
-        />
-      )),
-    [featured, address, signer, reloadInfo, currencyData],
+      featured && currencies
+        ? featured.map((asset) => (
+            <TokenHeader
+              key={asset.id}
+              asset={convertAssetWithSupplies(asset)}
+              currencies={currencies}
+              auction={
+                asset.auctions.nodes[0]
+                  ? convertAuctionFull(asset.auctions.nodes[0])
+                  : undefined
+              }
+              bestAuctionBid={
+                asset.auctions.nodes[0]?.bestBid?.nodes[0]
+                  ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
+                  : undefined
+              }
+              sales={asset.sales.nodes.map(convertSaleFull)}
+              creator={convertUser(asset.creator, asset.creator.address)}
+              owners={asset.ownerships.nodes.map(convertOwnership)}
+              numberOfOwners={asset.ownerships.totalCount}
+              isHomepage={true}
+              signer={signer}
+              currentAccount={address}
+              onOfferCanceled={reloadInfo}
+              onAuctionAccepted={reloadInfo}
+            />
+          ))
+        : undefined,
+    [featured, address, signer, reloadInfo, currencies],
   )
 
-  if (featureAssetsQuery.loading && !assetData)
+  if (!FEATURED_TOKEN.length) return null
+  if (!featuredAssets)
     return (
       <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>
         <Box my="auto" p={{ base: 6, md: 12 }} textAlign="center">
@@ -114,7 +106,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
         </Stack>
       </SimpleGrid>
     )
-  if (!featuredAssets || featuredAssets.length === 0) return null
+  if (featuredAssets.length === 0) return null
   if (featuredAssets.length === 1) return <header>{featuredAssets}</header>
   return (
     <header>

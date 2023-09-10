@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatUnits } from '@ethersproject/units'
 import { Events } from '@nft/webhook'
+import invariant from 'ts-invariant'
 
 export default function AuctionBidExpired({
   asset,
@@ -13,6 +14,7 @@ export default function AuctionBidExpired({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (!maker?.email) return null
   const amount = BigNumber.from(quantity).mul(unitPrice)
   return {
