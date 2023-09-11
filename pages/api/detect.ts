@@ -1,12 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Client } from 'pg'
+import { Pool } from 'pg'
+import invariant from 'ts-invariant'
+
+invariant(process.env.DATABASE_URL, 'Env DATABASE_URL is missing')
+const client = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 10, // default
+  application_name: 'demo',
+  allowExitOnIdle: true, // don't wait for connections to close, perfect for serverless functions
+})
 
 export default async function detect(
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<void> {
-  const client = new Client({ connectionString: process.env.DATABASE_URL })
-  await client.connect()
   const domain = req.headers['x-forwarded-host'] || req.headers['host']
   const {
     rows: [organization],
