@@ -12,6 +12,7 @@ import useAccount from '../../hooks/useAccount'
 import useLoginRedirect from '../../hooks/useLoginRedirect'
 import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
+import { formatError } from '../../utils'
 
 const EditPage: NextPage = () => {
   const signer = useSigner()
@@ -29,7 +30,7 @@ const EditPage: NextPage = () => {
     skip: !isLoggedIn,
   })
 
-  const onSubmit = useCallback(
+  const onUpdated = useCallback(
     async (address: string) => {
       toast({
         title: t('users.form.notifications.updated'),
@@ -38,6 +39,16 @@ const EditPage: NextPage = () => {
       await push(`/users/${address}`)
     },
     [toast, t, push],
+  )
+
+  const onError = useCallback(
+    async (error: unknown) => {
+      toast({
+        title: formatError(error),
+        status: 'error',
+      })
+    },
+    [toast],
   )
 
   return (
@@ -52,7 +63,8 @@ const EditPage: NextPage = () => {
         ) : (
           <UserFormEdit
             signer={signer}
-            onUpdated={onSubmit}
+            onUpdated={onUpdated}
+            onError={onError}
             account={data.account}
           />
         )}
