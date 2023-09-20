@@ -55,7 +55,7 @@ const TokenGrid = <Order extends string>({
           items={
             pagination.withoutLimit
               ? environment.PAGINATION_LIMIT
-              : pagination.limit
+              : pagination.limit || environment.PAGINATION_LIMIT
           }
           compact
           spacing={{ base: 4, lg: 3, xl: 4 }}
