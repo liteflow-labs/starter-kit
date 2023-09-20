@@ -4,3 +4,4 @@ Disallow: /_next/image
 Disallow: /api/
 Disallow: /tokens/*/bid$
 Disallow: /tokens/*/offer$
+Disallow: /users/*
