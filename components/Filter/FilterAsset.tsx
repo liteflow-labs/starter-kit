@@ -17,8 +17,8 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { chains } from '../../connectors'
 import { Filter, OfferFilter } from '../../hooks/useAssetFilterFromQuery'
+import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
 import FilterByCollection from './FilterBy/Collection'
 import FilterByPrice from './FilterBy/Price'
@@ -54,6 +54,7 @@ const FilterAsset: NextPage<Props> = ({
   noChain,
   onFilterChange,
 }) => {
+  const { CHAINS } = useEnvironment()
   const { t } = useTranslation('components')
   const isSmall = useBreakpointValue(
     { base: true, sm: false },
@@ -91,10 +92,10 @@ const FilterAsset: NextPage<Props> = ({
     <Stack spacing={8} as="form" onSubmit={handleSubmit(onFilterChange)}>
       <Accordion
         allowMultiple
-        defaultIndex={isSmall ? [] : [noChain ? 2 : chains.length > 1 ? 3 : 2]}
+        defaultIndex={isSmall ? [] : [noChain ? 2 : CHAINS.length > 1 ? 3 : 2]}
       >
         {noChain ||
-          (chains.length > 1 && (
+          (CHAINS.length > 1 && (
             <AccordionItem>
               <AccordionButton>
                 <Heading variant="heading2" flex="1" textAlign="left">
@@ -111,7 +112,7 @@ const FilterAsset: NextPage<Props> = ({
                   }
                 >
                   <Stack spacing={1}>
-                    {chains.map(({ id, name }, i) => (
+                    {CHAINS.map(({ id, name }, i) => (
                       <Checkbox key={i} value={id}>
                         <Flex gap={2} alignItems="center">
                           <Image

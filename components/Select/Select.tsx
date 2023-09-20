@@ -143,9 +143,19 @@ const Select = <T,>({
                         />
                       </Box>
                     )}
-                    <Text as="span" isTruncated fontWeight="normal">
+                    <Text as="span" fontWeight="normal">
                       {selectedChoice.label}
                     </Text>
+                    {selectedChoice.caption && (
+                      <Text
+                        as="span"
+                        isTruncated
+                        variant="text-sm"
+                        color="gray.500"
+                      >
+                        {selectedChoice.caption}
+                      </Text>
+                    )}
                   </>
                 ) : (
                   <Text

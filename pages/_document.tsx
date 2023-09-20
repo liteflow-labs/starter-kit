@@ -15,6 +15,7 @@ import Document, {
 import { ComponentType, ReactElement } from 'react'
 import invariant from 'ts-invariant'
 import getClient from '../client'
+import getEnvironment from '../environment'
 import { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import { theme } from '../styles/theme'
 import { MyAppProps } from './_app'
@@ -54,8 +55,15 @@ class MyDocument extends Document {
   ): Promise<DocumentInitialProps & MyDocumentProps> {
     invariant(context.req)
     const jwt = context.req?.cookies?.[COOKIE_JWT_TOKEN] || null
+    const environment = await getEnvironment()
     // the `getClient` needs to be reset on every request as early as possible and before any rendering
-    const apolloClient = getClient(jwt, true)
+    const apolloClient = getClient(
+      environment.LITEFLOW_API_KEY,
+      jwt,
+      environment.BASE_URL,
+      true,
+      console.error,
+    )
     // Generate the now time, rounded to the second to avoid re-rendering on the client
     // TOFIX: find a better way to share the time between the app and document
     const now = new Date(Math.floor(Date.now() / 1000) * 1000)
@@ -63,7 +71,7 @@ class MyDocument extends Document {
     const AppTree = context.AppTree as typeof context.AppTree &
       ComponentType<AppInitialProps<MyAppProps>>
     // This renders the page and wait for all requests to be resolved
-    await getDataFromTree(<AppTree pageProps={{ jwt, now }} />) // This `defaultGetInitialProps` should be as late as possible and after the data are resolved by `getDataFromTree`
+    await getDataFromTree(<AppTree pageProps={{ jwt, now, environment }} />) // This `defaultGetInitialProps` should be as late as possible and after the data are resolved by `getDataFromTree`
     const initialProps = await context.defaultGetInitialProps(context)
     return {
       ...initialProps,

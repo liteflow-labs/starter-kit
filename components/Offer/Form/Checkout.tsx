@@ -23,7 +23,7 @@ import {
 import { Signer } from '@ethersproject/abstract-signer'
 import { useAcceptOffer } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useEffect, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Offer } from '../../../graphql'
 import useBalance from '../../../hooks/useBalance'
@@ -78,16 +78,7 @@ const OfferFormCheckout: FC<Props> = ({
     formState: { errors, isSubmitting },
     setValue,
     watch,
-  } = useForm<FormData>({
-    defaultValues: {
-      quantity: offer.availableQuantity,
-    },
-  })
-
-  useEffect(
-    () => setValue('quantity', offer.availableQuantity),
-    [offer.availableQuantity, setValue],
-  )
+  } = useForm<FormData>({ defaultValues: { quantity: '1' } })
 
   const quantity = watch('quantity')
 
@@ -183,6 +174,7 @@ const OfferFormCheckout: FC<Props> = ({
           price={priceUnit}
           quantity={quantityBN}
           isSingle={!multiple}
+          noFees
         />
       </div>
 

@@ -1,5 +1,15 @@
-query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
-  asset(id: $id) {
+query BidOnAsset(
+  $chainId: Int!
+  $collectionAddress: Address!
+  $tokenId: String!
+  $address: Address
+  $now: Datetime!
+) {
+  asset(
+    chainId: $chainId
+    collectionAddress: $collectionAddress
+    tokenId: $tokenId
+  ) {
     id
     chainId
     collectionAddress
@@ -102,6 +112,20 @@ query BidOnAsset($id: String!, $address: Address, $now: Datetime!) {
       nodes {
         ownerAddress
       }
+    }
+  }
+  currencies(
+    orderBy: CREATED_AT_ASC
+    filter: { chainId: { equalTo: $chainId }, address: { isNull: false } }
+  ) {
+    nodes {
+      id
+      chainId
+      address
+      decimals
+      symbol
+      name
+      image
     }
   }
 }

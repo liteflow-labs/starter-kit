@@ -15,8 +15,8 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { chains } from '../../connectors'
 import { Filter } from '../../hooks/useCollectionFilterFromQuery'
+import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
 
 type Props = {
@@ -30,6 +30,7 @@ export const NoFilter: Filter = {
 }
 
 const FilterCollection: NextPage<Props> = ({ filter, onFilterChange }) => {
+  const { CHAINS } = useEnvironment()
   const { t } = useTranslation('components')
 
   const { handleSubmit, reset, watch } = useForm<Filter>({
@@ -66,7 +67,7 @@ const FilterCollection: NextPage<Props> = ({ filter, onFilterChange }) => {
               }
             >
               <Stack spacing={1}>
-                {chains.map(({ id, name }, i) => (
+                {CHAINS.map(({ id, name }, i) => (
                   <Checkbox key={i} value={id}>
                     <Flex gap={2} alignItems="center">
                       <Image

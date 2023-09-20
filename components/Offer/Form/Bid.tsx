@@ -20,7 +20,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
-import { BigNumber } from '@ethersproject/bignumber'
 import { toAddress } from '@liteflow/core'
 import { useCreateOffer } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
@@ -29,9 +28,9 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
-import { useFeesQuery } from '../../../graphql'
 import useBalance from '../../../hooks/useBalance'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useFees from '../../../hooks/useFees'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
 import { formatDateDatetime, formatError } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
@@ -104,14 +103,24 @@ const OfferFormBid: FC<Props> = (props) => {
     onClose: createOfferOnClose,
   } = useDisclosure()
 
-  const defaultAuctionExpirationValue = formatDateDatetime(
-    dayjs().add(auctionValidity, 'second').toISOString(),
+  const defaultAuctionExpirationValue = useMemo(
+    () =>
+      formatDateDatetime(dayjs().add(auctionValidity, 'second').toISOString()),
+    [auctionValidity],
   )
-  const defaultExpirationValue = formatDateDatetime(
-    dayjs().add(offerValidity, 'second').toISOString(),
+  const defaultExpirationValue = useMemo(
+    () =>
+      formatDateDatetime(dayjs().add(offerValidity, 'second').toISOString()),
+    [offerValidity],
   )
-  const minDate = formatDateDatetime(dayjs().add(1, 'day').toISOString())
-  const maxDate = formatDateDatetime(dayjs().add(1, 'year').toISOString())
+  const minDate = useMemo(
+    () => formatDateDatetime(dayjs().add(1, 'day').toISOString()),
+    [],
+  )
+  const maxDate = useMemo(
+    () => formatDateDatetime(dayjs().add(1, 'year').toISOString()),
+    [],
+  )
   const {
     register,
     handleSubmit,
@@ -153,36 +162,26 @@ const OfferFormBid: FC<Props> = (props) => {
   const priceUnit = useParseBigNumber(price, currency?.decimals)
   const quantityBN = useParseBigNumber(quantity)
 
-  const { data } = useFeesQuery({
-    variables: {
-      chainId,
-      collectionAddress,
-      tokenId,
-      currencyId: currency?.id || '',
-      quantity: quantityBN.toString(),
-      unitPrice: priceUnit.toString(),
-    },
-    skip: !currency?.id,
+  const { feesPerTenThousand, loading: loadingFees } = useFees({
+    chainId,
+    collectionAddress,
+    tokenId,
+    currencyId: currency?.id,
+    quantity: quantityBN,
+    unitPrice: priceUnit,
   })
-  const feesPerTenThousand = useMemo(
-    () => data?.orderFees.valuePerTenThousand || 0,
-    [data],
-  )
-
-  const totalPrice = useMemo(() => {
-    return priceUnit.mul(quantityBN)
-  }, [priceUnit, quantityBN])
-
-  const totalFees = useMemo(() => {
-    if (!totalPrice) return BigNumber.from(0)
-    return totalPrice.mul(feesPerTenThousand).div(10000)
-  }, [totalPrice, feesPerTenThousand])
 
   const canBid = useMemo(() => {
-    if (!balance) return false
-    if (!totalPrice) return true
+    if (
+      balance === undefined ||
+      feesPerTenThousand === undefined ||
+      loadingFees // disable creation of bid if fees are being fetched
+    )
+      return false
+    const totalPrice = priceUnit.mul(quantityBN)
+    const totalFees = totalPrice.mul(feesPerTenThousand).div(10000)
     return balance.gte(totalPrice.add(totalFees))
-  }, [balance, totalPrice, totalFees])
+  }, [balance, feesPerTenThousand, loadingFees, priceUnit, quantityBN])
 
   const onSubmit = handleSubmit(async ({ expiredAt }) => {
     if (!auctionId && !expiredAt) throw new Error('expiredAt is required')

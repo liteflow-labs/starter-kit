@@ -1,5 +1,5 @@
 import { Events } from '@nft/webhook'
-import environment from '../environment'
+import invariant from 'ts-invariant'
 import { formatDate } from '../utils'
 
 export default function AuctionEndedNoBids({
@@ -12,6 +12,7 @@ export default function AuctionEndedNoBids({
   subject: string
   to: string
 } | null {
+  invariant(process.env.NEXT_PUBLIC_BASE_URL)
   if (!!bestBid) return null
   if (!creator?.email) return null
   return {
@@ -29,7 +30,7 @@ export default function AuctionEndedNoBids({
       expireAt,
     )}</strong>, the auction will be canceled.<br/>
     <br/>
-    <a href="${environment.BASE_URL}/tokens/${
+    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/tokens/${
       asset.id
     }">Create a new sale</a><br/>`,
   }
