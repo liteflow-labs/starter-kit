@@ -200,6 +200,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [refetch, refreshAsset, toast],
   )
 
+  console.log(BASE_URL)
+
   if (asset === null) return <Error statusCode={404} />
   return (
     <LargeLayout>
@@ -207,12 +209,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
         title={asset ? `${asset.name} - ${asset.collection.name}` : undefined}
         description={asset?.description}
         image={asset?.image}
-      >
-        <link
-          rel="canonical"
-          href={`${BASE_URL}/collection/${_chainId}/${collectionAddress}`}
-        />
-      </Head>
+        canonical={`/collection/${_chainId}/${collectionAddress}`}
+      />
       <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <AspectRatio ratio={1}>
           <Center

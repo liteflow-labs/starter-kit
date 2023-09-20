@@ -7,12 +7,14 @@ type Props = {
   title?: string
   description?: string
   image?: string
+  canonical?: string
 }
 
 const Head: FC<PropsWithChildren<Props>> = ({
   title,
   description,
   image,
+  canonical,
   children,
 }) => {
   const { META_TITLE, META_DESCRIPTION, BASE_URL } = useEnvironment()
@@ -22,12 +24,13 @@ const Head: FC<PropsWithChildren<Props>> = ({
 
   // remove query string and hash from asPath
   const canonicalURL = useMemo(() => {
+    if (canonical) return BASE_URL + canonical
     const _pathSliceLength = Math.min.apply(Math, [
       asPath.indexOf('?') > 0 ? asPath.indexOf('?') : asPath.length,
       asPath.indexOf('#') > 0 ? asPath.indexOf('#') : asPath.length,
     ])
     return BASE_URL + asPath.substring(0, _pathSliceLength)
-  }, [BASE_URL, asPath])
+  }, [BASE_URL, canonical, asPath])
 
   return (
     <NextHead>
