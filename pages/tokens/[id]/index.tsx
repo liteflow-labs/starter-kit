@@ -73,7 +73,7 @@ enum AssetTabs {
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
-  const { CHAINS, REPORT_EMAIL } = useEnvironment()
+  const { BASE_URL, CHAINS, REPORT_EMAIL } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
@@ -207,7 +207,14 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
         title={asset ? `${asset.name} - ${asset.collection.name}` : undefined}
         description={asset?.description}
         image={asset?.image}
-      />
+      >
+        {asset && (
+          <link
+            rel="canonical"
+            href={`${BASE_URL}/collection/${asset.collection.chainId}/${asset.collection.address}`}
+          />
+        )}
+      </Head>
       <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <AspectRatio ratio={1}>
           <Center
