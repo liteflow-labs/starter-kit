@@ -200,8 +200,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [refetch, refreshAsset, toast],
   )
 
-  console.log(BASE_URL)
-
   if (asset === null) return <Error statusCode={404} />
   return (
     <LargeLayout>
