@@ -111,7 +111,7 @@ const FilterByCollection: FC<Props> = ({
           <SearchInput
             placeholder={t('filters.assets.properties.search.placeholder')}
             name="propertySearch"
-            onReset={() => setValue('propertySearch', '')}
+            onReset={() => setValue('propertySearch', undefined)}
           />
         </Stack>
       </AccordionPanel>
@@ -129,7 +129,7 @@ const FilterByCollection: FC<Props> = ({
           <SearchInput
             placeholder={t('filters.assets.collections.search.placeholder')}
             name="collectionSearch"
-            onReset={() => setValue('collectionSearch', '')}
+            onReset={() => setValue('collectionSearch', undefined)}
           />
           <List>
             {!collections ? (

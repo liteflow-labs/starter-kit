@@ -4,6 +4,7 @@ import { HiOutlineX } from '@react-icons/all-files/hi/HiOutlineX'
 import { useRouter } from 'next/router'
 import { FC, HTMLAttributes, useCallback, useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { removeEmptyFromObject } from '../utils'
 
 type IProps = HTMLAttributes<any> & {
   name: string
@@ -19,13 +20,14 @@ const SearchInput: FC<IProps> = ({ name, onReset, onSubmit, ...props }) => {
 
   const resetSearch = useCallback(async () => {
     if (onReset) return onReset()
-    await push(
-      { pathname, query: { ...query, search: undefined, page: undefined } },
-      undefined,
-      {
-        shallow: true,
-      },
-    )
+    const cleanData = removeEmptyFromObject({
+      ...query,
+      search: undefined,
+      page: undefined,
+    })
+    await push({ pathname, query: cleanData }, undefined, {
+      shallow: true,
+    })
   }, [onReset, push, query, pathname])
 
   return (
