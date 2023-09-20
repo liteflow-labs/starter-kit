@@ -208,12 +208,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
         description={asset?.description}
         image={asset?.image}
       >
-        {asset && (
-          <link
-            rel="canonical"
-            href={`${BASE_URL}/collection/${asset.collection.chainId}/${asset.collection.address}`}
-          />
-        )}
+        <link
+          rel="canonical"
+          href={`${BASE_URL}/collection/${_chainId}/${collectionAddress}`}
+        />
       </Head>
       <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <AspectRatio ratio={1}>
