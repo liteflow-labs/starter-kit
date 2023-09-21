@@ -73,7 +73,7 @@ enum AssetTabs {
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
-  const { BASE_URL, CHAINS, REPORT_EMAIL } = useEnvironment()
+  const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
