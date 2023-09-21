@@ -8,33 +8,8 @@ import {
   useTheme,
 } from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import Image from '../Image/Image'
-
-const getUnlockedContentUrls = (
-  unlockedContent:
-    | {
-        url: string
-        mimetype: string | null
-      }
-    | null
-    | undefined,
-  imageUrl: string,
-  animationUrl: string | null | undefined,
-): { image: string; animation: string | null } => {
-  if (unlockedContent) {
-    return {
-      image: unlockedContent.url,
-      animation: unlockedContent.mimetype?.startsWith('video/')
-        ? unlockedContent.url
-        : null,
-    }
-  }
-  return {
-    image: imageUrl,
-    animation: animationUrl || null,
-  }
-}
 
 const TokenMedia: FC<{
   imageUrl: string
@@ -55,25 +30,74 @@ const TokenMedia: FC<{
 }) => {
   const { colors } = useTheme()
 
-  // prioritize unlockedContent
-  const { image, animation } = getUnlockedContentUrls(
-    unlockedContent,
-    imageUrl,
-    animationUrl,
+  // setup content to display in order with mimetype. The goal is if there is an issue with one, try the next one until no more
+  const contentsToDisplay = useMemo<{ url: string; mimetype: string }[]>(() => {
+    const contentsToDisplay = []
+    if (unlockedContent) {
+      if (unlockedContent.mimetype) {
+        // we know the mimetype
+        contentsToDisplay.push({
+          url: unlockedContent.url,
+          mimetype: unlockedContent.mimetype,
+        })
+      } else {
+        // we don't know the mimetype, start with image and then video
+        contentsToDisplay.push({
+          url: unlockedContent.url,
+          mimetype: 'image/*',
+        })
+        contentsToDisplay.push({
+          url: unlockedContent.url,
+          mimetype: 'video/*',
+        })
+      }
+    }
+    if (animationUrl) {
+      contentsToDisplay.push({
+        url: animationUrl,
+        mimetype: 'video/*', // start with video
+      })
+      contentsToDisplay.push({
+        url: animationUrl,
+        mimetype: 'image/*', // then image
+      })
+    }
+    contentsToDisplay.push({
+      url: imageUrl,
+      mimetype: 'image/*', // start with image
+    })
+    contentsToDisplay.push({
+      url: imageUrl,
+      mimetype: 'video/*', // then video
+    })
+    return contentsToDisplay
+  }, [animationUrl, imageUrl, unlockedContent])
+  console.log('contentsToDisplay', contentsToDisplay)
+
+  // try to display the first element of contentsToDisplay
+  const [currentContentToDisplay, setCurrentContentToDisplay] =
+    useState<number>(0)
+
+  // reset current content to display when imageUrl, animationUrl, or unlockedContent change
+  useEffect(() => setCurrentContentToDisplay(0), [contentsToDisplay])
+
+  // on error, switch to the next content to display
+  const onError = useCallback(() => {
+    console.warn('error onError')
+    setCurrentContentToDisplay((x) => {
+      console.warn('error displaying content', x)
+      return x + 1 // increase current content to display by one
+    })
+  }, [])
+
+  // element to display
+  const toDisplay = useMemo(
+    () => contentsToDisplay.at(currentContentToDisplay),
+    [contentsToDisplay, currentContentToDisplay],
   )
 
-  const [imageError, setImageError] = useState(false)
-  const [videoError, setVideoError] = useState(false)
-
-  const onImageError = useCallback(() => setImageError(true), [])
-  const onVideoError = useCallback(() => setVideoError(true), [])
-
-  // reset when image change. Needed when component is recycled
-  useEffect(() => setImageError(false), [image])
-  useEffect(() => setVideoError(false), [image, animation])
-
-  // cannot display anything
-  if (imageError && videoError)
+  // nothing to display, return error
+  if (!toDisplay) {
     return (
       <>
         <svg viewBox="0 0 1 1">
@@ -89,67 +113,56 @@ const TokenMedia: FC<{
         </Center>
       </>
     )
-
-  // Hack in case the image fails to load because it is a video
-  if (imageError && !videoError) {
-    return (
-      <Box
-        as="video"
-        src={image}
-        autoPlay
-        playsInline
-        muted
-        loop
-        controls={controls}
-        maxW="full"
-        maxH="full"
-        onError={onVideoError}
-      />
-    )
   }
 
-  // display video
-  if (animation && !videoError) {
-    return (
-      <Box
-        as="video"
-        src={animation}
-        autoPlay
-        playsInline
-        muted
-        loop
-        controls={controls}
-        maxW="full"
-        maxH="full"
-        onError={onVideoError}
-      />
-    )
-  }
-
-  // Use a basic image when the file is a blob or data
-  if (image.startsWith('blob:') || image.startsWith('data:'))
+  // Use a basic image when the url contains a blob or data
+  if (toDisplay.url.startsWith('blob:') || toDisplay.url.startsWith('data:'))
     return (
       <chakra.img
-        src={image}
+        src={toDisplay.url}
         alt={defaultText}
         objectFit={fill ? 'cover' : 'scale-down'}
         sizes={sizes}
+        onError={onError}
       />
     )
 
-  return (
-    <Box position="relative" w="full" h="full">
-      <Image
-        src={image}
-        alt={defaultText}
-        onError={onImageError}
-        fill
-        objectFit={fill ? 'cover' : 'contain'}
-        sizes={sizes}
-        unoptimized={unlockedContent?.mimetype === 'image/gif'}
+  // Use a video element when the file is a video
+  if (toDisplay.mimetype.startsWith('video/')) {
+    return (
+      <Box
+        as="video"
+        src={toDisplay.url}
+        autoPlay
+        playsInline
+        muted
+        loop
+        controls={controls}
+        maxW="full"
+        maxH="full"
+        onError={onError}
       />
-    </Box>
-  )
+    )
+  }
+
+  // Use a image element when the file is a image
+  if (toDisplay.mimetype.startsWith('image/')) {
+    return (
+      <Box position="relative" w="full" h="full">
+        <Image
+          src={toDisplay.url}
+          alt={defaultText}
+          onError={onError}
+          fill
+          objectFit={fill ? 'cover' : 'contain'}
+          sizes={sizes}
+          unoptimized={toDisplay.mimetype === 'image/gif'}
+        />
+      </Box>
+    )
+  }
+
+  // TODO: should add a loading states?
 }
 
 export default TokenMedia
