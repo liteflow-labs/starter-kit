@@ -14,20 +14,13 @@ import {
   Spinner,
   Text,
 } from '@chakra-ui/react'
+import { MintDropStep } from '@liteflow/react'
 import { CgArrowLongRight } from '@react-icons/all-files/cg/CgArrowLongRight'
 import { HiOutlineExternalLink } from '@react-icons/all-files/hi/HiOutlineExternalLink'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import Link from '../Link/Link'
-
-// TODO: to be removed after adding useMintDrop hook to the SDK
-export enum MintDropStep {
-  INITIAL,
-  TRANSACTION_SIGNATURE,
-  TRANSACTION_PENDING,
-  OWNERSHIP,
-}
 
 type Props = {
   isOpen: boolean

@@ -85,7 +85,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       onOpen()
-      await mintDrop({ dropId: drop.id, quantity: data.quantity })
+      await mintDrop(drop.id, data.quantity)
       await push(`/users/${address}`)
       toast({
         title: 'NFT was successfully minted',
