@@ -33,9 +33,7 @@ const DropProgress: FC<Props> = ({ drops }) => {
 
   const mintPercentage = useMemo(() => {
     if (!totalSupply) return
-    return (
-      BigNumber.from(totalMinted).mul(10000).div(totalSupply).toNumber() / 100
-    )
+    return (totalMinted / totalSupply) * 100
   }, [totalMinted, totalSupply])
 
   return (
