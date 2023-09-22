@@ -27,7 +27,6 @@ type Props = {
     | undefined
   filter: Filter
   formValues: UseFormReturn<Filter, any, undefined>
-  propertySearch: string
   onFilterChange: (filter: Filter) => void
 }
 
@@ -35,7 +34,6 @@ const FilterByTrait: FC<Props> = ({
   collection,
   filter,
   formValues: { watch },
-  propertySearch,
   onFilterChange,
 }) => {
   const { t } = useTranslation('components')
@@ -55,11 +53,12 @@ const FilterByTrait: FC<Props> = ({
 
   const traits = useMemo(() => {
     if (!traitsData) return
+    const propertySearch = filterResult.propertySearch
     if (!propertySearch) return traitsData
     return traitsData.filter(({ type }) =>
       type.toLowerCase().includes(propertySearch.toLowerCase()),
     )
-  }, [propertySearch, traitsData])
+  }, [filterResult, traitsData])
 
   const addTrait = useCallback(
     (type: string, value: string) => {
