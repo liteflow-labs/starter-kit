@@ -47,7 +47,7 @@ const FilterByCollection: FC<Props> = ({
       offset: 0,
       filter: {
         name: {
-          includesInsensitive: filterResult.collectionSearch,
+          includesInsensitive: filterResult.collectionSearch || '',
         } as StringFilter,
         ...(filterResult.chains.length
           ? { chainId: { in: filterResult.chains } }
