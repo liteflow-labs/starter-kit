@@ -114,7 +114,13 @@ const CollectionPage: FC<Props> = ({ now }) => {
     useAssetFilterState(filter)
   const updateFilter = useCallback(
     async (filter: Filter) => {
-      const { traits, currency, ...otherFilters } = filter
+      const {
+        traits,
+        currency,
+        collectionSearch, // exclude from query
+        propertySearch, // exclude from query
+        ...otherFilters
+      } = filter
       const cleanData = removeEmptyFromObject({
         ...Object.keys(query).reduce((acc, value) => {
           if (value.startsWith('trait')) return acc

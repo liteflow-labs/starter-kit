@@ -17,9 +17,6 @@ import {
   HStack,
   Icon,
   IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
   Menu,
   MenuButton,
   MenuItem,
@@ -32,17 +29,17 @@ import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { FaEnvelope } from '@react-icons/all-files/fa/FaEnvelope'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
-import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { FC, HTMLAttributes, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
+import SearchInput from '../SearchInput'
 import Select from '../Select/Select'
 import AccountImage from '../Wallet/Image'
 
@@ -346,7 +343,7 @@ const Navbar: FC<{
   const { address, isLoggedIn, logout, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady, events } = useRouter()
-  const { register, setValue, handleSubmit } = useForm<FormData>()
+  const formValues = useForm<FormData>()
   const [cookies] = useCookies()
   const { openConnectModal } = useConnectModal()
   const lastNotification = cookies[`lastNotification-${address}`]
@@ -367,10 +364,10 @@ const Navbar: FC<{
 
   useEffect(() => {
     if (!isReady) return
-    if (!query.search) return setValue('search', '')
-    if (Array.isArray(query.search)) return setValue('search', '')
-    setValue('search', query.search)
-  }, [isReady, setValue, query.search])
+    if (!query.search) return formValues.setValue('search', '')
+    if (Array.isArray(query.search)) return formValues.setValue('search', '')
+    formValues.setValue('search', query.search)
+  }, [isReady, formValues, query.search])
 
   useEffect(() => {
     const callback = () => {
@@ -383,7 +380,7 @@ const Navbar: FC<{
     }
   }, [events, refetch, address, isLoggedIn])
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = formValues.handleSubmit((data) => {
     if (data.search) query.search = data.search
     else delete query.search
     delete query.skip // reset pagination
@@ -407,18 +404,15 @@ const Navbar: FC<{
             />
           </Flex>
         </Flex>
-        <Flex as="form" my="auto" grow={1} onSubmit={onSubmit}>
-          <InputGroup>
-            <Input
+        <FormProvider {...formValues}>
+          <Flex as="form" my="auto" grow={1} onSubmit={onSubmit}>
+            <SearchInput
               placeholder={t('navbar.search')}
-              type="search"
-              {...register('search')}
+              name="search"
+              onSubmit={onSubmit}
             />
-            <InputRightElement cursor="pointer" onClick={onSubmit}>
-              <Icon as={HiOutlineSearch} w={6} h={6} color="black" />
-            </InputRightElement>
-          </InputGroup>
-        </Flex>
+          </Flex>
+        </FormProvider>
         <Flex display={{ base: 'none', lg: 'flex' }} align="center" gap={6}>
           <Flex
             as={Link}

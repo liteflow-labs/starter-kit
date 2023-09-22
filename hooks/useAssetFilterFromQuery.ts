@@ -32,6 +32,8 @@ export type Filter = {
     decimals: number
   } | null
   traits: TraitFilter[]
+  collectionSearch?: string
+  propertySearch?: string
 }
 
 export enum OfferFilter {
