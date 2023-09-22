@@ -22,7 +22,7 @@ const SearchInput: FC<IProps> = ({
 }) => {
   const { query, push, pathname } = useRouter()
   const { register, watch } = useFormContext()
-  const search = watch(name)
+  const search = !!watch(name)
   const searchActive = useMemo(() => !!query.search, [query.search])
 
   const resetSearch = useCallback(async () => {
@@ -46,7 +46,7 @@ const SearchInput: FC<IProps> = ({
         {...props}
       />
       <InputRightElement w={12} mr={2} pl={0} justifyContent="flex-end" gap={1}>
-        {((onReset && search) || searchActive) && (
+        {((onReset && search) || (!onReset && searchActive)) && (
           <Icon
             as={HiOutlineX}
             w={5}
