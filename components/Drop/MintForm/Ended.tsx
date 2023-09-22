@@ -6,7 +6,7 @@ import {
   SimpleGrid,
   Text,
 } from '@chakra-ui/react'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, JSX, useMemo } from 'react'
@@ -28,7 +28,7 @@ const MintFormEnded: FC<Props> = ({ collection, drops }): JSX.Element => {
   const totalMinted = useMemo(
     () =>
       drops.reduce((acc, drop) => {
-        return acc + BigNumber(drop.minted).toNumber()
+        return acc + BigNumber.from(drop.minted).toNumber()
       }, 0),
     [drops],
   )

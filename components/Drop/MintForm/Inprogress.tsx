@@ -79,7 +79,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
 
   const mintedOut = useMemo(() => {
     if (!drop.supply) return false
-    return BigNumber.from(drop.minted).gte(BigNumber.from(drop.supply))
+    return BigNumber.from(drop.minted).gte(drop.supply)
   }, [drop.minted, drop.supply])
 
   const onSubmit = handleSubmit(async (data) => {

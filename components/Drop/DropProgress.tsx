@@ -1,5 +1,5 @@
 import { Flex, Progress, SimpleGrid, Text } from '@chakra-ui/react'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
@@ -17,7 +17,7 @@ const DropProgress: FC<Props> = ({ drops }) => {
   const totalMinted = useMemo(
     () =>
       drops.reduce((acc, drop) => {
-        return acc + BigNumber(drop.minted).toNumber()
+        return acc + BigNumber.from(drop.minted).toNumber()
       }, 0),
     [drops],
   )
@@ -26,17 +26,16 @@ const DropProgress: FC<Props> = ({ drops }) => {
     () =>
       drops.reduce((acc, drop) => {
         if (drop.supply === null) return Infinity
-        return acc + BigNumber(drop.supply).toNumber()
+        return acc + BigNumber.from(drop.supply).toNumber()
       }, 0),
     [drops],
   )
 
   const mintPercentage = useMemo(() => {
     if (!totalSupply) return
-    return new BigNumber(totalMinted)
-      .div(BigNumber(totalSupply))
-      .multipliedBy(100)
-      .toNumber()
+    return (
+      BigNumber.from(totalMinted).mul(10000).div(totalSupply).toNumber() / 100
+    )
   }, [totalMinted, totalSupply])
 
   return (
