@@ -3,16 +3,23 @@ import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { HiOutlineX } from '@react-icons/all-files/hi/HiOutlineX'
 import { useRouter } from 'next/router'
 import { FC, HTMLAttributes, useCallback, useMemo } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { removeEmptyFromObject } from '../utils'
 
 type IProps = HTMLAttributes<any> & {
   name: string
+  registerOptions?: RegisterOptions
   onReset?: () => void
   onSubmit?: () => void
 }
 
-const SearchInput: FC<IProps> = ({ name, onReset, onSubmit, ...props }) => {
+const SearchInput: FC<IProps> = ({
+  name,
+  registerOptions,
+  onReset,
+  onSubmit,
+  ...props
+}) => {
   const { query, push, pathname } = useRouter()
   const { register, watch } = useFormContext()
   const search = watch(name)
@@ -32,7 +39,12 @@ const SearchInput: FC<IProps> = ({ name, onReset, onSubmit, ...props }) => {
 
   return (
     <InputGroup>
-      <Input {...register(name)} type="search" pr={14} {...props} />
+      <Input
+        {...register(name, registerOptions)}
+        type="search"
+        pr={14}
+        {...props}
+      />
       <InputRightElement w={12} mr={2} pl={0} justifyContent="flex-end" gap={1}>
         {((onReset && search) || searchActive) && (
           <Icon
