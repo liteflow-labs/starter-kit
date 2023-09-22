@@ -328,8 +328,10 @@
         "accepted": "Oferta Aceptada"
       },
       "actions": {
-        "accept": "Aceptar"
+        "accept": "Aceptar",
+        "view": "Ver NFT"
       },
+      "auction": "Subasta",
       "orderBy": {
         "label": "Ordenar por",
         "values": {

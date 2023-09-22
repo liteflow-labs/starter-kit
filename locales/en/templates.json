@@ -328,8 +328,10 @@
         "accepted": "Bid accepted"
       },
       "actions": {
-        "accept": "Accept"
+        "accept": "Accept",
+        "view": "View NFT"
       },
+      "auction": "Auction",
       "orderBy": {
         "label": "Sort by",
         "values": {

@@ -328,8 +328,10 @@
         "accepted": "入札受諾"
       },
       "actions": {
-        "accept": "受け入れる"
+        "accept": "受け入れる",
+        "view": "NFTを見る"
       },
+      "auction": "競売",
       "orderBy": {
         "label": "並び替え",
         "values": {

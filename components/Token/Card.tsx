@@ -96,7 +96,6 @@ const TokenCard: FC<Props> = ({
 }) => {
   const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const { t } = useTranslation('templates')
-  const href = asset.id ? `/tokens/${asset.id}` : '#'
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const [isHovered, setIsHovered] = useState(false)
 
@@ -162,7 +161,7 @@ const TokenCard: FC<Props> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Flex as={Link} href={href} w="full" position="relative">
+      <Flex as={Link} href={`/tokens/${asset.id}`} w="full" position="relative">
         <AspectRatio w="full" ratio={1}>
           {asset.image ? (
             <TokenMedia
@@ -242,7 +241,7 @@ const TokenCard: FC<Props> = ({
               </Text>
             </Link>
           )}
-          <Link href={href}>
+          <Link href={`/tokens/${asset.id}`}>
             <Heading
               as="h4"
               variant="heading2"

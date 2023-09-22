@@ -328,8 +328,10 @@
         "accepted": "出价已接受"
       },
       "actions": {
-        "accept": "接受"
+        "accept": "接受",
+        "view": "查看 NFT"
       },
+      "auction": "拍卖",
       "orderBy": {
         "label": "排序方式",
         "values": {

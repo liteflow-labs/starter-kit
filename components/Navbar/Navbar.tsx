@@ -359,7 +359,7 @@ const Navbar: FC<{
       account: address?.toLowerCase() || '',
       lastNotification: new Date(lastNotification || 0),
     },
-    skip: !isLoggedIn,
+    skip: !isLoggedIn && !address,
   })
   const account = isLoggedIn
     ? accountData?.account || previousAccountData?.account
@@ -373,11 +373,15 @@ const Navbar: FC<{
   }, [isReady, setValue, query.search])
 
   useEffect(() => {
-    events.on('routeChangeStart', refetch)
-    return () => {
-      events.off('routeChangeStart', refetch)
+    const callback = () => {
+      if (!isLoggedIn && !address) return
+      void refetch()
     }
-  }, [events, refetch])
+    events.on('routeChangeStart', callback)
+    return () => {
+      events.off('routeChangeStart', callback)
+    }
+  }, [events, refetch, address, isLoggedIn])
 
   const onSubmit = handleSubmit((data) => {
     if (data.search) query.search = data.search

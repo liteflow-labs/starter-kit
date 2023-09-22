@@ -351,22 +351,20 @@ export const convertCollection = (
   }
 }
 
-export const convertTraits = (
-  asset: Parameters<typeof convertAsset>[0] & {
-    traits: {
-      nodes: Array<
-        Pick<AssetTrait, 'type' | 'value'> & {
-          collectionTraitValue: Maybe<
-            Pick<CollectionTraitValue, 'numberOfAssets'>
-          >
-        }
-      >
-    }
-    collection: {
-      supply: number
-    }
-  },
-): {
+export const convertTraits = (asset: {
+  traits: {
+    nodes: Array<
+      Pick<AssetTrait, 'type' | 'value'> & {
+        collectionTraitValue: Maybe<
+          Pick<CollectionTraitValue, 'numberOfAssets'>
+        >
+      }
+    >
+  }
+  collection: {
+    supply: number
+  }
+}): {
   type: string
   value: string
   percent: number
@@ -887,12 +885,15 @@ export const convertBid = (
 
 export const convertBidFull = (
   bid: Parameters<typeof convertBid>[0] &
-    Pick<OfferOpenBuy, 'id' | 'availableQuantity' | 'expiredAt' | 'createdAt'>,
+    Pick<Offer, 'id' | 'availableQuantity' | 'expiredAt' | 'createdAt'> & {
+      auctionId?: string | null
+    },
 ): Required<ReturnType<typeof convertBid>> & {
   id: string
   availableQuantity: BigNumber
   expiredAt: Date | undefined
   createdAt: Date
+  auctionId?: string
 } => {
   return {
     ...convertBid(bid),
@@ -900,6 +901,7 @@ export const convertBidFull = (
     availableQuantity: BigNumber.from(bid.availableQuantity),
     expiredAt: bid.expiredAt ? new Date(bid.expiredAt) : undefined,
     createdAt: new Date(bid.createdAt),
+    auctionId: bid?.auctionId || undefined,
   }
 }
 

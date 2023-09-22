@@ -47,7 +47,7 @@ export type Props = {
   owners: TokenAssetProps['owners']
   numberOfOwners: TokenAssetProps['numberOfOwners']
   auction: SaleDetailProps['auction']
-  bestBid: SaleDetailProps['bestBid']
+  bestAuctionBid: SaleDetailProps['bestAuctionBid']
   sales: SaleDetailProps['directSales']
   isHomepage: boolean
   signer: Signer | undefined
@@ -63,7 +63,7 @@ const TokenHeader: FC<Props> = ({
   owners,
   numberOfOwners,
   auction,
-  bestBid,
+  bestAuctionBid,
   sales,
   isHomepage,
   signer,
@@ -159,7 +159,7 @@ const TokenHeader: FC<Props> = ({
           isSingle={isSingle}
           ownAllSupply={ownAllSupply}
           auction={auction}
-          bestBid={bestBid}
+          bestAuctionBid={bestAuctionBid}
           directSales={sales}
           signer={signer}
           currentAccount={currentAccount}

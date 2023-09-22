@@ -16,10 +16,7 @@ import {
   convertSaleFull,
   convertUser,
 } from '../../convert'
-import {
-  useFetchCurrenciesForBidsQuery,
-  useFetchFeaturedAssetsQuery,
-} from '../../graphql'
+import { useFetchFeaturedAssetsQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
@@ -36,9 +33,6 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
   const { FEATURED_TOKEN } = useEnvironment()
   const signer = useSigner()
   const { address } = useAccount()
-  const currenciesQuery = useFetchCurrenciesForBidsQuery({
-    skip: !FEATURED_TOKEN.length,
-  })
   const featureAssetsQuery = useFetchFeaturedAssetsQuery({
     variables: {
       featuredIds: FEATURED_TOKEN,
@@ -48,7 +42,8 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
     skip: !FEATURED_TOKEN.length,
   })
   useHandleQueryError(featureAssetsQuery)
-  useHandleQueryError(currenciesQuery)
+
+  const currencies = featureAssetsQuery.data?.currencies?.nodes
 
   const featured = useOrderByKey(
     FEATURED_TOKEN,
@@ -62,33 +57,35 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
 
   const featuredAssets = useMemo(
     () =>
-      featured?.map((asset) => (
-        <TokenHeader
-          key={asset.id}
-          asset={convertAssetWithSupplies(asset)}
-          currencies={currenciesQuery.data?.currencies?.nodes || []}
-          auction={
-            asset.auctions.nodes[0]
-              ? convertAuctionFull(asset.auctions.nodes[0])
-              : undefined
-          }
-          bestBid={
-            asset.auctions.nodes[0]?.bestBid?.nodes[0]
-              ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
-              : undefined
-          }
-          sales={asset.sales.nodes.map(convertSaleFull)}
-          creator={convertUser(asset.creator, asset.creator.address)}
-          owners={asset.ownerships.nodes.map(convertOwnership)}
-          numberOfOwners={asset.ownerships.totalCount}
-          isHomepage={true}
-          signer={signer}
-          currentAccount={address}
-          onOfferCanceled={reloadInfo}
-          onAuctionAccepted={reloadInfo}
-        />
-      )),
-    [featured, address, signer, reloadInfo, currenciesQuery],
+      featured && currencies
+        ? featured.map((asset) => (
+            <TokenHeader
+              key={asset.id}
+              asset={convertAssetWithSupplies(asset)}
+              currencies={currencies}
+              auction={
+                asset.auctions.nodes[0]
+                  ? convertAuctionFull(asset.auctions.nodes[0])
+                  : undefined
+              }
+              bestAuctionBid={
+                asset.auctions.nodes[0]?.bestBid?.nodes[0]
+                  ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
+                  : undefined
+              }
+              sales={asset.sales.nodes.map(convertSaleFull)}
+              creator={convertUser(asset.creator, asset.creator.address)}
+              owners={asset.ownerships.nodes.map(convertOwnership)}
+              numberOfOwners={asset.ownerships.totalCount}
+              isHomepage={true}
+              signer={signer}
+              currentAccount={address}
+              onOfferCanceled={reloadInfo}
+              onAuctionAccepted={reloadInfo}
+            />
+          ))
+        : undefined,
+    [featured, address, signer, reloadInfo, currencies],
   )
 
   if (!FEATURED_TOKEN.length) return null
