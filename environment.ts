@@ -41,6 +41,19 @@ export type Environment = {
   BUGSNAG_API_KEY?: string
 
   /**
+   * Theme configuration
+   */
+
+  // URL of the logo to place in the header
+  LOGO: string
+
+  // URL of the favicon
+  FAVICON: string
+
+  // Brand color to use for the theme
+  BRAND_COLOR: string
+
+  /**
    * Wallet/chain configuration
    */
 
@@ -170,6 +183,10 @@ const getEnvironment = async (): Promise<Environment> => {
     BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     MAX_ROYALTIES: maxRoyaltiesPerTenThousand / 100,
     BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,
+    // Theme configuration
+    LOGO: metadata.LOGO || '/logo.svg',
+    FAVICON: metadata.FAVICON || '/favicon.svg',
+    BRAND_COLOR: metadata.BRAND_COLOR || '#245BFF',
     // Wallet/chain configuration
     CHAINS: [
       ethereumMainnet,

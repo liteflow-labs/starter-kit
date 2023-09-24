@@ -17,7 +17,7 @@ import invariant from 'ts-invariant'
 import getClient from '../client'
 import getEnvironment from '../environment'
 import { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
-import { theme } from '../styles/theme'
+import { baseTheme } from '../styles/theme'
 import { MyAppProps } from './_app'
 
 type MyDocumentProps = { apolloState: NormalizedCacheObject }
@@ -40,7 +40,9 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <ColorModeScript
+            initialColorMode={baseTheme.config.initialColorMode}
+          />
           <Main />
           <NextScript />
         </body>
