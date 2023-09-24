@@ -52,6 +52,11 @@ export default function useAccount(): AccountDetail {
     [isReconnecting, jwt],
   )
 
+  const isLoggedIn = useMemo(
+    () => isLoggedInWhileReconnect || isLoggedInToAPI,
+    [isLoggedInWhileReconnect, isLoggedInToAPI],
+  )
+
   // Reconnect based on the token and mark as logged in
   useEffect(() => {
     if (isLoggedInToAPI) return
@@ -59,11 +64,6 @@ export default function useAccount(): AccountDetail {
     if (!jwt) return
     setAuthenticationToken(jwt.token)
   }, [isLoggedInToAPI, isReconnecting, jwt, setAuthenticationToken])
-
-  const isLoggedIn = useMemo(
-    () => isLoggedInWhileReconnect || isLoggedInToAPI,
-    [isLoggedInWhileReconnect, isLoggedInToAPI],
-  )
 
   const login = useCallback(
     async (connector: Connector) => {
