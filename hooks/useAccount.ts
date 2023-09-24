@@ -1,6 +1,6 @@
 import { useAuthenticate, useIsLoggedIn } from '@liteflow/react'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 import { Connector, useAccount as useWagmiAccount } from 'wagmi'
 import { walletClientToSigner } from './useSigner'
@@ -45,13 +45,25 @@ export default function useAccount(): AccountDetail {
     return { address: res.address.toLowerCase(), token: jwtToken }
   }, [cookies])
 
-  let isLoggedIn = useIsLoggedIn(jwt?.address || '')
+  const isLoggedInToAPI = useIsLoggedIn(jwt?.address || '')
+
+  const isLoggedInWhileReconnect = useMemo(
+    () => isReconnecting && !!jwt,
+    [isReconnecting, jwt],
+  )
 
   // Reconnect based on the token and mark as logged in
-  if (!isLoggedIn && isReconnecting && jwt) {
+  useEffect(() => {
+    if (isLoggedInToAPI) return
+    if (!isReconnecting) return
+    if (!jwt) return
     setAuthenticationToken(jwt.token)
-    isLoggedIn = true
-  }
+  }, [isLoggedInToAPI, isReconnecting, jwt, setAuthenticationToken])
+
+  const isLoggedIn = useMemo(
+    () => isLoggedInWhileReconnect || isLoggedInToAPI,
+    [isLoggedInWhileReconnect, isLoggedInToAPI],
+  )
 
   const login = useCallback(
     async (connector: Connector) => {
