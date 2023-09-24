@@ -53,7 +53,11 @@ const TokenGrid = <Order extends string>({
       </Box>
       {assets === undefined ? (
         <SkeletonGrid
-          items={pagination.withoutLimit ? PAGINATION_LIMIT : pagination.limit}
+          items={
+            pagination.withoutLimit
+              ? PAGINATION_LIMIT
+              : pagination.limit || PAGINATION_LIMIT
+          }
           compact
           spacing={{ base: 4, lg: 3, xl: 4 }}
           columns={{ base: 1, sm: 2, md: 3 }}

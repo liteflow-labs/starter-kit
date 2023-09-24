@@ -54,7 +54,7 @@ const OwnersModalActivator: FC<Props> = ({
             bgColor="brand.50"
           >
             <Text as="span" variant="caption" color="brand.500">
-              {`+${numberOfOwners >= 103 ? 99 : owners.length - 4}`}
+              {`+${numberOfOwners >= 103 ? 99 : numberOfOwners - 4}`}
             </Text>
           </Flex>
         </Flex>
