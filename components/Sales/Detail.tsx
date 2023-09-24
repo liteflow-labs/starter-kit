@@ -39,7 +39,7 @@ export type Props = {
           winningOffer: { id: string } | null | undefined
         })
     | undefined
-  bestBid:
+  bestAuctionBid:
     | (SaleAuctionSummaryProps['bestBid'] & {
         amount: BigNumberish
       })
@@ -65,7 +65,7 @@ const SaleDetail: FC<Props> = ({
   currencies,
   directSales,
   auction,
-  bestBid,
+  bestAuctionBid,
   isHomepage,
   signer,
   currentAccount,
@@ -83,7 +83,7 @@ const SaleDetail: FC<Props> = ({
     bellowReservePrice,
     reservePriceMatches,
     isValid,
-  } = useAuctionStatus(auction, bestBid)
+  } = useAuctionStatus(auction, bestAuctionBid)
 
   return (
     <Stack spacing={8}>
@@ -117,7 +117,7 @@ const SaleDetail: FC<Props> = ({
         <>
           <SaleAuctionSummary
             auction={auction}
-            bestBid={bestBid}
+            bestBid={bestAuctionBid}
             isOwner={isOwner}
             inProgress={inProgress}
             endedWithNoBids={endedAndWaitingForTransfer && !hasBids}

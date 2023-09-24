@@ -1,15 +1,18 @@
 query FetchUserBidsReceived(
   $limit: Int!
   $offset: Int!
-  $orderBy: [OfferOpenBuysOrderBy!]
+  $orderBy: [OffersOrderBy!]
   $address: Address!
   $now: Datetime
 ) {
-  bids: offerOpenBuys(
+  bids: offers(
     orderBy: $orderBy
     first: $limit
     offset: $offset
     filter: {
+      type: { equalTo: BUY }
+      availableQuantity: { greaterThan: "0" }
+      signature: { isNull: false }
       expiredAt: { greaterThan: $now }
       makerAddress: { notEqualTo: $address }
       asset: { ownerships: { some: { ownerAddress: { equalTo: $address } } } }
@@ -26,6 +29,7 @@ query FetchUserBidsReceived(
       availableQuantity
       expiredAt
       createdAt
+      auctionId
       maker {
         address
         name

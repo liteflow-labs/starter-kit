@@ -1,4 +1,4 @@
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex, Heading, Skeleton, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, HTMLAttributes, useMemo } from 'react'
@@ -13,21 +13,29 @@ const Summary: FC<
     isSingle: boolean
     price: BigNumber
     quantity: BigNumber
-    feesOnTopPerTenThousand?: number
+    feesOnTopPerTenThousand?: number | undefined
+    noFees?: boolean
   }
-> = ({ currency, price, quantity, isSingle, feesOnTopPerTenThousand }) => {
+> = ({
+  currency,
+  price,
+  quantity,
+  isSingle,
+  feesOnTopPerTenThousand,
+  noFees,
+}) => {
   const { t } = useTranslation('components')
   const totalPrice = useMemo(() => price.mul(quantity), [quantity, price])
-
   const totalFees = useMemo(() => {
-    if (!feesOnTopPerTenThousand) return BigNumber.from(0)
+    if (noFees) return BigNumber.from(0)
+    if (feesOnTopPerTenThousand === undefined) return
     return totalPrice.mul(feesOnTopPerTenThousand).div(10000)
-  }, [totalPrice, feesOnTopPerTenThousand])
+  }, [noFees, feesOnTopPerTenThousand, totalPrice])
 
   return (
     <>
       {isSingle ? (
-        <Heading as="h5" variant="heading3" color="gray.500">
+        <Heading as="h5" variant="heading3" color="gray.500" mb={2}>
           {t('offer.summary.single')}
         </Heading>
       ) : (
@@ -51,12 +59,35 @@ const Summary: FC<
           </Heading>
         </>
       )}
-      {feesOnTopPerTenThousand !== undefined && (
-        <Heading as={Flex} variant="heading3" color="gray.500" mb={2}>
-          {t('offer.summary.fees', { value: feesOnTopPerTenThousand / 100 })}
+      {!noFees && (
+        <>
+          {feesOnTopPerTenThousand === undefined || totalFees === undefined ? (
+            <Skeleton noOfLines={1} height={4} width={200} mt={4} />
+          ) : (
+            <Heading as={Flex} variant="heading3" color="gray.500" mb={2}>
+              {t('offer.summary.fees', {
+                value: feesOnTopPerTenThousand / 100,
+              })}
+              <Text
+                as={Price}
+                amount={totalFees}
+                currency={currency}
+                color="brand.black"
+                ml={1}
+                fontWeight="semibold"
+              />
+            </Heading>
+          )}
+        </>
+      )}
+      {totalFees === undefined ? (
+        <Skeleton noOfLines={1} height={4} width={200} mt={4} />
+      ) : (
+        <Heading as={Flex} variant="heading3" color="gray.500">
+          {t('offer.summary.total')}
           <Text
             as={Price}
-            amount={totalFees}
+            amount={totalPrice.add(totalFees)}
             currency={currency}
             color="brand.black"
             ml={1}
@@ -64,17 +95,6 @@ const Summary: FC<
           />
         </Heading>
       )}
-      <Heading as={Flex} variant="heading3" color="gray.500">
-        {t('offer.summary.total')}
-        <Text
-          as={Price}
-          amount={totalPrice.add(totalFees)}
-          currency={currency}
-          color="brand.black"
-          ml={1}
-          fontWeight="semibold"
-        />
-      </Heading>
     </>
   )
 }

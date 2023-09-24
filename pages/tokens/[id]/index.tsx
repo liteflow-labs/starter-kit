@@ -55,7 +55,6 @@ import {
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useChainCurrencies from '../../../hooks/useChainCurrencies'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -98,7 +97,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
       address: address || '',
     },
   })
-  const chainCurrency = useChainCurrencies(chainId, { onlyERC20: true })
 
   const asset = data?.asset
 
@@ -141,7 +139,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const auction = useMemo(() => {
     const first = asset?.auctions.nodes[0]
     if (!first) return
-    const auction = convertAuctionFull(first)
+    const auction = {
+      ...convertAuctionFull(first),
+      bids: first.offers.nodes.map(convertBidFull),
+    }
     if (!auction) return
     // check if auction is expired
     if (new Date(auction.expireAt) <= new Date()) return
@@ -150,15 +151,14 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     return auction
   }, [asset])
 
+  const openBids = useMemo(() => asset?.bids.nodes.map(convertBidFull), [asset])
+
   const directSales = useMemo(
     () => asset?.sales.nodes.map(convertSaleFull) || [],
     [asset],
   )
 
-  const bestBid = useMemo(
-    () => asset?.auctions.nodes[0]?.offers.nodes.map(convertBidFull)[0],
-    [asset],
-  )
+  const bestAuctionBid = useMemo(() => auction?.bids[0], [auction?.bids])
 
   const creator = useMemo(
     () =>
@@ -169,6 +169,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const owners = useMemo(
     () => asset?.ownerships.nodes.map(convertOwnership) || [],
     [asset],
+  )
+
+  const bids = useMemo(
+    () => auction?.bids || openBids,
+    [auction?.bids, openBids],
   )
 
   const refresh = useCallback(async () => {
@@ -199,7 +204,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   return (
     <LargeLayout>
       <Head
-        title={asset?.name || ''}
+        title={asset ? `${asset.name} - ${asset.collection.name}` : undefined}
         description={asset?.description}
         image={asset?.image}
       />
@@ -363,7 +368,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               isOpenCollection={asset.collection.mintType === 'PUBLIC'}
             />
           )}
-          {!asset ? (
+          {!asset || !data.currencies?.nodes ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
@@ -373,14 +378,14 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               assetId={asset.id}
               chainId={chainId}
               blockExplorer={blockExplorer}
-              currencies={chainCurrency.data?.currencies?.nodes || []}
+              currencies={data.currencies?.nodes}
               signer={signer}
               currentAccount={address}
               isSingle={isSingle}
               isHomepage={false}
               isOwner={isOwner}
               auction={auction}
-              bestBid={bestBid}
+              bestAuctionBid={bestAuctionBid}
               directSales={directSales}
               ownAllSupply={ownAllSupply}
               onOfferCanceled={refresh}
@@ -530,11 +535,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               <Box h={96} overflowY="auto" py={6}>
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
-                    now={date}
+                    bids={bids}
                     chainId={chainId}
-                    collectionAddress={collectionAddress}
-                    tokenId={tokenId}
-                    auctionId={auction?.id}
                     signer={signer}
                     account={address}
                     isSingle={isSingle}

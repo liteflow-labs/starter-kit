@@ -19,23 +19,21 @@ export type IProp = {
   hasNextPage: boolean | undefined
   hasPreviousPage: boolean | undefined
   onPageChange: (page: number) => void
-} & (
-  | {
-      withoutLimit: true
-    }
-  | {
-      withoutLimit?: false
-      limit: number
-      limits: number[]
-      onLimitChange: (limit: string) => void
-    }
-)
+  onLimitChange?: (limit: string) => void
+  withoutLimit?: boolean
+  limit?: number
+  limits?: number[]
+}
 
 export default function Pagination({
   page,
   hasNextPage,
   hasPreviousPage,
   onPageChange,
+  onLimitChange,
+  limit,
+  limits,
+  withoutLimit,
   ...props
 }: IProp): JSX.Element {
   const { t } = useTranslation('components')
@@ -50,7 +48,7 @@ export default function Pagination({
 
   return (
     <Flex
-      direction={{ base: props.withoutLimit ? 'row' : 'column', sm: 'row' }}
+      direction={{ base: withoutLimit ? 'row' : 'column', sm: 'row' }}
       align={{ base: 'flex-end', sm: 'center' }}
       justify="space-between"
       w="full"
@@ -58,7 +56,7 @@ export default function Pagination({
       flexWrap="wrap"
       {...props}
     >
-      {!props.withoutLimit && (
+      {!withoutLimit && limit && limits && onLimitChange && (
         <Flex gap={3} display={{ base: 'none', sm: 'flex' }}>
           <HStack spacing={1} minWidth="max">
             <FormLabel m={0}>{t('pagination.label')}</FormLabel>
@@ -66,10 +64,10 @@ export default function Pagination({
           <Select
             cursor="pointer"
             w="24"
-            onChange={(e) => props.onLimitChange(e.target.value)}
-            value={props.limit.toString()}
+            onChange={(e) => onLimitChange(e.target.value)}
+            value={limit.toString()}
           >
-            {props.limits.map((limit) => (
+            {limits.map((limit) => (
               <option key={limit.toString()} value={limit.toString()}>
                 {limit.toString()}
               </option>

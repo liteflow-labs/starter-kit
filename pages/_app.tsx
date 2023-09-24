@@ -8,6 +8,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 import dayjs from 'dayjs'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
 import App from 'next/app'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
@@ -29,7 +30,6 @@ import {
 } from 'wagmi'
 import getClient from '../client'
 import Footer from '../components/Footer/Footer'
-import Head from '../components/Head'
 import Navbar from '../components/Navbar/Navbar'
 import connectors from '../connectors'
 import getEnvironment, { Environment, EnvironmentContext } from '../environment'
@@ -221,10 +221,7 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
   return (
     <ErrorBoundary>
       <EnvironmentContext.Provider value={environment}>
-        <Head
-          title={environment.META_TITLE}
-          description={environment.META_DESCRIPTION}
-        >
+        <Head>
           <meta name="keywords" content={environment.META_KEYWORDS} />
 
           <meta name="author" content={environment.META_COMPANY_NAME} />
