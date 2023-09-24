@@ -35,6 +35,13 @@ class MyDocument extends Document {
       <Html lang={this.props.locale || 'en'}>
         <Head>
           <link
+            rel="shortcut icon"
+            href={
+              this.props.__NEXT_DATA__.props.pageProps.environment.FAVICON ||
+              '/favicon.ico'
+            }
+          />
+          <link
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
             rel="stylesheet"
           />
