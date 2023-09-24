@@ -4,20 +4,15 @@ import {
   AccordionItem,
   AccordionPanel,
   Heading,
-  Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
   SkeletonCircle,
   SkeletonText,
   Stack,
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { convertCollection } from 'convert'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo, useState } from 'react'
+import { FC, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import {
   CollectionFilter,
@@ -27,33 +22,33 @@ import {
 import { Filter } from '../../../hooks/useAssetFilterFromQuery'
 import CollectionListItem from '../../Collection/ListItem'
 import List, { ListItem } from '../../List/List'
+import SearchInput from '../../SearchInput'
 
 type Props = {
   formValues: UseFormReturn<Filter, any, undefined>
   selectedCollection?: { chainId: number; address: string }
   onCollectionChange: (data?: { chainId: number; address: string }) => void
   onFilterChange: (data?: Partial<Filter>) => void
-  setPropertySearch: (value: string) => void
 }
 
 const FilterByCollection: FC<Props> = ({
-  formValues: { watch },
+  formValues: { setValue, watch },
   selectedCollection,
   onCollectionChange,
   onFilterChange,
-  setPropertySearch,
 }) => {
   const { t } = useTranslation('components')
 
   const filterResult = watch()
 
-  const [collectionSearch, setCollectionSearch] = useState('')
   const { data: collectionData } = useSearchCollectionQuery({
     variables: {
       limit: 8,
       offset: 0,
       filter: {
-        name: { includesInsensitive: collectionSearch } as StringFilter,
+        name: {
+          includesInsensitive: filterResult.collectionSearch || '',
+        } as StringFilter,
         ...(filterResult.chains.length
           ? { chainId: { in: filterResult.chains } }
           : {}),
@@ -113,16 +108,11 @@ const FilterByCollection: FC<Props> = ({
               closable
             />
           )}
-          <InputGroup>
-            <Input
-              placeholder={t('filters.assets.properties.search.placeholder')}
-              type="search"
-              onChange={(e) => setPropertySearch(e.target.value)}
-            />
-            <InputRightElement pointerEvents="none">
-              <Icon as={HiOutlineSearch} w={6} h={6} color="black" />
-            </InputRightElement>
-          </InputGroup>
+          <SearchInput
+            placeholder={t('filters.assets.properties.search.placeholder')}
+            name="propertySearch"
+            onReset={() => setValue('propertySearch', '')}
+          />
         </Stack>
       </AccordionPanel>
     </AccordionItem>
@@ -136,16 +126,11 @@ const FilterByCollection: FC<Props> = ({
       </AccordionButton>
       <AccordionPanel>
         <Stack spacing={4}>
-          <InputGroup>
-            <Input
-              placeholder={t('filters.assets.collections.search.placeholder')}
-              type="search"
-              onChange={(e) => setCollectionSearch(e.target.value)}
-            />
-            <InputRightElement pointerEvents="none">
-              <Icon as={HiOutlineSearch} w={6} h={6} color="black" />
-            </InputRightElement>
-          </InputGroup>
+          <SearchInput
+            placeholder={t('filters.assets.collections.search.placeholder')}
+            name="collectionSearch"
+            onReset={() => setValue('collectionSearch', '')}
+          />
           <List>
             {!collections ? (
               new Array(8)

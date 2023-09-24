@@ -16,7 +16,7 @@ import {
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { Filter, OfferFilter } from '../../hooks/useAssetFilterFromQuery'
 import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
@@ -80,7 +80,6 @@ const FilterAsset: NextPage<Props> = ({
   const [collection, setCollection] = useState<
     { chainId: number; address: string } | undefined
   >(currentCollection)
-  const [propertySearch, setPropertySearch] = useState('')
 
   const propagateFilter = useCallback(
     (data: Partial<Filter> = {}) =>
@@ -179,24 +178,24 @@ const FilterAsset: NextPage<Props> = ({
             </Flex>
           </AccordionPanel>
         </AccordionItem>
-        <FilterByPrice
-          formValues={formValues}
-          onFilterChange={propagateFilter}
-        />
-        <FilterByCollection
-          formValues={formValues}
-          selectedCollection={currentCollection}
-          onCollectionChange={setCollection}
-          onFilterChange={propagateFilter}
-          setPropertySearch={setPropertySearch}
-        />
-        <FilterByTrait
-          collection={collection}
-          filter={filter}
-          formValues={formValues}
-          propertySearch={propertySearch}
-          onFilterChange={onFilterChange}
-        />
+        <FormProvider {...formValues}>
+          <FilterByPrice
+            formValues={formValues}
+            onFilterChange={propagateFilter}
+          />
+          <FilterByCollection
+            formValues={formValues}
+            selectedCollection={currentCollection}
+            onCollectionChange={setCollection}
+            onFilterChange={propagateFilter}
+          />
+          <FilterByTrait
+            collection={collection}
+            filter={filter}
+            formValues={formValues}
+            onFilterChange={onFilterChange}
+          />
+        </FormProvider>
       </Accordion>
     </Stack>
   )
