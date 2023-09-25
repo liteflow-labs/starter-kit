@@ -32,7 +32,11 @@ import {
   convertSale,
   convertUser,
 } from '../../convert'
-import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
+import {
+  AssetsOrderBy,
+  useFetchAllErc721And1155Query,
+  useFetchCurrenciesQuery,
+} from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   Filter,
@@ -73,6 +77,10 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     },
   })
 
+  const { data: currencyData } = useFetchCurrenciesQuery({
+    ssr: false,
+  })
+
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
 
@@ -109,7 +117,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   )
 
   const assets = assetsData?.assets?.nodes
-  const currencies = assetsData?.currencies?.nodes
+  const currencies = currencyData?.currencies?.nodes
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
