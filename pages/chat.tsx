@@ -2,18 +2,18 @@ import { Box } from '@chakra-ui/react'
 import { Account, Chat, ChatProvider } from '@nft/chat'
 import request, { gql } from 'graphql-request'
 import { NextPage } from 'next'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import Head from '../components/Head'
 import useEnvironment from '../hooks/useEnvironment'
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import useSigner from '../hooks/useSigner'
 import LargeLayout from '../layouts/large'
-import { theme } from '../styles/theme'
+import { getTheme } from '../styles/theme'
 
 const accounts = new Map<string, Promise<Account>>()
 
 const ChatPage: NextPage = () => {
-  const { LITEFLOW_API_KEY } = useEnvironment()
+  const { LITEFLOW_API_KEY, BRAND_COLOR } = useEnvironment()
   const signer = useSigner()
   useLoginRedirect()
 
@@ -50,6 +50,8 @@ const ChatPage: NextPage = () => {
     },
     [LITEFLOW_API_KEY],
   )
+
+  const theme = useMemo(() => getTheme(BRAND_COLOR), [BRAND_COLOR])
 
   return (
     <LargeLayout>
