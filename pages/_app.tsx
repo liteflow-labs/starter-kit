@@ -288,7 +288,7 @@ MyApp.getInitialProps = async (
       ...initialProps.pageProps,
       jwt,
       now,
-      environment: await getEnvironment(appContext.ctx.req),
+      environment: await getEnvironment(),
     },
   }
 }
