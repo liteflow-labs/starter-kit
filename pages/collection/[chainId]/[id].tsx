@@ -82,7 +82,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
     },
   })
   const collection = collectionData?.collection
-  const currencies = collectionData?.currencies?.nodes
 
   const { data: collectionMetricsData } = useFetchCollectionMetricsQuery({
     variables: {
@@ -238,10 +237,12 @@ const CollectionPage: FC<Props> = ({ now }) => {
             <ModalBody>
               <FilterAsset
                 noChain
-                currencies={currencies}
                 currentCollection={{ chainId, address: collectionAddress }}
                 onFilterChange={updateFilter}
-                filter={filter}
+                filter={{
+                  ...filter,
+                  chains: collection ? [collection.chainId] : [],
+                }}
               />
             </ModalBody>
           </ModalContent>
@@ -252,10 +253,12 @@ const CollectionPage: FC<Props> = ({ now }) => {
           <GridItem as="aside" overflow="hidden">
             <FilterAsset
               noChain
-              currencies={currencies}
               currentCollection={{ chainId, address: collectionAddress }}
               onFilterChange={updateFilter}
-              filter={filter}
+              filter={{
+                ...filter,
+                chains: collection ? [collection.chainId] : [],
+              }}
             />
           </GridItem>
         )}

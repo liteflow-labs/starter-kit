@@ -32,11 +32,7 @@ import {
   convertSale,
   convertUser,
 } from '../../convert'
-import {
-  AssetsOrderBy,
-  useFetchAllErc721And1155Query,
-  useFetchCurrenciesQuery,
-} from '../../graphql'
+import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   Filter,
@@ -77,10 +73,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const { data: currencyData } = useFetchCurrenciesQuery({
-    ssr: false,
-  })
-
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
 
@@ -117,7 +109,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   )
 
   const assets = assetsData?.assets?.nodes
-  const currencies = currencyData?.currencies?.nodes
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -175,11 +166,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                 <ModalHeader>{t('explore.nfts.filter')}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <FilterAsset
-                    currencies={currencies}
-                    onFilterChange={updateFilter}
-                    filter={filter}
-                  />
+                  <FilterAsset onFilterChange={updateFilter} filter={filter} />
                 </ModalBody>
               </ModalContent>
             </Modal>
@@ -187,11 +174,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
           <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
             {showFilters && !isSmall && (
               <GridItem as="aside" overflow="hidden">
-                <FilterAsset
-                  currencies={currencies}
-                  onFilterChange={updateFilter}
-                  filter={filter}
-                />
+                <FilterAsset onFilterChange={updateFilter} filter={filter} />
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>

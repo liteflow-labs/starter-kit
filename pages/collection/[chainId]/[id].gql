@@ -20,20 +20,6 @@ query FetchCollectionDetails($collectionAddress: Address!, $chainId: Int!) {
       }
     }
   }
-  currencies(
-    filter: { chainId: { equalTo: $chainId } }
-    orderBy: CREATED_AT_ASC
-  ) {
-    nodes {
-      id
-      chainId
-      address
-      name
-      image
-      decimals
-      symbol
-    }
-  }
 }
 
 query FetchCollectionMetrics($collectionAddress: Address!, $chainId: Int!) {

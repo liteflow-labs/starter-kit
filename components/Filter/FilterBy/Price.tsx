@@ -19,28 +19,17 @@ import {
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import { useFetchCurrenciesQuery } from '../../../graphql'
 import { Filter } from '../../../hooks/useAssetFilterFromQuery'
 import Image from '../../Image/Image'
 import Select from '../../Select/Select'
 
 type Props = {
-  currencies:
-    | {
-        id: string
-        chainId: number
-        address: string | null
-        name: string
-        image: string
-        decimals: number
-        symbol: string
-      }[]
-    | undefined
   formValues: UseFormReturn<Filter, any, undefined>
   onFilterChange: (data?: Partial<Filter>) => void
 }
 
 const FilterByPrice: FC<Props> = ({
-  currencies,
   formValues: {
     control,
     register,
@@ -53,6 +42,19 @@ const FilterByPrice: FC<Props> = ({
   const { t } = useTranslation('components')
 
   const filterResult = watch()
+
+  const { data: currencyData } = useFetchCurrenciesQuery({
+    ssr: false,
+  })
+  const currencies = useMemo(
+    () =>
+      filterResult.chains.length > 0
+        ? currencyData?.currencies?.nodes.filter((currency) =>
+            filterResult.chains.includes(currency.chainId),
+          )
+        : currencyData?.currencies?.nodes,
+    [currencyData, filterResult],
+  )
 
   const currency = useMemo(() => {
     if (currencies === undefined) return undefined
