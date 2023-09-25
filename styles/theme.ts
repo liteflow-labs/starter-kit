@@ -1,13 +1,14 @@
 import { extendTheme } from '@chakra-ui/react'
+import { generatePalette } from '../colors'
 
-export const theme = extendTheme({
+export const baseTheme = extendTheme({
   styles: {
     global: {
       '*::placeholder': {
         color: 'gray.400',
       },
-      '*::-webkit-search-cancel-button': {
-        cursor: 'pointer',
+      '::-webkit-search-cancel-button': {
+        WebkitAppearance: 'none',
       },
     },
   },
@@ -241,19 +242,6 @@ export const theme = extendTheme({
       500: '#3B82F6',
       600: '#2563EB',
     },
-    brand: {
-      50: '#F5F7FF',
-      100: '#D3E2FF',
-      200: '#A7C4FF',
-      300: '#7BA3FF',
-      400: '#5A88FF',
-      500: '#245BFF',
-      600: '#1A45DB',
-      700: '#1233B7',
-      800: '#0B2393',
-      900: '#06177A',
-      black: '#060F27',
-    },
     secondary: {
       100: '#C9FBCB',
       500: '#02B14F',
@@ -300,3 +288,10 @@ export const theme = extendTheme({
     full: '9999px',
   },
 })
+
+export const getTheme = (brandColor: string) =>
+  extendTheme(baseTheme, {
+    colors: {
+      brand: generatePalette(brandColor),
+    },
+  })
