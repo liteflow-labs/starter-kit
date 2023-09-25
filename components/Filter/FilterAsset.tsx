@@ -25,6 +25,17 @@ import FilterByPrice from './FilterBy/Price'
 import FilterByTrait from './FilterBy/Trait'
 
 type Props = {
+  currencies:
+    | {
+        id: string
+        chainId: number
+        address: string | null
+        name: string
+        image: string
+        decimals: number
+        symbol: string
+      }[]
+    | undefined
   filter: Filter
   currentCollection?: { chainId: number; address: string }
   noChain?: boolean
@@ -49,6 +60,7 @@ const offerTypes = [
 ]
 
 const FilterAsset: NextPage<Props> = ({
+  currencies,
   filter,
   currentCollection,
   noChain,
@@ -180,6 +192,7 @@ const FilterAsset: NextPage<Props> = ({
         </AccordionItem>
         <FormProvider {...formValues}>
           <FilterByPrice
+            currencies={currencies}
             formValues={formValues}
             onFilterChange={propagateFilter}
           />

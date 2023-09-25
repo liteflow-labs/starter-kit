@@ -109,4 +109,15 @@ query FetchAllERC721And1155(
       }
     }
   }
+  currencies(orderBy: CREATED_AT_ASC) {
+    nodes {
+      id
+      chainId
+      address
+      name
+      image
+      decimals
+      symbol
+    }
+  }
 }

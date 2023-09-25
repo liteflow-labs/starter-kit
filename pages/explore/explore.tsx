@@ -109,6 +109,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   )
 
   const assets = assetsData?.assets?.nodes
+  const currencies = assetsData?.currencies?.nodes
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -166,7 +167,11 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                 <ModalHeader>{t('explore.nfts.filter')}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <FilterAsset onFilterChange={updateFilter} filter={filter} />
+                  <FilterAsset
+                    currencies={currencies}
+                    onFilterChange={updateFilter}
+                    filter={filter}
+                  />
                 </ModalBody>
               </ModalContent>
             </Modal>
@@ -174,7 +179,11 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
           <Grid gap="4" templateColumns={{ base: '1fr', md: '1fr 3fr' }}>
             {showFilters && !isSmall && (
               <GridItem as="aside" overflow="hidden">
-                <FilterAsset onFilterChange={updateFilter} filter={filter} />
+                <FilterAsset
+                  currencies={currencies}
+                  onFilterChange={updateFilter}
+                  filter={filter}
+                />
               </GridItem>
             )}
             <GridItem gap={6} colSpan={showFilters ? 1 : 2}>
