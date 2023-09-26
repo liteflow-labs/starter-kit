@@ -1,4 +1,4 @@
-import request from 'graphql-request'
+import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
@@ -114,79 +114,47 @@ export type Environment = {
 
 export const EnvironmentContext = createContext<Environment>({} as Environment)
 
-const getEnvironment = async (): Promise<Environment> => {
+const getEnvironment = async (
+  req: NextIncomingMessage | undefined,
+): Promise<Environment> => {
   invariant(process.env.NEXT_PUBLIC_BASE_URL, 'Base url is not defined')
   invariant(process.env.NEXT_PUBLIC_LITEFLOW_API_KEY, 'API key is not defined')
   invariant(
     process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
     'Wallet connect project id is not defined',
   )
+  const host = req
+    ? `${req.headers['x-forwarded-proto'] || 'https'}://${
+        req.headers['x-forwarded-host'] || req.headers['host']
+      }`
+    : window.location.origin
+  const response = await fetch(`${host}/api/detect`, {
+    headers: { 'Content-type': 'application/json' },
+  })
   const {
-    config: {
-      name,
-      hasLazyMint,
-      hasUnlockableContent,
-      maxRoyaltiesPerTenThousand,
-      offerValiditySeconds,
-      offerAuctionDeltaSeconds,
-      metadata,
-    },
-  } = await request<{
-    config: {
-      name: string
-      hasLazyMint: boolean
-      hasUnlockableContent: boolean
-      maxRoyaltiesPerTenThousand: number
-      offerValiditySeconds: number
-      offerAuctionDeltaSeconds: number
-      metadata: Partial<{
-        REPORT_EMAIL: string
-
-        LOGO: string
-        FAVICON: string
-        BRAND_COLOR: string
-
-        FEATURED_TOKEN: string[]
-        HOME_COLLECTIONS: string[]
-        HOME_USERS: string[]
-        HOME_TOKENS: string[]
-
-        META_TITLE: string
-        META_KEYWORDS: string
-        META_DESCRIPTION: string
-        META_COMPANY_NAME: string
-      }>
-    }
-  }>(
-    `${
-      process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
-    }/${process.env.NEXT_PUBLIC_LITEFLOW_API_KEY}/graphql`,
-    `{
-      config {
-        name
-        hasLazyMint
-        hasUnlockableContent
-        maxRoyaltiesPerTenThousand
-        offerValiditySeconds
-        offerAuctionDeltaSeconds
-        metadata
-      }
-    }`,
-  )
+    metadata,
+    id,
+    domain,
+    maxRoyaltiesPerTenThousand,
+    offerValiditySeconds,
+    offerAuctionDeltaSeconds,
+    hasLazyMint,
+    hasUnlockableContent,
+  } = await response.json()
   return {
     // Base configuration
-    LITEFLOW_API_KEY: process.env.NEXT_PUBLIC_LITEFLOW_API_KEY,
-    REPORT_EMAIL: metadata.REPORT_EMAIL || '',
+    LITEFLOW_API_KEY: id || process.env.NEXT_PUBLIC_LITEFLOW_API_KEY,
+    REPORT_EMAIL: metadata?.REPORT_EMAIL || '',
     PAGINATION_LIMIT: 12,
     OFFER_VALIDITY_IN_SECONDS: offerValiditySeconds,
     AUCTION_VALIDITY_IN_SECONDS: offerAuctionDeltaSeconds,
-    BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    BASE_URL: domain || process.env.NEXT_PUBLIC_BASE_URL,
     MAX_ROYALTIES: maxRoyaltiesPerTenThousand / 100,
     BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,
     // Theme configuration
-    LOGO: metadata.LOGO || '/logo.svg',
-    FAVICON: metadata.FAVICON || '/favicon.svg',
-    BRAND_COLOR: metadata.BRAND_COLOR || '#245BFF',
+    LOGO: metadata?.LOGO || '/logo.svg',
+    FAVICON: metadata?.FAVICON || '/favicon.svg',
+    BRAND_COLOR: metadata?.BRAND_COLOR || '#245BFF',
     // Wallet/chain configuration
     CHAINS: [
       ethereumMainnet,
@@ -262,15 +230,15 @@ const getEnvironment = async (): Promise<Environment> => {
     MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
     ALCHEMY_API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
     // Home page configuration
-    FEATURED_TOKEN: metadata.FEATURED_TOKEN || [],
-    HOME_COLLECTIONS: metadata.HOME_COLLECTIONS || [],
-    HOME_USERS: metadata.HOME_USERS || [],
-    HOME_TOKENS: metadata.HOME_TOKENS || [],
+    FEATURED_TOKEN: metadata?.FEATURED_TOKEN || [],
+    HOME_COLLECTIONS: metadata?.HOME_COLLECTIONS || [],
+    HOME_USERS: metadata?.HOME_USERS || [],
+    HOME_TOKENS: metadata?.HOME_TOKENS || [],
     // SEO Configuration
-    META_COMPANY_NAME: name,
-    META_TITLE: metadata.META_TITLE || name,
-    META_DESCRIPTION: metadata.META_DESCRIPTION || name,
-    META_KEYWORDS: metadata.META_KEYWORDS || name,
+    META_COMPANY_NAME: metadata?.META_COMPANY_NAME || 'Liteflow',
+    META_TITLE: metadata?.META_TITLE || 'Acme NFT Marketplace',
+    META_DESCRIPTION: metadata?.META_DESCRIPTION || '',
+    META_KEYWORDS: metadata?.META_KEYWORDS || '',
     // NFT Mint Behavior
     LAZYMINT: hasLazyMint,
     UNLOCKABLE_CONTENT: hasUnlockableContent,
