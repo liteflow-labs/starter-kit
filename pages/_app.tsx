@@ -276,17 +276,25 @@ MyApp.getInitialProps = async (
   const initialProps = (await App.getInitialProps(
     appContext,
   )) as AppInitialProps<{}> // force type of props to empty object instead of any so TS will properly require MyAppProps to be returned by this function
-  const jwt = appContext.ctx.req?.cookies?.[COOKIE_JWT_TOKEN] || null
   // Generate the now time, rounded to the second to avoid re-rendering on the client
   // TOFIX: find a better way to share the time between the app and document
   const now = new Date(Math.floor(Date.now() / 1000) * 1000)
+  const pageProps = appContext.ctx.req
+    ? {
+        jwt: appContext.ctx.req.cookies?.[COOKIE_JWT_TOKEN] || null,
+        now,
+        environment: await getEnvironment(),
+      }
+    : {
+        jwt: window.__NEXT_DATA__.props.pageProps.jwt,
+        now,
+        environment: window.__NEXT_DATA__.props.pageProps.environment,
+      }
   return {
     ...initialProps,
     pageProps: {
       ...initialProps.pageProps,
-      jwt,
-      now,
-      environment: await getEnvironment(),
+      ...pageProps,
     },
   }
 }
