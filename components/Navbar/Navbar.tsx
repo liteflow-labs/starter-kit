@@ -37,7 +37,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
-import Image from '../Image/Image'
+import useEnvironment from '../../hooks/useEnvironment'
 import Link from '../Link/Link'
 import SearchInput from '../SearchInput'
 import Select from '../Select/Select'
@@ -81,14 +81,10 @@ const NavItemMobile: FC<HTMLAttributes<any>> = ({ children, ...props }) => {
 // Mobile navigation
 const DrawerMenu: FC<{
   account: string | null | undefined
-  logo?: {
-    path: string
-    width?: number
-    height?: number
-  }
   multiLang?: MultiLang
   signOutFn: () => void
-}> = ({ account, signOutFn, logo, multiLang }) => {
+}> = ({ account, signOutFn, multiLang }) => {
+  const { LOGO, META_COMPANY_NAME } = useEnvironment()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { asPath, events, query, push } = useRouter()
   const { t } = useTranslation('components')
@@ -122,13 +118,10 @@ const DrawerMenu: FC<{
           <DrawerCloseButton />
           <DrawerHeader>
             <Link href="/" onClick={onClose}>
-              <Image
-                src={logo?.path || '/logo.svg'}
-                alt="Logo"
-                width={logo?.width || 139}
-                height={logo?.height || 32}
-                w={logo?.width ? `${logo.width}px` : '139px'}
-                h={logo?.height ? `${logo.height}px` : '32px'}
+              <img
+                src={LOGO}
+                alt={META_COMPANY_NAME}
+                style={{ height: '32px' }}
               />
             </Link>
           </DrawerHeader>
@@ -332,14 +325,10 @@ type FormData = {
 }
 
 const Navbar: FC<{
-  logo?: {
-    path: string
-    width?: number
-    height?: number
-  }
   multiLang?: MultiLang
-}> = ({ logo, multiLang }) => {
+}> = ({ multiLang }) => {
   const { t } = useTranslation('components')
+  const { LOGO, META_COMPANY_NAME } = useEnvironment()
   const { address, isLoggedIn, logout, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady, events } = useRouter()
@@ -394,13 +383,10 @@ const Navbar: FC<{
       <Flex mx="auto" h={16} gap={6} px={{ base: 6, lg: 8 }} maxW="7xl">
         <Flex align="center">
           <Flex as={Link} href="/">
-            <Image
-              src={logo?.path || '/logo.svg'}
-              alt="Logo"
-              width={logo?.width || 139}
-              height={logo?.height || 32}
-              w={logo?.width ? `${logo.width}px` : '139px'}
-              h={logo?.height ? `${logo.height}px` : '32px'}
+            <img
+              src={LOGO}
+              alt={META_COMPANY_NAME}
+              style={{ height: '32px' }}
             />
           </Flex>
         </Flex>
@@ -522,7 +508,6 @@ const Navbar: FC<{
         <Flex display={{ base: 'flex', lg: 'none' }} align="center">
           <DrawerMenu
             account={account?.address}
-            logo={logo}
             multiLang={multiLang}
             signOutFn={() => logout().then(disconnect)}
           />

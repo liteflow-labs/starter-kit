@@ -241,7 +241,10 @@ const CollectionPage: FC<Props> = ({ now }) => {
                 noChain
                 currentCollection={{ chainId, address: collectionAddress }}
                 onFilterChange={updateFilter}
-                filter={filter}
+                filter={{
+                  ...filter,
+                  chains: collection ? [collection.chainId] : [],
+                }}
               />
             </ModalBody>
           </ModalContent>
@@ -254,7 +257,10 @@ const CollectionPage: FC<Props> = ({ now }) => {
               noChain
               currentCollection={{ chainId, address: collectionAddress }}
               onFilterChange={updateFilter}
-              filter={filter}
+              filter={{
+                ...filter,
+                chains: collection ? [collection.chainId] : [],
+              }}
             />
           </GridItem>
         )}
