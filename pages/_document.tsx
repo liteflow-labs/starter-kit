@@ -17,7 +17,7 @@ import invariant from 'ts-invariant'
 import getClient from '../client'
 import getEnvironment from '../environment'
 import { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
-import { theme } from '../styles/theme'
+import { baseTheme } from '../styles/theme'
 import { MyAppProps } from './_app'
 
 type MyDocumentProps = { apolloState: NormalizedCacheObject }
@@ -35,12 +35,21 @@ class MyDocument extends Document {
       <Html lang={this.props.locale || 'en'}>
         <Head>
           <link
+            rel="shortcut icon"
+            href={
+              this.props.__NEXT_DATA__.props.pageProps.environment.FAVICON ||
+              '/favicon.ico'
+            }
+          />
+          <link
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
             rel="stylesheet"
           />
         </Head>
         <body>
-          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <ColorModeScript
+            initialColorMode={baseTheme.config.initialColorMode}
+          />
           <Main />
           <NextScript />
         </body>
@@ -55,7 +64,7 @@ class MyDocument extends Document {
   ): Promise<DocumentInitialProps & MyDocumentProps> {
     invariant(context.req)
     const jwt = context.req?.cookies?.[COOKIE_JWT_TOKEN] || null
-    const environment = await getEnvironment(context.req)
+    const environment = await getEnvironment()
     // the `getClient` needs to be reset on every request as early as possible and before any rendering
     const apolloClient = getClient(
       environment.LITEFLOW_API_KEY,

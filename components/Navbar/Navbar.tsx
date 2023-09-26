@@ -17,9 +17,6 @@ import {
   HStack,
   Icon,
   IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
   Menu,
   MenuButton,
   MenuItem,
@@ -32,17 +29,17 @@ import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { FaEnvelope } from '@react-icons/all-files/fa/FaEnvelope'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
-import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { FC, HTMLAttributes, useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
-import Image from '../Image/Image'
+import useEnvironment from '../../hooks/useEnvironment'
 import Link from '../Link/Link'
+import SearchInput from '../SearchInput'
 import Select from '../Select/Select'
 import AccountImage from '../Wallet/Image'
 
@@ -84,14 +81,10 @@ const NavItemMobile: FC<HTMLAttributes<any>> = ({ children, ...props }) => {
 // Mobile navigation
 const DrawerMenu: FC<{
   account: string | null | undefined
-  logo?: {
-    path: string
-    width?: number
-    height?: number
-  }
   multiLang?: MultiLang
   signOutFn: () => void
-}> = ({ account, signOutFn, logo, multiLang }) => {
+}> = ({ account, signOutFn, multiLang }) => {
+  const { LOGO, META_COMPANY_NAME } = useEnvironment()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { asPath, events, query, push } = useRouter()
   const { t } = useTranslation('components')
@@ -125,13 +118,10 @@ const DrawerMenu: FC<{
           <DrawerCloseButton />
           <DrawerHeader>
             <Link href="/" onClick={onClose}>
-              <Image
-                src={logo?.path || '/logo.svg'}
-                alt="Logo"
-                width={logo?.width || 139}
-                height={logo?.height || 32}
-                w={logo?.width ? `${logo.width}px` : '139px'}
-                h={logo?.height ? `${logo.height}px` : '32px'}
+              <img
+                src={LOGO}
+                alt={META_COMPANY_NAME}
+                style={{ height: '32px' }}
               />
             </Link>
           </DrawerHeader>
@@ -332,18 +322,14 @@ type FormData = {
 }
 
 const Navbar: FC<{
-  logo?: {
-    path: string
-    width?: number
-    height?: number
-  }
   multiLang?: MultiLang
-}> = ({ logo, multiLang }) => {
+}> = ({ multiLang }) => {
   const { t } = useTranslation('components')
+  const { LOGO, META_COMPANY_NAME } = useEnvironment()
   const { address, isLoggedIn, logout, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { asPath, query, push, isReady, events } = useRouter()
-  const { register, setValue, handleSubmit } = useForm<FormData>()
+  const formValues = useForm<FormData>()
   const [cookies] = useCookies()
   const { openConnectModal } = useConnectModal()
   const lastNotification = cookies[`lastNotification-${address}`]
@@ -364,10 +350,10 @@ const Navbar: FC<{
 
   useEffect(() => {
     if (!isReady) return
-    if (!query.search) return setValue('search', '')
-    if (Array.isArray(query.search)) return setValue('search', '')
-    setValue('search', query.search)
-  }, [isReady, setValue, query.search])
+    if (!query.search) return formValues.setValue('search', '')
+    if (Array.isArray(query.search)) return formValues.setValue('search', '')
+    formValues.setValue('search', query.search)
+  }, [isReady, formValues, query.search])
 
   useEffect(() => {
     const callback = () => {
@@ -380,7 +366,7 @@ const Navbar: FC<{
     }
   }, [events, refetch, address, isLoggedIn])
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = formValues.handleSubmit((data) => {
     if (data.search) query.search = data.search
     else delete query.search
     delete query.skip // reset pagination
@@ -394,28 +380,22 @@ const Navbar: FC<{
       <Flex mx="auto" h={16} gap={6} px={{ base: 6, lg: 8 }} maxW="7xl">
         <Flex align="center">
           <Flex as={Link} href="/">
-            <Image
-              src={logo?.path || '/logo.svg'}
-              alt="Logo"
-              width={logo?.width || 139}
-              height={logo?.height || 32}
-              w={logo?.width ? `${logo.width}px` : '139px'}
-              h={logo?.height ? `${logo.height}px` : '32px'}
+            <img
+              src={LOGO}
+              alt={META_COMPANY_NAME}
+              style={{ height: '32px' }}
             />
           </Flex>
         </Flex>
-        <Flex as="form" my="auto" grow={1} onSubmit={onSubmit}>
-          <InputGroup>
-            <Input
+        <FormProvider {...formValues}>
+          <Flex as="form" my="auto" grow={1} onSubmit={onSubmit}>
+            <SearchInput
               placeholder={t('navbar.search')}
-              type="search"
-              {...register('search')}
+              name="search"
+              onSubmit={onSubmit}
             />
-            <InputRightElement cursor="pointer" onClick={onSubmit}>
-              <Icon as={HiOutlineSearch} w={6} h={6} color="black" />
-            </InputRightElement>
-          </InputGroup>
-        </Flex>
+          </Flex>
+        </FormProvider>
         <Flex display={{ base: 'none', lg: 'flex' }} align="center" gap={6}>
           <Flex
             as={Link}
@@ -514,7 +494,6 @@ const Navbar: FC<{
         <Flex display={{ base: 'flex', lg: 'none' }} align="center">
           <DrawerMenu
             account={account?.address}
-            logo={logo}
             multiLang={multiLang}
             signOutFn={() => logout().then(disconnect)}
           />

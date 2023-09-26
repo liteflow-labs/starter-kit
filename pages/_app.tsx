@@ -36,7 +36,7 @@ import connectors from '../connectors'
 import getEnvironment, { Environment, EnvironmentContext } from '../environment'
 import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import useEnvironment from '../hooks/useEnvironment'
-import { theme } from '../styles/theme'
+import { getTheme } from '../styles/theme'
 import Error from './_error'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
@@ -217,6 +217,9 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
     () => connectors(environment),
     [environment],
   )
+
+  const theme = useMemo(() => getTheme(environment.BRAND_COLOR), [environment])
+
   return (
     <ErrorBoundary>
       <EnvironmentContext.Provider value={environment}>
@@ -285,7 +288,7 @@ MyApp.getInitialProps = async (
       ...initialProps.pageProps,
       jwt,
       now,
-      environment: await getEnvironment(appContext.ctx.req),
+      environment: await getEnvironment(),
     },
   }
 }
