@@ -140,7 +140,7 @@ export const convertAssetWithSupplies = (
 }
 
 export const convertDropActive = (
-  inProgressAndUpComing: Pick<
+  activeDrops: Pick<
     Collection,
     'address' | 'chainId' | 'name' | 'image' | 'cover'
   > & {
@@ -148,13 +148,9 @@ export const convertDropActive = (
       verification: Maybe<Pick<AccountVerification, 'status'>>
     }
   } & {
-    firstDrop: NonNullable<{ nodes: Array<Pick<Drop, 'startDate'>> }>
-  } & {
-    allDrops: NonNullable<{ nodes: Array<Pick<Drop, 'supply'>> }>
-  } & {
-    lastDrop: NonNullable<{
+    drops: NonNullable<{
       nodes: Array<
-        Pick<Drop, 'id' | 'endDate' | 'unitPrice'> & {
+        Pick<Drop, 'id' | 'startDate' | 'endDate' | 'unitPrice' | 'supply'> & {
           currency: {
             id: string
             decimals: number
@@ -191,47 +187,42 @@ export const convertDropActive = (
     image: string
   }
 } => {
-  const totalSupply = inProgressAndUpComing.allDrops.nodes.reduce(
-    (acc, drop) => {
-      if (drop.supply === null) return Infinity
-      return acc + BigNumber.from(drop.supply).toNumber()
-    },
-    0,
-  )
+  const totalSupply = activeDrops.drops.nodes.reduce((acc, drop) => {
+    if (drop.supply === null) return Infinity
+    return acc + BigNumber.from(drop.supply).toNumber()
+  }, 0)
 
-  invariant(inProgressAndUpComing.lastDrop.nodes[0], 'lastDrop is required')
-  invariant(inProgressAndUpComing.firstDrop.nodes[0], 'firstDrop is required')
+  invariant(activeDrops.drops.nodes[0], 'drop is required')
   return {
-    id: inProgressAndUpComing.lastDrop.nodes[0].id,
-    startDate: inProgressAndUpComing.firstDrop.nodes[0].startDate,
-    endDate: inProgressAndUpComing.lastDrop.nodes[0].endDate,
-    unitPrice: inProgressAndUpComing.lastDrop.nodes[0].unitPrice,
+    id: activeDrops.drops.nodes[0].id,
+    startDate: activeDrops.drops.nodes[0].startDate,
+    endDate: activeDrops.drops.nodes[0].endDate,
+    unitPrice: activeDrops.drops.nodes[0].unitPrice,
     supply: totalSupply,
     collection: {
-      address: inProgressAndUpComing.address,
-      chainId: inProgressAndUpComing.chainId,
-      cover: inProgressAndUpComing.cover,
-      image: inProgressAndUpComing.image,
-      name: inProgressAndUpComing.name,
+      address: activeDrops.address,
+      chainId: activeDrops.chainId,
+      cover: activeDrops.cover,
+      image: activeDrops.image,
+      name: activeDrops.name,
       deployer: {
-        address: inProgressAndUpComing.deployer.address,
-        name: inProgressAndUpComing.deployer.name,
-        username: inProgressAndUpComing.deployer.username,
-        verified:
-          inProgressAndUpComing.deployer.verification?.status === 'VALIDATED',
+        address: activeDrops.deployer.address,
+        name: activeDrops.deployer.name,
+        username: activeDrops.deployer.username,
+        verified: activeDrops.deployer.verification?.status === 'VALIDATED',
       },
     },
     currency: {
-      id: inProgressAndUpComing.lastDrop.nodes[0].currency.id,
-      decimals: inProgressAndUpComing.lastDrop.nodes[0].currency.decimals,
-      symbol: inProgressAndUpComing.lastDrop.nodes[0].currency.symbol,
-      image: inProgressAndUpComing.lastDrop.nodes[0].currency.image,
+      id: activeDrops.drops.nodes[0].currency.id,
+      decimals: activeDrops.drops.nodes[0].currency.decimals,
+      symbol: activeDrops.drops.nodes[0].currency.symbol,
+      image: activeDrops.drops.nodes[0].currency.image,
     },
   }
 }
 
 export const convertDropEnded = (
-  inProgressAndUpComing: Pick<
+  endedDrops: Pick<
     Collection,
     'address' | 'chainId' | 'name' | 'image' | 'cover'
   > & {
@@ -280,40 +271,36 @@ export const convertDropEnded = (
     image: string
   }
 } => {
-  const totalSupply = inProgressAndUpComing.allDrops.nodes.reduce(
-    (acc, drop) => {
-      if (drop.supply === null) return Infinity
-      return acc + BigNumber.from(drop.supply).toNumber()
-    },
-    0,
-  )
+  const totalSupply = endedDrops.allDrops.nodes.reduce((acc, drop) => {
+    if (drop.supply === null) return Infinity
+    return acc + BigNumber.from(drop.supply).toNumber()
+  }, 0)
 
-  invariant(inProgressAndUpComing.lastDrop.nodes[0], 'lastDrop is required')
+  invariant(endedDrops.lastDrop.nodes[0], 'lastDrop is required')
   return {
-    id: inProgressAndUpComing.lastDrop.nodes[0].id,
-    startDate: inProgressAndUpComing.lastDrop.nodes[0].startDate,
-    endDate: inProgressAndUpComing.lastDrop.nodes[0].endDate,
-    unitPrice: inProgressAndUpComing.lastDrop.nodes[0].unitPrice,
+    id: endedDrops.lastDrop.nodes[0].id,
+    startDate: endedDrops.lastDrop.nodes[0].startDate,
+    endDate: endedDrops.lastDrop.nodes[0].endDate,
+    unitPrice: endedDrops.lastDrop.nodes[0].unitPrice,
     supply: totalSupply,
     collection: {
-      address: inProgressAndUpComing.address,
-      chainId: inProgressAndUpComing.chainId,
-      cover: inProgressAndUpComing.cover,
-      image: inProgressAndUpComing.image,
-      name: inProgressAndUpComing.name,
+      address: endedDrops.address,
+      chainId: endedDrops.chainId,
+      cover: endedDrops.cover,
+      image: endedDrops.image,
+      name: endedDrops.name,
       deployer: {
-        address: inProgressAndUpComing.deployer.address,
-        name: inProgressAndUpComing.deployer.name,
-        username: inProgressAndUpComing.deployer.username,
-        verified:
-          inProgressAndUpComing.deployer.verification?.status === 'VALIDATED',
+        address: endedDrops.deployer.address,
+        name: endedDrops.deployer.name,
+        username: endedDrops.deployer.username,
+        verified: endedDrops.deployer.verification?.status === 'VALIDATED',
       },
     },
     currency: {
-      id: inProgressAndUpComing.lastDrop.nodes[0].currency.id,
-      decimals: inProgressAndUpComing.lastDrop.nodes[0].currency.decimals,
-      symbol: inProgressAndUpComing.lastDrop.nodes[0].currency.symbol,
-      image: inProgressAndUpComing.lastDrop.nodes[0].currency.image,
+      id: endedDrops.lastDrop.nodes[0].currency.id,
+      decimals: endedDrops.lastDrop.nodes[0].currency.decimals,
+      symbol: endedDrops.lastDrop.nodes[0].currency.symbol,
+      image: endedDrops.lastDrop.nodes[0].currency.image,
     },
   }
 }
