@@ -64,7 +64,7 @@ class MyDocument extends Document {
   ): Promise<DocumentInitialProps & MyDocumentProps> {
     invariant(context.req)
     const jwt = context.req?.cookies?.[COOKIE_JWT_TOKEN] || null
-    const environment = await getEnvironment()
+    const environment = await getEnvironment(context.req)
     // the `getClient` needs to be reset on every request as early as possible and before any rendering
     const apolloClient = getClient(
       environment.LITEFLOW_API_KEY,

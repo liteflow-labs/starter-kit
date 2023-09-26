@@ -35,14 +35,13 @@ export default async function detect(
   )
   if (!organization) return res.json({})
   res.json({
-    ...(organization.metadata || {}),
-    LITEFLOW_API_KEY: organization.id,
-    META_TITLE: organization.name,
-    BASE_URL: organization.domain,
-    MAX_ROYALTIES: organization.maxRoyaltiesPerTenThousand / 100,
-    OFFER_VALIDITY_IN_SECONDS: organization.offerValiditySeconds,
-    AUCTION_VALIDITY_IN_SECONDS: organization.offerAuctionDeltaSeconds,
-    LAZYMINT: organization.hasLazyMint,
-    UNLOCKABLE_CONTENT: organization.hasUnlockableContent,
+    metadata: organization.metadata || {},
+    id: organization.id,
+    domain: organization.domain,
+    maxRoyaltiesPerTenThousand: organization.maxRoyaltiesPerTenThousand,
+    offerValiditySeconds: organization.offerValiditySeconds,
+    offerAuctionDeltaSeconds: organization.offerAuctionDeltaSeconds,
+    hasLazyMint: organization.hasLazyMint,
+    hasUnlockableContent: organization.hasUnlockableContent,
   })
 }
