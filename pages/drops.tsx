@@ -1,7 +1,7 @@
 import { Divider, Heading, SimpleGrid } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import DropCard from '../components/Drop/DropCard'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
@@ -15,7 +15,6 @@ import useEnvironment from '../hooks/useEnvironment'
 import usePaginate from '../hooks/usePaginate'
 import usePaginateQuery from '../hooks/usePaginateQuery'
 import LargeLayout from '../layouts/large'
-import { dateIsBefore, dateIsBetween } from '../utils'
 
 type Props = {
   now: string
@@ -28,39 +27,18 @@ const DropsPage: NextPage<Props> = ({ now }) => {
   const { page, limit, offset } = usePaginateQuery()
   const [changePage, changeLimit] = usePaginate()
 
-  const { data, loading } = useFetchDropsQuery({
+  const { data, loading, refetch } = useFetchDropsQuery({
     variables: { now: date, limit, offset },
   })
 
-  const inprogressDrops = useMemo(() => {
-    return (
-      data?.inProgressAndUpComing?.nodes
-        .filter((drop) => {
-          if (
-            drop.firstDrop.nodes[0]?.startDate == null ||
-            drop.lastDrop.nodes[0]?.endDate == null
-          )
-            return false
-          return dateIsBetween(
-            date,
-            drop.firstDrop.nodes[0]?.startDate,
-            drop.lastDrop.nodes[0]?.endDate,
-          )
-        })
-        .map((drop) => convertDropActive(drop)) || []
-    )
-  }, [date, data?.inProgressAndUpComing?.nodes])
+  const inprogressDrops = useMemo(
+    () => data?.inProgress?.nodes.map((drop) => convertDropActive(drop)) || [],
+    [data?.inProgress?.nodes],
+  )
 
   const upcomingDrops = useMemo(
-    () =>
-      data?.inProgressAndUpComing?.nodes
-        .filter((drop) => {
-          if (drop.firstDrop.nodes[0]?.startDate == null) return false
-
-          return dateIsBefore(date, drop.firstDrop.nodes[0]?.startDate)
-        })
-        .map((drop) => convertDropActive(drop)) || [],
-    [date, data?.inProgressAndUpComing?.nodes],
+    () => data?.upcoming?.nodes.map((drop) => convertDropActive(drop)) || [],
+    [data?.upcoming?.nodes],
   )
 
   const endedDrops = useMemo(
@@ -75,6 +53,8 @@ const DropsPage: NextPage<Props> = ({ now }) => {
       upcomingDrops.length === 0,
     [endedDrops.length, inprogressDrops.length, upcomingDrops.length],
   )
+
+  const onCountdownEnd = useCallback(async () => await refetch(), [refetch])
 
   return (
     <LargeLayout>
@@ -108,6 +88,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
                   key={drop.id}
                   drop={drop}
                   timeline={Timeline.INPROGRESS}
+                  onCountdownEnd={onCountdownEnd}
                 />
               ))}
               {upcomingDrops.map((drop) => (
@@ -115,6 +96,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
                   key={drop.id}
                   drop={drop}
                   timeline={Timeline.UPCOMING}
+                  onCountdownEnd={onCountdownEnd}
                 />
               ))}
             </SimpleGrid>

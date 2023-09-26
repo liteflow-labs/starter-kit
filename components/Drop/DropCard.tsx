@@ -11,24 +11,25 @@ import {
 } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
-import Price from 'components/Price/Price'
 import { convertDropActive } from 'convert'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { useMemo } from 'react'
 import { Timeline } from '../../hooks/useDropTimeline'
 import { formatAddress } from '../../utils'
-import Countdown from '../Countdown/Countdown'
+import DropCountdown from '../Countdown/DropCountdown'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
+import Price from '../Price/Price'
 import TokenMedia from '../Token/Media'
 
 type Props = {
   drop: ReturnType<typeof convertDropActive>
   timeline: Timeline
+  onCountdownEnd?: () => void
 }
 
-export default function DropCard({ drop, timeline }: Props) {
+export default function DropCard({ drop, timeline, onCountdownEnd }: Props) {
   const { t } = useTranslation('components')
 
   const timelineText = useMemo(() => {
@@ -72,8 +73,19 @@ export default function DropCard({ drop, timeline }: Props) {
       </Box>
 
       <Flex position="relative" w="full">
+        {timeline === Timeline.INPROGRESS && (
+          // Hidden countdown to trigger refetch when countdown ends
+          <DropCountdown
+            date={drop.endDate}
+            isHidden
+            onCountdownEnd={onCountdownEnd}
+          />
+        )}
         {timeline === Timeline.UPCOMING && (
-          <Countdown date={drop.startDate} isStyled />
+          <DropCountdown
+            date={drop.startDate}
+            onCountdownEnd={onCountdownEnd}
+          />
         )}
         <Text as="span" variant="caption" verticalAlign="middle" ml="auto">
           <Badge
