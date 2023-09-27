@@ -21,6 +21,7 @@ import { useRouter } from 'next/router'
 import numbro from 'numbro'
 import { FC, JSX, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import invariant from 'ts-invariant'
 import useSigner from '../../../hooks/useSigner'
 import { formatError } from '../../../utils'
 import Countdown from '../../Countdown/Countdown'
@@ -85,8 +86,13 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       onOpen()
-      await mintDrop(drop.id, data.quantity)
-      await push(`/users/${address}`)
+      const mintedDrops = await mintDrop(drop.id, data.quantity)
+      invariant(mintedDrops[0], 'Error minting drop')
+      data.quantity === 1
+        ? await push(
+            `/tokens/${mintedDrops[0].chain}-${mintedDrops[0].collection}-${mintedDrops[0].token}`,
+          )
+        : await push(`/users/${address}/owned`)
       toast({
         title: 'NFT was successfully minted',
         status: 'success',
