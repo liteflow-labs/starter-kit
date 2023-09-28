@@ -11,11 +11,12 @@ import {
   ModalHeader,
   SimpleGrid,
   useBreakpointValue,
+  useConst,
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import FilterAsset, { NoFilter } from '../../components/Filter/FilterAsset'
@@ -45,11 +46,7 @@ import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
 import { removeEmptyFromObject } from '../../utils'
 
-type Props = {
-  now: string
-}
-
-const ExplorePage: NextPage<Props> = ({ now }) => {
+const ExplorePage: NextPage = () => {
   const { PAGINATION_LIMIT } = useEnvironment()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue(
@@ -57,19 +54,19 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     { fallback: 'md' },
   )
   const { t } = useTranslation('templates')
-  const date = useMemo(() => new Date(now), [now])
+  const mountTime = useConst(() => new Date())
   const { address } = useAccount()
   const filter = useAssetFilterFromQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
   const { page, limit, offset } = usePaginateQuery()
   const { data: assetsData } = useFetchAllErc721And1155Query({
     variables: {
-      now: date,
+      now: mountTime,
       address: address || '',
       limit,
       offset,
       orderBy,
-      filter: convertFilterToAssetFilter(filter, date),
+      filter: convertFilterToAssetFilter(filter, mountTime),
     },
   })
 

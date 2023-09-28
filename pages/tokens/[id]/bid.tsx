@@ -6,6 +6,7 @@ import {
   Heading,
   Icon,
   Stack,
+  useConst,
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -41,11 +42,7 @@ import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSin
 import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
 
-type Props = {
-  now: string
-}
-
-const BidPage: NextPage<Props> = ({ now }) => {
+const BidPage: NextPage = () => {
   const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
     useEnvironment()
   const signer = useSigner()
@@ -60,13 +57,13 @@ const BidPage: NextPage<Props> = ({ now }) => {
   )
   invariant(chainId && collectionAddress && tokenId, 'Invalid asset id')
 
-  const date = useMemo(() => new Date(now), [now])
+  const mountTime = useConst(() => new Date())
   const { data } = useBidOnAssetQuery({
     variables: {
       chainId: parseInt(chainId, 10),
       collectionAddress: collectionAddress,
       tokenId: tokenId,
-      now: date,
+      now: mountTime,
       address: address || '',
     },
   })

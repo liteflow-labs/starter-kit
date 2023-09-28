@@ -21,6 +21,7 @@ import {
   Tabs,
   Text,
   Tooltip,
+  useConst,
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -61,10 +62,6 @@ import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
 import { formatError } from '../../../utils'
 
-type Props = {
-  now: string
-}
-
 enum AssetTabs {
   bids = 'bids',
   history = 'history',
@@ -72,7 +69,7 @@ enum AssetTabs {
 
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
-const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
+const DetailPage: NextPage = () => {
   const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -87,13 +84,13 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   invariant(tokenId, 'tokenId is required')
   const chainId = parseInt(_chainId, 10)
 
-  const date = useMemo(() => new Date(nowProp), [nowProp])
+  const mountTime = useConst(() => new Date())
   const { data, refetch } = useFetchAssetQuery({
     variables: {
       chainId,
       collectionAddress,
       tokenId,
-      now: date,
+      now: mountTime,
       address: address || '',
     },
   })

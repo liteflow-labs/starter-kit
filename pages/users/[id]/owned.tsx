@@ -1,3 +1,4 @@
+import { useConst } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -24,11 +25,7 @@ import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSin
 import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
 
-type Props = {
-  now: string
-}
-
-const OwnedPage: NextPage<Props> = ({ now }) => {
+const OwnedPage: NextPage = () => {
   const { PAGINATION_LIMIT, BASE_URL } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -39,7 +36,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const date = useMemo(() => new Date(now), [now])
+  const mountTime = useConst(() => new Date())
   const { data } = useFetchOwnedAssetsQuery({
     variables: {
       address: userAddress,
@@ -47,7 +44,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
       limit,
       offset,
       orderBy,
-      now: date,
+      now: mountTime,
     },
   })
 

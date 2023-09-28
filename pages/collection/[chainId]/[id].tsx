@@ -11,11 +11,13 @@ import {
   ModalHeader,
   SimpleGrid,
   useBreakpointValue,
+  useConst,
 } from '@chakra-ui/react'
+import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { FC, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import CollectionHeader from '../../../components/Collection/CollectionHeader'
 import CollectionHeaderSkeleton from '../../../components/Collection/CollectionHeaderSkeleton'
 import CollectionMetrics from '../../../components/Collection/CollectionMetrics'
@@ -57,11 +59,7 @@ import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSin
 import LargeLayout from '../../../layouts/large'
 import { removeEmptyFromObject } from '../../../utils'
 
-type Props = {
-  now: string
-}
-
-const CollectionPage: FC<Props> = ({ now }) => {
+const CollectionPage: NextPage = () => {
   const { REPORT_EMAIL, PAGINATION_LIMIT } = useEnvironment()
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
@@ -73,7 +71,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
     { fallback: 'md' },
   )
   const { t } = useTranslation('templates')
-  const date = useMemo(() => new Date(now), [now])
+  const mountTime = useConst(() => new Date())
   const { address } = useAccount()
   const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
@@ -98,13 +96,13 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { data: assetData } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
-      now: date,
+      now: mountTime,
       currentAccount: address || '',
       limit,
       offset,
       orderBy,
       chainId: chainId,
-      filter: convertFilterToAssetFilter(filter, date),
+      filter: convertFilterToAssetFilter(filter, mountTime),
     },
   })
 

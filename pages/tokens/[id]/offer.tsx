@@ -8,6 +8,7 @@ import {
   GridItem,
   Heading,
   Skeleton,
+  useConst,
   useRadioGroup,
   useToast,
 } from '@chakra-ui/react'
@@ -45,17 +46,6 @@ import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
 import { isSameAddress } from '../../../utils'
 
-type Props = {
-  assetId: string
-  now: string
-  currentAccount: string | null
-  meta: {
-    title: string
-    description: string
-    image: string
-  }
-}
-
 enum SaleType {
   FIXED_PRICE = 'FIXED_PRICE',
   TIMED_AUCTION = 'TIMED_AUCTION',
@@ -67,7 +57,7 @@ type SaleOption = {
   icon: any
 }
 
-const OfferPage: NextPage<Props> = ({ now }) => {
+const OfferPage: NextPage = () => {
   const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
     useEnvironment()
   const signer = useSigner()
@@ -83,13 +73,13 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   )
   invariant(chainId && collectionAddress && tokenId, 'Invalid asset id')
 
-  const date = useMemo(() => new Date(now), [now])
+  const mountTime = useConst(() => new Date())
   const { data } = useOfferForAssetQuery({
     variables: {
       chainId: parseInt(chainId, 10),
       collectionAddress: collectionAddress,
       tokenId: tokenId,
-      now: date,
+      now: mountTime,
       address: address || '',
     },
   })

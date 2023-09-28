@@ -13,6 +13,7 @@ import {
   Th,
   Thead,
   Tr,
+  useConst,
   useToast,
 } from '@chakra-ui/react'
 import { useIsLoggedIn } from '@liteflow/react'
@@ -46,11 +47,7 @@ import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
-type Props = {
-  now: string
-}
-
-const BidReceivedPage: NextPage<Props> = ({ now }) => {
+const BidReceivedPage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
@@ -63,14 +60,14 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
-  const date = useMemo(() => new Date(now), [now])
+  const mountTime = useConst(() => new Date())
   const { data, refetch } = useFetchUserBidsReceivedQuery({
     variables: {
       address: userAddress,
       limit,
       offset,
       orderBy,
-      now: date,
+      now: mountTime,
     },
   })
 
