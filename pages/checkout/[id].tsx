@@ -6,6 +6,7 @@ import {
   Heading,
   Skeleton,
   Stack,
+  useConst,
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -36,11 +37,7 @@ import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle
 import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
 
-type Props = {
-  now: string
-}
-
-const CheckoutPage: NextPage<Props> = ({ now }) => {
+const CheckoutPage: NextPage = () => {
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
@@ -49,19 +46,20 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
 
   const { address } = useAccount()
 
-  const date = useMemo(() => new Date(now), [now])
+  const mountTime = useConst(() => new Date())
   const { data: offerData } = useCheckoutQuery({ variables: { id: offerId } })
   const offer = offerData?.offer
 
   const { data: assetData } = useFetchAssetForCheckoutQuery({
     variables: {
-      now: date,
+      now: mountTime,
       address: address || '',
       chainId: offer?.asset.chainId || 0,
       collectionAddress: offer?.asset.collectionAddress || '',
       tokenId: offer?.asset.tokenId || '',
     },
     skip: !offer,
+    ssr: false,
   })
   const asset = assetData?.asset
 
@@ -70,20 +68,20 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     [offer],
   )
   const isSingle = useMemo(
-    () => asset?.collection.standard === 'ERC721',
-    [asset],
+    () => offer?.asset.collection.standard === 'ERC721',
+    [offer?.asset.collection.standard],
   )
 
-  const blockExplorer = useBlockExplorer(asset?.chainId)
+  const blockExplorer = useBlockExplorer(offer?.asset.chainId)
 
   const onPurchased = useCallback(async () => {
-    if (!asset) return
+    if (!offer) return
     toast({
       title: t('offers.checkout.notifications.purchased'),
       status: 'success',
     })
-    await push(`/tokens/${asset.id}`)
-  }, [asset, toast, t, push])
+    await push(`/tokens/${offer.asset.id}`)
+  }, [offer, toast, t, push])
 
   if (offer === null || asset === null) {
     return <Error statusCode={404} />
@@ -91,15 +89,15 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   return (
     <SmallLayout>
       <Head
-        title={asset && t('offers.checkout.meta.title', asset)}
+        title={offer && t('offers.checkout.meta.title', offer.asset)}
         description={
-          asset &&
+          offer?.asset &&
           t('offers.checkout.meta.description', {
-            name: asset.name,
-            creator: asset.creator.name || asset.creator.address,
+            name: offer.asset.name,
+            creator: offer.asset.creator.name || offer.asset.creator.address,
           })
         }
-        image={asset?.image}
+        image={offer?.asset.image}
       />
 
       <BackButton onClick={back} />

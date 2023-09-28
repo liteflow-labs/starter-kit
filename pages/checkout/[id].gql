@@ -3,9 +3,26 @@ query Checkout($id: UUID!) {
     id
     type
     asset {
+      id
       chainId
       collectionAddress
       tokenId
+      image
+      name
+      creator {
+        address
+        name
+        image
+        verification {
+          status
+        }
+      }
+      collection {
+        chainId
+        address
+        name
+        standard
+      }
     }
     maker {
       address
@@ -42,19 +59,6 @@ query FetchAssetForCheckout(
     chainId
     collectionAddress
     tokenId
-    collection {
-      chainId
-      address
-      name
-      standard
-    }
-    name
-    image
-    unlockedContent {
-      url
-      mimetype
-    }
-    animationUrl
     creator {
       address
       name
@@ -63,6 +67,18 @@ query FetchAssetForCheckout(
         status
       }
     }
+    collection {
+      chainId
+      address
+      name
+    }
+    name
+    image
+    unlockedContent {
+      url
+      mimetype
+    }
+    animationUrl
     owned: ownership(ownerAddress: $address) {
       quantity
     }
