@@ -40,6 +40,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
       address: address || '',
     },
     skip: !FEATURED_TOKEN.length,
+    ssr: false,
   })
   useHandleQueryError(featureAssetsQuery)
 

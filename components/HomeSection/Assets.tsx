@@ -74,6 +74,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       address: address || '',
     },
     skip: assetIds === undefined,
+    ssr: false,
   })
   useHandleQueryError(assetsQuery)
   const assetData = assetsQuery.data

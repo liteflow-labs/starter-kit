@@ -20,6 +20,7 @@ const AuctionsHomeSection: FC<Props> = ({ date }) => {
   const { t } = useTranslation('templates')
   const auctionAssetsQuery = useFetchAuctionsQuery({
     variables: { now: date, address: address || '' },
+    ssr: false,
   })
   useHandleQueryError(auctionAssetsQuery)
   return (
