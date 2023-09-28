@@ -3,6 +3,7 @@ import {
   Center,
   chakra,
   Icon,
+  Skeleton,
   Stack,
   Text,
   useTheme,
@@ -10,6 +11,8 @@ import {
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import Image from '../Image/Image'
+
+const authorizedMimetypes = ['image/', 'video/']
 
 const TokenMedia: FC<{
   imageUrl: string
@@ -31,7 +34,9 @@ const TokenMedia: FC<{
   const { colors } = useTheme()
 
   // setup content to display in order with mimetype. The goal is if there is an issue with one, try the next one until no more
-  const contentsToDisplay = useMemo<{ url: string; mimetype: string }[]>(() => {
+  const contentsToDisplay = useMemo<
+    { url: string; mimetype?: string; fallbackMimetype?: string }[]
+  >(() => {
     const contentsToDisplay = []
     if (unlockedContent) {
       if (unlockedContent.mimetype) {
@@ -44,31 +49,31 @@ const TokenMedia: FC<{
         // we don't know the mimetype, start with image and then video
         contentsToDisplay.push({
           url: unlockedContent.url,
-          mimetype: 'image/*',
+          fallbackMimetype: 'image/*',
         })
         contentsToDisplay.push({
           url: unlockedContent.url,
-          mimetype: 'video/*',
+          fallbackMimetype: 'video/*',
         })
       }
     }
     if (animationUrl) {
       contentsToDisplay.push({
         url: animationUrl,
-        mimetype: 'video/*', // start with video
+        fallbackMimetype: 'video/*',
       })
       contentsToDisplay.push({
         url: animationUrl,
-        mimetype: 'image/*', // then image
+        fallbackMimetype: 'image/*',
       })
     }
     contentsToDisplay.push({
       url: imageUrl,
-      mimetype: 'image/*', // start with image
+      fallbackMimetype: 'image/*',
     })
     contentsToDisplay.push({
       url: imageUrl,
-      mimetype: 'video/*', // then video
+      fallbackMimetype: 'video/*',
     })
     return contentsToDisplay
   }, [animationUrl, imageUrl, unlockedContent])
@@ -96,7 +101,62 @@ const TokenMedia: FC<{
     [contentsToDisplay, currentContentToDisplay],
   )
 
-  // nothing to display, return error
+  // mimetype of the element to display
+  const [mimetype, setMimetype] = useState<string | undefined>(
+    toDisplay?.mimetype,
+  )
+
+  // fetch mimetype if not set
+  useEffect(() => {
+    // set mimetype if defined in toDisplay
+    if (toDisplay?.mimetype) return setMimetype(toDisplay.mimetype)
+
+    // reset mime type
+    setMimetype(undefined)
+
+    // check no execution cases
+    if (!toDisplay) return
+    if (
+      !toDisplay.url.startsWith('http') ||
+      !toDisplay.url.startsWith('https')
+    ) {
+      // do not try to fetch mime type if url is not http or https
+      return
+    }
+
+    // fetch mime type
+    fetch(toDisplay.url, {
+      method: 'HEAD',
+      // TODO: add request cancelation
+    })
+      .then((response) => {
+        const mimetype = response.headers.get('Content-Type')
+        console.log('fetched mime type', mimetype)
+
+        // fallback to fallbackMimetype if mimetype is missing
+        if (!mimetype) {
+          return setMimetype(toDisplay.fallbackMimetype)
+        }
+
+        // set mimetype if it's an authorized mime type
+        if (authorizedMimetypes.some((x) => mimetype.startsWith(x))) {
+          return setMimetype(mimetype)
+        }
+
+        // call onError if not authorized to try to display next content
+        return onError()
+      })
+      .catch((error) => {
+        console.error(
+          `error during fetch of mimetype of image ${toDisplay.url}`,
+          error,
+        )
+        // fallback to fallbackMimetype
+        setMimetype(toDisplay.fallbackMimetype)
+      })
+  }, [onError, toDisplay])
+
+  // tried everything to display, return error
   if (!toDisplay) {
     return (
       <>
@@ -128,7 +188,7 @@ const TokenMedia: FC<{
     )
 
   // Use a video element when the file is a video
-  if (toDisplay.mimetype.startsWith('video/')) {
+  if (mimetype?.startsWith('video/')) {
     return (
       <Box
         as="video"
@@ -145,8 +205,8 @@ const TokenMedia: FC<{
     )
   }
 
-  // Use a image element when the file is a image
-  if (toDisplay.mimetype.startsWith('image/')) {
+  // Use a image element when the file is an image
+  if (mimetype?.startsWith('image/')) {
     return (
       <Box position="relative" w="full" h="full">
         <Image
@@ -156,13 +216,14 @@ const TokenMedia: FC<{
           fill
           objectFit={fill ? 'cover' : 'contain'}
           sizes={sizes}
-          unoptimized={toDisplay.mimetype === 'image/gif'}
+          unoptimized={mimetype === 'image/gif'}
         />
       </Box>
     )
   }
 
-  // TODO: should add a loading states?
+  // display loader
+  return <Skeleton width="100%" height="100%" />
 }
 
 export default TokenMedia
