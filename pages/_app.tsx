@@ -170,7 +170,6 @@ function AccountProvider({
 
 export type MyAppProps = {
   jwt: string | null
-  now: Date
   environment: Environment
 }
 
@@ -277,15 +276,11 @@ MyApp.getInitialProps = async (
     appContext,
   )) as AppInitialProps<{}> // force type of props to empty object instead of any so TS will properly require MyAppProps to be returned by this function
   const jwt = appContext.ctx.req?.cookies?.[COOKIE_JWT_TOKEN] || null
-  // Generate the now time, rounded to the second to avoid re-rendering on the client
-  // TOFIX: find a better way to share the time between the app and document
-  const now = new Date(Math.floor(Date.now() / 1000) * 1000)
   return {
     ...initialProps,
     pageProps: {
       ...initialProps.pageProps,
       jwt,
-      now,
       environment: await getEnvironment(),
     },
   }
