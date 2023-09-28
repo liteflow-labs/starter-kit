@@ -104,6 +104,7 @@ const CollectionPage: NextPage = () => {
       chainId: chainId,
       filter: convertFilterToAssetFilter(filter, mountTime),
     },
+    ssr: false,
   })
 
   const { showFilters, toggleFilters, close, count } =

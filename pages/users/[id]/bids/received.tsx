@@ -69,6 +69,7 @@ const BidReceivedPage: NextPage = () => {
       orderBy,
       now: mountTime,
     },
+    ssr: false,
   })
 
   const bids = useMemo(

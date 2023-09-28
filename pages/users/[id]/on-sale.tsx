@@ -46,6 +46,7 @@ const OnSalePage: NextPage = () => {
       orderBy,
       now: mountTime,
     },
+    ssr: false,
   })
 
   const assets = useMemo(

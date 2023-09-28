@@ -68,6 +68,7 @@ const ExplorePage: NextPage = () => {
       orderBy,
       filter: convertFilterToAssetFilter(filter, mountTime),
     },
+    ssr: false,
   })
 
   const { showFilters, toggleFilters, close, count } =
