@@ -99,8 +99,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "価格: 低 - 高",
-        "salesMinUnitPriceInRefDesc": "価格: 高 - 低",
+        "priceAsc": "価格: 低 - 高",
+        "priceDesc": "価格: 高 - 低",
         "createdAtDesc": "日付: 最新",
         "createdAtAsc": "日付: 最も古い"
       }

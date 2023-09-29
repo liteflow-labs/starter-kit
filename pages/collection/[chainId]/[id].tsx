@@ -205,14 +205,12 @@ const CollectionPage: FC<Props> = ({ now }) => {
             onChange={changeOrder}
             choices={[
               {
-                label: t('collection.orderBy.values.salesMinUnitPriceInRefAsc'),
-                value: 'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
+                label: t('collection.orderBy.values.priceAsc'),
+                value: 'BEST_PRICE_ASC',
               },
               {
-                label: t(
-                  'collection.orderBy.values.salesMinUnitPriceInRefDesc',
-                ),
-                value: 'SALES_MIN_UNIT_PRICE_IN_REF_DESC',
+                label: t('collection.orderBy.values.priceDesc'),
+                value: 'BEST_PRICE_DESC',
               },
               {
                 label: t('collection.orderBy.values.createdAtDesc'),
