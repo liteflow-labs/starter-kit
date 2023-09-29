@@ -91,9 +91,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
   })
 
   const { limit, offset, page } = usePaginateQuery()
-  const orderBy = useOrderByQuery<AssetsOrderBy>(
-    'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
-  )
+  const orderBy = useOrderByQuery<AssetsOrderBy>('BEST_PRICE_ASC')
   const filter = useAssetFilterFromQuery()
   const { data: assetData } = useFetchCollectionAssetsQuery({
     variables: {
