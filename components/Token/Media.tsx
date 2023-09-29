@@ -4,6 +4,8 @@ import { FC, useCallback, useEffect, useState } from 'react'
 import { FileDef } from '../../convert'
 import Image from '../Image/Image'
 
+const supportedMedia = [/^image\/*/, /^video\/*/]
+
 const TokenMedia: FC<{
   media: FileDef
   fallback: FileDef | null
@@ -31,6 +33,15 @@ const TokenMedia: FC<{
     if (mediaToDisplay?.url === fallback?.url) return
     setMediaToDisplay(fallback)
   }, [imageError, videoError, fallback, mediaToDisplay])
+
+  // Switch to the fallback when the media is not supported
+  useEffect(() => {
+    const mimetype = mediaToDisplay?.mimetype
+    if (!mimetype) return // assume it's supported
+    if (supportedMedia.some((regex) => regex.test(mimetype))) return // it's supported
+    if (mediaToDisplay?.url === fallback?.url) return
+    setMediaToDisplay(fallback)
+  }, [fallback, mediaToDisplay])
 
   // Reset all errors when the media to display changes (when switching to the fallback)
   useEffect(() => {
