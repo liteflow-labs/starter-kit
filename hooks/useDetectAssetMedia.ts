@@ -29,7 +29,7 @@ export default function useDetectAssetMedia(
 
   const fallback = useMemo(() => {
     if (!asset) return null
-    if (asset.animation) return asset.animation
+    if (asset.animation) return asset.image
     return null
   }, [asset])
 
