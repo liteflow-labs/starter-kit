@@ -50,11 +50,13 @@ query FetchAssetForCheckout(
     }
     name
     image
+    imageMimetype
     unlockedContent {
       url
       mimetype
     }
     animationUrl
+    animationMimetype
     creator {
       address
       name
