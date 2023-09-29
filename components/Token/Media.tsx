@@ -1,79 +1,70 @@
-import {
-  Box,
-  Center,
-  chakra,
-  Icon,
-  Stack,
-  Text,
-  useTheme,
-} from '@chakra-ui/react'
+import { Box, Center, Icon, Stack, Text, useTheme } from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
+import { FileResult } from '../../hooks/useDetectAssetMedia'
 import Image from '../Image/Image'
 
-const getUnlockedContentUrls = (
-  unlockedContent:
-    | {
-        url: string
-        mimetype: string | null
-      }
-    | null
-    | undefined,
-  imageUrl: string,
-  animationUrl: string | null | undefined,
-): { image: string; animation: string | null } => {
-  if (unlockedContent) {
-    return {
-      image: unlockedContent.url,
-      animation: unlockedContent.mimetype?.startsWith('video/')
-        ? unlockedContent.url
-        : null,
+function useSimulateMedia(
+  type: 'img' | 'video',
+  src: string | undefined,
+): {
+  isValid: boolean
+  isLoading: boolean
+} {
+  const [isValid, setIsValid] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    if (!src) return
+    setIsLoading(true)
+    const element = document.createElement(type)
+    element.src = src
+    const onLoad = () => {
+      setIsLoading(false)
+      setIsValid(true)
+      element.remove()
     }
-  }
+    if (type === 'video') element.onloadedmetadata = onLoad
+    if (type === 'img') element.onload = onLoad
+    element.onerror = () => {
+      setIsLoading(false)
+      setIsValid(false)
+      element.remove()
+    }
+    document.body.appendChild(element)
+  }, [src, type])
   return {
-    image: imageUrl,
-    animation: animationUrl || null,
+    isValid,
+    isLoading,
   }
 }
 
 const TokenMedia: FC<{
-  imageUrl: string
-  animationUrl: string | null | undefined
-  unlockedContent: { url: string; mimetype: string | null } | null | undefined
+  media: FileResult
+  fallback: FileResult | null
   defaultText: string
   controls?: boolean
   fill?: boolean
   sizes: string
-}> = ({
-  imageUrl,
-  animationUrl,
-  unlockedContent,
-  defaultText,
-  fill,
-  controls,
-  sizes,
-}) => {
+}> = ({ media, fallback, defaultText, fill, controls, sizes }) => {
   const { colors } = useTheme()
+  const [useFallback, setUseFallback] = useState(false)
 
-  // prioritize unlockedContent
-  const { image, animation } = getUnlockedContentUrls(
-    unlockedContent,
-    imageUrl,
-    animationUrl,
+  const mediaToDisplay = useMemo(
+    () => (useFallback ? fallback : media),
+    [useFallback, fallback, media],
   )
 
-  const [imageError, setImageError] = useState(false)
-  const [videoError, setVideoError] = useState(false)
+  const image = useSimulateMedia('img', mediaToDisplay?.url)
+  const video = useSimulateMedia('video', mediaToDisplay?.url)
 
-  const onImageError = useCallback(() => setImageError(true), [])
-  const onVideoError = useCallback(() => setVideoError(true), [])
+  const loading = useMemo(
+    () => image.isLoading || video.isLoading,
+    [image, video],
+  )
 
-  // reset when image change. Needed when component is recycled
-  useEffect(() => setImageError(false), [image])
-  useEffect(() => setVideoError(false), [image, animation])
+  if (!mediaToDisplay) return null
 
-  // cannot display anything
-  if (imageError && videoError)
+  if (loading)
     return (
       <>
         <svg viewBox="0 0 1 1">
@@ -81,39 +72,20 @@ const TokenMedia: FC<{
         </svg>
         <Center width="100%" height="100%" position="absolute">
           <Stack align="center" spacing={3}>
-            <Icon as={FaImage} color="gray.500" boxSize="4em" />
             <Text color="gray.500" fontWeight="600">
-              An issue occurred
+              loading
             </Text>
           </Stack>
         </Center>
       </>
     )
 
-  // Hack in case the image fails to load because it is a video
-  if (imageError && !videoError) {
-    return (
-      <Box
-        as="video"
-        src={image}
-        autoPlay
-        playsInline
-        muted
-        loop
-        controls={controls}
-        maxW="full"
-        maxH="full"
-        onError={onVideoError}
-      />
-    )
-  }
-
   // display video
-  if (animation && !videoError) {
+  if (video.isValid) {
     return (
       <Box
         as="video"
-        src={animation}
+        src={mediaToDisplay.url}
         autoPlay
         playsInline
         muted
@@ -121,34 +93,40 @@ const TokenMedia: FC<{
         controls={controls}
         maxW="full"
         maxH="full"
-        onError={onVideoError}
+        onError={() => setUseFallback(true)}
       />
     )
   }
 
-  // Use a basic image when the file is a blob or data
-  if (image.startsWith('blob:') || image.startsWith('data:'))
+  if (image.isValid)
     return (
-      <chakra.img
-        src={image}
-        alt={defaultText}
-        objectFit={fill ? 'cover' : 'scale-down'}
-        sizes={sizes}
-      />
+      <Box position="relative" w="full" h="full">
+        <Image
+          src={media.url}
+          alt={defaultText}
+          onError={() => setUseFallback(true)}
+          fill
+          objectFit={fill ? 'cover' : 'contain'}
+          sizes={sizes}
+          unoptimized={media.mimetype === 'image/gif'}
+        />
+      </Box>
     )
 
   return (
-    <Box position="relative" w="full" h="full">
-      <Image
-        src={image}
-        alt={defaultText}
-        onError={onImageError}
-        fill
-        objectFit={fill ? 'cover' : 'contain'}
-        sizes={sizes}
-        unoptimized={unlockedContent?.mimetype === 'image/gif'}
-      />
-    </Box>
+    <>
+      <svg viewBox="0 0 1 1">
+        <rect width="1" height="1" fill={colors.brand[100]} />
+      </svg>
+      <Center width="100%" height="100%" position="absolute">
+        <Stack align="center" spacing={3}>
+          <Icon as={FaImage} color="gray.500" boxSize="4em" />
+          <Text color="gray.500" fontWeight="600">
+            An issue occurred
+          </Text>
+        </Stack>
+      </Center>
+    </>
   )
 }
 
