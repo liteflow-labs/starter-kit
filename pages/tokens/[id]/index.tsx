@@ -100,9 +100,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   })
 
   const asset = useMemo(() => {
-    if (!data?.asset) return null
+    if (!data?.asset) return undefined
     return {
-      ...data?.asset,
+      ...data.asset,
       image: { url: data.asset.image, mimetype: data.asset.imageMimetype },
       animation: data.asset.animationUrl
         ? {
