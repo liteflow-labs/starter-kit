@@ -23,6 +23,11 @@ import {
   Trade,
 } from './graphql'
 
+export type FileDef = {
+  url: string
+  mimetype: string | null
+}
+
 export const convertAsset = (
   asset: Pick<
     Asset,
@@ -32,6 +37,8 @@ export const convertAsset = (
     | 'tokenId'
     | 'animationUrl'
     | 'image'
+    | 'imageMimetype'
+    | 'animationMimetype'
     | 'name'
     | 'unlockedContent'
   > & {
@@ -50,8 +57,8 @@ export const convertAsset = (
   chainId: number
   collectionAddress: string
   tokenId: string
-  animationUrl: string | null | undefined
-  image: string
+  animation: FileDef | null
+  image: FileDef
   name: string
   collection: {
     chainId: number
@@ -59,7 +66,7 @@ export const convertAsset = (
     name: string
   }
   owned: BigNumber
-  unlockedContent: { url: string; mimetype: string | null } | null
+  unlockedContent: FileDef | null
   bestBid:
     | {
         unitPrice: BigNumber
@@ -76,8 +83,16 @@ export const convertAsset = (
     chainId: asset.chainId,
     collectionAddress: asset.collectionAddress,
     tokenId: asset.tokenId,
-    animationUrl: asset.animationUrl,
-    image: asset.image,
+    animation: asset.animationUrl
+      ? {
+          url: asset.animationUrl,
+          mimetype: asset.animationMimetype,
+        }
+      : null,
+    image: {
+      url: asset.image,
+      mimetype: asset.imageMimetype,
+    },
     name: asset.name,
     collection: {
       chainId: asset.collection.chainId,
@@ -113,8 +128,16 @@ export const convertAssetWithSupplies = (
     chainId: asset.chainId,
     collectionAddress: asset.collectionAddress,
     tokenId: asset.tokenId,
-    animationUrl: asset.animationUrl,
-    image: asset.image,
+    animation: asset.animationUrl
+      ? {
+          url: asset.animationUrl,
+          mimetype: asset.animationMimetype,
+        }
+      : null,
+    image: {
+      url: asset.image,
+      mimetype: asset.imageMimetype,
+    },
     unlockedContent: asset.unlockedContent,
     name: asset.name,
     collection: {
