@@ -21,6 +21,9 @@ const TokenMedia: FC<{
   const onImageError = useCallback(() => setImageError(true), [])
   const onVideoError = useCallback(() => setVideoError(true), [])
 
+  // Reset the media when the props change
+  useEffect(() => setMediaToDisplay(media), [media])
+
   // Switch to the fallback when there is an error with the main media
   useEffect(() => {
     if (!imageError) return
@@ -34,8 +37,6 @@ const TokenMedia: FC<{
     setImageError(false)
     setVideoError(false)
   }, [mediaToDisplay])
-
-  useEffect(() => setMediaToDisplay(media), [media])
 
   // cannot display anything
   if (!mediaToDisplay || (imageError && videoError && mediaToDisplay))
