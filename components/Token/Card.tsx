@@ -165,7 +165,7 @@ const TokenCard: FC<Props> = ({
     >
       <Flex as={Link} href={`/tokens/${asset.id}`} w="full" position="relative">
         <AspectRatio w="full" ratio={1}>
-          {asset.image ? (
+          {media.media?.url ? (
             <TokenMedia
               {...media}
               defaultText={asset.name}
