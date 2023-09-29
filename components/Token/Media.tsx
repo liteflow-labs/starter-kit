@@ -1,12 +1,4 @@
-import {
-  Box,
-  Center,
-  chakra,
-  Icon,
-  Stack,
-  Text,
-  useTheme,
-} from '@chakra-ui/react'
+import { Box, Center, Icon, Stack, Text, useTheme } from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { FileResult } from '../../hooks/useDetectAssetMedia'
@@ -83,20 +75,6 @@ const TokenMedia: FC<{
       />
     )
   }
-
-  // Use a basic image when the file is a blob or data
-  if (
-    mediaToDisplay.url.startsWith('blob:') ||
-    mediaToDisplay.url.startsWith('data:')
-  )
-    return (
-      <chakra.img
-        src={mediaToDisplay.url}
-        alt={defaultText}
-        objectFit={fill ? 'cover' : 'scale-down'}
-        sizes={sizes}
-      />
-    )
 
   return (
     <Box position="relative" w="full" h="full">
