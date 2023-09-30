@@ -1,20 +1,21 @@
 import { useEffect, useMemo, useState } from 'react'
 import { dateIsBefore, dateIsBetween } from '../utils'
 
-export enum Timeline {
+export enum Status {
   UPCOMING = 'upcoming',
   INPROGRESS = 'inprogress',
   ENDED = 'ended',
 }
 
 type HookArgs = {
-  drop: {
-    startDate: Date
-    endDate: Date
-  }
+  startDate: Date
+  endDate: Date
 }
 
-export default function useDropTimeline({ drop }: HookArgs): Timeline {
+export default function useTimeStatus({
+  endDate,
+  startDate,
+}: HookArgs): Status {
   const [date, setDate] = useState(new Date())
 
   useEffect(() => {
@@ -23,9 +24,8 @@ export default function useDropTimeline({ drop }: HookArgs): Timeline {
   })
 
   return useMemo(() => {
-    if (dateIsBefore(date, drop.startDate)) return Timeline.UPCOMING
-    if (dateIsBetween(date, drop.startDate, drop.endDate))
-      return Timeline.INPROGRESS
-    return Timeline.ENDED
-  }, [date, drop.endDate, drop.startDate])
+    if (dateIsBefore(date, startDate)) return Status.UPCOMING
+    if (dateIsBetween(date, startDate, endDate)) return Status.INPROGRESS
+    return Status.ENDED
+  }, [date, endDate, startDate])
 }

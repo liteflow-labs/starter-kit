@@ -15,7 +15,7 @@ import { convertDropActive } from 'convert'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { useMemo } from 'react'
-import { Timeline } from '../../hooks/useDropTimeline'
+import useTimeStatus, { Status } from '../../hooks/useTimeStatus'
 import { formatAddress } from '../../utils'
 import DropCountdown from '../Countdown/DropCountdown'
 import Image from '../Image/Image'
@@ -25,18 +25,18 @@ import TokenMedia from '../Token/Media'
 
 type Props = {
   drop: ReturnType<typeof convertDropActive>
-  timeline: Timeline
   onCountdownEnd?: () => void
 }
 
-export default function DropCard({ drop, timeline, onCountdownEnd }: Props) {
+export default function DropCard({ drop, onCountdownEnd }: Props) {
   const { t } = useTranslation('components')
+  const status = useTimeStatus(drop)
 
-  const timelineText = useMemo(() => {
-    if (timeline === Timeline.UPCOMING) return t('drop.timeline.upcoming')
-    if (timeline === Timeline.INPROGRESS) return t('drop.timeline.in-progress')
+  const statusText = useMemo(() => {
+    if (status === Status.UPCOMING) return t('drop.timeline.upcoming')
+    if (status === Status.INPROGRESS) return t('drop.timeline.in-progress')
     return t('drop.timeline.ended')
-  }, [t, timeline])
+  }, [t, status])
 
   return (
     <Box
@@ -73,7 +73,7 @@ export default function DropCard({ drop, timeline, onCountdownEnd }: Props) {
       </Box>
 
       <Flex position="relative" w="full">
-        {timeline === Timeline.INPROGRESS && (
+        {status === Status.INPROGRESS && (
           // Hidden countdown to trigger refetch when countdown ends
           <DropCountdown
             date={drop.endDate}
@@ -81,7 +81,7 @@ export default function DropCard({ drop, timeline, onCountdownEnd }: Props) {
             onCountdownEnd={onCountdownEnd}
           />
         )}
-        {timeline === Timeline.UPCOMING && (
+        {status === Status.UPCOMING && (
           <DropCountdown
             date={drop.startDate}
             onCountdownEnd={onCountdownEnd}
@@ -95,7 +95,7 @@ export default function DropCard({ drop, timeline, onCountdownEnd }: Props) {
             py={1}
             borderRadius="2xl"
           >
-            {timelineText}
+            {statusText}
           </Badge>
         </Text>
       </Flex>
@@ -105,9 +105,9 @@ export default function DropCard({ drop, timeline, onCountdownEnd }: Props) {
         rounded="2xl"
         borderWidth="2px"
         position="relative"
-        w={timeline === Timeline.ENDED ? 14 : '72px'}
-        h={timeline === Timeline.ENDED ? 14 : '72px'}
-        mt={timeline === Timeline.ENDED ? -3 : 14}
+        w={status === Status.ENDED ? 14 : '72px'}
+        h={status === Status.ENDED ? 14 : '72px'}
+        mt={status === Status.ENDED ? -3 : 14}
         mb={4}
         bg="gray.200"
       >
@@ -143,7 +143,7 @@ export default function DropCard({ drop, timeline, onCountdownEnd }: Props) {
 
           <Flex alignItems="center" gap={2}>
             <Text variant="caption" color="white">
-              {drop.supply === Infinity
+              {!drop.supply
                 ? t('drop.supply.infinite')
                 : t('drop.supply.available', {
                     count: numbro(drop.supply).format({
