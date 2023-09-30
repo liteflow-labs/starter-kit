@@ -88,7 +88,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
       onOpen()
       const mintedDrops = await mintDrop(drop.id, data.quantity)
       invariant(mintedDrops[0], 'Error minting drop')
-      data.quantity === 1
+      mintedDrops.length === 1
         ? await push(
             `/tokens/${mintedDrops[0].chain}-${mintedDrops[0].collection}-${mintedDrops[0].token}`,
           )
