@@ -166,7 +166,7 @@ export const convertDropActive = (
   startDate: Date
   endDate: Date
   unitPrice: string
-  supply: number
+  supply: BigNumber | null
   collection: {
     address: string
     chainId: number
@@ -187,10 +187,12 @@ export const convertDropActive = (
     image: string
   }
 } => {
-  const totalSupply = activeDrops.drops.nodes.reduce((acc, drop) => {
-    if (drop.supply === null) return Infinity
-    return acc + BigNumber.from(drop.supply).toNumber()
-  }, 0)
+  const totalSupply = collectionWithDrops.drops.nodes.some((x) => !x.supply)
+    ? null
+    : collectionWithDrops.drops.nodes.reduce(
+        (acc, drop) => acc.add(BigNumber.from(drop.supply)),
+        BigNumber.from(0),
+      )
 
   invariant(activeDrops.drops.nodes[0], 'drop is required')
   return {
@@ -250,7 +252,7 @@ export const convertDropEnded = (
   startDate: Date
   endDate: Date
   unitPrice: string
-  supply: number
+  supply: BigNumber | null
   collection: {
     address: string
     chainId: number
@@ -271,10 +273,12 @@ export const convertDropEnded = (
     image: string
   }
 } => {
-  const totalSupply = endedDrops.allDrops.nodes.reduce((acc, drop) => {
-    if (drop.supply === null) return Infinity
-    return acc + BigNumber.from(drop.supply).toNumber()
-  }, 0)
+  const totalSupply = collectionWithDrops.allDrops.nodes.some((x) => !x.supply)
+    ? null
+    : collectionWithDrops.allDrops.nodes.reduce(
+        (acc, drop) => acc.add(BigNumber.from(drop.supply)),
+        BigNumber.from(0),
+      )
 
   invariant(endedDrops.lastDrop.nodes[0], 'lastDrop is required')
   return {
