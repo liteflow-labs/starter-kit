@@ -140,7 +140,7 @@ export const convertAssetWithSupplies = (
 }
 
 export const convertDropActive = (
-  activeDrops: Pick<
+  collectionWithDrops: Pick<
     Collection,
     'address' | 'chainId' | 'name' | 'image' | 'cover'
   > & {
@@ -194,37 +194,26 @@ export const convertDropActive = (
         BigNumber.from(0),
       )
 
-  invariant(activeDrops.drops.nodes[0], 'drop is required')
+  const latestDrop = collectionWithDrops.drops.nodes[0]
+  invariant(latestDrop, 'drop is required')
+
   return {
-    id: activeDrops.drops.nodes[0].id,
-    startDate: activeDrops.drops.nodes[0].startDate,
-    endDate: activeDrops.drops.nodes[0].endDate,
-    unitPrice: activeDrops.drops.nodes[0].unitPrice,
+    ...latestDrop,
     supply: totalSupply,
     collection: {
-      address: activeDrops.address,
-      chainId: activeDrops.chainId,
-      cover: activeDrops.cover,
-      image: activeDrops.image,
-      name: activeDrops.name,
+      ...collectionWithDrops,
       deployer: {
-        address: activeDrops.deployer.address,
-        name: activeDrops.deployer.name,
-        username: activeDrops.deployer.username,
-        verified: activeDrops.deployer.verification?.status === 'VALIDATED',
+        ...collectionWithDrops.deployer,
+        verified:
+          collectionWithDrops.deployer.verification?.status === 'VALIDATED',
       },
     },
-    currency: {
-      id: activeDrops.drops.nodes[0].currency.id,
-      decimals: activeDrops.drops.nodes[0].currency.decimals,
-      symbol: activeDrops.drops.nodes[0].currency.symbol,
-      image: activeDrops.drops.nodes[0].currency.image,
-    },
+    currency: latestDrop.currency,
   }
 }
 
 export const convertDropEnded = (
-  endedDrops: Pick<
+  collectionWithDrops: Pick<
     Collection,
     'address' | 'chainId' | 'name' | 'image' | 'cover'
   > & {
@@ -280,32 +269,20 @@ export const convertDropEnded = (
         BigNumber.from(0),
       )
 
-  invariant(endedDrops.lastDrop.nodes[0], 'lastDrop is required')
+  const latestDrop = collectionWithDrops.lastDrop.nodes[0]
+  invariant(latestDrop, 'lastDrop is required')
   return {
-    id: endedDrops.lastDrop.nodes[0].id,
-    startDate: endedDrops.lastDrop.nodes[0].startDate,
-    endDate: endedDrops.lastDrop.nodes[0].endDate,
-    unitPrice: endedDrops.lastDrop.nodes[0].unitPrice,
+    ...latestDrop,
     supply: totalSupply,
     collection: {
-      address: endedDrops.address,
-      chainId: endedDrops.chainId,
-      cover: endedDrops.cover,
-      image: endedDrops.image,
-      name: endedDrops.name,
+      ...collectionWithDrops,
       deployer: {
-        address: endedDrops.deployer.address,
-        name: endedDrops.deployer.name,
-        username: endedDrops.deployer.username,
-        verified: endedDrops.deployer.verification?.status === 'VALIDATED',
+        ...collectionWithDrops.deployer,
+        verified:
+          collectionWithDrops.deployer.verification?.status === 'VALIDATED',
       },
     },
-    currency: {
-      id: endedDrops.lastDrop.nodes[0].currency.id,
-      decimals: endedDrops.lastDrop.nodes[0].currency.decimals,
-      symbol: endedDrops.lastDrop.nodes[0].currency.symbol,
-      image: endedDrops.lastDrop.nodes[0].currency.image,
-    },
+    currency: latestDrop.currency,
   }
 }
 
