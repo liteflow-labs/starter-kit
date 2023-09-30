@@ -62,6 +62,11 @@ const DropDetail: NextPage = () => {
   if (!collectionLoading && !collection) return <Error statusCode={404} />
   return (
     <LargeLayout>
+      <Head
+        title={collection?.name || t('drops.title')}
+        description={collection?.description || ''}
+        image={collection?.image || undefined}
+      />
       {!collection ? (
         <>
           <CollectionHeaderSkeleton />
