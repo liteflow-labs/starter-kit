@@ -10,10 +10,7 @@ import DropMintSchedule from '../../../../components/Drop/DropMintSchedule'
 import DropProgress from '../../../../components/Drop/DropProgress'
 import DropMintForm from '../../../../components/Drop/MintForm'
 import Head from '../../../../components/Head'
-import {
-  convertCollectionDropDetail,
-  convertDropDetail,
-} from '../../../../convert'
+import { convertCollectionFull, convertDropDetail } from '../../../../convert'
 import {
   useFetchCollectionDropDetailQuery,
   useFetchCollectionDropsQuery,
@@ -52,7 +49,7 @@ const DropDetail: NextPage = () => {
   const collection = useMemo(
     () =>
       collectionData?.collection
-        ? convertCollectionDropDetail(collectionData.collection)
+        ? convertCollectionFull(collectionData.collection)
         : null,
     [collectionData],
   )

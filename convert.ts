@@ -17,7 +17,6 @@ import {
   Currency,
   Drop,
   Maybe,
-  MintType,
   Offer,
   OfferOpenBuy,
   OfferOpenSale,
@@ -425,62 +424,6 @@ export const convertCollectionMetrics = (
     floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
     totalOwners: collection.numberOfOwners,
     supply: collection.supply,
-  }
-}
-
-export const convertCollectionDropDetail = (
-  collection: Pick<
-    Collection,
-    | 'address'
-    | 'chainId'
-    | 'name'
-    | 'description'
-    | 'image'
-    | 'cover'
-    | 'twitter'
-    | 'discord'
-    | 'website'
-    | 'mintType'
-  > & {
-    deployer: Pick<Account, 'address' | 'name' | 'username'> & {
-      verification: Maybe<Pick<AccountVerification, 'status'>>
-    }
-  },
-): {
-  address: string
-  chainId: number
-  name: string
-  description: string | null
-  image: string | null
-  cover: string | null
-  twitter: string | null
-  discord: string | null
-  website: string | null
-  deployer: {
-    address: string
-    name: string | null
-    username: string | null
-    verified: boolean
-  }
-  mintType: MintType
-} => {
-  return {
-    address: collection.address,
-    chainId: collection.chainId,
-    name: collection.name,
-    description: collection.description,
-    image: collection.image,
-    cover: collection.cover,
-    twitter: collection.twitter,
-    discord: collection.discord,
-    website: collection.website,
-    mintType: collection.mintType,
-    deployer: {
-      address: collection.deployer.address,
-      name: collection.deployer.name,
-      username: collection.deployer.username,
-      verified: collection.deployer?.verification?.status === 'VALIDATED',
-    },
   }
 }
 
