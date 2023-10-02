@@ -80,8 +80,8 @@
     },
     "by": "By {{address}}",
     "supply": {
-      "available_one": "{{count}} item",
-      "available_other": "{{count}} items",
+      "available_one": "<0/> item",
+      "available_other": "<0/> items",
       "infinite": "Open edition"
     },
     "progress": {

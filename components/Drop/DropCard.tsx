@@ -12,6 +12,7 @@ import {
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { convertDropActive } from 'convert'
+import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { useMemo } from 'react'
@@ -142,15 +143,28 @@ export default function DropCard({ drop, onCountdownEnd }: Props) {
           </Flex>
 
           <Flex alignItems="center" gap={2}>
-            <Text variant="caption" color="white">
-              {!drop.supply
-                ? t('drop.supply.infinite')
-                : t('drop.supply.available', {
-                    count: numbro(drop.supply).format({
-                      thousandSeparated: true,
-                    }),
-                  })}
-            </Text>
+            {drop.supply ? (
+              <Text variant="caption" color="white">
+                <Trans
+                  ns="components"
+                  i18nKey="drop.supply.available"
+                  values={{
+                    count: drop.supply.toNumber(),
+                  }}
+                  components={[
+                    <>
+                      {numbro(drop.supply).format({
+                        thousandSeparated: true,
+                      })}
+                    </>,
+                  ]}
+                />
+              </Text>
+            ) : (
+              <Text variant="caption" color="white">
+                {t('drop.supply.infinite')}
+              </Text>
+            )}
             <Divider orientation="vertical" h={4} />
             <Stack alignItems="center" direction="row" spacing={1}>
               <Flex flexShrink={0}>
