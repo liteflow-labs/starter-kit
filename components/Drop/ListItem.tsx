@@ -14,7 +14,7 @@ import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 import Price from '../../components/Price/Price'
-import useDropTimeline, { Timeline } from '../../hooks/useDropTimeline'
+import useDropStatus, { Status } from '../../hooks/useTimeStatus'
 import { formatDate } from '../../utils'
 
 type Props = {
@@ -39,13 +39,13 @@ type Props = {
 
 const DropListItem: FC<Props> = ({ drop, isOpen }) => {
   const { t } = useTranslation('components')
-  const timeline = useDropTimeline({ drop })
+  const state = useDropStatus(drop)
 
-  const timelineText = useMemo(() => {
-    if (timeline === Timeline.UPCOMING) return t('drop.timeline.upcoming')
-    if (timeline === Timeline.INPROGRESS) return t('drop.timeline.in-progress')
+  const stateText = useMemo(() => {
+    if (state === Status.UPCOMING) return t('drop.timeline.upcoming')
+    if (state === Status.INPROGRESS) return t('drop.timeline.in-progress')
     return t('drop.timeline.ended')
-  }, [t, timeline])
+  }, [t, state])
 
   return (
     <Accordion
@@ -162,7 +162,7 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                     borderRadius="2xl"
                     textTransform="none"
                   >
-                    {timelineText}
+                    {stateText}
                   </Badge>
                 </Text>
                 <AccordionIcon boxSize={6} />

@@ -17,7 +17,6 @@ import {
   Currency,
   Drop,
   Maybe,
-  MintType,
   Offer,
   OfferOpenBuy,
   OfferOpenSale,
@@ -140,7 +139,7 @@ export const convertAssetWithSupplies = (
 }
 
 export const convertDropActive = (
-  activeDrops: Pick<
+  collectionWithDrops: Pick<
     Collection,
     'address' | 'chainId' | 'name' | 'image' | 'cover'
   > & {
@@ -166,7 +165,7 @@ export const convertDropActive = (
   startDate: Date
   endDate: Date
   unitPrice: string
-  supply: number
+  supply: BigNumber | null
   collection: {
     address: string
     chainId: number
@@ -187,42 +186,33 @@ export const convertDropActive = (
     image: string
   }
 } => {
-  const totalSupply = activeDrops.drops.nodes.reduce((acc, drop) => {
-    if (drop.supply === null) return Infinity
-    return acc + BigNumber.from(drop.supply).toNumber()
-  }, 0)
+  const totalSupply = collectionWithDrops.drops.nodes.some((x) => !x.supply)
+    ? null
+    : collectionWithDrops.drops.nodes.reduce(
+        (acc, drop) => acc.add(BigNumber.from(drop.supply)),
+        BigNumber.from(0),
+      )
 
-  invariant(activeDrops.drops.nodes[0], 'drop is required')
+  const latestDrop = collectionWithDrops.drops.nodes[0]
+  invariant(latestDrop, 'drop is required')
+
   return {
-    id: activeDrops.drops.nodes[0].id,
-    startDate: activeDrops.drops.nodes[0].startDate,
-    endDate: activeDrops.drops.nodes[0].endDate,
-    unitPrice: activeDrops.drops.nodes[0].unitPrice,
+    ...latestDrop,
     supply: totalSupply,
     collection: {
-      address: activeDrops.address,
-      chainId: activeDrops.chainId,
-      cover: activeDrops.cover,
-      image: activeDrops.image,
-      name: activeDrops.name,
+      ...collectionWithDrops,
       deployer: {
-        address: activeDrops.deployer.address,
-        name: activeDrops.deployer.name,
-        username: activeDrops.deployer.username,
-        verified: activeDrops.deployer.verification?.status === 'VALIDATED',
+        ...collectionWithDrops.deployer,
+        verified:
+          collectionWithDrops.deployer.verification?.status === 'VALIDATED',
       },
     },
-    currency: {
-      id: activeDrops.drops.nodes[0].currency.id,
-      decimals: activeDrops.drops.nodes[0].currency.decimals,
-      symbol: activeDrops.drops.nodes[0].currency.symbol,
-      image: activeDrops.drops.nodes[0].currency.image,
-    },
+    currency: latestDrop.currency,
   }
 }
 
 export const convertDropEnded = (
-  endedDrops: Pick<
+  collectionWithDrops: Pick<
     Collection,
     'address' | 'chainId' | 'name' | 'image' | 'cover'
   > & {
@@ -250,7 +240,7 @@ export const convertDropEnded = (
   startDate: Date
   endDate: Date
   unitPrice: string
-  supply: number
+  supply: BigNumber | null
   collection: {
     address: string
     chainId: number
@@ -271,37 +261,27 @@ export const convertDropEnded = (
     image: string
   }
 } => {
-  const totalSupply = endedDrops.allDrops.nodes.reduce((acc, drop) => {
-    if (drop.supply === null) return Infinity
-    return acc + BigNumber.from(drop.supply).toNumber()
-  }, 0)
+  const totalSupply = collectionWithDrops.allDrops.nodes.some((x) => !x.supply)
+    ? null
+    : collectionWithDrops.allDrops.nodes.reduce(
+        (acc, drop) => acc.add(BigNumber.from(drop.supply)),
+        BigNumber.from(0),
+      )
 
-  invariant(endedDrops.lastDrop.nodes[0], 'lastDrop is required')
+  const latestDrop = collectionWithDrops.lastDrop.nodes[0]
+  invariant(latestDrop, 'lastDrop is required')
   return {
-    id: endedDrops.lastDrop.nodes[0].id,
-    startDate: endedDrops.lastDrop.nodes[0].startDate,
-    endDate: endedDrops.lastDrop.nodes[0].endDate,
-    unitPrice: endedDrops.lastDrop.nodes[0].unitPrice,
+    ...latestDrop,
     supply: totalSupply,
     collection: {
-      address: endedDrops.address,
-      chainId: endedDrops.chainId,
-      cover: endedDrops.cover,
-      image: endedDrops.image,
-      name: endedDrops.name,
+      ...collectionWithDrops,
       deployer: {
-        address: endedDrops.deployer.address,
-        name: endedDrops.deployer.name,
-        username: endedDrops.deployer.username,
-        verified: endedDrops.deployer.verification?.status === 'VALIDATED',
+        ...collectionWithDrops.deployer,
+        verified:
+          collectionWithDrops.deployer.verification?.status === 'VALIDATED',
       },
     },
-    currency: {
-      id: endedDrops.lastDrop.nodes[0].currency.id,
-      decimals: endedDrops.lastDrop.nodes[0].currency.decimals,
-      symbol: endedDrops.lastDrop.nodes[0].currency.symbol,
-      image: endedDrops.lastDrop.nodes[0].currency.image,
-    },
+    currency: latestDrop.currency,
   }
 }
 
@@ -444,62 +424,6 @@ export const convertCollectionMetrics = (
     floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
     totalOwners: collection.numberOfOwners,
     supply: collection.supply,
-  }
-}
-
-export const convertCollectionDropDetail = (
-  collection: Pick<
-    Collection,
-    | 'address'
-    | 'chainId'
-    | 'name'
-    | 'description'
-    | 'image'
-    | 'cover'
-    | 'twitter'
-    | 'discord'
-    | 'website'
-    | 'mintType'
-  > & {
-    deployer: Pick<Account, 'address' | 'name' | 'username'> & {
-      verification: Maybe<Pick<AccountVerification, 'status'>>
-    }
-  },
-): {
-  address: string
-  chainId: number
-  name: string
-  description: string | null
-  image: string | null
-  cover: string | null
-  twitter: string | null
-  discord: string | null
-  website: string | null
-  deployer: {
-    address: string
-    name: string | null
-    username: string | null
-    verified: boolean
-  }
-  mintType: MintType
-} => {
-  return {
-    address: collection.address,
-    chainId: collection.chainId,
-    name: collection.name,
-    description: collection.description,
-    image: collection.image,
-    cover: collection.cover,
-    twitter: collection.twitter,
-    discord: collection.discord,
-    website: collection.website,
-    mintType: collection.mintType,
-    deployer: {
-      address: collection.deployer.address,
-      name: collection.deployer.name,
-      username: collection.deployer.username,
-      verified: collection.deployer?.verification?.status === 'VALIDATED',
-    },
   }
 }
 

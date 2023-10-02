@@ -27,9 +27,10 @@ const MintFormEnded: FC<Props> = ({ collection, drops }): JSX.Element => {
 
   const totalMinted = useMemo(
     () =>
-      drops.reduce((acc, drop) => {
-        return acc + BigNumber.from(drop.minted).toNumber()
-      }, 0),
+      drops.reduce(
+        (acc, drop) => acc.add(BigNumber.from(drop.minted)),
+        BigNumber.from(0),
+      ),
     [drops],
   )
 

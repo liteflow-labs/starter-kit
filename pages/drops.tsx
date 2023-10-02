@@ -10,7 +10,6 @@ import SkeletonDropCard from '../components/Skeleton/DropCard'
 import SkeletonGrid from '../components/Skeleton/Grid'
 import { convertDropActive, convertDropEnded } from '../convert'
 import { useFetchDropsQuery } from '../graphql'
-import { Timeline } from '../hooks/useDropTimeline'
 import useEnvironment from '../hooks/useEnvironment'
 import usePaginate from '../hooks/usePaginate'
 import usePaginateQuery from '../hooks/usePaginateQuery'
@@ -41,17 +40,19 @@ const DropsPage: NextPage<Props> = ({ now }) => {
     [data?.upcoming?.nodes],
   )
 
+  const activeDrops = useMemo(
+    () => [...inprogressDrops, ...upcomingDrops],
+    [inprogressDrops, upcomingDrops],
+  )
+
   const endedDrops = useMemo(
     () => data?.ended?.nodes.map((drop) => convertDropEnded(drop)) || [],
     [data?.ended?.nodes],
   )
 
   const isEmpty = useMemo(
-    () =>
-      endedDrops.length === 0 &&
-      inprogressDrops.length === 0 &&
-      upcomingDrops.length === 0,
-    [endedDrops.length, inprogressDrops.length, upcomingDrops.length],
+    () => endedDrops.length === 0 && activeDrops.length === 0,
+    [endedDrops.length, activeDrops.length],
   )
 
   const onCountdownEnd = useCallback(async () => await refetch(), [refetch])
@@ -76,26 +77,17 @@ const DropsPage: NextPage<Props> = ({ now }) => {
         />
       ) : (
         <>
-          {(inprogressDrops.length > 0 || upcomingDrops.length > 0) && (
+          {activeDrops.length > 0 && (
             <SimpleGrid
               columns={{ base: 1, md: 2 }}
               spacing={3}
               w="full"
               mb={endedDrops.length > 0 ? 8 : 0}
             >
-              {inprogressDrops.map((drop) => (
+              {activeDrops.map((drop) => (
                 <DropCard
                   key={drop.id}
                   drop={drop}
-                  timeline={Timeline.INPROGRESS}
-                  onCountdownEnd={onCountdownEnd}
-                />
-              ))}
-              {upcomingDrops.map((drop) => (
-                <DropCard
-                  key={drop.id}
-                  drop={drop}
-                  timeline={Timeline.UPCOMING}
                   onCountdownEnd={onCountdownEnd}
                 />
               ))}
@@ -109,11 +101,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
               </Heading>
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} w="full">
                 {endedDrops.map((drop) => (
-                  <DropCard
-                    key={drop.id}
-                    drop={drop}
-                    timeline={Timeline.ENDED}
-                  />
+                  <DropCard key={drop.id} drop={drop} />
                 ))}
               </SimpleGrid>
             </>

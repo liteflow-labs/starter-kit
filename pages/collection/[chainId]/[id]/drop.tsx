@@ -1,19 +1,16 @@
-import { SimpleGrid } from '@chakra-ui/react'
+import { Flex, SimpleGrid, Skeleton, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useMemo } from 'react'
+import CollectionHeader from '../../../../components/Collection/CollectionHeader'
+import CollectionHeaderSkeleton from '../../../../components/Collection/CollectionHeaderSkeleton'
 import DropDetailSkeleton from '../../../../components/Drop/DropDetailSkeleton'
-import DropHeader from '../../../../components/Drop/DropHeader'
-import DropHeaderSkeleton from '../../../../components/Drop/DropHeaderSkeleton'
 import DropMintSchedule from '../../../../components/Drop/DropMintSchedule'
 import DropProgress from '../../../../components/Drop/DropProgress'
 import DropMintForm from '../../../../components/Drop/MintForm'
 import Head from '../../../../components/Head'
-import {
-  convertCollectionDropDetail,
-  convertDropDetail,
-} from '../../../../convert'
+import { convertCollectionFull, convertDropDetail } from '../../../../convert'
 import {
   useFetchCollectionDropDetailQuery,
   useFetchCollectionDropsQuery,
@@ -25,10 +22,11 @@ import LargeLayout from '../../../../layouts/large'
 
 const DropDetail: NextPage = () => {
   const { t } = useTranslation('templates')
-  const { REPORT_EMAIL } = useEnvironment()
+  const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
   })
+  const chain = CHAINS.find((x) => x.id === chainId)
   const collectionAddress = useRequiredQueryParamSingle('id')
   const { address } = useAccount()
 
@@ -48,10 +46,10 @@ const DropDetail: NextPage = () => {
     },
   })
 
-  const collectionDropDetail = useMemo(
+  const collection = useMemo(
     () =>
       collectionData?.collection
-        ? convertCollectionDropDetail(collectionData.collection)
+        ? convertCollectionFull(collectionData.collection)
         : null,
     [collectionData],
   )
@@ -61,18 +59,37 @@ const DropDetail: NextPage = () => {
     return dropsData.drops.nodes.map((drop) => convertDropDetail(drop))
   }, [dropsData?.drops])
 
-  if (!collectionLoading && !collectionDropDetail)
-    return <Error statusCode={404} />
+  if (!collectionLoading && !collection) return <Error statusCode={404} />
   return (
     <LargeLayout>
-      <Head title={collectionDropDetail?.name || t('drops.title')} />
-      {!collectionDropDetail ? (
-        <DropHeaderSkeleton />
+      <Head
+        title={collection?.name || t('drops.title')}
+        description={collection?.description || ''}
+        image={collection?.image || undefined}
+      />
+      {!collection ? (
+        <>
+          <CollectionHeaderSkeleton />
+          <Flex flexDirection="column" justifyContent="center" mt={4} py={2}>
+            <Skeleton height="1em" width="100px" mb={2} />
+            <Skeleton height="1em" width="50px" />
+          </Flex>
+        </>
       ) : (
-        <DropHeader
-          collection={collectionDropDetail}
-          reportEmail={REPORT_EMAIL}
-        />
+        <>
+          <CollectionHeader
+            collection={collection}
+            reportEmail={REPORT_EMAIL}
+          />
+          <Flex flexDirection="column" mt={4} py={2}>
+            <Text variant="button1" color="brand.black">
+              {chain?.name || '-'}
+            </Text>
+            <Text variant="subtitle2" color="gray.500">
+              {t('collection.header.data-labels.chain')}
+            </Text>
+          </Flex>
+        </>
       )}
       {!dropsData ? (
         <DropDetailSkeleton />

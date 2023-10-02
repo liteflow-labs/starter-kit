@@ -16,24 +16,26 @@ const DropProgress: FC<Props> = ({ drops }) => {
 
   const totalMinted = useMemo(
     () =>
-      drops.reduce((acc, drop) => {
-        return acc + BigNumber.from(drop.minted).toNumber()
-      }, 0),
+      drops.reduce(
+        (acc, drop) => acc.add(BigNumber.from(drop.minted)),
+        BigNumber.from(0),
+      ),
     [drops],
   )
 
-  const totalSupply = useMemo(
-    () =>
-      drops.reduce((acc, drop) => {
-        if (drop.supply === null) return Infinity
-        return acc + BigNumber.from(drop.supply).toNumber()
-      }, 0),
-    [drops],
-  )
+  const totalSupply = useMemo(() => {
+    if (drops.some((x) => !x.supply)) return null
+    return drops
+      .filter((x) => !!x.supply)
+      .reduce(
+        (acc, drop) => acc.add(BigNumber.from(drop.supply)),
+        BigNumber.from(0),
+      )
+  }, [drops])
 
   const mintPercentage = useMemo(() => {
     if (!totalSupply) return
-    return (totalMinted / totalSupply) * 100
+    return (totalMinted.toNumber() / totalSupply.toNumber()) * 100
   }, [totalMinted, totalSupply])
 
   return (
@@ -54,7 +56,7 @@ const DropProgress: FC<Props> = ({ drops }) => {
         ).format({
           thousandSeparated: true,
         })} / ${
-          totalSupply === Infinity
+          !totalSupply
             ? '∞'
             : numbro(totalSupply).format({
                 thousandSeparated: true,
