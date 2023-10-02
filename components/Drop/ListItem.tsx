@@ -42,7 +42,7 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
   const state = useDropStatus(drop)
 
   const stateText = useMemo(() => {
-    if (state === Status.UPCOMING) return t('drop.state.upcoming')
+    if (state === Status.UPCOMING) return t('drop.timeline.upcoming')
     if (state === Status.INPROGRESS) return t('drop.timeline.in-progress')
     return t('drop.timeline.ended')
   }, [t, state])
