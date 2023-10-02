@@ -42,20 +42,16 @@ const MintDropModal: FC<Props> = ({
     switch (step) {
       case MintDropStep.TRANSACTION_SIGNATURE:
         return {
-          title: t('modal.accept-auction.transaction.signature.title'),
-          description: t(
-            'modal.accept-auction.transaction.signature.description',
-          ),
+          title: t('modal.drop.transaction.signature.title'),
+          description: t('modal.drop.transaction.signature.description'),
           icon: (
             <Icon as={CgArrowLongRight} h="22px" w="22px" color="brand.500" />
           ),
         }
       case MintDropStep.TRANSACTION_PENDING:
         return {
-          title: t('modal.accept-auction.transaction.pending.title'),
-          description: t(
-            'modal.accept-auction.transaction.pending.description',
-          ),
+          title: t('modal.drop.transaction.pending.title'),
+          description: t('modal.drop.transaction.pending.description'),
           icon: (
             <Spinner
               color="brand.500"
@@ -68,10 +64,8 @@ const MintDropModal: FC<Props> = ({
         }
       case MintDropStep.OWNERSHIP:
         return {
-          title: t('modal.accept-auction.transaction.ownership.title'),
-          description: t(
-            'modal.accept-auction.transaction.ownership.description',
-          ),
+          title: t('modal.drop.transaction.ownership.title'),
+          description: t('modal.drop.transaction.ownership.description'),
           icon: (
             <Spinner
               color="brand.500"
@@ -103,12 +97,12 @@ const MintDropModal: FC<Props> = ({
       <ModalContent>
         <ModalHeader>
           <Heading as="h3" variant="heading1" color="brand.black">
-            Mint
+            {t('modal.drop.title')}
           </Heading>
         </ModalHeader>
         <ModalBody>
           <Text as="p" variant="text" color="gray.500" mb={4}>
-            {t('modal.cancel-offer.description')}
+            {t('modal.drop.description')}
           </Text>
 
           <Flex align="center" gap={3}>
@@ -140,7 +134,7 @@ const MintDropModal: FC<Props> = ({
             isDisabled={!transactionHash}
           >
             <Text as="span" isTruncated>
-              {t('modal.cancel-offer.action', blockExplorer)}
+              {t('modal.drop.action', blockExplorer)}
             </Text>
           </Button>
         </ModalFooter>
