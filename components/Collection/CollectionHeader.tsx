@@ -78,7 +78,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
           h={32}
           rounded="2xl"
           overflow="hidden"
-          border="2px solid"
+          borderWidth="2px"
           borderColor="white"
           bg="gray.200"
         >
@@ -111,8 +111,8 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
               href={`/users/${collection.deployer.address}`}
               color="brand.black"
             >
-              <Text as="span" color="">
-                {collection?.deployer.name ||
+              <Text as="span">
+                {collection.deployer.name ||
                   formatAddress(collection.deployer.address, 10)}
               </Text>
               {collection.deployer.verified && (
@@ -199,7 +199,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
           </Menu>
         </Flex>
       </Flex>
-      {collection?.description && (
+      {collection.description && (
         <Box mt={4}>
           <Truncate size="lg" color="gray.500" length={200}>
             {collection.description}
