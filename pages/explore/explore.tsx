@@ -60,7 +60,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
   const filter = useAssetFilterFromQuery()
-  const orderBy = useOrderByQuery<AssetsOrderBy>('BEST_PRICE_DESC')
+  const orderBy = useOrderByQuery<AssetsOrderBy>('BEST_PRICE_ASC')
   const { page, limit, offset } = usePaginateQuery()
   const { data: assetsData } = useFetchAllErc721And1155Query({
     variables: {
