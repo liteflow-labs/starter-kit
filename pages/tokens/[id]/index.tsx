@@ -21,6 +21,7 @@ import {
   Tabs,
   Text,
   Tooltip,
+  VStack,
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -500,7 +501,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               )}
             </Stack>
 
-            <div>
+            <Box overflow="hidden">
               <Tabs
                 isManual
                 index={tabIndex}
@@ -532,7 +533,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   ))}
                 </TabList>
               </Tabs>
-              <Box h={96} overflowY="auto" py={6}>
+              <VStack alignItems="flex-start" spacing={3} py={6} w="full">
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
                     bids={bids}
@@ -553,8 +554,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     tokenId={tokenId}
                   />
                 )}
-              </Box>
-            </div>
+              </VStack>
+            </Box>
           </>
         )}
       </SimpleGrid>

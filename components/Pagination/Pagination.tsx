@@ -21,6 +21,7 @@ export type IProp = {
   onPageChange: (page: number) => void
   onLimitChange?: (limit: string) => void
   withoutLimit?: boolean
+  withoutNumbers?: boolean
   limit?: number
   limits?: number[]
 }
@@ -34,6 +35,7 @@ export default function Pagination({
   limit,
   limits,
   withoutLimit,
+  withoutNumbers,
   ...props
 }: IProp): JSX.Element {
   const { t } = useTranslation('components')
@@ -92,36 +94,38 @@ export default function Pagination({
           isDisabled={!hasPreviousPage}
           onClick={() => onPageChange(page - 1)}
         />
-        <ButtonGroup>
-          {hasPreviousPage && (
+        {!withoutNumbers && (
+          <ButtonGroup>
+            {hasPreviousPage && (
+              <Button
+                size="sm"
+                variant="outline"
+                colorScheme="gray"
+                onClick={() => onPageChange(page - 1)}
+              >
+                {page - 1}
+              </Button>
+            )}
             <Button
               size="sm"
               variant="outline"
-              colorScheme="gray"
-              onClick={() => onPageChange(page - 1)}
+              colorScheme="brand"
+              onClick={() => onPageChange(page)}
             >
-              {page - 1}
+              {page}
             </Button>
-          )}
-          <Button
-            size="sm"
-            variant="outline"
-            colorScheme="brand"
-            onClick={() => onPageChange(page)}
-          >
-            {page}
-          </Button>
-          {hasNextPage && (
-            <Button
-              size="sm"
-              variant="outline"
-              colorScheme="gray"
-              onClick={() => onPageChange(page + 1)}
-            >
-              {page + 1}
-            </Button>
-          )}
-        </ButtonGroup>
+            {hasNextPage && (
+              <Button
+                size="sm"
+                variant="outline"
+                colorScheme="gray"
+                onClick={() => onPageChange(page + 1)}
+              >
+                {page + 1}
+              </Button>
+            )}
+          </ButtonGroup>
+        )}
         <IconButton
           variant="outline"
           colorScheme="gray"

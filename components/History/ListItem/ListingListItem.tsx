@@ -36,6 +36,7 @@ const ListingListItem: FC<IProps> = ({
 }) => {
   return (
     <ListItem
+      px={0}
       image={<Icon as={FaTag} h={5} w={5} color="gray.400" />}
       label={
         <Trans

@@ -2,6 +2,9 @@ query FetchAssetHistory(
   $chainId: Int!
   $collectionAddress: Address!
   $tokenId: String!
+  $limit: Int!
+  $offset: Int!
+  $filter: [AssetHistoryAction!]
 ) {
   asset(
     chainId: $chainId
@@ -12,9 +15,15 @@ query FetchAssetHistory(
     collectionAddress
     tokenId
     histories(
+      filter: { action: { in: $filter } }
       orderBy: DATE_DESC
-      first: 100 # TODO: implement pagination
+      first: $limit
+      offset: $offset
     ) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
       nodes {
         action
         date

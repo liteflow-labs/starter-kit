@@ -1,11 +1,15 @@
 import { Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import { convertHistories } from '../../convert'
-import { useFetchAssetHistoryQuery } from '../../graphql'
+import { AssetHistoryAction, useFetchAssetHistoryQuery } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
+import HistoryListFilter, {
+  DEFAULT_HISTORY_FILTER,
+} from '../History/HistoryListFilter'
 import List from '../List/List'
+import Pagination from '../Pagination/Pagination'
 import SkeletonList from '../Skeleton/List'
 import SkeletonListItem from '../Skeleton/ListItem'
 import {
@@ -20,16 +24,32 @@ type IProps = {
   chainId: number
   collectionAddress: string
   tokenId: string
+  filter?: AssetHistoryAction[]
 }
+
+const LIMIT = 5
 
 const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
   const { t } = useTranslation('components')
+  const [filter, setFilter] = useState<AssetHistoryAction[]>(
+    DEFAULT_HISTORY_FILTER,
+  )
+
+  const [page, setPage] = useState(1)
+  const offset = useMemo(() => (page - 1) * LIMIT, [page])
+  const onFilterChange = useCallback((filter: AssetHistoryAction[]) => {
+    setPage(1)
+    setFilter(filter)
+  }, [])
 
   const { data: historyData } = useFetchAssetHistoryQuery({
     variables: {
       chainId,
       collectionAddress,
       tokenId,
+      limit: LIMIT,
+      offset,
+      filter,
     },
   })
   const blockExplorer = useBlockExplorer(chainId)
@@ -97,19 +117,34 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
     }
   }
 
-  if (!histories)
-    return (
-      <SkeletonList items={5}>
-        <SkeletonListItem image subtitle caption />
-      </SkeletonList>
-    )
-  if (histories.length === 0)
-    return (
-      <Text as="p" variant="text" color="gray.500">
-        {t('history.none')}
-      </Text>
-    )
-  return <List>{histories.map((history, i) => ListItem(history, i))}</List>
+  return (
+    <>
+      <HistoryListFilter filter={filter} onFilterChange={onFilterChange} />
+      {!histories ? (
+        <SkeletonList items={5}>
+          <SkeletonListItem image subtitle caption />
+        </SkeletonList>
+      ) : histories.length > 0 ? (
+        <List>{histories.map((history, i) => ListItem(history, i))}</List>
+      ) : (
+        <Text as="p" variant="text" color="gray.500">
+          {t('history.none')}
+        </Text>
+      )}
+      {histories?.length !== 0 && (
+        <Pagination
+          page={page}
+          onPageChange={setPage}
+          hasNextPage={historyData?.asset?.histories.pageInfo.hasNextPage}
+          hasPreviousPage={
+            historyData?.asset?.histories.pageInfo.hasPreviousPage
+          }
+          withoutLimit
+          withoutNumbers
+        />
+      )}
+    </>
+  )
 }
 
 export default HistoryList
