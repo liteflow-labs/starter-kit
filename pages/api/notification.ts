@@ -2,6 +2,7 @@ import { Events, parseAndVerifyRequest } from '@nft/webhook'
 import { NextApiRequest, NextApiResponse } from 'next'
 import nodemailer, { SendMailOptions } from 'nodemailer'
 import invariant from 'ts-invariant'
+import AccountCreatedReferral from '../../emails/AccountCreatedReferral'
 import AuctionBidCreated from '../../emails/AuctionBidCreated'
 import AuctionBidExpired from '../../emails/AuctionBidExpired'
 import AuctionEndedNoBids from '../../emails/AuctionEndedNoBids'
@@ -35,28 +36,30 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-const emails = new Map<keyof Events, ((data: any) => SendMailOptions | null)[]>(
+const emails = new Map<
+  keyof Events,
+  ((data: any) => Promise<SendMailOptions | null> | SendMailOptions | null)[]
+>([
+  ['AUCTION_BID_CREATED', [AuctionBidCreated]],
+  ['BID_CREATED', [BidCreated]],
+  ['OFFER_CREATED', []],
+  ['BID_EXPIRED', [BidExpired]],
+  ['OFFER_EXPIRED', [OfferExpired]],
+  ['AUCTION_BID_EXPIRED', [AuctionBidExpired]],
+  ['TRADE_CREATED', [BidAccepted, OfferPurchased]],
   [
-    ['AUCTION_BID_CREATED', [AuctionBidCreated]],
-    ['BID_CREATED', [BidCreated]],
-    ['OFFER_CREATED', []],
-    ['BID_EXPIRED', [BidExpired]],
-    ['OFFER_EXPIRED', [OfferExpired]],
-    ['AUCTION_BID_EXPIRED', [AuctionBidExpired]],
-    ['TRADE_CREATED', [BidAccepted, OfferPurchased]],
+    'AUCTION_ENDED',
     [
-      'AUCTION_ENDED',
-      [
-        AuctionEndedNoBids,
-        AuctionEndedReservePriceBuyer,
-        AuctionEndedReservePriceSeller,
-        AuctionEndedWonBuyer,
-        AuctionEndedWonSeller,
-      ],
+      AuctionEndedNoBids,
+      AuctionEndedReservePriceBuyer,
+      AuctionEndedReservePriceSeller,
+      AuctionEndedWonBuyer,
+      AuctionEndedWonSeller,
     ],
-    ['AUCTION_EXPIRED', [AuctionExpired]],
   ],
-)
+  ['AUCTION_EXPIRED', [AuctionExpired]],
+  ['ACCOUNT_CREATED', [AccountCreatedReferral]],
+])
 
 export default async function notification(
   req: NextApiRequest,
@@ -67,15 +70,14 @@ export default async function notification(
   if (!emailTemplates)
     throw new Error(`Email template for event ${type} does not exist`)
   await Promise.all(
-    emailTemplates
-      .map((template) => template(data))
-      .filter(Boolean)
-      .map((email) =>
-        transporter.sendMail({
-          ...email,
-          from: process.env.EMAIL_FROM,
-        }),
-      ),
+    emailTemplates.map(async (template) => {
+      const email = await template(data)
+      if (!email) return null
+      return transporter.sendMail({
+        ...email,
+        from: process.env.EMAIL_FROM,
+      })
+    }),
   )
 
   res.status(200).end()
