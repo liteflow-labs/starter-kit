@@ -24,12 +24,6 @@ We are pleased to let you know that <strong>${
     }</strong> successfully registered on ${
       process.env.NEXT_PUBLIC_BASE_URL
     } with your referral link.<br/>
-<br/>
-Each time an item created by <strong>${
-      username || address
-    }</strong> is sold, you will receive a percentage of the sale.<br/>
-<br/>
-<a href="${process.env.NEXT_PUBLIC_BASE_URL}/referral">How it works?</a><br/>
 <br/>`,
   }
 }
