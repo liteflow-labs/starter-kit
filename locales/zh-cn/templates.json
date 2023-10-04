@@ -78,6 +78,15 @@
       }
     }
   },
+  "drops": {
+    "drops": "滴",
+    "empty": {
+      "title": "你在平台上投放吗？",
+      "description": "联系支持人员在平台上创建您的第一个drop！",
+      "action": "联系支持人员"
+    },
+    "past-drops": "过去的滴"
+  },
   "collection": {
     "filter": "过滤 器",
     "card": {

@@ -16,19 +16,21 @@ import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { FC, useCallback, useMemo } from 'react'
-import CollectionHeader from '../../../components/Collection/CollectionHeader'
-import CollectionHeaderSkeleton from '../../../components/Collection/CollectionHeaderSkeleton'
-import CollectionMetrics from '../../../components/Collection/CollectionMetrics'
-import CollectionMetricsSkeleton from '../../../components/Collection/CollectionMetricsSkeleton'
-import Empty from '../../../components/Empty/Empty'
-import FilterAsset, { NoFilter } from '../../../components/Filter/FilterAsset'
-import FilterNav from '../../../components/Filter/FilterNav'
-import Head from '../../../components/Head'
-import Pagination from '../../../components/Pagination/Pagination'
-import Select from '../../../components/Select/Select'
-import SkeletonGrid from '../../../components/Skeleton/Grid'
-import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
-import TokenCard from '../../../components/Token/Card'
+import CollectionHeader from '../../../../components/Collection/CollectionHeader'
+import CollectionHeaderSkeleton from '../../../../components/Collection/CollectionHeaderSkeleton'
+import CollectionMetrics from '../../../../components/Collection/CollectionMetrics'
+import CollectionMetricsSkeleton from '../../../../components/Collection/CollectionMetricsSkeleton'
+import Empty from '../../../../components/Empty/Empty'
+import FilterAsset, {
+  NoFilter,
+} from '../../../../components/Filter/FilterAsset'
+import FilterNav from '../../../../components/Filter/FilterNav'
+import Head from '../../../../components/Head'
+import Pagination from '../../../../components/Pagination/Pagination'
+import Select from '../../../../components/Select/Select'
+import SkeletonGrid from '../../../../components/Skeleton/Grid'
+import SkeletonTokenCard from '../../../../components/Skeleton/TokenCard'
+import TokenCard from '../../../../components/Token/Card'
 import {
   convertAsset,
   convertAuctionWithBestBid,
@@ -36,26 +38,26 @@ import {
   convertCollectionMetrics,
   convertSale,
   convertUser,
-} from '../../../convert'
+} from '../../../../convert'
 import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
   useFetchCollectionMetricsQuery,
-} from '../../../graphql'
-import useAccount from '../../../hooks/useAccount'
+} from '../../../../graphql'
+import useAccount from '../../../../hooks/useAccount'
 import useAssetFilterFromQuery, {
   Filter,
   convertFilterToAssetFilter,
-} from '../../../hooks/useAssetFilterFromQuery'
-import useAssetFilterState from '../../../hooks/useAssetFilterState'
-import useEnvironment from '../../../hooks/useEnvironment'
-import useOrderByQuery from '../../../hooks/useOrderByQuery'
-import usePaginate from '../../../hooks/usePaginate'
-import usePaginateQuery from '../../../hooks/usePaginateQuery'
-import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
-import LargeLayout from '../../../layouts/large'
-import { removeEmptyFromObject } from '../../../utils'
+} from '../../../../hooks/useAssetFilterFromQuery'
+import useAssetFilterState from '../../../../hooks/useAssetFilterState'
+import useEnvironment from '../../../../hooks/useEnvironment'
+import useOrderByQuery from '../../../../hooks/useOrderByQuery'
+import usePaginate from '../../../../hooks/usePaginate'
+import usePaginateQuery from '../../../../hooks/usePaginateQuery'
+import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
+import LargeLayout from '../../../../layouts/large'
+import { removeEmptyFromObject } from '../../../../utils'
 
 type Props = {
   now: string

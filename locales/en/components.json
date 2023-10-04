@@ -64,9 +64,65 @@
   },
   "countdown": {
     "day": "{{value}}d",
+    "day-long": "days",
     "hour": "{{value}}h",
+    "hour-long": "hrs",
     "min": "{{value}}m",
-    "sec": "{{value}}s"
+    "min-long": "mins",
+    "sec": "{{value}}s",
+    "sec-long": "secs"
+  },
+  "drop": {
+    "timeline": {
+      "upcoming": "Upcoming",
+      "in-progress": "In progress",
+      "ended": "Ended"
+    },
+    "by": "By {{address}}",
+    "supply": {
+      "available_one": "<0/> item",
+      "available_other": "<0/> items",
+      "infinite": "Open edition"
+    },
+    "progress": {
+      "percentage": "{{percentage}}% minted",
+      "minted": "Minted"
+    },
+    "listItem": {
+      "price": "Price: <0/>",
+      "startDate": "Starts: {{startDate}}",
+      "endDate": "Ends: {{endDate}}",
+      "supply": "Supply: {{supply}}",
+      "maxQuantityPerWallet": "Mint limit: {{maxQuantityPerWallet}} per wallet",
+      "eligible": "Eligible",
+      "notEligible": "Not eligible"
+    },
+    "form": {
+      "ended": {
+        "title": "Mint ended",
+        "minted": "Minted:",
+        "totalMinted": "{{totalMinted}} items",
+        "viewCollection": "View collection"
+      },
+      "in-progress": {
+        "price": "Price:",
+        "supply": "Supply:",
+        "mintLimit": "Mint limit:",
+        "limit": "{{maxQuantityPerWallet}} per wallet",
+        "mintedOut": "Minted out",
+        "mint": "Mint",
+        "notEligible": "You're not eligible for this mint stage",
+        "endsIn": "Ends in <0/>"
+      },
+      "upcoming": {
+        "price": "Price:",
+        "supply": "Supply:",
+        "mintLimit": "Mint limit:",
+        "limit": "{{maxQuantityPerWallet}} per wallet",
+        "disabled": "Minting soon",
+        "startsIn": "Starts in <0/>"
+      }
+    }
   },
   "dropzone": {
     "required": "This field is required.",
@@ -347,6 +403,25 @@
         }
       }
     },
+    "drop": {
+      "title": "Mint",
+      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
+      "action": "View on {{name}}",
+      "transaction": {
+        "signature": {
+          "title": "Your confirmation is required",
+          "description": "Open and confirm transaction in your wallet"
+        },
+        "pending": {
+          "title": "Confirmation is pending",
+          "description": "0/2 completed - Transaction is pending on Blockchain"
+        },
+        "ownership": {
+          "title": "Confirmation is pending",
+          "description": "1/2 completed - Ownership is being checked"
+        }
+      }
+    },
     "login": {
       "title": "Sign in with your wallet",
       "description": "Connect with one of the following options.",
@@ -358,6 +433,7 @@
     "open-menu": "Open main menu",
     "open-activity": "Open activity menu",
     "explore": "Explore",
+    "drops": "Drops",
     "create": "Create",
     "search": "Search",
     "sign-in": "Sign in",
