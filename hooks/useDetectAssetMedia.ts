@@ -1,18 +1,22 @@
 import { useMemo } from 'react'
-import { FileDef } from '../convert'
+
+export type AssetMedia = {
+  url: string
+  mimetype?: string | null
+} | null
 
 export default function useDetectAssetMedia(
   asset:
     | {
-        image: FileDef
-        animation: FileDef | null
-        unlockedContent: FileDef | null
+        image: AssetMedia
+        animation: AssetMedia | null
+        unlockedContent: AssetMedia | null
       }
     | undefined
     | null,
 ): {
-  media: FileDef
-  fallback: FileDef | null
+  media: AssetMedia
+  fallback: AssetMedia | null
 } {
   const media = useMemo(() => {
     if (!asset) {
