@@ -1,5 +1,4 @@
 import { Stack, Tag, TagLabel } from '@chakra-ui/react'
-import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useMemo } from 'react'
 import { AssetHistoryAction } from '../../graphql'
 
@@ -16,8 +15,6 @@ export const DEFAULT_HISTORY_FILTER = [
 ] as AssetHistoryAction[]
 
 const HistoryListFilter: FC<IProps> = ({ filter, onFilterChange }) => {
-  const { t } = useTranslation('components')
-
   const showAll = useMemo(
     () => DEFAULT_HISTORY_FILTER.every((v) => filter.includes(v)),
     [filter],
