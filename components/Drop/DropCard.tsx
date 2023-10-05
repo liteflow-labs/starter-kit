@@ -63,10 +63,12 @@ export default function DropCard({ drop, onCountdownEnd }: Props) {
       >
         {drop.collection.cover && (
           <TokenMedia
-            imageUrl={drop.collection.cover}
+            media={{
+              url: drop.collection.cover,
+              mimetype: null,
+            }}
+            fallback={null}
             defaultText={drop.collection.name}
-            animationUrl={undefined}
-            unlockedContent={null}
             sizes="(min-width: 62em) 600px, 100vw"
             fill
           />
