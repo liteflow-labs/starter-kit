@@ -2,6 +2,7 @@ import { Events, parseAndVerifyRequest } from '@nft/webhook'
 import { NextApiRequest, NextApiResponse } from 'next'
 import nodemailer, { SendMailOptions } from 'nodemailer'
 import invariant from 'ts-invariant'
+import AccountCreatedReferral from '../../emails/AccountCreatedReferral'
 import AuctionBidCreated from '../../emails/AuctionBidCreated'
 import AuctionBidExpired from '../../emails/AuctionBidExpired'
 import AuctionEndedNoBids from '../../emails/AuctionEndedNoBids'
@@ -55,6 +56,7 @@ const emails = new Map<keyof Events, ((data: any) => SendMailOptions | null)[]>(
       ],
     ],
     ['AUCTION_EXPIRED', [AuctionExpired]],
+    ['ACCOUNT_CREATED', [AccountCreatedReferral]],
   ],
 )
 
