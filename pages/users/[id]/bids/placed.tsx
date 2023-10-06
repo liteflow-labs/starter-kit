@@ -240,11 +240,10 @@ const BidPlacedPage: NextPage = () => {
                           <>
                             {!item.expiredAt || item.expiredAt > new Date() ? (
                               <CancelOfferButton
+                                offer={item}
+                                title={t('user.bid-placed.cancel.title')}
                                 variant="outline"
                                 colorScheme="gray"
-                                signer={signer}
-                                offerId={item.id}
-                                chainId={item.asset.chainId}
                                 onCanceled={onCanceled}
                                 onError={(e) =>
                                   toast({
@@ -252,7 +251,6 @@ const BidPlacedPage: NextPage = () => {
                                     title: formatError(e),
                                   })
                                 }
-                                title={t('user.bid-placed.cancel.title')}
                               >
                                 <Text as="span" isTruncated>
                                   {t('user.bid-placed.actions.cancel')}

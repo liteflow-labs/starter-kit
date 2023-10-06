@@ -243,11 +243,10 @@ const FixedPricePage: NextPage = () => {
                           <>
                             {!item.expiredAt || item.expiredAt > new Date() ? (
                               <CancelOfferButton
+                                offer={item}
+                                title={t('user.fixed.cancel.title')}
                                 variant="outline"
                                 colorScheme="gray"
-                                signer={signer}
-                                offerId={item.id}
-                                chainId={item.asset.chainId}
                                 onCanceled={onCanceled}
                                 onError={(e) =>
                                   toast({
@@ -255,7 +254,6 @@ const FixedPricePage: NextPage = () => {
                                     title: formatError(e),
                                   })
                                 }
-                                title={t('user.fixed.cancel.title')}
                               >
                                 <Text as="span" isTruncated>
                                   {t('user.fixed.actions.cancel')}
