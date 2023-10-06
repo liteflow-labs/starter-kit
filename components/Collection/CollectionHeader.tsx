@@ -16,13 +16,14 @@ import { FaGlobe } from '@react-icons/all-files/fa/FaGlobe'
 import { FaTwitter } from '@react-icons/all-files/fa/FaTwitter'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
-import useBlockExplorer from 'hooks/useBlockExplorer'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import Etherscan from '../../components/Icons/Etherscan'
 import Image from '../../components/Image/Image'
 import Link from '../../components/Link/Link'
 import Truncate from '../../components/Truncate/Truncate'
+import useBlockExplorer from '../../hooks/useBlockExplorer'
+import useEnvironment from '../../hooks/useEnvironment'
 import { formatAddress } from '../../utils'
 
 type Props = {
@@ -43,12 +44,12 @@ type Props = {
       verified: boolean
     }
   }
-  reportEmail: string
 }
 
-const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
+const CollectionHeader: FC<Props> = ({ collection }) => {
   const { t } = useTranslation('templates')
   const blockExplorer = useBlockExplorer(collection.chainId)
+  const { REPORT_EMAIL } = useEnvironment()
   return (
     <>
       <Flex
@@ -186,7 +187,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
             />
             <MenuList>
               <Link
-                href={`mailto:${reportEmail}?subject=${encodeURI(
+                href={`mailto:${REPORT_EMAIL}?subject=${encodeURI(
                   'Report a collection',
                 )}&body=${encodeURI(
                   `I would like to report the following collection "${collection.name}" (#${collection.address})\nReason: `,

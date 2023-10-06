@@ -22,7 +22,7 @@ import LargeLayout from '../../../../layouts/large'
 
 const DropDetail: NextPage = () => {
   const { t } = useTranslation('templates')
-  const { CHAINS, REPORT_EMAIL } = useEnvironment()
+  const { CHAINS } = useEnvironment()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
   })
@@ -77,10 +77,7 @@ const DropDetail: NextPage = () => {
         </>
       ) : (
         <>
-          <CollectionHeader
-            collection={collection}
-            reportEmail={REPORT_EMAIL}
-          />
+          <CollectionHeader collection={collection} />
           <Flex flexDirection="column" mt={4} py={2}>
             <Text variant="button1" color="brand.black">
               {chain?.name || '-'}
