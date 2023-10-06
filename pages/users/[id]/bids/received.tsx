@@ -258,12 +258,10 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                             </Button>
                           ) : (
                             <AcceptOfferButton
+                              offer={item}
+                              title={t('user.bid-received.accept.title')}
                               variant="outline"
                               colorScheme="gray"
-                              signer={signer}
-                              chainId={item.asset.chainId}
-                              offer={item}
-                              quantity={item.availableQuantity}
                               onAccepted={onAccepted}
                               onError={(e) =>
                                 toast({
@@ -271,7 +269,6 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                                   title: formatError(e),
                                 })
                               }
-                              title={t('user.bid-received.accept.title')}
                             >
                               <Text as="span" isTruncated>
                                 {t('user.bid-received.actions.accept')}
