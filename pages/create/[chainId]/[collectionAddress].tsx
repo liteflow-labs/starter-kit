@@ -18,7 +18,6 @@ import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
-import type { Props as NFTCardProps } from '../../../components/Token/Card'
 import TokenCard from '../../../components/Token/Card'
 import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
@@ -75,7 +74,7 @@ const CreatePage: NextPage = ({}) => {
     formData?.isAnimation && !formData.isPrivate ? formData.content : undefined,
   )
 
-  const asset: NFTCardProps['asset'] | undefined = useMemo(() => {
+  const asset = useMemo(() => {
     if (!collection) return
     return {
       id: '--',
@@ -90,7 +89,7 @@ const CreatePage: NextPage = ({}) => {
       },
       owned: BigNumber.from(0),
       unlockedContent: null,
-    } as NFTCardProps['asset'] // TODO: use satisfies to ensure proper type
+    }
   }, [imageUrlLocal, animationUrlLocal, formData?.name, collection])
 
   const creator = useMemo(

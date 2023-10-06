@@ -147,7 +147,6 @@ const TokenCard: FC<Props> = ({
     hasMultiCurrency,
   ])
 
-  // TODO: is the width correct?
   return (
     <Flex
       direction="column"
