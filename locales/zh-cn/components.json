@@ -204,6 +204,14 @@
   },
   "history": {
     "none": "无历史记录",
+    "filter": {
+      "all": "All",
+      "lazymint": "Lazymint",
+      "listing": "Listing",
+      "purchase": "Purchase",
+      "transfer": "Transfer",
+      "mint": "Mint"
+    },
     "listing": {
       "by": "截至 <0/>",
       "listed_one": "已上架 <0>{{count}}</0> 个版本，价格为 <1/>",

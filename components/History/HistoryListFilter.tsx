@@ -1,4 +1,5 @@
 import { Stack, Tag, TagLabel } from '@chakra-ui/react'
+import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useMemo, useState } from 'react'
 import { AssetHistoryAction } from '../../graphql'
 
@@ -15,6 +16,7 @@ export const DEFAULT_HISTORY_FILTER = [
 ] as AssetHistoryAction[]
 
 const HistoryListFilter: FC<IProps> = ({ filter, onFilterChange }) => {
+  const { t } = useTranslation('components')
   const [selection, setSelection] = useState<AssetHistoryAction[] | 'ALL'>(
     'ALL',
   )
@@ -52,32 +54,32 @@ const HistoryListFilter: FC<IProps> = ({ filter, onFilterChange }) => {
   const tags = useMemo(
     () => [
       {
-        title: 'All',
+        title: t('history.filter.all'),
         isActive: selection === 'ALL',
         onClick: () => handleFilterChange('ALL'),
       },
       {
-        title: 'Lazymint',
+        title: t('history.filter.lazymint'),
         isActive: selection.includes('LAZYMINT'),
         onClick: () => handleFilterChange('LAZYMINT'),
       },
       {
-        title: 'Listing',
+        title: t('history.filter.listing'),
         isActive: selection.includes('LISTING'),
         onClick: () => handleFilterChange('LISTING'),
       },
       {
-        title: 'Purchase',
+        title: t('history.filter.purchase'),
         isActive: selection.includes('PURCHASE'),
         onClick: () => handleFilterChange('PURCHASE'),
       },
       {
-        title: 'Transfer',
+        title: t('history.filter.transfer'),
         isActive: selection.includes('TRANSFER'),
         onClick: () => handleFilterChange('TRANSFER'),
       },
     ],
-    [handleFilterChange, selection],
+    [handleFilterChange, selection, t],
   )
 
   return (
