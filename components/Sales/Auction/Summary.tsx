@@ -48,11 +48,15 @@ const SaleAuctionSummary: FC<Props> = ({
 }) => {
   if (inProgress)
     return <SaleAuctionInProgress auction={auction} bestBid={bestBid} />
-  if (endedWithNoBids) return <SaleAuctionIncompleteNoBids isOwner={isOwner} />
+  if (endedWithNoBids)
+    return <SaleAuctionIncompleteNoBids mb={isOwner ? -5 : 0} />
   if (endedWithNoReserve) {
     if (!bestBid) throw new Error('bestBid is falsy')
     return (
-      <SaleAuctionIncompleteReservePrice isOwner={isOwner} bestBid={bestBid} />
+      <SaleAuctionIncompleteReservePrice
+        bestBid={bestBid}
+        mb={isOwner ? -5 : 0}
+      />
     )
   }
   if (endedWithReserve) {
