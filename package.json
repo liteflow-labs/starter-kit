@@ -60,7 +60,7 @@
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@graphql-eslint/eslint-plugin": "^3.20.1",
     "@next/bundle-analyzer": "^13.4.9",
-    "@nft/api-graphql": "^1.0.0-beta.41-prerelease-4",
+    "@nft/api-graphql": "^1.0.0-beta.42",
     "@types/nodemailer": "^6.4.8",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^18.2.15",
