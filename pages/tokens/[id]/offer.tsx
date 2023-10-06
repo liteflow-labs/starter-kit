@@ -22,7 +22,6 @@ import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
-import type { BidCurrency } from '../../../components/Offer/Form/Bid'
 import Radio from '../../../components/Radio/Radio'
 import SalesAuctionForm from '../../../components/Sales/Auction/Form'
 import SalesDirectForm from '../../../components/Sales/Direct/Form'
@@ -113,7 +112,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
 
   const currencies = data?.currencies?.nodes
   const auctionCurrencies = useMemo(
-    () => currencies?.filter((c) => c.address) as BidCurrency[] | undefined,
+    () => currencies?.filter((c) => c.address),
     [currencies],
   )
 

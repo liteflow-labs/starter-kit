@@ -31,9 +31,7 @@ import {
 } from '../../convert'
 import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
-import useBlockExplorer from '../../hooks/useBlockExplorer'
 import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
 
 type Props = {
@@ -41,7 +39,6 @@ type Props = {
 }
 
 const CheckoutPage: NextPage<Props> = ({ now }) => {
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
@@ -73,8 +70,6 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     () => asset?.collection.standard === 'ERC721',
     [asset],
   )
-
-  const blockExplorer = useBlockExplorer(asset?.chainId)
 
   const onPurchased = useCallback(async () => {
     if (!asset) return
@@ -206,12 +201,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
               <Skeleton width="200px" height="40px" />
             ) : (
               <OfferFormCheckout
-                signer={signer}
-                chainId={offer.asset.chainId}
-                account={address}
                 offer={offer}
-                blockExplorer={blockExplorer}
-                currency={offer.currency}
                 multiple={!isSingle}
                 onPurchased={onPurchased}
               />

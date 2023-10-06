@@ -19,7 +19,6 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { toAddress } from '@liteflow/core'
 import { useCreateOffer } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
@@ -28,10 +27,14 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
+import { BidOnAssetQuery } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBalance from '../../../hooks/useBalance'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useFees from '../../../hooks/useFees'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import useSigner from '../../../hooks/useSigner'
 import { formatDateDatetime, formatError } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Image from '../../Image/Image'
@@ -48,54 +51,27 @@ type FormData = {
   auctionExpirationDate: string
 }
 
-export type BidCurrency = {
-  id: string
-  address: string
-  decimals: number
-  symbol: string
-  image: string
-  name: string
+type Props = {
+  asset: NonNullable<BidOnAssetQuery['asset']>
+  currencies: {
+    id: string
+    address: string | null
+    decimals: number
+    symbol: string
+    image: string
+    name: string
+  }[]
+  onCreated: (offerId: string) => void
 }
 
-type Props = {
-  signer: (Signer & TypedDataSigner) | undefined
-  account: string | null | undefined
-  currencies: BidCurrency[]
-  chainId: number
-  collectionAddress: string
-  tokenId: string
-  blockExplorer: BlockExplorer
-  onCreated: (offerId: string) => void
-  auctionId: string | undefined
-  auctionValidity: number
-  offerValidity: number
-} & (
-  | {
-      multiple: true
-      supply: string
-    }
-  | {
-      multiple: false
-      owner?: string
-    }
-)
-
-const OfferFormBid: FC<Props> = (props) => {
+const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
   const { t } = useTranslation('components')
-  const {
-    signer,
-    account,
-    currencies,
-    chainId,
-    collectionAddress,
-    tokenId,
-    blockExplorer,
-    onCreated,
-    auctionId,
-    auctionValidity,
-    offerValidity,
-  } = props
+  const signer = useSigner()
+  const { address: account } = useAccount()
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
+  const { AUCTION_VALIDITY_IN_SECONDS, OFFER_VALIDITY_IN_SECONDS } =
+    useEnvironment()
+  const blockExplorer = useBlockExplorer(asset.chainId)
   const toast = useToast()
   const {
     isOpen: createOfferIsOpen,
@@ -103,15 +79,32 @@ const OfferFormBid: FC<Props> = (props) => {
     onClose: createOfferOnClose,
   } = useDisclosure()
 
+  const auctionId = useMemo(
+    () => asset.auctions.nodes[0]?.id,
+    [asset.auctions.nodes],
+  )
+  const isMultiple = useMemo(
+    () => asset.collection.standard === 'ERC1155',
+    [asset.collection.standard],
+  )
+  const ownerAddress = useMemo(
+    () => asset.ownerships.nodes[0]?.ownerAddress,
+    [asset.ownerships.nodes],
+  )
+
   const defaultAuctionExpirationValue = useMemo(
     () =>
-      formatDateDatetime(dayjs().add(auctionValidity, 'second').toISOString()),
-    [auctionValidity],
+      formatDateDatetime(
+        dayjs().add(AUCTION_VALIDITY_IN_SECONDS, 'second').toISOString(),
+      ),
+    [AUCTION_VALIDITY_IN_SECONDS],
   )
   const defaultExpirationValue = useMemo(
     () =>
-      formatDateDatetime(dayjs().add(offerValidity, 'second').toISOString()),
-    [offerValidity],
+      formatDateDatetime(
+        dayjs().add(OFFER_VALIDITY_IN_SECONDS, 'second').toISOString(),
+      ),
+    [OFFER_VALIDITY_IN_SECONDS],
   )
   const minDate = useMemo(
     () => formatDateDatetime(dayjs().add(1, 'day').toISOString()),
@@ -163,9 +156,9 @@ const OfferFormBid: FC<Props> = (props) => {
   const quantityBN = useParseBigNumber(quantity)
 
   const { feesPerTenThousand, loading: loadingFees } = useFees({
-    chainId,
-    collectionAddress,
-    tokenId,
+    chainId: asset.chainId,
+    collectionAddress: asset.collectionAddress,
+    tokenId: asset.tokenId,
     currencyId: currency?.id,
     quantity: quantityBN,
     unitPrice: priceUnit,
@@ -185,7 +178,7 @@ const OfferFormBid: FC<Props> = (props) => {
 
   const onSubmit = handleSubmit(async ({ expiredAt }) => {
     if (!auctionId && !expiredAt) throw new Error('expiredAt is required')
-    invariant(currency)
+    invariant(currency?.address, 'currency address is required')
     try {
       createOfferOnOpen()
       const id = await createOffer({
@@ -195,13 +188,13 @@ const OfferFormBid: FC<Props> = (props) => {
           amount: priceUnit,
           currency: toAddress(currency.address),
         },
-        chain: chainId,
-        collection: toAddress(collectionAddress),
-        token: tokenId,
-        taker: props.multiple
+        chain: asset.chainId,
+        collection: toAddress(asset.collectionAddress),
+        token: asset.tokenId,
+        taker: isMultiple
           ? undefined // Keep the bid open for anyone that can fill it
-          : props.owner
-          ? toAddress(props.owner)
+          : ownerAddress
+          ? toAddress(ownerAddress)
           : undefined,
         expiredAt: auctionId ? undefined : new Date(expiredAt),
         auctionId,
@@ -308,7 +301,7 @@ const OfferFormBid: FC<Props> = (props) => {
         )}
       </FormControl>
 
-      {props.multiple && (
+      {isMultiple && (
         <FormControl isInvalid={!!errors.quantity}>
           <HStack spacing={1} mb={2}>
             <FormLabel htmlFor="quantity" m={0}>
@@ -322,7 +315,7 @@ const OfferFormBid: FC<Props> = (props) => {
             <NumberInput
               clampValueOnBlur={false}
               min={1}
-              max={parseInt(props.supply, 10)}
+              max={parseInt(asset.quantity, 10)}
               allowMouseWheel
               w="full"
               onChange={(x) => setValue('quantity', x)}
@@ -335,10 +328,10 @@ const OfferFormBid: FC<Props> = (props) => {
                   validate: (value) => {
                     if (
                       parseInt(value, 10) < 1 ||
-                      parseInt(value, 10) > parseInt(props.supply, 10)
+                      parseInt(value, 10) > parseInt(asset.quantity, 10)
                     ) {
                       return t('offer.form.bid.validation.in-range', {
-                        max: parseInt(props.supply, 10),
+                        max: parseInt(asset.quantity, 10),
                       })
                     }
                     if (!/^\d+$/.test(value)) {
@@ -359,7 +352,7 @@ const OfferFormBid: FC<Props> = (props) => {
           <FormHelperText>
             <Text as="p" variant="text" color="gray.500">
               {t('offer.form.bid.supply', {
-                count: parseInt(props.supply, 10),
+                count: parseInt(asset.quantity, 10),
               })}
             </Text>
           </FormHelperText>
@@ -407,19 +400,17 @@ const OfferFormBid: FC<Props> = (props) => {
         )}
       </FormControl>
 
-      <div>
-        <Summary
-          currency={currency}
-          price={priceUnit}
-          quantity={quantityBN}
-          isSingle={!props.multiple}
-          feesOnTopPerTenThousand={feesPerTenThousand}
-        />
-      </div>
+      <Summary
+        currency={currency}
+        price={priceUnit}
+        quantity={quantityBN}
+        isSingle={!isMultiple}
+        feesOnTopPerTenThousand={feesPerTenThousand}
+      />
 
       {account && <Balance account={account} currency={currency} />}
       <ConnectButtonWithNetworkSwitch
-        chainId={chainId}
+        chainId={asset.chainId}
         isLoading={isSubmitting}
         isDisabled={!canBid}
         size="lg"

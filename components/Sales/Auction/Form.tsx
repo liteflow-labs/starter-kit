@@ -50,7 +50,7 @@ type Props = {
   currencies: {
     name: string
     id: string
-    address: string
+    address: string | null
     image: string
     decimals: number
     symbol: string
@@ -100,7 +100,7 @@ const SalesAuctionForm: FC<Props> = ({
   // TODO: Add check for approval of maker token
   const onSubmit = handleSubmit(async (data) => {
     if (loading) return
-
+    invariant(currency.address, 'currency address is required')
     const [chain, collection, token] = assetId.split('-')
     invariant(chain)
     invariant(collection)
