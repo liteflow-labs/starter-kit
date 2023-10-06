@@ -6,7 +6,6 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import {
   AcceptOfferStep,
@@ -18,7 +17,9 @@ import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, SyntheticEvent, useMemo } from 'react'
+import useAccount from '../../hooks/useAccount'
 import { BlockExplorer } from '../../hooks/useBlockExplorer'
+import useSigner from '../../hooks/useSigner'
 import {
   dateFromNow,
   formatDate,
@@ -54,8 +55,6 @@ export type Props = {
     }
   }
   chainId: number
-  signer: Signer | undefined
-  account: string | null | undefined
   blockExplorer: BlockExplorer
   isSingle: boolean
   preventAcceptation: boolean
@@ -67,8 +66,6 @@ export type Props = {
 const Bid: FC<Props> = ({
   bid,
   chainId,
-  signer,
-  account,
   blockExplorer,
   isSingle,
   preventAcceptation,
@@ -77,6 +74,8 @@ const Bid: FC<Props> = ({
   onCanceled,
 }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
+  const { address: account } = useAccount()
   const toast = useToast()
   const {
     isOpen: acceptOfferIsOpen,

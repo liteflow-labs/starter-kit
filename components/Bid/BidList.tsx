@@ -1,5 +1,4 @@
 import { Text } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, Fragment } from 'react'
@@ -16,8 +15,6 @@ type Props = {
       })[]
     | undefined
   chainId: number
-  signer: Signer | undefined
-  account: string | null | undefined
   isSingle: boolean
   preventAcceptation: boolean
   totalOwned: BigNumber
@@ -28,8 +25,6 @@ type Props = {
 const BidList: FC<Props> = ({
   bids,
   chainId,
-  signer,
-  account,
   isSingle,
   preventAcceptation,
   totalOwned,
@@ -59,8 +54,6 @@ const BidList: FC<Props> = ({
           <Bid
             bid={bid}
             chainId={chainId}
-            signer={signer}
-            account={account}
             preventAcceptation={preventAcceptation}
             blockExplorer={blockExplorer}
             onAccepted={onAccepted}

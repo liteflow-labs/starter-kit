@@ -539,8 +539,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   <BidList
                     bids={bids}
                     chainId={chainId}
-                    signer={signer}
-                    account={address}
                     isSingle={isSingle}
                     preventAcceptation={!isOwner || !!auction}
                     onAccepted={refresh}
