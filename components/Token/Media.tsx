@@ -1,4 +1,12 @@
-import { Box, Center, Icon, Stack, Text, useTheme } from '@chakra-ui/react'
+import {
+  Box,
+  Center,
+  Icon,
+  Skeleton,
+  Stack,
+  Text,
+  useTheme,
+} from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { AssetMedia } from '../../hooks/useDetectAssetMedia'
@@ -39,7 +47,7 @@ const TokenMedia: FC<{
     const mimetype = mediaToDisplay?.mimetype
     if (!mimetype) return // assume it's supported
     if (supportedMedia.some((regex) => regex.test(mimetype))) return // it's supported
-    if (mediaToDisplay?.url === fallback?.url) return
+    if (mediaToDisplay?.url === fallback?.url) return setMediaToDisplay(null) // fallback is also not supported
     setMediaToDisplay(fallback)
   }, [fallback, mediaToDisplay])
 
@@ -88,19 +96,25 @@ const TokenMedia: FC<{
     )
   }
 
-  return (
-    <Box position="relative" w="full" h="full">
-      <Image
-        src={mediaToDisplay.url}
-        alt={defaultText}
-        onError={onImageError}
-        fill
-        objectFit={fill ? 'cover' : 'contain'}
-        sizes={sizes}
-        unoptimized={mediaToDisplay.mimetype === 'image/gif'}
-      />
-    </Box>
-  )
+  if (
+    !mediaToDisplay.mimetype ||
+    mediaToDisplay.mimetype.startsWith('image/')
+  ) {
+    return (
+      <Box position="relative" w="full" h="full">
+        <Image
+          src={mediaToDisplay.url}
+          alt={defaultText}
+          onError={onImageError}
+          fill
+          objectFit={fill ? 'cover' : 'contain'}
+          sizes={sizes}
+          unoptimized={mediaToDisplay.mimetype === 'image/gif'}
+        />
+      </Box>
+    )
+  }
+  return <Skeleton width="100%" height="100%" />
 }
 
 export default TokenMedia
