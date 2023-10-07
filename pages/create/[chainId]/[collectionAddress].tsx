@@ -75,7 +75,7 @@ const CreatePage: NextPage = ({}) => {
     formData?.isAnimation && !formData.isPrivate ? formData.content : undefined,
   )
 
-  const asset: NFTCardProps['asset'] | undefined = useMemo(() => {
+  const asset = useMemo(() => {
     if (!collection) return
     return {
       id: '--',
