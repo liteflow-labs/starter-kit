@@ -15,7 +15,7 @@ type Props = {
       symbol: string
     }
   }
-  bestBid:
+  bestAuctionBid:
     | {
         unitPrice: BigNumber
         currency: {
@@ -27,29 +27,32 @@ type Props = {
     | undefined
 }
 
-const SaleAuctionInProgress: FC<Props> = ({ auction, bestBid }) => {
+const SaleAuctionInProgress: FC<Props> = ({ auction, bestAuctionBid }) => {
   const { t } = useTranslation('components')
   const bidTitle = useMemo(
     () =>
-      bestBid
+      bestAuctionBid
         ? t('sales.auction.in-progress.highest-bid')
         : t('sales.auction.in-progress.open'),
-    [bestBid, t],
+    [bestAuctionBid, t],
   )
 
   const currency = useMemo(
-    () => (bestBid ? bestBid.currency : auction.currency),
-    [bestBid, auction],
+    () => (bestAuctionBid ? bestAuctionBid.currency : auction.currency),
+    [bestAuctionBid, auction],
   )
 
   const bidChildren = useMemo(
     () =>
-      bestBid ? (
-        <Price amount={bestBid.unitPrice} currency={bestBid.currency} />
+      bestAuctionBid ? (
+        <Price
+          amount={bestAuctionBid.unitPrice}
+          currency={bestAuctionBid.currency}
+        />
       ) : (
         t('sales.auction.in-progress.offer')
       ),
-    [bestBid, t],
+    [bestAuctionBid, t],
   )
 
   return (

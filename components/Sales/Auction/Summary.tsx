@@ -1,4 +1,5 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { useAuctionStatus } from '@liteflow/react'
 import { FC } from 'react'
 import SaleAuctionIncompleteNoBids from './Incomplete/FailedNoBids'
 import SaleAuctionIncompleteReservePrice from './Incomplete/FailedReservePrice'
@@ -9,14 +10,17 @@ export type Props = {
   auction: {
     endAt: Date
     expireAt: Date
+    reserveAmount: BigNumber
     currency: {
       decimals: number
       image: string
       symbol: string
     }
+    winningOffer: { id: string } | null | undefined
   }
-  bestBid:
+  bestAuctionBid:
     | {
+        amount: BigNumberish
         unitPrice: BigNumber
         currency: {
           decimals: number
@@ -31,41 +35,46 @@ export type Props = {
       }
     | undefined
   isOwner: boolean
-  inProgress: boolean
-  endedWithNoBids: boolean
-  endedWithNoReserve: boolean
-  endedWithReserve: boolean
 }
 
 const SaleAuctionSummary: FC<Props> = ({
   auction,
-  bestBid,
+  bestAuctionBid,
   isOwner,
-  inProgress,
-  endedWithNoBids,
-  endedWithNoReserve,
-  endedWithReserve,
 }) => {
+  const {
+    inProgress,
+    endedAndWaitingForTransfer,
+    hasBids,
+    bellowReservePrice,
+    reservePriceMatches,
+  } = useAuctionStatus(auction, bestAuctionBid)
+
   if (inProgress)
-    return <SaleAuctionInProgress auction={auction} bestBid={bestBid} />
-  if (endedWithNoBids)
+    return (
+      <SaleAuctionInProgress
+        auction={auction}
+        bestAuctionBid={bestAuctionBid}
+      />
+    )
+  if (endedAndWaitingForTransfer && !hasBids)
     return <SaleAuctionIncompleteNoBids mb={isOwner ? -5 : 0} />
-  if (endedWithNoReserve) {
-    if (!bestBid) throw new Error('bestBid is falsy')
+  if (endedAndWaitingForTransfer && bellowReservePrice) {
+    if (!bestAuctionBid) throw new Error('bestAuctionBid is falsy')
     return (
       <SaleAuctionIncompleteReservePrice
-        bestBid={bestBid}
+        bestAuctionBid={bestAuctionBid}
         mb={isOwner ? -5 : 0}
       />
     )
   }
-  if (endedWithReserve) {
-    if (!bestBid) throw new Error('bestBid is falsy')
+  if (endedAndWaitingForTransfer && reservePriceMatches) {
+    if (!bestAuctionBid) throw new Error('bestAuctionBid is falsy')
     return (
       <SaleAuctionIncompleteSuccess
         auction={auction}
         isOwner={isOwner}
-        bestBid={bestBid}
+        bestAuctionBid={bestAuctionBid}
       />
     )
   }

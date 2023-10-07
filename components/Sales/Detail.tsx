@@ -75,15 +75,7 @@ const SaleDetail: FC<Props> = ({
   onOfferCanceled,
   onAuctionAccepted,
 }) => {
-  const {
-    inProgress,
-    ended,
-    endedAndWaitingForTransfer,
-    hasBids,
-    bellowReservePrice,
-    reservePriceMatches,
-    isValid,
-  } = useAuctionStatus(auction, bestAuctionBid)
+  const { ended, isValid } = useAuctionStatus(auction, bestAuctionBid)
 
   return (
     <Stack spacing={8}>
@@ -117,14 +109,8 @@ const SaleDetail: FC<Props> = ({
         <>
           <SaleAuctionSummary
             auction={auction}
-            bestBid={bestAuctionBid}
+            bestAuctionBid={bestAuctionBid}
             isOwner={isOwner}
-            inProgress={inProgress}
-            endedWithNoBids={endedAndWaitingForTransfer && !hasBids}
-            endedWithNoReserve={
-              endedAndWaitingForTransfer && bellowReservePrice
-            }
-            endedWithReserve={endedAndWaitingForTransfer && reservePriceMatches}
           />
           <SaleAuctionButton
             assetId={assetId}
@@ -136,16 +122,9 @@ const SaleDetail: FC<Props> = ({
             assetId={assetId}
             chainId={chainId}
             auction={auction}
-            signer={signer}
+            bestAuctionBid={bestAuctionBid}
             isOwner={isOwner}
             isHomepage={isHomepage}
-            inProgress={inProgress}
-            endedWithNoBids={endedAndWaitingForTransfer && !hasBids}
-            endedWithNoReserve={
-              endedAndWaitingForTransfer && bellowReservePrice
-            }
-            endedWithReserve={endedAndWaitingForTransfer && reservePriceMatches}
-            blockExplorer={blockExplorer}
             onAuctionAccepted={onAuctionAccepted}
           />
         </>

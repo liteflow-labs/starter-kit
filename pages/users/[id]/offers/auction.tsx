@@ -238,9 +238,7 @@ const AuctionPage: NextPage = () => {
                       <Td isNumeric>
                         {ownerLoggedIn && item.ownAsset && (
                           <SaleAuctionAction
-                            signer={signer}
                             auction={item}
-                            bestBid={item.bestBid}
                             onAuctionAccepted={onAuctionAccepted}
                           />
                         )}

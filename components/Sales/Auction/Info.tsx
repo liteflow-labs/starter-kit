@@ -7,14 +7,14 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
-import { BigNumber } from '@ethersproject/bignumber'
-import { useAcceptAuction } from '@liteflow/react'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { useAcceptAuction, useAuctionStatus } from '@liteflow/react'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, ReactElement, useCallback, useMemo, useState } from 'react'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useSigner from '../../../hooks/useSigner'
 import { formatError } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Link from '../../Link/Link'
@@ -26,44 +26,50 @@ export type Props = {
   chainId: number
   auction: {
     id: string
+    endAt: Date
+    expireAt: Date
     reserveAmount: BigNumber
     currency: {
       decimals: number
       image: string
       symbol: string
     }
+    winningOffer: { id: string } | null | undefined
   }
-  signer: Signer | undefined
+  bestAuctionBid:
+    | {
+        amount: BigNumberish
+      }
+    | undefined
   isOwner: boolean
   isHomepage: boolean
-  inProgress: boolean
-  endedWithNoBids: boolean
-  endedWithNoReserve: boolean
-  endedWithReserve: boolean
-  blockExplorer: BlockExplorer
   onAuctionAccepted: (id: string) => Promise<void>
 }
 
 const SaleAuctionInfo: FC<Props> = ({
-  signer,
   assetId,
   chainId,
   auction,
+  bestAuctionBid,
   isOwner,
   isHomepage,
-  inProgress,
-  endedWithNoBids,
-  endedWithNoReserve,
-  endedWithReserve,
-  blockExplorer,
   onAuctionAccepted,
 }): ReactElement | null => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
   const [_acceptAuction, { activeStep, transactionHash }] =
     useAcceptAuction(signer)
   const [loading, setLoading] = useState(false)
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    inProgress,
+    endedAndWaitingForTransfer,
+    hasBids,
+    bellowReservePrice,
+    reservePriceMatches,
+  } = useAuctionStatus(auction, bestAuctionBid)
+  const blockExplorer = useBlockExplorer(chainId)
 
   const acceptAuction = useCallback(async (): Promise<void> => {
     setLoading(true)
@@ -102,7 +108,7 @@ const SaleAuctionInfo: FC<Props> = ({
         ),
       }
     }
-    if (endedWithNoBids) {
+    if (endedAndWaitingForTransfer && !hasBids) {
       return {
         type: 'success',
         icon: <Icon as={BiBadgeCheck} h={6} w={6} color="white" />,
@@ -123,7 +129,7 @@ const SaleAuctionInfo: FC<Props> = ({
         ),
       }
     }
-    if (endedWithNoReserve) {
+    if (endedAndWaitingForTransfer && bellowReservePrice) {
       return {
         type: 'success',
         icon: <Icon as={BiBadgeCheck} h={6} w={6} color="white" />,
@@ -144,7 +150,7 @@ const SaleAuctionInfo: FC<Props> = ({
         ),
       }
     }
-    if (endedWithReserve) {
+    if (endedAndWaitingForTransfer && reservePriceMatches) {
       return {
         type: 'success',
         icon: <Icon as={BiBadgeCheck} h={6} w={6} color="white" />,
@@ -167,16 +173,18 @@ const SaleAuctionInfo: FC<Props> = ({
       }
     }
   }, [
-    inProgress,
-    endedWithNoBids,
-    endedWithNoReserve,
-    endedWithReserve,
-    auction,
-    assetId,
-    loading,
     acceptAuction,
-    t,
+    assetId,
+    auction.currency,
+    auction.reserveAmount,
+    bellowReservePrice,
     chainId,
+    endedAndWaitingForTransfer,
+    hasBids,
+    inProgress,
+    loading,
+    reservePriceMatches,
+    t,
   ])
 
   if (!isOwner) return null

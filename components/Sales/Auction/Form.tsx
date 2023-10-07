@@ -24,15 +24,16 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { toAddress } from '@liteflow/core'
 import { useCreateAuction } from '@liteflow/react'
+import useEnvironment from 'hooks/useEnvironment'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import useSigner from '../../../hooks/useSigner'
 import { formatError, getHumanizedDate } from '../../../utils'
 import Image from '../../Image/Image'
 import Select from '../../Select/Select'
@@ -45,7 +46,6 @@ type FormData = {
 }
 
 type Props = {
-  signer: Signer | undefined
   assetId: string
   currencies: {
     name: string
@@ -55,18 +55,13 @@ type Props = {
     decimals: number
     symbol: string
   }[]
-  auctionValidity: number
   onCreated: (id: string) => void
 }
 
-const SalesAuctionForm: FC<Props> = ({
-  signer,
-  assetId,
-  currencies,
-  auctionValidity,
-  onCreated,
-}) => {
+const SalesAuctionForm: FC<Props> = ({ assetId, currencies, onCreated }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
+  const { AUCTION_VALIDITY_IN_SECONDS } = useEnvironment()
   const [createAuction, { loading }] = useCreateAuction(signer)
   const toast = useToast()
   const {
@@ -111,7 +106,7 @@ const SalesAuctionForm: FC<Props> = ({
         collection: toAddress(collection),
         token,
         endAt: new Date(data.endAt),
-        auctionValiditySeconds: auctionValidity,
+        auctionValiditySeconds: AUCTION_VALIDITY_IN_SECONDS,
         reservePrice: {
           amount: (priceUnit || BigNumber.from(0)).toString(),
           currency: toAddress(currency.address),
@@ -256,7 +251,7 @@ const SalesAuctionForm: FC<Props> = ({
             <li>{t('sales.auction.form.banner.item1')}</li>
             <li>
               {t('sales.auction.form.banner.item2', {
-                validity: getHumanizedDate(auctionValidity),
+                validity: getHumanizedDate(AUCTION_VALIDITY_IN_SECONDS),
               })}
             </li>
           </AlertDescription>

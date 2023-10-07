@@ -10,9 +10,11 @@ export type Props = {
     reserveAmount: BigNumber
     winningOffer: { id: string } | null | undefined
   }
-  bestBid?: {
-    amount: BigNumber
-  }
+  bestBid:
+    | {
+        amount: BigNumber
+      }
+    | undefined
 }
 
 const SaleAuctionStatus: FC<Props> = ({ auction, bestBid }) => {

@@ -24,7 +24,7 @@ type Props = {
   auction: {
     expireAt: Date
   }
-  bestBid: {
+  bestAuctionBid: {
     maker: {
       address: string
       image: string | null | undefined
@@ -41,7 +41,7 @@ type Props = {
 const SaleAuctionIncompleteSuccess: FC<Props> = ({
   isOwner,
   auction,
-  bestBid,
+  bestAuctionBid,
 }) => {
   const { t } = useTranslation('components')
   return (
@@ -57,8 +57,8 @@ const SaleAuctionIncompleteSuccess: FC<Props> = ({
         <Flex align="center" gap={3}>
           <Flex
             as={AccountImage}
-            address={bestBid.maker.address}
-            image={bestBid.maker.image}
+            address={bestAuctionBid.maker.address}
+            image={bestAuctionBid.maker.image}
             rounded="full"
           />
           <Heading as="h4" variant="heading2" color="brand.black">
@@ -67,16 +67,22 @@ const SaleAuctionIncompleteSuccess: FC<Props> = ({
               i18nKey="sales.auction.success.offer"
               components={[
                 <Price
-                  amount={bestBid.unitPrice}
-                  currency={bestBid.currency}
+                  amount={bestAuctionBid.unitPrice}
+                  currency={bestAuctionBid.currency}
                   key="price"
                 />,
                 <Text as="span" color="gray.500" key="text" />,
-                <Link href={`/users/${bestBid.maker.address}`} key="link">
-                  {bestBid.maker.name ? (
-                    <span>{bestBid.maker.name}</span>
+                <Link
+                  href={`/users/${bestAuctionBid.maker.address}`}
+                  key="link"
+                >
+                  {bestAuctionBid.maker.name ? (
+                    <span>{bestAuctionBid.maker.name}</span>
                   ) : (
-                    <WalletAddress address={bestBid.maker.address} isShort />
+                    <WalletAddress
+                      address={bestAuctionBid.maker.address}
+                      isShort
+                    />
                   )}
                 </Link>,
               ]}

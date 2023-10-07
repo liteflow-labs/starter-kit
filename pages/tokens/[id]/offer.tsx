@@ -67,8 +67,7 @@ type SaleOption = {
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
-  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
-    useEnvironment()
+  const { OFFER_VALIDITY_IN_SECONDS } = useEnvironment()
   const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
@@ -171,10 +170,8 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     if (sale === SaleType.TIMED_AUCTION)
       return (
         <SalesAuctionForm
-          signer={signer}
           assetId={asset.id}
           currencies={auctionCurrencies}
-          auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
       )
@@ -191,7 +188,6 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     isCreator,
     onCreated,
     OFFER_VALIDITY_IN_SECONDS,
-    AUCTION_VALIDITY_IN_SECONDS,
   ])
 
   if (asset === null) return <Error statusCode={404} />
