@@ -6,11 +6,9 @@ import {
   SimpleGrid,
   Stack,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { FC, useMemo } from 'react'
 import { MintType, Standard } from '../../graphql'
-import useBlockExplorer from '../../hooks/useBlockExplorer'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import Link from '../Link/Link'
 import type { Props as SaleDetailProps } from '../Sales/Detail'
@@ -51,8 +49,6 @@ export type Props = {
   bestAuctionBid: SaleDetailProps['bestAuctionBid']
   sales: SaleDetailProps['directSales']
   isHomepage: boolean
-  signer: Signer | undefined
-  currentAccount: string | null | undefined
   onOfferCanceled: (id: string) => Promise<void>
   onAuctionAccepted: (id: string) => Promise<void>
 }
@@ -67,12 +63,9 @@ const TokenHeader: FC<Props> = ({
   bestAuctionBid,
   sales,
   isHomepage,
-  signer,
-  currentAccount,
   onOfferCanceled,
   onAuctionAccepted,
 }) => {
-  const blockExplorer = useBlockExplorer(asset.collection.chainId)
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const media = useDetectAssetMedia(asset)
 
@@ -150,7 +143,6 @@ const TokenHeader: FC<Props> = ({
           isOpenCollection={asset.collection.mintType === 'PUBLIC'}
         />
         <SaleDetail
-          blockExplorer={blockExplorer}
           assetId={asset.id}
           chainId={asset.collection.chainId}
           currencies={chainCurrencies}
@@ -161,8 +153,6 @@ const TokenHeader: FC<Props> = ({
           auction={auction}
           bestAuctionBid={bestAuctionBid}
           directSales={sales}
-          signer={signer}
-          currentAccount={currentAccount}
           onOfferCanceled={onOfferCanceled}
           onAuctionAccepted={onAuctionAccepted}
         />

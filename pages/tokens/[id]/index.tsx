@@ -58,7 +58,6 @@ import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useDetectAssetMedia from '../../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
 import { formatError } from '../../../utils'
 
@@ -75,7 +74,6 @@ const tabs = [AssetTabs.bids, AssetTabs.history]
 
 const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const { CHAINS, REPORT_EMAIL } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const toast = useToast()
   const { address } = useAccount()
@@ -379,10 +377,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             <SaleDetail
               assetId={asset.id}
               chainId={chainId}
-              blockExplorer={blockExplorer}
               currencies={data.currencies?.nodes}
-              signer={signer}
-              currentAccount={address}
               isSingle={isSingle}
               isHomepage={false}
               isOwner={isOwner}

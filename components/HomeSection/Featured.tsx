@@ -78,14 +78,12 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
               owners={asset.ownerships.nodes.map(convertOwnership)}
               numberOfOwners={asset.ownerships.totalCount}
               isHomepage={true}
-              signer={signer}
-              currentAccount={address}
               onOfferCanceled={reloadInfo}
               onAuctionAccepted={reloadInfo}
             />
           ))
         : undefined,
-    [featured, address, signer, reloadInfo, currencies],
+    [featured, reloadInfo, currencies],
   )
 
   if (!FEATURED_TOKEN.length) return null

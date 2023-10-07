@@ -11,7 +11,6 @@ import {
   useRadioGroup,
   useToast,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { NextPage } from 'next'
@@ -36,13 +35,9 @@ import {
 } from '../../../convert'
 import { useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
-import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useEnvironment from '../../../hooks/useEnvironment'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
-import { isSameAddress } from '../../../utils'
 
 type Props = {
   assetId: string
@@ -67,8 +62,6 @@ type SaleOption = {
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
-  const { OFFER_VALIDITY_IN_SECONDS } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
@@ -91,23 +84,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
       address: address || '',
     },
   })
-
-  const blockExplorer = useBlockExplorer(data?.asset?.chainId)
-
   const asset = data?.asset
-
-  const royaltiesPerTenThousand =
-    asset?.royalties.reduce((sum, { value }) => sum + value, 0) || 0
-
-  const quantityAvailable = useMemo(
-    () => BigNumber.from(asset?.owned?.quantity || 0),
-    [asset],
-  )
-
-  const isCreator =
-    asset && address
-      ? isSameAddress(asset.creator.address.toLowerCase(), address)
-      : false
 
   const currencies = data?.currencies?.nodes
   const auctionCurrencies = useMemo(
@@ -153,17 +130,8 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     if (sale === SaleType.FIXED_PRICE)
       return (
         <SalesDirectForm
-          chainId={asset.chainId}
-          collectionAddress={asset.collectionAddress}
-          tokenId={asset.tokenId}
-          standard={asset.collection.standard}
+          asset={asset}
           currencies={currencies}
-          blockExplorer={blockExplorer}
-          royaltiesPerTenThousand={royaltiesPerTenThousand}
-          quantityAvailable={quantityAvailable}
-          signer={signer}
-          isCreator={isCreator}
-          offerValidity={OFFER_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
       )
@@ -176,19 +144,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
         />
       )
     invariant(true, 'Invalid sale type')
-  }, [
-    currencies,
-    auctionCurrencies,
-    asset,
-    sale,
-    blockExplorer,
-    royaltiesPerTenThousand,
-    quantityAvailable,
-    signer,
-    isCreator,
-    onCreated,
-    OFFER_VALIDITY_IN_SECONDS,
-  ])
+  }, [currencies, auctionCurrencies, asset, sale, onCreated])
 
   if (asset === null) return <Error statusCode={404} />
   return (

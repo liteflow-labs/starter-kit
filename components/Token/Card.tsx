@@ -119,9 +119,7 @@ const TokenCard: FC<Props> = ({
     if (sale)
       return (
         <SaleDirectCardFooter
-          saleId={sale.id}
-          unitPrice={sale.unitPrice}
-          currency={sale.currency}
+          sale={sale}
           numberOfSales={numberOfSales}
           hasMultiCurrency={hasMultiCurrency}
           isOwner={isOwner}

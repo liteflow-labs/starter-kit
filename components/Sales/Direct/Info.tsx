@@ -8,14 +8,15 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
+import useAccount from 'hooks/useAccount'
+import useSigner from 'hooks/useSigner'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, ReactElement, useCallback, useMemo } from 'react'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import { formatError, isSameAddress } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import CancelOfferModal from '../../Modal/CancelOffer'
@@ -38,11 +39,8 @@ type Sale = {
 export type Props = {
   assetId: string
   chainId: number
-  blockExplorer: BlockExplorer
   isOwner: boolean
   isHomepage: boolean
-  signer: Signer | undefined
-  currentAccount: string | null | undefined
   sales: Sale[]
   onOfferCanceled: (id: string) => Promise<void>
 }
@@ -51,17 +49,17 @@ export type Props = {
 const SaleDirectInfo: FC<Props> = ({
   assetId,
   chainId,
-  blockExplorer,
   isOwner,
   isHomepage,
   sales,
-  signer,
-  currentAccount,
   onOfferCanceled,
 }): ReactElement | null => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
   const [cancelOffer, { activeStep, transactionHash }] = useCancelOffer(signer)
   const toast = useToast()
+  const { address } = useAccount()
+  const blockExplorer = useBlockExplorer(chainId)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleCancel = useCallback(
@@ -85,9 +83,9 @@ const SaleDirectInfo: FC<Props> = ({
 
   const cancel = useMemo(() => {
     // Only display cancel when there is a single offer owned by the current account
-    if (!currentAccount) return null
+    if (!address) return null
     const currentAccountFirstSale = sales.find((x) =>
-      isSameAddress(x.maker.address, currentAccount),
+      isSameAddress(x.maker.address, address),
     )
     if (!currentAccountFirstSale) return null
 
@@ -156,16 +154,16 @@ const SaleDirectInfo: FC<Props> = ({
       </Flex>
     )
   }, [
-    currentAccount,
-    sales,
-    t,
     activeStep,
+    address,
+    blockExplorer,
+    chainId,
+    handleCancel,
     isOpen,
     onClose,
-    blockExplorer,
+    sales,
+    t,
     transactionHash,
-    handleCancel,
-    chainId,
   ])
 
   const create = useMemo(() => {

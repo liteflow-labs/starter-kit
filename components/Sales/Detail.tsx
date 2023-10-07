@@ -1,9 +1,7 @@
 import { Stack } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumberish } from '@ethersproject/bignumber'
 import { useAuctionStatus } from '@liteflow/react'
 import { FC } from 'react'
-import { BlockExplorer } from '../../hooks/useBlockExplorer'
 import SaleAuctionButton from './Auction/Button'
 import type { Props as SaleAuctionInfoProps } from './Auction/Info'
 import SaleAuctionInfo from './Auction/Info'
@@ -24,7 +22,6 @@ export type Props = {
   // Asset related props
   assetId: string
   chainId: number
-  blockExplorer: BlockExplorer
   isSingle: boolean
   currencies: SaleOpenSummaryProps['currencies']
 
@@ -40,7 +37,7 @@ export type Props = {
         })
     | undefined
   bestAuctionBid:
-    | (SaleAuctionSummaryProps['bestBid'] & {
+    | (SaleAuctionSummaryProps['bestAuctionBid'] & {
         amount: BigNumberish
       })
     | undefined
@@ -48,8 +45,6 @@ export type Props = {
   isHomepage: boolean
 
   // Owner related props
-  signer: Signer | undefined
-  currentAccount: string | null | undefined
   isOwner: boolean
   ownAllSupply: boolean
 
@@ -61,14 +56,11 @@ export type Props = {
 const SaleDetail: FC<Props> = ({
   assetId,
   chainId,
-  blockExplorer,
   currencies,
   directSales,
   auction,
   bestAuctionBid,
   isHomepage,
-  signer,
-  currentAccount,
   isSingle,
   isOwner,
   ownAllSupply,
@@ -86,19 +78,13 @@ const SaleDetail: FC<Props> = ({
             assetId={assetId}
             chainId={chainId}
             sales={directSales}
-            blockExplorer={blockExplorer}
             isHomepage={isHomepage}
-            signer={signer}
-            currentAccount={currentAccount}
             ownAllSupply={ownAllSupply}
             onOfferCanceled={onOfferCanceled}
           />
           <SaleDirectInfo
             assetId={assetId}
             chainId={chainId}
-            blockExplorer={blockExplorer}
-            signer={signer}
-            currentAccount={currentAccount}
             isHomepage={isHomepage}
             isOwner={isOwner}
             sales={directSales}
