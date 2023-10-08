@@ -1,21 +1,33 @@
 import { Flex, Text } from '@chakra-ui/react'
-import { ButtonHTMLAttributes, FC } from 'react'
+import { convertOwnership } from 'convert'
+import { ButtonHTMLAttributes, FC, useMemo } from 'react'
+import { AccountVerificationStatus } from '../../../graphql'
 import AccountImage from '../../Wallet/Image'
 
 export type Props = ButtonHTMLAttributes<any> & {
-  owners: {
-    address: string
-    image: string | null | undefined
-    name: string | null | undefined
-  }[]
-  numberOfOwners: number
+  ownerships: {
+    totalCount: number
+    nodes: {
+      ownerAddress: string
+      quantity: string
+      owner: {
+        address: string
+        name: string | null
+        image: string | null
+        verification: {
+          status: AccountVerificationStatus
+        } | null
+      }
+    }[]
+  }
 }
 
-const OwnersModalActivator: FC<Props> = ({
-  owners,
-  numberOfOwners,
-  ...props
-}) => {
+const OwnersModalActivator: FC<Props> = ({ ownerships, ...props }) => {
+  const numberOfOwners = ownerships.totalCount
+  const owners = useMemo(
+    () => ownerships.nodes.map(convertOwnership),
+    [ownerships],
+  )
   return (
     <Flex as="button" {...props}>
       {owners.slice(0, 4).map(({ address, image, name }, index) => (

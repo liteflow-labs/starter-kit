@@ -47,10 +47,8 @@ import TraitList from '../../../components/Trait/TraitList'
 import {
   convertAuctionFull,
   convertBidFull,
-  convertOwnership,
   convertSaleFull,
   convertTraits,
-  convertUser,
 } from '../../../convert'
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
@@ -163,17 +161,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   )
 
   const bestAuctionBid = useMemo(() => auction?.bids[0], [auction?.bids])
-
-  const creator = useMemo(
-    () =>
-      asset ? convertUser(asset.creator, asset.creator.address) : undefined,
-    [asset],
-  )
-
-  const owners = useMemo(
-    () => asset?.ownerships.nodes.map(convertOwnership) || [],
-    [asset],
-  )
 
   const bids = useMemo(
     () => auction?.bids || openBids,
@@ -355,18 +342,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           {!asset ? (
             <SkeletonProperty items={3} />
           ) : (
-            <TokenMetadata
-              chainId={asset.chainId}
-              collectionAddress={asset.collectionAddress}
-              tokenId={asset.tokenId}
-              creator={creator}
-              owners={owners}
-              numberOfOwners={asset.ownerships.totalCount}
-              saleSupply={BigNumber.from(asset.sales.totalAvailableQuantitySum)}
-              standard={asset.collection.standard}
-              totalSupply={BigNumber.from(asset.quantity)}
-              isOpenCollection={asset.collection.mintType === 'PUBLIC'}
-            />
+            <TokenMetadata asset={asset} />
           )}
           {!asset || !data.currencies?.nodes ? (
             <>

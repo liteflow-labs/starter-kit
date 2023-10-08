@@ -8,20 +8,11 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import { FC, useCallback, useMemo } from 'react'
-import {
-  convertAssetWithSupplies,
-  convertAuctionFull,
-  convertBid,
-  convertOwnership,
-  convertSaleFull,
-  convertUser,
-} from '../../convert'
 import { useFetchFeaturedAssetsQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
-import useSigner from '../../hooks/useSigner'
 import Slider from '../Slider/Slider'
 import TokenHeader from '../Token/Header'
 
@@ -31,7 +22,6 @@ type Props = {
 
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
   const { FEATURED_TOKEN } = useEnvironment()
-  const signer = useSigner()
   const { address } = useAccount()
   const featureAssetsQuery = useFetchFeaturedAssetsQuery({
     variables: {
@@ -61,22 +51,8 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
         ? featured.map((asset) => (
             <TokenHeader
               key={asset.id}
-              asset={convertAssetWithSupplies(asset)}
+              asset={asset}
               currencies={currencies}
-              auction={
-                asset.auctions.nodes[0]
-                  ? convertAuctionFull(asset.auctions.nodes[0])
-                  : undefined
-              }
-              bestAuctionBid={
-                asset.auctions.nodes[0]?.bestBid?.nodes[0]
-                  ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
-                  : undefined
-              }
-              sales={asset.sales.nodes.map(convertSaleFull)}
-              creator={convertUser(asset.creator, asset.creator.address)}
-              owners={asset.ownerships.nodes.map(convertOwnership)}
-              numberOfOwners={asset.ownerships.totalCount}
               isHomepage={true}
               onOfferCanceled={reloadInfo}
               onAuctionAccepted={reloadInfo}

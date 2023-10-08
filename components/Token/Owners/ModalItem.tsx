@@ -8,19 +8,17 @@ import WalletAddress from '../../Wallet/Address'
 import AccountImage from '../../Wallet/Image'
 
 export type Props = {
-  address: string
-  image: string | null | undefined
-  name: string | null | undefined
-  verified: boolean
-  quantity: string
+  owner: {
+    address: string
+    image: string | null | undefined
+    name: string | null | undefined
+    verified: boolean
+    quantity: string
+  }
 }
 
 const OwnersModalItem: FC<Props> = ({
-  address,
-  image,
-  name,
-  quantity,
-  verified,
+  owner: { address, image, name, verified, quantity },
 }) => {
   const { t } = useTranslation('components')
   return (

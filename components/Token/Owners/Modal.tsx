@@ -19,41 +19,31 @@ import { convertOwnership } from '../../../convert'
 import { useFetchOwnersLazyQuery } from '../../../graphql'
 import List, { ListItem } from '../../List/List'
 import Pagination from '../../Pagination/Pagination'
+import type { Props as OwnersModalActivatorProps } from './ModalActivator'
 import OwnersModalActivator from './ModalActivator'
 import OwnersModalItem from './ModalItem'
 
 export type Props = {
-  chainId: number
-  collectionAddress: string
-  tokenId: string
-  ownersPreview: {
-    address: string
-    image: string | null | undefined
-    name: string | null | undefined
-    verified: boolean
-    quantity: string
-  }[]
-  numberOfOwners: number
+  asset: {
+    chainId: number
+    collectionAddress: string
+    tokenId: string
+    ownerships: OwnersModalActivatorProps['ownerships']
+  }
 }
 
 const OwnerPaginationLimit = 8
 
-const OwnersModal: FC<Props> = ({
-  chainId,
-  collectionAddress,
-  tokenId,
-  ownersPreview,
-  numberOfOwners,
-}) => {
+const OwnersModal: FC<Props> = ({ asset }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
 
   const [fetch, { data }] = useFetchOwnersLazyQuery({
     variables: {
-      chainId,
-      collectionAddress,
-      tokenId,
+      chainId: asset.chainId,
+      collectionAddress: asset.collectionAddress,
+      tokenId: asset.tokenId,
       limit: OwnerPaginationLimit,
       offset: (page - 1) * OwnerPaginationLimit,
     },
@@ -72,8 +62,7 @@ const OwnersModal: FC<Props> = ({
   return (
     <>
       <OwnersModalActivator
-        owners={ownersPreview}
-        numberOfOwners={numberOfOwners}
+        ownerships={asset.ownerships}
         onClick={openOwners}
       />
       <Modal
@@ -99,7 +88,7 @@ const OwnersModal: FC<Props> = ({
                 px={2.5}
               >
                 <Text as="span" variant="caption" color="brand.500">
-                  {numberOfOwners}
+                  {asset.ownerships.totalCount}
                 </Text>
               </Flex>
             </Flex>
@@ -123,7 +112,7 @@ const OwnersModal: FC<Props> = ({
                 : data.ownerships?.nodes
                     .map(convertOwnership)
                     .map((owner) => (
-                      <OwnersModalItem key={owner.address} {...owner} />
+                      <OwnersModalItem key={owner.address} owner={owner} />
                     ))}
             </List>
           </ModalBody>
