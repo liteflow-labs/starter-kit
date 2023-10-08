@@ -13,7 +13,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
 import SkeletonForm from '../../../components/Skeleton/Form'
@@ -23,27 +23,11 @@ import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
 import { useFetchAccountAndCollectionQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
-import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useEnvironment from '../../../hooks/useEnvironment'
 import useLocalFileURL from '../../../hooks/useLocalFileURL'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
-import { values as traits } from '../../../traits'
 
-const Layout = ({ children }: { children: React.ReactNode }) => (
-  <SmallLayout>
-    <Head
-      title="Create Collectible"
-      description="Create Collectible securely stored on blockchain"
-    />
-    {children}
-  </SmallLayout>
-)
-
-const CreatePage: NextPage = ({}) => {
-  const { UNLOCKABLE_CONTENT, LAZYMINT, MAX_ROYALTIES } = useEnvironment()
-  const signer = useSigner()
+const CreatePage: NextPage = () => {
   const collectionAddress = useRequiredQueryParamSingle('collectionAddress')
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
@@ -64,7 +48,6 @@ const CreatePage: NextPage = ({}) => {
 
   const [formData, setFormData] = useState<Partial<FormData>>()
 
-  const blockExplorer = useBlockExplorer(chainId)
   const imageUrlLocal = useLocalFileURL(
     formData?.isPrivate || formData?.isAnimation
       ? formData?.preview
@@ -102,11 +85,6 @@ const CreatePage: NextPage = ({}) => {
     [account],
   )
 
-  const categories = useMemo(
-    () => (traits['Category'] || []).map((x) => ({ id: x, title: x })) || [],
-    [],
-  )
-
   const onCreated = useCallback(
     async (assetId: string) => {
       toast({
@@ -120,7 +98,11 @@ const CreatePage: NextPage = ({}) => {
 
   if (collection === null) return <Error statusCode={404} />
   return (
-    <Layout>
+    <SmallLayout>
+      <Head
+        title="Create Collectible"
+        description="Create Collectible securely stored on blockchain"
+      />
       <BackButton onClick={back} />
       <Heading as="h1" variant="title" color="brand.black" mt={6}>
         {!collection ? (
@@ -162,20 +144,14 @@ const CreatePage: NextPage = ({}) => {
             <SkeletonForm items={4} />
           ) : (
             <TokenFormCreate
-              signer={signer}
               collection={collection}
-              categories={categories}
-              blockExplorer={blockExplorer}
               onCreated={onCreated}
               onInputChange={setFormData}
-              activateUnlockableContent={UNLOCKABLE_CONTENT}
-              maxRoyalties={MAX_ROYALTIES}
-              activateLazyMint={LAZYMINT}
             />
           )}
         </GridItem>
       </Grid>
-    </Layout>
+    </SmallLayout>
   )
 }
 
