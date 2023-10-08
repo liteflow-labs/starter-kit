@@ -36,13 +36,11 @@ import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsReceivedQuery,
 } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
@@ -52,10 +50,8 @@ type Props = {
 
 const BidReceivedPage: NextPage<Props> = ({ now }) => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OfferOpenBuysOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
@@ -101,8 +97,6 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="bids"
         loginUrlForReferral={BASE_URL + '/login'}
@@ -237,12 +231,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                         />
                       </Td>
                       <Td>
-                        <Avatar
-                          address={item.maker.address}
-                          image={item.maker.image}
-                          name={item.maker.name}
-                          verified={item.maker.verified}
-                        />
+                        <Avatar user={item.maker} />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>

@@ -34,26 +34,22 @@ import {
   TradesOrderBy,
   useFetchUserTradePurchasedQuery,
 } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow } from '../../../../utils'
 
 const TradePurchasedPage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT, CHAINS } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<TradesOrderBy>('TIMESTAMP_DESC')
   const [changePage, changeLimit] = usePaginate()
-  const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
   const { data } = useFetchUserTradePurchasedQuery({
@@ -77,8 +73,6 @@ const TradePurchasedPage: NextPage = () => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="trades"
         loginUrlForReferral={BASE_URL + '/login'}
@@ -228,12 +222,7 @@ const TradePurchasedPage: NextPage = () => {
                         )}
                       </Td>
                       <Td>
-                        <Avatar
-                          address={item.seller.address}
-                          image={item.seller.image}
-                          name={item.seller.name}
-                          verified={item.seller.verified}
-                        />
+                        <Avatar user={item.seller} />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td>

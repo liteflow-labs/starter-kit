@@ -9,7 +9,6 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { useInvitation, useIsLoggedIn } from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
@@ -20,32 +19,31 @@ import linkify from 'components/Linkify/Linkify'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useEffect, useState } from 'react'
 import useAccount from '../../../hooks/useAccount'
+import useSigner from '../../../hooks/useSigner'
 import { formatError } from '../../../utils'
 import Link from '../../Link/Link'
 import WalletAddress from '../../Wallet/Address'
 
-const UserProfileInfo: FC<{
-  signer: Signer | undefined
+type Props = {
   address: string
-  name: string | null | undefined
-  description: string | null | undefined
-  twitter: string | null | undefined
-  instagram: string | null | undefined
-  website: string | null | undefined
-  verified: boolean
+  user: {
+    name: string | null
+    description: string | null
+    twitter: string | null
+    instagram: string | null
+    website: string | null
+    verified: boolean
+  }
   loginUrlForReferral?: string
-}> = ({
-  signer,
+}
+
+const UserProfileInfo: FC<Props> = ({
   address,
-  description,
-  instagram,
-  name,
-  twitter,
-  verified,
-  website,
+  user: { name, description, twitter, instagram, website, verified },
   loginUrlForReferral,
 }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
   const { create: createReferralLink, creating: creatingReferralLink } =
     useInvitation(signer)
   const { isLoggedIn } = useAccount()

@@ -33,22 +33,18 @@ import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import { convertSaleFull } from '../../../../convert'
 import { OffersOrderBy, useFetchUserFixedPriceQuery } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
 const FixedPricePage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OffersOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
@@ -94,8 +90,6 @@ const FixedPricePage: NextPage = () => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="offers"
         loginUrlForReferral={BASE_URL + '/login'}

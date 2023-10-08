@@ -35,22 +35,18 @@ import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsPlacedQuery,
 } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
 const BidPlacedPage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OfferOpenBuysOrderBy>('CREATED_AT_DESC')
   const [changePage, changeLimit] = usePaginate()
@@ -94,8 +90,6 @@ const BidPlacedPage: NextPage = () => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="bids"
         loginUrlForReferral={BASE_URL + '/login'}

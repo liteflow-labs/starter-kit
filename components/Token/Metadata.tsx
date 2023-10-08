@@ -73,12 +73,7 @@ const TokenMetadata: FC<Props> = ({ asset }) => {
               ? t('token.metadata.creator')
               : t('token.metadata.minted_by')}
           </Heading>
-          <Avatar
-            address={creator.address}
-            image={creator.image}
-            name={creator.name}
-            verified={creator.verified}
-          />
+          <Avatar user={creator} />
         </Stack>
       )}
       {numberOfOwners === 1 && owners[0] && (
@@ -86,12 +81,7 @@ const TokenMetadata: FC<Props> = ({ asset }) => {
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owner')}
           </Heading>
-          <Avatar
-            address={owners[0].address}
-            image={owners[0].image}
-            name={owners[0].name}
-            verified={owners[0].verified}
-          />
+          <Avatar user={owners[0]} />
         </Stack>
       )}
       {numberOfOwners > 1 && (
@@ -99,13 +89,7 @@ const TokenMetadata: FC<Props> = ({ asset }) => {
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owners')}
           </Heading>
-          <OwnersModal
-            chainId={asset.chainId}
-            collectionAddress={asset.collectionAddress}
-            tokenId={asset.tokenId}
-            ownersPreview={owners}
-            numberOfOwners={numberOfOwners}
-          />
+          <OwnersModal asset={asset} />
         </Stack>
       )}
       {asset.collection.standard === 'ERC721' && (

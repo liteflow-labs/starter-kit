@@ -140,10 +140,10 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                 <SkeletonImageAndText />
               ) : (
                 <Avatar
-                  address={offer.maker.address}
-                  image={offer.maker.image}
-                  name={offer.maker.name}
-                  verified={offer.maker.verification?.status === 'VALIDATED'}
+                  user={{
+                    ...offer.maker,
+                    verified: offer.maker.verification?.status === 'VALIDATED',
+                  }}
                 />
               )}
             </Stack>

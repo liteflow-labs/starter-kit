@@ -31,26 +31,22 @@ import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
 import { convertTrade } from '../../../../convert'
 import { TradesOrderBy, useFetchUserTradeSoldQuery } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow } from '../../../../utils'
 
 const TradeSoldPage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT, CHAINS } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<TradesOrderBy>('TIMESTAMP_DESC')
   const [changePage, changeLimit] = usePaginate()
-  const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
   const { data } = useFetchUserTradeSoldQuery({
@@ -74,8 +70,6 @@ const TradeSoldPage: NextPage = () => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="trades"
         loginUrlForReferral={BASE_URL + '/login'}
@@ -221,12 +215,7 @@ const TradeSoldPage: NextPage = () => {
                         )}
                       </Td>
                       <Td>
-                        <Avatar
-                          address={item.buyer.address}
-                          image={item.buyer.image}
-                          name={item.buyer.name}
-                          verified={item.buyer.verified}
-                        />
+                        <Avatar user={item.buyer} />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td>

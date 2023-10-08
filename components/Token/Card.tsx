@@ -222,13 +222,7 @@ const TokenCard: FC<Props> = ({
       <Flex justify="space-between" px={4} pt={4} pb={3} gap={2} align="start">
         <Stack spacing={0} w="full" overflow="hidden">
           {displayCreator ? (
-            <Avatar
-              address={creator.address}
-              image={creator.image}
-              name={creator.name}
-              verified={creator.verified}
-              size={5}
-            />
+            <Avatar user={creator} size={5} />
           ) : (
             <Link
               href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}

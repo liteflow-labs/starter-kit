@@ -8,12 +8,12 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { useUpdateAccount } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Account } from '../../../graphql'
+import useSigner from '../../../hooks/useSigner'
 import Dropzone from '../../Dropzone/Dropzone'
 
 type FormData = {
@@ -28,7 +28,6 @@ type FormData = {
 }
 
 type Props = {
-  signer: Signer | undefined
   account: Pick<
     Account,
     | 'cover'
@@ -44,8 +43,9 @@ type Props = {
   onError: (error: unknown) => void
 }
 
-const UserFormEdit: FC<Props> = ({ signer, account, onUpdated, onError }) => {
+const UserFormEdit: FC<Props> = ({ account, onUpdated, onError }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
   const {
     control,
     register,

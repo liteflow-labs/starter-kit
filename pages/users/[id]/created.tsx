@@ -21,7 +21,6 @@ import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
 import usePaginateQuery from '../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../hooks/useSigner'
 import LargeLayout from '../../../layouts/large'
 
 type Props = {
@@ -30,7 +29,6 @@ type Props = {
 
 const CreatedPage: NextPage<Props> = ({ now }) => {
   const { PAGINATION_LIMIT, BASE_URL } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { pathname, replace, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
@@ -78,8 +76,6 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="created"
         loginUrlForReferral={BASE_URL + '/login'}
