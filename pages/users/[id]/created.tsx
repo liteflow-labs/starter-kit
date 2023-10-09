@@ -4,17 +4,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../../convert'
-import {
-  AssetDetailFragment,
-  AssetsOrderBy,
-  useFetchCreatedAssetsQuery,
-} from '../../../graphql'
+import { AssetsOrderBy, useFetchCreatedAssetsQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
@@ -49,22 +39,7 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
     },
   })
 
-  const assets = useMemo(
-    () =>
-      data?.created?.nodes
-        .filter((x): x is AssetDetailFragment => !!x)
-        .map((x) => ({
-          ...convertAsset(x),
-          auction: x.auctions?.nodes[0]
-            ? convertAuctionWithBestBid(x.auctions.nodes[0])
-            : undefined,
-          creator: convertUser(x.creator, x.creator.address),
-          sale: convertSale(x.firstSale?.nodes[0]),
-          numberOfSales: x.firstSale.totalCount,
-          hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
-        })),
-    [data],
-  )
+  const assets = useMemo(() => data?.created?.nodes.filter((x) => !!x), [data])
 
   const changeOrder = useCallback(
     async (orderBy: any) => {

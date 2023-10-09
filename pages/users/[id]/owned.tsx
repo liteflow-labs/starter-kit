@@ -5,12 +5,6 @@ import { useCallback, useMemo } from 'react'
 import UserProfileTemplate from '../../../components/Profile'
 import TokenGrid from '../../../components/Token/Grid'
 import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../../convert'
-import {
   AssetDetailFragment,
   OwnershipsOrderBy,
   useFetchOwnedAssetsQuery,
@@ -53,17 +47,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
     () =>
       data?.owned?.nodes
         .map((x) => x.asset)
-        .filter((x): x is AssetDetailFragment => !!x)
-        .map((x) => ({
-          ...convertAsset(x),
-          auction: x.auctions?.nodes[0]
-            ? convertAuctionWithBestBid(x.auctions.nodes[0])
-            : undefined,
-          creator: convertUser(x.creator, x.creator.address),
-          sale: convertSale(x.firstSale?.nodes[0]),
-          numberOfSales: x.firstSale.totalCount,
-          hasMultiCurrency: x.firstSale.totalCurrencyDistinctCount > 1,
-        })),
+        .filter((x): x is AssetDetailFragment => !!x),
     [data],
   )
 
