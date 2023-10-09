@@ -1,5 +1,4 @@
 import { Flex, Text } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import Link from '../../Link/Link'
@@ -8,7 +7,7 @@ import Price from '../../Price/Price'
 type Props = {
   sale: {
     id: string
-    unitPrice: BigNumber
+    unitPrice: string
     currency: {
       decimals: number
       symbol: string

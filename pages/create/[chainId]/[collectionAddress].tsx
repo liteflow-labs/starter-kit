@@ -8,7 +8,6 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
@@ -70,7 +69,7 @@ const CreatePage: NextPage = () => {
         chainId: collection.chainId,
         name: collection.name,
       },
-      owned: BigNumber.from(0),
+      owned: null,
       unlockedContent: null,
     }
   }, [imageUrlLocal, animationUrlLocal, formData?.name, collection])
@@ -78,9 +77,13 @@ const CreatePage: NextPage = () => {
   const creator = useMemo(
     () => ({
       address: account?.address || '0x',
-      image: account?.image || undefined,
-      name: account?.name || undefined,
-      verified: account?.verification?.status === 'VALIDATED',
+      image: account?.image || null,
+      name: account?.name || null,
+      verification: account?.verification
+        ? {
+            status: account?.verification?.status,
+          }
+        : null,
     }),
     [account],
   )
@@ -129,12 +132,13 @@ const CreatePage: NextPage = () => {
               <SkeletonTokenCard />
             ) : (
               <TokenCard
-                asset={asset}
-                creator={creator}
-                auction={undefined}
-                sale={undefined}
-                numberOfSales={0}
-                hasMultiCurrency={false}
+                asset={{
+                  ...asset,
+                  creator,
+                  bestBid: { nodes: [] },
+                  auctions: undefined,
+                  firstSale: undefined,
+                }}
               />
             )}
           </Box>

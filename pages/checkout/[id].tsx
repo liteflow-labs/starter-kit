@@ -23,12 +23,6 @@ import SkeletonImageAndText from '../../components/Skeleton/ImageAndText'
 import SkeletonTokenCard from '../../components/Skeleton/TokenCard'
 import TokenCard from '../../components/Token/Card'
 import Avatar from '../../components/User/Avatar'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../convert'
 import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle'
@@ -110,24 +104,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {!asset ? (
-              <SkeletonTokenCard />
-            ) : (
-              <TokenCard
-                asset={convertAsset(asset)}
-                creator={convertUser(asset.creator, asset.creator.address)}
-                sale={convertSale(asset.firstSale.nodes[0])}
-                auction={
-                  asset.auctions.nodes[0]
-                    ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-                    : undefined
-                }
-                numberOfSales={asset.firstSale.totalCount}
-                hasMultiCurrency={
-                  asset.firstSale.totalCurrencyDistinctCount > 1
-                }
-              />
-            )}
+            {!asset ? <SkeletonTokenCard /> : <TokenCard asset={asset} />}
           </Box>
         </GridItem>
         <GridItem>

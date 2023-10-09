@@ -27,12 +27,6 @@ import SalesDirectForm from '../../../components/Sales/Direct/Form'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../components/Token/Card'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../../convert'
 import { useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
@@ -146,7 +140,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     invariant(true, 'Invalid sale type')
   }, [currencies, auctionCurrencies, asset, sale, onCreated])
 
-  if (asset === null) return <Error statusCode={404} />
+  if (!asset) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head
@@ -170,24 +164,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {!asset ? (
-              <SkeletonTokenCard />
-            ) : (
-              <TokenCard
-                asset={convertAsset(asset)}
-                creator={convertUser(asset.creator, asset.creator.address)}
-                sale={convertSale(asset.firstSale.nodes[0])}
-                auction={
-                  asset.auctions.nodes[0]
-                    ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-                    : undefined
-                }
-                numberOfSales={asset.firstSale.totalCount}
-                hasMultiCurrency={
-                  asset.firstSale.totalCurrencyDistinctCount > 1
-                }
-              />
-            )}
+            {!asset ? <SkeletonTokenCard /> : <TokenCard asset={asset} />}
           </Box>
         </GridItem>
         <GridItem>

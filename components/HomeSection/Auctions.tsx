@@ -1,10 +1,5 @@
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertUser,
-} from '../../convert'
 import { FetchAuctionsQuery, useFetchAuctionsQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
@@ -30,12 +25,12 @@ const AuctionsHomeSection: FC<Props> = ({ date }) => {
       ) => (
         <TokenCard
           key={item.id}
-          asset={convertAsset(item.asset)}
-          creator={convertUser(item.asset.creator, item.asset.creator.address)}
-          auction={convertAuctionWithBestBid(item)}
-          sale={undefined}
-          numberOfSales={0}
-          hasMultiCurrency={false}
+          asset={{
+            ...item.asset,
+            auctions: { nodes: [{ ...item }] },
+            bestBid: { nodes: [] },
+            firstSale: undefined,
+          }}
         />
       )}
       title={t('home.auctions')}

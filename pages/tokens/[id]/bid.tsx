@@ -25,12 +25,6 @@ import Price from '../../../components/Price/Price'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../components/Token/Card'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../../convert'
 import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
@@ -113,22 +107,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {!asset ? (
-              <SkeletonTokenCard />
-            ) : (
-              <TokenCard
-                asset={convertAsset(asset)}
-                creator={convertUser(asset.creator, asset.creator.address)}
-                auction={
-                  auction ? convertAuctionWithBestBid(auction) : undefined
-                }
-                sale={convertSale(asset.firstSale.nodes[0])}
-                numberOfSales={asset.firstSale.totalCount}
-                hasMultiCurrency={
-                  asset.firstSale.totalCurrencyDistinctCount > 1
-                }
-              />
-            )}
+            {!asset ? <SkeletonTokenCard /> : <TokenCard asset={asset} />}
           </Box>
         </GridItem>
         <GridItem>
