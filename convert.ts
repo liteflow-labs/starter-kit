@@ -20,7 +20,6 @@ import {
   Offer,
   OfferOpenBuy,
   OfferOpenSale,
-  OfferOpenSalesConnection,
   Ownership,
   Trade,
 } from './graphql'
@@ -88,47 +87,6 @@ export const convertAsset = (
     },
     owned: BigNumber.from(asset.owned?.quantity || 0),
     unlockedContent: asset.unlockedContent,
-    bestBid: bestBid
-      ? {
-          unitPrice: BigNumber.from(bestBid.unitPrice),
-          currency: bestBid.currency,
-        }
-      : undefined,
-  }
-}
-
-export const convertAssetWithSupplies = (
-  asset: Parameters<typeof convertAsset>[0] &
-    Pick<Asset, 'quantity'> & {
-      sales: Pick<OfferOpenSalesConnection, 'totalAvailableQuantitySum'>
-      collection: Pick<Collection, 'standard' | 'mintType'>
-    },
-): ReturnType<typeof convertAsset> & {
-  saleSupply: BigNumber
-  totalSupply: BigNumber
-  owned: BigNumber
-  collection: Pick<Collection, 'standard' | 'mintType'>
-} => {
-  const bestBid = asset.bestBid?.nodes[0]
-  return {
-    id: asset.id,
-    chainId: asset.chainId,
-    collectionAddress: asset.collectionAddress,
-    tokenId: asset.tokenId,
-    animationUrl: asset.animationUrl,
-    image: asset.image,
-    unlockedContent: asset.unlockedContent,
-    name: asset.name,
-    collection: {
-      chainId: asset.collection.chainId,
-      address: asset.collection.address,
-      name: asset.collection.name,
-      standard: asset.collection.standard,
-      mintType: asset.collection.mintType,
-    },
-    saleSupply: BigNumber.from(asset.sales.totalAvailableQuantitySum),
-    totalSupply: BigNumber.from(asset.quantity),
-    owned: BigNumber.from(asset.owned?.quantity || 0),
     bestBid: bestBid
       ? {
           unitPrice: BigNumber.from(bestBid.unitPrice),

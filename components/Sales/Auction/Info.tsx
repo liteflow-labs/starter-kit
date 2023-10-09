@@ -7,7 +7,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { BigNumberish } from '@ethersproject/bignumber'
 import { useAcceptAuction, useAuctionStatus } from '@liteflow/react'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
@@ -28,7 +28,7 @@ export type Props = {
     id: string
     endAt: Date
     expireAt: Date
-    reserveAmount: BigNumber
+    reserveAmount: string
     currency: {
       decimals: number
       image: string

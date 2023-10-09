@@ -10,7 +10,6 @@ import {
   StackProps,
   Text,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
@@ -23,10 +22,10 @@ type Props = StackProps & {
   bestAuctionBid: {
     maker: {
       address: string
-      image: string | null | undefined
-      name: string | null | undefined
+      image: string | null
+      name: string | null
     }
-    unitPrice: BigNumber
+    unitPrice: string
     currency: {
       decimals: number
       symbol: string

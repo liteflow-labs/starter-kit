@@ -6,9 +6,7 @@ import {
   SimpleGrid,
   Stack,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { FC, useMemo } from 'react'
-import { convertAuctionFull, convertBid, convertSaleFull } from '../../convert'
 import { FetchFeaturedAssetsQuery } from '../../graphql'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import Link from '../Link/Link'
@@ -35,34 +33,6 @@ const TokenHeader: FC<Props> = ({
   onAuctionAccepted,
 }) => {
   const media = useDetectAssetMedia(asset)
-
-  const auction = useMemo(
-    () =>
-      asset.auctions.nodes[0]
-        ? convertAuctionFull(asset.auctions.nodes[0])
-        : undefined,
-    [asset],
-  )
-  const bestAuctionBid = useMemo(
-    () =>
-      asset.auctions.nodes[0]?.bestBid?.nodes[0]
-        ? convertBid(asset.auctions.nodes[0]?.bestBid?.nodes[0])
-        : undefined,
-    [asset],
-  )
-  const isOwner = useMemo(
-    () => BigNumber.from(asset.owned?.quantity).gt('0'),
-    [asset],
-  )
-  const isSingle = useMemo(
-    () => asset.collection.standard === 'ERC721',
-    [asset],
-  )
-  const ownAllSupply = useMemo(
-    () => BigNumber.from(asset.owned?.quantity).gte(asset.quantity),
-    [asset],
-  )
-  const sales = useMemo(() => asset.sales.nodes.map(convertSaleFull), [asset])
 
   const chainCurrencies = useMemo(
     () =>
@@ -118,16 +88,9 @@ const TokenHeader: FC<Props> = ({
         </Stack>
         <TokenMetadata asset={asset} />
         <SaleDetail
-          assetId={asset.id}
-          chainId={asset.collection.chainId}
+          asset={asset}
           currencies={chainCurrencies}
           isHomepage={isHomepage}
-          isOwner={isOwner}
-          isSingle={isSingle}
-          ownAllSupply={ownAllSupply}
-          auction={auction}
-          bestAuctionBid={bestAuctionBid}
-          directSales={sales}
           onOfferCanceled={onOfferCanceled}
           onAuctionAccepted={onAuctionAccepted}
         />

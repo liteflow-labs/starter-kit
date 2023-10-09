@@ -1,52 +1,93 @@
 import { Stack } from '@chakra-ui/react'
-import { BigNumberish } from '@ethersproject/bignumber'
+import { BigNumber } from '@ethersproject/bignumber'
 import { useAuctionStatus } from '@liteflow/react'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
+import { convertSaleFull } from '../../convert'
+import { AccountVerificationStatus, Standard } from '../../graphql'
 import SaleAuctionButton from './Auction/Button'
-import type { Props as SaleAuctionInfoProps } from './Auction/Info'
 import SaleAuctionInfo from './Auction/Info'
-import SaleAuctionSummary, {
-  Props as SaleAuctionSummaryProps,
-} from './Auction/Summary'
-import type { Props as SaleDirectButtonProps } from './Direct/Button'
+import SaleAuctionSummary from './Auction/Summary'
 import SaleDirectButton from './Direct/Button'
-import type { Props as SaleDirectInfoProps } from './Direct/Info'
 import SaleDirectInfo from './Direct/Info'
 import SaleDirectSummary from './Direct/Summary'
 import SaleOpenButton from './Open/Button'
 import SaleOpenInfo from './Open/Info'
-import type { Props as SaleOpenSummaryProps } from './Open/Summary'
 import SaleOpenSummary from './Open/Summary'
 
 export type Props = {
-  // Asset related props
-  assetId: string
-  chainId: number
-  isSingle: boolean
-  currencies: SaleOpenSummaryProps['currencies']
-
-  // Sales related props
-  directSales: (SaleDirectInfoProps['sales'][0] &
-    SaleDirectButtonProps['sales'][0] & {
-      currency: { id: string; image: string }
-    })[]
-  auction:
-    | (SaleAuctionInfoProps['auction'] &
-        SaleAuctionSummaryProps['auction'] & {
-          winningOffer: { id: string } | null | undefined
-        })
-    | undefined
-  bestAuctionBid:
-    | (SaleAuctionSummaryProps['bestAuctionBid'] & {
-        amount: BigNumberish
-      })
-    | undefined
-
+  asset: {
+    id: string
+    quantity: string
+    collection: {
+      chainId: number
+      standard: Standard
+    }
+    owned: {
+      quantity: string
+    } | null
+    sales: {
+      nodes: {
+        id: string
+        unitPrice: string
+        expiredAt: Date | null
+        availableQuantity: string
+        maker: {
+          address: string
+          image: string | null
+          name: string | null
+          verification: {
+            status: AccountVerificationStatus
+          } | null
+        }
+        currency: {
+          id: string
+          decimals: number
+          image: string // not needed
+          symbol: string
+        }
+      }[]
+    }
+    auctions: {
+      nodes: {
+        id: string
+        endAt: Date
+        expireAt: Date
+        reserveAmount: string
+        winningOffer:
+          | {
+              id: string
+            }
+          | null
+          | undefined
+        bestBid: {
+          nodes: {
+            amount: string
+            unitPrice: string
+            currency: {
+              decimals: number
+              symbol: string
+              image: string
+            }
+            maker: {
+              address: string
+              image: string | null
+              name: string | null
+            }
+          }[]
+        }
+        currency: {
+          decimals: number
+          image: string
+          symbol: string
+        }
+      }[]
+    }
+  }
+  currencies: {
+    chainId: number
+    image: string
+  }[]
   isHomepage: boolean
-
-  // Owner related props
-  isOwner: boolean
-  ownAllSupply: boolean
 
   // Callbacks
   onOfferCanceled: (id: string) => Promise<void>
@@ -54,20 +95,35 @@ export type Props = {
 }
 
 const SaleDetail: FC<Props> = ({
-  assetId,
-  chainId,
+  asset,
   currencies,
-  directSales,
-  auction,
-  bestAuctionBid,
   isHomepage,
-  isSingle,
-  isOwner,
-  ownAllSupply,
   onOfferCanceled,
   onAuctionAccepted,
 }) => {
+  const auction = asset.auctions.nodes[0]
+  const bestAuctionBid = auction?.bestBid?.nodes[0]
   const { ended, isValid } = useAuctionStatus(auction, bestAuctionBid)
+
+  const isOwner = useMemo(
+    () => BigNumber.from(asset.owned?.quantity || 0).gt('0'),
+    [asset.owned?.quantity],
+  )
+  const ownAllSupply = useMemo(
+    () =>
+      BigNumber.from(asset.owned?.quantity || 0).gte(
+        BigNumber.from(asset.quantity || '0'),
+      ),
+    [asset.owned?.quantity, asset.quantity],
+  )
+  const isSingle = useMemo(
+    () => asset.collection.standard === 'ERC721',
+    [asset.collection.standard],
+  )
+  const directSales = useMemo(
+    () => asset.sales.nodes.map(convertSaleFull) || [],
+    [asset.sales.nodes],
+  )
 
   return (
     <Stack spacing={8}>
@@ -75,16 +131,16 @@ const SaleDetail: FC<Props> = ({
         <>
           <SaleDirectSummary sales={directSales} isSingle={isSingle} />
           <SaleDirectButton
-            assetId={assetId}
-            chainId={chainId}
+            assetId={asset.id}
+            chainId={asset.collection.chainId}
             sales={directSales}
             isHomepage={isHomepage}
             ownAllSupply={ownAllSupply}
             onOfferCanceled={onOfferCanceled}
           />
           <SaleDirectInfo
-            assetId={assetId}
-            chainId={chainId}
+            assetId={asset.id}
+            chainId={asset.collection.chainId}
             isHomepage={isHomepage}
             isOwner={isOwner}
             sales={directSales}
@@ -99,14 +155,14 @@ const SaleDetail: FC<Props> = ({
             isOwner={isOwner}
           />
           <SaleAuctionButton
-            assetId={assetId}
+            assetId={asset.id}
             isEnded={ended}
             isOwner={isOwner}
             isHomepage={isHomepage}
           />
           <SaleAuctionInfo
-            assetId={assetId}
-            chainId={chainId}
+            assetId={asset.id}
+            chainId={asset.collection.chainId}
             auction={auction}
             bestAuctionBid={bestAuctionBid}
             isOwner={isOwner}
@@ -118,12 +174,12 @@ const SaleDetail: FC<Props> = ({
         <>
           <SaleOpenSummary currencies={currencies} />
           <SaleOpenButton
-            assetId={assetId}
+            assetId={asset.id}
             isHomepage={isHomepage}
             ownAllSupply={ownAllSupply}
           />
           <SaleOpenInfo
-            assetId={assetId}
+            assetId={asset.id}
             isHomepage={isHomepage}
             isOwner={isOwner}
           />

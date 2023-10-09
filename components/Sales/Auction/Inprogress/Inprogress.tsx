@@ -1,5 +1,4 @@
 import { Flex, Heading, Icon } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
@@ -17,7 +16,7 @@ type Props = {
   }
   bestAuctionBid:
     | {
-        unitPrice: BigNumber
+        unitPrice: string
         currency: {
           decimals: number
           symbol: string

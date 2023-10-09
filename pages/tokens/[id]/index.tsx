@@ -24,6 +24,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useAuctionStatus } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import linkify from 'components/Linkify/Linkify'
@@ -44,12 +45,7 @@ import SkeletonProperty from '../../../components/Skeleton/Property'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
 import TraitList from '../../../components/Trait/TraitList'
-import {
-  convertAuctionFull,
-  convertBidFull,
-  convertSaleFull,
-  convertTraits,
-} from '../../../convert'
+import { convertTraits } from '../../../convert'
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
@@ -97,6 +93,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
 
   const asset = data?.asset
 
+  const auction = asset?.auctions.nodes[0]
+  const bestAuctionBid = auction?.bestBid?.nodes[0]
+  const { isValid } = useAuctionStatus(auction, bestAuctionBid)
+
   const finalMedia = useDetectAssetMedia(asset)
   const previewMedia = useDetectAssetMedia(
     asset && { ...asset, unlockedContent: null },
@@ -104,20 +104,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
 
   const blockExplorer = useBlockExplorer(chainId)
 
-  const totalOwned = useMemo(
-    () => BigNumber.from(asset?.owned?.quantity || 0),
-    [asset],
+  const isOwner = useMemo(
+    () => BigNumber.from(asset?.owned?.quantity || 0).gt('0'),
+    [asset?.owned?.quantity],
   )
 
-  const isOwner = useMemo(() => totalOwned.gt('0'), [totalOwned])
-  const ownAllSupply = useMemo(
-    () => totalOwned.gte(BigNumber.from(asset?.quantity || '0')),
-    [asset, totalOwned],
-  )
-  const isSingle = useMemo(
-    () => asset?.collection.standard === 'ERC721',
-    [asset],
-  )
   const chain = useMemo(
     () => CHAINS.find((x) => x.id === chainId),
     [CHAINS, chainId],
@@ -138,33 +129,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [blockExplorer, collectionAddress, tokenId],
   )
 
-  const auction = useMemo(() => {
-    const first = asset?.auctions.nodes[0]
-    if (!first) return
-    const auction = {
-      ...convertAuctionFull(first),
-      bids: first.offers.nodes.map(convertBidFull),
-    }
-    if (!auction) return
-    // check if auction is expired
-    if (new Date(auction.expireAt) <= new Date()) return
-    // check if auction has a winning offer
-    if (!!auction.winningOffer?.id) return
-    return auction
-  }, [asset])
-
-  const openBids = useMemo(() => asset?.bids.nodes.map(convertBidFull), [asset])
-
-  const directSales = useMemo(
-    () => asset?.sales.nodes.map(convertSaleFull) || [],
-    [asset],
-  )
-
-  const bestAuctionBid = useMemo(() => auction?.bids[0], [auction?.bids])
-
   const bids = useMemo(
-    () => auction?.bids || openBids,
-    [auction?.bids, openBids],
+    () => (auction && isValid ? auction.bestBid.nodes : asset?.bids.nodes),
+    [asset?.bids.nodes, auction, isValid],
   )
 
   const refresh = useCallback(async () => {
@@ -351,16 +318,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             </>
           ) : (
             <SaleDetail
-              assetId={asset.id}
-              chainId={chainId}
+              asset={asset}
               currencies={data.currencies?.nodes}
-              isSingle={isSingle}
               isHomepage={false}
-              isOwner={isOwner}
-              auction={auction}
-              bestAuctionBid={bestAuctionBid}
-              directSales={directSales}
-              ownAllSupply={ownAllSupply}
               onOfferCanceled={refresh}
               onAuctionAccepted={refresh}
             />
@@ -508,13 +468,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               <Box h={96} overflowY="auto" py={6}>
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
+                    asset={asset}
                     bids={bids}
-                    chainId={chainId}
-                    isSingle={isSingle}
                     preventAcceptation={!isOwner || !!auction}
                     onAccepted={refresh}
                     onCanceled={refresh}
-                    totalOwned={totalOwned}
                   />
                 )}
                 {query.filter === AssetTabs.history && (

@@ -1,4 +1,3 @@
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { useAuctionStatus } from '@liteflow/react'
 import { FC } from 'react'
 import SaleAuctionIncompleteNoBids from './Incomplete/FailedNoBids'
@@ -10,7 +9,7 @@ export type Props = {
   auction: {
     endAt: Date
     expireAt: Date
-    reserveAmount: BigNumber
+    reserveAmount: string
     currency: {
       decimals: number
       image: string
@@ -20,8 +19,8 @@ export type Props = {
   }
   bestAuctionBid:
     | {
-        amount: BigNumberish
-        unitPrice: BigNumber
+        amount: string
+        unitPrice: string
         currency: {
           decimals: number
           symbol: string
@@ -29,8 +28,8 @@ export type Props = {
         }
         maker: {
           address: string
-          image: string | null | undefined
-          name: string | null | undefined
+          image: string | null
+          name: string | null
         }
       }
     | undefined
