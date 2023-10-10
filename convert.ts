@@ -7,7 +7,6 @@ import {
   Account,
   AccountVerification,
   Collection,
-  CollectionStats,
   Currency,
   Drop,
   Maybe,
@@ -162,39 +161,6 @@ export const convertDropEnded = (
       },
     },
     currency: latestDrop.currency,
-  }
-}
-
-export const convertCollection = (
-  collection: Pick<
-    Collection,
-    'address' | 'name' | 'image' | 'cover' | 'chainId'
-  > & {
-    floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
-  } & {
-    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
-  },
-): {
-  chainId: number
-  address: string
-  name: string
-  image: string | null
-  cover: string | null
-  totalVolume: string
-  totalVolumeCurrencySymbol: string
-  floorPrice: string | null
-  floorPriceCurrencySymbol: string | null
-} => {
-  return {
-    chainId: collection.chainId,
-    address: collection.address,
-    name: collection.name,
-    image: collection.image,
-    cover: collection.cover,
-    totalVolume: collection.totalVolume?.valueInRef,
-    totalVolumeCurrencySymbol: collection.totalVolume?.refCode,
-    floorPrice: collection.floorPrice?.valueInRef || null,
-    floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
   }
 }
 

@@ -10,7 +10,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { convertCollection } from 'convert'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
@@ -20,6 +19,7 @@ import {
   useSearchCollectionQuery,
 } from '../../../graphql'
 import { Filter } from '../../../hooks/useAssetFilterFromQuery'
+import type { Props as CollectionCardProps } from '../../Collection/CollectionCard'
 import CollectionListItem from '../../Collection/ListItem'
 import List, { ListItem } from '../../List/List'
 import SearchInput from '../../SearchInput'
@@ -60,7 +60,8 @@ const FilterByCollection: FC<Props> = ({
   const collections = collectionData?.collections?.nodes
 
   const collection = useMemo(() => {
-    if (selectedCollection) return selectedCollection
+    if (selectedCollection)
+      return selectedCollection as CollectionCardProps['collection']
     if (!filterResult.collection) {
       onCollectionChange(undefined)
       return
@@ -104,7 +105,7 @@ const FilterByCollection: FC<Props> = ({
               textAlign="left"
               cursor="pointer"
               onClick={() => onFilterChange({ collection: null, traits: [] })}
-              collection={convertCollection(collection as any)}
+              collection={collection}
               closable
             />
           )}
@@ -146,9 +147,9 @@ const FilterByCollection: FC<Props> = ({
                   />
                 ))
             ) : collections.length > 0 ? (
-              collections.map((x) => (
+              collections.map((collection) => (
                 <CollectionListItem
-                  key={`${x.chainId}-${x.address}`}
+                  key={`${collection.chainId}-${collection.address}`}
                   cursor={'pointer'}
                   rounded="xl"
                   transition={'background-color 0.3s ease-in-out'}
@@ -157,11 +158,11 @@ const FilterByCollection: FC<Props> = ({
                   }}
                   onClick={() =>
                     onFilterChange({
-                      collection: `${x.chainId}-${x.address}`,
+                      collection: `${collection.chainId}-${collection.address}`,
                       traits: [],
                     })
                   }
-                  collection={convertCollection(x)}
+                  collection={collection}
                 />
               ))
             ) : (

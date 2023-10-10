@@ -17,7 +17,6 @@ import {
 import CollectionCard from 'components/Collection/CollectionCard'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
-import { convertCollection } from 'convert'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -204,10 +203,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   }
                 >
                   {collections.map((collection, i) => (
-                    <CollectionCard
-                      collection={convertCollection(collection)}
-                      key={i}
-                    />
+                    <CollectionCard collection={collection} key={i} />
                   ))}
                 </SimpleGrid>
               ) : (
