@@ -2,7 +2,6 @@ import { Flex, SimpleGrid, Skeleton, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
-import { useMemo } from 'react'
 import CollectionHeader from '../../../../components/Collection/CollectionHeader'
 import CollectionHeaderSkeleton from '../../../../components/Collection/CollectionHeaderSkeleton'
 import DropDetailSkeleton from '../../../../components/Drop/DropDetailSkeleton'
@@ -10,7 +9,6 @@ import DropMintSchedule from '../../../../components/Drop/DropMintSchedule'
 import DropProgress from '../../../../components/Drop/DropProgress'
 import DropMintForm from '../../../../components/Drop/MintForm'
 import Head from '../../../../components/Head'
-import { convertDropDetail } from '../../../../convert'
 import {
   useFetchCollectionDropDetailQuery,
   useFetchCollectionDropsQuery,
@@ -46,11 +44,7 @@ const DropDetail: NextPage = () => {
       chainId,
     },
   })
-
-  const drops = useMemo(() => {
-    if (!dropsData?.drops) return []
-    return dropsData.drops.nodes.map((drop) => convertDropDetail(drop))
-  }, [dropsData?.drops])
+  const drops = dropsData?.drops?.nodes
 
   if (!collectionLoading && !collection) return <Error statusCode={404} />
   return (
@@ -81,7 +75,7 @@ const DropDetail: NextPage = () => {
           </Flex>
         </>
       )}
-      {!dropsData ? (
+      {!drops ? (
         <DropDetailSkeleton />
       ) : (
         <>

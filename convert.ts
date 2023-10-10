@@ -7,7 +7,6 @@ import {
   Account,
   AccountVerification,
   Collection,
-  Currency,
   Drop,
   Maybe,
 } from './graphql'
@@ -161,59 +160,5 @@ export const convertDropEnded = (
       },
     },
     currency: latestDrop.currency,
-  }
-}
-
-export const convertDropDetail = (
-  drop: Pick<
-    Drop,
-    | 'id'
-    | 'name'
-    | 'startDate'
-    | 'endDate'
-    | 'unitPrice'
-    | 'minted'
-    | 'supply'
-    | 'maxQuantityPerWallet'
-    | 'isAllowed'
-    | 'maxQuantity'
-  > & {
-    currency: Pick<Currency, 'id' | 'image' | 'symbol' | 'decimals'>
-  },
-): {
-  id: string
-  name: string
-  startDate: Date
-  endDate: Date
-  unitPrice: string
-  minted: string
-  supply: string | null
-  maxQuantityPerWallet: string | null
-  isAllowed: boolean
-  maxQuantity: string | null
-  currency: {
-    id: string
-    decimals: number
-    symbol: string
-    image: string
-  }
-} => {
-  return {
-    id: drop.id,
-    name: drop.name,
-    startDate: drop.startDate,
-    endDate: drop.endDate,
-    unitPrice: drop.unitPrice,
-    minted: drop.minted,
-    supply: drop.supply || null,
-    maxQuantityPerWallet: drop.maxQuantityPerWallet || null,
-    isAllowed: drop.isAllowed,
-    maxQuantity: drop.maxQuantity || null,
-    currency: {
-      id: drop.currency.id,
-      decimals: drop.currency.decimals,
-      symbol: drop.currency.symbol,
-      image: drop.currency.image,
-    },
   }
 }
