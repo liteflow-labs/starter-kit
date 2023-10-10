@@ -1,9 +1,11 @@
 import { Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import invariant from 'ts-invariant'
-import { convertHistories } from '../../convert'
-import { useFetchAssetHistoryQuery } from '../../graphql'
+import {
+  FetchAssetHistoryQuery,
+  useFetchAssetHistoryQuery,
+} from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import List from '../List/List'
 import SkeletonList from '../Skeleton/List'
@@ -24,6 +26,7 @@ type IProps = {
 
 const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
   const { t } = useTranslation('components')
+  const blockExplorer = useBlockExplorer(chainId)
 
   const { data: historyData } = useFetchAssetHistoryQuery({
     variables: {
@@ -32,27 +35,19 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
       tokenId,
     },
   })
-  const blockExplorer = useBlockExplorer(chainId)
-
-  const histories = useMemo(
-    () => historyData?.asset?.histories.nodes.map(convertHistories),
-    [historyData],
-  )
+  const histories = historyData?.asset?.histories.nodes
 
   const ListItem = (
-    history: ReturnType<typeof convertHistories>,
+    history: NonNullable<
+      FetchAssetHistoryQuery['asset']
+    >['histories']['nodes'][0],
     i: number,
   ) => {
     switch (history.action) {
       case 'LISTING':
         invariant(history.unitPrice, 'unitPrice is required')
         return (
-          <ListingListItem
-            {...history}
-            key={i}
-            currency={history.currency}
-            unitPrice={history.unitPrice}
-          />
+          <ListingListItem {...history} key={i} unitPrice={history.unitPrice} />
         )
 
       case 'PURCHASE':
@@ -62,7 +57,6 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
           <PurchaseListItem
             {...history}
             key={i}
-            currency={history.currency}
             unitPrice={history.unitPrice}
             toAddress={history.toAddress}
             blockExplorer={blockExplorer}

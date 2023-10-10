@@ -6,8 +6,6 @@ import invariant from 'ts-invariant'
 import {
   Account,
   AccountVerification,
-  AssetHistory,
-  AssetHistoryAction,
   AssetTrait,
   Collection,
   CollectionStats,
@@ -445,75 +443,3 @@ export const convertOwnership = (
   ...convertUser(ownership.owner, ownership.ownerAddress),
   quantity: ownership.quantity,
 })
-
-export const convertHistories = (
-  history: Pick<
-    AssetHistory,
-    | 'action'
-    | 'date'
-    | 'unitPrice'
-    | 'quantity'
-    | 'fromAddress'
-    | 'toAddress'
-    | 'transactionHash'
-  > & {
-    from:
-      | (Pick<Account, 'image' | 'name'> & {
-          verification: Maybe<Pick<AccountVerification, 'status'>>
-        })
-      | null
-    to:
-      | (Pick<Account, 'image' | 'name'> & {
-          verification: Maybe<Pick<AccountVerification, 'status'>>
-        })
-      | null
-    currency: Maybe<Pick<Currency, 'decimals' | 'symbol'>>
-  },
-): {
-  action: AssetHistoryAction
-  date: Date
-  unitPrice: BigNumber | null
-  quantity: BigNumber
-  transactionHash: string | null
-  fromAddress: string
-  from: {
-    name: string | null
-    image: string | null
-    verified: boolean
-  } | null
-  toAddress: string | null
-  to: {
-    name: string | null
-    image: string | null
-    verified: boolean
-  } | null
-  currency: {
-    decimals: number
-    symbol: string
-  } | null
-} => {
-  return {
-    action: history.action,
-    date: new Date(history.date),
-    unitPrice: (history.unitPrice && BigNumber.from(history.unitPrice)) || null,
-    quantity: BigNumber.from(history.quantity),
-    fromAddress: history.fromAddress,
-    transactionHash: history.transactionHash,
-    from: history.from
-      ? {
-          image: history.from.image,
-          name: history.from.name,
-          verified: history.from.verification?.status === 'VALIDATED',
-        }
-      : null,
-    toAddress: history.toAddress,
-    to: history.to
-      ? {
-          image: history.to.image,
-          name: history.to.name,
-          verified: history.to.verification?.status === 'VALIDATED',
-        }
-      : null,
-    currency: history.currency,
-  }
-}
