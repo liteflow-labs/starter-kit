@@ -17,7 +17,6 @@ import {
   Drop,
   Maybe,
   Offer,
-  OfferOpenBuy,
   OfferOpenSale,
   Ownership,
 } from './graphql'
@@ -644,41 +643,5 @@ export const convertSaleFull = (
     },
     expiredAt: new Date(sale.expiredAt),
     availableQuantity: BigNumber.from(sale.availableQuantity),
-  }
-}
-
-export const convertBid = (
-  bid: Pick<OfferOpenBuy, 'unitPrice' | 'amount'> & {
-    currency: Pick<Currency, 'decimals' | 'symbol' | 'id' | 'image'>
-    maker: Pick<Account, 'address' | 'name' | 'image'> & {
-      verification: Maybe<Pick<AccountVerification, 'status'>>
-    }
-  },
-): {
-  maker: {
-    address: string
-    name: string | null | undefined
-    image: string | null | undefined
-    verified: boolean
-  }
-  amount: BigNumber
-  unitPrice: BigNumber
-  currency: {
-    id: string
-    decimals: number
-    symbol: string
-    image: string
-  }
-} => {
-  return {
-    amount: BigNumber.from(bid.amount),
-    maker: {
-      address: bid.maker.address,
-      image: bid.maker.image,
-      name: bid.maker.name,
-      verified: bid.maker.verification?.status === 'VALIDATED',
-    },
-    unitPrice: BigNumber.from(bid.unitPrice),
-    currency: bid.currency,
   }
 }
