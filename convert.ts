@@ -13,7 +13,6 @@ import {
   Currency,
   Drop,
   Maybe,
-  Ownership,
 } from './graphql'
 
 export type FileDef = {
@@ -427,19 +426,4 @@ export const convertFullUser = (
   instagram: user?.instagram || null,
   twitter: user?.twitter || null,
   website: user?.website || null,
-})
-
-export const convertOwnership = (
-  ownership: Pick<Ownership, 'ownerAddress' | 'quantity'> & {
-    owner:
-      | (Pick<Account, 'address' | 'image' | 'name'> & {
-          verification: Maybe<Pick<AccountVerification, 'status'>>
-        })
-      | null
-  },
-): Required<ReturnType<typeof convertUser>> & {
-  quantity: string
-} => ({
-  ...convertUser(ownership.owner, ownership.ownerAddress),
-  quantity: ownership.quantity,
 })

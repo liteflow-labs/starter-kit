@@ -15,11 +15,12 @@ import {
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useState } from 'react'
-import { convertOwnership } from '../../../convert'
-import { useFetchOwnersLazyQuery } from '../../../graphql'
+import {
+  AccountVerificationStatus,
+  useFetchOwnersLazyQuery,
+} from '../../../graphql'
 import List, { ListItem } from '../../List/List'
 import Pagination from '../../Pagination/Pagination'
-import type { Props as OwnersModalActivatorProps } from './ModalActivator'
 import OwnersModalActivator from './ModalActivator'
 import OwnersModalItem from './ModalItem'
 
@@ -28,7 +29,21 @@ export type Props = {
     chainId: number
     collectionAddress: string
     tokenId: string
-    ownerships: OwnersModalActivatorProps['ownerships']
+    ownerships: {
+      totalCount: number
+      nodes: {
+        ownerAddress: string
+        quantity: string
+        owner: {
+          address: string
+          name: string | null
+          image: string | null
+          verification: {
+            status: AccountVerificationStatus
+          } | null
+        }
+      }[]
+    }
   }
 }
 
@@ -109,11 +124,12 @@ const OwnersModal: FC<Props> = ({ asset }) => {
                         label={<SkeletonText noOfLines={2} width="32" />}
                       />
                     ))
-                : data.ownerships?.nodes
-                    .map(convertOwnership)
-                    .map((owner) => (
-                      <OwnersModalItem key={owner.address} owner={owner} />
-                    ))}
+                : data.ownerships?.nodes.map((ownership) => (
+                    <OwnersModalItem
+                      key={ownership.ownerAddress}
+                      ownership={ownership}
+                    />
+                  ))}
             </List>
           </ModalBody>
           <ModalFooter>

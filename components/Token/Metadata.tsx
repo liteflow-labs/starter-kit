@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { IoImageOutline } from '@react-icons/all-files/io5/IoImageOutline'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
-import { convertOwnership, convertUser } from '../../convert'
+import { convertUser } from '../../convert'
 import { AccountVerificationStatus, MintType, Standard } from '../../graphql'
 import Avatar from '../User/Avatar'
 import OwnersModal from './Owners/Modal'
@@ -59,10 +59,7 @@ const TokenMetadata: FC<Props> = ({ asset }) => {
     () => convertUser(asset.creator, asset.creator.address),
     [asset],
   )
-  const owners = useMemo(
-    () => asset.ownerships.nodes.map(convertOwnership),
-    [asset],
-  )
+  const owners = asset.ownerships.nodes
 
   return (
     <Flex wrap="wrap" rowGap={6} columnGap={8}>
@@ -81,7 +78,7 @@ const TokenMetadata: FC<Props> = ({ asset }) => {
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owner')}
           </Heading>
-          <Avatar user={owners[0]} />
+          <Avatar user={convertUser(owners[0].owner, owners[0].ownerAddress)} />
         </Stack>
       )}
       {numberOfOwners > 1 && (
