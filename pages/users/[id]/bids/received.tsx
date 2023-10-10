@@ -15,6 +15,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { useIsLoggedIn } from '@liteflow/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -31,7 +32,6 @@ import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
-import { convertBidFull } from '../../../../convert'
 import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsReceivedQuery,
@@ -69,15 +69,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
       now: date,
     },
   })
-
-  const bids = useMemo(
-    () =>
-      data?.bids?.nodes.map((x) => ({
-        ...convertBidFull(x),
-        asset: x.asset,
-      })),
-    [data],
-  )
+  const bids = data?.bids?.nodes
 
   const onAccepted = useCallback(async () => {
     toast({
@@ -208,14 +200,14 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                                 </Tag>
                               )}
                             </Text>
-                            {item.availableQuantity.gt(1) && (
+                            {BigNumber.from(item.availableQuantity).gt(1) && (
                               <Text
                                 as="span"
                                 variant="caption"
                                 color="gray.500"
                               >
                                 {t('user.bid-received.requested', {
-                                  value: item.availableQuantity.toString(),
+                                  value: item.availableQuantity,
                                 })}
                               </Text>
                             )}
@@ -226,12 +218,20 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                         <Text
                           as={Price}
                           noOfLines={1}
-                          amount={item.unitPrice.mul(item.availableQuantity)}
+                          amount={BigNumber.from(item.unitPrice).mul(
+                            item.availableQuantity,
+                          )}
                           currency={item.currency}
                         />
                       </Td>
                       <Td>
-                        <Avatar user={item.maker} />
+                        <Avatar
+                          user={{
+                            ...item.maker,
+                            verified:
+                              item.maker.verification?.status === 'VALIDATED',
+                          }}
+                        />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>

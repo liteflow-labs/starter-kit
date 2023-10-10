@@ -15,12 +15,13 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { useIsLoggedIn } from '@liteflow/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import CancelOfferButton from '../../../../components/Button/CancelOffer'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
@@ -30,7 +31,6 @@ import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
-import { convertBidFull } from '../../../../convert'
 import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsPlacedQuery,
@@ -62,15 +62,7 @@ const BidPlacedPage: NextPage = () => {
       orderBy,
     },
   })
-
-  const bids = useMemo(
-    () =>
-      data?.bids?.nodes.map((x) => ({
-        ...convertBidFull(x),
-        asset: x.asset,
-      })),
-    [data],
-  )
+  const bids = data?.bids?.nodes
 
   const onCanceled = useCallback(async () => {
     toast({
@@ -201,14 +193,14 @@ const BidPlacedPage: NextPage = () => {
                                 </Tag>
                               )}
                             </Text>
-                            {item.availableQuantity.gt(1) && (
+                            {BigNumber.from(item.availableQuantity).gt(1) && (
                               <Text
                                 as="span"
                                 variant="caption"
                                 color="gray.500"
                               >
                                 {t('user.bid-placed.requested', {
-                                  value: item.availableQuantity.toString(),
+                                  value: item.availableQuantity,
                                 })}
                               </Text>
                             )}
@@ -219,12 +211,14 @@ const BidPlacedPage: NextPage = () => {
                         <Text
                           as={Price}
                           noOfLines={1}
-                          amount={item.unitPrice.mul(item.availableQuantity)}
+                          amount={BigNumber.from(item.unitPrice).mul(
+                            item.availableQuantity,
+                          )}
                           currency={item.currency}
                         />
                       </Td>
                       <Td>
-                        {item.expiredAt && item.expiredAt <= new Date()
+                        {item.expiredAt <= new Date()
                           ? t('user.bid-placed.status.expired')
                           : t('user.bid-placed.status.active')}
                       </Td>
@@ -232,7 +226,7 @@ const BidPlacedPage: NextPage = () => {
                       <Td isNumeric>
                         {ownerLoggedIn && (
                           <>
-                            {!item.expiredAt || item.expiredAt > new Date() ? (
+                            {item.expiredAt > new Date() ? (
                               <CancelOfferButton
                                 offer={item}
                                 title={t('user.bid-placed.cancel.title')}

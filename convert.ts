@@ -682,25 +682,3 @@ export const convertBid = (
     currency: bid.currency,
   }
 }
-
-export const convertBidFull = (
-  bid: Parameters<typeof convertBid>[0] &
-    Pick<Offer, 'id' | 'availableQuantity' | 'expiredAt' | 'createdAt'> & {
-      auctionId?: string | null
-    },
-): Required<ReturnType<typeof convertBid>> & {
-  id: string
-  availableQuantity: BigNumber
-  expiredAt: Date | undefined
-  createdAt: Date
-  auctionId?: string
-} => {
-  return {
-    ...convertBid(bid),
-    id: bid.id,
-    availableQuantity: BigNumber.from(bid.availableQuantity),
-    expiredAt: bid.expiredAt ? new Date(bid.expiredAt) : undefined,
-    createdAt: new Date(bid.createdAt),
-    auctionId: bid?.auctionId || undefined,
-  }
-}
