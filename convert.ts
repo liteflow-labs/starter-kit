@@ -712,7 +712,7 @@ export const convertSaleFull = (
     image: string | null | undefined
     verified: boolean
   }
-  expiredAt: Date | undefined
+  expiredAt: Date
   availableQuantity: BigNumber
 } => {
   const base = convertSale(sale)
@@ -726,7 +726,7 @@ export const convertSaleFull = (
       image: sale.maker.image,
       verified: sale.maker.verification?.status === 'VALIDATED',
     },
-    expiredAt: sale.expiredAt ? new Date(sale.expiredAt) : undefined,
+    expiredAt: new Date(sale.expiredAt),
     availableQuantity: BigNumber.from(sale.availableQuantity),
   }
 }

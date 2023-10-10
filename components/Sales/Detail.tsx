@@ -29,7 +29,7 @@ export type Props = {
       nodes: {
         id: string
         unitPrice: string
-        expiredAt: Date | null
+        expiredAt: Date
         availableQuantity: string
         maker: {
           address: string
