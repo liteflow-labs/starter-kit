@@ -15,7 +15,6 @@ import {
   Currency,
   Drop,
   Maybe,
-  Offer,
   Ownership,
 } from './graphql'
 
@@ -516,43 +515,5 @@ export const convertHistories = (
         }
       : null,
     currency: history.currency,
-  }
-}
-
-export const convertAuctionWithBestBid = (auction: {
-  endAt: Date
-  bestBid: Maybe<{
-    nodes: Array<
-      Pick<Offer, 'unitPrice' | 'amount'> & {
-        currency: Pick<Currency, 'decimals' | 'symbol'>
-      }
-    >
-  }>
-}): {
-  endAt: Date
-  bestBid:
-    | {
-        unitPrice: BigNumber
-        amount: BigNumber
-        currency: {
-          decimals: number
-          symbol: string
-        }
-      }
-    | undefined
-} => {
-  const bestBid = auction.bestBid?.nodes[0]
-  if (!bestBid)
-    return {
-      endAt: new Date(auction.endAt),
-      bestBid: undefined,
-    }
-  return {
-    endAt: new Date(auction.endAt),
-    bestBid: {
-      amount: BigNumber.from(bestBid.amount),
-      unitPrice: BigNumber.from(bestBid.unitPrice),
-      currency: bestBid.currency,
-    },
   }
 }
