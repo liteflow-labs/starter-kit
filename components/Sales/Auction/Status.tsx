@@ -1,18 +1,17 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { useAuctionStatus } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 
 export type Props = {
   auction: {
-    endAt: string | Date
-    expireAt: string | Date
-    reserveAmount: BigNumber
-    winningOffer: { id: string } | null | undefined
+    endAt: Date
+    expireAt: Date
+    reserveAmount: string
+    winningOffer: { id: string } | null
   }
   bestBid:
     | {
-        amount: BigNumber
+        amount: string
       }
     | undefined
 }

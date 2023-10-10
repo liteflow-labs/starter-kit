@@ -1,5 +1,4 @@
 import { Button, Text, useDisclosure, useToast } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import {
   AcceptAuctionStep,
   useAcceptAuction,
@@ -16,19 +15,19 @@ import AcceptAuctionModal from '../../Modal/AcceptAuction'
 export type Props = {
   auction: {
     id: string
-    endAt: string | Date
-    expireAt: string | Date
-    reserveAmount: BigNumber
-    winningOffer: { id: string } | null | undefined
+    endAt: Date
+    expireAt: Date
+    reserveAmount: string
+    winningOffer: { id: string } | null
     asset: {
       id: string
       chainId: number
     }
-    bestBid:
-      | {
-          amount: BigNumber
-        }
-      | undefined
+    bestBid: {
+      nodes: {
+        amount: string
+      }[]
+    }
   }
   onAuctionAccepted: (id: string) => void
 }
@@ -38,7 +37,7 @@ const SaleAuctionAction: FC<Props> = ({ auction, onAuctionAccepted }) => {
   const signer = useSigner()
   const blockExplorer = useBlockExplorer(auction.asset.chainId)
   const { inProgress, endedAndWaitingForTransfer, reservePriceMatches } =
-    useAuctionStatus(auction, auction.bestBid)
+    useAuctionStatus(auction, auction.bestBid.nodes[0])
   const [accept, { activeStep, transactionHash }] = useAcceptAuction(signer)
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()

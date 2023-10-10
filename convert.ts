@@ -9,7 +9,6 @@ import {
   AssetHistory,
   AssetHistoryAction,
   AssetTrait,
-  Auction,
   Collection,
   CollectionStats,
   CollectionTraitValue,
@@ -555,32 +554,5 @@ export const convertAuctionWithBestBid = (auction: {
       unitPrice: BigNumber.from(bestBid.unitPrice),
       currency: bestBid.currency,
     },
-  }
-}
-
-export const convertAuctionFull = (
-  auction: Pick<Auction, 'id' | 'reserveAmount' | 'endAt' | 'expireAt'> & {
-    winningOffer: { id: string } | null | undefined
-    currency: Pick<Currency, 'decimals' | 'symbol' | 'image'>
-  },
-): {
-  id: string
-  reserveAmount: BigNumber
-  endAt: Date
-  expireAt: Date
-  currency: {
-    decimals: number
-    symbol: string
-    image: string
-  }
-  winningOffer: { id: string } | null | undefined
-} => {
-  return {
-    id: auction.id,
-    reserveAmount: BigNumber.from(auction.reserveAmount),
-    endAt: new Date(auction.endAt),
-    expireAt: new Date(auction.expireAt),
-    currency: auction.currency,
-    winningOffer: auction.winningOffer,
   }
 }
