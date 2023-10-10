@@ -8,7 +8,6 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
 import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
@@ -25,8 +24,7 @@ import SaleOpenEdit from '../Open/Info'
 
 type Sale = {
   id: string
-  unitPrice: BigNumber
-  expiredAt: Date | null | undefined
+  unitPrice: string
   maker: {
     address: string
   }

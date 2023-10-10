@@ -2,7 +2,6 @@ import { Stack } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAuctionStatus } from '@liteflow/react'
 import { FC, useMemo } from 'react'
-import { convertSaleFull } from '../../convert'
 import { AccountVerificationStatus, Standard } from '../../graphql'
 import SaleAuctionButton from './Auction/Button'
 import SaleAuctionInfo from './Auction/Info'
@@ -120,10 +119,7 @@ const SaleDetail: FC<Props> = ({
     () => asset.collection.standard === 'ERC721',
     [asset.collection.standard],
   )
-  const directSales = useMemo(
-    () => asset.sales.nodes.map(convertSaleFull) || [],
-    [asset.sales.nodes],
-  )
+  const directSales = asset.sales.nodes
 
   return (
     <Stack spacing={8}>

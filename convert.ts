@@ -611,37 +611,3 @@ export const convertSale = (
     currency: sale.currency,
   }
 }
-
-export const convertSaleFull = (
-  sale: Parameters<typeof convertSale>[0] &
-    Pick<OfferOpenSale, 'id' | 'expiredAt' | 'availableQuantity'> & {
-      maker: Pick<Account, 'address' | 'name' | 'image'> & {
-        verification: Maybe<Pick<AccountVerification, 'status'>>
-      }
-    },
-): Required<ReturnType<typeof convertSale>> & {
-  id: string
-  maker: {
-    address: string
-    name: string | null | undefined
-    image: string | null | undefined
-    verified: boolean
-  }
-  expiredAt: Date
-  availableQuantity: BigNumber
-} => {
-  const base = convertSale(sale)
-  if (!base) throw new Error('invalid sale')
-  return {
-    ...base,
-    id: sale.id,
-    maker: {
-      address: sale.maker.address,
-      name: sale.maker.name,
-      image: sale.maker.image,
-      verified: sale.maker.verification?.status === 'VALIDATED',
-    },
-    expiredAt: new Date(sale.expiredAt),
-    availableQuantity: BigNumber.from(sale.availableQuantity),
-  }
-}

@@ -21,7 +21,7 @@ import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import CancelOfferButton from '../../../../components/Button/CancelOffer'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
@@ -31,7 +31,6 @@ import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
-import { convertSaleFull } from '../../../../convert'
 import { OffersOrderBy, useFetchUserFixedPriceQuery } from '../../../../graphql'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
@@ -60,6 +59,7 @@ const FixedPricePage: NextPage = () => {
       orderBy,
     },
   })
+  const offers = data?.offers?.nodes
 
   const onCanceled = useCallback(async () => {
     toast({
@@ -68,17 +68,6 @@ const FixedPricePage: NextPage = () => {
     })
     await refetch()
   }, [refetch, toast, t])
-
-  const offers = useMemo(
-    () =>
-      data?.offers?.nodes.map((x) => ({
-        ...convertSaleFull(x),
-        createdAt: new Date(x.createdAt),
-        asset: x.asset,
-        ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
-      })),
-    [data],
-  )
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -204,14 +193,14 @@ const FixedPricePage: NextPage = () => {
                             <Text as="span" noOfLines={1}>
                               {item.asset.name}
                             </Text>
-                            {item.availableQuantity.gt(1) && (
+                            {BigNumber.from(item.availableQuantity).gt(1) && (
                               <Text
                                 as="span"
                                 variant="caption"
                                 color="gray.500"
                               >
                                 {t('user.fixed.available', {
-                                  value: item.availableQuantity.toString(),
+                                  value: item.availableQuantity,
                                 })}
                               </Text>
                             )}
@@ -227,7 +216,7 @@ const FixedPricePage: NextPage = () => {
                         />
                       </Td>
                       <Td>
-                        {item.expiredAt && item.expiredAt <= new Date()
+                        {new Date(item.expiredAt) <= new Date()
                           ? t('user.fixed.status.expired')
                           : t('user.fixed.status.active')}
                       </Td>
@@ -235,7 +224,7 @@ const FixedPricePage: NextPage = () => {
                       <Td isNumeric>
                         {ownerLoggedIn && (
                           <>
-                            {!item.expiredAt || item.expiredAt > new Date() ? (
+                            {new Date(item.expiredAt) > new Date() ? (
                               <CancelOfferButton
                                 offer={item}
                                 title={t('user.fixed.cancel.title')}
@@ -253,7 +242,9 @@ const FixedPricePage: NextPage = () => {
                                   {t('user.fixed.actions.cancel')}
                                 </Text>
                               </CancelOfferButton>
-                            ) : item.ownAsset ? (
+                            ) : BigNumber.from(
+                                item.asset.owned?.quantity || 0,
+                              ).gt(0) ? (
                               <Button
                                 as={Link}
                                 href={`/tokens/${item.asset.id}/offer`}
