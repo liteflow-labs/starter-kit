@@ -31,7 +31,6 @@ import Select from '../../../../components/Select/Select'
 import SkeletonGrid from '../../../../components/Skeleton/Grid'
 import SkeletonTokenCard from '../../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../../components/Token/Card'
-import { convertCollectionMetrics } from '../../../../convert'
 import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
@@ -84,6 +83,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       chainId,
     },
   })
+  const metrics = collectionMetricsData?.collection
 
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>(
@@ -102,6 +102,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       filter: convertFilterToAssetFilter(filter, date),
     },
   })
+  const assets = assetData?.assets?.nodes
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -136,15 +137,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const assets = assetData?.assets?.nodes
-  const collectionMetrics = useMemo(
-    () =>
-      collectionMetricsData?.collection
-        ? convertCollectionMetrics(collectionMetricsData.collection)
-        : undefined,
-    [collectionMetricsData],
-  )
-
   const changeOrder = useCallback(
     async (orderBy: any) => {
       await push(
@@ -173,10 +165,10 @@ const CollectionPage: FC<Props> = ({ now }) => {
         <CollectionHeader collection={collection} />
       )}
 
-      {!collectionMetrics ? (
+      {!metrics ? (
         <CollectionMetricsSkeleton />
       ) : (
-        <CollectionMetrics chainId={chainId} metrics={collectionMetrics} />
+        <CollectionMetrics chainId={chainId} metrics={metrics} />
       )}
 
       <Flex py="6" justifyContent="space-between">

@@ -198,30 +198,6 @@ export const convertCollection = (
   }
 }
 
-export const convertCollectionMetrics = (
-  collection: Pick<Collection, 'numberOfOwners' | 'supply'> & {
-    floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>
-  } & {
-    totalVolume: Pick<CollectionStats, 'valueInRef' | 'refCode'>
-  },
-): {
-  totalVolume: string
-  totalVolumeCurrencySymbol: string
-  floorPrice: string | null
-  floorPriceCurrencySymbol: string | null
-  totalOwners: number
-  supply: number
-} => {
-  return {
-    totalVolume: collection.totalVolume.valueInRef,
-    totalVolumeCurrencySymbol: collection.totalVolume.refCode,
-    floorPrice: collection.floorPrice?.valueInRef || null,
-    floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
-    totalOwners: collection.numberOfOwners,
-    supply: collection.supply,
-  }
-}
-
 export const convertDropDetail = (
   drop: Pick<
     Drop,
