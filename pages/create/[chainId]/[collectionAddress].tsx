@@ -61,9 +61,9 @@ const CreatePage: NextPage = () => {
     return {
       id: '--',
       image: imageLocal?.url || '',
-      imageMimeType: imageLocal?.mimetype || null,
+      imageMimetype: imageLocal?.mimetype || null,
       animationUrl: animationLocal?.url || null,
-      animationMimeType: animationLocal?.mimetype || null,
+      animationMimetype: animationLocal?.mimetype || null,
       name: formData?.name || '',
       bestBid: undefined,
       collection: {

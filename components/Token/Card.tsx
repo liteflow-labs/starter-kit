@@ -38,10 +38,10 @@ export type Props = {
       chainId: number
     }
     image: string
-    imageMimeType: string | null
+    imageMimetype: string | null
     unlockedContent: { url: string; mimetype: string | null } | null
     animationUrl: string | null
-    animationMimeType: string | null
+    animationMimetype: string | null
     creator: {
       address: string
       name: string | null
@@ -104,9 +104,9 @@ const TokenCard: FC<Props> = ({ asset }) => {
   )
   const [isHovered, setIsHovered] = useState(false)
   const media = useDetectAssetMedia({
-    image: { url: asset.image, mimetype: asset.imageMimeType },
+    image: { url: asset.image, mimetype: asset.imageMimetype },
     animation: asset.animationUrl
-      ? { url: asset.animationUrl, mimetype: asset.animationMimeType }
+      ? { url: asset.animationUrl, mimetype: asset.animationMimetype }
       : null,
     unlockedContent: asset.unlockedContent,
   })
