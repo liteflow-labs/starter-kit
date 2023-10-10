@@ -6,10 +6,8 @@ import invariant from 'ts-invariant'
 import {
   Account,
   AccountVerification,
-  AssetTrait,
   Collection,
   CollectionStats,
-  CollectionTraitValue,
   Currency,
   Drop,
   Maybe,
@@ -198,38 +196,6 @@ export const convertCollection = (
     floorPrice: collection.floorPrice?.valueInRef || null,
     floorPriceCurrencySymbol: collection.floorPrice?.refCode || null,
   }
-}
-
-export const convertTraits = (asset: {
-  traits: {
-    nodes: Array<
-      Pick<AssetTrait, 'type' | 'value'> & {
-        collectionTraitValue: Maybe<
-          Pick<CollectionTraitValue, 'numberOfAssets'>
-        >
-      }
-    >
-  }
-  collection: {
-    supply: number
-  }
-}): {
-  type: string
-  value: string
-  percent: number
-}[] => {
-  const assetTraitsWithCounts = asset.traits.nodes.map((assetTrait) => {
-    return {
-      type: assetTrait.type,
-      value: assetTrait.value,
-      percent:
-        ((assetTrait.collectionTraitValue?.numberOfAssets || 0) /
-          asset.collection.supply) *
-        100,
-    }
-  })
-
-  return assetTraitsWithCounts
 }
 
 export const convertCollectionFull = (

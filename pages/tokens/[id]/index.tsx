@@ -45,7 +45,6 @@ import SkeletonProperty from '../../../components/Skeleton/Property'
 import TokenMedia from '../../../components/Token/Media'
 import TokenMetadata from '../../../components/Token/Metadata'
 import TraitList from '../../../components/Trait/TraitList'
-import { convertTraits } from '../../../convert'
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
@@ -126,10 +125,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [CHAINS, chainId],
   )
 
-  const traits = useMemo(
-    () => asset && asset.traits.nodes.length > 0 && convertTraits(asset),
-    [asset],
-  )
+  const traits = asset && asset.traits.nodes.length > 0 && asset.traits.nodes
 
   const tabIndex = useMemo(
     () => (query.filter ? tabs.findIndex((tab) => tab === query.filter) : 0),
@@ -435,11 +431,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     {t('asset.detail.traits')}
                   </Heading>
                   <Box borderRadius="2xl" p={3} borderWidth="1px">
-                    <TraitList
-                      chainId={chainId}
-                      collectionAddress={collectionAddress}
-                      traits={traits}
-                    />
+                    <TraitList asset={asset} traits={traits} />
                   </Box>
                 </Stack>
               )}
