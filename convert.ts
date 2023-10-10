@@ -17,7 +17,6 @@ import {
   Drop,
   Maybe,
   Offer,
-  OfferOpenSale,
   Ownership,
 } from './graphql'
 
@@ -583,31 +582,5 @@ export const convertAuctionFull = (
     expireAt: new Date(auction.expireAt),
     currency: auction.currency,
     winningOffer: auction.winningOffer,
-  }
-}
-
-export const convertSale = (
-  sale:
-    | (Pick<OfferOpenSale, 'unitPrice' | 'id'> & {
-        currency: Pick<Currency, 'decimals' | 'symbol' | 'id' | 'image'>
-      })
-    | undefined,
-):
-  | undefined
-  | {
-      id: string
-      unitPrice: BigNumber
-      currency: {
-        id: string
-        decimals: number
-        symbol: string
-        image: string
-      }
-    } => {
-  if (!sale) return
-  return {
-    id: sale.id,
-    unitPrice: BigNumber.from(sale.unitPrice),
-    currency: sale.currency,
   }
 }
