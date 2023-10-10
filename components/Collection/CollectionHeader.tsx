@@ -22,6 +22,7 @@ import Etherscan from '../../components/Icons/Etherscan'
 import Image from '../../components/Image/Image'
 import Link from '../../components/Link/Link'
 import Truncate from '../../components/Truncate/Truncate'
+import { AccountVerificationStatus } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import useEnvironment from '../../hooks/useEnvironment'
 import { formatAddress } from '../../utils'
@@ -41,7 +42,9 @@ type Props = {
       address: string
       name: string | null
       username: string | null
-      verified: boolean
+      verification: {
+        status: AccountVerificationStatus
+      } | null
     }
   }
 }
@@ -116,7 +119,7 @@ const CollectionHeader: FC<Props> = ({ collection }) => {
                 {collection.deployer.name ||
                   formatAddress(collection.deployer.address, 10)}
               </Text>
-              {collection.deployer.verified && (
+              {collection.deployer.verification?.status === 'VALIDATED' && (
                 <Icon as={HiBadgeCheck} color="brand.500" boxSize={5} />
               )}
             </Text>

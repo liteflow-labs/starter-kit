@@ -10,7 +10,7 @@ import DropMintSchedule from '../../../../components/Drop/DropMintSchedule'
 import DropProgress from '../../../../components/Drop/DropProgress'
 import DropMintForm from '../../../../components/Drop/MintForm'
 import Head from '../../../../components/Head'
-import { convertCollectionFull, convertDropDetail } from '../../../../convert'
+import { convertDropDetail } from '../../../../convert'
 import {
   useFetchCollectionDropDetailQuery,
   useFetchCollectionDropsQuery,
@@ -37,6 +37,7 @@ const DropDetail: NextPage = () => {
         chainId,
       },
     })
+  const collection = collectionData?.collection
 
   const { data: dropsData } = useFetchCollectionDropsQuery({
     variables: {
@@ -45,14 +46,6 @@ const DropDetail: NextPage = () => {
       chainId,
     },
   })
-
-  const collection = useMemo(
-    () =>
-      collectionData?.collection
-        ? convertCollectionFull(collectionData.collection)
-        : null,
-    [collectionData],
-  )
 
   const drops = useMemo(() => {
     if (!dropsData?.drops) return []

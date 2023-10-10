@@ -198,59 +198,6 @@ export const convertCollection = (
   }
 }
 
-export const convertCollectionFull = (
-  collection: Pick<
-    Collection,
-    | 'address'
-    | 'chainId'
-    | 'name'
-    | 'description'
-    | 'image'
-    | 'cover'
-    | 'twitter'
-    | 'discord'
-    | 'website'
-  > & {
-    deployer: Pick<Account, 'address' | 'name' | 'username'> & {
-      verification: Maybe<Pick<AccountVerification, 'status'>>
-    }
-  },
-): {
-  address: string
-  chainId: number
-  name: string
-  description: string | null
-  image: string | null
-  cover: string | null
-  twitter: string | null
-  discord: string | null
-  website: string | null
-  deployer: {
-    address: string
-    name: string | null
-    username: string | null
-    verified: boolean
-  }
-} => {
-  return {
-    address: collection.address,
-    chainId: collection.chainId,
-    name: collection.name,
-    description: collection.description,
-    image: collection.image,
-    cover: collection.cover,
-    twitter: collection.twitter,
-    discord: collection.discord,
-    website: collection.website,
-    deployer: {
-      address: collection.deployer.address,
-      name: collection.deployer.name,
-      username: collection.deployer.username,
-      verified: collection.deployer?.verification?.status === 'VALIDATED',
-    },
-  }
-}
-
 export const convertCollectionMetrics = (
   collection: Pick<Collection, 'numberOfOwners' | 'supply'> & {
     floorPrice: Maybe<Pick<CollectionStats, 'valueInRef' | 'refCode'>>

@@ -31,10 +31,7 @@ import Select from '../../../../components/Select/Select'
 import SkeletonGrid from '../../../../components/Skeleton/Grid'
 import SkeletonTokenCard from '../../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../../components/Token/Card'
-import {
-  convertCollectionFull,
-  convertCollectionMetrics,
-} from '../../../../convert'
+import { convertCollectionMetrics } from '../../../../convert'
 import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
@@ -139,11 +136,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const collectionDetails = useMemo(
-    () => (collection ? convertCollectionFull(collection) : undefined),
-    [collection],
-  )
-
   const assets = assetData?.assets?.nodes
   const collectionMetrics = useMemo(
     () =>
@@ -175,10 +167,10 @@ const CollectionPage: FC<Props> = ({ now }) => {
         image={collection?.image || undefined}
       />
 
-      {!collectionDetails ? (
+      {!collection ? (
         <CollectionHeaderSkeleton />
       ) : (
-        <CollectionHeader collection={collectionDetails} />
+        <CollectionHeader collection={collection} />
       )}
 
       {!collectionMetrics ? (
