@@ -1,4 +1,5 @@
 import { Divider, Heading, SimpleGrid } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useMemo } from 'react'
@@ -8,7 +9,6 @@ import Head from '../components/Head'
 import Pagination from '../components/Pagination/Pagination'
 import SkeletonDropCard from '../components/Skeleton/DropCard'
 import SkeletonGrid from '../components/Skeleton/Grid'
-import { convertDropActive, convertDropEnded } from '../convert'
 import { useFetchDropsQuery } from '../graphql'
 import useEnvironment from '../hooks/useEnvironment'
 import usePaginate from '../hooks/usePaginate'
@@ -30,25 +30,10 @@ const DropsPage: NextPage<Props> = ({ now }) => {
     variables: { now: date, limit, offset },
   })
 
-  const inprogressDrops = useMemo(
-    () => data?.inProgress?.nodes.map((drop) => convertDropActive(drop)) || [],
-    [data?.inProgress?.nodes],
-  )
-
-  const upcomingDrops = useMemo(
-    () => data?.upcoming?.nodes.map((drop) => convertDropActive(drop)) || [],
-    [data?.upcoming?.nodes],
-  )
-
-  const activeDrops = useMemo(
-    () => [...inprogressDrops, ...upcomingDrops],
-    [inprogressDrops, upcomingDrops],
-  )
-
-  const endedDrops = useMemo(
-    () => data?.ended?.nodes.map((drop) => convertDropEnded(drop)) || [],
-    [data?.ended?.nodes],
-  )
+  const inprogressDrops = data?.inProgress?.nodes || []
+  const upcomingDrops = data?.upcoming?.nodes || []
+  const activeDrops = [...inprogressDrops, ...upcomingDrops]
+  const endedDrops = data?.ended?.nodes || []
 
   const isEmpty = useMemo(
     () => endedDrops.length === 0 && activeDrops.length === 0,
@@ -84,10 +69,19 @@ const DropsPage: NextPage<Props> = ({ now }) => {
               w="full"
               mb={endedDrops.length > 0 ? 8 : 0}
             >
-              {activeDrops.map((drop) => (
+              {activeDrops.map((drop, i) => (
                 <DropCard
-                  key={drop.id}
-                  drop={drop}
+                  key={i}
+                  collection={{ ...drop }}
+                  drops={drop.drops.nodes}
+                  totalSupply={
+                    drop.drops.nodes.some((x) => !x.supply)
+                      ? null
+                      : drop.drops.nodes.reduce(
+                          (acc, drop) => acc.add(BigNumber.from(drop.supply)),
+                          BigNumber.from(0),
+                        )
+                  }
                   onCountdownEnd={onCountdownEnd}
                 />
               ))}
@@ -100,8 +94,20 @@ const DropsPage: NextPage<Props> = ({ now }) => {
                 {t('drops.past-drops')}
               </Heading>
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} w="full">
-                {endedDrops.map((drop) => (
-                  <DropCard key={drop.id} drop={drop} />
+                {endedDrops.map((drop, i) => (
+                  <DropCard
+                    key={i}
+                    collection={{ ...drop }}
+                    drops={drop.lastDrop.nodes}
+                    totalSupply={
+                      drop.allDrops.nodes.some((x) => !x.supply)
+                        ? null
+                        : drop.allDrops.nodes.reduce(
+                            (acc, drop) => acc.add(BigNumber.from(drop.supply)),
+                            BigNumber.from(0),
+                          )
+                    }
+                  />
                 ))}
               </SimpleGrid>
             </>
