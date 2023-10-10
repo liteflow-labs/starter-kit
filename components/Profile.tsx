@@ -1,8 +1,7 @@
 import { GridItem, SimpleGrid, Stack } from '@chakra-ui/react'
-import { FC, PropsWithChildren, useMemo } from 'react'
+import { FC, PropsWithChildren } from 'react'
 import type { TabsEnum } from '../components/User/Profile/Navigation'
 import UserProfileNavigation from '../components/User/Profile/Navigation'
-import { convertFullUser } from '../convert'
 import { useFetchAccountDetailQuery } from '../graphql'
 import useAccount from '../hooks/useAccount'
 import { isSameAddress } from '../utils'
@@ -26,11 +25,7 @@ const UserProfileTemplate: FC<Props> = ({
   const { data: accountData } = useFetchAccountDetailQuery({
     variables: { address },
   })
-
-  const account = useMemo(
-    () => convertFullUser(accountData?.account || null, address),
-    [accountData, address],
-  )
+  const account = accountData?.account
 
   return (
     <>

@@ -5,11 +5,14 @@ import AccountImage from '../../Wallet/Image'
 
 type Props = {
   address: string
-  user: {
-    cover: string | null
-    image: string | null
-    name: string | null
-  }
+  user:
+    | {
+        cover: string | null
+        image: string | null
+        name: string | null
+      }
+    | null
+    | undefined
 }
 
 const UserProfileBanner: FC<Props> = ({ address, user }) => {
@@ -26,7 +29,7 @@ const UserProfileBanner: FC<Props> = ({ address, user }) => {
       rounded="xl"
       bgColor="gray.100"
     >
-      {user.cover && (
+      {user?.cover && (
         <Image
           src={user.cover}
           alt={user.name || address}
@@ -48,7 +51,7 @@ const UserProfileBanner: FC<Props> = ({ address, user }) => {
         <Flex
           as={AccountImage}
           address={address}
-          image={user.image}
+          image={user?.image}
           size={88}
           rounded="full"
         />

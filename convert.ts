@@ -395,35 +395,3 @@ export const convertUserWithCover = (
   ...convertUser(user, defaultAddress),
   cover: user?.cover || null,
 })
-
-export const convertFullUser = (
-  user: Maybe<
-    Pick<
-      Account,
-      | 'address'
-      | 'image'
-      | 'name'
-      | 'description'
-      | 'cover'
-      | 'instagram'
-      | 'twitter'
-      | 'website'
-    > & {
-      verification: Maybe<Pick<AccountVerification, 'status'>>
-    }
-  >,
-  defaultAddress: string,
-): ReturnType<typeof convertUser> & {
-  description: string | null
-  cover: string | null
-  instagram: string | null
-  twitter: string | null
-  website: string | null
-} => ({
-  ...convertUser(user, defaultAddress),
-  description: user?.description || null,
-  cover: user?.cover || null,
-  instagram: user?.instagram || null,
-  twitter: user?.twitter || null,
-  website: user?.website || null,
-})
