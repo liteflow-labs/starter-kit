@@ -6,7 +6,6 @@ import invariant from 'ts-invariant'
 import {
   Account,
   AccountVerification,
-  Asset,
   AssetHistory,
   AssetHistoryAction,
   AssetTrait,
@@ -21,7 +20,6 @@ import {
   OfferOpenBuy,
   OfferOpenSale,
   Ownership,
-  Trade,
 } from './graphql'
 
 export type FileDef = {
@@ -704,94 +702,5 @@ export const convertBidFull = (
     expiredAt: bid.expiredAt ? new Date(bid.expiredAt) : undefined,
     createdAt: new Date(bid.createdAt),
     auctionId: bid?.auctionId || undefined,
-  }
-}
-
-export const convertTrade = (
-  trade: Pick<
-    Trade,
-    | 'timestamp'
-    | 'transactionHash'
-    | 'amount'
-    | 'quantity'
-    | 'buyerAddress'
-    | 'sellerAddress'
-  > & {
-    buyer?: Maybe<
-      Pick<Account, 'address' | 'name' | 'image'> & {
-        verification: Maybe<Pick<AccountVerification, 'status'>>
-      }
-    >
-    seller?: Maybe<
-      Pick<Account, 'address' | 'name' | 'image'> & {
-        verification: Maybe<Pick<AccountVerification, 'status'>>
-      }
-    >
-    currency: Maybe<
-      Pick<Currency, 'id' | 'image' | 'name' | 'decimals' | 'symbol'>
-    >
-    asset: Maybe<Pick<Asset, 'id' | 'name' | 'image' | 'chainId'>>
-  },
-): {
-  transactionHash: string
-  amount: BigNumber
-  quantity: BigNumber
-  buyerAddress: string
-  sellerAddress: string
-  buyer: {
-    address: string
-    name: string | null | undefined
-    image: string | null | undefined
-    verified: boolean
-  }
-  seller: {
-    address: string
-    name: string | null | undefined
-    image: string | null | undefined
-    verified: boolean
-  }
-  createdAt: Date
-  currency: {
-    name: string
-    id: string
-    image: string
-    decimals: number
-    symbol: string
-  } | null
-  asset?: {
-    id: string
-    name: string
-    image: string
-    chainId: number
-  }
-} => {
-  return {
-    transactionHash: trade.transactionHash,
-    amount: BigNumber.from(trade.amount),
-    buyerAddress: trade.buyerAddress,
-    createdAt: new Date(trade.timestamp),
-    quantity: BigNumber.from(trade.quantity),
-    sellerAddress: trade.sellerAddress,
-    buyer: {
-      address: trade.buyer?.address || trade.buyerAddress,
-      name: trade.buyer?.name,
-      image: trade.buyer?.image,
-      verified: trade.buyer?.verification?.status === 'VALIDATED',
-    },
-    seller: {
-      address: trade.seller?.address || trade.sellerAddress,
-      name: trade.seller?.name,
-      image: trade.seller?.image,
-      verified: trade.seller?.verification?.status === 'VALIDATED',
-    },
-    currency: trade.currency,
-    asset: trade.asset
-      ? {
-          id: trade.asset.id,
-          name: trade.asset.name,
-          image: trade.asset.image,
-          chainId: trade.asset.chainId,
-        }
-      : undefined,
   }
 }

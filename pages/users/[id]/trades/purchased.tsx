@@ -14,12 +14,13 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -29,7 +30,6 @@ import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
-import { convertTrade } from '../../../../convert'
 import {
   TradesOrderBy,
   useFetchUserTradePurchasedQuery,
@@ -60,8 +60,7 @@ const TradePurchasedPage: NextPage = () => {
       orderBy,
     },
   })
-
-  const trades = useMemo(() => data?.trades?.nodes.map(convertTrade), [data])
+  const trades = data?.trades?.nodes
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -192,14 +191,14 @@ const TradePurchasedPage: NextPage = () => {
                               <Text as="span" noOfLines={1}>
                                 {item.asset.name}
                               </Text>
-                              {item.quantity.gt(1) && (
+                              {BigNumber.from(item.quantity).gt(1) && (
                                 <Text
                                   as="span"
                                   variant="caption"
                                   color="gray.500"
                                 >
                                   {t('user.trade-purchased.purchased', {
-                                    value: item.quantity.toString(),
+                                    value: item.quantity,
                                   })}
                                 </Text>
                               )}
@@ -222,9 +221,15 @@ const TradePurchasedPage: NextPage = () => {
                         )}
                       </Td>
                       <Td>
-                        <Avatar user={item.seller} />
+                        <Avatar
+                          user={{
+                            ...item.seller,
+                            verified:
+                              item.seller.verification?.status === 'VALIDATED',
+                          }}
+                        />
                       </Td>
-                      <Td>{dateFromNow(item.createdAt)}</Td>
+                      <Td>{dateFromNow(item.timestamp)}</Td>
                       <Td>
                         <IconButton
                           aria-label="external link"
