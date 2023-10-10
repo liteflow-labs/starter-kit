@@ -1,6 +1,7 @@
 import { Box, Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { FC } from 'react'
+import { AccountVerificationStatus } from '../../graphql'
 import { formatAddress } from '../../utils'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
@@ -12,7 +13,9 @@ type Props = {
     image: string | null
     cover: string | null
     name: string | null
-    verified: boolean
+    verification: {
+      status: AccountVerificationStatus
+    } | null
   }
 }
 
@@ -73,7 +76,7 @@ const UserCard: FC<Props> = ({ user }) => {
           <Text variant="button1" title={user.name || user.address} isTruncated>
             {user.name || formatAddress(user.address, 10)}
           </Text>
-          {user.verified && (
+          {user.verification?.status === 'VALIDATED' && (
             <Icon as={HiBadgeCheck} color="brand.500" boxSize={4} />
           )}
         </Flex>
