@@ -214,13 +214,7 @@ const TradeSoldPage: NextPage = () => {
                         )}
                       </Td>
                       <Td>
-                        <Avatar
-                          user={{
-                            ...item.buyer,
-                            verified:
-                              item.buyer.verification?.status === 'VALIDATED',
-                          }}
-                        />
+                        <Avatar user={item.buyer} />
                       </Td>
                       <Td>{dateFromNow(item.timestamp)}</Td>
                       <Td>

@@ -2,8 +2,7 @@ import { Flex, Heading, Icon, Stack, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { IoImageOutline } from '@react-icons/all-files/io5/IoImageOutline'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
-import { convertUser } from '../../convert'
+import { FC } from 'react'
 import { AccountVerificationStatus, MintType, Standard } from '../../graphql'
 import Avatar from '../User/Avatar'
 import OwnersModal from './Owners/Modal'
@@ -55,22 +54,18 @@ const TokenMetadata: FC<Props> = ({ asset }) => {
   const numberOfOwners = asset.ownerships.totalCount
   const saleSupply = BigNumber.from(asset.sales.totalAvailableQuantitySum)
   const totalSupply = BigNumber.from(asset.quantity)
-  const creator = useMemo(
-    () => convertUser(asset.creator, asset.creator.address),
-    [asset],
-  )
   const owners = asset.ownerships.nodes
 
   return (
     <Flex wrap="wrap" rowGap={6} columnGap={8}>
-      {creator && (
+      {asset.creator && (
         <Stack spacing={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
             {isOpenCollection
               ? t('token.metadata.creator')
               : t('token.metadata.minted_by')}
           </Heading>
-          <Avatar user={creator} />
+          <Avatar user={asset.creator} />
         </Stack>
       )}
       {numberOfOwners === 1 && owners[0] && (
@@ -78,7 +73,7 @@ const TokenMetadata: FC<Props> = ({ asset }) => {
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owner')}
           </Heading>
-          <Avatar user={convertUser(owners[0].owner, owners[0].ownerAddress)} />
+          <Avatar user={owners[0].owner} />
         </Stack>
       )}
       {numberOfOwners > 1 && (

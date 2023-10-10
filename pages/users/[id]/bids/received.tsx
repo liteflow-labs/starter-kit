@@ -225,13 +225,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                         />
                       </Td>
                       <Td>
-                        <Avatar
-                          user={{
-                            ...item.maker,
-                            verified:
-                              item.maker.verification?.status === 'VALIDATED',
-                          }}
-                        />
+                        <Avatar user={item.maker} />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>

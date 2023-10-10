@@ -362,22 +362,3 @@ export const convertDropDetail = (
     },
   }
 }
-
-export const convertUser = (
-  user: Maybe<
-    Pick<Account, 'address' | 'image' | 'name'> & {
-      verification: Maybe<Pick<AccountVerification, 'status'>>
-    }
-  >,
-  defaultAddress: string,
-): {
-  address: string
-  image: string | null
-  name: string | null
-  verified: boolean
-} => ({
-  address: user?.address || defaultAddress,
-  image: user?.image || null,
-  name: user?.name || null,
-  verified: user?.verification?.status === 'VALIDATED',
-})
