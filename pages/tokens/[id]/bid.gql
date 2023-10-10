@@ -23,7 +23,9 @@ query BidOnAsset(
     quantity
     name
     image
+    imageMimetype
     animationUrl
+    animationMimetype
     unlockedContent {
       url
       mimetype

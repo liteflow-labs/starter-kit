@@ -18,6 +18,7 @@ import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
+import type { Props as NFTCardProps } from '../../../components/Token/Card'
 import TokenCard from '../../../components/Token/Card'
 import type { FormData } from '../../../components/Token/Form/Create'
 import TokenFormCreate from '../../../components/Token/Form/Create'
@@ -65,12 +66,12 @@ const CreatePage: NextPage = ({}) => {
   const [formData, setFormData] = useState<Partial<FormData>>()
 
   const blockExplorer = useBlockExplorer(chainId)
-  const imageUrlLocal = useLocalFileURL(
+  const imageLocal = useLocalFileURL(
     formData?.isPrivate || formData?.isAnimation
       ? formData?.preview
       : formData?.content,
   )
-  const animationUrlLocal = useLocalFileURL(
+  const animationLocal = useLocalFileURL(
     formData?.isAnimation && !formData.isPrivate ? formData.content : undefined,
   )
 
@@ -78,8 +79,8 @@ const CreatePage: NextPage = ({}) => {
     if (!collection) return
     return {
       id: '--',
-      image: imageUrlLocal || '',
-      animationUrl: animationUrlLocal,
+      image: imageLocal,
+      animation: animationLocal,
       name: formData?.name || '',
       bestBid: undefined,
       collection: {
@@ -89,8 +90,8 @@ const CreatePage: NextPage = ({}) => {
       },
       owned: BigNumber.from(0),
       unlockedContent: null,
-    }
-  }, [imageUrlLocal, animationUrlLocal, formData?.name, collection])
+    } as NFTCardProps['asset'] // TODO: use satisfies to ensure proper type
+  }, [imageLocal, animationLocal, formData?.name, collection])
 
   const creator = useMemo(
     () => ({

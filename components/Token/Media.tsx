@@ -1,8 +1,18 @@
-import { Box, Center, Icon, Stack, Text, useTheme } from '@chakra-ui/react'
+import {
+  Box,
+  Center,
+  Icon,
+  Skeleton,
+  Stack,
+  Text,
+  useTheme,
+} from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { AssetMedia } from '../../hooks/useDetectAssetMedia'
 import Image from '../Image/Image'
+
+const supportedMedia = [/^image\/*/, /^video\/*/]
 
 const TokenMedia: FC<{
   media: AssetMedia
@@ -21,6 +31,9 @@ const TokenMedia: FC<{
   const onImageError = useCallback(() => setImageError(true), [])
   const onVideoError = useCallback(() => setVideoError(true), [])
 
+  // Reset the media when the props change
+  useEffect(() => setMediaToDisplay(media), [media])
+
   // Switch to the fallback when there is an error with the main media
   useEffect(() => {
     if (!imageError) return
@@ -29,13 +42,20 @@ const TokenMedia: FC<{
     setMediaToDisplay(fallback)
   }, [imageError, videoError, fallback, mediaToDisplay])
 
+  // Switch to the fallback when the media is not supported
+  useEffect(() => {
+    const mimetype = mediaToDisplay?.mimetype
+    if (!mimetype) return // assume it's supported
+    if (supportedMedia.some((regex) => regex.test(mimetype))) return // it's supported
+    if (mediaToDisplay?.url === fallback?.url) return setMediaToDisplay(null) // fallback is also not supported
+    setMediaToDisplay(fallback)
+  }, [fallback, mediaToDisplay])
+
   // Reset all errors when the media to display changes (when switching to the fallback)
   useEffect(() => {
     setImageError(false)
     setVideoError(false)
   }, [mediaToDisplay])
-
-  useEffect(() => setMediaToDisplay(media), [media])
 
   // cannot display anything
   if (!mediaToDisplay || (imageError && videoError && mediaToDisplay))
@@ -76,19 +96,25 @@ const TokenMedia: FC<{
     )
   }
 
-  return (
-    <Box position="relative" w="full" h="full">
-      <Image
-        src={mediaToDisplay.url}
-        alt={defaultText}
-        onError={onImageError}
-        fill
-        objectFit={fill ? 'cover' : 'contain'}
-        sizes={sizes}
-        unoptimized={mediaToDisplay.mimetype === 'image/gif'}
-      />
-    </Box>
-  )
+  if (
+    !mediaToDisplay.mimetype ||
+    mediaToDisplay.mimetype.startsWith('image/')
+  ) {
+    return (
+      <Box position="relative" w="full" h="full">
+        <Image
+          src={mediaToDisplay.url}
+          alt={defaultText}
+          onError={onImageError}
+          fill
+          objectFit={fill ? 'cover' : 'contain'}
+          sizes={sizes}
+          unoptimized={mediaToDisplay.mimetype === 'image/gif'}
+        />
+      </Box>
+    )
+  }
+  return <Skeleton width="100%" height="100%" />
 }
 
 export default TokenMedia
