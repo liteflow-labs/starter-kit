@@ -39,7 +39,9 @@ query FetchAsset(
     }
     quantity
     image
+    imageMimetype
     animationUrl
+    animationMimetype
     hasUnlockableContent
     unlockedContent {
       url

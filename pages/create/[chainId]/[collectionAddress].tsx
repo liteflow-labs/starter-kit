@@ -47,12 +47,12 @@ const CreatePage: NextPage = () => {
 
   const [formData, setFormData] = useState<Partial<FormData>>()
 
-  const imageUrlLocal = useLocalFileURL(
+  const imageLocal = useLocalFileURL(
     formData?.isPrivate || formData?.isAnimation
       ? formData?.preview
       : formData?.content,
   )
-  const animationUrlLocal = useLocalFileURL(
+  const animationLocal = useLocalFileURL(
     formData?.isAnimation && !formData.isPrivate ? formData.content : undefined,
   )
 
@@ -60,8 +60,10 @@ const CreatePage: NextPage = () => {
     if (!collection) return
     return {
       id: '--',
-      image: imageUrlLocal || '',
-      animationUrl: animationUrlLocal,
+      image: imageLocal?.url || '',
+      imageMimeType: imageLocal?.mimetype || null,
+      animationUrl: animationLocal?.url || null,
+      animationMimeType: animationLocal?.mimetype || null,
       name: formData?.name || '',
       bestBid: undefined,
       collection: {
@@ -72,7 +74,7 @@ const CreatePage: NextPage = () => {
       owned: null,
       unlockedContent: null,
     }
-  }, [imageUrlLocal, animationUrlLocal, formData?.name, collection])
+  }, [imageLocal, animationLocal, formData?.name, collection])
 
   const creator = useMemo(
     () => ({

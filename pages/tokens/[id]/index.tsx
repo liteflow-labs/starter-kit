@@ -91,7 +91,19 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     },
   })
 
-  const asset = data?.asset
+  const asset = useMemo(() => {
+    if (!data?.asset) return undefined
+    return {
+      ...data.asset,
+      image: { url: data.asset.image, mimetype: data.asset.imageMimetype },
+      animation: data.asset.animationUrl
+        ? {
+            url: data.asset.animationUrl,
+            mimetype: data.asset.animationMimetype,
+          }
+        : null,
+    }
+  }, [data])
 
   const auction = asset?.auctions.nodes[0]
   const bestAuctionBid = auction?.bestBid?.nodes[0]
@@ -164,7 +176,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
       <Head
         title={asset ? `${asset.name} - ${asset.collection.name}` : undefined}
         description={asset?.description}
-        image={asset?.image}
+        image={asset?.image.url}
       />
       <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <AspectRatio ratio={1}>
@@ -311,7 +323,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           ) : (
             <TokenMetadata asset={asset} />
           )}
-          {!asset || !data.currencies?.nodes ? (
+          {!asset || !data?.currencies?.nodes ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
@@ -391,7 +403,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                       {t('asset.detail.details.media')}
                     </Text>
                     <Link
-                      href={asset.animationUrl || asset.image}
+                      href={asset.animation?.url || asset.image.url}
                       isExternal
                       externalIcon
                     >
