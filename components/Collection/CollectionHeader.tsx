@@ -22,7 +22,7 @@ import { FC } from 'react'
 import Etherscan from '../../components/Icons/Etherscan'
 import Image from '../../components/Image/Image'
 import Link from '../../components/Link/Link'
-import Truncate from '../../components/Truncate/Truncate'
+import MarkdownViewer from '../../components/MarkdownViewer'
 import { formatAddress } from '../../utils'
 
 type Props = {
@@ -201,9 +201,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
       </Flex>
       {collection.description && (
         <Box mt={4}>
-          <Truncate size="lg" color="gray.500" length={200}>
-            {collection.description}
-          </Truncate>
+          <MarkdownViewer source={collection.description} />
         </Box>
       )}
     </>
