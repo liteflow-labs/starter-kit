@@ -1,5 +1,5 @@
 query WalletCurrencies {
-  currencies(orderBy: CREATED_AT_ASC) {
+  currencies(orderBy: SYMBOL_ASC) {
     nodes {
       image
       name
