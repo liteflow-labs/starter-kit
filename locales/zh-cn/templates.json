@@ -108,8 +108,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "价格：低 - 高",
-        "salesMinUnitPriceInRefDesc": "价格：高 - 低",
+        "priceAsc": "价格：低 - 高",
+        "priceDesc": "价格：高 - 低",
         "createdAtDesc": "日期：最新",
         "createdAtAsc": "日期：最早"
       }

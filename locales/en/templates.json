@@ -108,8 +108,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "Price: Low - High",
-        "salesMinUnitPriceInRefDesc": "Price: High - Low",
+        "priceAsc": "Price: Low - High",
+        "priceDesc": "Price: High - Low",
         "createdAtDesc": "Date: Newest",
         "createdAtAsc": "Date: Oldest"
       }
