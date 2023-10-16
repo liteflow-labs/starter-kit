@@ -1,96 +1,105 @@
 import {
-  Code,
-  Divider,
-  Heading,
+  Box,
+  Link,
   OrderedList,
+  SkeletonText,
   Text,
   UnorderedList,
+  chakra,
   useColorMode,
 } from '@chakra-ui/react'
 import { MarkdownPreviewProps } from '@uiw/react-markdown-preview'
+import useTranslation from 'next-translate/useTranslation'
 import dynamic from 'next/dynamic'
-import { FC } from 'react'
-import Link from './Link/Link'
+import { FC, useEffect, useRef, useState } from 'react'
 
 const MDPreview = dynamic<MarkdownPreviewProps>(
   () => import('@uiw/react-markdown-preview'),
   {
     ssr: false,
+    // SkeletonText placeholder while loading
+    loading: () => <SkeletonText noOfLines={2} />,
   },
 )
 
-const MarkdownViewer: FC<MarkdownPreviewProps> = (props) => {
+const MarkdownViewer: FC<MarkdownPreviewProps> = ({ source, ...props }) => {
+  const { t } = useTranslation('components')
   const { colorMode } = useColorMode()
+  const [isMultiline, setMultiline] = useState(false)
+  const [isOpen, setOpen] = useState(false)
+  const invisibleRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const element = invisibleRef.current
+    const ONE_LINE_HEIGHT = 24
+    if (
+      // hack to check if the text is multiline by using hidden div
+      (element && element.scrollHeight > ONE_LINE_HEIGHT) ||
+      // check if the text is multiline by checking for newlines
+      (source && source.split(/\r\n|\r|\n/).length > 1)
+    ) {
+      setMultiline(true)
+    }
+  }, [source])
+
   return (
-    <div data-color-mode={colorMode}>
-      <MDPreview
-        components={{
-          p: ({ children }) => <Text>{children}</Text>,
-          h1: ({ children }) => {
-            const title = children.filter((child) => typeof child === 'string')
-            return (
-              <Heading as="h1" variant="title">
-                {title}
-              </Heading>
-            )
-          },
-          h2: ({ children }) => {
-            const title = children.filter((child) => typeof child === 'string')
-            return (
-              <Heading as="h2" variant="subtitle">
-                {title}
-              </Heading>
-            )
-          },
-          h3: ({ children }) => {
-            const title = children.filter((child) => typeof child === 'string')
-            return (
-              <Heading as="h3" variant="heading1">
-                {title}
-              </Heading>
-            )
-          },
-          h4: ({ children }) => {
-            const title = children.filter((child) => typeof child === 'string')
-            return (
-              <Heading as="h4" variant="heading2">
-                {title}
-              </Heading>
-            )
-          },
-          h5: ({ children }) => {
-            const title = children.filter((child) => typeof child === 'string')
-            return (
-              <Heading as="h5" variant="heading3">
-                {title}
-              </Heading>
-            )
-          },
-          h6: ({ children }) => {
-            const title = children.filter((child) => typeof child === 'string')
-            return (
-              <Heading as="h6" variant="heading4">
-                {title}
-              </Heading>
-            )
-          },
-          br: () => <br />,
-          hr: () => <Divider />,
-          code: ({ children }) => <Code>{children}</Code>,
-          ol: ({ children }) => <OrderedList>{children}</OrderedList>,
-          ul: ({ children }) => <UnorderedList>{children}</UnorderedList>,
-          a: ({ children, href }) => {
-            if (!href) return null
-            return (
-              <Link href={href} isExternal>
-                {children}
-              </Link>
-            )
-          },
-        }}
-        {...props}
-      />
-    </div>
+    <Box position="relative">
+      <chakra.div
+        ref={invisibleRef}
+        position="absolute"
+        w="full"
+        visibility="hidden"
+      >
+        {source}
+      </chakra.div>
+      <div data-color-mode={colorMode}>
+        <MDPreview
+          components={{
+            p: (props) => <Text {...props} />,
+            br: () => <br />,
+            ol: (props) => <OrderedList {...props} />,
+            ul: (props) => <UnorderedList {...props} />,
+            a: (props) => (
+              <Link
+                color="brand.500"
+                _hover={{ textDecoration: 'underline' }}
+                {...props}
+              />
+            ),
+            // Force these to be text components
+            h1: (props) => <Text {...props} />,
+            h2: (props) => <Text {...props} />,
+            h3: (props) => <Text {...props} />,
+            h4: (props) => <Text {...props} />,
+            h5: (props) => <Text {...props} />,
+            h6: (props) => <Text {...props} />,
+            code: (props) => <Text {...props} />,
+            hr: () => <></>,
+          }}
+          style={{
+            display: isOpen ? 'flex' : '-webkit-box',
+            WebkitLineClamp: 1,
+            overflow: isOpen ? 'visible' : 'hidden',
+            textOverflow: 'ellipsis',
+            WebkitBoxOrient: 'vertical',
+          }}
+          source={source}
+          {...props}
+        />
+      </div>
+      {isMultiline && (
+        <chakra.button
+          onClick={() => setOpen(!isOpen)}
+          color="brand.500"
+          _active={{ opacity: 0.6 }}
+          _hover={{ bg: 'transparent', opacity: 0.8 }}
+        >
+          <Text variant="button2">
+            {isOpen ? t('truncate.show-less') : t('truncate.show-more')}
+          </Text>
+        </chakra.button>
+      )}
+    </Box>
   )
 }
 

@@ -888,6 +888,7 @@
     "percent": "{{value}}%"
   },
   "truncate": {
+    "show-less": "显示更少",
     "show-more": "显示更多"
   },
   "user": {
