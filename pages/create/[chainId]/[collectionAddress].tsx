@@ -66,21 +66,21 @@ const CreatePage: NextPage = ({}) => {
   const [formData, setFormData] = useState<Partial<FormData>>()
 
   const blockExplorer = useBlockExplorer(chainId)
-  const imageUrlLocal = useLocalFileURL(
+  const imageLocal = useLocalFileURL(
     formData?.isPrivate || formData?.isAnimation
       ? formData?.preview
       : formData?.content,
   )
-  const animationUrlLocal = useLocalFileURL(
+  const animationLocal = useLocalFileURL(
     formData?.isAnimation && !formData.isPrivate ? formData.content : undefined,
   )
 
-  const asset: NFTCardProps['asset'] | undefined = useMemo(() => {
+  const asset = useMemo(() => {
     if (!collection) return
     return {
       id: '--',
-      image: imageUrlLocal || '',
-      animationUrl: animationUrlLocal,
+      image: imageLocal,
+      animation: animationLocal,
       name: formData?.name || '',
       bestBid: undefined,
       collection: {
@@ -91,7 +91,7 @@ const CreatePage: NextPage = ({}) => {
       owned: BigNumber.from(0),
       unlockedContent: null,
     } as NFTCardProps['asset'] // TODO: use satisfies to ensure proper type
-  }, [imageUrlLocal, animationUrlLocal, formData?.name, collection])
+  }, [imageLocal, animationLocal, formData?.name, collection])
 
   const creator = useMemo(
     () => ({

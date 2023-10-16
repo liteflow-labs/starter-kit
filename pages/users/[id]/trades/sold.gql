@@ -43,6 +43,7 @@ query FetchUserTradeSold(
         tokenId
         name
         image
+        imageMimetype
       }
     }
   }

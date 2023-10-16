@@ -49,6 +49,7 @@ query FetchUserBidsPlaced(
         tokenId
         name
         image
+        imageMimetype
       }
     }
   }

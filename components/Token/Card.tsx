@@ -18,6 +18,7 @@ import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDots
 import Countdown from 'components/Countdown/Countdown'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo, useState } from 'react'
+import { FileDef } from '../../convert'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
@@ -37,9 +38,9 @@ export type Props = {
       name: string
       chainId: number
     }
-    image: string
-    unlockedContent: { url: string; mimetype: string | null } | null
-    animationUrl: string | null | undefined
+    image: FileDef
+    unlockedContent: FileDef | null
+    animation: FileDef | null
     owned: BigNumber
     bestBid:
       | {
@@ -147,7 +148,6 @@ const TokenCard: FC<Props> = ({
     hasMultiCurrency,
   ])
 
-  // TODO: is the width correct?
   return (
     <Flex
       direction="column"

@@ -28,11 +28,13 @@ query FetchAllERC721And1155(
         name
       }
       image
+      imageMimetype
       unlockedContent {
         url
         mimetype
       }
       animationUrl
+      animationMimetype
       owned: ownership(ownerAddress: $address) {
         quantity
       }

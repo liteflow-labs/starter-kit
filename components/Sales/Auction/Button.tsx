@@ -11,7 +11,6 @@ type Props = {
   isEnded: boolean
 }
 
-// TODO: This component needs refactoring, please look at the storybook to see all the possible variants of this component with this API
 const SaleAuctionButton: FC<Props> = ({
   assetId,
   isOwner,
