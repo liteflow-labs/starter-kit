@@ -39,6 +39,7 @@ query FetchUserFixedPrice(
         tokenId
         name
         image
+        imageMimetype
         owned: ownership(ownerAddress: $address) {
           quantity
         }

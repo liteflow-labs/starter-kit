@@ -9,6 +9,7 @@ import {
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { FC, useMemo } from 'react'
+import { FileDef } from '../../convert'
 import { MintType, Standard } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
@@ -26,9 +27,9 @@ export type Props = {
     collectionAddress: string
     tokenId: string
     name: string
-    image: string
-    animationUrl: string | null | undefined
-    unlockedContent: { url: string; mimetype: string | null } | null | undefined
+    image: FileDef
+    animation: FileDef | null
+    unlockedContent: FileDef | null
     saleSupply: BigNumber
     collection: {
       name: string

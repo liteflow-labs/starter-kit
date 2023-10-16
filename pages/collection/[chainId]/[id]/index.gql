@@ -72,7 +72,9 @@ query FetchCollectionAssets(
       name
       description
       image
+      imageMimetype
       animationUrl
+      animationMimetype
       hasUnlockableContent
       unlockedContent {
         url

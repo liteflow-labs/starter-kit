@@ -42,6 +42,7 @@ query FetchUserTradePurchased(
         collectionAddress
         tokenId
         name
+        imageMimetype
         image
       }
     }

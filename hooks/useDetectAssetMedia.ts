@@ -8,15 +8,9 @@ export type AssetMedia = {
 export default function useDetectAssetMedia(
   asset:
     | {
-        image: string
-        animationUrl: string | null | undefined
-        unlockedContent:
-          | {
-              url: string
-              mimetype: string | null
-            }
-          | null
-          | undefined
+        image: AssetMedia
+        animation: AssetMedia | null
+        unlockedContent: AssetMedia | null
       }
     | undefined
     | null,
@@ -33,13 +27,13 @@ export default function useDetectAssetMedia(
       }
     }
     if (asset.unlockedContent) return asset.unlockedContent
-    if (asset.animationUrl) return { url: asset.animationUrl }
-    return { url: asset.image }
+    if (asset.animation) return asset.animation
+    return asset.image
   }, [asset])
 
   const fallback = useMemo(() => {
     if (!asset) return null
-    if (asset.animationUrl) return { url: asset.image }
+    if (asset.animation) return asset.image
     return null
   }, [asset])
 

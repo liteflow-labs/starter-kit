@@ -36,6 +36,7 @@ query FetchUserAuctions(
         collectionAddress
         tokenId
         image
+        imageMimetype
         name
         owned: ownership(ownerAddress: $address) {
           quantity
