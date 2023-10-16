@@ -43,6 +43,8 @@
       "orderBy": {
         "label": "Ordenar por",
         "values": {
+          "priceAsc": "Precio: Bajo - Alto",
+          "priceDesc": "Precio: Alto - Bajo",
           "createdAtDesc": "Fecha: más recientes",
           "createdAtAsc": "Fecha: más antiguos"
         }
