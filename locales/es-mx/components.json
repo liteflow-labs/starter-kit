@@ -888,6 +888,7 @@
     "percent": "{{value}}%"
   },
   "truncate": {
+    "show-less": "Mostrar menos",
     "show-more": "Mostrar más"
   },
   "user": {
