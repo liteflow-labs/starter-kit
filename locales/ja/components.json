@@ -888,6 +888,7 @@
     "percent": "{{value}}%"
   },
   "truncate": {
+    "show-less": "表示を短縮する",
     "show-more": "続きを表示する"
   },
   "user": {

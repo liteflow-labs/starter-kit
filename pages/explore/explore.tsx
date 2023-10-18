@@ -54,7 +54,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
   const filter = useAssetFilterFromQuery()
-  const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
+  const orderBy = useOrderByQuery<AssetsOrderBy>('BEST_PRICE_ASC')
   const { page, limit, offset } = usePaginateQuery()
   const { data: assetsData } = useFetchAllErc721And1155Query({
     variables: {
@@ -140,6 +140,14 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                 name="orderBy"
                 onChange={changeOrder}
                 choices={[
+                  {
+                    label: t('explore.nfts.orderBy.values.priceAsc'),
+                    value: 'BEST_PRICE_ASC',
+                  },
+                  {
+                    label: t('explore.nfts.orderBy.values.priceDesc'),
+                    value: 'BEST_PRICE_DESC',
+                  },
                   {
                     label: t('explore.nfts.orderBy.values.createdAtDesc'),
                     value: 'CREATED_AT_DESC',
