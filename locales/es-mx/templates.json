@@ -43,6 +43,8 @@
       "orderBy": {
         "label": "Ordenar por",
         "values": {
+          "priceAsc": "Precio: Bajo - Alto",
+          "priceDesc": "Precio: Alto - Bajo",
           "createdAtDesc": "Fecha: más recientes",
           "createdAtAsc": "Fecha: más antiguos"
         }
@@ -78,6 +80,15 @@
       }
     }
   },
+  "drops": {
+    "title": "Gotas",
+    "empty": {
+      "title": "¿Su caída en la plataforma?",
+      "description": "¡Póngase en contacto con el soporte para crear su primera gota en la plataforma!",
+      "action": "Soporte de contacto"
+    },
+    "past-drops": "Gotas pasadas"
+  },
   "collection": {
     "filter": "Filtros",
     "card": {
@@ -99,8 +110,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "Precio: Bajo - Alto",
-        "salesMinUnitPriceInRefDesc": "Precio: Alto - Bajo",
+        "priceAsc": "Precio: Bajo - Alto",
+        "priceDesc": "Precio: Alto - Bajo",
         "createdAtDesc": "Fecha: Más reciente",
         "createdAtAsc": "Fecha: Más antiguo"
       }
