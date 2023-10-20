@@ -6,19 +6,15 @@ import {
   Box,
   Heading,
   Stack,
+  StackProps,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 
-type Props = {
-  // TODO: Remove props as it is used only to put a margin, this margin should be handled in one of the parent component
-  isOwner: boolean
-}
-
-const SaleAuctionIncompleteNoBids: FC<Props> = ({ isOwner }) => {
+const SaleAuctionIncompleteNoBids: FC<StackProps> = (props) => {
   const { t } = useTranslation('components')
   return (
-    <Stack spacing={8}>
+    <Stack spacing={8} {...props}>
       <hr />
       <Heading as="h2" variant="subtitle" color="brand.black">
         {t('sales.auction.failed-no-bid.ended')}
@@ -32,11 +28,7 @@ const SaleAuctionIncompleteNoBids: FC<Props> = ({ isOwner }) => {
         </Heading>
       </Stack>
 
-      <Alert
-        status="error"
-        mb={isOwner ? '-20px !important' : 0}
-        borderRadius="xl"
-      >
+      <Alert status="error" borderRadius="xl">
         <AlertIcon />
         <Box fontSize="sm">
           <AlertTitle>

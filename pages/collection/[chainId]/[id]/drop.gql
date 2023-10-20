@@ -1,0 +1,54 @@
+query FetchCollectionDropDetail($address: Address!, $chainId: Int!) {
+  collection(address: $address, chainId: $chainId) {
+    address
+    chainId
+    cover
+    discord
+    image
+    description
+    deployer {
+      address
+      name
+      username
+      verification {
+        status
+      }
+    }
+    name
+    twitter
+    website
+  }
+}
+
+query FetchCollectionDrops(
+  $address: Address!
+  $minter: Address!
+  $chainId: Int!
+) {
+  drops(
+    filter: {
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $address }
+    }
+    orderBy: START_DATE_ASC
+  ) {
+    nodes {
+      id
+      name
+      startDate
+      endDate
+      unitPrice
+      minted
+      supply
+      maxQuantityPerWallet
+      isAllowed(minter: $minter)
+      maxQuantity(minter: $minter)
+      currency {
+        id
+        decimals
+        symbol
+        image
+      }
+    }
+  }
+}

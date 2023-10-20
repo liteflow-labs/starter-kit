@@ -43,6 +43,8 @@
       "orderBy": {
         "label": "並び替え",
         "values": {
+          "priceAsc": "価格: 低 - 高",
+          "priceDesc": "価格: 高 - 低",
           "createdAtDesc": "日付: 最も新しい",
           "createdAtAsc": "日付: 最も古い"
         }
@@ -78,6 +80,15 @@
       }
     }
   },
+  "drops": {
+    "title": "ドロップ",
+    "empty": {
+      "title": "プラットホームにドロップしますか？",
+      "description": "プラットフォーム上で最初のドロップを作成するには、サポートにお問い合わせください。",
+      "action": "サポート問い合わせ先"
+    },
+    "past-drops": "過去のドロップ"
+  },
   "collection": {
     "filter": "フィルター",
     "card": {
@@ -99,8 +110,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "価格: 低 - 高",
-        "salesMinUnitPriceInRefDesc": "価格: 高 - 低",
+        "priceAsc": "価格: 低 - 高",
+        "priceDesc": "価格: 高 - 低",
         "createdAtDesc": "日付: 最新",
         "createdAtAsc": "日付: 最も古い"
       }

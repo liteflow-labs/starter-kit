@@ -7,6 +7,7 @@ import {
   Flex,
   Heading,
   Stack,
+  StackProps,
   Text,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -18,9 +19,7 @@ import Price from '../../../Price/Price'
 import WalletAddress from '../../../Wallet/Address'
 import AccountImage from '../../../Wallet/Image'
 
-type Props = {
-  // TODO: Remove props as it is used only to put a margin, this margin should be handled in one of the parent component
-  isOwner: boolean
+type Props = StackProps & {
   bestBid: {
     maker: {
       address: string
@@ -35,10 +34,13 @@ type Props = {
   }
 }
 
-const SaleAuctionIncompleteReservePrice: FC<Props> = ({ isOwner, bestBid }) => {
+const SaleAuctionIncompleteReservePrice: FC<Props> = ({
+  bestBid,
+  ...props
+}) => {
   const { t } = useTranslation('components')
   return (
-    <Stack spacing={8}>
+    <Stack spacing={8} {...props}>
       <hr />
       <Heading as="h2" variant="subtitle" color="brand.black">
         {t('sales.auction.failed-no-reserve.ended')}
@@ -78,11 +80,7 @@ const SaleAuctionIncompleteReservePrice: FC<Props> = ({ isOwner, bestBid }) => {
         </Flex>
       </Stack>
 
-      <Alert
-        status="error"
-        mb={isOwner ? '-20px !important' : 0}
-        borderRadius="xl"
-      >
+      <Alert status="error" borderRadius="xl">
         <AlertIcon />
         <Box fontSize="sm">
           <AlertTitle>
