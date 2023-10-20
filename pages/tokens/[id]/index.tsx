@@ -55,6 +55,7 @@ import {
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useDetectAssetMedia from '../../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import useSigner from '../../../hooks/useSigner'
@@ -98,7 +99,24 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     },
   })
 
-  const asset = data?.asset
+  const asset = useMemo(() => {
+    if (!data?.asset) return undefined
+    return {
+      ...data.asset,
+      image: { url: data.asset.image, mimetype: data.asset.imageMimetype },
+      animation: data.asset.animationUrl
+        ? {
+            url: data.asset.animationUrl,
+            mimetype: data.asset.animationMimetype,
+          }
+        : null,
+    }
+  }, [data])
+
+  const finalMedia = useDetectAssetMedia(asset)
+  const previewMedia = useDetectAssetMedia(
+    asset && { ...asset, unlockedContent: null },
+  )
 
   const blockExplorer = useBlockExplorer(chainId)
 
@@ -206,7 +224,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
       <Head
         title={asset ? `${asset.name} - ${asset.collection.name}` : undefined}
         description={asset?.description}
-        image={asset?.image}
+        image={asset?.image.url}
       />
       <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <AspectRatio ratio={1}>
@@ -221,11 +239,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             ) : (
               <>
                 <TokenMedia
-                  imageUrl={asset.image}
-                  animationUrl={asset.animationUrl}
-                  unlockedContent={
-                    showPreview ? undefined : asset.unlockedContent
-                  }
+                  {...(showPreview ? previewMedia : finalMedia)}
                   defaultText={asset.name}
                   controls
                   sizes="
@@ -368,7 +382,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               isOpenCollection={asset.collection.mintType === 'PUBLIC'}
             />
           )}
-          {!asset || !data.currencies?.nodes ? (
+          {!asset || !data?.currencies?.nodes ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
@@ -458,7 +472,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                       {t('asset.detail.details.media')}
                     </Text>
                     <Link
-                      href={asset.animationUrl || asset.image}
+                      href={asset.animation?.url || asset.image.url}
                       isExternal
                       externalIcon
                     >

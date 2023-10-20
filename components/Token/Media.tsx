@@ -1,79 +1,64 @@
 import {
   Box,
   Center,
-  chakra,
   Icon,
+  Skeleton,
   Stack,
   Text,
   useTheme,
 } from '@chakra-ui/react'
 import { FaImage } from '@react-icons/all-files/fa/FaImage'
 import { FC, useCallback, useEffect, useState } from 'react'
+import { AssetMedia } from '../../hooks/useDetectAssetMedia'
 import Image from '../Image/Image'
 
-const getUnlockedContentUrls = (
-  unlockedContent:
-    | {
-        url: string
-        mimetype: string | null
-      }
-    | null
-    | undefined,
-  imageUrl: string,
-  animationUrl: string | null | undefined,
-): { image: string; animation: string | null } => {
-  if (unlockedContent) {
-    return {
-      image: unlockedContent.url,
-      animation: unlockedContent.mimetype?.startsWith('video/')
-        ? unlockedContent.url
-        : null,
-    }
-  }
-  return {
-    image: imageUrl,
-    animation: animationUrl || null,
-  }
-}
+const supportedMedia = [/^image\/*/, /^video\/*/]
 
 const TokenMedia: FC<{
-  imageUrl: string
-  animationUrl: string | null | undefined
-  unlockedContent: { url: string; mimetype: string | null } | null | undefined
+  media: AssetMedia
+  fallback: AssetMedia | null
   defaultText: string
   controls?: boolean
   fill?: boolean
   sizes: string
-}> = ({
-  imageUrl,
-  animationUrl,
-  unlockedContent,
-  defaultText,
-  fill,
-  controls,
-  sizes,
-}) => {
+}> = ({ media, fallback, defaultText, fill, controls, sizes }) => {
   const { colors } = useTheme()
-
-  // prioritize unlockedContent
-  const { image, animation } = getUnlockedContentUrls(
-    unlockedContent,
-    imageUrl,
-    animationUrl,
-  )
 
   const [imageError, setImageError] = useState(false)
   const [videoError, setVideoError] = useState(false)
+  const [mediaToDisplay, setMediaToDisplay] = useState<AssetMedia | null>(media)
 
   const onImageError = useCallback(() => setImageError(true), [])
   const onVideoError = useCallback(() => setVideoError(true), [])
 
-  // reset when image change. Needed when component is recycled
-  useEffect(() => setImageError(false), [image])
-  useEffect(() => setVideoError(false), [image, animation])
+  // Reset the media when the props change
+  useEffect(() => setMediaToDisplay(media), [media])
+
+  // Switch to the fallback when there is an error with the main media
+  useEffect(() => {
+    if (!imageError) return
+    if (!videoError) return
+    if (mediaToDisplay?.url === fallback?.url) return
+    setMediaToDisplay(fallback)
+  }, [imageError, videoError, fallback, mediaToDisplay])
+
+  // Switch to the fallback when the media is not supported
+  useEffect(() => {
+    const mimetype = mediaToDisplay?.mimetype
+    if (!mimetype) return // assume it's supported
+    if (supportedMedia.some((regex) => regex.test(mimetype))) return // it's supported
+    if (mediaToDisplay?.url === fallback?.url) return setMediaToDisplay(null) // fallback is also not supported
+    setMediaToDisplay(fallback)
+  }, [fallback, mediaToDisplay])
+
+  // Reset all errors when the media to display changes (when switching to the fallback)
+  useEffect(() => {
+    setImageError(false)
+    setVideoError(false)
+  }, [mediaToDisplay])
 
   // cannot display anything
-  if (imageError && videoError)
+  if (!mediaToDisplay || (imageError && videoError && mediaToDisplay))
     return (
       <>
         <svg viewBox="0 0 1 1">
@@ -90,30 +75,15 @@ const TokenMedia: FC<{
       </>
     )
 
-  // Hack in case the image fails to load because it is a video
-  if (imageError && !videoError) {
-    return (
-      <Box
-        as="video"
-        src={image}
-        autoPlay
-        playsInline
-        muted
-        loop
-        controls={controls}
-        maxW="full"
-        maxH="full"
-        onError={onVideoError}
-      />
-    )
-  }
-
   // display video
-  if (animation && !videoError) {
+  if (
+    (mediaToDisplay.mimetype?.startsWith('video/') || imageError) &&
+    !videoError
+  ) {
     return (
       <Box
         as="video"
-        src={animation}
+        src={mediaToDisplay.url}
         autoPlay
         playsInline
         muted
@@ -126,30 +96,25 @@ const TokenMedia: FC<{
     )
   }
 
-  // Use a basic image when the file is a blob or data
-  if (image.startsWith('blob:') || image.startsWith('data:'))
+  if (
+    !mediaToDisplay.mimetype ||
+    mediaToDisplay.mimetype.startsWith('image/')
+  ) {
     return (
-      <chakra.img
-        src={image}
-        alt={defaultText}
-        objectFit={fill ? 'cover' : 'scale-down'}
-        sizes={sizes}
-      />
+      <Box position="relative" w="full" h="full">
+        <Image
+          src={mediaToDisplay.url}
+          alt={defaultText}
+          onError={onImageError}
+          fill
+          objectFit={fill ? 'cover' : 'contain'}
+          sizes={sizes}
+          unoptimized={mediaToDisplay.mimetype === 'image/gif'}
+        />
+      </Box>
     )
-
-  return (
-    <Box position="relative" w="full" h="full">
-      <Image
-        src={image}
-        alt={defaultText}
-        onError={onImageError}
-        fill
-        objectFit={fill ? 'cover' : 'contain'}
-        sizes={sizes}
-        unoptimized={unlockedContent?.mimetype === 'image/gif'}
-      />
-    </Box>
-  )
+  }
+  return <Skeleton width="100%" height="100%" />
 }
 
 export default TokenMedia

@@ -129,6 +129,9 @@ const DrawerMenu: FC<{
             <Link href="/explore">
               <NavItemMobile>{t('navbar.explore')}</NavItemMobile>
             </Link>
+            {/* <Link href="/drops">
+              <NavItemMobile>{t('navbar.drops')}</NavItemMobile>
+            </Link> */}
             <Link href="/create">
               <NavItemMobile>{t('navbar.create')}</NavItemMobile>
             </Link>
@@ -408,6 +411,17 @@ const Navbar: FC<{
               {t('navbar.explore')}
             </Text>
           </Flex>
+          {/* <Flex
+            as={Link}
+            href="/drops"
+            color="brand.black"
+            align="center"
+            _hover={{ color: 'gray.500' }}
+          >
+            <Text as="span" variant="button2">
+              {t('navbar.drops')}
+            </Text>
+          </Flex> */}
           <Flex
             as={Link}
             href="/create"

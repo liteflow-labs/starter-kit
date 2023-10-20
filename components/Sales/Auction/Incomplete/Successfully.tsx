@@ -45,7 +45,7 @@ const SaleAuctionIncompleteSuccess: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   return (
-    <Stack spacing={8}>
+    <Stack spacing={8} mb={isOwner ? -5 : 0}>
       <hr />
       <Heading as="h2" variant="subtitle" color="brand.black">
         {t('sales.auction.success.ended')}
@@ -86,11 +86,7 @@ const SaleAuctionIncompleteSuccess: FC<Props> = ({
       </Stack>
 
       {isOwner ? (
-        <Alert
-          status="warning"
-          mb={isOwner ? '-20px !important' : 0}
-          borderRadius="xl"
-        >
+        <Alert status="warning" borderRadius="xl">
           <AlertIcon />
           <Box fontSize="sm">
             <AlertTitle>

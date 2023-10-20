@@ -9,8 +9,10 @@ import {
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { FC, useMemo } from 'react'
+import { FileDef } from '../../convert'
 import { MintType, Standard } from '../../graphql'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
+import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import Link from '../Link/Link'
 import type { Props as SaleDetailProps } from '../Sales/Detail'
 import SaleDetail from '../Sales/Detail'
@@ -25,9 +27,9 @@ export type Props = {
     collectionAddress: string
     tokenId: string
     name: string
-    image: string
-    animationUrl: string | null | undefined
-    unlockedContent: { url: string; mimetype: string | null } | null | undefined
+    image: FileDef
+    animation: FileDef | null
+    unlockedContent: FileDef | null
     saleSupply: BigNumber
     collection: {
       name: string
@@ -73,6 +75,7 @@ const TokenHeader: FC<Props> = ({
 }) => {
   const blockExplorer = useBlockExplorer(asset.collection.chainId)
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
+  const media = useDetectAssetMedia(asset)
 
   const ownAllSupply = useMemo(
     () => asset.owned.gte(asset.totalSupply),
@@ -110,9 +113,7 @@ const TokenHeader: FC<Props> = ({
         >
           <AspectRatio w="full" ratio={1}>
             <TokenMedia
-              imageUrl={asset.image}
-              animationUrl={asset.animationUrl}
-              unlockedContent={asset.unlockedContent}
+              {...media}
               defaultText={asset.name}
               fill
               sizes="

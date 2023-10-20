@@ -122,16 +122,14 @@ const SaleDirectInfo: FC<Props> = ({
           </Box>
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('sales.direct.info.price')}
-            {currentAccountFirstSale && (
-              <Text
-                as={Price}
-                color="brand.black"
-                ml={2}
-                fontWeight="semibold"
-                amount={currentAccountFirstSale.unitPrice}
-                currency={currentAccountFirstSale.currency}
-              />
-            )}
+            <Text
+              as={Price}
+              color="brand.black"
+              ml={2}
+              fontWeight="semibold"
+              amount={currentAccountFirstSale.unitPrice}
+              currency={currentAccountFirstSale.currency}
+            />
           </Heading>
         </Flex>
         <ConnectButtonWithNetworkSwitch
