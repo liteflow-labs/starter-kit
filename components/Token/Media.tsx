@@ -12,7 +12,7 @@ import { FC, useCallback, useEffect, useState } from 'react'
 import { AssetMedia } from '../../hooks/useDetectAssetMedia'
 import Image from '../Image/Image'
 
-const supportedMedia = [/^image\/*/, /^video\/*/]
+const supportedMedia = [/^image\/*/, /^video\/*/, /^application\/octet-stream$/]
 
 const TokenMedia: FC<{
   media: AssetMedia
@@ -77,7 +77,9 @@ const TokenMedia: FC<{
 
   // display video
   if (
-    (mediaToDisplay.mimetype?.startsWith('video/') || imageError) &&
+    (mediaToDisplay.mimetype?.startsWith('video/') ||
+      mediaToDisplay.mimetype === 'application/octet-stream' ||
+      imageError) &&
     !videoError
   ) {
     return (
