@@ -19,7 +19,6 @@ import Countdown from 'components/Countdown/Countdown'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo, useState } from 'react'
 import { FileDef } from '../../convert'
-import useAccount from '../../hooks/useAccount'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
@@ -102,7 +101,6 @@ const TokenCard: FC<Props> = ({
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const [isHovered, setIsHovered] = useState(false)
   const media = useDetectAssetMedia(asset)
-  const { isLoggedIn } = useAccount()
 
   const chainName = useMemo(
     () => CHAINS.find((x) => x.id === asset.collection.chainId)?.name,
