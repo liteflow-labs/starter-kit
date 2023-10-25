@@ -7,8 +7,8 @@ import { useCallback, useMemo } from 'react'
 import Head from '../components/Head'
 import Image from '../components/Image/Image'
 import Price from '../components/Price/Price'
-import { FetchCartItemsQuery, useFetchCartItemsQuery } from '../graphql'
-import useCart, { CartItem } from '../hooks/useCart'
+import { useFetchCartItemsQuery } from '../graphql'
+import useCart from '../hooks/useCart'
 import useSigner from '../hooks/useSigner'
 import LargeLayout from '../layouts/large'
 
@@ -22,25 +22,15 @@ const CartPage: NextPage = () => {
     variables: { offerIds: items.map((x) => x.offerId) },
   })
 
-  const offers = useMemo(
-    () =>
-      (data?.offerOpenSales?.nodes || []).reduce(
-        (prev, x) => ({
-          ...prev,
-          [x.id]: x,
-        }),
-        {} as CartItem & FetchCartItemsQuery['offerOpenSales']['nodes'][number],
-      ),
-    [data],
-  )
-
   const itemsWithOffer = useMemo(
     () =>
-      items.map((x) => ({
-        ...x,
-        offer: offers[x.offerId],
+      items.map((item) => ({
+        ...item,
+        offer:
+          data?.offerOpenSales?.nodes.find((x) => x.id === item.offerId) ||
+          null,
       })),
-    [items, offers],
+    [items, data],
   )
 
   const purchase = useCallback(async () => {
@@ -57,24 +47,28 @@ const CartPage: NextPage = () => {
         {t('cart.title')}
       </Heading>
       <VStack spacing={4}>
-        {itemsWithOffer.map(({ offer, quantity }) => (
-          <Flex key={offer.id}>
-            <Image
-              src={offer.asset.image}
-              alt={offer.asset.name}
-              width={100}
-              height={100}
-            />
-            <VStack>
-              <Text>{offer.asset.name}</Text>
-              <Text>{offer.asset.collection.name}</Text>
-            </VStack>
-            <Price
-              amount={BigNumber.from(offer.unitPrice).mul(quantity || 1)}
-              currency={offer.currency}
-            />
-          </Flex>
-        ))}
+        {itemsWithOffer.map(({ offerId, offer, quantity }) =>
+          offer ? (
+            <Flex key={offerId}>
+              <Image
+                src={offer.asset.image}
+                alt={offer.asset.name}
+                width={100}
+                height={100}
+              />
+              <VStack>
+                <Text>{offer.asset.name}</Text>
+                <Text>{offer.asset.collection.name}</Text>
+              </VStack>
+              <Price
+                amount={BigNumber.from(offer.unitPrice).mul(quantity || 1)}
+                currency={offer.currency}
+              />
+            </Flex>
+          ) : (
+            <Text key={offerId}>Invalid offer</Text>
+          ),
+        )}
       </VStack>
       <Button onClick={purchase}>Buy all</Button>
     </LargeLayout>
