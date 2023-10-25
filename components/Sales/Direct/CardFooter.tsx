@@ -1,7 +1,8 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { Divider, Flex, HStack, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
+import AddToCartButton from '../../Button/AddToCart'
 import Link from '../../Link/Link'
 import Price from '../../Price/Price'
 
@@ -72,26 +73,41 @@ const SaleDirectCardFooter: FC<Props> = ({
   }, [numberOfSales, unitPrice, currency, hasMultiCurrency, t])
 
   return (
-    <Flex
-      as={Link}
-      href={`/checkout/${saleId}`}
-      py={2}
-      px={4}
-      bgColor={showButton ? 'brand.500' : 'gray.100'}
-    >
-      <Text
-        variant="subtitle2"
-        color={showButton ? 'white' : 'gray.500'}
-        noOfLines={1}
-        wordBreak="break-all"
+    <HStack gap={0}>
+      <Flex
+        as={Link}
+        href={`/checkout/${saleId}`}
+        py={2}
+        px={4}
+        bgColor={showButton ? 'brand.500' : 'gray.100'}
+        flexGrow={1}
+        transition="none"
       >
-        {showButton
-          ? isOwner
-            ? t('sales.direct.card-footer.view')
-            : t('sales.direct.card-footer.purchase')
-          : chip}
-      </Text>
-    </Flex>
+        <Text
+          variant="subtitle2"
+          color={showButton ? 'white' : 'gray.500'}
+          noOfLines={1}
+          wordBreak="break-all"
+        >
+          {showButton
+            ? isOwner
+              ? t('sales.direct.card-footer.view')
+              : t('sales.direct.card-footer.purchase')
+            : chip}
+        </Text>
+      </Flex>
+      {showButton && (
+        <>
+          <Divider orientation="vertical" />
+          <AddToCartButton
+            offerId={saleId}
+            isDisabled={isOwner}
+            borderRadius="none"
+            h={9}
+          />
+        </>
+      )}
+    </HStack>
   )
 }
 

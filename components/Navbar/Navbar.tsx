@@ -30,6 +30,7 @@ import { FaEnvelope } from '@react-icons/all-files/fa/FaEnvelope'
 import { FaShoppingCart } from '@react-icons/all-files/fa/FaShoppingCart'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
+import CartDrawer from 'components/Navbar/CartDrawer'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { FC, HTMLAttributes, useEffect, useRef } from 'react'
@@ -330,6 +331,7 @@ const Navbar: FC<{
   multiLang?: MultiLang
 }> = ({ multiLang }) => {
   const { t } = useTranslation('components')
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const { LOGO, META_COMPANY_NAME } = useEnvironment()
   const { address, isLoggedIn, logout, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
@@ -337,7 +339,7 @@ const Navbar: FC<{
   const formValues = useForm<FormData>()
   const [cookies] = useCookies()
   const { openConnectModal } = useConnectModal()
-  const { items } = useCart()
+  const { items: cartItems } = useCart()
   const lastNotification = cookies[`lastNotification-${address}`]
   const {
     data: accountData,
@@ -476,36 +478,35 @@ const Navbar: FC<{
                   </Flex>
                 </IconButton>
               </Link>
-              <Link href="/cart">
-                <IconButton
-                  aria-label="Cart"
-                  variant="ghost"
-                  colorScheme="gray"
-                  rounded="full"
-                  position="relative"
-                >
-                  <Flex>
-                    <Icon as={FaShoppingCart} color="brand.black" h={4} w={4} />
-                    {items.length > 0 && (
-                      <Flex
-                        position="absolute"
-                        top={0}
-                        right={0}
-                        h={4}
-                        w={4}
-                        align="center"
-                        justify="center"
-                        rounded="full"
-                        bgColor="red.500"
-                        color="white"
-                        fontSize="xs"
-                      >
-                        {items.length}
-                      </Flex>
-                    )}
-                  </Flex>
-                </IconButton>
-              </Link>
+              <IconButton
+                aria-label="Cart"
+                variant="ghost"
+                colorScheme="gray"
+                rounded="full"
+                position="relative"
+                onClick={onOpen}
+              >
+                <Flex>
+                  <Icon as={FaShoppingCart} color="brand.black" h={4} w={4} />
+                  {cartItems.length > 0 && (
+                    <Flex
+                      position="absolute"
+                      top={0}
+                      right={0}
+                      h={4}
+                      w={4}
+                      align="center"
+                      justify="center"
+                      rounded="full"
+                      bgColor="red.500"
+                      color="white"
+                      fontSize="xs"
+                    >
+                      {cartItems.length}
+                    </Flex>
+                  )}
+                </Flex>
+              </IconButton>
               <UserMenu
                 account={account.address}
                 user={account}
@@ -545,6 +546,7 @@ const Navbar: FC<{
             signOutFn={() => logout().then(disconnect)}
           />
         </Flex>
+        <CartDrawer isOpen={isOpen} onClose={onClose} items={cartItems} />
       </Flex>
     </>
   )
