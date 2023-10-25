@@ -3,11 +3,6 @@ query FetchCartItems($offerIds: [UUID!]!) {
     nodes {
       id
       type
-      asset {
-        chainId
-        collectionAddress
-        tokenId
-      }
       maker {
         address
         name
