@@ -27,6 +27,7 @@ import {
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { FaEnvelope } from '@react-icons/all-files/fa/FaEnvelope'
+import { FaShoppingCart } from '@react-icons/all-files/fa/FaShoppingCart'
 import { HiChevronDown } from '@react-icons/all-files/hi/HiChevronDown'
 import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import useTranslation from 'next-translate/useTranslation'
@@ -37,6 +38,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useDisconnect } from 'wagmi'
 import { useNavbarAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
+import useCart from '../../hooks/useCart'
 import useEnvironment from '../../hooks/useEnvironment'
 import Link from '../Link/Link'
 import SearchInput from '../SearchInput'
@@ -335,6 +337,7 @@ const Navbar: FC<{
   const formValues = useForm<FormData>()
   const [cookies] = useCookies()
   const { openConnectModal } = useConnectModal()
+  const { items } = useCart()
   const lastNotification = cookies[`lastNotification-${address}`]
   const {
     data: accountData,
@@ -469,6 +472,36 @@ const Navbar: FC<{
                         rounded="full"
                         bgColor="red.500"
                       />
+                    )}
+                  </Flex>
+                </IconButton>
+              </Link>
+              <Link href="/cart">
+                <IconButton
+                  aria-label="Cart"
+                  variant="ghost"
+                  colorScheme="gray"
+                  rounded="full"
+                  position="relative"
+                >
+                  <Flex>
+                    <Icon as={FaShoppingCart} color="brand.black" h={4} w={4} />
+                    {items.length > 0 && (
+                      <Flex
+                        position="absolute"
+                        top={0}
+                        right={0}
+                        h={4}
+                        w={4}
+                        align="center"
+                        justify="center"
+                        rounded="full"
+                        bgColor="red.500"
+                        color="white"
+                        fontSize="xs"
+                      >
+                        {items.length}
+                      </Flex>
                     )}
                   </Flex>
                 </IconButton>
