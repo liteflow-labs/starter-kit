@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react'
+import { AspectRatio, Box, Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { FC } from 'react'
 import { formatAddress } from '../../utils'
@@ -27,23 +27,25 @@ const UserCard: FC<Props> = ({ user }) => {
         w="full"
         overflow="hidden"
       >
-        <Box position="relative" height="7.5rem">
-          {user.cover ? (
-            <Image
-              src={user.cover}
-              alt={user.name || 'User cover image'}
-              fill
-              sizes="
+        <Flex w="full" position="relative" bg="gray.100">
+          <AspectRatio w="full" ratio={3 / 2}>
+            {user.cover ? (
+              <Image
+                src={user.cover}
+                alt={user.name || 'User cover image'}
+                fill
+                sizes="
               (min-width: 80em) 292px,
               (min-width: 62em) 25vw,
               (min-width: 48em) 33vw,
               (min-width: 30em) 50vw,
               100vw"
-              objectFit="cover"
-            />
-          ) : (
-            <Box bg="gray.100" height="full" />
-          )}
+                objectFit="cover"
+              />
+            ) : (
+              <Box />
+            )}
+          </AspectRatio>
           <Flex
             position="absolute"
             bottom={-8}
@@ -60,7 +62,7 @@ const UserCard: FC<Props> = ({ user }) => {
               rounded="full"
             />
           </Flex>
-        </Box>
+        </Flex>
         <Flex
           alignItems="center"
           gap={1.5}
