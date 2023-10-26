@@ -30,7 +30,7 @@ type Props = {
 const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   const { events } = useRouter()
   const { clearCart, items } = useCart()
-  const [fetch, { data, refetch, called }] = useFetchCartItemsLazyQuery({
+  const [fetch, { data }] = useFetchCartItemsLazyQuery({
     variables: {
       offerIds: items.map((item) => item.offerId),
     },
