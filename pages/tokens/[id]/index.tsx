@@ -26,7 +26,6 @@ import {
 import { BigNumber } from '@ethersproject/bignumber'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
-import linkify from 'components/Linkify/Linkify'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
@@ -39,6 +38,7 @@ import Head from '../../../components/Head'
 import HistoryList from '../../../components/History/HistoryList'
 import Image from '../../../components/Image/Image'
 import Link from '../../../components/Link/Link'
+import MarkdownViewer from '../../../components/MarkdownViewer'
 import SaleDetail from '../../../components/Sales/Detail'
 import SkeletonProperty from '../../../components/Skeleton/Property'
 import TokenMedia from '../../../components/Token/Media'
@@ -418,12 +418,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   </Heading>
                   <Stack borderRadius="2xl" p={3} borderWidth="1px">
                     <Text
-                      as="p"
                       variant="text-sm"
                       color="gray.500"
                       whiteSpace="pre-wrap"
                     >
-                      {linkify(asset.description)}
+                      <MarkdownViewer source={asset.description} />
                     </Text>
                   </Stack>
                 </Stack>
