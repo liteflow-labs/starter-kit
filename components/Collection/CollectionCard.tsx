@@ -1,4 +1,12 @@
-import { Box, Flex, Heading, SimpleGrid, Text, VStack } from '@chakra-ui/react'
+import {
+  AspectRatio,
+  Box,
+  Flex,
+  Heading,
+  SimpleGrid,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import Image from 'components/Image/Image'
 import Link from 'components/Link/Link'
 import { convertCollection } from 'convert'
@@ -36,21 +44,25 @@ const CollectionCard: FC<Props> = ({ collection }) => {
       overflow="hidden"
       w="full"
     >
-      <Flex position="relative" h={120} w="full" bg="gray.100">
-        {collection.cover && (
-          <Image
-            src={collection.cover}
-            alt={collection.name}
-            fill
-            sizes="
+      <Flex w="full" position="relative" bg="gray.100">
+        <AspectRatio w="full" ratio={7 / 4}>
+          {collection.cover ? (
+            <Image
+              src={collection.cover}
+              alt={collection.name}
+              fill
+              sizes="
             (min-width: 80em) 292px,
             (min-width: 62em) 25vw,
             (min-width: 48em) 33vw,
             (min-width: 30em) 50vw,
             100vw"
-            objectFit="cover"
-          />
-        )}
+              objectFit="cover"
+            />
+          ) : (
+            <Box />
+          )}
+        </AspectRatio>
         <Box
           position="absolute"
           bottom="-28px"
