@@ -16,12 +16,12 @@ import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard
 import { HiOutlineGlobeAlt } from '@react-icons/all-files/hi/HiOutlineGlobeAlt'
 import { SiInstagram } from '@react-icons/all-files/si/SiInstagram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
-import linkify from 'components/Linkify/Linkify'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useEffect, useState } from 'react'
 import useAccount from '../../../hooks/useAccount'
 import { formatError } from '../../../utils'
 import Link from '../../Link/Link'
+import MarkdownViewer from '../../MarkdownViewer'
 import WalletAddress from '../../Wallet/Address'
 
 const UserProfileInfo: FC<{
@@ -132,62 +132,64 @@ const UserProfileInfo: FC<{
           <Heading as="h4" variant="heading2" color="brand.black">
             {t('user.info.bio')}
           </Heading>
-          <Text as="p" variant="text-sm" color="gray.500" whiteSpace="pre-wrap">
-            {linkify(description)}
+          <Text variant="text-sm" color="gray.500" whiteSpace="pre-wrap">
+            <MarkdownViewer source={description} />
           </Text>
         </Stack>
       )}
 
-      <VStack as="nav" spacing={3} align="flex-start">
-        {twitter && (
-          <Button
-            as={Link}
-            href={`https://twitter.com/${twitter}`}
-            isExternal
-            variant="outline"
-            colorScheme="gray"
-            w={40}
-            justifyContent="space-between"
-            rightIcon={<Icon as={SiTwitter} />}
-          >
-            <Text as="span" isTruncated>
-              @{twitter}
-            </Text>
-          </Button>
-        )}
-        {instagram && (
-          <Button
-            as={Link}
-            href={`https://instagram.com/${instagram}`}
-            isExternal
-            variant="outline"
-            colorScheme="gray"
-            w={40}
-            justifyContent="space-between"
-            rightIcon={<Icon as={SiInstagram} />}
-          >
-            <Text as="span" isTruncated>
-              @{instagram}
-            </Text>
-          </Button>
-        )}
-        {website && (
-          <Button
-            as={Link}
-            href={website.includes('http') ? website : `https://${website}`}
-            isExternal
-            variant="outline"
-            colorScheme="gray"
-            w={40}
-            justifyContent="space-between"
-            rightIcon={<Icon as={HiOutlineGlobeAlt} />}
-          >
-            <Text as="span" isTruncated>
-              {website.replace(/^https?\:\/\//i, '')}
-            </Text>
-          </Button>
-        )}
-      </VStack>
+      {(twitter || instagram || website) && (
+        <VStack as="nav" spacing={3} align="flex-start">
+          {twitter && (
+            <Button
+              as={Link}
+              href={`https://twitter.com/${twitter}`}
+              isExternal
+              variant="outline"
+              colorScheme="gray"
+              w={40}
+              justifyContent="space-between"
+              rightIcon={<Icon as={SiTwitter} />}
+            >
+              <Text as="span" isTruncated>
+                @{twitter}
+              </Text>
+            </Button>
+          )}
+          {instagram && (
+            <Button
+              as={Link}
+              href={`https://instagram.com/${instagram}`}
+              isExternal
+              variant="outline"
+              colorScheme="gray"
+              w={40}
+              justifyContent="space-between"
+              rightIcon={<Icon as={SiInstagram} />}
+            >
+              <Text as="span" isTruncated>
+                @{instagram}
+              </Text>
+            </Button>
+          )}
+          {website && (
+            <Button
+              as={Link}
+              href={website.includes('http') ? website : `https://${website}`}
+              isExternal
+              variant="outline"
+              colorScheme="gray"
+              w={40}
+              justifyContent="space-between"
+              rightIcon={<Icon as={HiOutlineGlobeAlt} />}
+            >
+              <Text as="span" isTruncated>
+                {website.replace(/^https?\:\/\//i, '')}
+              </Text>
+            </Button>
+          )}
+        </VStack>
+      )}
 
       {ownerLoggedIn && loginUrlForReferral && (
         <Stack spacing={4} maxW="100%">

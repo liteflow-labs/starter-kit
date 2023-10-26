@@ -163,7 +163,13 @@ const TokenCard: FC<Props> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Flex as={Link} href={`/tokens/${asset.id}`} w="full" position="relative">
+      <Flex
+        as={Link}
+        href={`/tokens/${asset.id}`}
+        w="full"
+        position="relative"
+        bg="gray.100"
+      >
         <AspectRatio w="full" ratio={1}>
           {media.media?.url ? (
             <TokenMedia
@@ -178,7 +184,7 @@ const TokenCard: FC<Props> = ({
             100vw"
             />
           ) : (
-            <Box bg="brand.50" />
+            <Box />
           )}
         </AspectRatio>
         {auction && (
