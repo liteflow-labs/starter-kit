@@ -546,7 +546,7 @@ const Navbar: FC<{
             signOutFn={() => logout().then(disconnect)}
           />
         </Flex>
-        <CartDrawer isOpen={isOpen} onClose={onClose} items={cartItems} />
+        <CartDrawer isOpen={isOpen} onClose={onClose} />
       </Flex>
     </>
   )
