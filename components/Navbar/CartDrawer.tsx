@@ -10,7 +10,11 @@ import {
   DrawerOverlay,
   Flex,
   HStack,
+  SkeletonCircle,
+  SkeletonText,
   Tag,
+  Text,
+  VStack,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
@@ -18,7 +22,7 @@ import { useFetchCartItemsLazyQuery } from '../../graphql'
 import useCart from '../../hooks/useCart'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Link from '../Link/Link'
-import List from '../List/List'
+import List, { ListItem } from '../List/List'
 import CartDrawerListItem from '../Navbar/CartDrawerListItem'
 
 type Props = {
@@ -78,14 +82,49 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
         <Divider />
         <DrawerBody py={4} px={2}>
           <List>
-            {cartItems?.map((cartItem) => (
-              <CartDrawerListItem key={cartItem.id} cartItem={cartItem} />
-            ))}
+            {!cartItems ? (
+              new Array(6)
+                .fill(0)
+                .map((_, index) => (
+                  <ListItem
+                    key={index}
+                    image={<SkeletonCircle size="10" borderRadius="xl" />}
+                    imageRounded="xl"
+                    label={<SkeletonText noOfLines={2} width="24" />}
+                    action={<SkeletonText noOfLines={1} width="24" />}
+                  />
+                ))
+            ) : cartItems.length > 0 ? (
+              cartItems.map((cartItem) => (
+                <CartDrawerListItem key={cartItem.id} cartItem={cartItem} />
+              ))
+            ) : (
+              <VStack spacing={1} py={4}>
+                <Text variant="subtitle2" color="gray.800">
+                  No items in cart
+                </Text>
+                <Text variant="caption">Add items to get started.</Text>
+                <Button
+                  size="sm"
+                  as={Link}
+                  href="/explore?offers=fixed"
+                  variant="outline"
+                  mt={3}
+                >
+                  Explore NFTs
+                </Button>
+              </VStack>
+            )}
           </List>
         </DrawerBody>
         <Divider />
         <DrawerFooter>
-          <Button as={Link} href="/cart" width="full">
+          <Button
+            as={Link}
+            href="/cart"
+            width="full"
+            isDisabled={cartItems?.length === 0}
+          >
             Checkout
           </Button>
         </DrawerFooter>
