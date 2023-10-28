@@ -15,12 +15,14 @@ import {
   Tooltip,
 } from '@chakra-ui/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
-import CartDrawerListItem from 'components/Navbar/CartDrawerListItem'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
 import { useFetchCartItemsLazyQuery } from '../../graphql'
 import useCart from '../../hooks/useCart'
+import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Link from '../Link/Link'
+import List from '../List/List'
+import CartDrawerListItem from '../Navbar/CartDrawerListItem'
 
 type Props = {
   isOpen: boolean
@@ -35,6 +37,12 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
       offerIds: items.map((item) => item.offerId),
     },
   })
+
+  const cartItems = useOrderByKey(
+    items.map((item) => item.offerId),
+    data?.offerOpenSales?.nodes,
+    (asset) => asset.id,
+  )
 
   useEffect(() => {
     async function fetchCartItems() {
@@ -85,10 +93,12 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
           </Button>
         </Flex>
         <Divider />
-        <DrawerBody p={4}>
-          {data?.offerOpenSales?.nodes.map((cartItem) => (
-            <CartDrawerListItem key={cartItem.id} cartItem={cartItem} />
-          ))}
+        <DrawerBody py={4} px={2}>
+          <List>
+            {cartItems?.map((cartItem) => (
+              <CartDrawerListItem key={cartItem.id} cartItem={cartItem} />
+            ))}
+          </List>
         </DrawerBody>
         <Divider />
         <DrawerFooter>

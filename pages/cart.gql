@@ -3,6 +3,7 @@ query FetchCartItems($offerIds: [UUID!]!) {
     nodes {
       id
       type
+      expiredAt
       maker {
         address
         name
