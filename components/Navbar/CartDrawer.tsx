@@ -83,7 +83,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
         <DrawerBody py={4} px={2}>
           <List>
             {!cartItems ? (
-              new Array(6)
+              new Array(items.length > 0 ? items.length : 4)
                 .fill(0)
                 .map((_, index) => (
                   <ListItem
