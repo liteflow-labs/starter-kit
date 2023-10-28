@@ -25,6 +25,10 @@ const CartContext: FC<PropsWithChildren> = (props) => {
     [items],
   )
 
+  // TODO: add fetch when we add first item to the list so we get the chainId for that item
+  // and share that chainId with context so we can block adding items from different chains
+  // no need to do this multiple times, just once when we add first item and clear it when we clear cart
+
   useEffect(() => {
     if (!address) return
     setItems(
