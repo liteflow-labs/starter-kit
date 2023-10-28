@@ -1,4 +1,5 @@
-import { Button, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Icon, Text, Tooltip } from '@chakra-ui/react'
+import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import Price from 'components/Price/Price'
 import { FC, useMemo, useState } from 'react'
 import { dateIsBefore } from 'utils'
@@ -71,7 +72,31 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
       }
       subtitle={
         isExpired ? (
-          <Text variant="caption">Not available</Text>
+          <Flex
+            as={Text}
+            variant="caption"
+            lineHeight={5}
+            alignItems="center"
+            gap={1}
+          >
+            <span>Not available</span>
+            <Tooltip
+              fontSize="xs"
+              label="The item is unavailable because it has been purchased by someone else, the seller has removed it from sale, or the listing has expired."
+              placement="bottom"
+              p={3}
+            >
+              <Box display="inline-flex" as="span">
+                <Icon
+                  as={FaInfoCircle}
+                  color="gray.400"
+                  h={4}
+                  w={4}
+                  cursor="pointer"
+                />
+              </Box>
+            </Tooltip>
+          </Flex>
         ) : (
           <Text
             as={Link}

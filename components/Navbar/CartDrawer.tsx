@@ -1,20 +1,17 @@
 import {
   Button,
+  CloseButton,
   Divider,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Flex,
   HStack,
-  Icon,
-  Text,
-  Tooltip,
+  Tag,
 } from '@chakra-ui/react'
-import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { useRouter } from 'next/router'
 import { FC, useEffect } from 'react'
 import { useFetchCartItemsLazyQuery } from '../../graphql'
@@ -62,36 +59,22 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
     <Drawer isOpen={isOpen} onClose={onClose} placement="right">
       <DrawerOverlay />
       <DrawerContent mt={16} mb={4} mx={4} borderRadius="xl">
-        <DrawerCloseButton top={4} />
         <DrawerHeader px={4}>
-          <HStack>
-            <span>Your cart</span>
-            <Tooltip
-              label="Items in your cart are not guaranteed at the time of checkout."
-              placement="bottom"
-              p={3}
-            >
-              <span>
-                <Icon
-                  as={FaInfoCircle}
-                  color="gray.400"
-                  h={4}
-                  w={4}
-                  cursor="pointer"
-                />
-              </span>
-            </Tooltip>
-          </HStack>
+          <Flex alignItems="center" justifyContent="space-between">
+            <HStack spacing={1}>
+              <span>Cart</span>
+              <Tag size="sm" colorScheme="brand" variant="solid">
+                {items.length}
+              </Tag>
+            </HStack>
+            <HStack spacing={1}>
+              <Button size="sm" variant="ghost" onClick={clearCart}>
+                Clear all
+              </Button>
+              <CloseButton onClick={onClose} />
+            </HStack>
+          </Flex>
         </DrawerHeader>
-        <Divider />
-        <Flex px={4} py={3} alignItems="center" justifyContent="space-between">
-          <Text>
-            {items.length} {items.length === 1 ? 'item' : 'items'}
-          </Text>
-          <Button size="sm" variant="ghost" onClick={clearCart}>
-            Clear all
-          </Button>
-        </Flex>
         <Divider />
         <DrawerBody py={4} px={2}>
           <List>
