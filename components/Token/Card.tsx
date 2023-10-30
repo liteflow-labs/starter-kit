@@ -1,5 +1,6 @@
 import {
   AspectRatio,
+  Badge,
   Box,
   Flex,
   Heading,
@@ -17,8 +18,10 @@ import { HiClock } from '@react-icons/all-files/hi/HiClock'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import Countdown from 'components/Countdown/Countdown'
 import useTranslation from 'next-translate/useTranslation'
+import numbro from 'numbro'
 import { FC, useMemo, useState } from 'react'
 import { FileDef } from '../../convert'
+import { Standard } from '../../graphql'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
@@ -37,11 +40,13 @@ export type Props = {
       address: string
       name: string
       chainId: number
+      standard: Standard
     }
     image: FileDef
     unlockedContent: FileDef | null
     animation: FileDef | null
     owned: BigNumber
+    quantity: BigNumber
     bestBid:
       | {
           unitPrice: BigNumber
@@ -208,25 +213,47 @@ const TokenCard: FC<Props> = ({
         )}
       </Flex>
       {isHovered && (
-        <Flex
-          rounded="full"
-          position="absolute"
-          top={4}
-          left={4}
-          title={chainName}
-          cursor="pointer"
-          overflow="hidden"
-          filter="grayscale(100%)"
-        >
-          <Image
-            src={`/chains/${asset.collection.chainId}.svg`}
-            alt={asset.collection.chainId.toString()}
-            width={24}
-            height={24}
-            w={6}
-            h={6}
-          />
-        </Flex>
+        <>
+          <Flex
+            rounded="full"
+            position="absolute"
+            top={4}
+            left={4}
+            title={chainName}
+            cursor="pointer"
+            overflow="hidden"
+            filter="grayscale(100%)"
+          >
+            <Image
+              src={`/chains/${asset.collection.chainId}.svg`}
+              alt={asset.collection.chainId.toString()}
+              width={24}
+              height={24}
+              w={6}
+              h={6}
+            />
+          </Flex>
+          {asset.collection.standard === 'ERC1155' && (
+            <Badge
+              position="absolute"
+              top={4}
+              right={4}
+              px={2}
+              py={0.5}
+              borderRadius="2xl"
+              textTransform="capitalize"
+              pointerEvents="none"
+              bg="white"
+              color="gray.500"
+            >
+              Supply:{' '}
+              {numbro(asset.quantity).format({
+                average: true,
+                roundingFunction: (num) => (num > 1000 ? Math.round(num) : num),
+              })}
+            </Badge>
+          )}
+        </>
       )}
       <Flex justify="space-between" px={4} pt={4} pb={3} gap={2} align="start">
         <Stack spacing={0} w="full" overflow="hidden">

@@ -22,6 +22,7 @@ import {
   OfferOpenSale,
   OfferOpenSalesConnection,
   Ownership,
+  Standard,
   Trade,
 } from './graphql'
 
@@ -43,8 +44,9 @@ export const convertAsset = (
     | 'animationMimetype'
     | 'name'
     | 'unlockedContent'
+    | 'quantity'
   > & {
-    collection: Pick<Collection, 'address' | 'name' | 'chainId'>
+    collection: Pick<Collection, 'address' | 'name' | 'chainId' | 'standard'>
     owned: Maybe<Pick<Ownership, 'quantity'>>
     bestBid: Maybe<{
       nodes: Array<
@@ -66,8 +68,10 @@ export const convertAsset = (
     chainId: number
     address: string
     name: string
+    standard: Standard
   }
   owned: BigNumber
+  quantity: BigNumber
   unlockedContent: FileDef | null
   bestBid:
     | {
@@ -100,8 +104,10 @@ export const convertAsset = (
       chainId: asset.collection.chainId,
       address: asset.collection.address,
       name: asset.collection.name,
+      standard: asset.collection.standard,
     },
     owned: BigNumber.from(asset.owned?.quantity || 0),
+    quantity: BigNumber.from(asset.quantity),
     unlockedContent: asset.unlockedContent,
     bestBid: bestBid
       ? {
