@@ -158,6 +158,7 @@ export const convertAssetWithSupplies = (
     saleSupply: BigNumber.from(asset.sales.totalAvailableQuantitySum),
     totalSupply: BigNumber.from(asset.quantity),
     owned: BigNumber.from(asset.owned?.quantity || 0),
+    quantity: BigNumber.from(asset.quantity),
     bestBid: bestBid
       ? {
           unitPrice: BigNumber.from(bestBid.unitPrice),
