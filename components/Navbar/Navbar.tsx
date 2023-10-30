@@ -33,7 +33,7 @@ import { HiOutlineMenu } from '@react-icons/all-files/hi/HiOutlineMenu'
 import CartDrawer from 'components/Navbar/CartDrawer'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { FC, HTMLAttributes, useEffect, useRef } from 'react'
+import { FC, HTMLAttributes, useEffect, useMemo, useRef } from 'react'
 import { useCookies } from 'react-cookie'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useDisconnect } from 'wagmi'
@@ -383,6 +383,41 @@ const Navbar: FC<{
     return push({ pathname: '/explore', query })
   })
 
+  const cartButton = useMemo(
+    () => (
+      <IconButton
+        aria-label="Cart"
+        variant="ghost"
+        colorScheme="gray"
+        rounded="full"
+        position="relative"
+        onClick={onOpen}
+      >
+        <Flex>
+          <Icon as={FaShoppingCart} color="brand.black" h={4} w={4} />
+          {cartItems.length > 0 && (
+            <Flex
+              position="absolute"
+              top={0}
+              right={0}
+              h={4}
+              w={4}
+              align="center"
+              justify="center"
+              rounded="full"
+              bgColor="red.500"
+              color="white"
+              fontSize="xs"
+            >
+              {cartItems.length}
+            </Flex>
+          )}
+        </Flex>
+      </IconButton>
+    ),
+    [cartItems.length, onOpen],
+  )
+
   return (
     <>
       <Flex mx="auto" h={16} gap={6} px={{ base: 6, lg: 8 }} maxW="7xl">
@@ -478,35 +513,7 @@ const Navbar: FC<{
                   </Flex>
                 </IconButton>
               </Link>
-              <IconButton
-                aria-label="Cart"
-                variant="ghost"
-                colorScheme="gray"
-                rounded="full"
-                position="relative"
-                onClick={onOpen}
-              >
-                <Flex>
-                  <Icon as={FaShoppingCart} color="brand.black" h={4} w={4} />
-                  {cartItems.length > 0 && (
-                    <Flex
-                      position="absolute"
-                      top={0}
-                      right={0}
-                      h={4}
-                      w={4}
-                      align="center"
-                      justify="center"
-                      rounded="full"
-                      bgColor="red.500"
-                      color="white"
-                      fontSize="xs"
-                    >
-                      {cartItems.length}
-                    </Flex>
-                  )}
-                </Flex>
-              </IconButton>
+              {cartButton}
               <UserMenu
                 account={account.address}
                 user={account}
@@ -539,7 +546,8 @@ const Navbar: FC<{
             </Flex>
           )}
         </Flex>
-        <Flex display={{ base: 'flex', lg: 'none' }} align="center">
+        <Flex display={{ base: 'flex', lg: 'none' }} align="center" gap={2}>
+          {account && cartButton}
           <DrawerMenu
             account={account?.address}
             multiLang={multiLang}

@@ -60,9 +60,19 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   }, [events, onClose])
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} placement="right">
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      placement="right"
+      size={{ base: 'full', sm: 'xs' }}
+    >
       <DrawerOverlay />
-      <DrawerContent mt={16} mb={4} mx={4} borderRadius="xl">
+      <DrawerContent
+        mt={{ base: 0, sm: 16 }}
+        mb={{ base: 0, sm: 4 }}
+        mx={{ base: 0, sm: 4 }}
+        borderRadius={{ base: 'none', sm: 'xl' }}
+      >
         <DrawerHeader px={4}>
           <Flex alignItems="center" justifyContent="space-between">
             <HStack spacing={1}>

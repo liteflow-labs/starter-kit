@@ -123,7 +123,7 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
         // user might increase quantity to something that will not be available after some time
         // so in that case we should show a warning, but there won't be enough space in the drawer
         isExpired ? undefined : (
-          <Text variant="subtitle2">
+          <Text variant="subtitle2" textAlign="end">
             <Price amount={cartItem.unitPrice} currency={cartItem.currency} />
           </Text>
         )
