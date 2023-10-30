@@ -142,6 +142,7 @@
         },
         "refresh-metadata": "刷新元数据"
       },
+      "supply": "Supply: {{supply}}",
       "details": {
         "title": "细节",
         "chain": "链",

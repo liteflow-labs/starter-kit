@@ -246,10 +246,12 @@ const TokenCard: FC<Props> = ({
               bg="white"
               color="gray.500"
             >
-              Supply:{' '}
-              {numbro(asset.quantity).format({
-                average: true,
-                roundingFunction: (num) => (num > 1000 ? Math.round(num) : num),
+              {t('asset.detail.supply', {
+                supply: numbro(asset.quantity).format({
+                  average: true,
+                  roundingFunction: (num) =>
+                    num > 1000 ? Math.round(num) : num,
+                }),
               })}
             </Badge>
           )}
