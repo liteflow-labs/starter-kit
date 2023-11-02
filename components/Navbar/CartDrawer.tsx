@@ -17,9 +17,10 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useFetchCartItemsLazyQuery } from '../../graphql'
 import useCart from '../../hooks/useCart'
+import useEnvironment from '../../hooks/useEnvironment'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Link from '../Link/Link'
 import List, { ListItem } from '../List/List'
@@ -32,6 +33,7 @@ type Props = {
 
 const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   const { events } = useRouter()
+  const { CHAINS } = useEnvironment()
   const { clearCart, items } = useCart()
   const [fetch, { data }] = useFetchCartItemsLazyQuery({
     variables: {
@@ -44,6 +46,23 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
     data?.offerOpenSales?.nodes,
     (asset) => asset.id,
   )
+
+  const uniqueCartChains = useMemo(() => {
+    const chains: { id: number; name: string; image: string }[] = []
+    cartItems?.forEach((item) => {
+      const chain = CHAINS.find((chain) => chain.id === item.asset.chainId)
+      chain &&
+        !chains.some((item) => item.id === chain.id) &&
+        chains.push({
+          id: chain.id,
+          name: chain.name,
+          image: `/chains/${chain.id}.svg`,
+        })
+    })
+    return chains
+  }, [CHAINS, cartItems])
+
+  console.log(uniqueCartChains)
 
   useEffect(() => {
     async function fetchCartItems() {
