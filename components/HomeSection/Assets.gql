@@ -33,7 +33,9 @@ query FetchAssets(
         chainId
         address
         name
+        standard
       }
+      quantity
       image
       imageMimetype
       animationUrl
