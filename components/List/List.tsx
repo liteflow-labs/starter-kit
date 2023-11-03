@@ -104,7 +104,7 @@ export type ListProps = StackProps
 export default function List({
   children,
   ...props
-}: PropsWithChildren<{}>): JSX.Element {
+}: PropsWithChildren<ListProps>): JSX.Element {
   return (
     <Stack as="ul" position="relative" {...props}>
       {children}
