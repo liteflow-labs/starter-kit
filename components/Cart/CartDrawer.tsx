@@ -41,12 +41,14 @@ type Props = {
 
 export type FormData = {
   chainId: number
-  currencies: {
-    id: string
-    decimals: number
-    symbol: string
-    approved: boolean
-  }[]
+  currencies:
+    | {
+        id: string
+        decimals: number
+        symbol: string
+        approved: boolean
+      }[]
+    | undefined
 }
 
 const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
@@ -169,8 +171,6 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
           />
         )
       case 'transaction':
-        invariant(cartItems, 'Cart items must be defined')
-        invariant(selectedChain, 'Selected chain must be defined')
         return (
           <CartTransactionStepButton
             currencies={currencies}

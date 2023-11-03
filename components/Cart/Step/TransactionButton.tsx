@@ -3,12 +3,14 @@ import { FaAngleLeft } from '@react-icons/all-files/fa/FaAngleLeft'
 import { FC, useCallback } from 'react'
 
 type Props = {
-  currencies: {
-    id: string
-    decimals: number
-    symbol: string
-    approved: boolean
-  }[]
+  currencies:
+    | {
+        id: string
+        decimals: number
+        symbol: string
+        approved: boolean
+      }[]
+    | undefined
   isDisabled?: boolean
   onBack: () => void
   onSubmit: () => void
@@ -20,7 +22,7 @@ const CartTransactionStepButton: FC<Props> = ({
   onBack,
   onSubmit,
 }) => {
-  const isAllApproved = currencies.every((currency) => currency.approved)
+  const isAllApproved = currencies?.every((currency) => currency.approved)
   // TODO: add callback to approve currency
   const onApprove = useCallback((id: string | undefined) => console.log(id), [])
   return (
@@ -40,12 +42,12 @@ const CartTransactionStepButton: FC<Props> = ({
         onClick={() =>
           isAllApproved
             ? onSubmit()
-            : onApprove(currencies.filter((c) => !c.approved)[0]?.id)
+            : onApprove(currencies?.filter((c) => !c.approved)[0]?.id)
         }
       >
         {isAllApproved
           ? 'Purchase'
-          : `Approve ${currencies.filter((c) => !c.approved)[0]?.symbol}`}
+          : `Approve ${currencies?.filter((c) => !c.approved)[0]?.symbol}`}
       </Button>
     </HStack>
   )

@@ -1,7 +1,7 @@
 import { HStack, Icon, Text, VStack } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { AiOutlineCheck } from '@react-icons/all-files/Ai/AiOutlineCheck'
-import { AiOutlineClose } from '@react-icons/all-files/Ai/AiOutlineClose'
+import { HiOutlineCheck } from '@react-icons/all-files/Hi/HiOutlineCheck'
+import { HiOutlineX } from '@react-icons/all-files/hi/HiOutlineX'
 import { FC, useEffect, useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { FetchCartItemsQuery } from '../../../graphql'
@@ -73,9 +73,9 @@ const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
             }
             action={
               currency.approved ? (
-                <Icon as={AiOutlineCheck} color="green.400" />
+                <Icon as={HiOutlineCheck} color="green.400" />
               ) : (
-                <Icon as={AiOutlineClose} color="red.400" />
+                <Icon as={HiOutlineX} color="red.400" />
               )
             }
             p={0}
