@@ -13,6 +13,7 @@ import {
   Flex,
   HStack,
   Icon,
+  IconButton,
   SkeletonCircle,
   SkeletonText,
   Tag,
@@ -224,27 +225,33 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
         </DrawerBody>
         <Divider />
         <DrawerFooter>
-          <Button
-            as={Link}
-            href="/cart"
-            width="full"
-            isDisabled={cartItems?.length === 0}
-            rightIcon={<Icon as={FaAngleRight} boxSize={5} />}
-            iconSpacing="auto"
-          >
-            Next
-            {selectedChain && (
-              <Image
-                src={selectedChain.image}
-                alt={selectedChain.name}
-                width={16}
-                height={16}
-                h={4}
-                w={4}
-                ml={1}
-              />
-            )}
-          </Button>
+          <HStack gap={0} width="full">
+            <Button
+              isDisabled={cartItems?.length === 0}
+              flexGrow={1}
+              borderRightRadius="none"
+            >
+              Continue with
+              {selectedChain && (
+                <Image
+                  src={selectedChain.image}
+                  alt={selectedChain.name}
+                  width={16}
+                  height={16}
+                  h={4}
+                  w={4}
+                  ml={1}
+                />
+              )}
+            </Button>
+            <Divider orientation="vertical" />
+            <IconButton
+              aria-label="Continue"
+              icon={<Icon as={FaAngleRight} boxSize={5} />}
+              isDisabled={cartItems?.length === 0}
+              borderLeftRadius="none"
+            />
+          </HStack>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
