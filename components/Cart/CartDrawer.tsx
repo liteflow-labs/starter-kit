@@ -1,5 +1,7 @@
 import {
+  Box,
   Button,
+  Checkbox,
   CloseButton,
   Divider,
   Drawer,
@@ -10,31 +12,51 @@ import {
   DrawerOverlay,
   Flex,
   HStack,
+  Icon,
   SkeletonCircle,
   SkeletonText,
   Tag,
   Text,
   VStack,
+  useRadioGroup,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
+import { FaAngleRight } from '@react-icons/all-files/fa/FaAngleRight'
+import Image from 'components/Image/Image'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useFetchCartItemsLazyQuery } from '../../graphql'
 import useCart from '../../hooks/useCart'
 import useEnvironment from '../../hooks/useEnvironment'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Link from '../Link/Link'
 import List, { ListItem } from '../List/List'
-import CartDrawerListItem from '../Navbar/CartDrawerListItem'
+import CartDrawerListItem from './CartDrawerListItem'
+import CartRadio from './CartRadio'
 
 type Props = {
   isOpen: boolean
   onClose: () => void
 }
 
+type FormData = {
+  chainId: number
+}
+
 const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   const { events } = useRouter()
   const { CHAINS } = useEnvironment()
   const { clearCart, items } = useCart()
+  const formValues = useForm<FormData>()
+  const { getRadioProps, getRootProps } = useRadioGroup({
+    name: 'chainId',
+    defaultValue: undefined,
+    onChange: (e) =>
+      formValues.setValue('chainId', BigNumber.from(e).toNumber()),
+  })
+  const selectedChainId = formValues.watch('chainId')
+
   const [fetch, { data }] = useFetchCartItemsLazyQuery({
     variables: {
       offerIds: items.map((item) => item.offerId),
@@ -62,7 +84,10 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
     return chains
   }, [CHAINS, cartItems])
 
-  console.log(uniqueCartChains)
+  const selectedChain = useMemo(
+    () => uniqueCartChains?.find((chain) => chain.id === selectedChainId),
+    [selectedChainId, uniqueCartChains],
+  )
 
   useEffect(() => {
     async function fetchCartItems() {
@@ -77,6 +102,20 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
       events.off('routeChangeStart', () => onClose())
     }
   }, [events, onClose])
+
+  useEffect(() => {
+    if (
+      selectedChainId === undefined &&
+      uniqueCartChains &&
+      uniqueCartChains[0]
+    ) {
+      formValues.setValue('chainId', uniqueCartChains[0].id)
+    }
+  }, [formValues, selectedChainId, uniqueCartChains])
+
+  const onSubmit = formValues.handleSubmit((data) => {
+    console.log(data.chainId)
+  })
 
   return (
     <Drawer
@@ -124,9 +163,46 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
                   />
                 ))
             ) : cartItems.length > 0 ? (
-              cartItems.map((cartItem) => (
-                <CartDrawerListItem key={cartItem.id} cartItem={cartItem} />
-              ))
+              <FormProvider {...formValues}>
+                <Box as="form" onSubmit={onSubmit}>
+                  <VStack
+                    alignItems="flex-start"
+                    width="full"
+                    {...getRootProps()}
+                  >
+                    {uniqueCartChains.map((chain, i) => {
+                      const radio = getRadioProps({ value: chain.id })
+                      return (
+                        <CartRadio
+                          key={i}
+                          {...radio}
+                          isChecked={chain.id === formValues.watch('chainId')}
+                        >
+                          <HStack gap={1}>
+                            <Checkbox
+                              isChecked={
+                                chain.id === formValues.watch('chainId')
+                              }
+                              width="auto"
+                              _checked={{ backgroundColor: 'transparent' }}
+                              _hover={{ backgroundColor: 'transparent' }}
+                            />
+                            <Text variant="subtitle2">{chain.name}</Text>
+                          </HStack>
+                          {cartItems
+                            .filter((item) => item.asset.chainId === chain.id)
+                            .map((cartItem) => (
+                              <CartDrawerListItem
+                                key={cartItem.id}
+                                cartItem={cartItem}
+                              />
+                            ))}
+                        </CartRadio>
+                      )
+                    })}
+                  </VStack>
+                </Box>
+              </FormProvider>
             ) : (
               <VStack spacing={1} py={4}>
                 <Text variant="subtitle2" color="gray.800">
@@ -153,8 +229,21 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
             href="/cart"
             width="full"
             isDisabled={cartItems?.length === 0}
+            rightIcon={<Icon as={FaAngleRight} boxSize={5} />}
+            iconSpacing="auto"
           >
-            Checkout
+            Next
+            {selectedChain && (
+              <Image
+                src={selectedChain.image}
+                alt={selectedChain.name}
+                width={16}
+                height={16}
+                h={4}
+                w={4}
+                ml={1}
+              />
+            )}
           </Button>
         </DrawerFooter>
       </DrawerContent>

@@ -45,9 +45,7 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
   return (
     <ListItem
       image={
-        <Link
-          href={`/tokens/${cartItem.asset.collection.chainId}-${cartItem.asset.collection.address}-${cartItem.asset.id}`}
-        >
+        <Link href={`/tokens/${cartItem.asset.id}`}>
           <Image
             src={cartItem.asset.image}
             alt={cartItem.asset.name}
@@ -62,7 +60,7 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
       label={
         <Text
           as={Link}
-          href={`/tokens/${cartItem.asset.collection.chainId}-${cartItem.asset.collection.address}-${cartItem.asset.id}`}
+          href={`/tokens/${cartItem.asset.id}`}
           variant="subtitle2"
           color="gray.800"
           title={cartItem.asset.name}
@@ -100,7 +98,7 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
         ) : (
           <Text
             as={Link}
-            href={`/collections/${cartItem.asset.collection.chainId}/${cartItem.asset.collection.address}`}
+            href={`/collection/${cartItem.asset.collection.chainId}/${cartItem.asset.collection.address}`}
             title={cartItem.asset.collection.name}
             variant="caption"
           >
