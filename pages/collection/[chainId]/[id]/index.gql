@@ -95,10 +95,12 @@ query FetchCollectionAssets(
         address
         image
         name
+        standard
       }
       owned: ownership(ownerAddress: $currentAccount) {
         quantity
       }
+      quantity
       bestBid: bids(
         orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
         filter: { expiredAt: { greaterThan: $now } }
