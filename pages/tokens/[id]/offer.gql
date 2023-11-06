@@ -35,6 +35,7 @@ query OfferForAsset(
     owned: ownership(ownerAddress: $address) {
       quantity
     }
+    quantity
     auctions(
       first: 1
       orderBy: CREATED_AT_DESC

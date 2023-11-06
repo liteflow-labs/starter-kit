@@ -196,7 +196,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   )
 
   const refresh = useCallback(async () => {
-    await refetch()
+    await refetch({
+      now: new Date(),
+    })
   }, [refetch])
 
   const refreshAsset = useRefreshAsset()
@@ -204,7 +206,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     async (assetId: string) => {
       try {
         await refreshAsset(assetId)
-        await refetch()
+        await refresh()
         toast({
           title: 'Successfully refreshed metadata',
           status: 'success',
@@ -216,7 +218,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
         })
       }
     },
-    [refetch, refreshAsset, toast],
+    [refresh, refreshAsset, toast],
   )
 
   if (asset === null) return <Error statusCode={404} />
