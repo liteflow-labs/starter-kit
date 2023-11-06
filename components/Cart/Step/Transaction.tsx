@@ -1,6 +1,6 @@
 import { HStack, Icon, Text, VStack } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { HiOutlineCheck } from '@react-icons/all-files/Hi/HiOutlineCheck'
+import { FaCheck } from '@react-icons/all-files/fa/FaCheck'
 import { HiOutlineX } from '@react-icons/all-files/hi/HiOutlineX'
 import { FC, useEffect, useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -73,7 +73,7 @@ const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
             }
             action={
               currency.approved ? (
-                <Icon as={HiOutlineCheck} color="green.400" />
+                <Icon as={FaCheck} color="green.400" />
               ) : (
                 <Icon as={HiOutlineX} color="red.400" />
               )
