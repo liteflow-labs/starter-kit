@@ -53,7 +53,7 @@ const BidPlacedPage: NextPage = () => {
   const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OfferOpenBuysOrderBy>('CREATED_AT_DESC')
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
   const toast = useToast()
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
@@ -290,7 +290,6 @@ const BidPlacedPage: NextPage = () => {
               limit={limit}
               limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              onPageChange={changePage}
               onLimitChange={changeLimit}
               hasNextPage={data?.bids?.pageInfo.hasNextPage}
               hasPreviousPage={data?.bids?.pageInfo.hasPreviousPage}

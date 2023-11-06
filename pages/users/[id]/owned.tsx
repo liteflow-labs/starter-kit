@@ -35,7 +35,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
   const { pathname, replace, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OwnershipsOrderBy>('CREATED_AT_DESC')
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
@@ -105,7 +105,6 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
             limit,
             limits: [PAGINATION_LIMIT, 24, 36, 48],
             page,
-            onPageChange: changePage,
             onLimitChange: changeLimit,
             hasNextPage: data?.owned?.pageInfo.hasNextPage,
             hasPreviousPage: data?.owned?.pageInfo.hasPreviousPage,
