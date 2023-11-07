@@ -162,14 +162,10 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   }, [events, onClose])
 
   useEffect(() => {
-    if (
-      selectedChainId === undefined &&
-      uniqueCartChains &&
-      uniqueCartChains[0]
-    ) {
+    if (!selectedChain && uniqueCartChains && uniqueCartChains[0]) {
       formValues.setValue('chainId', uniqueCartChains[0].id)
     }
-  }, [formValues, selectedChainId, uniqueCartChains])
+  }, [formValues, selectedChain, uniqueCartChains])
 
   return (
     <Drawer
