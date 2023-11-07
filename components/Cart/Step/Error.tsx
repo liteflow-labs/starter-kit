@@ -1,8 +1,10 @@
 import { Flex, Heading, Icon, Stack } from '@chakra-ui/react'
 import { FaExclamation } from '@react-icons/all-files/fa/FaExclamation'
+import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 
 const CartErrorStep: FC = () => {
+  const { t } = useTranslation('components')
   return (
     <Stack height="full" align="center" justify="center" spacing={4}>
       <Flex
@@ -18,10 +20,10 @@ const CartErrorStep: FC = () => {
       </Flex>
       <Stack spacing={1} textAlign="center">
         <Heading as="h3" variant="heading1" color="brand.black">
-          Error
+          {t('cart.step.error.title')}
         </Heading>
         <Heading as="h5" variant="heading3" color="gray.500">
-          There was an error with your transaction
+          {t('cart.step.error.description')}
         </Heading>
       </Stack>
     </Stack>
