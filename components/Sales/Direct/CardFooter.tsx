@@ -103,8 +103,6 @@ const SaleDirectCardFooter: FC<Props> = ({
             offerId={saleId}
             isDisabled={isOwner}
             borderRadius="none"
-            // add isDisabled prop when the item on the carts are on different chains
-            // also add a tooltip to explain why
             h={9}
           />
         </>

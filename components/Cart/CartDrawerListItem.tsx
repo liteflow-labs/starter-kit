@@ -116,11 +116,7 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
           >
             Remove
           </Button>
-        ) : // TODO: we could also add increase/decrease quantity buttons here
-        // but could be better to do it in the cart page
-        // user might increase quantity to something that will not be available after some time
-        // so in that case we should show a warning, but there won't be enough space in the drawer
-        isExpired ? undefined : (
+        ) : isExpired ? undefined : (
           <Text variant="subtitle2" textAlign="end">
             <Price amount={cartItem.unitPrice} currency={cartItem.currency} />
           </Text>
