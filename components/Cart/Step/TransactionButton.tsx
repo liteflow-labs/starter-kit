@@ -1,5 +1,6 @@
 import { Button, Divider, HStack, Icon, IconButton } from '@chakra-ui/react'
 import { FaAngleLeft } from '@react-icons/all-files/fa/FaAngleLeft'
+import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback } from 'react'
 
 type Props = {
@@ -22,13 +23,14 @@ const CartTransactionStepButton: FC<Props> = ({
   onBack,
   onSubmit,
 }) => {
+  const { t } = useTranslation('components')
   const isAllApproved = currencies?.every((currency) => currency.approved)
   // TODO: add callback to approve currency
   const onApprove = useCallback((id: string | undefined) => console.log(id), [])
   return (
     <HStack gap={0} width="full">
       <IconButton
-        aria-label="Continue"
+        aria-label={t('cart.step.transaction.button.aria-label')}
         icon={<Icon as={FaAngleLeft} boxSize={5} />}
         isDisabled={isDisabled}
         borderRightRadius="none"
@@ -46,8 +48,10 @@ const CartTransactionStepButton: FC<Props> = ({
         }
       >
         {isAllApproved
-          ? 'Purchase'
-          : `Approve ${currencies?.filter((c) => !c.approved)[0]?.symbol}`}
+          ? t('cart.step.transaction.button.purchase')
+          : t('cart.step.transaction.button.approve', {
+              value: currencies?.filter((c) => !c.approved)[0]?.symbol,
+            })}
       </Button>
     </HStack>
   )
