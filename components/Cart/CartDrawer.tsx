@@ -73,20 +73,20 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
     (asset) => asset.id,
   )
 
-  const uniqueCartChains = useMemo(() => {
-    const chains: { id: number; name: string; image: string }[] = []
-    cartItems?.forEach((item) => {
-      const chain = CHAINS.find((chain) => chain.id === item.asset.chainId)
-      chain &&
-        !chains.some((item) => item.id === chain.id) &&
-        chains.push({
+  const uniqueCartChains = useMemo(
+    () =>
+      cartItems
+        ?.map((cartItem) => cartItem.asset.chainId)
+        .filter((chainId, index, array) => array.indexOf(chainId) === index)
+        .map((chainId) => CHAINS.find((chain) => chain.id === chainId))
+        .filter(Boolean)
+        .map((chain) => ({
           id: chain.id,
           name: chain.name,
           image: `/chains/${chain.id}.svg`,
-        })
-    })
-    return chains
-  }, [CHAINS, cartItems])
+        })) || [],
+    [cartItems, CHAINS],
+  )
 
   const selectedChain = useMemo(
     () => uniqueCartChains?.find((chain) => chain.id === selectedChainId),
