@@ -1,5 +1,6 @@
 import { Button, Divider, HStack, Icon, IconButton } from '@chakra-ui/react'
 import { FaAngleRight } from '@react-icons/all-files/fa/FaAngleRight'
+import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import Image from '../../Image/Image'
 
@@ -15,6 +16,7 @@ type Props = {
 }
 
 const CartSelectionStepButton: FC<Props> = ({ chain, isDisabled, onClick }) => {
+  const { t } = useTranslation('components')
   return (
     <HStack gap={0} width="full">
       <Button
@@ -23,7 +25,7 @@ const CartSelectionStepButton: FC<Props> = ({ chain, isDisabled, onClick }) => {
         borderRightRadius="none"
         onClick={onClick}
       >
-        Continue with
+        {t('cart.step.selection.button.label')}
         {chain && (
           <Image
             src={chain.image}
@@ -38,7 +40,7 @@ const CartSelectionStepButton: FC<Props> = ({ chain, isDisabled, onClick }) => {
       </Button>
       <Divider orientation="vertical" />
       <IconButton
-        aria-label="Continue"
+        aria-label={t('cart.step.selection.button.aria-label')}
         icon={<Icon as={FaAngleRight} boxSize={5} />}
         isDisabled={isDisabled}
         borderLeftRadius="none"
