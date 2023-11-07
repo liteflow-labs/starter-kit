@@ -13,6 +13,7 @@ import {
 import { BigNumber } from '@ethersproject/bignumber'
 import { FaCheck } from '@react-icons/all-files/fa/FaCheck'
 import { HiOutlineX } from '@react-icons/all-files/hi/HiOutlineX'
+import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { FetchCartItemsQuery } from '../../../graphql'
@@ -26,6 +27,7 @@ type Props = {
 }
 
 const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
+  const { t } = useTranslation('components')
   const { setValue, watch } = useFormContext()
   const currencies = watch('currencies')
 
@@ -59,11 +61,9 @@ const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
         <Alert status="warning" borderRadius="xl">
           <AlertIcon />
           <Box fontSize="sm">
-            <AlertTitle>Items Unavailable</AlertTitle>
+            <AlertTitle>{t('cart.step.transaction.empty.title')}</AlertTitle>
             <AlertDescription fontSize="xs">
-              The items on your cart has been purchased by someone else, the
-              seller has removed it from sale, or the listing has expired.
-              Please add new items to your cart and try again.
+              {t('cart.step.transaction.empty.description')}
             </AlertDescription>
           </Box>
         </Alert>
@@ -73,7 +73,9 @@ const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
   return (
     <VStack px={2} alignItems="flex-start" width="full" spacing={3}>
       <HStack gap={1}>
-        <Text variant="subtitle2">Summary</Text>
+        <Text variant="subtitle2">
+          {t('cart.step.transaction.summary.title')}
+        </Text>
         <Image
           src={chain.image}
           alt={chain.name}
@@ -120,7 +122,9 @@ const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
           />
         ))}
       </Card>
-      <Text variant="subtitle2">Price</Text>
+      <Text variant="subtitle2">
+        {t('cart.step.transaction.summary.price')}
+      </Text>
       <List width="full">
         {uniqueCurrencies.map((currency, i) => (
           <ListItem
