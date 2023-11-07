@@ -9,6 +9,7 @@ import {
   useRadioGroup,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
+import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { FetchCartItemsQuery } from '../../../graphql'
@@ -26,6 +27,7 @@ type Props = {
 }
 
 const CartSelectionStep: FC<Props> = ({ cartItems, chains }) => {
+  const { t } = useTranslation('components')
   const { setValue, watch } = useFormContext()
   const { items } = useCart()
   const { getRadioProps, getRootProps } = useRadioGroup({
@@ -55,9 +57,11 @@ const CartSelectionStep: FC<Props> = ({ cartItems, chains }) => {
     return (
       <VStack spacing={1} py={4}>
         <Text variant="subtitle2" color="gray.800">
-          No items in cart
+          {t('cart.step.selection.empty.title')}
         </Text>
-        <Text variant="caption">Add items to get started.</Text>
+        <Text variant="caption">
+          {t('cart.step.selection.empty.description')}
+        </Text>
         <Button
           size="sm"
           as={Link}
@@ -65,7 +69,7 @@ const CartSelectionStep: FC<Props> = ({ cartItems, chains }) => {
           variant="outline"
           mt={3}
         >
-          Explore NFTs
+          {t('cart.step.selection.empty.action')}
         </Button>
       </VStack>
     )
