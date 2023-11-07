@@ -89,8 +89,13 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   )
 
   const selectedChain = useMemo(
-    () => uniqueCartChains?.find((chain) => chain.id === selectedChainId),
+    () => uniqueCartChains.find((chain) => chain.id === selectedChainId),
     [selectedChainId, uniqueCartChains],
+  )
+
+  const currentCartItems = useMemo(
+    () => cartItems?.filter((x) => x.asset.chainId === selectedChain?.id) || [],
+    [cartItems, selectedChain],
   )
 
   const content = useMemo(() => {
@@ -135,13 +140,11 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
           </List>
         )
       case 'transaction':
-        invariant(cartItems, 'Cart items must be defined')
+        invariant(currentCartItems, 'Current cart items must be defined')
         invariant(selectedChain, 'Selected chain must be defined')
         return (
           <CartTransactionStep
-            cartItems={cartItems.filter(
-              (cartItem) => cartItem.asset.chainId === selectedChain.id,
-            )}
+            cartItems={currentCartItems}
             chain={selectedChain}
           />
         )
@@ -151,7 +154,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
       case 'error':
         return <CartErrorStep />
     }
-  }, [cartItems, items.length, selectedChain, step, uniqueCartChains])
+  }, [cartItems, selectedChain, step, uniqueCartChains, currentCartItems])
 
   const onSubmit = formValues.handleSubmit((data) => {
     // TODO: do the transaction (This will be next callback when all the currencies are approved)
