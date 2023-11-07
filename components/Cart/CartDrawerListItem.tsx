@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Icon, Text, Tooltip } from '@chakra-ui/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import Price from 'components/Price/Price'
+import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo, useState } from 'react'
 import { dateIsBefore } from 'utils'
 import { Standard } from '../../graphql'
@@ -36,6 +37,7 @@ type Props = {
 }
 
 const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
+  const { t } = useTranslation('components')
   const [isHovered, setIsHovered] = useState(false)
   const { removeItem } = useCart()
   const isExpired = useMemo(
@@ -77,10 +79,10 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
             alignItems="center"
             gap={1}
           >
-            <span>Not available</span>
+            <span>{t('cart.drawer.list-item.not-available')}</span>
             <Tooltip
               fontSize="xs"
-              label="The item is unavailable because it has been purchased by someone else, the seller has removed it from sale, or the listing has expired."
+              label={t('cart.drawer.list-item.tooltip')}
               placement="bottom"
               p={3}
             >
@@ -114,7 +116,7 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
             variant="outline"
             onClick={() => removeItem(cartItem.id)}
           >
-            Remove
+            {t('cart.drawer.list-item.remove')}
           </Button>
         ) : isExpired ? undefined : (
           <Text variant="subtitle2" textAlign="end">
