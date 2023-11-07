@@ -26,6 +26,7 @@ import { dateIsBefore } from 'utils'
 import { useFetchCartItemsQuery } from '../../graphql'
 import useCart from '../../hooks/useCart'
 import useEnvironment from '../../hooks/useEnvironment'
+import useNow from '../../hooks/useNow'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
 import CartSelectionStepButton from './Step/SelectionButton'
 
@@ -49,6 +50,7 @@ export type FormData = {
 const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   const { events } = useRouter()
   const { CHAINS } = useEnvironment()
+  const now = useNow()
   const { clearCart, items } = useCart()
   const [step, setStep] = useState<
     'selection' | 'transaction' | 'success' | 'error'
@@ -89,11 +91,10 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   )
 
   const nonExpiredSelectedCartItems = useMemo(() => {
-    const now = new Date()
     return cartItems
       ?.filter((x) => x.asset.chainId === selectedChain?.id)
       .filter((item) => dateIsBefore(now, item.expiredAt))
-  }, [cartItems, selectedChain?.id])
+  }, [cartItems, now, selectedChain?.id])
 
   const content = useMemo(() => {
     switch (step) {
