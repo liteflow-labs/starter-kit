@@ -18,6 +18,7 @@ import CartSelectionStep from 'components/Cart/Step/Selection'
 import CartSuccessStep from 'components/Cart/Step/Success'
 import CartTransactionStep from 'components/Cart/Step/Transaction'
 import CartTransactionStepButton from 'components/Cart/Step/TransactionButton'
+import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -48,6 +49,7 @@ export type FormData = {
 }
 
 const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation('components')
   const { events } = useRouter()
   const { CHAINS } = useEnvironment()
   const now = useNow()
@@ -147,7 +149,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
       case 'transaction':
         return nonExpiredSelectedCartItems?.length === 0 ? (
           <Button onClick={() => setStep('selection')} width="full">
-            Back to cart
+            {t('cart.drawer.back')}
           </Button>
         ) : (
           <CartTransactionStepButton
@@ -159,13 +161,13 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
       case 'success':
         return (
           <Button onClick={() => setStep('selection')} width="full">
-            Back to cart
+            {t('cart.drawer.back')}
           </Button>
         )
       case 'error':
         return (
           <Button onClick={() => setStep('transaction')} width="full">
-            Try again
+            {t('cart.drawer.error')}
           </Button>
         )
     }
@@ -176,6 +178,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
     onSubmit,
     selectedChain,
     step,
+    t,
   ])
 
   useEffect(() => {
@@ -208,7 +211,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
         <DrawerHeader px={4}>
           <Flex alignItems="center" justifyContent="space-between">
             <HStack spacing={1}>
-              <span>Cart</span>
+              <span>{t('cart.drawer.title')}</span>
               <Tag size="sm" colorScheme="brand" variant="solid">
                 {items.length}
               </Tag>
@@ -222,7 +225,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
                   setStep('selection')
                 }}
               >
-                Clear all
+                {t('cart.drawer.clear-all')}
               </Button>
               <CloseButton onClick={onClose} />
             </HStack>
