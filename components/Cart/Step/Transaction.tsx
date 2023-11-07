@@ -1,4 +1,15 @@
-import { Card, HStack, Icon, Text, VStack } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Card,
+  HStack,
+  Icon,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { FaCheck } from '@react-icons/all-files/fa/FaCheck'
 import { HiOutlineX } from '@react-icons/all-files/hi/HiOutlineX'
@@ -41,6 +52,23 @@ const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
       setValue('currencies', uniqueCurrencies)
     }
   }, [currencies, setValue, uniqueCurrencies])
+
+  if (cartItems.length === 0)
+    return (
+      <VStack px={2} alignItems="flex-start" width="full">
+        <Alert status="warning" borderRadius="xl">
+          <AlertIcon />
+          <Box fontSize="sm">
+            <AlertTitle>Items Unavailable</AlertTitle>
+            <AlertDescription fontSize="xs">
+              The items on your cart has been purchased by someone else, the
+              seller has removed it from sale, or the listing has expired.
+              Please add new items to your cart and try again.
+            </AlertDescription>
+          </Box>
+        </Alert>
+      </VStack>
+    )
 
   return (
     <VStack px={2} alignItems="flex-start" width="full" spacing={3}>

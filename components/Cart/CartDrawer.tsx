@@ -144,7 +144,11 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
           />
         )
       case 'transaction':
-        return (
+        return nonExpiredSelectedCartItems?.length === 0 ? (
+          <Button onClick={() => setStep('selection')} width="full">
+            Back to cart
+          </Button>
+        ) : (
           <CartTransactionStepButton
             currencies={currencies}
             onBack={() => setStep('selection')}
@@ -164,7 +168,14 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
           </Button>
         )
     }
-  }, [cartItems, currencies, onSubmit, selectedChain, step])
+  }, [
+    cartItems?.length,
+    currencies,
+    nonExpiredSelectedCartItems?.length,
+    onSubmit,
+    selectedChain,
+    step,
+  ])
 
   useEffect(() => {
     events.on('routeChangeStart', () => onClose())
