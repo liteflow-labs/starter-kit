@@ -1,7 +1,7 @@
 import {
   Button,
-  Checkbox,
   HStack,
+  Radio,
   SkeletonCircle,
   SkeletonText,
   Text,
@@ -76,12 +76,11 @@ const CartSelectionStep: FC<Props> = ({ cartItems, chains }) => {
         const radio = getRadioProps({ value: chain.id })
         return (
           <CartRadio key={i} {...radio} isChecked={chain.id === chainId}>
-            <HStack gap={1}>
-              <Checkbox
+            <HStack gap={1} pointerEvents="none">
+              <Radio
                 isChecked={chain.id === chainId}
                 width="auto"
-                _checked={{ backgroundColor: 'transparent' }}
-                _hover={{ backgroundColor: 'transparent' }}
+                colorScheme="brand"
               />
               <Text variant="subtitle2">{chain.name}</Text>
             </HStack>
