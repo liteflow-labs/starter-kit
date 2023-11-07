@@ -26,7 +26,7 @@ import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
-import { useFetchCartItemsLazyQuery } from '../../graphql'
+import { useFetchCartItemsQuery } from '../../graphql'
 import useCart from '../../hooks/useCart'
 import useEnvironment from '../../hooks/useEnvironment'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
@@ -61,15 +61,14 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   const formValues = useForm<FormData>()
   const selectedChainId = formValues.watch('chainId')
   const currencies = formValues.watch('currencies')
+  const offerIds = useMemo(() => items.map((item) => item.offerId), [items])
 
-  const [fetch, { data }] = useFetchCartItemsLazyQuery({
-    variables: {
-      offerIds: items.map((item) => item.offerId),
-    },
+  const { data } = useFetchCartItemsQuery({
+    variables: { offerIds },
   })
 
   const cartItems = useOrderByKey(
-    items.map((item) => item.offerId),
+    offerIds,
     data?.offerOpenSales?.nodes,
     (asset) => asset.id,
   )
@@ -192,14 +191,6 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
         )
     }
   }, [cartItems, currencies, onSubmit, selectedChain, step])
-
-  useEffect(() => {
-    async function fetchCartItems() {
-      isOpen && setStep('selection')
-      isOpen && (await fetch())
-    }
-    void fetchCartItems()
-  }, [fetch, isOpen])
 
   useEffect(() => {
     events.on('routeChangeStart', () => onClose())
