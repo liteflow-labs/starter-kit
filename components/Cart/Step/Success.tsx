@@ -1,5 +1,6 @@
 import { Flex, Heading, Icon, Stack } from '@chakra-ui/react'
 import { FaCheck } from '@react-icons/all-files/fa/FaCheck'
+import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import Link from '../../Link/Link'
@@ -10,6 +11,7 @@ type Props = {
 }
 
 const CartSuccessStep: FC<Props> = ({ chainId, transactionHash }) => {
+  const { t } = useTranslation('components')
   const blockExplorer = useBlockExplorer(chainId)
   return (
     <Stack height="full" align="center" justify="center" spacing={4}>
@@ -26,10 +28,10 @@ const CartSuccessStep: FC<Props> = ({ chainId, transactionHash }) => {
       </Flex>
       <Stack spacing={1} textAlign="center">
         <Heading as="h3" variant="heading1" color="brand.black">
-          Congratulations
+          {t('cart.step.success.title')}
         </Heading>
         <Heading as="h5" variant="heading3" color="gray.500">
-          Your transaction was successful
+          {t('cart.step.success.description')}
         </Heading>
         <Link
           href={blockExplorer.transaction(transactionHash) || ''}
@@ -38,7 +40,7 @@ const CartSuccessStep: FC<Props> = ({ chainId, transactionHash }) => {
             textDecoration: 'underline',
           }}
         >
-          View transaction
+          {t('cart.step.success.action')}
         </Link>
       </Stack>
     </Stack>
