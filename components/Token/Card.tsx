@@ -5,7 +5,6 @@ import {
   Heading,
   HStack,
   Icon,
-  IconButton,
   Menu,
   MenuButton,
   MenuItem,
@@ -20,10 +19,8 @@ import Countdown from 'components/Countdown/Countdown'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo, useState } from 'react'
 import { FileDef } from '../../convert'
-import useAccount from '../../hooks/useAccount'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../hooks/useEnvironment'
-import AddToCartButton from '../Button/AddToCart'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
 import SaleAuctionCardFooter from '../Sales/Auction/CardFooter'
@@ -104,7 +101,6 @@ const TokenCard: FC<Props> = ({
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const [isHovered, setIsHovered] = useState(false)
   const media = useDetectAssetMedia(asset)
-  const { isLoggedIn } = useAccount()
 
   const chainName = useMemo(
     () => CHAINS.find((x) => x.id === asset.collection.chainId)?.name,
@@ -206,41 +202,25 @@ const TokenCard: FC<Props> = ({
         )}
       </Flex>
       {isHovered && (
-        <>
-          <Flex
-            rounded="full"
-            position="absolute"
-            top={4}
-            left={4}
-            title={chainName}
-            cursor="pointer"
-            overflow="hidden"
-            filter="grayscale(100%)"
-          >
-            <Image
-              src={`/chains/${asset.collection.chainId}.svg`}
-              alt={asset.collection.chainId.toString()}
-              width={24}
-              height={24}
-              w={6}
-              h={6}
-            />
-          </Flex>
-          {sale && isLoggedIn && (
-            <AddToCartButton
-              offerId={sale.id}
-              as={IconButton}
-              aria-label="Add to cart"
-              rounded="full"
-              position="absolute"
-              disabled={isOwner}
-              top={4}
-              right={4}
-              width="auto"
-              size="sm"
-            />
-          )}
-        </>
+        <Flex
+          rounded="full"
+          position="absolute"
+          top={4}
+          left={4}
+          title={chainName}
+          cursor="pointer"
+          overflow="hidden"
+          filter="grayscale(100%)"
+        >
+          <Image
+            src={`/chains/${asset.collection.chainId}.svg`}
+            alt={asset.collection.chainId.toString()}
+            width={24}
+            height={24}
+            w={6}
+            h={6}
+          />
+        </Flex>
       )}
       <Flex justify="space-between" px={4} pt={4} pb={3} gap={2} align="start">
         <Stack spacing={0} w="full" overflow="hidden">

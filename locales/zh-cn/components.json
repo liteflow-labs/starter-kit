@@ -1,4 +1,64 @@
 {
+  "cart": {
+    "add-to-cart": {
+      "button": {
+        "add": "添加到购物车",
+        "remove": "从购物车中删除"
+      },
+      "toast": {
+        "add": "已添加到购物车",
+        "remove": "已从购物车中删除"
+      }
+    },
+    "drawer": {
+      "title": "大车",
+      "back": "返回购物车",
+      "error": "再试一次",
+      "clear-all": "全部清除",
+      "list-item": {
+        "not-available": "无法使用",
+        "tooltip": "该商品不可用，因为它已被其他人购买、卖家已将其下架或列表已过期。",
+        "remove": "消除"
+      }
+    },
+    "step": {
+      "error": {
+        "title": "错误",
+        "description": "您的交易出现错误"
+      },
+      "selection": {
+        "empty": {
+          "title": "购物车中没有商品",
+          "description": "添加项目以开始使用。",
+          "action": "探索 NFT"
+        },
+        "button": {
+          "label": "继续",
+          "aria-label": "继续"
+        }
+      },
+      "success": {
+        "title": "恭喜你",
+        "description": "您的交易已成功",
+        "action": "查看交易"
+      },
+      "transaction": {
+        "empty": {
+          "title": "缺货商品",
+          "description": "您购物车中的商品已被其他人购买、卖家已将其下架或商品列表已过期。"
+        },
+        "summary": {
+          "title": "概括",
+          "price": "价格"
+        },
+        "button": {
+          "approve": "批准 {{value}}",
+          "purchase": "购买",
+          "aria-label": "继续"
+        }
+      }
+    }
+  },
   "account": {
     "title": "帐户",
     "tabs": {

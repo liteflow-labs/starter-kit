@@ -35,7 +35,7 @@ export function ListItem({
   ...props
 }: ListItemProps): JSX.Element {
   return (
-    <Stack {...props} as="li" padding={2}>
+    <Stack as="li" padding={2} {...props}>
       <Flex align="center" gap={3}>
         {image && (
           <Flex
@@ -104,7 +104,7 @@ export type ListProps = StackProps
 export default function List({
   children,
   ...props
-}: PropsWithChildren<{}>): JSX.Element {
+}: PropsWithChildren<ListProps>): JSX.Element {
   return (
     <Stack as="ul" position="relative" {...props}>
       {children}

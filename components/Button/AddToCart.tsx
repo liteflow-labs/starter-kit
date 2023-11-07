@@ -1,6 +1,7 @@
-import { Button, ButtonProps } from '@chakra-ui/react'
-import { FaShoppingBag } from '@react-icons/all-files/fa/FaShoppingBag'
+import { ButtonProps, IconButton, useToast } from '@chakra-ui/react'
+import { FaMinus } from '@react-icons/all-files/fa/FaMinus'
 import { FaShoppingCart } from '@react-icons/all-files/fa/FaShoppingCart'
+import useTranslation from 'next-translate/useTranslation'
 import { JSX, PropsWithChildren, useCallback } from 'react'
 import useCart from '../../hooks/useCart'
 
@@ -13,21 +14,38 @@ export default function AddToCartButton({
   children,
   ...props
 }: PropsWithChildren<Props>): JSX.Element {
+  const { t } = useTranslation('components')
+  const toast = useToast()
   const { addItem, hasItem, removeItem } = useCart()
 
   const addOrRemoveFromCart = useCallback(async () => {
     if (hasItem(offerId)) {
       removeItem(offerId)
+      toast({
+        title: t('cart.add-to-cart.toast.remove'),
+        status: 'success',
+        duration: 1500,
+      })
     } else {
       addItem({ offerId })
+      toast({
+        title: t('cart.add-to-cart.toast.add'),
+        status: 'success',
+        duration: 1500,
+      })
     }
-  }, [offerId, hasItem, addItem, removeItem])
+  }, [addItem, hasItem, offerId, removeItem, toast, t])
 
   return (
-    <Button
+    <IconButton
       {...props}
+      aria-label={
+        hasItem(offerId)
+          ? t('cart.add-to-cart.button.remove')
+          : t('cart.add-to-cart.button.add')
+      }
       onClick={addOrRemoveFromCart}
-      icon={hasItem(offerId) ? <FaShoppingBag /> : <FaShoppingCart />}
+      icon={hasItem(offerId) ? <FaMinus /> : <FaShoppingCart />}
     />
   )
 }

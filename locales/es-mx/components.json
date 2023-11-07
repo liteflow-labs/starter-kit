@@ -1,4 +1,64 @@
 {
+  "cart": {
+    "add-to-cart": {
+      "button": {
+        "add": "Añadir a la cesta",
+        "remove": "Quitar del carrito"
+      },
+      "toast": {
+        "add": "Agregado al carrito",
+        "remove": "Eliminado del carrito"
+      }
+    },
+    "drawer": {
+      "title": "Carro",
+      "back": "Volver al carrito",
+      "error": "Intentar otra vez",
+      "clear-all": "Limpiar todo",
+      "list-item": {
+        "not-available": "No disponible",
+        "tooltip": "El artículo no está disponible porque lo compró otra persona, el vendedor lo retiró de la venta o el anuncio expiró.",
+        "remove": "Eliminar"
+      }
+    },
+    "step": {
+      "error": {
+        "title": "Error",
+        "description": "Hubo un error con tu transacción"
+      },
+      "selection": {
+        "empty": {
+          "title": "No hay artículos en el carrito",
+          "description": "Agregue elementos para comenzar.",
+          "action": "Explorar las NFT"
+        },
+        "button": {
+          "label": "Continua con",
+          "aria-label": "Continuar"
+        }
+      },
+      "success": {
+        "title": "Felicidades",
+        "description": "Su transacción fue exitosa",
+        "action": "Ver transacción"
+      },
+      "transaction": {
+        "empty": {
+          "title": "Artículos no disponibles",
+          "description": "Los artículos de su carrito han sido comprados por otra persona, el vendedor los ha retirado de la venta o el anuncio ha caducado. "
+        },
+        "summary": {
+          "title": "Resumen",
+          "price": "Precio"
+        },
+        "button": {
+          "approve": "Aprobar {{value}}",
+          "purchase": "Compra",
+          "aria-label": "Continuar"
+        }
+      }
+    }
+  },
   "account": {
     "title": "Cuenta",
     "tabs": {
