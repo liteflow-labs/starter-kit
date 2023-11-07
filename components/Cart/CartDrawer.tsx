@@ -11,11 +11,7 @@ import {
   DrawerOverlay,
   Flex,
   HStack,
-  SkeletonCircle,
-  SkeletonText,
   Tag,
-  Text,
-  VStack,
 } from '@chakra-ui/react'
 import CartErrorStep from 'components/Cart/Step/Error'
 import CartSelectionStep from 'components/Cart/Step/Selection'
@@ -30,8 +26,6 @@ import { useFetchCartItemsQuery } from '../../graphql'
 import useCart from '../../hooks/useCart'
 import useEnvironment from '../../hooks/useEnvironment'
 import { useOrderByKey } from '../../hooks/useOrderByKey'
-import Link from '../Link/Link'
-import List, { ListItem } from '../List/List'
 import CartSelectionStepButton from './Step/SelectionButton'
 
 type Props = {
@@ -102,42 +96,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
     switch (step) {
       case 'selection':
         return (
-          <List>
-            {!cartItems ? (
-              new Array(items.length > 0 ? items.length : 4)
-                .fill(0)
-                .map((_, index) => (
-                  <ListItem
-                    key={index}
-                    image={<SkeletonCircle size="10" borderRadius="xl" />}
-                    imageRounded="xl"
-                    label={<SkeletonText noOfLines={2} width="24" />}
-                    action={<SkeletonText noOfLines={1} width="24" />}
-                  />
-                ))
-            ) : cartItems.length > 0 ? (
-              <CartSelectionStep
-                cartItems={cartItems}
-                chains={uniqueCartChains}
-              />
-            ) : (
-              <VStack spacing={1} py={4}>
-                <Text variant="subtitle2" color="gray.800">
-                  No items in cart
-                </Text>
-                <Text variant="caption">Add items to get started.</Text>
-                <Button
-                  size="sm"
-                  as={Link}
-                  href="/explore?offers=fixed"
-                  variant="outline"
-                  mt={3}
-                >
-                  Explore NFTs
-                </Button>
-              </VStack>
-            )}
-          </List>
+          <CartSelectionStep cartItems={cartItems} chains={uniqueCartChains} />
         )
       case 'transaction':
         invariant(currentCartItems, 'Current cart items must be defined')
