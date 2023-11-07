@@ -22,6 +22,7 @@ import { useRouter } from 'next/router'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
+import { dateIsBefore } from 'utils'
 import { useFetchCartItemsQuery } from '../../graphql'
 import useCart from '../../hooks/useCart'
 import useEnvironment from '../../hooks/useEnvironment'
@@ -87,10 +88,12 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
     [selectedChainId, uniqueCartChains],
   )
 
-  const currentCartItems = useMemo(
-    () => cartItems?.filter((x) => x.asset.chainId === selectedChain?.id) || [],
-    [cartItems, selectedChain],
-  )
+  const nonExpiredSelectedCartItems = useMemo(() => {
+    const now = new Date()
+    return cartItems
+      ?.filter((x) => x.asset.chainId === selectedChain?.id)
+      .filter((item) => dateIsBefore(now, item.expiredAt))
+  }, [cartItems, selectedChain?.id])
 
   const content = useMemo(() => {
     switch (step) {
@@ -99,11 +102,14 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
           <CartSelectionStep cartItems={cartItems} chains={uniqueCartChains} />
         )
       case 'transaction':
-        invariant(currentCartItems, 'Current cart items must be defined')
+        invariant(
+          nonExpiredSelectedCartItems,
+          'Non expired cart items must be defined',
+        )
         invariant(selectedChain, 'Selected chain must be defined')
         return (
           <CartTransactionStep
-            cartItems={currentCartItems}
+            cartItems={nonExpiredSelectedCartItems}
             chain={selectedChain}
           />
         )
@@ -113,7 +119,13 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
       case 'error':
         return <CartErrorStep />
     }
-  }, [cartItems, selectedChain, step, uniqueCartChains, currentCartItems])
+  }, [
+    cartItems,
+    nonExpiredSelectedCartItems,
+    selectedChain,
+    step,
+    uniqueCartChains,
+  ])
 
   const onSubmit = formValues.handleSubmit((data) => {
     // TODO: do the transaction (This will be next callback when all the currencies are approved)

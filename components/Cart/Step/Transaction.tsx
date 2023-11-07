@@ -1,4 +1,4 @@
-import { HStack, Icon, Text, VStack } from '@chakra-ui/react'
+import { Card, HStack, Icon, Text, VStack } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { FaCheck } from '@react-icons/all-files/fa/FaCheck'
 import { HiOutlineX } from '@react-icons/all-files/hi/HiOutlineX'
@@ -25,7 +25,7 @@ const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
       symbol: string
       approved: boolean
     }[] = []
-    cartItems?.forEach((item) => {
+    cartItems.forEach((item) => {
       !currencies.some((currency) => item.currency.id === currency.id) &&
         currencies.push({ ...item.currency, approved: false })
     })
@@ -56,6 +56,43 @@ const CartTransactionStep: FC<Props> = ({ cartItems, chain }) => {
           ml={1}
         />
       </HStack>
+      <Card width="full" p={1}>
+        {cartItems.map((cartItem, i) => (
+          <ListItem
+            key={i}
+            image={
+              <Image
+                src={cartItem.asset.image}
+                alt={cartItem.asset.name}
+                width={24}
+                height={24}
+                w={6}
+                h={6}
+                objectFit="cover"
+              />
+            }
+            label={
+              <Text
+                variant="subtitle2"
+                color="gray.800"
+                title={cartItem.asset.name}
+              >
+                {cartItem.asset.name}
+              </Text>
+            }
+            action={
+              <Text variant="subtitle2" textAlign="end">
+                <Price
+                  amount={cartItem.unitPrice}
+                  currency={cartItem.currency}
+                />
+              </Text>
+            }
+            imageSize={6}
+          />
+        ))}
+      </Card>
+      <Text variant="subtitle2">Price</Text>
       <List width="full">
         {uniqueCurrencies.map((currency, i) => (
           <ListItem
