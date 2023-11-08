@@ -11,10 +11,10 @@ import {
 } from '@chakra-ui/react'
 import { IoChevronBackSharp } from '@react-icons/all-files/io5/IoChevronBackSharp'
 import { IoChevronForward } from '@react-icons/all-files/io5/IoChevronForward'
-import Link from 'components/Link/Link'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { JSX } from 'react'
+import Link from '../Link/Link'
 
 export type IProp = {
   page: number
@@ -87,7 +87,11 @@ export default function Pagination({
       >
         <IconButton
           as={onPageChange ? undefined : Link}
-          href={{ pathname, query: { ...query, page: page - 1 } }}
+          href={
+            onPageChange
+              ? undefined
+              : { pathname, query: { ...query, page: page - 1 } }
+          }
           variant="outline"
           colorScheme="gray"
           rounded="full"
@@ -96,39 +100,47 @@ export default function Pagination({
           icon={<Icon as={IoChevronBackSharp} h={4} w={4} aria-hidden="true" />}
           isDisabled={!hasPreviousPage}
           pointerEvents={hasPreviousPage ? undefined : 'none'}
-          onClick={() => onPageChange && onPageChange(page - 1)}
+          onClick={onPageChange ? () => onPageChange(page - 1) : undefined}
         />
         <ButtonGroup>
           {hasPreviousPage && (
             <Button
               as={onPageChange ? undefined : Link}
-              href={{ pathname, query: { ...query, page: page - 1 } }}
+              href={
+                onPageChange
+                  ? undefined
+                  : { pathname, query: { ...query, page: page - 1 } }
+              }
               size="sm"
               variant="outline"
               colorScheme="gray"
-              onClick={() => onPageChange && onPageChange(page - 1)}
+              onClick={onPageChange ? () => onPageChange(page - 1) : undefined}
             >
               {page - 1}
             </Button>
           )}
           <Button
             as={onPageChange ? undefined : Link}
-            href={{ pathname, query }}
+            href={onPageChange ? undefined : { pathname, query }}
             size="sm"
             variant="outline"
             colorScheme="brand"
-            onClick={() => onPageChange && onPageChange(page)}
+            onClick={onPageChange ? () => onPageChange(page) : undefined}
           >
             {page}
           </Button>
           {hasNextPage && (
             <Button
               as={onPageChange ? undefined : Link}
-              href={{ pathname, query: { ...query, page: page + 1 } }}
+              href={
+                onPageChange
+                  ? undefined
+                  : { pathname, query: { ...query, page: page + 1 } }
+              }
               size="sm"
               variant="outline"
               colorScheme="gray"
-              onClick={() => onPageChange && onPageChange(page + 1)}
+              onClick={onPageChange ? () => onPageChange(page + 1) : undefined}
             >
               {page + 1}
             </Button>
@@ -136,7 +148,11 @@ export default function Pagination({
         </ButtonGroup>
         <IconButton
           as={onPageChange ? undefined : Link}
-          href={{ pathname, query: { ...query, page: page + 1 } }}
+          href={
+            onPageChange
+              ? undefined
+              : { pathname, query: { ...query, page: page + 1 } }
+          }
           variant="outline"
           colorScheme="gray"
           rounded="full"
@@ -145,7 +161,7 @@ export default function Pagination({
           icon={<Icon as={IoChevronForward} h={4} w={4} aria-hidden="true" />}
           isDisabled={!hasNextPage}
           pointerEvents={hasNextPage ? undefined : 'none'}
-          onClick={() => onPageChange && onPageChange(page + 1)}
+          onClick={onPageChange ? () => onPageChange(page + 1) : undefined}
         />
       </Flex>
     </Flex>
