@@ -166,7 +166,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   if (collection === null) return <Error statusCode={404} />
   return (
@@ -314,7 +314,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
               limit={limit}
               limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              onPageChange={changePage}
               onLimitChange={changeLimit}
               hasNextPage={assetData?.assets?.pageInfo.hasNextPage}
               hasPreviousPage={assetData?.assets?.pageInfo.hasPreviousPage}
