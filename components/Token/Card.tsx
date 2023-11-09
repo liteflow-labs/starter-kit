@@ -107,13 +107,7 @@ const TokenCard: FC<Props> = ({ asset }) => {
     [asset],
   )
   const [isHovered, setIsHovered] = useState(false)
-  const media = useDetectAssetMedia({
-    image: { url: asset.image, mimetype: asset.imageMimetype },
-    animation: asset.animationUrl
-      ? { url: asset.animationUrl, mimetype: asset.animationMimetype }
-      : null,
-    unlockedContent: asset.unlockedContent,
-  })
+  const media = useDetectAssetMedia(asset)
 
   const auction = asset.auctions?.nodes[0]
   const sale = asset.firstSale?.nodes[0]

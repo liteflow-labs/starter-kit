@@ -93,16 +93,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const asset = useMemo(() => {
     if (data?.asset === null) return null
     if (data?.asset === undefined) return undefined
-    return {
-      ...data.asset,
-      image: { url: data.asset.image, mimetype: data.asset.imageMimetype },
-      animation: data.asset.animationUrl
-        ? {
-            url: data.asset.animationUrl,
-            mimetype: data.asset.animationMimetype,
-          }
-        : null,
-    }
+    return data.asset
   }, [data])
 
   const auction = asset?.auctions.nodes[0]
@@ -175,7 +166,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
       <Head
         title={asset ? `${asset.name} - ${asset.collection.name}` : undefined}
         description={asset?.description}
-        image={asset?.image.url}
+        image={asset?.image}
       />
       <SimpleGrid spacing={6} columns={{ md: 2 }}>
         <AspectRatio ratio={1}>
@@ -401,7 +392,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                       {t('asset.detail.details.media')}
                     </Text>
                     <Link
-                      href={asset.animation?.url || asset.image.url}
+                      href={asset.animationUrl || asset.image}
                       isExternal
                       externalIcon
                     >

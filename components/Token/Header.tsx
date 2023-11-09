@@ -32,13 +32,7 @@ const TokenHeader: FC<Props> = ({
   onOfferCanceled,
   onAuctionAccepted,
 }) => {
-  const media = useDetectAssetMedia({
-    image: { url: asset.image, mimetype: asset.imageMimetype },
-    animation: asset.animationUrl
-      ? { url: asset.animationUrl, mimetype: asset.animationMimetype }
-      : null,
-    unlockedContent: asset.unlockedContent,
-  })
+  const media = useDetectAssetMedia(asset)
 
   const chainCurrencies = useMemo(
     () =>

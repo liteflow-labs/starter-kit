@@ -16,7 +16,7 @@ const supportedMedia = [/^image\/*/, /^video\/*/, /^application\/octet-stream$/]
 
 const TokenMedia: FC<{
   media: AssetMedia
-  fallback: AssetMedia | null
+  fallback: AssetMedia
   defaultText: string
   controls?: boolean
   fill?: boolean
