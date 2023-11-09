@@ -42,6 +42,17 @@ const DropsPage: NextPage<Props> = ({ now }) => {
 
   const onCountdownEnd = useCallback(async () => await refetch(), [refetch])
 
+  const calculateTotalSupply = useCallback(
+    (drops: { supply: string | null }[]) =>
+      drops.some((x) => !x.supply)
+        ? null
+        : drops.reduce(
+            (acc, drop) => acc.add(BigNumber.from(drop.supply)),
+            BigNumber.from(0),
+          ),
+    [],
+  )
+
   return (
     <LargeLayout>
       <Head title={t('drops.title')} />
@@ -74,14 +85,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
                   key={i}
                   collection={{ ...drop }}
                   drops={drop.drops.nodes}
-                  totalSupply={
-                    drop.drops.nodes.some((x) => !x.supply)
-                      ? null
-                      : drop.drops.nodes.reduce(
-                          (acc, drop) => acc.add(BigNumber.from(drop.supply)),
-                          BigNumber.from(0),
-                        )
-                  }
+                  totalSupply={calculateTotalSupply(drop.drops.nodes)}
                   onCountdownEnd={onCountdownEnd}
                 />
               ))}
@@ -99,14 +103,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
                     key={i}
                     collection={{ ...drop }}
                     drops={drop.lastDrop.nodes}
-                    totalSupply={
-                      drop.allDrops.nodes.some((x) => !x.supply)
-                        ? null
-                        : drop.allDrops.nodes.reduce(
-                            (acc, drop) => acc.add(BigNumber.from(drop.supply)),
-                            BigNumber.from(0),
-                          )
-                    }
+                    totalSupply={calculateTotalSupply(drop.allDrops.nodes)}
                   />
                 ))}
               </SimpleGrid>
