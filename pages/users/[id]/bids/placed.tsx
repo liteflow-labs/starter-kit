@@ -218,7 +218,7 @@ const BidPlacedPage: NextPage = () => {
                         />
                       </Td>
                       <Td>
-                        {item.expiredAt <= new Date()
+                        {new Date(item.expiredAt) <= new Date()
                           ? t('user.bid-placed.status.expired')
                           : t('user.bid-placed.status.active')}
                       </Td>
@@ -226,7 +226,7 @@ const BidPlacedPage: NextPage = () => {
                       <Td isNumeric>
                         {ownerLoggedIn && (
                           <>
-                            {item.expiredAt > new Date() ? (
+                            {new Date(item.expiredAt) > new Date() ? (
                               <CancelOfferButton
                                 offer={item}
                                 title={t('user.bid-placed.cancel.title')}
