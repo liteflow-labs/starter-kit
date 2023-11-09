@@ -140,7 +140,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     invariant(true, 'Invalid sale type')
   }, [currencies, auctionCurrencies, asset, sale, onCreated])
 
-  if (!asset) return <Error statusCode={404} />
+  if (asset === null) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head
