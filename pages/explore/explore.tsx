@@ -202,9 +202,9 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                       : { sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {assets.map((x, i) => (
+                  {assets.map((asset, i) => (
                     <Flex key={i} justify="center" overflow="hidden">
-                      <TokenCard asset={x} />
+                      <TokenCard asset={asset} />
                     </Flex>
                   ))}
                 </SimpleGrid>
