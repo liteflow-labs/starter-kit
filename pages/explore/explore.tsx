@@ -115,7 +115,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   return (
     <>
@@ -223,7 +223,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   limit={limit}
                   limits={[PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  onPageChange={changePage}
                   onLimitChange={changeLimit}
                   hasNextPage={assetsData?.assets?.pageInfo.hasNextPage}
                   hasPreviousPage={assetsData?.assets?.pageInfo.hasPreviousPage}

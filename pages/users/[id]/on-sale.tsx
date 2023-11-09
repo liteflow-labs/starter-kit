@@ -23,7 +23,7 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
   const { pathname, replace, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>('CREATED_AT_DESC')
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
@@ -75,7 +75,6 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
             limit,
             limits: [PAGINATION_LIMIT, 24, 36, 48],
             page,
-            onPageChange: changePage,
             onLimitChange: changeLimit,
             hasNextPage: data?.onSale?.pageInfo.hasNextPage,
             hasPreviousPage: data?.onSale?.pageInfo.hasPreviousPage,

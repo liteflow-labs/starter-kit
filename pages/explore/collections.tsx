@@ -86,7 +86,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   const collections = collectionsData?.collections?.nodes
   const hasFilter = CHAINS.length > 1
 
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -221,7 +221,6 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   limit={limit}
                   limits={[PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  onPageChange={changePage}
                   onLimitChange={changeLimit}
                   hasNextPage={
                     collectionsData?.collections?.pageInfo.hasNextPage

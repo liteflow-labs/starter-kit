@@ -8,7 +8,9 @@ fragment AssetDetail on Asset {
     chainId
     address
     name
+    standard
   }
+  quantity
   image
   imageMimetype
   animationUrl

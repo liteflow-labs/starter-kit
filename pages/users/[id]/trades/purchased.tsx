@@ -49,7 +49,7 @@ const TradePurchasedPage: NextPage = () => {
   const { replace, pathname, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<TradesOrderBy>('TIMESTAMP_DESC')
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
   const userAddress = useRequiredQueryParamSingle('id')
 
   const { data } = useFetchUserTradePurchasedQuery({
@@ -259,7 +259,6 @@ const TradePurchasedPage: NextPage = () => {
               limit={limit}
               limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              onPageChange={changePage}
               onLimitChange={changeLimit}
               hasNextPage={data?.trades?.pageInfo.hasNextPage}
               hasPreviousPage={data?.trades?.pageInfo.hasPreviousPage}

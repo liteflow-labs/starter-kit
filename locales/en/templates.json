@@ -142,6 +142,7 @@
         },
         "refresh-metadata": "Refresh Metadata"
       },
+      "supply": "X{{supply}}",
       "details": {
         "title": "Details",
         "chain": "Chain",

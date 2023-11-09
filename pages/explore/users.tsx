@@ -72,7 +72,7 @@ const UsersPage: NextPage<Props> = () => {
 
   const users = usersData?.users?.nodes
 
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   return (
     <>
@@ -141,7 +141,6 @@ const UsersPage: NextPage<Props> = () => {
               limit={limit}
               limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              onPageChange={changePage}
               onLimitChange={changeLimit}
               hasNextPage={usersData?.users?.pageInfo.hasNextPage}
               hasPreviousPage={usersData?.users?.pageInfo.hasPreviousPage}

@@ -24,7 +24,7 @@ const DropsPage: NextPage<Props> = ({ now }) => {
   const { PAGINATION_LIMIT, REPORT_EMAIL } = useEnvironment()
   const date = useMemo(() => new Date(now), [now])
   const { page, limit, offset } = usePaginateQuery()
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   const { data, loading, refetch } = useFetchDropsQuery({
     variables: { now: date, limit, offset },
@@ -122,7 +122,6 @@ const DropsPage: NextPage<Props> = ({ now }) => {
               limit={limit}
               limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              onPageChange={changePage}
               onLimitChange={changeLimit}
               hasNextPage={data?.ended?.pageInfo.hasNextPage}
               hasPreviousPage={data?.ended?.pageInfo.hasPreviousPage}
