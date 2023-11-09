@@ -70,8 +70,10 @@ const CreatePage: NextPage = () => {
         address: collection.address,
         chainId: collection.chainId,
         name: collection.name,
+        standard: collection.standard,
       },
       owned: null,
+      quantity: '1',
       unlockedContent: null,
     }
   }, [imageLocal, animationLocal, formData?.name, collection])
