@@ -41,7 +41,7 @@ export type Props = {
         currency: {
           id: string
           decimals: number
-          image: string // not needed
+          image: string
           symbol: string
         }
       }[]
