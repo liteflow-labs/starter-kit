@@ -1,5 +1,5 @@
 import { ButtonProps, useDisclosure } from '@chakra-ui/react'
-import { BigNumberish } from '@ethersproject/bignumber'
+import { BigNumber } from '@ethersproject/bignumber'
 import { AcceptOfferStep, useAcceptOffer } from '@liteflow/react'
 import { JSX, PropsWithChildren, useCallback } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
@@ -10,8 +10,7 @@ import ConnectButtonWithNetworkSwitch from './ConnectWithNetworkSwitch'
 type Props = Omit<ButtonProps, 'onClick' | 'disabled'> & {
   offer: {
     id: string
-    unitPrice: BigNumberish
-    availableQuantity: BigNumberish
+    availableQuantity: string
     asset: {
       chainId: number
     }
@@ -37,7 +36,7 @@ export default function AcceptOfferButton({
   const handleAcceptOffer = useCallback(async () => {
     try {
       onOpen()
-      await accept(offer.id, offer.availableQuantity)
+      await accept(offer.id, BigNumber.from(offer.availableQuantity))
       await onAccepted()
     } catch (e) {
       onError(e as Error)

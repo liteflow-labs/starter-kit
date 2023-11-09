@@ -16,8 +16,6 @@ type Props = {
 }
 
 const UserProfileBanner: FC<Props> = ({ address, user }) => {
-  if (!address) throw new Error('account is falsy')
-
   return (
     <Flex
       as="header"

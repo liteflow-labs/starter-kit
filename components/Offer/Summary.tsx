@@ -1,10 +1,10 @@
 import { Flex, Heading, Skeleton, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, HTMLAttributes, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import Price from '../Price/Price'
 
-type Props = HTMLAttributes<any> & {
+type Props = {
   currency: {
     decimals: number
     symbol: string
