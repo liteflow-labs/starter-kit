@@ -105,7 +105,7 @@ const TokenCard: FC<Props> = ({
   const { t } = useTranslation('templates')
   const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const [isHovered, setIsHovered] = useState(false)
-  const media = useDetectAssetMedia(asset)
+  const media = useDetectAssetMedia({ ...asset, animation: null })
 
   const chainName = useMemo(
     () => CHAINS.find((x) => x.id === asset.collection.chainId)?.name,
