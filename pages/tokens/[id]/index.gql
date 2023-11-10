@@ -154,7 +154,7 @@ query FetchAsset(
           decimals
           symbol
         }
-        offers(
+        bestBid: offers(
           orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
           filter: {
             signature: { isNull: false }

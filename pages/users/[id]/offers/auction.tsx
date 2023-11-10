@@ -20,7 +20,7 @@ import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -31,27 +31,19 @@ import UserProfileTemplate from '../../../../components/Profile'
 import SaleAuctionAction from '../../../../components/Sales/Auction/Action'
 import SaleAuctionStatus from '../../../../components/Sales/Auction/Status'
 import Select from '../../../../components/Select/Select'
-import {
-  convertAuctionFull,
-  convertAuctionWithBestBid,
-} from '../../../../convert'
 import { AuctionsOrderBy, useFetchUserAuctionsQuery } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
 const AuctionPage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<AuctionsOrderBy>('CREATED_AT_DESC')
   const { changeLimit } = usePaginate()
@@ -67,18 +59,7 @@ const AuctionPage: NextPage = () => {
       orderBy,
     },
   })
-
-  const auctions = useMemo(
-    () =>
-      data?.auctions?.nodes.map((x) => ({
-        ...convertAuctionWithBestBid(x),
-        ...convertAuctionFull(x),
-        asset: x.asset,
-        createdAt: new Date(x.createdAt),
-        ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
-      })),
-    [data],
-  )
+  const auctions = data?.auctions?.nodes
 
   const onAuctionAccepted = useCallback(async () => {
     try {
@@ -105,8 +86,6 @@ const AuctionPage: NextPage = () => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="offers"
         loginUrlForReferral={BASE_URL + '/login'}
@@ -217,12 +196,12 @@ const AuctionPage: NextPage = () => {
                         </Flex>
                       </Td>
                       <Td isNumeric>
-                        {item.bestBid ? (
+                        {item.bestBid && item.bestBid.nodes[0] ? (
                           <Text
                             as={Price}
                             noOfLines={1}
-                            amount={item.bestBid.unitPrice}
-                            currency={item.bestBid.currency}
+                            amount={item.bestBid.nodes[0].unitPrice}
+                            currency={item.bestBid.nodes[0].currency}
                           />
                         ) : (
                           '-'
@@ -231,19 +210,20 @@ const AuctionPage: NextPage = () => {
                       <Td>
                         <SaleAuctionStatus
                           auction={item}
-                          bestBid={item.bestBid}
+                          bestBid={item.bestBid && item.bestBid.nodes[0]}
                         />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>
-                        {ownerLoggedIn && item.ownAsset && (
-                          <SaleAuctionAction
-                            signer={signer}
-                            auction={item}
-                            bestBid={item.bestBid}
-                            onAuctionAccepted={onAuctionAccepted}
-                          />
-                        )}
+                        {ownerLoggedIn &&
+                          BigNumber.from(item.asset.owned?.quantity || 0).gt(
+                            0,
+                          ) && (
+                            <SaleAuctionAction
+                              auction={item}
+                              onAuctionAccepted={onAuctionAccepted}
+                            />
+                          )}
                       </Td>
                     </Tr>
                   ))}

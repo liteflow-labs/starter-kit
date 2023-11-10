@@ -8,8 +8,7 @@ const WalletAddress: FC<{
   address: string
   isShort?: boolean
   isCopyable?: boolean
-  as?: FC<any>
-}> = ({ address, isShort, isCopyable, as }) => {
+}> = ({ address, isShort, isCopyable }) => {
   const { t } = useTranslation('components')
   const formatted = formatAddress(address, 10)
   const toast = useToast()
@@ -33,19 +32,6 @@ const WalletAddress: FC<{
       ),
     [address, formatted, isShort],
   )
-
-  const CustomTag: any = as
-  if (CustomTag)
-    return (
-      <CustomTag
-        onClick={handleClick}
-        postIcon={
-          <Icon as={HiOutlineClipboard} ml={3} h={4} w={4} color="gray.400" />
-        }
-      >
-        {children}
-      </CustomTag>
-    )
 
   return isCopyable ? (
     <Flex

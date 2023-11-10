@@ -20,25 +20,14 @@ import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
 import Image from '../../../components/Image/Image'
 import BackButton from '../../../components/Navbar/BackButton'
-import OfferFormBid, {
-  type BidCurrency,
-} from '../../../components/Offer/Form/Bid'
+import OfferFormBid from '../../../components/Offer/Form/Bid'
 import Price from '../../../components/Price/Price'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../components/Token/Card'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../../convert'
 import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
-import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
 
 type Props = {
@@ -46,9 +35,6 @@ type Props = {
 }
 
 const BidPage: NextPage<Props> = ({ now }) => {
-  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
-    useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
@@ -70,9 +56,6 @@ const BidPage: NextPage<Props> = ({ now }) => {
       address: address || '',
     },
   })
-
-  const blockExplorer = useBlockExplorer(data?.asset?.chainId)
-
   const asset = data?.asset
 
   const auction = useMemo(
@@ -80,10 +63,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
     [asset],
   )
   const bidCurrencies = useMemo(
-    () =>
-      (auction ? [auction.currency] : data?.currencies?.nodes) as
-        | BidCurrency[]
-        | undefined,
+    () => (auction ? [auction.currency] : data?.currencies?.nodes),
     [auction, data],
   )
 
@@ -127,22 +107,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {!asset ? (
-              <SkeletonTokenCard />
-            ) : (
-              <TokenCard
-                asset={convertAsset(asset)}
-                creator={convertUser(asset.creator, asset.creator.address)}
-                auction={
-                  auction ? convertAuctionWithBestBid(auction) : undefined
-                }
-                sale={convertSale(asset.firstSale.nodes[0])}
-                numberOfSales={asset.firstSale.totalCount}
-                hasMultiCurrency={
-                  asset.firstSale.totalCurrencyDistinctCount > 1
-                }
-              />
-            )}
+            {!asset ? <SkeletonTokenCard /> : <TokenCard asset={asset} />}
           </Box>
         </GridItem>
         <GridItem>
@@ -209,37 +174,11 @@ const BidPage: NextPage<Props> = ({ now }) => {
 
             {!asset || !bidCurrencies ? (
               <SkeletonForm items={2} />
-            ) : asset.collection.standard === 'ERC721' ? (
-              <OfferFormBid
-                signer={signer}
-                account={address}
-                chainId={asset.chainId}
-                collectionAddress={asset.collectionAddress}
-                tokenId={asset.tokenId}
-                multiple={false}
-                owner={asset.ownerships.nodes[0]?.ownerAddress}
-                currencies={bidCurrencies}
-                blockExplorer={blockExplorer}
-                onCreated={onCreated}
-                auctionId={auction?.id}
-                auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
-                offerValidity={OFFER_VALIDITY_IN_SECONDS}
-              />
             ) : (
               <OfferFormBid
-                signer={signer}
-                account={address}
-                chainId={asset.chainId}
-                collectionAddress={asset.collectionAddress}
-                tokenId={asset.tokenId}
-                multiple={true}
-                supply={asset.quantity}
+                asset={asset}
                 currencies={bidCurrencies}
-                blockExplorer={blockExplorer}
                 onCreated={onCreated}
-                auctionId={auction?.id}
-                auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
-                offerValidity={OFFER_VALIDITY_IN_SECONDS}
               />
             )}
           </Flex>

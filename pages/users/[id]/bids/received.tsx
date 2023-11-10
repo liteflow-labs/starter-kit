@@ -15,6 +15,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { useIsLoggedIn } from '@liteflow/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
@@ -31,18 +32,15 @@ import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
-import { convertBidFull } from '../../../../convert'
 import {
   OfferOpenBuysOrderBy,
   useFetchUserBidsReceivedQuery,
 } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
@@ -52,10 +50,8 @@ type Props = {
 
 const BidReceivedPage: NextPage<Props> = ({ now }) => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OfferOpenBuysOrderBy>('CREATED_AT_DESC')
   const { changeLimit } = usePaginate()
@@ -73,15 +69,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
       now: date,
     },
   })
-
-  const bids = useMemo(
-    () =>
-      data?.bids?.nodes.map((x) => ({
-        ...convertBidFull(x),
-        asset: x.asset,
-      })),
-    [data],
-  )
+  const bids = data?.bids?.nodes
 
   const onAccepted = useCallback(async () => {
     toast({
@@ -101,8 +89,6 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="bids"
         loginUrlForReferral={BASE_URL + '/login'}
@@ -214,14 +200,14 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                                 </Tag>
                               )}
                             </Text>
-                            {item.availableQuantity.gt(1) && (
+                            {BigNumber.from(item.availableQuantity).gt(1) && (
                               <Text
                                 as="span"
                                 variant="caption"
                                 color="gray.500"
                               >
                                 {t('user.bid-received.requested', {
-                                  value: item.availableQuantity.toString(),
+                                  value: item.availableQuantity,
                                 })}
                               </Text>
                             )}
@@ -232,17 +218,14 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                         <Text
                           as={Price}
                           noOfLines={1}
-                          amount={item.unitPrice.mul(item.availableQuantity)}
+                          amount={BigNumber.from(item.unitPrice).mul(
+                            item.availableQuantity,
+                          )}
                           currency={item.currency}
                         />
                       </Td>
                       <Td>
-                        <Avatar
-                          address={item.maker.address}
-                          image={item.maker.image}
-                          name={item.maker.name}
-                          verified={item.maker.verified}
-                        />
+                        <Avatar user={item.maker} />
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>
@@ -258,12 +241,10 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                             </Button>
                           ) : (
                             <AcceptOfferButton
+                              offer={item}
+                              title={t('user.bid-received.accept.title')}
                               variant="outline"
                               colorScheme="gray"
-                              signer={signer}
-                              chainId={item.asset.chainId}
-                              offer={item}
-                              quantity={item.availableQuantity}
                               onAccepted={onAccepted}
                               onError={(e) =>
                                 toast({
@@ -271,7 +252,6 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                                   title: formatError(e),
                                 })
                               }
-                              title={t('user.bid-received.accept.title')}
                             >
                               <Text as="span" isTruncated>
                                 {t('user.bid-received.actions.accept')}

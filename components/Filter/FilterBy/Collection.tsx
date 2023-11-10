@@ -10,7 +10,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { convertCollection } from 'convert'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
@@ -26,7 +25,20 @@ import SearchInput from '../../SearchInput'
 
 type Props = {
   formValues: UseFormReturn<Filter, any, undefined>
-  selectedCollection?: { chainId: number; address: string }
+  selectedCollection?: {
+    chainId: number
+    address: string
+    name: string
+    image: string | null
+    floorPrice: {
+      valueInRef: string
+      refCode: string
+    } | null
+    totalVolume: {
+      valueInRef: string
+      refCode: string
+    }
+  }
   onCollectionChange: (data?: { chainId: number; address: string }) => void
   onFilterChange: (data?: Partial<Filter>) => void
 }
@@ -104,7 +116,7 @@ const FilterByCollection: FC<Props> = ({
               textAlign="left"
               cursor="pointer"
               onClick={() => onFilterChange({ collection: null, traits: [] })}
-              collection={convertCollection(collection as any)}
+              collection={collection}
               closable
             />
           )}
@@ -146,9 +158,9 @@ const FilterByCollection: FC<Props> = ({
                   />
                 ))
             ) : collections.length > 0 ? (
-              collections.map((x) => (
+              collections.map((collection) => (
                 <CollectionListItem
-                  key={`${x.chainId}-${x.address}`}
+                  key={`${collection.chainId}-${collection.address}`}
                   cursor={'pointer'}
                   rounded="xl"
                   transition={'background-color 0.3s ease-in-out'}
@@ -157,11 +169,11 @@ const FilterByCollection: FC<Props> = ({
                   }}
                   onClick={() =>
                     onFilterChange({
-                      collection: `${x.chainId}-${x.address}`,
+                      collection: `${collection.chainId}-${collection.address}`,
                       traits: [],
                     })
                   }
-                  collection={convertCollection(x)}
+                  collection={collection}
                 />
               ))
             ) : (

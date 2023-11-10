@@ -1,19 +1,14 @@
-import { Button, Text } from '@chakra-ui/react'
+import { Button, ButtonProps, Text } from '@chakra-ui/react'
 import { HiOutlineArrowLeft } from '@react-icons/all-files/hi/HiOutlineArrowLeft'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, HTMLAttributes } from 'react'
+import { FC } from 'react'
 
-type IProps = HTMLAttributes<any> & {
-  onClick: () => void
-}
-
-const BackButton: FC<IProps> = ({ children, onClick, ...props }) => {
+const BackButton: FC<ButtonProps> = ({ children, ...props }) => {
   const { t } = useTranslation('components')
   return (
     <Button
       variant="outline"
       colorScheme="gray"
-      onClick={onClick}
       leftIcon={<HiOutlineArrowLeft />}
       {...props}
     >

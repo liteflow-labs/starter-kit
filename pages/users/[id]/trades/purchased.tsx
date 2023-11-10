@@ -14,12 +14,13 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { HiExternalLink } from '@react-icons/all-files/hi/HiExternalLink'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
 import Link from '../../../../components/Link/Link'
@@ -29,31 +30,26 @@ import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
-import { convertTrade } from '../../../../convert'
 import {
   TradesOrderBy,
   useFetchUserTradePurchasedQuery,
 } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow } from '../../../../utils'
 
 const TradePurchasedPage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT, CHAINS } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<TradesOrderBy>('TIMESTAMP_DESC')
   const { changeLimit } = usePaginate()
-  const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
   const { data } = useFetchUserTradePurchasedQuery({
@@ -64,8 +60,7 @@ const TradePurchasedPage: NextPage = () => {
       orderBy,
     },
   })
-
-  const trades = useMemo(() => data?.trades?.nodes.map(convertTrade), [data])
+  const trades = data?.trades?.nodes
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -77,8 +72,6 @@ const TradePurchasedPage: NextPage = () => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="trades"
         loginUrlForReferral={BASE_URL + '/login'}
@@ -198,14 +191,14 @@ const TradePurchasedPage: NextPage = () => {
                               <Text as="span" noOfLines={1}>
                                 {item.asset.name}
                               </Text>
-                              {item.quantity.gt(1) && (
+                              {BigNumber.from(item.quantity).gt(1) && (
                                 <Text
                                   as="span"
                                   variant="caption"
                                   color="gray.500"
                                 >
                                   {t('user.trade-purchased.purchased', {
-                                    value: item.quantity.toString(),
+                                    value: item.quantity,
                                   })}
                                 </Text>
                               )}
@@ -228,14 +221,9 @@ const TradePurchasedPage: NextPage = () => {
                         )}
                       </Td>
                       <Td>
-                        <Avatar
-                          address={item.seller.address}
-                          image={item.seller.image}
-                          name={item.seller.name}
-                          verified={item.seller.verified}
-                        />
+                        <Avatar user={item.seller} />
                       </Td>
-                      <Td>{dateFromNow(item.createdAt)}</Td>
+                      <Td>{dateFromNow(item.timestamp)}</Td>
                       <Td>
                         <IconButton
                           aria-label="external link"

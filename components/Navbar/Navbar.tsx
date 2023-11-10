@@ -283,13 +283,12 @@ const ActivityMenu: FC<{ account: string }> = ({ account }) => {
 
 // Account menu for desktop. Only visible when signed in
 const UserMenu: FC<{
-  account: string
   user: {
     address: string
     image: string | null
   }
   signOutFn: () => void
-}> = ({ account, user, signOutFn }) => {
+}> = ({ user, signOutFn }) => {
   const { t } = useTranslation('components')
   return (
     <Menu>
@@ -297,7 +296,7 @@ const UserMenu: FC<{
         <Flex>
           <Flex
             as={AccountImage}
-            address={user.address || account}
+            address={user.address}
             image={user.image}
             size={40}
             rounded="full"
@@ -305,7 +304,7 @@ const UserMenu: FC<{
         </Flex>
       </MenuButton>
       <MenuList>
-        <Link href={`/users/${account}`}>
+        <Link href={`/users/${user.address}`}>
           <MenuItem>{t('navbar.user.profile')}</MenuItem>
         </Link>
         <Link href="/account/wallet">
@@ -474,7 +473,6 @@ const Navbar: FC<{
                 </IconButton>
               </Link>
               <UserMenu
-                account={account.address}
                 user={account}
                 signOutFn={() => logout().then(disconnect)}
               />
