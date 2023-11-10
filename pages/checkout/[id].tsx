@@ -209,6 +209,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
                 signer={signer}
                 chainId={offer.asset.chainId}
                 account={address}
+                asset={asset}
                 offer={offer}
                 blockExplorer={blockExplorer}
                 currency={offer.currency}
