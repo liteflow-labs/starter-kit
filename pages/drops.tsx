@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import DropCard from '../components/Drop/DropCard'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
@@ -80,15 +81,21 @@ const DropsPage: NextPage<Props> = ({ now }) => {
               w="full"
               mb={endedDrops.length > 0 ? 8 : 0}
             >
-              {activeDrops.map((drop, i) => (
-                <DropCard
-                  key={i}
-                  collection={{ ...drop }}
-                  drops={drop.drops.nodes}
-                  totalSupply={calculateTotalSupply(drop.drops.nodes)}
-                  onCountdownEnd={onCountdownEnd}
-                />
-              ))}
+              {activeDrops.map((drop, i) => {
+                invariant(
+                  drop.drops.nodes[0],
+                  'drops must have at least one drop',
+                )
+                return (
+                  <DropCard
+                    key={i}
+                    collection={{ ...drop }}
+                    drop={drop.drops.nodes[0]}
+                    totalSupply={calculateTotalSupply(drop.drops.nodes)}
+                    onCountdownEnd={onCountdownEnd}
+                  />
+                )
+              })}
             </SimpleGrid>
           )}
 
@@ -98,14 +105,20 @@ const DropsPage: NextPage<Props> = ({ now }) => {
                 {t('drops.past-drops')}
               </Heading>
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} w="full">
-                {endedDrops.map((drop, i) => (
-                  <DropCard
-                    key={i}
-                    collection={{ ...drop }}
-                    drops={drop.lastDrop.nodes}
-                    totalSupply={calculateTotalSupply(drop.allDrops.nodes)}
-                  />
-                ))}
+                {endedDrops.map((drop, i) => {
+                  invariant(
+                    drop.lastDrop.nodes[0],
+                    'drops must have at least one drop',
+                  )
+                  return (
+                    <DropCard
+                      key={i}
+                      collection={{ ...drop }}
+                      drop={drop.lastDrop.nodes[0]}
+                      totalSupply={calculateTotalSupply(drop.allDrops.nodes)}
+                    />
+                  )
+                })}
               </SimpleGrid>
             </>
           )}

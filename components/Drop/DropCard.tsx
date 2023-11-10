@@ -16,7 +16,6 @@ import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { useMemo } from 'react'
-import invariant from 'ts-invariant'
 import { AccountVerificationStatus } from '../../graphql'
 import useTimeStatus, { Status } from '../../hooks/useTimeStatus'
 import { formatAddress } from '../../utils'
@@ -41,7 +40,7 @@ type Props = {
       } | null
     }
   }
-  drops: {
+  drop: {
     startDate: Date
     endDate: Date
     unitPrice: string
@@ -50,22 +49,19 @@ type Props = {
       symbol: string
       image: string
     }
-  }[]
+  }
   totalSupply: BigNumber | null
   onCountdownEnd?: () => void
 }
 
 export default function DropCard({
   collection,
-  drops,
+  drop,
   totalSupply,
   onCountdownEnd,
 }: Props) {
   const { t } = useTranslation('components')
-
-  const latestDrop = drops[0]
-  invariant(latestDrop, 'drop is required')
-  const status = useTimeStatus(latestDrop)
+  const status = useTimeStatus(drop)
 
   const statusText = useMemo(() => {
     if (status === Status.UPCOMING) return t('drop.timeline.upcoming')
@@ -113,14 +109,14 @@ export default function DropCard({
         {status === Status.INPROGRESS && (
           // Hidden countdown to trigger refetch when countdown ends
           <DropCountdown
-            date={new Date(latestDrop.endDate)}
+            date={new Date(drop.endDate)}
             isHidden
             onCountdownEnd={onCountdownEnd}
           />
         )}
         {status === Status.UPCOMING && (
           <DropCountdown
-            date={new Date(latestDrop.startDate)}
+            date={new Date(drop.startDate)}
             onCountdownEnd={onCountdownEnd}
           />
         )}
@@ -205,8 +201,8 @@ export default function DropCard({
             <Stack alignItems="center" direction="row" spacing={1}>
               <Flex flexShrink={0}>
                 <Image
-                  src={latestDrop.currency.image}
-                  alt={latestDrop.currency.symbol}
+                  src={drop.currency.image}
+                  alt={drop.currency.symbol}
                   width={16}
                   height={16}
                   w={4}
@@ -214,10 +210,7 @@ export default function DropCard({
                 />
               </Flex>
               <Text variant="caption" color="white" isTruncated>
-                <Price
-                  amount={latestDrop.unitPrice}
-                  currency={latestDrop.currency}
-                />
+                <Price amount={drop.unitPrice} currency={drop.currency} />
               </Text>
             </Stack>
           </Flex>
