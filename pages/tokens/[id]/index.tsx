@@ -89,15 +89,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
       address: address || '',
     },
   })
-
-  const asset = useMemo(() => {
-    if (data?.asset === null) return null
-    if (data?.asset === undefined) return undefined
-    return data.asset
-  }, [data])
-
+  const asset = data?.asset
   const auction = asset?.auctions.nodes[0]
   const bestAuctionBid = auction?.bestBid?.nodes[0]
+
   const { isValid } = useAuctionStatus(auction, bestAuctionBid)
 
   const finalMedia = useDetectAssetMedia(asset)
