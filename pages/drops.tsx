@@ -31,10 +31,16 @@ const DropsPage: NextPage<Props> = ({ now }) => {
     variables: { now: date, limit, offset },
   })
 
-  const inprogressDrops = data?.inProgress?.nodes || []
-  const upcomingDrops = data?.upcoming?.nodes || []
-  const activeDrops = [...inprogressDrops, ...upcomingDrops]
-  const endedDrops = data?.ended?.nodes || []
+  const activeDrops = useMemo(() => {
+    const inprogressDrops = data?.inProgress?.nodes || []
+    const upcomingDrops = data?.upcoming?.nodes || []
+    return [...inprogressDrops, ...upcomingDrops]
+  }, [data?.inProgress?.nodes, data?.upcoming?.nodes])
+
+  const endedDrops = useMemo(
+    () => data?.ended?.nodes || [],
+    [data?.ended?.nodes],
+  )
 
   const isEmpty = useMemo(
     () => endedDrops.length === 0 && activeDrops.length === 0,
