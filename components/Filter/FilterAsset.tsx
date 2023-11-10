@@ -26,7 +26,20 @@ import FilterByTrait from './FilterBy/Trait'
 
 type Props = {
   filter: Filter
-  currentCollection?: { chainId: number; address: string }
+  currentCollection?: {
+    chainId: number
+    address: string
+    name: string
+    image: string | null
+    floorPrice: {
+      valueInRef: string
+      refCode: string
+    } | null
+    totalVolume: {
+      valueInRef: string
+      refCode: string
+    }
+  }
   noChain?: boolean
   onFilterChange: (filter: Filter) => void
 }

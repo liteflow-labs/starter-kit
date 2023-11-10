@@ -19,14 +19,26 @@ import {
   useSearchCollectionQuery,
 } from '../../../graphql'
 import { Filter } from '../../../hooks/useAssetFilterFromQuery'
-import type { Props as CollectionCardProps } from '../../Collection/CollectionCard'
 import CollectionListItem from '../../Collection/ListItem'
 import List, { ListItem } from '../../List/List'
 import SearchInput from '../../SearchInput'
 
 type Props = {
   formValues: UseFormReturn<Filter, any, undefined>
-  selectedCollection?: { chainId: number; address: string }
+  selectedCollection?: {
+    chainId: number
+    address: string
+    name: string
+    image: string | null
+    floorPrice: {
+      valueInRef: string
+      refCode: string
+    } | null
+    totalVolume: {
+      valueInRef: string
+      refCode: string
+    }
+  }
   onCollectionChange: (data?: { chainId: number; address: string }) => void
   onFilterChange: (data?: Partial<Filter>) => void
 }
@@ -60,8 +72,7 @@ const FilterByCollection: FC<Props> = ({
   const collections = collectionData?.collections?.nodes
 
   const collection = useMemo(() => {
-    if (selectedCollection)
-      return selectedCollection as CollectionCardProps['collection']
+    if (selectedCollection) return selectedCollection
     if (!filterResult.collection) {
       onCollectionChange(undefined)
       return
