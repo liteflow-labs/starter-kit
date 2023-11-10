@@ -34,8 +34,6 @@ query FetchAllERC721And1155(
         url
         mimetype
       }
-      animationUrl
-      animationMimetype
       owned: ownership(ownerAddress: $address) {
         quantity
       }

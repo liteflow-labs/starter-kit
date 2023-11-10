@@ -43,8 +43,8 @@ export type Props = {
     image: string
     imageMimetype: string | null
     unlockedContent: { url: string; mimetype: string | null } | null
-    animationUrl: string | null
-    animationMimetype: string | null
+    animationUrl?: string | null
+    animationMimetype?: string | null
     creator: {
       address: string
       name: string | null
@@ -107,7 +107,7 @@ const TokenCard: FC<Props> = ({ asset }) => {
     [asset],
   )
   const [isHovered, setIsHovered] = useState(false)
-  const media = useDetectAssetMedia({ ...asset, animationUrl: null })
+  const media = useDetectAssetMedia(asset)
 
   const auction = asset.auctions?.nodes[0]
   const sale = asset.firstSale?.nodes[0]
