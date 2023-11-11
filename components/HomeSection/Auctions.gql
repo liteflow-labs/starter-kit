@@ -38,8 +38,6 @@ query FetchAuctions($now: Datetime!, $address: Address) {
         quantity
         image
         imageMimetype
-        animationUrl
-        animationMimetype
         unlockedContent {
           url
           mimetype

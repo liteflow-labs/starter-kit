@@ -10,8 +10,8 @@ export default function useDetectAssetMedia(
     | {
         image: string
         imageMimetype: string | null
-        animationUrl: string | null
-        animationMimetype: string | null
+        animationUrl?: string | null
+        animationMimetype?: string | null
         unlockedContent: AssetMedia
       }
     | undefined
