@@ -23,7 +23,6 @@ import DropCountdown from '../Countdown/DropCountdown'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
 import Price from '../Price/Price'
-import TokenMedia from '../Token/Media'
 
 type Props = {
   collection: {
@@ -92,15 +91,12 @@ export default function DropCard({
         bg="gray.100"
       >
         {collection.cover && (
-          <TokenMedia
-            media={{
-              url: collection.cover,
-              mimetype: null,
-            }}
-            fallback={null}
-            defaultText={collection.name}
-            sizes="(min-width: 62em) 600px, 100vw"
+          <Image
+            src={collection.cover}
+            alt={collection.name}
             fill
+            sizes="(min-width: 62em) 600px, 100vw"
+            objectFit="cover"
           />
         )}
       </Box>
