@@ -30,21 +30,6 @@ import SearchInput from '../../SearchInput'
 
 type Props = {
   formValues: UseFormReturn<Filter, any, undefined>
-  selectedCollection?: {
-    chainId: number
-    address: string
-    name: string
-    image: string | null
-    floorPrice: {
-      valueInRef: string
-      refCode: string
-    } | null
-    totalVolume: {
-      valueInRef: string
-      refCode: string
-    }
-  }
-  onCollectionChange: (data?: { chainId: number; address: string }) => void
   onFilterChange: (data?: Partial<Filter>) => void
 }
 
@@ -52,8 +37,6 @@ const PAGINATION_LIMIT = 8
 
 const FilterByCollection: FC<Props> = ({
   formValues: { setValue, watch },
-  selectedCollection,
-  onCollectionChange,
   onFilterChange,
 }) => {
   const { t } = useTranslation('components')
@@ -79,7 +62,6 @@ const FilterByCollection: FC<Props> = ({
       } as CollectionFilter,
     },
     notifyOnNetworkStatusChange: true,
-    skip: !!selectedCollection,
   })
   const collections = collectionData?.collections?.nodes
   const hasNextPage = collectionData?.collections?.pageInfo.hasNextPage
@@ -102,58 +84,37 @@ const FilterByCollection: FC<Props> = ({
   }, [endCursor, fetchMore, toast])
 
   const collection = useMemo(() => {
-    if (selectedCollection) return selectedCollection
-    if (!filterResult.collection) {
-      onCollectionChange(undefined)
-      return
-    }
+    if (!filterResult.collection) return
     const [chainId, address] = filterResult.collection.split('-')
     if (!chainId || !address) return
     const collection = collections?.find(
       (x) => x.address === address && x.chainId === parseInt(chainId, 10),
     )
-    onCollectionChange(
-      collection ? { chainId: collection.chainId, address } : undefined,
-    )
     return collection
-  }, [
-    collections,
-    filterResult.collection,
-    selectedCollection,
-    onCollectionChange,
-  ])
+  }, [collections, filterResult.collection])
 
   return collection ? (
     <AccordionItem>
       <AccordionButton>
         <Heading variant="heading2" flex="1" textAlign="left">
-          {selectedCollection
-            ? t('filters.assets.properties.label')
-            : t('filters.assets.properties.labelWithCollection')}
+          {t('filters.assets.properties.labelWithCollection')}
         </Heading>
         <AccordionIcon />
       </AccordionButton>
       <AccordionPanel>
         <Stack spacing={3}>
-          {!selectedCollection && (
-            <CollectionListItem
-              width="full"
-              borderColor="brand.500"
-              bgColor="brand.50"
-              borderWidth="1px"
-              borderRadius="md"
-              padding={2}
-              textAlign="left"
-              cursor="pointer"
-              onClick={() => onFilterChange({ collection: null, traits: [] })}
-              collection={collection}
-              closable
-            />
-          )}
-          <SearchInput
-            placeholder={t('filters.assets.properties.search.placeholder')}
-            name="propertySearch"
-            onReset={() => setValue('propertySearch', '')}
+          <CollectionListItem
+            width="full"
+            borderColor="brand.500"
+            bgColor="brand.50"
+            borderWidth="1px"
+            borderRadius="md"
+            padding={2}
+            textAlign="left"
+            cursor="pointer"
+            onClick={() => onFilterChange({ collection: null, traits: [] })}
+            collection={collection}
+            closable
           />
         </Stack>
       </AccordionPanel>
