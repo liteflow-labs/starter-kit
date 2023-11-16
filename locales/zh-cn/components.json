@@ -192,7 +192,7 @@
       },
       "properties": {
         "label": "性能",
-        "labelWithCollection": "集合和属性",
+        "labelWithCollection": "收藏",
         "search": {
           "placeholder": "筛选器属性"
         }
