@@ -3,7 +3,7 @@ query FetchCollectionTraits(
   $address: Address!
   $filter: CollectionTraitFilter!
   $limit: Int!
-  $cursor: Cursor
+  $offset: Int!
 ) {
   collection(chainId: $chainId, address: $address) {
     chainId
@@ -12,11 +12,10 @@ query FetchCollectionTraits(
       orderBy: [TYPE_ASC]
       first: $limit
       filter: $filter
-      after: $cursor
+      offset: $offset
     ) {
       pageInfo {
         hasNextPage
-        endCursor
       }
       nodes {
         type

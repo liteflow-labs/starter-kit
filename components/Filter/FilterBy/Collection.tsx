@@ -14,7 +14,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { concatToQuery } from '../../../concat'
 import {
@@ -41,6 +41,7 @@ const FilterByCollection: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
+  const [offset, setOffset] = useState(0)
 
   const filterResult = watch()
 
@@ -50,7 +51,7 @@ const FilterByCollection: FC<Props> = ({
     networkStatus,
   } = useSearchCollectionQuery({
     variables: {
-      cursor: null,
+      offset: 0, // the offset change must be done when calling the fetchMore function to concat queries' results
       limit: PAGINATION_LIMIT,
       filter: {
         name: {
@@ -65,23 +66,22 @@ const FilterByCollection: FC<Props> = ({
   })
   const collections = collectionData?.collections?.nodes
   const hasNextPage = collectionData?.collections?.pageInfo.hasNextPage
-  const endCursor = collectionData?.collections?.pageInfo.endCursor
 
   const loadMore = useCallback(async () => {
+    const newOffset = offset + PAGINATION_LIMIT
     try {
       await fetchMore({
-        variables: {
-          cursor: endCursor,
-        },
+        variables: { offset: newOffset },
         updateQuery: concatToQuery('collections'),
       })
+      setOffset(newOffset)
     } catch (e) {
       toast({
         title: formatError(e),
         status: 'error',
       })
     }
-  }, [endCursor, fetchMore, toast])
+  }, [fetchMore, offset, toast])
 
   const collection = useMemo(() => {
     if (!filterResult.collection) return

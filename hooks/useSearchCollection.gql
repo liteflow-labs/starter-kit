@@ -1,17 +1,16 @@
 query SearchCollection(
   $filter: CollectionFilter!
   $limit: Int!
-  $cursor: Cursor
+  $offset: Int!
 ) {
   collections(
     orderBy: TOTAL_VOLUME_DESC
     first: $limit
     filter: $filter
-    after: $cursor
+    offset: $offset
   ) {
     pageInfo {
       hasNextPage
-      endCursor
     }
     nodes {
       chainId

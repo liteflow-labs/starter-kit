@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import SearchInput from 'components/SearchInput'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useCallback } from 'react'
+import { FC, useCallback, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import {
   CollectionTraitFilter,
@@ -46,6 +46,7 @@ const FilterByTrait: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
+  const [offset, setOffset] = useState(0)
 
   const filterResult = watch()
 
@@ -53,7 +54,7 @@ const FilterByTrait: FC<Props> = ({
     variables: {
       address: collection.address,
       chainId: collection.chainId,
-      cursor: null,
+      offset: 0, // the offset change must be done when calling the fetchMore function to concat queries' results
       limit: PAGINATION_LIMIT,
       filter: {
         type: {
@@ -66,14 +67,12 @@ const FilterByTrait: FC<Props> = ({
 
   const traitsData = data?.collection?.traitsOfCollection.nodes
   const hasNextPage = data?.collection?.traitsOfCollection.pageInfo.hasNextPage
-  const endCursor = data?.collection?.traitsOfCollection.pageInfo.endCursor
 
   const loadMore = useCallback(async () => {
+    const newOffset = offset + PAGINATION_LIMIT
     try {
       await fetchMore({
-        variables: {
-          cursor: endCursor,
-        },
+        variables: { offset: newOffset },
         // Cannot use concatToQuery function because of nested cache
         // Nested cache comes from the shape of FetchCollectionTraits query above
         updateQuery: (prevResult, { fetchMoreResult }) => {
@@ -97,13 +96,14 @@ const FilterByTrait: FC<Props> = ({
           }
         },
       })
+      setOffset(newOffset)
     } catch (e) {
       toast({
         title: formatError(e),
         status: 'error',
       })
     }
-  }, [endCursor, fetchMore, toast])
+  }, [fetchMore, offset, toast])
 
   const addTrait = useCallback(
     (type: string, value: string) => {
