@@ -1,0 +1,19 @@
+mutation CreateApproval(
+  $accountAddress: Address!
+  $items: [CreateCheckoutApprovalTransactionsItemInput!]!
+) {
+  createCheckoutApprovalTransactions(
+    accountAddress: $accountAddress
+    items: $items
+  ) {
+    currencyId
+    amount
+    transaction {
+      to
+      from
+      data
+      gasPrice
+      value
+    }
+  }
+}
