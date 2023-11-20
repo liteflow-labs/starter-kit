@@ -145,6 +145,7 @@
       }
     },
     "traits": {
+      "more:": "Load more",
       "empty": {
         "title": "No Traits Found",
         "description": "Update your filters to find more traits."

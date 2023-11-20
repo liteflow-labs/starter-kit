@@ -145,6 +145,7 @@
       }
     },
     "traits": {
+      "more:": "装载更多",
       "empty": {
         "title": "未发现特征",
         "description": "更新您的过滤器以发现更多特征。"

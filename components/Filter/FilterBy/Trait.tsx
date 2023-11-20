@@ -254,7 +254,7 @@ const FilterByTrait: FC<Props> = ({
                     mx="auto"
                   >
                     <Text as="span" isTruncated>
-                      Load more traits
+                      {t('filters.traits.more')}
                     </Text>
                   </Button>
                 )}

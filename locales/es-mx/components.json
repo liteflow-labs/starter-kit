@@ -145,6 +145,7 @@
       }
     },
     "traits": {
+      "more:": "Carga más",
       "empty": {
         "title": "No se encontraron rasgos",
         "description": "Actualiza tus filtros para encontrar más rasgos."
