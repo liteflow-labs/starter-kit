@@ -220,7 +220,6 @@ const FilterAsset: NextPage<Props> = ({
           {collection && (
             <FilterByTrait
               collection={collection}
-              filter={filter}
               formValues={formValues}
               onFilterChange={onFilterChange}
             />

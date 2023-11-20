@@ -33,7 +33,6 @@ type Props = {
     chainId: number
     address: string
   }
-  filter: Filter
   formValues: UseFormReturn<Filter, any, undefined>
   onFilterChange: (filter: Filter) => void
 }
@@ -42,7 +41,6 @@ const PAGINATION_LIMIT = 8
 
 const FilterByTrait: FC<Props> = ({
   collection,
-  filter,
   formValues: { setValue, watch },
   onFilterChange,
 }) => {
@@ -205,8 +203,9 @@ const FilterByTrait: FC<Props> = ({
                       <AccordionPanel maxHeight="400px" overflow="auto">
                         <CheckboxGroup
                           defaultValue={
-                            filter?.traits?.find((trait) => trait.type === type)
-                              ?.values
+                            filterResult?.traits?.find(
+                              (trait) => trait.type === type,
+                            )?.values
                           }
                         >
                           <Stack spacing={1}>
