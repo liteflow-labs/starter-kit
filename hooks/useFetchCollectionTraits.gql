@@ -9,7 +9,7 @@ query FetchCollectionTraits(
     chainId
     address
     traitsOfCollection(
-      orderBy: [NUMBER_OF_VALUES_DESC]
+      orderBy: [TYPE_ASC]
       first: $limit
       filter: $filter
       after: $cursor
