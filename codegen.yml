@@ -1,4 +1,4 @@
-schema: ${NEXT_PUBLIC_GRAPHQL_URL:node_modules/@nft/api-graphql/schema.graphql}
+schema: https://staging.api.liteflow.com/e921d000-de68-47fc-beea-e428971ba509/graphql
 documents:
   - './pages/**/*.gql'
   - './components/**/*.gql'
