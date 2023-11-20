@@ -135,7 +135,7 @@
       "clear": "Clear filters"
     },
     "collections": {
-      "more:": "Load more",
+      "more": "Load more",
       "chains": {
         "label": "Chain"
       },
@@ -145,7 +145,7 @@
       }
     },
     "traits": {
-      "more:": "Load more",
+      "more": "Load more",
       "empty": {
         "title": "No Traits Found",
         "description": "Update your filters to find more traits."

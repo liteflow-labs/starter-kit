@@ -135,7 +135,7 @@
       "clear": "Borrar filtros"
     },
     "collections": {
-      "more:": "Carga más",
+      "more": "Carga más",
       "chains": {
         "label": "Cadena"
       },
@@ -145,7 +145,7 @@
       }
     },
     "traits": {
-      "more:": "Carga más",
+      "more": "Carga más",
       "empty": {
         "title": "No se encontraron rasgos",
         "description": "Actualiza tus filtros para encontrar más rasgos."
