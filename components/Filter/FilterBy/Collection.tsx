@@ -178,7 +178,7 @@ const FilterByCollection: FC<Props> = ({
                     mx="auto"
                   >
                     <Text as="span" isTruncated>
-                      Load more collections
+                      {t('filters.collections.more')}
                     </Text>
                   </Button>
                 )}

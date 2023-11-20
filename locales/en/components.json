@@ -135,6 +135,7 @@
       "clear": "Clear filters"
     },
     "collections": {
+      "more:": "Load more",
       "chains": {
         "label": "Chain"
       },

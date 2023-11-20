@@ -135,6 +135,7 @@
       "clear": "清除过滤器"
     },
     "collections": {
+      "more:": "装载更多",
       "chains": {
         "label": "链"
       },

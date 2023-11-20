@@ -135,6 +135,7 @@
       "clear": "Borrar filtros"
     },
     "collections": {
+      "more:": "Carga más",
       "chains": {
         "label": "Cadena"
       },

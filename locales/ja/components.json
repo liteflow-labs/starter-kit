@@ -135,6 +135,7 @@
       "clear": "フィルターをクリアする"
     },
     "collections": {
+      "more:": "もっと読み込む",
       "chains": {
         "label": "鎖"
       },
