@@ -26,7 +26,7 @@ import {
   useCreateCartPurchaseTransactionMutation,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
-import { CartItem } from '../../../hooks/useCart'
+import useCart, { CartItem } from '../../../hooks/useCart'
 import useSigner from '../../../hooks/useSigner'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import List, { ListItem } from '../../List/List'
@@ -50,6 +50,7 @@ const CartStepTransaction: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   const signer = useSigner()
+  const { removeItem } = useCart()
   const { address } = useAccount()
   const approvalItems = useMemo(
     () =>
@@ -119,13 +120,22 @@ const CartStepTransaction: FC<Props> = ({
       invariant(tx)
       const transaction = await sendTransaction(signer, tx)
       const receipt = await transaction.wait()
+      for (const item of cartItems) removeItem(item.offerId) // cleanup items in the cart
       onSubmit(receipt)
     } catch (e) {
       onError(e as Error)
     } finally {
       setBuying(false)
     }
-  }, [address, fetchCartTransaction, cartItems, onSubmit, signer, onError])
+  }, [
+    address,
+    fetchCartTransaction,
+    cartItems,
+    onSubmit,
+    signer,
+    onError,
+    removeItem,
+  ])
 
   if (loading) return <DrawerBody py={4} px={2} />
 
