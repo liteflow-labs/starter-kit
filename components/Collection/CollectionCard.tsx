@@ -9,20 +9,38 @@ import {
 } from '@chakra-ui/react'
 import Image from 'components/Image/Image'
 import Link from 'components/Link/Link'
-import { convertCollection } from 'convert'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { FC } from 'react'
 
-type Props = {
-  collection: ReturnType<typeof convertCollection>
+export type Props = {
+  collection: {
+    chainId: number
+    address: string
+    name: string
+    image: string | null
+    cover: string | null
+    floorPrice: {
+      valueInRef: string
+      refCode: string
+    } | null
+    totalVolume: {
+      valueInRef: string
+      refCode: string
+    }
+  }
 }
 
 const CollectionCard: FC<Props> = ({ collection }) => {
   const { t } = useTranslation('templates')
-  const convertTitle = (value: string | null, symbol: string | null) =>
-    `${value ? value : '-'} ${symbol ? symbol : ''}`
-  const convertValue = (value: string | null, symbol: string | null) => {
+  const convertTitle = (
+    value: string | undefined,
+    symbol: string | undefined,
+  ) => `${value ? value : '-'} ${symbol ? symbol : ''}`
+  const convertValue = (
+    value: string | undefined,
+    symbol: string | undefined,
+  ) => {
     const formattedValue = value
       ? numbro(value).format({
           thousandSeparated: true,
@@ -111,13 +129,13 @@ const CollectionCard: FC<Props> = ({ collection }) => {
               variant="subtitle2"
               isTruncated
               title={convertTitle(
-                collection.totalVolume,
-                collection.totalVolumeCurrencySymbol,
+                collection.totalVolume.valueInRef,
+                collection.totalVolume.refCode,
               )}
             >
               {convertValue(
-                collection.totalVolume,
-                collection.totalVolumeCurrencySymbol,
+                collection.totalVolume.valueInRef,
+                collection.totalVolume.refCode,
               )}
             </Text>
           </Box>
@@ -134,13 +152,13 @@ const CollectionCard: FC<Props> = ({ collection }) => {
               variant="subtitle2"
               isTruncated
               title={convertTitle(
-                collection.floorPrice,
-                collection.floorPriceCurrencySymbol,
+                collection.floorPrice?.valueInRef,
+                collection.floorPrice?.refCode,
               )}
             >
               {convertValue(
-                collection.floorPrice,
-                collection.floorPriceCurrencySymbol,
+                collection.floorPrice?.valueInRef,
+                collection.floorPrice?.refCode,
               )}
             </Text>
           </Box>

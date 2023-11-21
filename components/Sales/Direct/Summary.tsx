@@ -1,5 +1,4 @@
 import { Box, Flex, Heading, Icon } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
@@ -10,14 +9,14 @@ import Price from '../../Price/Price'
 type Props = {
   isSingle: boolean
   sales: {
-    unitPrice: BigNumber
+    unitPrice: string
     currency: {
       id: string
       decimals: number
       image: string
       symbol: string
     }
-    expiredAt: Date | null | undefined
+    expiredAt: Date
   }[]
 }
 
@@ -149,7 +148,7 @@ const SaleDirectSummary: FC<Props> = ({ sales, isSingle }) => {
           </Heading>
         </Flex>
       </Flex>
-      {sales.length === 1 && sales[0]?.expiredAt && (
+      {sales.length === 1 && sales[0] && (
         <Flex direction="column" gap={3}>
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('sales.direct.summary.expires')}

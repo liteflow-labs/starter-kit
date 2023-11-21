@@ -14,10 +14,14 @@ type Props = Omit<
     address: string
     name: string
     image: string | null
-    totalVolume: string
-    totalVolumeCurrencySymbol: string
-    floorPrice: string | null
-    floorPriceCurrencySymbol: string | null
+    floorPrice: {
+      valueInRef: string
+      refCode: string
+    } | null
+    totalVolume: {
+      valueInRef: string
+      refCode: string
+    }
   }
 }
 
@@ -42,17 +46,17 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
           as="span"
           title={
             collection.floorPrice
-              ? `${collection.floorPrice} ${collection.floorPriceCurrencySymbol}`
+              ? `${collection.floorPrice.valueInRef} ${collection.floorPrice.refCode}`
               : '-'
           }
         >
           {t('collection.listItem.floor', {
             price: collection.floorPrice
-              ? `${numbro(collection.floorPrice).format({
+              ? `${numbro(collection.floorPrice.valueInRef).format({
                   thousandSeparated: true,
                   trimMantissa: true,
                   mantissa: 2,
-                })} ${collection.floorPriceCurrencySymbol}`
+                })} ${collection.floorPrice.refCode}`
               : '-',
           })}
         </Text>
@@ -61,7 +65,7 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
         <VStack textAlign="right" alignItems="end" spacing="0">
           <HStack
             spacing={1}
-            title={`${collection.totalVolume} ${collection.totalVolumeCurrencySymbol}`}
+            title={`${collection.totalVolume.valueInRef} ${collection.totalVolume.refCode}`}
           >
             <Text
               variant="subtitle2"
@@ -69,15 +73,13 @@ const CollectionListItem: FC<Props> = ({ collection, ...props }) => {
               wordBreak="break-word"
               maxW={16}
             >
-              {numbro(collection.totalVolume).format({
+              {numbro(collection.totalVolume.valueInRef).format({
                 thousandSeparated: true,
                 trimMantissa: true,
                 mantissa: 2,
               })}
             </Text>
-            <Text variant="subtitle2">
-              {collection.totalVolumeCurrencySymbol}
-            </Text>
+            <Text variant="subtitle2">{collection.totalVolume.refCode}</Text>
           </HStack>
           <Text variant="caption" color="gray.500">
             {t('collection.listItem.allTime')}

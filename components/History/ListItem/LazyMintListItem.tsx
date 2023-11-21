@@ -4,6 +4,7 @@ import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { WiStars } from '@react-icons/all-files/wi/WiStars'
 import Trans from 'next-translate/Trans'
 import { FC } from 'react'
+import { AccountVerificationStatus } from '../../../graphql'
 import { formatDate } from '../../../utils'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
@@ -11,11 +12,13 @@ import WalletAddress from '../../Wallet/Address'
 
 type IProps = {
   date: Date
-  quantity: BigNumber
+  quantity: string
   fromAddress: string
   from: {
     name: string | null
-    verified: boolean
+    verification: {
+      status: AccountVerificationStatus
+    } | null
   } | null
 }
 
@@ -33,8 +36,8 @@ const LazyMintListItem: FC<IProps> = ({
           ns="components"
           i18nKey="history.lazymint.minted"
           values={{
-            count: quantity.lte(Number.MAX_SAFE_INTEGER - 1)
-              ? quantity.toNumber()
+            count: BigNumber.from(quantity).lte(Number.MAX_SAFE_INTEGER - 1)
+              ? BigNumber.from(quantity).toNumber()
               : Number.MAX_SAFE_INTEGER - 1,
           }}
           components={[
@@ -68,7 +71,7 @@ const LazyMintListItem: FC<IProps> = ({
               >
                 {from?.name || <WalletAddress address={fromAddress} isShort />}
               </Text>
-              {from?.verified && (
+              {from?.verification?.status === 'VALIDATED' && (
                 <Icon as={HiBadgeCheck} color="brand.500" h={4} w={4} />
               )}
             </Flex>,

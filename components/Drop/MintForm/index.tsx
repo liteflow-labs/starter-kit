@@ -1,6 +1,5 @@
 import { StyleProps, VStack } from '@chakra-ui/react'
 import { FC, useEffect, useMemo, useState } from 'react'
-import { convertDropDetail } from '../../../convert'
 import { dateIsBefore, dateIsBetween } from '../../../utils'
 import MintFormEnded from './Ended'
 import MintFormInprogress from './Inprogress'
@@ -11,7 +10,23 @@ type Props = StyleProps & {
     address: string
     chainId: number
   }
-  drops: ReturnType<typeof convertDropDetail>[]
+  drops: {
+    id: string
+    name: string
+    endDate: Date
+    startDate: Date
+    unitPrice: string
+    minted: string
+    supply: string | null
+    maxQuantityPerWallet: string | null
+    isAllowed: boolean
+    maxQuantity: string | null
+    currency: {
+      decimals: number
+      symbol: string
+      image: string
+    }
+  }[]
 }
 
 const DropMintForm: FC<Props> = ({ collection, drops, ...props }) => {

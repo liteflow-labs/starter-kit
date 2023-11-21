@@ -1,5 +1,4 @@
 import { Box, Text } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, HTMLAttributes } from 'react'
 import Link from '../../Link/Link'
@@ -9,7 +8,7 @@ type Props = {
   assetId: string
   bestBid:
     | {
-        unitPrice: BigNumber
+        unitPrice: string
         currency: {
           decimals: number
           symbol: string

@@ -2,7 +2,6 @@ import { Flex, SimpleGrid, Skeleton, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
-import { useMemo } from 'react'
 import CollectionHeader from '../../../../components/Collection/CollectionHeader'
 import CollectionHeaderSkeleton from '../../../../components/Collection/CollectionHeaderSkeleton'
 import DropDetailSkeleton from '../../../../components/Drop/DropDetailSkeleton'
@@ -10,7 +9,6 @@ import DropMintSchedule from '../../../../components/Drop/DropMintSchedule'
 import DropProgress from '../../../../components/Drop/DropProgress'
 import DropMintForm from '../../../../components/Drop/MintForm'
 import Head from '../../../../components/Head'
-import { convertCollectionFull, convertDropDetail } from '../../../../convert'
 import {
   useFetchCollectionDropDetailQuery,
   useFetchCollectionDropsQuery,
@@ -22,7 +20,7 @@ import LargeLayout from '../../../../layouts/large'
 
 const DropDetail: NextPage = () => {
   const { t } = useTranslation('templates')
-  const { CHAINS, REPORT_EMAIL } = useEnvironment()
+  const { CHAINS } = useEnvironment()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
   })
@@ -37,6 +35,7 @@ const DropDetail: NextPage = () => {
         chainId,
       },
     })
+  const collection = collectionData?.collection
 
   const { data: dropsData } = useFetchCollectionDropsQuery({
     variables: {
@@ -45,19 +44,7 @@ const DropDetail: NextPage = () => {
       chainId,
     },
   })
-
-  const collection = useMemo(
-    () =>
-      collectionData?.collection
-        ? convertCollectionFull(collectionData.collection)
-        : null,
-    [collectionData],
-  )
-
-  const drops = useMemo(() => {
-    if (!dropsData?.drops) return []
-    return dropsData.drops.nodes.map((drop) => convertDropDetail(drop))
-  }, [dropsData?.drops])
+  const drops = dropsData?.drops?.nodes
 
   if (!collectionLoading && !collection) return <Error statusCode={404} />
   return (
@@ -77,10 +64,7 @@ const DropDetail: NextPage = () => {
         </>
       ) : (
         <>
-          <CollectionHeader
-            collection={collection}
-            reportEmail={REPORT_EMAIL}
-          />
+          <CollectionHeader collection={collection} />
           <Flex flexDirection="column" mt={4} py={2}>
             <Text variant="button1" color="brand.black">
               {chain?.name || '-'}
@@ -91,7 +75,7 @@ const DropDetail: NextPage = () => {
           </Flex>
         </>
       )}
-      {!dropsData ? (
+      {!drops ? (
         <DropDetailSkeleton />
       ) : (
         <>

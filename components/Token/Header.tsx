@@ -6,54 +6,21 @@ import {
   SimpleGrid,
   Stack,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
-import { BigNumber } from '@ethersproject/bignumber'
 import { FC, useMemo } from 'react'
-import { FileDef } from '../../convert'
-import { MintType, Standard } from '../../graphql'
-import useBlockExplorer from '../../hooks/useBlockExplorer'
+import { FetchFeaturedAssetsQuery } from '../../graphql'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import Link from '../Link/Link'
-import type { Props as SaleDetailProps } from '../Sales/Detail'
 import SaleDetail from '../Sales/Detail'
 import TokenMedia from '../Token/Media'
-import type { Props as TokenAssetProps } from '../Token/Metadata'
 import TokenMetadata from '../Token/Metadata'
 
 export type Props = {
-  asset: {
-    id: string
-    chainId: number
-    collectionAddress: string
-    tokenId: string
-    name: string
-    image: FileDef
-    animation: FileDef | null
-    unlockedContent: FileDef | null
-    saleSupply: BigNumber
-    collection: {
-      name: string
-      address: string
-      standard: Standard
-      chainId: number
-      mintType: MintType
-    }
-    totalSupply: BigNumber
-    owned: BigNumber
-  }
+  asset: NonNullable<FetchFeaturedAssetsQuery['assets']>['nodes'][0]
   currencies: {
     chainId: number
     image: string
   }[]
-  creator: TokenAssetProps['creator']
-  owners: TokenAssetProps['owners']
-  numberOfOwners: TokenAssetProps['numberOfOwners']
-  auction: SaleDetailProps['auction']
-  bestAuctionBid: SaleDetailProps['bestAuctionBid']
-  sales: SaleDetailProps['directSales']
   isHomepage: boolean
-  signer: Signer | undefined
-  currentAccount: string | null | undefined
   onOfferCanceled: (id: string) => Promise<void>
   onAuctionAccepted: (id: string) => Promise<void>
 }
@@ -61,30 +28,11 @@ export type Props = {
 const TokenHeader: FC<Props> = ({
   asset,
   currencies,
-  creator,
-  owners,
-  numberOfOwners,
-  auction,
-  bestAuctionBid,
-  sales,
   isHomepage,
-  signer,
-  currentAccount,
   onOfferCanceled,
   onAuctionAccepted,
 }) => {
-  const blockExplorer = useBlockExplorer(asset.collection.chainId)
-  const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
   const media = useDetectAssetMedia(asset)
-
-  const ownAllSupply = useMemo(
-    () => asset.owned.gte(asset.totalSupply),
-    [asset],
-  )
-  const isSingle = useMemo(
-    () => asset.collection.standard === 'ERC721',
-    [asset],
-  )
 
   const chainCurrencies = useMemo(
     () =>
@@ -138,32 +86,11 @@ const TokenHeader: FC<Props> = ({
             {asset.name}
           </Heading>
         </Stack>
-        <TokenMetadata
-          chainId={asset.chainId}
-          collectionAddress={asset.collectionAddress}
-          tokenId={asset.tokenId}
-          creator={creator}
-          owners={owners}
-          numberOfOwners={numberOfOwners}
-          saleSupply={asset.saleSupply}
-          standard={asset.collection.standard}
-          totalSupply={asset.totalSupply}
-          isOpenCollection={asset.collection.mintType === 'PUBLIC'}
-        />
+        <TokenMetadata asset={asset} />
         <SaleDetail
-          blockExplorer={blockExplorer}
-          assetId={asset.id}
-          chainId={asset.collection.chainId}
+          asset={asset}
           currencies={chainCurrencies}
           isHomepage={isHomepage}
-          isOwner={isOwner}
-          isSingle={isSingle}
-          ownAllSupply={ownAllSupply}
-          auction={auction}
-          bestAuctionBid={bestAuctionBid}
-          directSales={sales}
-          signer={signer}
-          currentAccount={currentAccount}
           onOfferCanceled={onOfferCanceled}
           onAuctionAccepted={onAuctionAccepted}
         />

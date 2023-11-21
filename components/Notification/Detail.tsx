@@ -2,6 +2,7 @@ import { Box, Flex, Text } from '@chakra-ui/react'
 import { JSX, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import { AccountVerificationStatus, NotificationAction } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
 import { dateFromNow } from '../../utils'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
@@ -27,7 +28,6 @@ import {
 
 export type IProps = {
   createdAt: Date
-  currentAccount: string | null
   action: NotificationAction
   accountVerification: {
     status: AccountVerificationStatus
@@ -73,7 +73,6 @@ export type IProps = {
 export default function NotificationDetail({
   action,
   createdAt,
-  currentAccount,
   accountVerification,
   auction,
   offer,
@@ -81,6 +80,7 @@ export default function NotificationDetail({
   refereeAccount,
   ...props
 }: IProps): JSX.Element {
+  const { address: currentAccount } = useAccount()
   const content:
     | {
         link: string
