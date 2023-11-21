@@ -12,8 +12,9 @@ import {
   useRadioGroup,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import invariant from 'ts-invariant'
 import { FetchCartItemsQuery, useFetchCartItemsQuery } from '../../../graphql'
 import useCart, { CartItem } from '../../../hooks/useCart'
 import useEnvironment from '../../../hooks/useEnvironment'
@@ -127,6 +128,13 @@ const CartStepSelection: FC<Props> = ({ onSubmit }) => {
     })
   })
 
+  useEffect(() => {
+    if (uniqueCartChains.length !== 1) return
+    const chain = uniqueCartChains[0]
+    invariant(chain)
+    setValue('chainId', chain.id)
+  }, [uniqueCartChains, setValue])
+
   if (!offers || loading) {
     return (
       <DrawerBody py={4} px={2}>
@@ -171,7 +179,7 @@ const CartStepSelection: FC<Props> = ({ onSubmit }) => {
   }
   return (
     <VStack as="form" onSubmit={submit} height="full">
-      <DrawerBody py={4} px={2} height="full">
+      <DrawerBody py={4} px={2} height="full" width="full">
         <VStack alignItems="flex-start" width="full" {...getRootProps()}>
           {uniqueCartChains.map((chain, i) => {
             const radio = getRadioProps({ value: chain.id })
