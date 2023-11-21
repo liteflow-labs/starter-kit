@@ -135,6 +135,7 @@
       "clear": "Clear filters"
     },
     "collections": {
+      "more": "Load more",
       "chains": {
         "label": "Chain"
       },
@@ -144,6 +145,7 @@
       }
     },
     "traits": {
+      "more": "Load more",
       "empty": {
         "title": "No Traits Found",
         "description": "Update your filters to find more traits."
@@ -192,7 +194,7 @@
       },
       "properties": {
         "label": "Properties",
-        "labelWithCollection": "Collection & properties",
+        "labelWithCollection": "Collection",
         "search": {
           "placeholder": "Filter properties"
         }

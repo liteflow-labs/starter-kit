@@ -6,7 +6,6 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import {
   AcceptOfferStep,
@@ -18,7 +17,10 @@ import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, SyntheticEvent, useMemo } from 'react'
-import { BlockExplorer } from '../../hooks/useBlockExplorer'
+import { AccountVerificationStatus, Standard } from '../../graphql'
+import useAccount from '../../hooks/useAccount'
+import useBlockExplorer from '../../hooks/useBlockExplorer'
+import useSigner from '../../hooks/useSigner'
 import {
   dateFromNow,
   formatDate,
@@ -36,48 +38,51 @@ import AccountImage from '../Wallet/Image'
 import BidAcceptModal from './AcceptModal'
 
 export type Props = {
+  asset: {
+    collection: {
+      chainId: number
+      standard: Standard
+    }
+    owned: {
+      quantity: string
+    } | null
+  }
   bid: {
     id: string
     createdAt: Date
-    expiredAt: Date | null | undefined
-    unitPrice: BigNumber
-    availableQuantity: BigNumber
+    expiredAt: Date | null
+    unitPrice: string
+    availableQuantity: string
     currency: {
       decimals: number
       symbol: string
     }
     maker: {
       address: string
-      name: string | null | undefined
-      image: string | null | undefined
-      verified: boolean
+      name: string | null
+      image: string | null
+      verification: {
+        status: AccountVerificationStatus
+      } | null
     }
   }
-  chainId: number
-  signer: Signer | undefined
-  account: string | null | undefined
-  blockExplorer: BlockExplorer
-  isSingle: boolean
   preventAcceptation: boolean
-  totalOwned: BigNumber
   onAccepted: (id: string) => Promise<void>
   onCanceled: (id: string) => Promise<void>
 }
 
 const Bid: FC<Props> = ({
+  asset,
   bid,
-  chainId,
-  signer,
-  account,
-  blockExplorer,
-  isSingle,
   preventAcceptation,
-  totalOwned,
   onAccepted,
   onCanceled,
 }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
+  const { address: account } = useAccount()
   const toast = useToast()
+  const blockExplorer = useBlockExplorer(asset.collection.chainId)
   const {
     isOpen: acceptOfferIsOpen,
     onOpen: acceptOfferOnOpen,
@@ -102,6 +107,8 @@ const Bid: FC<Props> = ({
     cancelOffer,
     { activeStep: activeCancelOfferStep, transactionHash: cancelOfferHash },
   ] = useCancelOffer(signer)
+
+  const isSingle = asset.collection.standard === 'ERC721'
 
   const canAccept = useMemo(() => {
     if (!account) return false
@@ -224,7 +231,7 @@ const Bid: FC<Props> = ({
                   <WalletAddress address={bid.maker.address} isShort />
                 )}
               </Text>
-              {bid.maker.verified && (
+              {bid.maker.verification?.status === 'VALIDATED' && (
                 <Icon as={HiBadgeCheck} color="brand.500" h={4} w={4} />
               )}
             </Flex>
@@ -241,11 +248,11 @@ const Bid: FC<Props> = ({
           <>
             {canAccept && (
               <ConnectButtonWithNetworkSwitch
-                chainId={chainId}
+                chainId={asset.collection.chainId}
                 w={{ base: 'full', md: 'auto' }}
                 isLoading={activeAcceptOfferStep !== AcceptOfferStep.INITIAL}
                 onClick={() =>
-                  bid.availableQuantity.gt(1)
+                  BigNumber.from(bid.availableQuantity).gt(1)
                     ? confirmAcceptOnOpen()
                     : acceptBid()
                 }
@@ -257,7 +264,7 @@ const Bid: FC<Props> = ({
             )}
             {canCancel && (
               <ConnectButtonWithNetworkSwitch
-                chainId={chainId}
+                chainId={asset.collection.chainId}
                 variant="outline"
                 colorScheme="gray"
                 w={{ base: 'full', md: 'auto' }}
@@ -294,7 +301,7 @@ const Bid: FC<Props> = ({
         onClose={confirmAcceptOnClose}
         acceptBid={acceptBid}
         bid={bid}
-        totalOwned={totalOwned}
+        totalOwned={BigNumber.from(asset.owned?.quantity || 0)}
       />
     </>
   )

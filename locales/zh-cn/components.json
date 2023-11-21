@@ -135,6 +135,7 @@
       "clear": "清除过滤器"
     },
     "collections": {
+      "more": "装载更多",
       "chains": {
         "label": "链"
       },
@@ -144,6 +145,7 @@
       }
     },
     "traits": {
+      "more": "装载更多",
       "empty": {
         "title": "未发现特征",
         "description": "更新您的过滤器以发现更多特征。"
@@ -192,7 +194,7 @@
       },
       "properties": {
         "label": "性能",
-        "labelWithCollection": "集合和属性",
+        "labelWithCollection": "收藏",
         "search": {
           "placeholder": "筛选器属性"
         }

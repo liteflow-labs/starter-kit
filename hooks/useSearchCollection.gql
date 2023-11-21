@@ -6,9 +6,12 @@ query SearchCollection(
   collections(
     orderBy: TOTAL_VOLUME_DESC
     first: $limit
-    offset: $offset
     filter: $filter
+    offset: $offset
   ) {
+    pageInfo {
+      hasNextPage
+    }
     nodes {
       chainId
       address

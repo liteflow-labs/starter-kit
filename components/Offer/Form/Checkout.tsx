@@ -20,15 +20,16 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { useAcceptOffer } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { Offer } from '../../../graphql'
+import { CheckoutQuery } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
 import useBalance from '../../../hooks/useBalance'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
+import useSigner from '../../../hooks/useSigner'
 import { formatError } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import AcceptOfferModal from '../../Modal/AcceptOffer'
@@ -40,31 +41,16 @@ type FormData = {
 }
 
 type Props = {
-  signer: Signer | undefined
-  account: string | null | undefined
-  offer: Pick<Offer, 'id' | 'unitPrice' | 'availableQuantity'>
-  chainId: number
-  blockExplorer: BlockExplorer
-  currency: {
-    id: string
-    decimals: number
-    symbol: string
-  }
+  offer: NonNullable<CheckoutQuery['offer']>
   onPurchased: () => void
   multiple?: boolean
 }
 
-const OfferFormCheckout: FC<Props> = ({
-  signer,
-  account,
-  currency,
-  onPurchased,
-  multiple,
-  offer,
-  chainId,
-  blockExplorer,
-}) => {
+const OfferFormCheckout: FC<Props> = ({ onPurchased, multiple, offer }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
+  const { address: account } = useAccount()
+  const blockExplorer = useBlockExplorer(offer.asset.chainId)
   const [acceptOffer, { activeStep, transactionHash }] = useAcceptOffer(signer)
   const toast = useToast()
   const {
@@ -82,7 +68,7 @@ const OfferFormCheckout: FC<Props> = ({
 
   const quantity = watch('quantity')
 
-  const [balance] = useBalance(account, currency.id)
+  const [balance] = useBalance(account, offer.currency.id)
 
   const priceUnit = useParseBigNumber(offer.unitPrice)
   const quantityBN = useParseBigNumber(quantity)
@@ -168,17 +154,16 @@ const OfferFormCheckout: FC<Props> = ({
           </FormHelperText>
         </FormControl>
       )}
-      <div>
-        <Summary
-          currency={currency}
-          price={priceUnit}
-          quantity={quantityBN}
-          isSingle={!multiple}
-          noFees
-        />
-      </div>
 
-      {account && <Balance account={account} currency={currency} />}
+      <Summary
+        currency={offer.currency}
+        price={priceUnit}
+        quantity={quantityBN}
+        isSingle={!multiple}
+        noFees
+      />
+
+      {account && <Balance account={account} currency={offer.currency} />}
 
       <Alert status="info" borderRadius="xl">
         <AlertIcon />
@@ -191,7 +176,7 @@ const OfferFormCheckout: FC<Props> = ({
       </Alert>
 
       <ConnectButtonWithNetworkSwitch
-        chainId={chainId}
+        chainId={offer.asset.chainId}
         isDisabled={!canPurchase}
         isLoading={isSubmitting}
         size="lg"

@@ -4,25 +4,38 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback } from 'react'
 
 type TraitListProps = {
-  chainId: number
-  collectionAddress: string
+  asset: {
+    collection: {
+      address: string
+      chainId: number
+      supply: number
+    }
+  }
   traits: {
     type: string
     value: string
-    percent: number
+    collectionTraitValue: {
+      numberOfAssets: number
+    } | null
   }[]
 }
 
 const TraitList: FC<TraitListProps> = ({
-  chainId,
-  collectionAddress,
+  asset: {
+    collection: { address, chainId, supply },
+  },
   traits,
 }) => {
   const { t } = useTranslation('components')
   const href = useCallback(
     (type: string, value: string) =>
-      `/collection/${chainId}/${collectionAddress}?traits[${type}]=${value}`,
-    [chainId, collectionAddress],
+      `/collection/${chainId}/${address}?traits[${type}]=${value}`,
+    [chainId, address],
+  )
+  const getPercentage = useCallback(
+    (numberOfAssets: number | undefined) =>
+      (((numberOfAssets || 0) / supply) * 100).toFixed(2),
+    [supply],
   )
   return (
     <SimpleGrid columns={{ base: 2, sm: 3 }} gap={3}>
@@ -60,10 +73,14 @@ const TraitList: FC<TraitListProps> = ({
             as="span"
             variant="caption"
             color="brand.black"
-            title={t('traits.percent', { value: trait.percent.toFixed(2) })}
+            title={t('traits.percent', {
+              value: getPercentage(trait.collectionTraitValue?.numberOfAssets),
+            })}
             isTruncated
           >
-            {t('traits.percent', { value: trait.percent.toFixed(2) })}
+            {t('traits.percent', {
+              value: getPercentage(trait.collectionTraitValue?.numberOfAssets),
+            })}
           </Text>
         </Flex>
       ))}
