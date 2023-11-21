@@ -12,12 +12,6 @@ import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../convert'
-import {
   useFetchAssetsQuery,
   useFetchDefaultAssetIdsQuery,
 } from '../../graphql'
@@ -120,18 +114,7 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       <SimpleGrid flexWrap="wrap" spacing={4} columns={{ sm: 2, md: 3, lg: 4 }}>
         {assets.map((item, i) => (
           <Flex key={i} justify="center" overflow="hidden">
-            <TokenCard
-              asset={convertAsset(item)}
-              creator={convertUser(item.creator, item.creator.address)}
-              sale={convertSale(item.firstSale.nodes[0])}
-              auction={
-                item.auctions.nodes[0]
-                  ? convertAuctionWithBestBid(item.auctions.nodes[0])
-                  : undefined
-              }
-              numberOfSales={item.firstSale.totalCount}
-              hasMultiCurrency={item.firstSale.totalCurrencyDistinctCount > 1}
-            />
+            <TokenCard asset={item} />
           </Flex>
         ))}
       </SimpleGrid>

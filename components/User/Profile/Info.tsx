@@ -9,7 +9,6 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { useInvitation, useIsLoggedIn } from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
@@ -18,34 +17,35 @@ import { SiInstagram } from '@react-icons/all-files/si/SiInstagram'
 import { SiTwitter } from '@react-icons/all-files/si/SiTwitter'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useEffect, useState } from 'react'
+import { AccountVerificationStatus } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
+import useSigner from '../../../hooks/useSigner'
 import { formatError } from '../../../utils'
 import Link from '../../Link/Link'
 import MarkdownViewer from '../../MarkdownViewer'
 import WalletAddress from '../../Wallet/Address'
 
-const UserProfileInfo: FC<{
-  signer: Signer | undefined
+type Props = {
   address: string
-  name: string | null | undefined
-  description: string | null | undefined
-  twitter: string | null | undefined
-  instagram: string | null | undefined
-  website: string | null | undefined
-  verified: boolean
+  user:
+    | {
+        name: string | null
+        description: string | null
+        twitter: string | null
+        instagram: string | null
+        website: string | null
+        verification: {
+          status: AccountVerificationStatus
+        } | null
+      }
+    | null
+    | undefined
   loginUrlForReferral?: string
-}> = ({
-  signer,
-  address,
-  description,
-  instagram,
-  name,
-  twitter,
-  verified,
-  website,
-  loginUrlForReferral,
-}) => {
+}
+
+const UserProfileInfo: FC<Props> = ({ address, user, loginUrlForReferral }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
   const { create: createReferralLink, creating: creatingReferralLink } =
     useInvitation(signer)
   const { isLoggedIn } = useAccount()
@@ -93,7 +93,7 @@ const UserProfileInfo: FC<{
 
   return (
     <VStack as="aside" spacing={8} align="flex-start" px={6}>
-      {name && (
+      {user?.name && (
         <Box>
           <Heading
             as="h1"
@@ -101,9 +101,9 @@ const UserProfileInfo: FC<{
             color="brand.black"
             wordBreak="break-word"
           >
-            {name}
+            {user.name}
           </Heading>
-          {verified && (
+          {user?.verification?.status === 'VALIDATED' && (
             <Flex color="brand.500" mt={2} align="center" gap={1}>
               <Icon as={HiBadgeCheck} /> <span>{t('user.info.verified')}</span>
             </Flex>
@@ -127,23 +127,23 @@ const UserProfileInfo: FC<{
         </Button>
       )}
 
-      {description && (
+      {user?.description && (
         <Stack spacing={3}>
           <Heading as="h4" variant="heading2" color="brand.black">
             {t('user.info.bio')}
           </Heading>
           <Text variant="text-sm" color="gray.500" whiteSpace="pre-wrap">
-            <MarkdownViewer source={description} />
+            <MarkdownViewer source={user.description} />
           </Text>
         </Stack>
       )}
 
-      {(twitter || instagram || website) && (
+      {(user?.twitter || user?.instagram || user?.website) && (
         <VStack as="nav" spacing={3} align="flex-start">
-          {twitter && (
+          {user?.twitter && (
             <Button
               as={Link}
-              href={`https://twitter.com/${twitter}`}
+              href={`https://twitter.com/${user.twitter}`}
               isExternal
               variant="outline"
               colorScheme="gray"
@@ -152,14 +152,14 @@ const UserProfileInfo: FC<{
               rightIcon={<Icon as={SiTwitter} />}
             >
               <Text as="span" isTruncated>
-                @{twitter}
+                @{user.twitter}
               </Text>
             </Button>
           )}
-          {instagram && (
+          {user?.instagram && (
             <Button
               as={Link}
-              href={`https://instagram.com/${instagram}`}
+              href={`https://instagram.com/${user.instagram}`}
               isExternal
               variant="outline"
               colorScheme="gray"
@@ -168,14 +168,18 @@ const UserProfileInfo: FC<{
               rightIcon={<Icon as={SiInstagram} />}
             >
               <Text as="span" isTruncated>
-                @{instagram}
+                @{user.instagram}
               </Text>
             </Button>
           )}
-          {website && (
+          {user?.website && (
             <Button
               as={Link}
-              href={website.includes('http') ? website : `https://${website}`}
+              href={
+                user.website.includes('http')
+                  ? user.website
+                  : `https://${user.website}`
+              }
               isExternal
               variant="outline"
               colorScheme="gray"
@@ -184,7 +188,7 @@ const UserProfileInfo: FC<{
               rightIcon={<Icon as={HiOutlineGlobeAlt} />}
             >
               <Text as="span" isTruncated>
-                {website.replace(/^https?\:\/\//i, '')}
+                {user.website.replace(/^https?\:\/\//i, '')}
               </Text>
             </Button>
           )}

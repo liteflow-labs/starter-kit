@@ -1,11 +1,22 @@
-query FetchCollectionTraits($chainId: Int!, $address: Address!) {
+query FetchCollectionTraits(
+  $chainId: Int!
+  $address: Address!
+  $filter: CollectionTraitFilter!
+  $limit: Int!
+  $offset: Int!
+) {
   collection(chainId: $chainId, address: $address) {
     chainId
     address
     traitsOfCollection(
-      first: 50 # TODO: implement pagination
       orderBy: [TYPE_ASC]
+      first: $limit
+      filter: $filter
+      offset: $offset
     ) {
+      pageInfo {
+        hasNextPage
+      }
       nodes {
         type
         numberOfValues

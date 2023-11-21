@@ -12,15 +12,7 @@ import type { Props as NFTCardProps } from './Card'
 import NFTCard from './Card'
 
 type IProps<Order extends string> = {
-  assets:
-    | (NFTCardProps['asset'] & {
-        auction: NFTCardProps['auction']
-        creator: NFTCardProps['creator']
-        sale: NFTCardProps['sale']
-        numberOfSales: number
-        hasMultiCurrency: boolean
-      })[]
-    | undefined
+  assets: NFTCardProps['asset'][] | undefined
   orderBy: {
     value: Order
     choices: {
@@ -70,30 +62,11 @@ const TokenGrid = <Order extends string>({
           spacing={{ base: 4, lg: 3, xl: 4 }}
           columns={{ base: 1, sm: 2, md: 3 }}
         >
-          {assets.map(
-            (
-              {
-                auction,
-                creator,
-                sale,
-                numberOfSales,
-                hasMultiCurrency,
-                ...asset
-              },
-              i,
-            ) => (
-              <Flex key={i} justify="center">
-                <NFTCard
-                  asset={asset}
-                  auction={auction}
-                  creator={creator}
-                  sale={sale}
-                  numberOfSales={numberOfSales}
-                  hasMultiCurrency={hasMultiCurrency}
-                />
-              </Flex>
-            ),
-          )}
+          {assets.map((asset, i) => (
+            <Flex key={i} justify="center">
+              <NFTCard asset={asset} />
+            </Flex>
+          ))}
         </SimpleGrid>
       ) : (
         <Empty

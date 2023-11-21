@@ -1,22 +1,22 @@
 import { Flex, Heading, Skeleton, Text } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, HTMLAttributes, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import Price from '../Price/Price'
 
-const Summary: FC<
-  HTMLAttributes<any> & {
-    currency: {
-      decimals: number
-      symbol: string
-    }
-    isSingle: boolean
-    price: BigNumber
-    quantity: BigNumber
-    feesOnTopPerTenThousand?: number | undefined
-    noFees?: boolean
+type Props = {
+  currency: {
+    decimals: number
+    symbol: string
   }
-> = ({
+  isSingle: boolean
+  price: BigNumber
+  quantity: BigNumber
+  feesOnTopPerTenThousand?: number | undefined
+  noFees?: boolean
+}
+
+const Summary: FC<Props> = ({
   currency,
   price,
   quantity,
@@ -33,7 +33,7 @@ const Summary: FC<
   }, [noFees, feesOnTopPerTenThousand, totalPrice])
 
   return (
-    <>
+    <div>
       {isSingle ? (
         <Heading as="h5" variant="heading3" color="gray.500" mb={2}>
           {t('offer.summary.single')}
@@ -95,7 +95,7 @@ const Summary: FC<
           />
         </Heading>
       )}
-    </>
+    </div>
   )
 }
 

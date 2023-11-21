@@ -11,7 +11,6 @@ import {
   useRadioGroup,
   useToast,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { NextPage } from 'next'
@@ -22,28 +21,17 @@ import { useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
-import type { BidCurrency } from '../../../components/Offer/Form/Bid'
 import Radio from '../../../components/Radio/Radio'
 import SalesAuctionForm from '../../../components/Sales/Auction/Form'
 import SalesDirectForm from '../../../components/Sales/Direct/Form'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../components/Token/Card'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../../convert'
 import { useOfferForAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
-import useBlockExplorer from '../../../hooks/useBlockExplorer'
-import useEnvironment from '../../../hooks/useEnvironment'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../hooks/useSigner'
 import SmallLayout from '../../../layouts/small'
-import { isSameAddress } from '../../../utils'
 
 type Props = {
   assetId: string
@@ -68,9 +56,6 @@ type SaleOption = {
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
-  const { OFFER_VALIDITY_IN_SECONDS, AUCTION_VALIDITY_IN_SECONDS } =
-    useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
@@ -93,27 +78,11 @@ const OfferPage: NextPage<Props> = ({ now }) => {
       address: address || '',
     },
   })
-
-  const blockExplorer = useBlockExplorer(data?.asset?.chainId)
-
   const asset = data?.asset
-
-  const royaltiesPerTenThousand =
-    asset?.royalties.reduce((sum, { value }) => sum + value, 0) || 0
-
-  const quantityAvailable = useMemo(
-    () => BigNumber.from(asset?.owned?.quantity || 0),
-    [asset],
-  )
-
-  const isCreator =
-    asset && address
-      ? isSameAddress(asset.creator.address.toLowerCase(), address)
-      : false
 
   const currencies = data?.currencies?.nodes
   const auctionCurrencies = useMemo(
-    () => currencies?.filter((c) => c.address) as BidCurrency[] | undefined,
+    () => currencies?.filter((c) => c.address),
     [currencies],
   )
 
@@ -155,45 +124,21 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     if (sale === SaleType.FIXED_PRICE)
       return (
         <SalesDirectForm
-          chainId={asset.chainId}
-          collectionAddress={asset.collectionAddress}
-          tokenId={asset.tokenId}
-          standard={asset.collection.standard}
+          asset={asset}
           currencies={currencies}
-          blockExplorer={blockExplorer}
-          royaltiesPerTenThousand={royaltiesPerTenThousand}
-          quantityAvailable={quantityAvailable}
-          signer={signer}
-          isCreator={isCreator}
-          offerValidity={OFFER_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
       )
     if (sale === SaleType.TIMED_AUCTION)
       return (
         <SalesAuctionForm
-          signer={signer}
           assetId={asset.id}
           currencies={auctionCurrencies}
-          auctionValidity={AUCTION_VALIDITY_IN_SECONDS}
           onCreated={onCreated}
         />
       )
     invariant(true, 'Invalid sale type')
-  }, [
-    currencies,
-    auctionCurrencies,
-    asset,
-    sale,
-    blockExplorer,
-    royaltiesPerTenThousand,
-    quantityAvailable,
-    signer,
-    isCreator,
-    onCreated,
-    OFFER_VALIDITY_IN_SECONDS,
-    AUCTION_VALIDITY_IN_SECONDS,
-  ])
+  }, [currencies, auctionCurrencies, asset, sale, onCreated])
 
   if (asset === null) return <Error statusCode={404} />
   return (
@@ -219,24 +164,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {!asset ? (
-              <SkeletonTokenCard />
-            ) : (
-              <TokenCard
-                asset={convertAsset(asset)}
-                creator={convertUser(asset.creator, asset.creator.address)}
-                sale={convertSale(asset.firstSale.nodes[0])}
-                auction={
-                  asset.auctions.nodes[0]
-                    ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-                    : undefined
-                }
-                numberOfSales={asset.firstSale.totalCount}
-                hasMultiCurrency={
-                  asset.firstSale.totalCurrencyDistinctCount > 1
-                }
-              />
-            )}
+            {!asset ? <SkeletonTokenCard /> : <TokenCard asset={asset} />}
           </Box>
         </GridItem>
         <GridItem>

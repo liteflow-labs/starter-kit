@@ -5,14 +5,17 @@ import AccountImage from '../../Wallet/Image'
 
 type Props = {
   address: string
-  cover: string | null | undefined
-  image: string | null | undefined
-  name: string | null | undefined
+  user:
+    | {
+        cover: string | null
+        image: string | null
+        name: string | null
+      }
+    | null
+    | undefined
 }
 
-const UserProfileBanner: FC<Props> = ({ cover, image, address, name }) => {
-  if (!address) throw new Error('account is falsy')
-
+const UserProfileBanner: FC<Props> = ({ address, user }) => {
   return (
     <Flex
       as="header"
@@ -24,10 +27,10 @@ const UserProfileBanner: FC<Props> = ({ cover, image, address, name }) => {
       rounded="xl"
       bgColor="gray.100"
     >
-      {cover && (
+      {user?.cover && (
         <Image
-          src={cover}
-          alt={name || address}
+          src={user.cover}
+          alt={user.name || address}
           fill
           sizes="
           (min-width: 80em) 1216px,
@@ -46,7 +49,7 @@ const UserProfileBanner: FC<Props> = ({ cover, image, address, name }) => {
         <Flex
           as={AccountImage}
           address={address}
-          image={image}
+          image={user?.image}
           size={88}
           rounded="full"
         />

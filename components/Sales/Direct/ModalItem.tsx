@@ -6,13 +6,15 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback } from 'react'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import { AccountVerificationStatus } from '../../../graphql'
+import useAccount from '../../../hooks/useAccount'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useSigner from '../../../hooks/useSigner'
 import { formatDate, formatError, isSameAddress } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Link from '../../Link/Link'
@@ -23,21 +25,20 @@ import WalletAddress from '../../Wallet/Address'
 import AccountImage from '../../Wallet/Image'
 
 export type Props = {
-  blockExplorer: BlockExplorer
-  signer: Signer | undefined
-  currentAccount: string | null | undefined
   chainId: number
   sale: {
     id: string
-    expiredAt: Date | null | undefined
+    expiredAt: Date
     maker: {
       address: string
-      image: string | null | undefined
-      name: string | null | undefined
-      verified: boolean
+      image: string | null
+      name: string | null
+      verification: {
+        status: AccountVerificationStatus
+      } | null
     }
-    unitPrice: BigNumber
-    availableQuantity: BigNumber
+    unitPrice: string
+    availableQuantity: string
     currency: {
       decimals: number
       symbol: string
@@ -46,15 +47,11 @@ export type Props = {
   onOfferCanceled: (id: string) => Promise<void>
 }
 
-const SaleDirectModalItem: FC<Props> = ({
-  blockExplorer,
-  sale,
-  chainId,
-  signer,
-  currentAccount,
-  onOfferCanceled,
-}) => {
+const SaleDirectModalItem: FC<Props> = ({ sale, chainId, onOfferCanceled }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
+  const { address } = useAccount()
+  const blockExplorer = useBlockExplorer(chainId)
   const [cancelOffer, { activeStep, transactionHash }] = useCancelOffer(signer)
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -107,7 +104,7 @@ const SaleDirectModalItem: FC<Props> = ({
                 <WalletAddress address={sale.maker.address} isShort />
               )}
             </Text>
-            {sale.maker.verified && (
+            {sale.maker.verification?.status === 'VALIDATED' && (
               <Icon as={HiBadgeCheck} color="brand.500" h={4} w={4} />
             )}
           </Flex>
@@ -126,8 +123,10 @@ const SaleDirectModalItem: FC<Props> = ({
             </span>
             <span>
               {t('sales.direct.modal-item.available', {
-                count: sale.availableQuantity.lte(Number.MAX_SAFE_INTEGER - 1)
-                  ? sale.availableQuantity.toNumber()
+                count: BigNumber.from(sale.availableQuantity).lte(
+                  Number.MAX_SAFE_INTEGER - 1,
+                )
+                  ? BigNumber.from(sale.availableQuantity).toNumber()
                   : Number.MAX_SAFE_INTEGER - 1,
               })}
             </span>
@@ -143,8 +142,7 @@ const SaleDirectModalItem: FC<Props> = ({
           ) : undefined
         }
         action={
-          !!currentAccount &&
-          isSameAddress(sale.maker.address, currentAccount) ? (
+          !!address && isSameAddress(sale.maker.address, address) ? (
             <ConnectButtonWithNetworkSwitch
               chainId={chainId}
               variant="outline"

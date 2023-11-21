@@ -17,7 +17,6 @@ import Select from '../../components/Select/Select'
 import SkeletonGrid from '../../components/Skeleton/Grid'
 import SkeletonUserCard from '../../components/Skeleton/UserCard'
 import UserCard from '../../components/User/UserCard'
-import { convertUserWithCover } from '../../convert'
 import {
   AccountFilter,
   AccountsOrderBy,
@@ -73,7 +72,7 @@ const UsersPage: NextPage<Props> = () => {
 
   const users = usersData?.users?.nodes
 
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   return (
     <>
@@ -127,10 +126,7 @@ const UsersPage: NextPage<Props> = () => {
               py={6}
             >
               {users.map((user, i) => (
-                <UserCard
-                  key={i}
-                  user={convertUserWithCover(user, user.address)}
-                />
+                <UserCard key={i} user={user} />
               ))}
             </SimpleGrid>
           ) : (
@@ -145,7 +141,6 @@ const UsersPage: NextPage<Props> = () => {
               limit={limit}
               limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              onPageChange={changePage}
               onLimitChange={changeLimit}
               hasNextPage={usersData?.users?.pageInfo.hasNextPage}
               hasPreviousPage={usersData?.users?.pageInfo.hasPreviousPage}
