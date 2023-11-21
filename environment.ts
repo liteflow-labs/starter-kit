@@ -11,32 +11,6 @@ import {
   polygonMumbai,
 } from 'wagmi/chains'
 
-type RemoteConfig = {
-  name: string
-  hasLazyMint: boolean
-  hasUnlockableContent: boolean
-  maxRoyaltiesPerTenThousand: number
-  offerValiditySeconds: number
-  offerAuctionDeltaSeconds: number
-  metadata: Partial<{
-    REPORT_EMAIL: string
-
-    LOGO: string
-    FAVICON: string
-    BRAND_COLOR: string
-
-    FEATURED_TOKEN: string[]
-    HOME_COLLECTIONS: string[]
-    HOME_USERS: string[]
-    HOME_TOKENS: string[]
-
-    META_TITLE: string
-    META_KEYWORDS: string
-    META_DESCRIPTION: string
-    META_COMPANY_NAME: string
-  }>
-}
-
 export type Environment = {
   /**
    * Base configuration
