@@ -30,7 +30,7 @@ import useCart, { CartItem } from '../../../hooks/useCart'
 import useSigner from '../../../hooks/useSigner'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import List, { ListItem } from '../../List/List'
-import Price from '../../Price/Price'
+import Price, { formatPrice } from '../../Price/Price'
 import CartItemSummary from '../ItemSummary'
 
 type Props = {
@@ -168,25 +168,20 @@ const CartStepTransaction: FC<Props> = ({
             {data?.createCheckoutApprovalTransactions.map((item, i) => (
               <ListItem
                 key={i}
-                label={
-                  <Price
-                    amount={item.amount}
-                    currency={{
-                      // id: item.currencyId,
-                      decimals: 18,
-                      symbol: 'xxx',
-                    }}
-                  />
-                }
+                label={<Price amount={item.amount} currency={item.currency} />}
                 action={
                   item.transaction ? (
                     <ConnectButtonWithNetworkSwitch
                       chainId={chainId}
-                      onClick={() => approve(item.currencyId, item.transaction)}
-                      isLoading={approvalLoading[item.currencyId] || false}
+                      size="sm"
+                      variant="outline"
+                      onClick={() =>
+                        approve(item.currency.id, item.transaction)
+                      }
+                      isLoading={approvalLoading[item.currency.id] || false}
                     >
                       {t('cart.step.transaction.button.approve', {
-                        value: 'xxx',
+                        value: formatPrice(item.amount, item.currency),
                       })}
                     </ConnectButtonWithNetworkSwitch>
                   ) : (

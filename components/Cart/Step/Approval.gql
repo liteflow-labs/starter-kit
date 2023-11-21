@@ -6,7 +6,11 @@ mutation CreateApproval(
     accountAddress: $accountAddress
     items: $items
   ) {
-    currencyId
+    currency {
+      id
+      decimals
+      symbol
+    }
     amount
     transaction {
       to
