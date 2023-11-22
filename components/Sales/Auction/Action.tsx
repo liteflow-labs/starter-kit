@@ -1,6 +1,4 @@
 import { Button, Text, useDisclosure, useToast } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
-import { BigNumber } from '@ethersproject/bignumber'
 import {
   AcceptAuctionStep,
   useAcceptAuction,
@@ -9,39 +7,37 @@ import {
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useMemo } from 'react'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useSigner from '../../../hooks/useSigner'
 import { formatError } from '../../../utils'
 import Link from '../../Link/Link'
 import AcceptAuctionModal from '../../Modal/AcceptAuction'
 
 export type Props = {
-  signer: Signer | undefined
   auction: {
     id: string
-    endAt: string | Date
-    expireAt: string | Date
-    reserveAmount: BigNumber
-    winningOffer: { id: string } | null | undefined
+    endAt: Date
+    expireAt: Date
+    reserveAmount: string
+    winningOffer: { id: string } | null
     asset: {
       id: string
       chainId: number
     }
-  }
-  bestBid?: {
-    amount: BigNumber
+    bestBid: {
+      nodes: {
+        amount: string
+      }[]
+    }
   }
   onAuctionAccepted: (id: string) => void
 }
 
-const SaleAuctionAction: FC<Props> = ({
-  signer,
-  auction,
-  bestBid,
-  onAuctionAccepted,
-}) => {
+const SaleAuctionAction: FC<Props> = ({ auction, onAuctionAccepted }) => {
   const { t } = useTranslation('components')
+  const signer = useSigner()
   const blockExplorer = useBlockExplorer(auction.asset.chainId)
   const { inProgress, endedAndWaitingForTransfer, reservePriceMatches } =
-    useAuctionStatus(auction, bestBid)
+    useAuctionStatus(auction, auction.bestBid.nodes[0])
   const [accept, { activeStep, transactionHash }] = useAcceptAuction(signer)
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()

@@ -1,5 +1,4 @@
 import CollectionCard from 'components/Collection/CollectionCard'
-import { convertCollection } from 'convert'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
@@ -55,7 +54,7 @@ const CollectionsHomeSection: FC<Props> = () => {
         collection: NonNullable<
           FetchCollectionsQuery['collections']
         >['nodes'][number],
-      ) => <CollectionCard collection={convertCollection(collection)} />}
+      ) => <CollectionCard collection={collection} />}
       title={t('home.collections.title')}
     />
   )

@@ -17,7 +17,6 @@ import {
 import CollectionCard from 'components/Collection/CollectionCard'
 import ExploreTemplate from 'components/Explore'
 import Head from 'components/Head'
-import { convertCollection } from 'convert'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
@@ -87,7 +86,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
   const collections = collectionsData?.collections?.nodes
   const hasFilter = CHAINS.length > 1
 
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   const changeOrder = useCallback(
     async (orderBy: any) => {
@@ -204,10 +203,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   }
                 >
                   {collections.map((collection, i) => (
-                    <CollectionCard
-                      collection={convertCollection(collection)}
-                      key={i}
-                    />
+                    <CollectionCard collection={collection} key={i} />
                   ))}
                 </SimpleGrid>
               ) : (
@@ -225,7 +221,6 @@ const CollectionsPage: NextPage<Props> = ({}) => {
                   limit={limit}
                   limits={[PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  onPageChange={changePage}
                   onLimitChange={changeLimit}
                   hasNextPage={
                     collectionsData?.collections?.pageInfo.hasNextPage

@@ -1,50 +1,58 @@
+import { NetworkStatus } from '@apollo/client'
 import {
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Button,
   Heading,
   SkeletonCircle,
   SkeletonText,
   Stack,
   Text,
   VStack,
+  useToast,
 } from '@chakra-ui/react'
-import { convertCollection } from 'convert'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import { concatToQuery } from '../../../concat'
 import {
   CollectionFilter,
   StringFilter,
   useSearchCollectionQuery,
 } from '../../../graphql'
 import { Filter } from '../../../hooks/useAssetFilterFromQuery'
+import { formatError } from '../../../utils'
 import CollectionListItem from '../../Collection/ListItem'
 import List, { ListItem } from '../../List/List'
 import SearchInput from '../../SearchInput'
 
 type Props = {
   formValues: UseFormReturn<Filter, any, undefined>
-  selectedCollection?: { chainId: number; address: string }
-  onCollectionChange: (data?: { chainId: number; address: string }) => void
   onFilterChange: (data?: Partial<Filter>) => void
 }
 
+const PAGINATION_LIMIT = 8
+
 const FilterByCollection: FC<Props> = ({
   formValues: { setValue, watch },
-  selectedCollection,
-  onCollectionChange,
   onFilterChange,
 }) => {
   const { t } = useTranslation('components')
+  const toast = useToast()
+  const [offset, setOffset] = useState(0)
 
   const filterResult = watch()
 
-  const { data: collectionData } = useSearchCollectionQuery({
+  const {
+    data: collectionData,
+    fetchMore,
+    networkStatus,
+  } = useSearchCollectionQuery({
     variables: {
-      limit: 8,
-      offset: 0,
+      offset: 0, // the offset change must be done when calling the fetchMore function to concat queries' results
+      limit: PAGINATION_LIMIT,
       filter: {
         name: {
           includesInsensitive: filterResult.collectionSearch || '',
@@ -54,64 +62,59 @@ const FilterByCollection: FC<Props> = ({
           : {}),
       } as CollectionFilter,
     },
-    skip: !!selectedCollection,
-    ssr: false,
+    notifyOnNetworkStatusChange: true,
   })
   const collections = collectionData?.collections?.nodes
+  const hasNextPage = collectionData?.collections?.pageInfo.hasNextPage
+
+  const loadMore = useCallback(async () => {
+    const newOffset = offset + PAGINATION_LIMIT
+    try {
+      await fetchMore({
+        variables: { offset: newOffset },
+        updateQuery: concatToQuery('collections'),
+      })
+      setOffset(newOffset)
+    } catch (e) {
+      toast({
+        title: formatError(e),
+        status: 'error',
+      })
+    }
+  }, [fetchMore, offset, toast])
 
   const collection = useMemo(() => {
-    if (selectedCollection) return selectedCollection
-    if (!filterResult.collection) {
-      onCollectionChange(undefined)
-      return
-    }
+    if (!filterResult.collection) return
     const [chainId, address] = filterResult.collection.split('-')
     if (!chainId || !address) return
     const collection = collections?.find(
       (x) => x.address === address && x.chainId === parseInt(chainId, 10),
     )
-    onCollectionChange(
-      collection ? { chainId: collection.chainId, address } : undefined,
-    )
     return collection
-  }, [
-    collections,
-    filterResult.collection,
-    selectedCollection,
-    onCollectionChange,
-  ])
+  }, [collections, filterResult.collection])
 
   return collection ? (
     <AccordionItem>
       <AccordionButton>
         <Heading variant="heading2" flex="1" textAlign="left">
-          {selectedCollection
-            ? t('filters.assets.properties.label')
-            : t('filters.assets.properties.labelWithCollection')}
+          {t('filters.assets.properties.labelWithCollection')}
         </Heading>
         <AccordionIcon />
       </AccordionButton>
       <AccordionPanel>
         <Stack spacing={3}>
-          {!selectedCollection && (
-            <CollectionListItem
-              width="full"
-              borderColor="brand.500"
-              bgColor="brand.50"
-              borderWidth="1px"
-              borderRadius="md"
-              padding={2}
-              textAlign="left"
-              cursor="pointer"
-              onClick={() => onFilterChange({ collection: null, traits: [] })}
-              collection={convertCollection(collection as any)}
-              closable
-            />
-          )}
-          <SearchInput
-            placeholder={t('filters.assets.properties.search.placeholder')}
-            name="propertySearch"
-            onReset={() => setValue('propertySearch', '')}
+          <CollectionListItem
+            width="full"
+            borderColor="brand.500"
+            bgColor="brand.50"
+            borderWidth="1px"
+            borderRadius="md"
+            padding={2}
+            textAlign="left"
+            cursor="pointer"
+            onClick={() => onFilterChange({ collection: null, traits: [] })}
+            collection={collection}
+            closable
           />
         </Stack>
       </AccordionPanel>
@@ -133,7 +136,7 @@ const FilterByCollection: FC<Props> = ({
           />
           <List>
             {!collections ? (
-              new Array(8)
+              new Array(PAGINATION_LIMIT)
                 .fill(0)
                 .map((_, index) => (
                   <ListItem
@@ -146,24 +149,40 @@ const FilterByCollection: FC<Props> = ({
                   />
                 ))
             ) : collections.length > 0 ? (
-              collections.map((x) => (
-                <CollectionListItem
-                  key={`${x.chainId}-${x.address}`}
-                  cursor={'pointer'}
-                  rounded="xl"
-                  transition={'background-color 0.3s ease-in-out'}
-                  _hover={{
-                    bgColor: 'brand.50',
-                  }}
-                  onClick={() =>
-                    onFilterChange({
-                      collection: `${x.chainId}-${x.address}`,
-                      traits: [],
-                    })
-                  }
-                  collection={convertCollection(x)}
-                />
-              ))
+              <>
+                {collections.map((collection) => (
+                  <CollectionListItem
+                    key={`${collection.chainId}-${collection.address}`}
+                    cursor={'pointer'}
+                    rounded="xl"
+                    transition={'background-color 0.3s ease-in-out'}
+                    _hover={{
+                      bgColor: 'brand.50',
+                    }}
+                    onClick={() =>
+                      onFilterChange({
+                        collection: `${collection.chainId}-${collection.address}`,
+                        traits: [],
+                      })
+                    }
+                    collection={collection}
+                  />
+                ))}
+                {hasNextPage && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    isLoading={networkStatus === NetworkStatus.fetchMore}
+                    onClick={loadMore}
+                    width="fit-content"
+                    mx="auto"
+                  >
+                    <Text as="span" isTruncated>
+                      {t('filters.collections.more')}
+                    </Text>
+                  </Button>
+                )}
+              </>
             ) : (
               <VStack spacing={1}>
                 <Text variant="subtitle2" color="gray.800" as="span">

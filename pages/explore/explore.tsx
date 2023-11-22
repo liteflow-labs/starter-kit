@@ -26,12 +26,6 @@ import Select from '../../components/Select/Select'
 import SkeletonGrid from '../../components/Skeleton/Grid'
 import SkeletonTokenCard from '../../components/Skeleton/TokenCard'
 import TokenCard from '../../components/Token/Card'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../convert'
 import { AssetsOrderBy, useFetchAllErc721And1155Query } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useAssetFilterFromQuery, {
@@ -121,7 +115,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   return (
     <>
@@ -208,22 +202,9 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                       : { sm: 2, md: 4, lg: 6 }
                   }
                 >
-                  {assets.map((x, i) => (
+                  {assets.map((asset, i) => (
                     <Flex key={i} justify="center" overflow="hidden">
-                      <TokenCard
-                        asset={convertAsset(x)}
-                        creator={convertUser(x.creator, x.creator.address)}
-                        auction={
-                          x.auctions.nodes[0]
-                            ? convertAuctionWithBestBid(x.auctions.nodes[0])
-                            : undefined
-                        }
-                        sale={convertSale(x.firstSale.nodes[0])}
-                        numberOfSales={x.firstSale.totalCount}
-                        hasMultiCurrency={
-                          x.firstSale.totalCurrencyDistinctCount > 1
-                        }
-                      />
+                      <TokenCard asset={asset} />
                     </Flex>
                   ))}
                 </SimpleGrid>
@@ -242,7 +223,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
                   limit={limit}
                   limits={[PAGINATION_LIMIT, 24, 36, 48]}
                   page={page}
-                  onPageChange={changePage}
                   onLimitChange={changeLimit}
                   hasNextPage={assetsData?.assets?.pageInfo.hasNextPage}
                   hasPreviousPage={assetsData?.assets?.pageInfo.hasPreviousPage}

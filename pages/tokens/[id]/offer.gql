@@ -23,8 +23,6 @@ query OfferForAsset(
     name
     image
     imageMimetype
-    animationUrl
-    animationMimetype
     royalties {
       value
     }

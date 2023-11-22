@@ -55,8 +55,6 @@ query FetchAssetForCheckout(
       url
       mimetype
     }
-    animationUrl
-    animationMimetype
     creator {
       address
       name

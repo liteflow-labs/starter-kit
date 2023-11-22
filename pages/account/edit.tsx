@@ -10,12 +10,10 @@ import UserFormEdit from '../../components/User/Form/Edit'
 import { useGetAccountQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useLoginRedirect from '../../hooks/useLoginRedirect'
-import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
 import { formatError } from '../../utils'
 
 const EditPage: NextPage = () => {
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { push } = useRouter()
   const { address, isLoggedIn } = useAccount()
@@ -62,7 +60,6 @@ const EditPage: NextPage = () => {
           </Box>
         ) : (
           <UserFormEdit
-            signer={signer}
             onUpdated={onUpdated}
             onError={onError}
             account={data.account}

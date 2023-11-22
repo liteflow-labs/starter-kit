@@ -19,6 +19,14 @@ query FetchCollectionDetails($collectionAddress: Address!, $chainId: Int!) {
         status
       }
     }
+    totalVolume {
+      refCode
+      valueInRef
+    }
+    floorPrice {
+      refCode
+      valueInRef
+    }
   }
 }
 
@@ -73,8 +81,6 @@ query FetchCollectionAssets(
       description
       image
       imageMimetype
-      animationUrl
-      animationMimetype
       hasUnlockableContent
       unlockedContent {
         url

@@ -20,7 +20,6 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { toAddress } from '@liteflow/core'
 import { CreateOfferStep, useCreateOffer } from '@liteflow/react'
@@ -30,10 +29,13 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Standard } from '../../../graphql'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useAccount from '../../../hooks/useAccount'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useEnvironment from '../../../hooks/useEnvironment'
 import useFees from '../../../hooks/useFees'
 import useParseBigNumber from '../../../hooks/useParseBigNumber'
-import { formatDateDatetime, formatError } from '../../../utils'
+import useSigner from '../../../hooks/useSigner'
+import { formatDateDatetime, formatError, isSameAddress } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Image from '../../Image/Image'
 import CreateOfferModal from '../../Modal/CreateOffer'
@@ -48,10 +50,23 @@ type FormData = {
 }
 
 type Props = {
-  chainId: number
-  collectionAddress: string
-  tokenId: string
-  standard: Standard
+  asset: {
+    chainId: number
+    collectionAddress: string
+    tokenId: string
+    collection: {
+      standard: Standard
+    }
+    creator: {
+      address: string
+    }
+    royalties: {
+      value: number
+    }[]
+    owned: {
+      quantity: string
+    } | null
+  }
   currencies: {
     name: string
     id: string
@@ -60,37 +75,35 @@ type Props = {
     decimals: number
     symbol: string
   }[]
-  royaltiesPerTenThousand: number
-  quantityAvailable: BigNumber
-  signer: (Signer & TypedDataSigner) | undefined
-  isCreator: boolean
-  offerValidity: number
-  blockExplorer: BlockExplorer
   onCreated: (offerId: string) => void
 }
 
-const SalesDirectForm: FC<Props> = ({
-  chainId,
-  collectionAddress,
-  tokenId,
-  standard,
-  currencies,
-  royaltiesPerTenThousand,
-  quantityAvailable,
-  signer,
-  isCreator,
-  offerValidity,
-  blockExplorer,
-  onCreated,
-}) => {
+const SalesDirectForm: FC<Props> = ({ asset, currencies, onCreated }) => {
   const { t } = useTranslation('components')
   const toast = useToast()
+  const signer = useSigner()
+  const { address } = useAccount()
+  const { OFFER_VALIDITY_IN_SECONDS } = useEnvironment()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const blockExplorer = useBlockExplorer(asset.chainId)
 
+  const isCreator = address
+    ? isSameAddress(asset.creator.address.toLowerCase(), address)
+    : false
+  const quantityAvailable = useMemo(
+    () => BigNumber.from(asset.owned?.quantity || 0),
+    [asset.owned?.quantity],
+  )
+  const royaltiesPerTenThousand = useMemo(
+    () => asset.royalties.reduce((sum, { value }) => sum + value, 0),
+    [asset.royalties],
+  )
   const defaultExpirationValue = useMemo(
     () =>
-      formatDateDatetime(dayjs().add(offerValidity, 'second').toISOString()),
-    [offerValidity],
+      formatDateDatetime(
+        dayjs().add(OFFER_VALIDITY_IN_SECONDS, 'second').toISOString(),
+      ),
+    [OFFER_VALIDITY_IN_SECONDS],
   )
   const minDate = useMemo(
     () => formatDateDatetime(dayjs().add(1, 'day').toISOString()),
@@ -137,9 +150,9 @@ const SalesDirectForm: FC<Props> = ({
   const quantityBN = useParseBigNumber(quantity)
 
   const { feesPerTenThousand, loading: loadingFees } = useFees({
-    chainId,
-    collectionAddress,
-    tokenId,
+    chainId: asset.chainId,
+    collectionAddress: asset.collectionAddress,
+    tokenId: asset.tokenId,
     currencyId: currency?.id,
     quantity: quantityBN,
     unitPrice: priceUnit,
@@ -162,7 +175,10 @@ const SalesDirectForm: FC<Props> = ({
   const onSubmit = handleSubmit(async ({ expiredAt }) => {
     if (activeStep !== CreateOfferStep.INITIAL) return
     if (!currency) throw new Error('currency falsy')
-    if (standard !== 'ERC721' && standard !== 'ERC1155')
+    if (
+      asset.collection.standard !== 'ERC721' &&
+      asset.collection.standard !== 'ERC1155'
+    )
       throw new Error('invalid token')
 
     try {
@@ -170,9 +186,9 @@ const SalesDirectForm: FC<Props> = ({
       const id = await createAndPublishOffer({
         type: 'SALE',
         quantity: quantityBN,
-        chain: chainId,
-        collection: toAddress(collectionAddress),
-        token: tokenId,
+        chain: asset.chainId,
+        collection: toAddress(asset.collectionAddress),
+        token: asset.tokenId,
         unitPrice: {
           amount: priceUnit,
           currency: currency.address ? toAddress(currency.address) : null,
@@ -191,7 +207,10 @@ const SalesDirectForm: FC<Props> = ({
     }
   })
 
-  const isSingle = useMemo(() => standard === 'ERC721', [standard])
+  const isSingle = useMemo(
+    () => asset.collection.standard === 'ERC721',
+    [asset.collection.standard],
+  )
 
   if (!currency) return <></>
   return (
@@ -509,7 +528,7 @@ const SalesDirectForm: FC<Props> = ({
       </Stack>
 
       <ConnectButtonWithNetworkSwitch
-        chainId={chainId}
+        chainId={asset.chainId}
         isLoading={activeStep !== CreateOfferStep.INITIAL}
         isDisabled={loadingFees}
         size="lg"
