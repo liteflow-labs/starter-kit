@@ -55,7 +55,6 @@ function Layout({ children }: PropsWithChildren) {
     const texts = {
       en: {
         explore: 'Explore',
-        create: 'Create',
         profile: 'Profile',
         support: 'Support',
         terms: 'Terms',
@@ -63,7 +62,6 @@ function Layout({ children }: PropsWithChildren) {
       },
       ja: {
         explore: '検索',
-        create: '作成',
         profile: 'プロフィール',
         support: 'サポート',
         terms: '利用規約',
@@ -71,7 +69,6 @@ function Layout({ children }: PropsWithChildren) {
       },
       'zh-cn': {
         explore: '探讨',
-        create: '创造',
         profile: '资料',
         support: '支持',
         terms: '条款',
@@ -79,7 +76,6 @@ function Layout({ children }: PropsWithChildren) {
       },
       'es-mx': {
         explore: 'Explorar',
-        create: 'Crear',
         profile: 'Perfil',
         support: 'Apoyo',
         terms: 'Letra chica',
@@ -89,13 +85,22 @@ function Layout({ children }: PropsWithChildren) {
     const locale = (router.locale || 'en') as keyof typeof texts
     return [
       { href: '/explore', label: texts[locale].explore },
-      { href: '/create', label: texts[locale].create },
       { href: userProfileLink, label: texts[locale].profile },
-      { href: '/', label: texts[locale].support },
-      { href: '/', label: texts[locale].terms },
-      { href: '/', label: texts[locale].privacy },
-      { href: 'https://twitter.com', label: 'Twitter' },
-      { href: 'https://discord.com', label: 'Discord' },
+      {
+        href: 'https://www.linkedin.com/company/vuca-digital-company-limited/?viewAsMember=true',
+        label: texts[locale].support,
+      },
+      {
+        href: 'https://cdn.crowntoken.io/Terms_of_Use.pdf',
+        label: texts[locale].terms,
+      },
+      {
+        href: 'https://crowntoken.io/files/Privacy_Policy_V.1.0.pdf',
+        label: texts[locale].privacy,
+      },
+      { href: 'https://crowntoken.io/', label: 'Crown Token' },
+      { href: 'https://twitter.com/CROWNtokenclub', label: 'Twitter' },
+      { href: 'https://discord.com/invite/UBetr9R3tq', label: 'Discord' },
     ].filter(Boolean)
   }, [router.locale, userProfileLink])
 

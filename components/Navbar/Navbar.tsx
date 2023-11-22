@@ -132,9 +132,6 @@ const DrawerMenu: FC<{
             {/* <Link href="/drops">
               <NavItemMobile>{t('navbar.drops')}</NavItemMobile>
             </Link> */}
-            <Link href="/create">
-              <NavItemMobile>{t('navbar.create')}</NavItemMobile>
-            </Link>
             {account ? (
               <>
                 <Accordion as="nav" allowMultiple>
@@ -421,17 +418,6 @@ const Navbar: FC<{
               {t('navbar.drops')}
             </Text>
           </Flex> */}
-          <Flex
-            as={Link}
-            href="/create"
-            color="brand.black"
-            align="center"
-            _hover={{ color: 'gray.500' }}
-          >
-            <Text as="span" variant="button2">
-              {t('navbar.create')}
-            </Text>
-          </Flex>
           {account ? (
             <HStack spacing={2}>
               <ActivityMenu account={account.address} />

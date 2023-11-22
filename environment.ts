@@ -2,15 +2,7 @@ import request from 'graphql-request'
 import { LRUCache } from 'lru-cache'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
-import {
-  bsc,
-  bscTestnet,
-  Chain,
-  goerli as ethereumGoerli,
-  mainnet as ethereumMainnet,
-  polygon,
-  polygonMumbai,
-} from 'wagmi/chains'
+import { Chain, mainnet as ethereumMainnet } from 'wagmi/chains'
 
 type RemoteConfig = {
   name: string
@@ -207,11 +199,6 @@ const getEnvironment = async (): Promise<Environment> => {
     // Wallet/chain configuration
     CHAINS: [
       ethereumMainnet,
-      ethereumGoerli,
-      bscTestnet,
-      bsc,
-      polygon,
-      polygonMumbai,
       {
         name: 'LightLink Phoenix',
         network: 'lightlink-phoenix',
@@ -239,37 +226,6 @@ const getEnvironment = async (): Promise<Environment> => {
           default: {
             name: 'LightLink Phoenix Explorer',
             url: 'https://phoenix.lightlink.io',
-          },
-        },
-      } as Chain,
-      {
-        name: 'LightLink Pegasus Testnet',
-        network: 'lightlink-pegasus',
-        testnet: true,
-        id: 1891,
-        nativeCurrency: {
-          decimals: 18,
-          name: 'Ether',
-          symbol: 'ETH',
-        },
-        rpcUrls: {
-          default: {
-            http: [
-              'https://replicator-01.pegasus.lightlink.io/rpc/v1',
-              'https://replicator-02.pegasus.lightlink.io/rpc/v1',
-            ],
-          },
-          public: {
-            http: [
-              'https://replicator-01.pegasus.lightlink.io/rpc/v1',
-              'https://replicator-02.pegasus.lightlink.io/rpc/v1',
-            ],
-          },
-        },
-        blockExplorers: {
-          default: {
-            name: 'LightLink Pegasus Explorer',
-            url: 'https://pegasus.lightlink.io',
           },
         },
       } as Chain,

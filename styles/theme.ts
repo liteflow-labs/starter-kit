@@ -241,7 +241,8 @@ export const baseTheme = extendTheme({
     },
   },
   fonts: {
-    banner: 'Poppins',
+    heading: 'Prompt, sans-serif',
+    body: 'Prompt, sans-serif',
   },
   colors: {
     white: '#FFFFFF',
