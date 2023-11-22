@@ -1,7 +1,7 @@
 import request from 'graphql-request'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
-import { bsc, Chain, mainnet as ethereumMainnet, polygon } from 'wagmi/chains'
+import { Chain, mainnet as ethereumMainnet } from 'wagmi/chains'
 
 export type Environment = {
   /**
@@ -180,7 +180,39 @@ const getEnvironment = async (): Promise<Environment> => {
     FAVICON: metadata.FAVICON || '/favicon.svg',
     BRAND_COLOR: metadata.BRAND_COLOR || '#245BFF',
     // Wallet/chain configuration
-    CHAINS: [ethereumMainnet, bsc, polygon],
+    CHAINS: [
+      ethereumMainnet,
+      {
+        name: 'LightLink Phoenix',
+        network: 'lightlink-phoenix',
+        id: 1890,
+        nativeCurrency: {
+          decimals: 18,
+          name: 'Ether',
+          symbol: 'ETH',
+        },
+        rpcUrls: {
+          default: {
+            http: [
+              'https://replicator-01.phoenix.lightlink.io/rpc/v1',
+              'https://replicator-02.phoenix.lightlink.io/rpc/v1',
+            ],
+          },
+          public: {
+            http: [
+              'https://replicator-01.phoenix.lightlink.io/rpc/v1',
+              'https://replicator-02.phoenix.lightlink.io/rpc/v1',
+            ],
+          },
+        },
+        blockExplorers: {
+          default: {
+            name: 'LightLink Phoenix Explorer',
+            url: 'https://phoenix.lightlink.io',
+          },
+        },
+      } as Chain,
+    ],
     WALLET_CONNECT_PROJECT_ID:
       process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
     MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
