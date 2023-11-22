@@ -98,6 +98,7 @@ function Layout({ children }: PropsWithChildren) {
         href: 'https://crowntoken.io/files/Privacy_Policy_V.1.0.pdf',
         label: texts[locale].privacy,
       },
+      { href: 'https://crowntoken.io/', label: 'Crown Token' },
       { href: 'https://twitter.com/CROWNtokenclub', label: 'Twitter' },
       { href: 'https://discord.com/invite/UBetr9R3tq', label: 'Discord' },
     ].filter(Boolean)
