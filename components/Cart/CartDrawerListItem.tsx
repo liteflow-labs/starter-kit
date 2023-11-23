@@ -11,7 +11,7 @@ import Link from '../Link/Link'
 import { ListItem } from '../List/List'
 
 type Props = {
-  cartItem: {
+  offer: {
     id: string
     unitPrice: string
     availableQuantity: string
@@ -36,21 +36,21 @@ type Props = {
   }
 }
 
-const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
+const CartDrawerListItem: FC<Props> = ({ offer }) => {
   const { t } = useTranslation('components')
   const [isHovered, setIsHovered] = useState(false)
   const { removeItem } = useCart()
   const isExpired = useMemo(
-    () => !dateIsBefore(new Date(), cartItem.expiredAt),
-    [cartItem.expiredAt],
+    () => !dateIsBefore(new Date(), offer.expiredAt),
+    [offer.expiredAt],
   )
   return (
     <ListItem
       image={
-        <Link href={`/tokens/${cartItem.asset.id}`}>
+        <Link href={`/tokens/${offer.asset.id}`}>
           <Image
-            src={cartItem.asset.image}
-            alt={cartItem.asset.name}
+            src={offer.asset.image}
+            alt={offer.asset.name}
             width={40}
             height={40}
             w={10}
@@ -62,12 +62,12 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
       label={
         <Text
           as={Link}
-          href={`/tokens/${cartItem.asset.id}`}
+          href={`/tokens/${offer.asset.id}`}
           variant="subtitle2"
           color="gray.800"
-          title={cartItem.asset.name}
+          title={offer.asset.name}
         >
-          {cartItem.asset.name}
+          {offer.asset.name}
         </Text>
       }
       subtitle={
@@ -100,11 +100,11 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
         ) : (
           <Text
             as={Link}
-            href={`/collection/${cartItem.asset.collection.chainId}/${cartItem.asset.collection.address}`}
-            title={cartItem.asset.collection.name}
+            href={`/collection/${offer.asset.collection.chainId}/${offer.asset.collection.address}`}
+            title={offer.asset.collection.name}
             variant="caption"
           >
-            {cartItem.asset.collection.name}
+            {offer.asset.collection.name}
           </Text>
         )
       }
@@ -114,13 +114,13 @@ const CartDrawerListItem: FC<Props> = ({ cartItem }) => {
             size="sm"
             colorScheme="gray"
             variant="outline"
-            onClick={() => removeItem(cartItem.id)}
+            onClick={() => removeItem(offer.id)}
           >
             {t('cart.drawer.list-item.remove')}
           </Button>
         ) : isExpired ? undefined : (
           <Text variant="subtitle2" textAlign="end">
-            <Price amount={cartItem.unitPrice} currency={cartItem.currency} />
+            <Price amount={offer.unitPrice} currency={offer.currency} />
           </Text>
         )
       }

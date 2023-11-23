@@ -90,7 +90,7 @@ const SaleDirectCardFooter: FC<Props> = ({
           wordBreak="break-all"
         >
           {showButton
-            ? isOwner
+            ? isOwner // TODO: we can be owner and still purchase for erc1155
               ? t('sales.direct.card-footer.view')
               : t('sales.direct.card-footer.purchase')
             : chip}
@@ -101,7 +101,7 @@ const SaleDirectCardFooter: FC<Props> = ({
           <Divider orientation="vertical" />
           <AddToCartButton
             offerId={saleId}
-            isDisabled={isOwner}
+            isDisabled={isOwner} // TODO: we can be owner and still purchase for erc1155
             borderRadius="none"
             h={9}
           />
