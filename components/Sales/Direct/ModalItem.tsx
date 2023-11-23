@@ -1,11 +1,4 @@
-import {
-  Button,
-  Flex,
-  Icon,
-  Text,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react'
+import { Flex, Icon, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
@@ -14,6 +7,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback } from 'react'
 import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import { formatDate, formatError, isSameAddress } from '../../../utils'
+import CheckoutButton from '../../Button/CheckoutButton'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
@@ -158,11 +152,11 @@ const SaleDirectModalItem: FC<Props> = ({
               </Text>
             </ConnectButtonWithNetworkSwitch>
           ) : (
-            <Button as={Link} href={`/checkout/${sale.id}`}>
+            <CheckoutButton offer={sale}>
               <Text as="span" isTruncated>
                 {t('sales.direct.modal-item.buy')}
               </Text>
-            </Button>
+            </CheckoutButton>
           )
         }
       />
