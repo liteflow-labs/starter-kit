@@ -54,7 +54,8 @@
         "button": {
           "approve": "批准 {{value}}",
           "purchase": "购买",
-          "aria-label": "继续"
+          "aria-label": "继续",
+          "insufficient": "资金不足"
         }
       }
     }

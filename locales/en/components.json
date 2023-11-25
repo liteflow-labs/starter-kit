@@ -54,7 +54,8 @@
         "button": {
           "approve": "Approve {{value}}",
           "purchase": "Purchase",
-          "aria-label": "Continue"
+          "aria-label": "Continue",
+          "insufficient": "Insufficient funds"
         }
       }
     }
