@@ -21,10 +21,7 @@ import { ContractReceipt } from 'ethers'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
-import {
-  useCreateApprovalMutation,
-  useCreateCartPurchaseTransactionMutation,
-} from '../../../graphql'
+import { useCreateApprovalMutation } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useCart, { CartItem } from '../../../hooks/useCart'
 import useSigner from '../../../hooks/useSigner'
@@ -50,7 +47,7 @@ const CartStepTransaction: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   const signer = useSigner()
-  const { removeItem } = useCart()
+  const { checkout } = useCart()
   const { address } = useAccount()
   const approvalItems = useMemo(
     () =>
@@ -62,7 +59,6 @@ const CartStepTransaction: FC<Props> = ({
   )
   const [fetchApproval, { loading, data, called }] = useCreateApprovalMutation()
 
-  const [fetchCartTransaction] = useCreateCartPurchaseTransactionMutation()
   const [buying, setBuying] = useState(false)
 
   useEffect(() => {
@@ -103,39 +99,17 @@ const CartStepTransaction: FC<Props> = ({
   )
 
   const submit = useCallback(async () => {
-    invariant(address)
-    invariant(signer)
     if (!address) return
     try {
       setBuying(true)
-      const items = cartItems.map((x) => ({
-        offerId: x.offerId,
-        fillQuantity: BigNumber.from(x.quantity || 1).toString(),
-      }))
-      const res = await fetchCartTransaction({
-        variables: { accountAddress: address, items: items },
-      })
-      invariant(res.data)
-      const tx = res.data.createCheckoutTransaction.transaction as any
-      invariant(tx)
-      const transaction = await sendTransaction(signer, tx)
-      const receipt = await transaction.wait()
-      for (const item of cartItems) removeItem(item.offerId) // cleanup items in the cart
+      const receipt = await checkout(cartItems)
       onSubmit(receipt)
     } catch (e) {
       onError(e as Error)
     } finally {
       setBuying(false)
     }
-  }, [
-    address,
-    fetchCartTransaction,
-    cartItems,
-    onSubmit,
-    signer,
-    onError,
-    removeItem,
-  ])
+  }, [address, cartItems, onSubmit, onError, checkout])
 
   if (loading) return <DrawerBody py={4} px={2} />
 
