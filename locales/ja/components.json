@@ -54,7 +54,8 @@
         "button": {
           "approve": "承認する {{value}}",
           "purchase": "購入",
-          "aria-label": "続く"
+          "aria-label": "続く",
+          "insufficient": "資金不足"
         }
       }
     }

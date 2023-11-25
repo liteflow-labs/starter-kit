@@ -4,6 +4,7 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
+  Button,
   Divider,
   DrawerBody,
   DrawerFooter,
@@ -26,6 +27,7 @@ import {
   useCreateCartPurchaseTransactionMutation,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
+import useBalances from '../../../hooks/useBalances'
 import useCart, { CartItem } from '../../../hooks/useCart'
 import useSigner from '../../../hooks/useSigner'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
@@ -60,7 +62,33 @@ const CartStepTransaction: FC<Props> = ({
       })),
     [cartItems],
   )
-  const [fetchApproval, { loading, data, called }] = useCreateApprovalMutation()
+  const [fetchApproval, { loading: loadingApproval, data, called }] =
+    useCreateApprovalMutation()
+
+  const allCurrencies = useMemo(
+    () =>
+      data?.createCheckoutApprovalTransactions.map((x) => x.currency.id) || [],
+    [data],
+  )
+
+  const [balances, { loading: loadingBalance }] = useBalances(
+    address,
+    allCurrencies,
+  )
+
+  const loading = useMemo(
+    () => loadingBalance || loadingApproval,
+    [loadingBalance, loadingApproval],
+  )
+
+  const hasEnoughBalance = useMemo(
+    () =>
+      data?.createCheckoutApprovalTransactions.every((x) => {
+        const balance = balances[x.currency.id]
+        return balance && balance.gte(x.amount)
+      }) || false,
+    [data, balances],
+  )
 
   const [fetchCartTransaction] = useCreateCartPurchaseTransactionMutation()
   const [buying, setBuying] = useState(false)
@@ -137,8 +165,6 @@ const CartStepTransaction: FC<Props> = ({
     removeItem,
   ])
 
-  if (loading) return <DrawerBody py={4} px={2} />
-
   if (called && data?.createCheckoutApprovalTransactions.length === 0)
     return (
       <DrawerBody py={4} px={2}>
@@ -170,7 +196,9 @@ const CartStepTransaction: FC<Props> = ({
                 key={i}
                 label={<Price amount={item.amount} currency={item.currency} />}
                 action={
-                  item.transaction ? (
+                  loading ? (
+                    <Button size="sm" variant="ghost" isLoading isDisabled />
+                  ) : item.transaction ? (
                     <ConnectButtonWithNetworkSwitch
                       chainId={chainId}
                       size="sm"
@@ -184,8 +212,13 @@ const CartStepTransaction: FC<Props> = ({
                         value: formatPrice(item.amount, item.currency),
                       })}
                     </ConnectButtonWithNetworkSwitch>
-                  ) : (
+                  ) : balances[item.currency.id] &&
+                    balances[item.currency.id]?.gt(item.amount) ? (
                     <Icon as={FaCheck} color="green.400" />
+                  ) : (
+                    <Text color="red.400" size="sm">
+                      {t('cart.step.transaction.button.insufficient')}
+                    </Text>
                   )
                 }
                 p={0}
@@ -206,13 +239,17 @@ const CartStepTransaction: FC<Props> = ({
           <Divider orientation="vertical" />
           <ConnectButtonWithNetworkSwitch
             chainId={chainId}
-            isDisabled={!allApproved}
+            isDisabled={!allApproved || !hasEnoughBalance || loading}
             isLoading={buying}
             flexGrow={1}
             borderLeftRadius="none"
             onClick={() => submit()}
           >
-            {t('cart.step.transaction.button.purchase')}
+            {loading
+              ? ''
+              : hasEnoughBalance
+              ? t('cart.step.transaction.button.purchase')
+              : t('cart.step.transaction.button.insufficient')}
           </ConnectButtonWithNetworkSwitch>
         </HStack>
       </DrawerFooter>
