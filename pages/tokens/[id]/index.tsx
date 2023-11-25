@@ -55,6 +55,7 @@ import {
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useCart from '../../../hooks/useCart'
 import useDetectAssetMedia from '../../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
@@ -197,6 +198,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const refresh = useCallback(async () => {
     await refetch()
   }, [refetch])
+
+  useCart({ onCheckout: refetch })
 
   const refreshAsset = useRefreshAsset()
   const refreshMetadata = useCallback(

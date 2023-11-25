@@ -6,15 +6,17 @@ import FeaturedHomeSection from 'components/HomeSection/Featured'
 import ResourcesHomeSection from 'components/HomeSection/Resources'
 import UsersHomeSection from 'components/HomeSection/Users'
 import { NextPage } from 'next'
-import { useMemo } from 'react'
+import { useState } from 'react'
 import Head from '../components/Head'
+import useCart from '../hooks/useCart'
 import LargeLayout from '../layouts/large'
 
 type Props = {
   now: number
 }
 const HomePage: NextPage<Props> = ({ now }) => {
-  const date = useMemo(() => new Date(now), [now])
+  const [date, setDate] = useState(new Date(now))
+  useCart({ onCheckout: () => setDate(new Date()) })
   return (
     <LargeLayout>
       <Head />

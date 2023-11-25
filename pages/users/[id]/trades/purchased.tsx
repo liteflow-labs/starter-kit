@@ -36,6 +36,7 @@ import {
 } from '../../../../graphql'
 import useAccount from '../../../../hooks/useAccount'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
+import useCart from '../../../../hooks/useCart'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -56,7 +57,7 @@ const TradePurchasedPage: NextPage = () => {
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const { data } = useFetchUserTradePurchasedQuery({
+  const { data, refetch } = useFetchUserTradePurchasedQuery({
     variables: {
       address: userAddress,
       limit,
@@ -64,6 +65,8 @@ const TradePurchasedPage: NextPage = () => {
       orderBy,
     },
   })
+
+  useCart({ onCheckout: refetch })
 
   const trades = useMemo(() => data?.trades?.nodes.map(convertTrade), [data])
 

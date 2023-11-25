@@ -42,6 +42,7 @@ import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParam
 import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
+import useCart from '../../../../hooks/useCart'
 
 const FixedPricePage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
@@ -64,6 +65,8 @@ const FixedPricePage: NextPage = () => {
       orderBy,
     },
   })
+
+  useCart({ onCheckout: refetch })
 
   const onCanceled = useCallback(async () => {
     toast({
