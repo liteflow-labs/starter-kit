@@ -1,9 +1,7 @@
 import { Button, Flex, Text } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import CheckoutButton from '../../Button/CheckoutButton'
 import Link from '../../Link/Link'
 import type { Props as ModalProps } from './Modal'
@@ -12,11 +10,8 @@ import SaleDirectModal from './Modal'
 export type Props = {
   assetId: string
   chainId: number
-  blockExplorer: BlockExplorer
   isHomepage: boolean
   sales: ModalProps['sales']
-  signer: Signer | undefined
-  currentAccount: string | null | undefined
   ownAllSupply: boolean
   onOfferCanceled: (id: string) => Promise<void>
 }
@@ -24,11 +19,8 @@ export type Props = {
 const SaleDirectButton: FC<Props> = ({
   assetId,
   chainId,
-  blockExplorer,
   isHomepage,
   sales,
-  signer,
-  currentAccount,
   ownAllSupply,
   onOfferCanceled,
 }) => {
@@ -68,15 +60,12 @@ const SaleDirectButton: FC<Props> = ({
     if (sales.length <= 1) return
     return (
       <SaleDirectModal
-        blockExplorer={blockExplorer}
-        signer={signer}
-        currentAccount={currentAccount}
-        sales={sales}
         chainId={chainId}
+        sales={sales}
         onOfferCanceled={onOfferCanceled}
       />
     )
-  }, [sales, currentAccount, signer, onOfferCanceled, blockExplorer, chainId])
+  }, [chainId, sales, onOfferCanceled])
 
   if (ownAllSupply && isHomepage)
     return (

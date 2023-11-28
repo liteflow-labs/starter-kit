@@ -142,6 +142,7 @@
         },
         "refresh-metadata": "メタデータの更新"
       },
+      "supply": "X{{supply}}",
       "details": {
         "title": "詳細",
         "chain": "鎖",

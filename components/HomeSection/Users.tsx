@@ -1,5 +1,4 @@
 import UserCard from 'components/User/UserCard'
-import { convertUserWithCover } from 'convert'
 import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
@@ -38,7 +37,7 @@ const UsersHomeSection: FC<Props> = () => {
       items={orderedUsers}
       itemRender={(
         user: NonNullable<FetchUsersQuery['users']>['nodes'][number],
-      ) => <UserCard user={convertUserWithCover(user, user.address)} />}
+      ) => <UserCard user={user} />}
       title={t('home.users.title')}
     />
   )

@@ -1,5 +1,6 @@
 import {
   AspectRatio,
+  Badge,
   Box,
   Flex,
   Heading,
@@ -17,8 +18,9 @@ import { HiClock } from '@react-icons/all-files/hi/HiClock'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import Countdown from 'components/Countdown/Countdown'
 import useTranslation from 'next-translate/useTranslation'
+import numbro from 'numbro'
 import { FC, useMemo, useState } from 'react'
-import { FileDef } from '../../convert'
+import { AccountVerificationStatus, Standard } from '../../graphql'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
@@ -26,7 +28,6 @@ import Link from '../Link/Link'
 import SaleAuctionCardFooter from '../Sales/Auction/CardFooter'
 import SaleDirectCardFooter from '../Sales/Direct/CardFooter'
 import SaleOpenCardFooter from '../Sales/Open/CardFooter'
-import Avatar from '../User/Avatar'
 import TokenMedia from './Media'
 
 export type Props = {
@@ -37,71 +38,85 @@ export type Props = {
       address: string
       name: string
       chainId: number
+      standard: Standard
     }
-    image: FileDef
-    unlockedContent: FileDef | null
-    animation: FileDef | null
-    owned: BigNumber
-    bestBid:
-      | {
-          unitPrice: BigNumber
-          currency: {
-            decimals: number
-            symbol: string
-          }
-        }
-      | undefined
-  }
-  creator: {
-    address: string
-    name: string | null | undefined
-    image: string | null | undefined
-    verified: boolean
-  }
-  auction:
-    | {
-        endAt: Date
-        bestBid:
-          | {
-              unitPrice: BigNumber
-              currency: {
-                decimals: number
-                symbol: string
-              }
-            }
-          | undefined
-      }
-    | undefined
-  sale:
-    | {
-        id: string
-        unitPrice: BigNumber
+    image: string
+    imageMimetype: string | null
+    unlockedContent: { url: string; mimetype: string | null } | null
+    animationUrl?: string | null
+    animationMimetype?: string | null
+    creator: {
+      address: string
+      name: string | null
+      image: string | null
+      verification: {
+        status: AccountVerificationStatus
+      } | null
+    }
+    owned: {
+      quantity: string
+    } | null
+    quantity: string
+    bestBid: {
+      nodes: {
+        unitPrice: string
         currency: {
           decimals: number
           symbol: string
         }
-      }
-    | undefined
-  numberOfSales: number
-  displayCreator?: boolean
-  hasMultiCurrency: boolean
+      }[]
+    }
+    auctions:
+      | {
+          nodes: {
+            endAt: Date
+            bestBid: {
+              nodes: {
+                unitPrice: string
+                currency: {
+                  decimals: number
+                  symbol: string
+                }
+              }[]
+            }
+          }[]
+        }
+      | undefined
+    firstSale:
+      | {
+          totalCount: number
+          totalCurrencyDistinctCount: number
+          nodes: {
+            id: string
+            unitPrice: string
+            currency: {
+              decimals: number
+              symbol: string
+            }
+          }[]
+        }
+      | undefined
+  }
 }
 
-const TokenCard: FC<Props> = ({
-  asset,
-  creator,
-  auction,
-  sale,
-  numberOfSales,
-  displayCreator = false,
-  hasMultiCurrency,
-}) => {
+const TokenCard: FC<Props> = ({ asset }) => {
   const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const { t } = useTranslation('templates')
-  const isOwner = useMemo(() => asset.owned.gt('0'), [asset])
+  const isOwner = useMemo(
+    () => BigNumber.from(asset.owned?.quantity || 0).gt('0'),
+    [asset],
+  )
   const [isHovered, setIsHovered] = useState(false)
   const media = useDetectAssetMedia(asset)
 
+  const auction = asset.auctions?.nodes[0]
+  const sale = asset.firstSale?.nodes[0]
+  const bestBid =
+    asset.bestBid?.nodes?.length > 0 ? asset.bestBid.nodes[0] : undefined
+  const numberOfSales = asset.firstSale?.totalCount || 0
+  const hasMultiCurrency = asset.firstSale?.totalCurrencyDistinctCount
+    ? asset.firstSale.totalCurrencyDistinctCount > 1
+    : false
   const chainName = useMemo(
     () => CHAINS.find((x) => x.id === asset.collection.chainId)?.name,
     [asset.collection.chainId, CHAINS],
@@ -112,7 +127,7 @@ const TokenCard: FC<Props> = ({
       return (
         <SaleAuctionCardFooter
           assetId={asset.id}
-          bestBid={auction.bestBid}
+          bestBid={auction.bestBid.nodes[0]}
           isOwner={isOwner}
           showButton={isHovered}
         />
@@ -120,9 +135,7 @@ const TokenCard: FC<Props> = ({
     if (sale)
       return (
         <SaleDirectCardFooter
-          saleId={sale.id}
-          unitPrice={sale.unitPrice}
-          currency={sale.currency}
+          sale={sale}
           numberOfSales={numberOfSales}
           hasMultiCurrency={hasMultiCurrency}
           isOwner={isOwner}
@@ -132,20 +145,20 @@ const TokenCard: FC<Props> = ({
     return (
       <SaleOpenCardFooter
         assetId={asset.id}
-        bestBid={asset.bestBid}
+        bestBid={bestBid}
         isOwner={isOwner}
         showButton={isHovered}
       />
     )
   }, [
-    auction,
     asset.id,
-    asset.bestBid,
-    isOwner,
-    isHovered,
-    sale,
-    numberOfSales,
+    auction,
+    bestBid,
     hasMultiCurrency,
+    isHovered,
+    isOwner,
+    numberOfSales,
+    sale,
   ])
 
   return (
@@ -163,7 +176,13 @@ const TokenCard: FC<Props> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Flex as={Link} href={`/tokens/${asset.id}`} w="full" position="relative">
+      <Flex
+        as={Link}
+        href={`/tokens/${asset.id}`}
+        w="full"
+        position="relative"
+        bg="gray.100"
+      >
         <AspectRatio w="full" ratio={1}>
           {media.media?.url ? (
             <TokenMedia
@@ -178,7 +197,7 @@ const TokenCard: FC<Props> = ({
             100vw"
             />
           ) : (
-            <Box bg="brand.50" />
+            <Box />
           )}
         </AspectRatio>
         {auction && (
@@ -202,45 +221,60 @@ const TokenCard: FC<Props> = ({
         )}
       </Flex>
       {isHovered && (
-        <Flex
-          rounded="full"
-          position="absolute"
-          top={4}
-          left={4}
-          title={chainName}
-          cursor="pointer"
-          overflow="hidden"
-          filter="grayscale(100%)"
-        >
-          <Image
-            src={`/chains/${asset.collection.chainId}.svg`}
-            alt={asset.collection.chainId.toString()}
-            width={24}
-            height={24}
-            w={6}
-            h={6}
-          />
-        </Flex>
+        <>
+          <Flex
+            rounded="full"
+            position="absolute"
+            top={4}
+            left={4}
+            title={chainName}
+            cursor="pointer"
+            overflow="hidden"
+            filter="grayscale(100%)"
+          >
+            <Image
+              src={`/chains/${asset.collection.chainId}.svg`}
+              alt={asset.collection.chainId.toString()}
+              width={24}
+              height={24}
+              w={6}
+              h={6}
+            />
+          </Flex>
+          {asset.collection.standard === 'ERC1155' && (
+            <Badge
+              position="absolute"
+              top={4}
+              right={4}
+              px={2}
+              py={0.5}
+              borderRadius="2xl"
+              textTransform="capitalize"
+              pointerEvents="none"
+              bg="white"
+              color="gray.500"
+            >
+              {t('asset.detail.supply', {
+                supply: numbro(asset.quantity).format({
+                  average: true,
+                  mantissa: 2,
+                  trimMantissa: true,
+                  roundingFunction: (num) => num,
+                }),
+              })}
+            </Badge>
+          )}
+        </>
       )}
       <Flex justify="space-between" px={4} pt={4} pb={3} gap={2} align="start">
         <Stack spacing={0} w="full" overflow="hidden">
-          {displayCreator ? (
-            <Avatar
-              address={creator.address}
-              image={creator.image}
-              name={creator.name}
-              verified={creator.verified}
-              size={5}
-            />
-          ) : (
-            <Link
-              href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}
-            >
-              <Text variant="subtitle2" color="gray.500" isTruncated>
-                {asset.collection.name}
-              </Text>
-            </Link>
-          )}
+          <Link
+            href={`/collection/${asset.collection.chainId}/${asset.collection.address}`}
+          >
+            <Text variant="subtitle2" color="gray.500" isTruncated>
+              {asset.collection.name}
+            </Text>
+          </Link>
           <Link href={`/tokens/${asset.id}`}>
             <Heading
               as="h4"

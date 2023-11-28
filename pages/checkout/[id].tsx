@@ -23,17 +23,9 @@ import SkeletonImageAndText from '../../components/Skeleton/ImageAndText'
 import SkeletonTokenCard from '../../components/Skeleton/TokenCard'
 import TokenCard from '../../components/Token/Card'
 import Avatar from '../../components/User/Avatar'
-import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertSale,
-  convertUser,
-} from '../../convert'
 import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
-import useBlockExplorer from '../../hooks/useBlockExplorer'
 import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../hooks/useSigner'
 import SmallLayout from '../../layouts/small'
 
 type Props = {
@@ -41,7 +33,6 @@ type Props = {
 }
 
 const CheckoutPage: NextPage<Props> = ({ now }) => {
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
@@ -73,8 +64,6 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     () => asset?.collection.standard === 'ERC721',
     [asset],
   )
-
-  const blockExplorer = useBlockExplorer(asset?.chainId)
 
   const onPurchased = useCallback(async () => {
     if (!asset) return
@@ -115,24 +104,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
       >
         <GridItem overflow="hidden">
           <Box pointerEvents="none">
-            {!asset ? (
-              <SkeletonTokenCard />
-            ) : (
-              <TokenCard
-                asset={convertAsset(asset)}
-                creator={convertUser(asset.creator, asset.creator.address)}
-                sale={convertSale(asset.firstSale.nodes[0])}
-                auction={
-                  asset.auctions.nodes[0]
-                    ? convertAuctionWithBestBid(asset.auctions.nodes[0])
-                    : undefined
-                }
-                numberOfSales={asset.firstSale.totalCount}
-                hasMultiCurrency={
-                  asset.firstSale.totalCurrencyDistinctCount > 1
-                }
-              />
-            )}
+            {!asset ? <SkeletonTokenCard /> : <TokenCard asset={asset} />}
           </Box>
         </GridItem>
         <GridItem>
@@ -144,12 +116,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
               {!offer ? (
                 <SkeletonImageAndText />
               ) : (
-                <Avatar
-                  address={offer.maker.address}
-                  image={offer.maker.image}
-                  name={offer.maker.name}
-                  verified={offer.maker.verification?.status === 'VALIDATED'}
-                />
+                <Avatar user={offer.maker} />
               )}
             </Stack>
 
@@ -206,12 +173,7 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
               <Skeleton width="200px" height="40px" />
             ) : (
               <OfferFormCheckout
-                signer={signer}
-                chainId={offer.asset.chainId}
-                account={address}
                 offer={offer}
-                blockExplorer={blockExplorer}
-                currency={offer.currency}
                 multiple={!isSingle}
                 onPurchased={onPurchased}
               />

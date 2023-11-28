@@ -1,6 +1,7 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react'
+import { AspectRatio, Box, Flex, Icon, Text } from '@chakra-ui/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { FC } from 'react'
+import { AccountVerificationStatus } from '../../graphql'
 import { formatAddress } from '../../utils'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
@@ -12,7 +13,9 @@ type Props = {
     image: string | null
     cover: string | null
     name: string | null
-    verified: boolean
+    verification: {
+      status: AccountVerificationStatus
+    } | null
   }
 }
 
@@ -27,23 +30,25 @@ const UserCard: FC<Props> = ({ user }) => {
         w="full"
         overflow="hidden"
       >
-        <Box position="relative" height="7.5rem">
-          {user.cover ? (
-            <Image
-              src={user.cover}
-              alt={user.name || 'User cover image'}
-              fill
-              sizes="
+        <Flex w="full" position="relative" bg="gray.100">
+          <AspectRatio w="full" ratio={3 / 2}>
+            {user.cover ? (
+              <Image
+                src={user.cover}
+                alt={user.name || 'User cover image'}
+                fill
+                sizes="
               (min-width: 80em) 292px,
               (min-width: 62em) 25vw,
               (min-width: 48em) 33vw,
               (min-width: 30em) 50vw,
               100vw"
-              objectFit="cover"
-            />
-          ) : (
-            <Box bg="gray.100" height="full" />
-          )}
+                objectFit="cover"
+              />
+            ) : (
+              <Box />
+            )}
+          </AspectRatio>
           <Flex
             position="absolute"
             bottom={-8}
@@ -60,7 +65,7 @@ const UserCard: FC<Props> = ({ user }) => {
               rounded="full"
             />
           </Flex>
-        </Box>
+        </Flex>
         <Flex
           alignItems="center"
           gap={1.5}
@@ -73,7 +78,7 @@ const UserCard: FC<Props> = ({ user }) => {
           <Text variant="button1" title={user.name || user.address} isTruncated>
             {user.name || formatAddress(user.address, 10)}
           </Text>
-          {user.verified && (
+          {user.verification?.status === 'VALIDATED' && (
             <Icon as={HiBadgeCheck} color="brand.500" boxSize={4} />
           )}
         </Flex>

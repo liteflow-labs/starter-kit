@@ -196,6 +196,7 @@
       "clear": "フィルターをクリアする"
     },
     "collections": {
+      "more": "もっと読み込む",
       "chains": {
         "label": "鎖"
       },
@@ -205,6 +206,7 @@
       }
     },
     "traits": {
+      "more": "もっと読み込む",
       "empty": {
         "title": "特性が見つかりません",
         "description": "フィルターを更新して、より多くの特性を見つけてください。"
@@ -253,7 +255,7 @@
       },
       "properties": {
         "label": "プロパティ",
-        "labelWithCollection": "コレクションとプロパティ",
+        "labelWithCollection": "コレクション",
         "search": {
           "placeholder": "フィルターのプロパティ"
         }

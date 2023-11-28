@@ -1,4 +1,5 @@
 import request from 'graphql-request'
+import { LRUCache } from 'lru-cache'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
@@ -10,6 +11,32 @@ import {
   polygon,
   polygonMumbai,
 } from 'wagmi/chains'
+
+type RemoteConfig = {
+  name: string
+  hasLazyMint: boolean
+  hasUnlockableContent: boolean
+  maxRoyaltiesPerTenThousand: number
+  offerValiditySeconds: number
+  offerAuctionDeltaSeconds: number
+  metadata: Partial<{
+    REPORT_EMAIL: string
+
+    LOGO: string
+    FAVICON: string
+    BRAND_COLOR: string
+
+    FEATURED_TOKEN: string[]
+    HOME_COLLECTIONS: string[]
+    HOME_USERS: string[]
+    HOME_TOKENS: string[]
+
+    META_TITLE: string
+    META_KEYWORDS: string
+    META_DESCRIPTION: string
+    META_COMPANY_NAME: string
+  }>
+}
 
 export type Environment = {
   /**
@@ -112,6 +139,36 @@ export type Environment = {
   UNLOCKABLE_CONTENT: boolean
 }
 
+const cache = new LRUCache({
+  max: 100,
+  ttl:
+    typeof window === 'undefined'
+      ? 1000 * 10 // 10 sec
+      : 0, // no ttl, user need to refresh the page
+  fetchMethod: async (key: string) => {
+    invariant(key === 'config', 'Invalid key')
+    const { config } = await request<{ config: RemoteConfig }>(
+      `${
+        process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
+      }/${process.env.NEXT_PUBLIC_LITEFLOW_API_KEY}/graphql`,
+      `query Config {
+        config {
+          name
+          hasLazyMint
+          hasUnlockableContent
+          maxRoyaltiesPerTenThousand
+          offerValiditySeconds
+          offerAuctionDeltaSeconds
+          metadata
+        }
+      }`,
+      undefined,
+      [['origin', process.env.NEXT_PUBLIC_BASE_URL || '']],
+    )
+    return config
+  },
+})
+
 export const EnvironmentContext = createContext<Environment>({} as Environment)
 
 const getEnvironment = async (): Promise<Environment> => {
@@ -121,58 +178,18 @@ const getEnvironment = async (): Promise<Environment> => {
     process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
     'Wallet connect project id is not defined',
   )
+  const config = await cache.fetch('config')
+  invariant(config, 'Config is not defined')
   const {
-    config: {
-      name,
-      hasLazyMint,
-      hasUnlockableContent,
-      maxRoyaltiesPerTenThousand,
-      offerValiditySeconds,
-      offerAuctionDeltaSeconds,
-      metadata,
-    },
-  } = await request<{
-    config: {
-      name: string
-      hasLazyMint: boolean
-      hasUnlockableContent: boolean
-      maxRoyaltiesPerTenThousand: number
-      offerValiditySeconds: number
-      offerAuctionDeltaSeconds: number
-      metadata: Partial<{
-        REPORT_EMAIL: string
+    name,
+    hasLazyMint,
+    hasUnlockableContent,
+    maxRoyaltiesPerTenThousand,
+    offerValiditySeconds,
+    offerAuctionDeltaSeconds,
+    metadata,
+  } = config
 
-        LOGO: string
-        FAVICON: string
-        BRAND_COLOR: string
-
-        FEATURED_TOKEN: string[]
-        HOME_COLLECTIONS: string[]
-        HOME_USERS: string[]
-        HOME_TOKENS: string[]
-
-        META_TITLE: string
-        META_KEYWORDS: string
-        META_DESCRIPTION: string
-        META_COMPANY_NAME: string
-      }>
-    }
-  }>(
-    `${
-      process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
-    }/${process.env.NEXT_PUBLIC_LITEFLOW_API_KEY}/graphql`,
-    `{
-      config {
-        name
-        hasLazyMint
-        hasUnlockableContent
-        maxRoyaltiesPerTenThousand
-        offerValiditySeconds
-        offerAuctionDeltaSeconds
-        metadata
-      }
-    }`,
-  )
   return {
     // Base configuration
     LITEFLOW_API_KEY: process.env.NEXT_PUBLIC_LITEFLOW_API_KEY,

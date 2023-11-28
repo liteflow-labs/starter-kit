@@ -1,39 +1,31 @@
 import { GridItem, SimpleGrid, Stack } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
-import { FC, PropsWithChildren, useMemo } from 'react'
+import { FC, PropsWithChildren } from 'react'
 import type { TabsEnum } from '../components/User/Profile/Navigation'
 import UserProfileNavigation from '../components/User/Profile/Navigation'
-import { convertFullUser } from '../convert'
 import { useFetchAccountDetailQuery } from '../graphql'
+import useAccount from '../hooks/useAccount'
 import { isSameAddress } from '../utils'
 import Head from './Head'
 import UserProfileBanner from './User/Profile/Banner'
 import UserProfileInfo from './User/Profile/Info'
 
-const UserProfileTemplate: FC<
-  PropsWithChildren<{
-    signer: Signer | undefined
-    currentAccount: string | null | undefined
-    address: string
-    currentTab: TabsEnum
-    loginUrlForReferral?: string
-  }>
-> = ({
-  signer,
-  currentAccount,
+type Props = PropsWithChildren<{
+  address: string
+  currentTab: TabsEnum
+  loginUrlForReferral?: string
+}>
+
+const UserProfileTemplate: FC<Props> = ({
   address,
   currentTab,
   loginUrlForReferral,
   children,
 }) => {
+  const { address: currentAccount } = useAccount()
   const { data: accountData } = useFetchAccountDetailQuery({
     variables: { address },
   })
-
-  const account = useMemo(
-    () => convertFullUser(accountData?.account || null, address),
-    [accountData, address],
-  )
+  const account = accountData?.account
 
   return (
     <>
@@ -42,12 +34,7 @@ const UserProfileTemplate: FC<
         description={account?.description || undefined}
         image={account?.image || undefined}
       />
-      <UserProfileBanner
-        address={address}
-        cover={account?.cover}
-        image={account?.image}
-        name={account?.name}
-      />
+      <UserProfileBanner address={address} user={account} />
       <SimpleGrid
         mb={6}
         spacingX={{ lg: 12 }}
@@ -55,14 +42,8 @@ const UserProfileTemplate: FC<
         columns={{ base: 1, lg: 4 }}
       >
         <UserProfileInfo
-          signer={signer}
           address={address}
-          description={account?.description}
-          instagram={account?.instagram}
-          name={account?.name}
-          twitter={account?.twitter}
-          website={account?.website}
-          verified={account?.verified}
+          user={account}
           loginUrlForReferral={loginUrlForReferral}
         />
         <GridItem colSpan={{ lg: 3 }}>

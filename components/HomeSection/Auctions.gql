@@ -30,14 +30,14 @@ query FetchAuctions($now: Datetime!, $address: Address) {
           chainId
           address
           name
+          standard
         }
         owned: ownership(ownerAddress: $address) {
           quantity
         }
+        quantity
         image
         imageMimetype
-        animationUrl
-        animationMimetype
         unlockedContent {
           url
           mimetype

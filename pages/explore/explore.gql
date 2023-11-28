@@ -26,6 +26,7 @@ query FetchAllERC721And1155(
         chainId
         address
         name
+        standard
       }
       image
       imageMimetype
@@ -33,11 +34,10 @@ query FetchAllERC721And1155(
         url
         mimetype
       }
-      animationUrl
-      animationMimetype
       owned: ownership(ownerAddress: $address) {
         quantity
       }
+      quantity
       auctions(
         first: 1
         orderBy: CREATED_AT_DESC

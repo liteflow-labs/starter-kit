@@ -21,7 +21,7 @@ import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import CancelOfferButton from '../../../../components/Button/CancelOffer'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
@@ -31,28 +31,23 @@ import Pagination from '../../../../components/Pagination/Pagination'
 import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
-import { convertSaleFull } from '../../../../convert'
 import { OffersOrderBy, useFetchUserFixedPriceQuery } from '../../../../graphql'
-import useAccount from '../../../../hooks/useAccount'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
 import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import useSigner from '../../../../hooks/useSigner'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 import useCart from '../../../../hooks/useCart'
 
 const FixedPricePage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
-  const { address } = useAccount()
   const { limit, offset, page } = usePaginateQuery()
   const orderBy = useOrderByQuery<OffersOrderBy>('CREATED_AT_DESC')
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
   const toast = useToast()
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
@@ -65,6 +60,7 @@ const FixedPricePage: NextPage = () => {
       orderBy,
     },
   })
+  const offers = data?.offers?.nodes
 
   useCart({ onCheckout: refetch })
 
@@ -76,17 +72,6 @@ const FixedPricePage: NextPage = () => {
     await refetch()
   }, [refetch, toast, t])
 
-  const offers = useMemo(
-    () =>
-      data?.offers?.nodes.map((x) => ({
-        ...convertSaleFull(x),
-        createdAt: new Date(x.createdAt),
-        asset: x.asset,
-        ownAsset: BigNumber.from(x.asset.owned?.quantity || 0).gt(0),
-      })),
-    [data],
-  )
-
   const changeOrder = useCallback(
     async (orderBy: any) => {
       await replace({ pathname, query: { ...query, orderBy } })
@@ -97,8 +82,6 @@ const FixedPricePage: NextPage = () => {
   return (
     <LargeLayout>
       <UserProfileTemplate
-        signer={signer}
-        currentAccount={address}
         address={userAddress}
         currentTab="offers"
         loginUrlForReferral={BASE_URL + '/login'}
@@ -213,14 +196,14 @@ const FixedPricePage: NextPage = () => {
                             <Text as="span" noOfLines={1}>
                               {item.asset.name}
                             </Text>
-                            {item.availableQuantity.gt(1) && (
+                            {BigNumber.from(item.availableQuantity).gt(1) && (
                               <Text
                                 as="span"
                                 variant="caption"
                                 color="gray.500"
                               >
                                 {t('user.fixed.available', {
-                                  value: item.availableQuantity.toString(),
+                                  value: item.availableQuantity,
                                 })}
                               </Text>
                             )}
@@ -236,7 +219,7 @@ const FixedPricePage: NextPage = () => {
                         />
                       </Td>
                       <Td>
-                        {item.expiredAt && item.expiredAt <= new Date()
+                        {new Date(item.expiredAt) <= new Date()
                           ? t('user.fixed.status.expired')
                           : t('user.fixed.status.active')}
                       </Td>
@@ -244,13 +227,12 @@ const FixedPricePage: NextPage = () => {
                       <Td isNumeric>
                         {ownerLoggedIn && (
                           <>
-                            {!item.expiredAt || item.expiredAt > new Date() ? (
+                            {new Date(item.expiredAt) > new Date() ? (
                               <CancelOfferButton
+                                offer={item}
+                                title={t('user.fixed.cancel.title')}
                                 variant="outline"
                                 colorScheme="gray"
-                                signer={signer}
-                                offerId={item.id}
-                                chainId={item.asset.chainId}
                                 onCanceled={onCanceled}
                                 onError={(e) =>
                                   toast({
@@ -258,13 +240,14 @@ const FixedPricePage: NextPage = () => {
                                     title: formatError(e),
                                   })
                                 }
-                                title={t('user.fixed.cancel.title')}
                               >
                                 <Text as="span" isTruncated>
                                   {t('user.fixed.actions.cancel')}
                                 </Text>
                               </CancelOfferButton>
-                            ) : item.ownAsset ? (
+                            ) : BigNumber.from(
+                                item.asset.owned?.quantity || 0,
+                              ).gt(0) ? (
                               <Button
                                 as={Link}
                                 href={`/tokens/${item.asset.id}/offer`}
@@ -298,7 +281,6 @@ const FixedPricePage: NextPage = () => {
               limit={limit}
               limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              onPageChange={changePage}
               onLimitChange={changeLimit}
               hasNextPage={data?.offers?.pageInfo.hasNextPage}
               hasPreviousPage={data?.offers?.pageInfo.hasPreviousPage}

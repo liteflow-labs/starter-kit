@@ -1,5 +1,4 @@
 import { Divider, Flex, HStack, Text } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import AddToCartButton from '../../Button/AddToCart'
@@ -7,23 +6,23 @@ import Link from '../../Link/Link'
 import Price from '../../Price/Price'
 
 type Props = {
-  saleId: string
-  numberOfSales: number
-  unitPrice: BigNumber
-  currency: {
-    decimals: number
-    symbol: string
+  sale: {
+    id: string
+    unitPrice: string
+    currency: {
+      decimals: number
+      symbol: string
+    }
   }
+  numberOfSales: number
   hasMultiCurrency: boolean
   isOwner: boolean
   showButton?: boolean
 }
 
 const SaleDirectCardFooter: FC<Props> = ({
-  saleId,
+  sale,
   numberOfSales,
-  unitPrice,
-  currency,
   hasMultiCurrency,
   isOwner,
   showButton = true,
@@ -41,8 +40,8 @@ const SaleDirectCardFooter: FC<Props> = ({
             </Text>
             <Text as="span" variant="subtitle2" color="brand.black">
               <Price
-                amount={unitPrice}
-                currency={currency}
+                amount={sale.unitPrice}
+                currency={sale.currency}
                 averageFrom={100000}
               />
             </Text>
@@ -62,26 +61,24 @@ const SaleDirectCardFooter: FC<Props> = ({
             </Text>
             <Text as="span" variant="subtitle2" color="brand.black">
               <Price
-                amount={unitPrice}
-                currency={currency}
+                amount={sale.unitPrice}
+                currency={sale.currency}
                 averageFrom={100000}
               />
             </Text>
           </>
         )
     }
-  }, [numberOfSales, unitPrice, currency, hasMultiCurrency, t])
+  }, [hasMultiCurrency, numberOfSales, sale.currency, sale.unitPrice, t])
 
   return (
     <HStack gap={0}>
       <Flex
         as={Link}
-        href={`/checkout/${saleId}`}
+        href={`/checkout/${sale.id}`}
         py={2}
         px={4}
         bgColor={showButton ? 'brand.500' : 'gray.100'}
-        flexGrow={1}
-        transition="none"
       >
         <Text
           variant="subtitle2"
@@ -100,7 +97,7 @@ const SaleDirectCardFooter: FC<Props> = ({
         <>
           <Divider orientation="vertical" />
           <AddToCartButton
-            offerId={saleId}
+            offerId={sale.id}
             isDisabled={isOwner} // TODO: we can be owner and still purchase for erc1155
             borderRadius="none"
             h={9}

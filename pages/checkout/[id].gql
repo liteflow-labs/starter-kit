@@ -55,8 +55,6 @@ query FetchAssetForCheckout(
       url
       mimetype
     }
-    animationUrl
-    animationMimetype
     creator {
       address
       name
@@ -68,6 +66,7 @@ query FetchAssetForCheckout(
     owned: ownership(ownerAddress: $address) {
       quantity
     }
+    quantity
     bestBid: bids(
       orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
       filter: { expiredAt: { greaterThan: $now } }
