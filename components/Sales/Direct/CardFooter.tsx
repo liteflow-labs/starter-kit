@@ -79,6 +79,7 @@ const SaleDirectCardFooter: FC<Props> = ({
         py={2}
         px={4}
         bgColor={showButton ? 'brand.500' : 'gray.100'}
+        width="full"
       >
         <Text
           variant="subtitle2"
