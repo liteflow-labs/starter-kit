@@ -4,11 +4,11 @@ import invariant from 'ts-invariant'
 import {
   AssetFilter,
   AssetToManyAuctionFilter,
-  AssetToManyOfferOpenSaleFilter,
+  AssetToManyOfferFilter,
   AuctionFilter,
   DatetimeFilter,
   IntFilter,
-  OfferOpenSaleFilter,
+  OfferFilter,
   Uint256Filter,
 } from '../graphql'
 import { parseBigNumber } from './useParseBigNumber'
@@ -93,8 +93,8 @@ const minPriceFilter = (
             currency.decimals,
           ).toString(),
         } as Uint256Filter,
-      } as OfferOpenSaleFilter,
-    } as AssetToManyOfferOpenSaleFilter,
+      } as OfferFilter,
+    } as AssetToManyOfferFilter,
   } as AssetFilter)
 
 const maxPriceFilter = (
@@ -113,8 +113,8 @@ const maxPriceFilter = (
             currency.decimals,
           ).toString(),
         } as Uint256Filter,
-      } as OfferOpenSaleFilter,
-    } as AssetToManyOfferOpenSaleFilter,
+      } as OfferFilter,
+    } as AssetToManyOfferFilter,
   } as AssetFilter)
 
 const offersFilter = (offers: OfferFilterType, date: Date): AssetFilter => {
