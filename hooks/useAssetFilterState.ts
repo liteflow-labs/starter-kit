@@ -19,7 +19,6 @@ export default function useAssetFilterState(filter: Filter): {
     if (filter.collection) count += 1
     if (filter.minPrice) count += 1
     if (filter.maxPrice) count += 1
-    if (filter.offers) count += 1
     return count
   }, [filter])
 
