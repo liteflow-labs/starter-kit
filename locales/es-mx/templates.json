@@ -123,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "Contenido desbloqueable",
-        "tooltip": "El contenido del ítem sólo puede ser desbloqueado por el propietario del ítem."
-      },
       "show-preview": "Ver previsualización",
       "description": "Descripción",
       "traits": "Atributos",

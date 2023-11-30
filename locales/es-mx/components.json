@@ -849,11 +849,6 @@
         "category": {
           "label": "Categoría",
           "placeholder": "Selecciona una categoría"
-        },
-        "unlockable": {
-          "label": "Contenido desbloqueable",
-          "hint": "(Opcional)",
-          "choice": "El contenido del ítem sólo puede ser desbloqueado por el propietario del ítem."
         }
       }
     },

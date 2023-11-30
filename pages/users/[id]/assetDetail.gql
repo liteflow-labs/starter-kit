@@ -15,10 +15,6 @@ fragment AssetDetail on Asset {
   imageMimetype
   animationUrl
   animationMimetype
-  unlockedContent {
-    url
-    mimetype
-  }
   auctions(
     first: 1
     orderBy: CREATED_AT_DESC
