@@ -4,7 +4,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Button,
   Checkbox,
   CheckboxGroup,
   Divider,
@@ -18,7 +17,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Filter, OfferFilterType } from '../../hooks/useAssetFilterFromQuery'
+import { Filter } from '../../hooks/useAssetFilterFromQuery'
 import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
 import FilterByCollection from './FilterBy/Collection'
@@ -51,16 +50,9 @@ export const NoFilter: Filter = {
   currency: null,
   maxPrice: null,
   minPrice: null,
-  offers: null,
   search: null,
   traits: [],
 }
-
-const offerTypes = [
-  { key: 'all', value: null },
-  { key: 'fixed', value: OfferFilterType.fixed },
-  { key: 'auction', value: OfferFilterType.auction },
-]
 
 const FilterAsset: NextPage<Props> = ({
   filter,
@@ -78,12 +70,7 @@ const FilterAsset: NextPage<Props> = ({
   const formValues = useForm<Filter>({
     defaultValues: filter,
   })
-  const {
-    formState: { isSubmitting },
-    handleSubmit,
-    reset,
-    watch,
-  } = formValues
+  const { handleSubmit, reset, watch } = formValues
   const filterResult = watch()
 
   const collection = useMemo(() => {
@@ -118,7 +105,7 @@ const FilterAsset: NextPage<Props> = ({
     <Stack spacing={8} as="form" onSubmit={handleSubmit(onFilterChange)}>
       <Accordion
         allowMultiple
-        defaultIndex={isSmall ? [] : [noChain ? 2 : CHAINS.length > 1 ? 3 : 2]}
+        defaultIndex={isSmall ? [] : [noChain ? 2 : CHAINS.length > 1 ? 2 : 1]}
       >
         {noChain ||
           (CHAINS.length > 1 && (
@@ -166,45 +153,6 @@ const FilterAsset: NextPage<Props> = ({
               </AccordionPanel>
             </AccordionItem>
           ))}
-        <AccordionItem>
-          <AccordionButton>
-            <Heading variant="heading2" flex="1" textAlign="left">
-              {t('filters.assets.offers.label')}
-            </Heading>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel>
-            <Flex
-              gap={2}
-              direction={{ base: 'column', sm: 'row' }}
-              flexWrap="wrap"
-            >
-              {offerTypes.map(({ key, value }) => (
-                <Button
-                  key={key}
-                  isDisabled={isSubmitting}
-                  variant="outline"
-                  size="sm"
-                  px={4}
-                  py={2.5}
-                  height={10}
-                  color="black"
-                  borderColor={
-                    filterResult.offers === value ? 'brand.500' : 'gray.200'
-                  }
-                  bgColor={
-                    filterResult.offers === value ? 'brand.50' : undefined
-                  }
-                  onClick={() => propagateFilter({ offers: value })}
-                >
-                  <Text variant="subtitle2">
-                    {t(`filters.assets.offers.values.${key}`)}
-                  </Text>
-                </Button>
-              ))}
-            </Flex>
-          </AccordionPanel>
-        </AccordionItem>
         <FormProvider {...formValues}>
           <FilterByPrice
             formValues={formValues}

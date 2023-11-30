@@ -104,49 +104,6 @@ query FetchFeaturedAssets(
         }
         totalAvailableQuantitySum
       }
-      auctions(first: 1, orderBy: CREATED_AT_DESC) {
-        nodes {
-          id
-          endAt
-          expireAt
-          winningOffer {
-            id
-          }
-          reserveAmount
-          currency {
-            image
-            name
-            id
-            decimals
-            symbol
-          }
-          bestBid: offers(
-            orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-            first: 1
-            filter: { signature: { isNull: false } }
-          ) {
-            nodes {
-              amount
-              unitPrice
-              maker {
-                address
-                name
-                image
-                verification {
-                  status
-                }
-              }
-              currency {
-                image
-                name
-                id
-                decimals
-                symbol
-              }
-            }
-          }
-        }
-      }
     }
   }
   currencies(orderBy: CREATED_AT_ASC, filter: { address: { isNull: false } }) {

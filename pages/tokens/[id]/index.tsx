@@ -24,7 +24,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAuctionStatus } from '@liteflow/react'
 import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import useRefreshAsset from 'hooks/useRefreshAsset'
@@ -90,10 +89,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     },
   })
   const asset = data?.asset
-  const auction = asset?.auctions.nodes[0]
-  const bestAuctionBid = auction?.bestBid?.nodes[0]
-
-  const { isValid } = useAuctionStatus(auction, bestAuctionBid)
 
   const finalMedia = useDetectAssetMedia(asset)
   const previewMedia = useDetectAssetMedia(
@@ -122,11 +117,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const assetExternalURL = useMemo(
     () => blockExplorer.token(collectionAddress, tokenId),
     [blockExplorer, collectionAddress, tokenId],
-  )
-
-  const bids = useMemo(
-    () => (auction && isValid ? auction.bestBid.nodes : asset?.bids.nodes),
-    [asset?.bids.nodes, auction, isValid],
   )
 
   const refresh = useCallback(async () => {
@@ -319,7 +309,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               currencies={data.currencies?.nodes}
               isHomepage={false}
               onOfferCanceled={refresh}
-              onAuctionAccepted={refresh}
             />
           )}
         </Flex>
@@ -461,8 +450,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
                     asset={asset}
-                    bids={bids}
-                    preventAcceptation={!isOwner || !!auction}
+                    bids={asset.bids.nodes}
+                    preventAcceptation={!isOwner}
                     onAccepted={refresh}
                     onCanceled={refresh}
                   />
