@@ -12,7 +12,6 @@ export default function useDetectAssetMedia(
         imageMimetype: string | null
         animationUrl?: string | null
         animationMimetype?: string | null
-        unlockedContent: AssetMedia
       }
     | undefined
     | null,
@@ -28,7 +27,6 @@ export default function useDetectAssetMedia(
         mimetype: 'image/svg+xml',
       }
     }
-    if (asset.unlockedContent) return asset.unlockedContent
     if (asset.animationUrl)
       return { url: asset.animationUrl, mimetype: asset.animationMimetype }
     return { url: asset.image, mimetype: asset.imageMimetype }

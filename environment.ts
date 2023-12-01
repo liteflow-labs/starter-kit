@@ -107,9 +107,6 @@ export type Environment = {
    */
   // Enable/disable the lazy minting feature. If enabled, the NFTs will be minted on the first sale
   LAZYMINT: boolean
-
-  // Enable/disable the unlockable content feature. If enabled, the NFTs will have unlockable content only accessible to owners
-  UNLOCKABLE_CONTENT: boolean
 }
 
 export const EnvironmentContext = createContext<Environment>({} as Environment)
@@ -240,7 +237,6 @@ const getEnvironment = async (
     META_KEYWORDS: metadata?.META_KEYWORDS || '',
     // NFT Mint Behavior
     LAZYMINT: hasLazyMint,
-    UNLOCKABLE_CONTENT: false,
   }
 }
 
