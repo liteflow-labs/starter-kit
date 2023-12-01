@@ -1,5 +1,4 @@
 import {
-  Checkbox,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -43,7 +42,6 @@ export type FormData = {
   amount: string
   content: File | undefined
   preview: File | undefined
-  isPrivate: boolean
   isAnimation: boolean
 }
 
@@ -63,7 +61,7 @@ const TokenFormCreate: FC<Props> = ({
   onInputChange,
 }) => {
   const { t } = useTranslation('components')
-  const { UNLOCKABLE_CONTENT, LAZYMINT, MAX_ROYALTIES } = useEnvironment()
+  const { LAZYMINT, MAX_ROYALTIES } = useEnvironment()
   const toast = useToast()
   const signer = useSigner()
   const blockExplorer = useBlockExplorer(collection.chainId)
@@ -82,7 +80,6 @@ const TokenFormCreate: FC<Props> = ({
     defaultValues: {
       description: '',
       royalties: '0',
-      isPrivate: false,
     },
   })
   const res = useWatch({ control })
@@ -122,7 +119,7 @@ const TokenFormCreate: FC<Props> = ({
               content: data.content,
               preview: data.preview,
               isAnimation: data.isAnimation,
-              isPrivate: data.isPrivate,
+              isPrivate: false,
             },
           },
         },
@@ -183,22 +180,7 @@ const TokenFormCreate: FC<Props> = ({
           chose: t('token.form.create.file.file.chose'),
         }}
       />
-      {UNLOCKABLE_CONTENT && (
-        <FormControl>
-          <HStack spacing={1} mb={2}>
-            <FormLabel m={0}>
-              {t('token.form.create.unlockable.label')}
-            </FormLabel>
-            <FormHelperText m={0}>
-              {t('token.form.create.unlockable.hint')}
-            </FormHelperText>
-          </HStack>
-          <Checkbox onChange={() => setValue('isPrivate', !res.isPrivate)}>
-            {t('token.form.create.unlockable.choice')}
-          </Checkbox>
-        </FormControl>
-      )}
-      {(res.isAnimation || res.isPrivate) && (
+      {res.isAnimation && (
         <Dropzone
           label={t('token.form.create.preview.label')}
           heading={t('token.form.create.preview.heading')}

@@ -51,10 +51,6 @@ query FetchAssetForCheckout(
     name
     image
     imageMimetype
-    unlockedContent {
-      url
-      mimetype
-    }
     creator {
       address
       name
