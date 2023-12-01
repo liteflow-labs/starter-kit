@@ -25,10 +25,9 @@ export default async function detect(
     offerValiditySeconds: number
     offerAuctionDeltaSeconds: number
     hasLazyMint: boolean
-    hasUnlockableContent: boolean
     metadata: any
   }>(
-    `SELECT id, name, domain, "maxRoyaltiesPerTenThousand", "offerValiditySeconds", "offerAuctionDeltaSeconds", "hasLazyMint", "hasUnlockableContent", metadata 
+    `SELECT id, name, domain, "maxRoyaltiesPerTenThousand", "offerValiditySeconds", "offerAuctionDeltaSeconds", "hasLazyMint", metadata 
       FROM organization."Organization" 
       WHERE domain = $1 LIMIT 1;`,
     [domain],
@@ -42,6 +41,5 @@ export default async function detect(
     offerValiditySeconds: organization.offerValiditySeconds,
     offerAuctionDeltaSeconds: organization.offerAuctionDeltaSeconds,
     hasLazyMint: organization.hasLazyMint,
-    hasUnlockableContent: organization.hasUnlockableContent,
   })
 }
