@@ -243,17 +243,6 @@
       "title": "Oferta por el NFT",
       "notifications": {
         "created": "Tu oferta ha sido creada."
-      },
-      "options": {
-        "label": "Tipo de Oferta",
-        "hints": {
-          "fixed": "Ingresa un precio para permitir a los usuarios comprar instantáneamente el NFT",
-          "auction": "Define un período de tiempo por el cual los usuarios podrán hacer ofertas"
-        },
-        "values": {
-          "fixed": "Precio Fijo",
-          "auction": "Subasta por Tiempo"
-        }
       }
     }
   },

@@ -243,17 +243,6 @@
       "title": "NFT要约",
       "notifications": {
         "created": "您已成功创建要约。"
-      },
-      "options": {
-        "label": "要约类型",
-        "hints": {
-          "fixed": "为您的NFT输入价格，方便用户立即购买",
-          "auction": "为买家设置提交出价的时间期限"
-        },
-        "values": {
-          "fixed": "固定价格",
-          "auction": "限时拍卖"
-        }
       }
     }
   },
