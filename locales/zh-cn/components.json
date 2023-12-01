@@ -644,37 +644,6 @@
         "view": "查看我的 NFT",
         "ongoing-auction": "正在进行的拍卖"
       },
-      "form": {
-        "submit": "创建要约",
-        "validation": {
-          "required": "此字段为必填字段",
-          "decimals": "此字段最多支持 {{ nbDecimals }} 个小数",
-          "positive": "此字段必须大于 0"
-        },
-        "currency": {
-          "label": "货币",
-          "hint": "设置拍卖时买家可以提交出价的货币",
-          "placeholder": "选择货币"
-        },
-        "price": {
-          "label": "底价",
-          "hint": "设置具体金额，出价如低于此价格则不会赢得拍卖",
-          "placeholder": "输入底价",
-          "info": "（可选）"
-        },
-        "start": {
-          "label": "开始日期",
-          "placeholder": "立即"
-        },
-        "end": {
-          "label": "结束日期"
-        },
-        "banner": {
-          "title": "拍卖规则",
-          "item1": "拍卖开始后，您就不能再取消售卖。这是为了给平台用户提供公平体验。",
-          "item2": "有效期：为防止长期售卖或遗忘，您的拍卖及其出价将在所选结束日期后取消 {{validity}}。您始终可以在有效期结束后重新创建售卖。"
-        }
-      },
       "info": {
         "title": "确认售出",
         "reserve": "底价：",

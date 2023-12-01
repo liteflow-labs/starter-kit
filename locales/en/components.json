@@ -644,37 +644,6 @@
         "view": "View my NFT",
         "ongoing-auction": "Ongoing Auction"
       },
-      "form": {
-        "submit": "Create Offer",
-        "validation": {
-          "required": "This field is required.",
-          "decimals": "This field supports a maximum of {{ nbDecimals }} decimals.",
-          "positive": "This field must be greater than 0."
-        },
-        "currency": {
-          "label": "Currency",
-          "hint": "Set the auction's currency with which buyers can place bids",
-          "placeholder": "Select a currency"
-        },
-        "price": {
-          "label": "Reserve price",
-          "hint": "Set a specific amount for which bids below it won't win the auction",
-          "placeholder": "Enter a reserve price",
-          "info": "(Optional)"
-        },
-        "start": {
-          "label": "Start Date",
-          "placeholder": "Right away"
-        },
-        "end": {
-          "label": "End Date"
-        },
-        "banner": {
-          "title": "Auction rules",
-          "item1": "When an auction starts, you won't be able to cancel the sale anymore. This is to provide a fair experience to the Platform users.",
-          "item2": "Expiration period: To prevent from long running and forgotten sales, your auction and its bids will be canceled {{validity}} after the selected end date. You can always recreate a sale at the end of the period."
-        }
-      },
       "info": {
         "title": "Confirm the sale",
         "reserve": "Reserve price:",

@@ -239,17 +239,6 @@
       "title": "NFTのオファー",
       "notifications": {
         "created": "オファーが無事に作成されました。"
-      },
-      "options": {
-        "label": "オファーの種類",
-        "hints": {
-          "fixed": "NFTを即座に購入可能な価格を入力してください",
-          "auction": "購入者が入札できる期間の設定"
-        },
-        "values": {
-          "fixed": "固定価格",
-          "auction": "期間限定オークション"
-        }
       }
     }
   },
