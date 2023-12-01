@@ -81,11 +81,6 @@ query FetchCollectionAssets(
       description
       image
       imageMimetype
-      hasUnlockableContent
-      unlockedContent {
-        url
-        mimetype
-      }
       createdAt
       creator {
         username

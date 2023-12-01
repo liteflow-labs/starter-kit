@@ -7,7 +7,6 @@ import { Chain, mainnet as ethereumMainnet } from 'wagmi/chains'
 type RemoteConfig = {
   name: string
   hasLazyMint: boolean
-  hasUnlockableContent: boolean
   maxRoyaltiesPerTenThousand: number
   offerValiditySeconds: number
   offerAuctionDeltaSeconds: number
@@ -126,9 +125,6 @@ export type Environment = {
    */
   // Enable/disable the lazy minting feature. If enabled, the NFTs will be minted on the first sale
   LAZYMINT: boolean
-
-  // Enable/disable the unlockable content feature. If enabled, the NFTs will have unlockable content only accessible to owners
-  UNLOCKABLE_CONTENT: boolean
 }
 
 const cache = new LRUCache({
@@ -147,7 +143,6 @@ const cache = new LRUCache({
         config {
           name
           hasLazyMint
-          hasUnlockableContent
           maxRoyaltiesPerTenThousand
           offerValiditySeconds
           offerAuctionDeltaSeconds
@@ -175,7 +170,6 @@ const getEnvironment = async (): Promise<Environment> => {
   const {
     name,
     hasLazyMint,
-    hasUnlockableContent,
     maxRoyaltiesPerTenThousand,
     offerValiditySeconds,
     offerAuctionDeltaSeconds,
@@ -246,7 +240,6 @@ const getEnvironment = async (): Promise<Environment> => {
     META_KEYWORDS: metadata.META_KEYWORDS || name,
     // NFT Mint Behavior
     LAZYMINT: hasLazyMint,
-    UNLOCKABLE_CONTENT: hasUnlockableContent,
   }
 }
 
