@@ -26,10 +26,6 @@ query OfferForAsset(
     royalties {
       value
     }
-    unlockedContent {
-      url
-      mimetype
-    }
     owned: ownership(ownerAddress: $address) {
       quantity
     }

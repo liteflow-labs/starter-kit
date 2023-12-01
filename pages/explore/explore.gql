@@ -30,10 +30,6 @@ query FetchAllERC721And1155(
       }
       image
       imageMimetype
-      unlockedContent {
-        url
-        mimetype
-      }
       owned: ownership(ownerAddress: $address) {
         quantity
       }

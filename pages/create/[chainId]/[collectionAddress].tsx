@@ -48,12 +48,10 @@ const CreatePage: NextPage = () => {
   const [formData, setFormData] = useState<Partial<FormData>>()
 
   const imageLocal = useLocalFileURL(
-    formData?.isPrivate || formData?.isAnimation
-      ? formData?.preview
-      : formData?.content,
+    formData?.isAnimation ? formData?.preview : formData?.content,
   )
   const animationLocal = useLocalFileURL(
-    formData?.isAnimation && !formData.isPrivate ? formData.content : undefined,
+    formData?.isAnimation ? formData.content : undefined,
   )
 
   const asset = useMemo(() => {
@@ -74,7 +72,6 @@ const CreatePage: NextPage = () => {
       },
       owned: null,
       quantity: '1',
-      unlockedContent: null,
     }
   }, [imageLocal, animationLocal, formData?.name, collection])
 

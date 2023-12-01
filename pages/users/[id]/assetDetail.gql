@@ -15,10 +15,6 @@ fragment AssetDetail on Asset {
   imageMimetype
   animationUrl
   animationMimetype
-  unlockedContent {
-    url
-    mimetype
-  }
   bestBid: bids(
     orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
     filter: { expiredAt: { greaterThan: $now } }

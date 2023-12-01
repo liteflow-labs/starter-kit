@@ -42,11 +42,6 @@ query FetchAsset(
     imageMimetype
     animationUrl
     animationMimetype
-    hasUnlockableContent
-    unlockedContent {
-      url
-      mimetype
-    }
     creator {
       address
       name

@@ -122,10 +122,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "可解锁内容",
-        "tooltip": "项目内容只能由项目所有者解锁"
-      },
       "show-preview": "显示预览",
       "description": "描述",
       "traits": "特征",
@@ -241,15 +237,6 @@
       "title": "NFT要约",
       "notifications": {
         "created": "您已成功创建要约。"
-      },
-      "options": {
-        "label": "要约类型",
-        "hints": {
-          "fixed": "为您的NFT输入价格，方便用户立即购买"
-        },
-        "values": {
-          "fixed": "固定价格"
-        }
       }
     }
   },

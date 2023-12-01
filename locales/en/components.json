@@ -670,11 +670,6 @@
         "category": {
           "label": "Category",
           "placeholder": "Select a category"
-        },
-        "unlockable": {
-          "label": "Unlockable content",
-          "hint": "(Optional)",
-          "choice": "The item's content can only be unlocked by the owner of the item"
         }
       }
     },

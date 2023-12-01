@@ -24,10 +24,6 @@ query BidOnAsset(
     name
     image
     imageMimetype
-    unlockedContent {
-      url
-      mimetype
-    }
     creator {
       address
       name

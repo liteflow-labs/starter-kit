@@ -38,7 +38,6 @@ export type Props = {
     }
     image: string
     imageMimetype: string | null
-    unlockedContent: { url: string; mimetype: string | null } | null
     animationUrl?: string | null
     animationMimetype?: string | null
     creator: {

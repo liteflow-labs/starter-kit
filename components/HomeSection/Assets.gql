@@ -38,10 +38,6 @@ query FetchAssets(
       quantity
       image
       imageMimetype
-      unlockedContent {
-        url
-        mimetype
-      }
       creator {
         address
         name

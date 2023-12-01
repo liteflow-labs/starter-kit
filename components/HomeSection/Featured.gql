@@ -22,10 +22,6 @@ query FetchFeaturedAssets(
       animationUrl
       animationMimetype
       quantity
-      unlockedContent {
-        url
-        mimetype
-      }
       creator {
         address
         name
