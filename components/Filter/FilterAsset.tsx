@@ -18,7 +18,7 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Filter, OfferFilter } from '../../hooks/useAssetFilterFromQuery'
+import { Filter, OfferFilterType } from '../../hooks/useAssetFilterFromQuery'
 import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
 import FilterByCollection from './FilterBy/Collection'
@@ -58,8 +58,8 @@ export const NoFilter: Filter = {
 
 const offerTypes = [
   { key: 'all', value: null },
-  { key: 'fixed', value: OfferFilter.fixed },
-  { key: 'auction', value: OfferFilter.auction },
+  { key: 'fixed', value: OfferFilterType.fixed },
+  { key: 'auction', value: OfferFilterType.auction },
 ]
 
 const FilterAsset: NextPage<Props> = ({

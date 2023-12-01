@@ -1,28 +1,12 @@
-import {
-  Box,
-  Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  GridItem,
-  Heading,
-  Skeleton,
-  useRadioGroup,
-  useToast,
-} from '@chakra-ui/react'
-import { AiOutlineDollarCircle } from '@react-icons/all-files/ai/AiOutlineDollarCircle'
-import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
+import { Box, Flex, Grid, GridItem, Heading, useToast } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import Head from '../../../components/Head'
 import BackButton from '../../../components/Navbar/BackButton'
-import Radio from '../../../components/Radio/Radio'
-import SalesAuctionForm from '../../../components/Sales/Auction/Form'
 import SalesDirectForm from '../../../components/Sales/Direct/Form'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
@@ -42,17 +26,6 @@ type Props = {
     description: string
     image: string
   }
-}
-
-enum SaleType {
-  FIXED_PRICE = 'FIXED_PRICE',
-  TIMED_AUCTION = 'TIMED_AUCTION',
-}
-
-type SaleOption = {
-  value: SaleType
-  label: string
-  icon: any
 }
 
 const OfferPage: NextPage<Props> = ({ now }) => {
@@ -81,34 +54,6 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   const asset = data?.asset
 
   const currencies = data?.currencies?.nodes
-  const auctionCurrencies = useMemo(
-    () => currencies?.filter((c) => c.address),
-    [currencies],
-  )
-
-  const saleOptions: [SaleOption, SaleOption] = useMemo(
-    () => [
-      {
-        value: SaleType.FIXED_PRICE,
-        label: t('offers.form.options.values.fixed'),
-        icon: AiOutlineDollarCircle,
-      },
-      {
-        value: SaleType.TIMED_AUCTION,
-        label: t('offers.form.options.values.auction'),
-        icon: HiOutlineClock,
-        disabled: asset?.collection.standard !== 'ERC721',
-      },
-    ],
-    [asset, t],
-  )
-
-  const [sale, setSale] = useState<SaleType>(saleOptions[0].value)
-
-  const { getRadioProps, getRootProps } = useRadioGroup({
-    defaultValue: sale,
-    onChange: (e: any) => setSale(e.toString() as SaleType),
-  })
 
   const onCreated = useCallback(async () => {
     toast({
@@ -117,28 +62,6 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     })
     await push(`/tokens/${assetId}`)
   }, [toast, t, push, assetId])
-
-  const saleForm = useMemo(() => {
-    if (!currencies || !asset || !auctionCurrencies)
-      return <SkeletonForm items={2} />
-    if (sale === SaleType.FIXED_PRICE)
-      return (
-        <SalesDirectForm
-          asset={asset}
-          currencies={currencies}
-          onCreated={onCreated}
-        />
-      )
-    if (sale === SaleType.TIMED_AUCTION)
-      return (
-        <SalesAuctionForm
-          assetId={asset.id}
-          currencies={auctionCurrencies}
-          onCreated={onCreated}
-        />
-      )
-    invariant(true, 'Invalid sale type')
-  }, [currencies, auctionCurrencies, asset, sale, onCreated])
 
   if (asset === null) return <Error statusCode={404} />
   return (
@@ -169,32 +92,15 @@ const OfferPage: NextPage<Props> = ({ now }) => {
         </GridItem>
         <GridItem>
           <Flex direction="column" gap={8} grow={1} shrink={1} basis="0%">
-            {!asset ? (
-              <>
-                <Skeleton height="24px" width="100px" />
-                <Flex gap={4}>
-                  <Skeleton height="85px" width="100%" borderRadius="2xl" />
-                  <Skeleton height="85px" width="100%" borderRadius="2xl" />
-                </Flex>
-              </>
+            {!currencies || !asset ? (
+              <SkeletonForm items={2} />
             ) : (
-              <FormControl>
-                <FormLabel>{t('offers.form.options.label')}</FormLabel>
-                <FormHelperText mb={2}>
-                  {sale === SaleType.FIXED_PRICE
-                    ? t('offers.form.options.hints.fixed')
-                    : t('offers.form.options.hints.auction')}
-                </FormHelperText>
-                <Flex mt={3} flexWrap="wrap" gap={4} {...getRootProps()}>
-                  {saleOptions.map((choice, i) => {
-                    const radio = getRadioProps({ value: choice.value })
-                    return <Radio key={i} choice={choice} {...radio} />
-                  })}
-                </Flex>
-              </FormControl>
+              <SalesDirectForm
+                asset={asset}
+                currencies={currencies}
+                onCreated={onCreated}
+              />
             )}
-
-            {saleForm}
           </Flex>
         </GridItem>
       </Grid>

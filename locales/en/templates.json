@@ -123,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "Unlockable content",
-        "tooltip": "The item's content can only be unlocked by the owner of the item"
-      },
       "show-preview": "Show preview",
       "description": "Description",
       "traits": "Traits",
@@ -243,17 +239,6 @@
       "title": "NFT Offer",
       "notifications": {
         "created": "Your offer has been successfully created."
-      },
-      "options": {
-        "label": "Type of offer",
-        "hints": {
-          "fixed": "Enter price to allow users instantly purchase your NFT",
-          "auction": "Set a period of time for which buyers can place bids"
-        },
-        "values": {
-          "fixed": "Fixed price",
-          "auction": "Timed auction"
-        }
       }
     }
   },
