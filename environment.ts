@@ -139,7 +139,6 @@ const getEnvironment = async (
     offerValiditySeconds,
     offerAuctionDeltaSeconds,
     hasLazyMint,
-    hasUnlockableContent,
   } = await response.json()
   return {
     // Base configuration
@@ -241,7 +240,7 @@ const getEnvironment = async (
     META_KEYWORDS: metadata?.META_KEYWORDS || '',
     // NFT Mint Behavior
     LAZYMINT: hasLazyMint,
-    UNLOCKABLE_CONTENT: hasUnlockableContent,
+    UNLOCKABLE_CONTENT: false,
   }
 }
 
