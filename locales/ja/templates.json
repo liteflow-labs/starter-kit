@@ -123,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "ロック解除可能なコンテンツ",
-        "tooltip": "アイテムのコンテンツは、アイテムの所有者のみがロックを解除できます。"
-      },
       "show-preview": "プレビューを表示",
       "description": "説明",
       "traits": "特徴",

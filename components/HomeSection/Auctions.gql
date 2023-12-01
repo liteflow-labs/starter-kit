@@ -38,10 +38,6 @@ query FetchAuctions($now: Datetime!, $address: Address) {
         quantity
         image
         imageMimetype
-        unlockedContent {
-          url
-          mimetype
-        }
         creator {
           address
           name

@@ -123,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "可解锁内容",
-        "tooltip": "项目内容只能由项目所有者解锁"
-      },
       "show-preview": "显示预览",
       "description": "描述",
       "traits": "特征",

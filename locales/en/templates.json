@@ -123,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "Unlockable content",
-        "tooltip": "The item's content can only be unlocked by the owner of the item"
-      },
       "show-preview": "Show preview",
       "description": "Description",
       "traits": "Traits",

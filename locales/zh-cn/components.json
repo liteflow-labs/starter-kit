@@ -818,11 +818,6 @@
         "category": {
           "label": "类别",
           "placeholder": "选择类别"
-        },
-        "unlockable": {
-          "label": "可解锁内容",
-          "hint": "(可选)",
-          "choice": "项目内容只能由项目所有者解锁"
         }
       }
     },
