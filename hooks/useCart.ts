@@ -14,6 +14,7 @@ type CartContext = {
   items: CartItem[]
   checkout: (items: CartItem[]) => Promise<ContractReceipt>
   registerOnCheckout: (callback: () => void) => void
+  unregisterOnCheckout: (callback: () => void) => void
 }
 
 export const CartContext = createContext<CartContext>({} as CartContext)
@@ -22,13 +23,15 @@ export default function useCart({
   onCheckout,
 }: {
   onCheckout?: () => void
-} = {}): Omit<CartContext, 'registerOnCheckout'> {
-  const { registerOnCheckout, ...context } = useContext(CartContext)
+} = {}): Omit<CartContext, 'registerOnCheckout' | 'unregisterOnCheckout'> {
+  const { registerOnCheckout, unregisterOnCheckout, ...context } =
+    useContext(CartContext)
 
   useEffect(() => {
     if (!onCheckout) return
     registerOnCheckout(onCheckout)
-  }, [onCheckout, registerOnCheckout])
+    return () => unregisterOnCheckout(onCheckout)
+  }, [onCheckout, registerOnCheckout, unregisterOnCheckout])
 
   return context
 }
