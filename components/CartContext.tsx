@@ -17,7 +17,14 @@ const CartContext: FC<PropsWithChildren> = (props) => {
   >([])
 
   const registerOnCheckout = useCallback((callback: () => void) => {
-    setOnCheckoutCallbacks((prev) => [...prev, callback])
+    setOnCheckoutCallbacks((prev) => [
+      ...prev.filter((x) => x !== callback),
+      callback,
+    ])
+  }, [])
+
+  const unregisterOnCheckout = useCallback((callback: () => void) => {
+    setOnCheckoutCallbacks((prev) => prev.filter((x) => x !== callback))
   }, [])
 
   const addItem = useCallback(
@@ -92,6 +99,7 @@ const CartContext: FC<PropsWithChildren> = (props) => {
         clearCart,
         checkout,
         registerOnCheckout,
+        unregisterOnCheckout,
       }}
       {...props}
     />
