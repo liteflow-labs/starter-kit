@@ -207,13 +207,13 @@
   "history": {
     "none": "Sin historial",
     "filter": {
-      "all": "All",
-      "lazymint": "Lazymint",
-      "listing": "Listing",
-      "purchase": "Purchase",
-      "transfer": "Transfer",
+      "all": "Todo",
+      "lazymint": "Lazy Mint",
+      "listing": "Listado",
+      "purchase": "Compra",
+      "transfer": "Transferencia",
       "mint": "Mint",
-      "burn": "Burn"
+      "burn": "Quemar"
     },
     "listing": {
       "by": "Por <0/>",
@@ -239,6 +239,11 @@
       "from": "De <0/> para <1/>",
       "purchased_one": "<0>{{count}}</0> edición compradas por <1/>",
       "purchased_other": "<0>{{count}}</0> ediciones compradas por <1/> cada una"
+    },
+    "burn": {
+      "quantity_one": "{{count}} edición quemada",
+      "purchased_other": "{{count}} ediciones quemadas",
+      "by": "Por {{user}}"
     }
   },
   "modal": {

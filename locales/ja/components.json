@@ -207,11 +207,11 @@
   "history": {
     "none": "履歴無し",
     "filter": {
-      "all": "All",
-      "lazymint": "Lazymint",
-      "listing": "Listing",
-      "purchase": "Purchase",
-      "transfer": "Transfer",
+      "all": "すべて",
+      "lazymint": "遅延作成",
+      "listing": "リスト",
+      "purchase": "購入",
+      "transfer": "転送",
       "mint": "Mint",
       "burn": "Burn"
     },
@@ -239,6 +239,11 @@
       "from": "<0/>から<1/>へ",
       "purchased_one": "<0>{{count}}</0> エディションを購入しました <1/>",
       "purchased_other": "<0>{{count}}</0> 各エディションが購入されました <1/>"
+    },
+    "burn": {
+      "quantity_one": "{{count}} エディションが燃やされました",
+      "purchased_other": "{{count}} エディションが燃やされました",
+      "by": "までに{{user}}"
     }
   },
   "modal": {

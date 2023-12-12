@@ -207,13 +207,13 @@
   "history": {
     "none": "无历史记录",
     "filter": {
-      "all": "All",
-      "lazymint": "Lazymint",
-      "listing": "Listing",
-      "purchase": "Purchase",
-      "transfer": "Transfer",
-      "mint": "Mint",
-      "burn": "Burn"
+      "all": "全部",
+      "lazymint": "懒人铸造",
+      "listing": "上架",
+      "purchase": "购买",
+      "transfer": "转让",
+      "mint": "铸造",
+      "burn": "烧毁"
     },
     "listing": {
       "by": "截至 <0/>",
@@ -239,6 +239,11 @@
       "from": "从 <0/> 至 <1/>",
       "purchased_one": "已购买 <0>{{count}}</0> 个版本，价格为 <1/>",
       "purchased_other": "已购买 <0>{{count}}</0> 个版本，单价为 <1/>"
+    },
+    "burn": {
+      "quantity_one": "{{count}} 版本已烧毁",
+      "purchased_other": "{{count}} 个版本已烧毁",
+      "by": "截至 {{user}}"
     }
   },
   "modal": {
