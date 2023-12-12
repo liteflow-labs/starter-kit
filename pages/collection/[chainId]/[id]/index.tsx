@@ -32,14 +32,6 @@ import SkeletonGrid from '../../../../components/Skeleton/Grid'
 import SkeletonTokenCard from '../../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../../components/Token/Card'
 import {
-  convertAsset,
-  convertAuctionWithBestBid,
-  convertCollectionFull,
-  convertCollectionMetrics,
-  convertSale,
-  convertUser,
-} from '../../../../convert'
-import {
   AssetsOrderBy,
   useFetchCollectionAssetsQuery,
   useFetchCollectionDetailsQuery,
@@ -64,7 +56,7 @@ type Props = {
 }
 
 const CollectionPage: FC<Props> = ({ now }) => {
-  const { REPORT_EMAIL, PAGINATION_LIMIT } = useEnvironment()
+  const { PAGINATION_LIMIT } = useEnvironment()
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
     parse: parseInt,
@@ -91,11 +83,10 @@ const CollectionPage: FC<Props> = ({ now }) => {
       chainId,
     },
   })
+  const metrics = collectionMetricsData?.collection
 
   const { limit, offset, page } = usePaginateQuery()
-  const orderBy = useOrderByQuery<AssetsOrderBy>(
-    'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
-  )
+  const orderBy = useOrderByQuery<AssetsOrderBy>('BEST_PRICE_ASC')
   const filter = useAssetFilterFromQuery()
   const { data: assetData } = useFetchCollectionAssetsQuery({
     variables: {
@@ -109,6 +100,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
       filter: convertFilterToAssetFilter(filter, date),
     },
   })
+  const assets = assetData?.assets?.nodes
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)
@@ -143,20 +135,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const collectionDetails = useMemo(
-    () => (collection ? convertCollectionFull(collection) : undefined),
-    [collection],
-  )
-
-  const assets = assetData?.assets?.nodes
-  const collectionMetrics = useMemo(
-    () =>
-      collectionMetricsData?.collection
-        ? convertCollectionMetrics(collectionMetricsData.collection)
-        : undefined,
-    [collectionMetricsData],
-  )
-
   const changeOrder = useCallback(
     async (orderBy: any) => {
       await push(
@@ -168,7 +146,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
     [push, pathname, query],
   )
 
-  const [changePage, changeLimit] = usePaginate()
+  const { changeLimit } = usePaginate()
 
   if (collection === null) return <Error statusCode={404} />
   return (
@@ -179,19 +157,16 @@ const CollectionPage: FC<Props> = ({ now }) => {
         image={collection?.image || undefined}
       />
 
-      {!collectionDetails ? (
+      {!collection ? (
         <CollectionHeaderSkeleton />
       ) : (
-        <CollectionHeader
-          collection={collectionDetails}
-          reportEmail={REPORT_EMAIL}
-        />
+        <CollectionHeader collection={collection} />
       )}
 
-      {!collectionMetrics ? (
+      {!metrics ? (
         <CollectionMetricsSkeleton />
       ) : (
-        <CollectionMetrics chainId={chainId} metrics={collectionMetrics} />
+        <CollectionMetrics chainId={chainId} metrics={metrics} />
       )}
 
       <Flex py="6" justifyContent="space-between">
@@ -207,14 +182,12 @@ const CollectionPage: FC<Props> = ({ now }) => {
             onChange={changeOrder}
             choices={[
               {
-                label: t('collection.orderBy.values.salesMinUnitPriceInRefAsc'),
-                value: 'SALES_MIN_UNIT_PRICE_IN_REF_ASC',
+                label: t('collection.orderBy.values.priceAsc'),
+                value: 'BEST_PRICE_ASC',
               },
               {
-                label: t(
-                  'collection.orderBy.values.salesMinUnitPriceInRefDesc',
-                ),
-                value: 'SALES_MIN_UNIT_PRICE_IN_REF_DESC',
+                label: t('collection.orderBy.values.priceDesc'),
+                value: 'BEST_PRICE_DESC',
               },
               {
                 label: t('collection.orderBy.values.createdAtDesc'),
@@ -239,7 +212,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
             <ModalBody>
               <FilterAsset
                 noChain
-                currentCollection={{ chainId, address: collectionAddress }}
+                currentCollection={collection}
                 onFilterChange={updateFilter}
                 filter={{
                   ...filter,
@@ -255,7 +228,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
           <GridItem as="aside" overflow="hidden">
             <FilterAsset
               noChain
-              currentCollection={{ chainId, address: collectionAddress }}
+              currentCollection={collection}
               onFilterChange={updateFilter}
               filter={{
                 ...filter,
@@ -287,22 +260,9 @@ const CollectionPage: FC<Props> = ({ now }) => {
                   : { base: 1, sm: 2, md: 4, lg: 6 }
               }
             >
-              {assets.map((x, i) => (
+              {assets.map((asset, i) => (
                 <Flex key={i} justify="center" overflow="hidden">
-                  <TokenCard
-                    asset={convertAsset(x)}
-                    creator={convertUser(x.creator, x.creator.address)}
-                    auction={
-                      x.auctions.nodes[0]
-                        ? convertAuctionWithBestBid(x.auctions.nodes[0])
-                        : undefined
-                    }
-                    sale={convertSale(x.firstSale.nodes[0])}
-                    numberOfSales={x.firstSale.totalCount}
-                    hasMultiCurrency={
-                      x.firstSale.totalCurrencyDistinctCount > 1
-                    }
-                  />
+                  <TokenCard asset={asset} />
                 </Flex>
               ))}
             </SimpleGrid>
@@ -318,7 +278,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
               limit={limit}
               limits={[PAGINATION_LIMIT, 24, 36, 48]}
               page={page}
-              onPageChange={changePage}
               onLimitChange={changeLimit}
               hasNextPage={assetData?.assets?.pageInfo.hasNextPage}
               hasPreviousPage={assetData?.assets?.pageInfo.hasPreviousPage}

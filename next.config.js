@@ -3,6 +3,7 @@ const nextTranslate = require('next-translate')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
+const removeImports = require('next-remove-imports')()
 
 /**
  * @type {import('next').NextConfig}
@@ -30,4 +31,4 @@ const nextConfig = {
   reactStrictMode: true,
 }
 
-module.exports = nextTranslate(withBundleAnalyzer(nextConfig))
+module.exports = nextTranslate(withBundleAnalyzer(removeImports(nextConfig)))

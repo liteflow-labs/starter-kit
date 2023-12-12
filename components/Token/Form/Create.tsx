@@ -1,5 +1,4 @@
 import {
-  Checkbox,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -19,14 +18,16 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Signer, TypedDataSigner } from '@ethersproject/abstract-signer'
 import { toAddress } from '@liteflow/core'
 import { CreateNftStep, useCreateNFT } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Standard } from '../../../graphql'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useEnvironment from '../../../hooks/useEnvironment'
+import useSigner from '../../../hooks/useSigner'
+import { values as traits } from '../../../traits'
 import { formatError } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Dropzone from '../../Dropzone/Dropzone'
@@ -41,39 +42,29 @@ export type FormData = {
   amount: string
   content: File | undefined
   preview: File | undefined
-  isPrivate: boolean
   isAnimation: boolean
 }
 
 type Props = {
-  signer: (Signer & TypedDataSigner) | undefined
   collection: {
     chainId: number
     address: string
     standard: Standard
   }
-  categories: { id: string; title: string }[]
-  blockExplorer: BlockExplorer
-  activateUnlockableContent: boolean
-  maxRoyalties: number
   onCreated: (id: string) => void
   onInputChange: (data: Partial<FormData>) => void
-  activateLazyMint: boolean
 }
 
 const TokenFormCreate: FC<Props> = ({
-  signer,
   collection,
-  categories,
-  blockExplorer,
-  activateUnlockableContent,
-  maxRoyalties,
   onCreated,
   onInputChange,
-  activateLazyMint,
 }) => {
   const { t } = useTranslation('components')
+  const { LAZYMINT, MAX_ROYALTIES } = useEnvironment()
   const toast = useToast()
+  const signer = useSigner()
+  const blockExplorer = useBlockExplorer(collection.chainId)
   const {
     isOpen: createCollectibleIsOpen,
     onOpen: createCollectibleOnOpen,
@@ -89,7 +80,6 @@ const TokenFormCreate: FC<Props> = ({
     defaultValues: {
       description: '',
       royalties: '0',
-      isPrivate: false,
     },
   })
   const res = useWatch({ control })
@@ -97,6 +87,11 @@ const TokenFormCreate: FC<Props> = ({
 
   // const [transform] = useFileTransformer()
   const [createNFT, { activeStep, transactionHash }] = useCreateNFT(signer)
+
+  const categories = useMemo(
+    () => (traits['Category'] || []).map((x) => ({ id: x, title: x })) || [],
+    [],
+  )
 
   const handleFileDrop = (file: File) => {
     if (!file) return
@@ -108,7 +103,7 @@ const TokenFormCreate: FC<Props> = ({
 
     try {
       createCollectibleOnOpen()
-      if (parseFloat(data.royalties) > maxRoyalties)
+      if (parseFloat(data.royalties) > MAX_ROYALTIES)
         throw new Error('Royalties too high')
       const assetId = await createNFT(
         {
@@ -124,11 +119,11 @@ const TokenFormCreate: FC<Props> = ({
               content: data.content,
               preview: data.preview,
               isAnimation: data.isAnimation,
-              isPrivate: data.isPrivate,
+              isPrivate: false,
             },
           },
         },
-        activateLazyMint,
+        LAZYMINT,
       )
 
       onCreated(assetId)
@@ -185,22 +180,7 @@ const TokenFormCreate: FC<Props> = ({
           chose: t('token.form.create.file.file.chose'),
         }}
       />
-      {activateUnlockableContent && (
-        <FormControl>
-          <HStack spacing={1} mb={2}>
-            <FormLabel m={0}>
-              {t('token.form.create.unlockable.label')}
-            </FormLabel>
-            <FormHelperText m={0}>
-              {t('token.form.create.unlockable.hint')}
-            </FormHelperText>
-          </HStack>
-          <Checkbox onChange={() => setValue('isPrivate', !res.isPrivate)}>
-            {t('token.form.create.unlockable.choice')}
-          </Checkbox>
-        </FormControl>
-      )}
-      {(res.isAnimation || res.isPrivate) && (
+      {res.isAnimation && (
         <Dropzone
           label={t('token.form.create.preview.label')}
           heading={t('token.form.create.preview.heading')}
@@ -303,7 +283,7 @@ const TokenFormCreate: FC<Props> = ({
           <NumberInput
             clampValueOnBlur={false}
             min={0}
-            max={maxRoyalties}
+            max={MAX_ROYALTIES}
             step={0.01}
             allowMouseWheel
             w="full"
@@ -316,10 +296,10 @@ const TokenFormCreate: FC<Props> = ({
                 validate: (value) => {
                   if (
                     parseFloat(value) < 0 ||
-                    parseFloat(value) > maxRoyalties
+                    parseFloat(value) > MAX_ROYALTIES
                   ) {
                     return t('token.form.create.validation.in-range', {
-                      max: maxRoyalties,
+                      max: MAX_ROYALTIES,
                     })
                   }
 
@@ -374,7 +354,7 @@ const TokenFormCreate: FC<Props> = ({
         step={activeStep}
         blockExplorer={blockExplorer}
         transactionHash={transactionHash}
-        isLazyMint={activateLazyMint}
+        isLazyMint={LAZYMINT}
       />
     </Stack>
   )

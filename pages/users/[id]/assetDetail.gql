@@ -8,13 +8,13 @@ fragment AssetDetail on Asset {
     chainId
     address
     name
+    standard
   }
+  quantity
   image
+  imageMimetype
   animationUrl
-  unlockedContent {
-    url
-    mimetype
-  }
+  animationMimetype
   auctions(
     first: 1
     orderBy: CREATED_AT_DESC

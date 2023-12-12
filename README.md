@@ -33,6 +33,7 @@ The Marketplace template includes the following features:
     - Sort by volumes
   - Explore users
 - Native currency and ERC20 support
+- Lazymint for NFTs
 - List NFTs on sale
   - Partial filling
   - Fixed price listing
@@ -66,6 +67,7 @@ The Marketplace template includes the following features:
   - Metadata IPFS link
   - Traits with percentages
 - NFT history (activity)
+  - Lazyminted
   - Minted
   - Listed
   - Purchased
@@ -77,6 +79,8 @@ The Marketplace template includes the following features:
   - Magic
   - Rainbow
 - Multi-chain support
+- Multi currency support
+- Advanced fee customization support
 
 It also includes compatibility with the following features:
 
@@ -84,16 +88,6 @@ It also includes compatibility with the following features:
 - Credit card payment gateway compatibility
 - Email connection compatibility
 - Wallet-to-wallet messaging system
-
-## Additional Paid Features Showcased
-
-The Marketplace template showcases the following additional paid features:
-
-- Lazymint for NFTs
-  - Lazymint history (activity)
-- Unlockable content for NFTs
-- Multi currency support
-- Advanced fee customization support
 
 ## Libraries used
 

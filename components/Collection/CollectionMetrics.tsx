@@ -7,12 +7,16 @@ import useEnvironment from '../../hooks/useEnvironment'
 type Props = {
   chainId: number
   metrics: {
-    totalVolume: string
-    totalVolumeCurrencySymbol: string
-    floorPrice: string | null
-    floorPriceCurrencySymbol: string | null
-    totalOwners: number
+    numberOfOwners: number
     supply: number
+    floorPrice: {
+      valueInRef: string
+      refCode: string
+    } | null
+    totalVolume: {
+      valueInRef: string
+      refCode: string
+    }
   }
 }
 
@@ -26,41 +30,41 @@ const CollectionMetrics: FC<Props> = ({ chainId, metrics }) => {
       {
         name: t('collection.header.data-labels.total-volume'),
         value:
-          numbro(metrics.totalVolume).format({
+          numbro(metrics.totalVolume.valueInRef).format({
             thousandSeparated: true,
             trimMantissa: true,
             mantissa: 4,
           }) +
           ' ' +
-          metrics.totalVolumeCurrencySymbol,
-        title: `${metrics.totalVolume} ${metrics.totalVolumeCurrencySymbol}`,
+          metrics.totalVolume.refCode,
+        title: `${metrics.totalVolume.valueInRef} ${metrics.totalVolume.refCode}`,
       },
       {
         name: t('collection.header.data-labels.floor-price'),
         value: metrics.floorPrice
-          ? numbro(metrics.floorPrice).format({
+          ? numbro(metrics.floorPrice.valueInRef).format({
               thousandSeparated: true,
               trimMantissa: true,
               mantissa: 4,
             }) +
             ' ' +
-            metrics.floorPriceCurrencySymbol
+            metrics.floorPrice.refCode
           : '-',
-        title: `${metrics.floorPrice || '-'} ${
-          metrics.floorPriceCurrencySymbol
-        }`,
+        title: metrics.floorPrice
+          ? `${metrics.floorPrice.valueInRef} ${metrics.floorPrice.refCode}`
+          : '-',
       },
       {
         name: t('collection.header.data-labels.owners'),
-        value: numbro(metrics.totalOwners).format({
+        value: numbro(metrics.numberOfOwners).format({
           thousandSeparated: true,
         }),
-        title: metrics.totalOwners?.toString(),
+        title: metrics.numberOfOwners.toString(),
       },
       {
         name: t('collection.header.data-labels.items'),
         value: numbro(metrics.supply).format({ thousandSeparated: true }),
-        title: metrics.supply?.toString(),
+        title: metrics.supply.toString(),
       },
       {
         type: 'separator',

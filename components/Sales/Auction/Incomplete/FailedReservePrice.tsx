@@ -7,9 +7,9 @@ import {
   Flex,
   Heading,
   Stack,
+  StackProps,
   Text,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
@@ -18,16 +18,14 @@ import Price from '../../../Price/Price'
 import WalletAddress from '../../../Wallet/Address'
 import AccountImage from '../../../Wallet/Image'
 
-type Props = {
-  // TODO: Remove props as it is used only to put a margin, this margin should be handled in one of the parent component
-  isOwner: boolean
-  bestBid: {
+type Props = StackProps & {
+  bestAuctionBid: {
     maker: {
       address: string
-      image: string | null | undefined
-      name: string | null | undefined
+      image: string | null
+      name: string | null
     }
-    unitPrice: BigNumber
+    unitPrice: string
     currency: {
       decimals: number
       symbol: string
@@ -35,10 +33,13 @@ type Props = {
   }
 }
 
-const SaleAuctionIncompleteReservePrice: FC<Props> = ({ isOwner, bestBid }) => {
+const SaleAuctionIncompleteReservePrice: FC<Props> = ({
+  bestAuctionBid,
+  ...props
+}) => {
   const { t } = useTranslation('components')
   return (
-    <Stack spacing={8}>
+    <Stack spacing={8} {...props}>
       <hr />
       <Heading as="h2" variant="subtitle" color="brand.black">
         {t('sales.auction.failed-no-reserve.ended')}
@@ -50,8 +51,8 @@ const SaleAuctionIncompleteReservePrice: FC<Props> = ({ isOwner, bestBid }) => {
         <Flex align="center" gap={3}>
           <Flex
             as={AccountImage}
-            address={bestBid.maker.address}
-            image={bestBid.maker.image}
+            address={bestAuctionBid.maker.address}
+            image={bestAuctionBid.maker.image}
             rounded="full"
           />
           <Heading as="h4" variant="heading2" color="brand.black">
@@ -60,16 +61,22 @@ const SaleAuctionIncompleteReservePrice: FC<Props> = ({ isOwner, bestBid }) => {
               i18nKey="sales.auction.failed-no-reserve.offer"
               components={[
                 <Price
-                  amount={bestBid.unitPrice}
-                  currency={bestBid.currency}
+                  amount={bestAuctionBid.unitPrice}
+                  currency={bestAuctionBid.currency}
                   key="price"
                 />,
                 <Text as="span" color="gray.500" key="text" />,
-                <Link href={`/users/${bestBid.maker.address}`} key="link">
-                  {bestBid.maker.name ? (
-                    <span>{bestBid.maker.name}</span>
+                <Link
+                  href={`/users/${bestAuctionBid.maker.address}`}
+                  key="link"
+                >
+                  {bestAuctionBid.maker.name ? (
+                    <span>{bestAuctionBid.maker.name}</span>
                   ) : (
-                    <WalletAddress address={bestBid.maker.address} isShort />
+                    <WalletAddress
+                      address={bestAuctionBid.maker.address}
+                      isShort
+                    />
                   )}
                 </Link>,
               ]}
@@ -78,11 +85,7 @@ const SaleAuctionIncompleteReservePrice: FC<Props> = ({ isOwner, bestBid }) => {
         </Flex>
       </Stack>
 
-      <Alert
-        status="error"
-        mb={isOwner ? '-20px !important' : 0}
-        borderRadius="xl"
-      >
+      <Alert status="error" borderRadius="xl">
         <AlertIcon />
         <Box fontSize="sm">
           <AlertTitle>

@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
-export default function usePaginate(): [
-  (page: number) => void,
-  (limit: string) => void,
-] {
+export default function usePaginate(): {
+  changePage: (page: number) => void
+  changeLimit: (limit: string) => void
+} {
   const { push, pathname, query } = useRouter()
   const changePage = useCallback(
     async (page: number) => push({ pathname, query: { ...query, page } }),
@@ -15,5 +15,5 @@ export default function usePaginate(): [
       push({ pathname, query: { ...query, limit, page: 1 } }),
     [pathname, push, query],
   )
-  return [changePage, changeLimit]
+  return { changePage, changeLimit }
 }

@@ -9,27 +9,56 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
-import { convertDropActive } from 'convert'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
 import numbro from 'numbro'
 import { useMemo } from 'react'
+import { AccountVerificationStatus } from '../../graphql'
 import useTimeStatus, { Status } from '../../hooks/useTimeStatus'
 import { formatAddress } from '../../utils'
 import DropCountdown from '../Countdown/DropCountdown'
 import Image from '../Image/Image'
 import Link from '../Link/Link'
 import Price from '../Price/Price'
-import TokenMedia from '../Token/Media'
 
 type Props = {
-  drop: ReturnType<typeof convertDropActive>
+  collection: {
+    address: string
+    chainId: number
+    cover: string | null
+    image: string | null
+    name: string
+    deployer: {
+      address: string
+      name: string | null
+      verification: {
+        status: AccountVerificationStatus
+      } | null
+    }
+  }
+  drop: {
+    startDate: Date
+    endDate: Date
+    unitPrice: string
+    currency: {
+      decimals: number
+      symbol: string
+      image: string
+    }
+  }
+  totalSupply: BigNumber | null
   onCountdownEnd?: () => void
 }
 
-export default function DropCard({ drop, onCountdownEnd }: Props) {
+export default function DropCard({
+  collection,
+  drop,
+  totalSupply,
+  onCountdownEnd,
+}: Props) {
   const { t } = useTranslation('components')
   const status = useTimeStatus(drop)
 
@@ -42,7 +71,7 @@ export default function DropCard({ drop, onCountdownEnd }: Props) {
   return (
     <Box
       as={Link}
-      href={`/collection/${drop.collection.chainId}/${drop.collection.address}/drop`}
+      href={`/collection/${collection.chainId}/${collection.address}/drop`}
       borderWidth="1px"
       borderRadius="2xl"
       w="full"
@@ -61,14 +90,13 @@ export default function DropCard({ drop, onCountdownEnd }: Props) {
         }}
         bg="gray.100"
       >
-        {drop.collection.cover && (
-          <TokenMedia
-            imageUrl={drop.collection.cover}
-            defaultText={drop.collection.name}
-            animationUrl={undefined}
-            unlockedContent={null}
-            sizes="(min-width: 62em) 600px, 100vw"
+        {collection.cover && (
+          <Image
+            src={collection.cover}
+            alt={collection.name}
             fill
+            sizes="(min-width: 62em) 600px, 100vw"
+            objectFit="cover"
           />
         )}
       </Box>
@@ -77,14 +105,14 @@ export default function DropCard({ drop, onCountdownEnd }: Props) {
         {status === Status.INPROGRESS && (
           // Hidden countdown to trigger refetch when countdown ends
           <DropCountdown
-            date={drop.endDate}
+            date={new Date(drop.endDate)}
             isHidden
             onCountdownEnd={onCountdownEnd}
           />
         )}
         {status === Status.UPCOMING && (
           <DropCountdown
-            date={drop.startDate}
+            date={new Date(drop.startDate)}
             onCountdownEnd={onCountdownEnd}
           />
         )}
@@ -112,10 +140,10 @@ export default function DropCard({ drop, onCountdownEnd }: Props) {
         mb={4}
         bg="gray.200"
       >
-        {drop.collection.image && (
+        {collection.image && (
           <Image
-            src={drop.collection.image}
-            alt={drop.collection.name}
+            src={collection.image}
+            alt={collection.name}
             fill
             sizes="72px"
             objectFit="cover"
@@ -126,34 +154,34 @@ export default function DropCard({ drop, onCountdownEnd }: Props) {
       <Flex position="relative" justifyContent="space-between" gap={4} w="full">
         <Flex flexDir="column" gap={1}>
           <Heading variant="heading2" color="white" isTruncated>
-            {drop.collection.name}
+            {collection.name}
           </Heading>
 
           <Flex alignItems="center" gap={1.5}>
             <Text variant="button2" color="white">
               {t('drop.by', {
                 address:
-                  drop.collection.deployer.name ||
-                  formatAddress(drop.collection.deployer.address, 10),
+                  collection.deployer.name ||
+                  formatAddress(collection.deployer.address, 10),
               })}
             </Text>
-            {drop.collection.deployer?.verified && (
+            {collection.deployer.verification?.status === 'VALIDATED' && (
               <Icon as={HiBadgeCheck} color="brand.500" h={4} w={4} />
             )}
           </Flex>
 
           <Flex alignItems="center" gap={2}>
-            {drop.supply ? (
+            {totalSupply ? (
               <Text variant="caption" color="white">
                 <Trans
                   ns="components"
                   i18nKey="drop.supply.available"
                   values={{
-                    count: drop.supply.toNumber(),
+                    count: totalSupply.toNumber(),
                   }}
                   components={[
                     <>
-                      {numbro(drop.supply).format({
+                      {numbro(totalSupply).format({
                         thousandSeparated: true,
                       })}
                     </>,

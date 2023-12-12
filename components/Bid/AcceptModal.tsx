@@ -35,7 +35,7 @@ export type Props = {
   onClose: () => void
   bid: {
     id: string
-    availableQuantity: BigNumber
+    availableQuantity: string
   }
   totalOwned: BigNumber
   acceptBid: (quantity?: BigNumberish) => Promise<void>
@@ -57,12 +57,14 @@ const BidAcceptModal: FC<Props> = ({
     setValue,
   } = useForm<{ quantity: string }>({
     defaultValues: {
-      quantity: bid.availableQuantity.toString(),
+      quantity: bid.availableQuantity,
     },
   })
   const maxQuantity = useMemo(
     () =>
-      totalOwned.lt(bid.availableQuantity) ? totalOwned : bid.availableQuantity,
+      totalOwned.lt(bid.availableQuantity)
+        ? totalOwned
+        : BigNumber.from(bid.availableQuantity),
     [bid, totalOwned],
   )
 
@@ -83,7 +85,7 @@ const BidAcceptModal: FC<Props> = ({
           <ModalBody>
             <VStack spacing="4" align="start">
               <Text>{t('bid.modal.accept.description')}</Text>
-              {bid.availableQuantity.gt(1) && (
+              {BigNumber.from(bid.availableQuantity).gt(1) && (
                 <FormControl isInvalid={!!errors.quantity}>
                   <HStack spacing={1} mb={2}>
                     <FormLabel htmlFor="quantity" m={0}>
@@ -138,7 +140,7 @@ const BidAcceptModal: FC<Props> = ({
                   <FormHelperText>
                     <Text as="p" variant="text" color="gray.500">
                       {t('bid.modal.accept.quantity.available', {
-                        count: bid.availableQuantity.toString(),
+                        count: bid.availableQuantity,
                       })}
                     </Text>
                   </FormHelperText>

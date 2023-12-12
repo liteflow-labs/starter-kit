@@ -43,6 +43,8 @@
       "orderBy": {
         "label": "Sort by",
         "values": {
+          "priceAsc": "Price: Low - High",
+          "priceDesc": "Price: High - Low",
           "createdAtDesc": "Date: Newest",
           "createdAtAsc": "Date: Oldest"
         }
@@ -108,8 +110,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "Price: Low - High",
-        "salesMinUnitPriceInRefDesc": "Price: High - Low",
+        "priceAsc": "Price: Low - High",
+        "priceDesc": "Price: High - Low",
         "createdAtDesc": "Date: Newest",
         "createdAtAsc": "Date: Oldest"
       }
@@ -121,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "Unlockable content",
-        "tooltip": "The item's content can only be unlocked by the owner of the item"
-      },
       "show-preview": "Show preview",
       "description": "Description",
       "traits": "Traits",
@@ -140,6 +138,7 @@
         },
         "refresh-metadata": "Refresh Metadata"
       },
+      "supply": "X{{supply}}",
       "details": {
         "title": "Details",
         "chain": "Chain",
@@ -240,17 +239,6 @@
       "title": "NFT Offer",
       "notifications": {
         "created": "Your offer has been successfully created."
-      },
-      "options": {
-        "label": "Type of offer",
-        "hints": {
-          "fixed": "Enter price to allow users instantly purchase your NFT",
-          "auction": "Set a period of time for which buyers can place bids"
-        },
-        "values": {
-          "fixed": "Fixed price",
-          "auction": "Timed auction"
-        }
       }
     }
   },

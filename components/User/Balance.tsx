@@ -1,23 +1,22 @@
 import { Flex, Heading, Icon, Spinner, Text, VStack } from '@chakra-ui/react'
 import { IoWalletOutline } from '@react-icons/all-files/io5/IoWalletOutline'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, HTMLAttributes } from 'react'
+import { FC } from 'react'
 import useBalance from '../../hooks/useBalance'
 import Price from '../Price/Price'
 
-const Balance: FC<
-  HTMLAttributes<any> & {
-    account: string | null | undefined
-    currency: {
-      id: string
-      decimals: number
-      symbol: string
-    }
+type Props = {
+  account: string
+  currency: {
+    id: string
+    decimals: number
+    symbol: string
   }
-> = ({ account, currency }) => {
+}
+
+const Balance: FC<Props> = ({ account, currency }) => {
   const { t } = useTranslation('components')
   const [balance] = useBalance(account, currency?.id)
-
   return (
     <VStack align="flex-start" spacing={4}>
       <Flex

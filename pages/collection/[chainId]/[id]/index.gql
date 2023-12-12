@@ -19,6 +19,14 @@ query FetchCollectionDetails($collectionAddress: Address!, $chainId: Int!) {
         status
       }
     }
+    totalVolume {
+      refCode
+      valueInRef
+    }
+    floorPrice {
+      refCode
+      valueInRef
+    }
   }
 }
 
@@ -72,12 +80,7 @@ query FetchCollectionAssets(
       name
       description
       image
-      animationUrl
-      hasUnlockableContent
-      unlockedContent {
-        url
-        mimetype
-      }
+      imageMimetype
       createdAt
       creator {
         username
@@ -93,10 +96,12 @@ query FetchCollectionAssets(
         address
         image
         name
+        standard
       }
       owned: ownership(ownerAddress: $currentAccount) {
         quantity
       }
+      quantity
       bestBid: bids(
         orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
         filter: { expiredAt: { greaterThan: $now } }

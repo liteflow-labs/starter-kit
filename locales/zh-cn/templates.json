@@ -43,6 +43,8 @@
       "orderBy": {
         "label": "排序方式",
         "values": {
+          "priceAsc": "价格：低 - 高",
+          "priceDesc": "价格：高 - 低",
           "createdAtDesc": "日期：最新",
           "createdAtAsc": "日期：最早"
         }
@@ -108,8 +110,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "价格：低 - 高",
-        "salesMinUnitPriceInRefDesc": "价格：高 - 低",
+        "priceAsc": "价格：低 - 高",
+        "priceDesc": "价格：高 - 低",
         "createdAtDesc": "日期：最新",
         "createdAtAsc": "日期：最早"
       }
@@ -121,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "可解锁内容",
-        "tooltip": "项目内容只能由项目所有者解锁"
-      },
       "show-preview": "显示预览",
       "description": "描述",
       "traits": "特征",
@@ -140,6 +138,7 @@
         },
         "refresh-metadata": "刷新元数据"
       },
+      "supply": "X{{supply}}",
       "details": {
         "title": "细节",
         "chain": "链",
@@ -240,17 +239,6 @@
       "title": "NFT要约",
       "notifications": {
         "created": "您已成功创建要约。"
-      },
-      "options": {
-        "label": "要约类型",
-        "hints": {
-          "fixed": "为您的NFT输入价格，方便用户立即购买",
-          "auction": "为买家设置提交出价的时间期限"
-        },
-        "values": {
-          "fixed": "固定价格",
-          "auction": "限时拍卖"
-        }
       }
     }
   },

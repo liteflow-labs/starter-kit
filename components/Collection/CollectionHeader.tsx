@@ -16,13 +16,15 @@ import { FaGlobe } from '@react-icons/all-files/fa/FaGlobe'
 import { FaTwitter } from '@react-icons/all-files/fa/FaTwitter'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
-import useBlockExplorer from 'hooks/useBlockExplorer'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import Etherscan from '../../components/Icons/Etherscan'
 import Image from '../../components/Image/Image'
 import Link from '../../components/Link/Link'
-import Truncate from '../../components/Truncate/Truncate'
+import MarkdownViewer from '../../components/MarkdownViewer'
+import { AccountVerificationStatus } from '../../graphql'
+import useBlockExplorer from '../../hooks/useBlockExplorer'
+import useEnvironment from '../../hooks/useEnvironment'
 import { formatAddress } from '../../utils'
 
 type Props = {
@@ -40,15 +42,17 @@ type Props = {
       address: string
       name: string | null
       username: string | null
-      verified: boolean
+      verification: {
+        status: AccountVerificationStatus
+      } | null
     }
   }
-  reportEmail: string
 }
 
-const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
+const CollectionHeader: FC<Props> = ({ collection }) => {
   const { t } = useTranslation('templates')
   const blockExplorer = useBlockExplorer(collection.chainId)
+  const { REPORT_EMAIL } = useEnvironment()
   return (
     <>
       <Flex
@@ -115,7 +119,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
                 {collection.deployer.name ||
                   formatAddress(collection.deployer.address, 10)}
               </Text>
-              {collection.deployer.verified && (
+              {collection.deployer.verification?.status === 'VALIDATED' && (
                 <Icon as={HiBadgeCheck} color="brand.500" boxSize={5} />
               )}
             </Text>
@@ -186,7 +190,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
             />
             <MenuList>
               <Link
-                href={`mailto:${reportEmail}?subject=${encodeURI(
+                href={`mailto:${REPORT_EMAIL}?subject=${encodeURI(
                   'Report a collection',
                 )}&body=${encodeURI(
                   `I would like to report the following collection "${collection.name}" (#${collection.address})\nReason: `,
@@ -201,9 +205,7 @@ const CollectionHeader: FC<Props> = ({ collection, reportEmail }) => {
       </Flex>
       {collection.description && (
         <Box mt={4}>
-          <Truncate size="lg" color="gray.500" length={200}>
-            {collection.description}
-          </Truncate>
+          <MarkdownViewer source={collection.description} />
         </Box>
       )}
     </>

@@ -135,6 +135,7 @@
       "clear": "Borrar filtros"
     },
     "collections": {
+      "more": "Carga más",
       "chains": {
         "label": "Cadena"
       },
@@ -144,6 +145,7 @@
       }
     },
     "traits": {
+      "more": "Carga más",
       "empty": {
         "title": "No se encontraron rasgos",
         "description": "Actualiza tus filtros para encontrar más rasgos."
@@ -192,7 +194,7 @@
       },
       "properties": {
         "label": "Propiedades",
-        "labelWithCollection": "Colección y propiedades",
+        "labelWithCollection": "Colección",
         "search": {
           "placeholder": "Propiedades del filtro"
         }
@@ -443,7 +445,7 @@
     "explore": "Explorar",
     "drops": "Gotas",
     "create": "Crear",
-    "search": "Buscar",
+    "search": "Busque NFT, colecciones o cuentas",
     "sign-in": "Iniciar sesión",
     "chat": "Mensajes",
     "signing-in": "Iniciando sesión...",
@@ -650,37 +652,6 @@
         "view": "Ver mi NFT",
         "ongoing-auction": "Subasta en curso"
       },
-      "form": {
-        "submit": "Crear Oferta",
-        "validation": {
-          "required": "Este campo es obligatorio.",
-          "decimals": "Este campo admite un máximo de {{ nbDecimals }} decimales.",
-          "positive": "Este campo debe ser mayor a 0."
-        },
-        "currency": {
-          "label": "Moneda",
-          "hint": "Selecciona la moneda en la cual los compradores pueden hacer ofertas",
-          "placeholder": "Selecciona una moneda"
-        },
-        "price": {
-          "label": "Precio de reserva",
-          "hint": "Define un precio por debajo del cual ninguna oferta ganará la subasta",
-          "placeholder": "Ingresa precio de reserva",
-          "info": "(Opcional)"
-        },
-        "start": {
-          "label": "Fecha de Inicio",
-          "placeholder": "De inmediato"
-        },
-        "end": {
-          "label": "Fecha de Finalización"
-        },
-        "banner": {
-          "title": "Reglas de las Subastas",
-          "item1": "Cuando una subasta comienza, ya no será posible cancelar la venta. Esto es para dar una experiencia justa a los usuarios de la plataforma.",
-          "item2": "Período de expiración: Para prevenir subastas/ofertas viejas y olvidadas, ambas serán canceladas {{validity}} después de la fecha de finalización seleccionada. Recuerda que puedes volver a crear una venta al finalizar el período."
-        }
-      },
       "info": {
         "title": "Confirma la venta",
         "reserve": "Precio de reserva:",
@@ -855,11 +826,6 @@
         "category": {
           "label": "Categoría",
           "placeholder": "Selecciona una categoría"
-        },
-        "unlockable": {
-          "label": "Contenido desbloqueable",
-          "hint": "(Opcional)",
-          "choice": "El contenido del ítem sólo puede ser desbloqueado por el propietario del ítem."
         }
       }
     },
@@ -896,6 +862,7 @@
     "percent": "{{value}}%"
   },
   "truncate": {
+    "show-less": "Mostrar menos",
     "show-more": "Mostrar más"
   },
   "user": {

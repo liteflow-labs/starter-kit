@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
+  Divider,
   Flex,
   Heading,
   Stack,
@@ -15,9 +16,9 @@ import {
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Filter, OfferFilter } from '../../hooks/useAssetFilterFromQuery'
+import { Filter, OfferFilterType } from '../../hooks/useAssetFilterFromQuery'
 import useEnvironment from '../../hooks/useEnvironment'
 import Image from '../Image/Image'
 import FilterByCollection from './FilterBy/Collection'
@@ -26,7 +27,20 @@ import FilterByTrait from './FilterBy/Trait'
 
 type Props = {
   filter: Filter
-  currentCollection?: { chainId: number; address: string }
+  currentCollection?: {
+    chainId: number
+    address: string
+    name: string
+    image: string | null
+    floorPrice: {
+      valueInRef: string
+      refCode: string
+    } | null
+    totalVolume: {
+      valueInRef: string
+      refCode: string
+    }
+  }
   noChain?: boolean
   onFilterChange: (filter: Filter) => void
 }
@@ -44,8 +58,8 @@ export const NoFilter: Filter = {
 
 const offerTypes = [
   { key: 'all', value: null },
-  { key: 'fixed', value: OfferFilter.fixed },
-  { key: 'auction', value: OfferFilter.auction },
+  { key: 'fixed', value: OfferFilterType.fixed },
+  { key: 'auction', value: OfferFilterType.auction },
 ]
 
 const FilterAsset: NextPage<Props> = ({
@@ -72,14 +86,27 @@ const FilterAsset: NextPage<Props> = ({
   } = formValues
   const filterResult = watch()
 
+  const collection = useMemo(() => {
+    if (currentCollection) {
+      return {
+        chainId: currentCollection.chainId,
+        address: currentCollection.address,
+      }
+    }
+    if (filterResult.collection) {
+      const [chainId, address] = filterResult.collection.split('-')
+      if (!chainId || !address) return
+      return {
+        chainId: parseInt(chainId, 10),
+        address,
+      }
+    }
+  }, [currentCollection, filterResult.collection])
+
   useEffect(() => {
     reset(filter)
     return () => reset(NoFilter)
   }, [reset, filter])
-
-  const [collection, setCollection] = useState<
-    { chainId: number; address: string } | undefined
-  >(currentCollection)
 
   const propagateFilter = useCallback(
     (data: Partial<Filter> = {}) =>
@@ -183,18 +210,20 @@ const FilterAsset: NextPage<Props> = ({
             formValues={formValues}
             onFilterChange={propagateFilter}
           />
-          <FilterByCollection
-            formValues={formValues}
-            selectedCollection={currentCollection}
-            onCollectionChange={setCollection}
-            onFilterChange={propagateFilter}
-          />
-          <FilterByTrait
-            collection={collection}
-            filter={filter}
-            formValues={formValues}
-            onFilterChange={onFilterChange}
-          />
+          {!currentCollection && (
+            <FilterByCollection
+              formValues={formValues}
+              onFilterChange={propagateFilter}
+            />
+          )}
+          {currentCollection && <Divider mb={4} />}
+          {collection && (
+            <FilterByTrait
+              collection={collection}
+              formValues={formValues}
+              onFilterChange={onFilterChange}
+            />
+          )}
         </FormProvider>
       </Accordion>
     </Stack>

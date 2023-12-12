@@ -10,6 +10,17 @@ export const baseTheme = extendTheme({
       '::-webkit-search-cancel-button': {
         WebkitAppearance: 'none',
       },
+      '.wmde-markdown': {
+        display: 'flex',
+        flexDirection: 'column',
+        '.anchor': {
+          display: 'none',
+        },
+        br: {
+          content: '" "',
+          height: 4,
+        },
+      },
     },
   },
   breakPoints: {

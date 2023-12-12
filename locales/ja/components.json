@@ -135,6 +135,7 @@
       "clear": "フィルターをクリアする"
     },
     "collections": {
+      "more": "もっと読み込む",
       "chains": {
         "label": "鎖"
       },
@@ -144,6 +145,7 @@
       }
     },
     "traits": {
+      "more": "もっと読み込む",
       "empty": {
         "title": "特性が見つかりません",
         "description": "フィルターを更新して、より多くの特性を見つけてください。"
@@ -192,7 +194,7 @@
       },
       "properties": {
         "label": "プロパティ",
-        "labelWithCollection": "コレクションとプロパティ",
+        "labelWithCollection": "コレクション",
         "search": {
           "placeholder": "フィルターのプロパティ"
         }
@@ -443,7 +445,7 @@
     "explore": "検索",
     "drops": "ドロップ",
     "create": "作成する",
-    "search": "検索",
+    "search": "NFT、コレクション、またはアカウントを検索する",
     "sign-in": "サインイン",
     "chat": "メッセージ",
     "signing-in": "サインイン...",
@@ -650,37 +652,6 @@
         "view": "私のNFTを見る",
         "ongoing-auction": "進行中のオークション"
       },
-      "form": {
-        "submit": "オファーを作成",
-        "validation": {
-          "required": "必須の項目です",
-          "decimals": "項目は、最大 {{ nbDecimals }} の小数をサポートします。",
-          "positive": "項目は 0 より大きい必要があります。"
-        },
-        "currency": {
-          "label": "通貨",
-          "hint": "入札可能なオークションの通貨を設定する",
-          "placeholder": "通貨の選択"
-        },
-        "price": {
-          "label": "最低落札価格",
-          "hint": "落札に必要な最低金額の設定",
-          "placeholder": "最低入札価格の入力",
-          "info": "(オプション)"
-        },
-        "start": {
-          "label": "開始日",
-          "placeholder": "今すぐ"
-        },
-        "end": {
-          "label": "終了日"
-        },
-        "banner": {
-          "title": "オークションのルール",
-          "item1": "オークションが開始すると、出品を取り消すことはできません。これによってプラットフォーム利用者が公平に利用できます。",
-          "item2": "有効期限: 長い販売期間のせいで忘れられることを防ぐために、設定した終了日である {{validity}} 過ぎると、オークションと入札はキャンセルされます。期間が終了すれば、いつでも再販売が可能です。"
-        }
-      },
       "info": {
         "title": "販売の確認",
         "reserve": "最低落札価格:",
@@ -855,11 +826,6 @@
         "category": {
           "label": "カテゴリー",
           "placeholder": "カテゴリーを選択"
-        },
-        "unlockable": {
-          "label": "ロック解除可能なコンテンツ",
-          "hint": "(オプション)",
-          "choice": "アイテムのコンテンツは、アイテムの所有者のみがロックを解除できます。"
         }
       }
     },
@@ -896,6 +862,7 @@
     "percent": "{{value}}%"
   },
   "truncate": {
+    "show-less": "表示を短縮する",
     "show-more": "続きを表示する"
   },
   "user": {

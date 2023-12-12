@@ -43,6 +43,8 @@
       "orderBy": {
         "label": "並び替え",
         "values": {
+          "priceAsc": "価格: 低 - 高",
+          "priceDesc": "価格: 高 - 低",
           "createdAtDesc": "日付: 最も新しい",
           "createdAtAsc": "日付: 最も古い"
         }
@@ -108,8 +110,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "価格: 低 - 高",
-        "salesMinUnitPriceInRefDesc": "価格: 高 - 低",
+        "priceAsc": "価格: 低 - 高",
+        "priceDesc": "価格: 高 - 低",
         "createdAtDesc": "日付: 最新",
         "createdAtAsc": "日付: 最も古い"
       }
@@ -121,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "ロック解除可能なコンテンツ",
-        "tooltip": "アイテムのコンテンツは、アイテムの所有者のみがロックを解除できます。"
-      },
       "show-preview": "プレビューを表示",
       "description": "説明",
       "traits": "特徴",
@@ -140,6 +138,7 @@
         },
         "refresh-metadata": "メタデータの更新"
       },
+      "supply": "X{{supply}}",
       "details": {
         "title": "詳細",
         "chain": "鎖",
@@ -240,17 +239,6 @@
       "title": "NFTのオファー",
       "notifications": {
         "created": "オファーが無事に作成されました。"
-      },
-      "options": {
-        "label": "オファーの種類",
-        "hints": {
-          "fixed": "NFTを即座に購入可能な価格を入力してください",
-          "auction": "購入者が入札できる期間の設定"
-        },
-        "values": {
-          "fixed": "固定価格",
-          "auction": "期間限定オークション"
-        }
       }
     }
   },

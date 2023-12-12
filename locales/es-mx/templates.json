@@ -43,6 +43,8 @@
       "orderBy": {
         "label": "Ordenar por",
         "values": {
+          "priceAsc": "Precio: Bajo - Alto",
+          "priceDesc": "Precio: Alto - Bajo",
           "createdAtDesc": "Fecha: más recientes",
           "createdAtAsc": "Fecha: más antiguos"
         }
@@ -108,8 +110,8 @@
     },
     "orderBy": {
       "values": {
-        "salesMinUnitPriceInRefAsc": "Precio: Bajo - Alto",
-        "salesMinUnitPriceInRefDesc": "Precio: Alto - Bajo",
+        "priceAsc": "Precio: Bajo - Alto",
+        "priceDesc": "Precio: Alto - Bajo",
         "createdAtDesc": "Fecha: Más reciente",
         "createdAtAsc": "Fecha: Más antiguo"
       }
@@ -121,10 +123,6 @@
   },
   "asset": {
     "detail": {
-      "unlockable": {
-        "title": "Contenido desbloqueable",
-        "tooltip": "El contenido del ítem sólo puede ser desbloqueado por el propietario del ítem."
-      },
       "show-preview": "Ver previsualización",
       "description": "Descripción",
       "traits": "Atributos",
@@ -140,6 +138,7 @@
         },
         "refresh-metadata": "Actualizar metadatos"
       },
+      "supply": "X{{supply}}",
       "details": {
         "title": "Detalles",
         "chain": "Cadena",
@@ -240,17 +239,6 @@
       "title": "Oferta por el NFT",
       "notifications": {
         "created": "Tu oferta ha sido creada."
-      },
-      "options": {
-        "label": "Tipo de Oferta",
-        "hints": {
-          "fixed": "Ingresa un precio para permitir a los usuarios comprar instantáneamente el NFT",
-          "auction": "Define un período de tiempo por el cual los usuarios podrán hacer ofertas"
-        },
-        "values": {
-          "fixed": "Precio Fijo",
-          "auction": "Subasta por Tiempo"
-        }
       }
     }
   },

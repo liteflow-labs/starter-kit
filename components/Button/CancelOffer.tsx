@@ -1,50 +1,52 @@
 import { ButtonProps, useDisclosure } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
 import { JSX, PropsWithChildren, useCallback } from 'react'
 import useBlockExplorer from '../../hooks/useBlockExplorer'
+import useSigner from '../../hooks/useSigner'
 import CancelOfferModal from '../Modal/CancelOffer'
 import ConnectButtonWithNetworkSwitch from './ConnectWithNetworkSwitch'
 
 type Props = Omit<ButtonProps, 'onClick' | 'disabled'> & {
-  signer: Signer | undefined
-  offerId: string
-  chainId: number
+  offer: {
+    id: string
+    asset: {
+      chainId: number
+    }
+  }
   title: string
   onCanceled: () => Promise<any>
   onError: (error: Error) => void
 }
 
 export default function CancelOfferButton({
-  signer,
+  children,
+  offer,
+  title,
   onCanceled,
   onError,
-  title,
-  chainId,
-  offerId,
-  children,
   ...props
 }: PropsWithChildren<Props>): JSX.Element {
-  const blockExplorer = useBlockExplorer(chainId)
+  const signer = useSigner()
+  const blockExplorer = useBlockExplorer(offer.asset.chainId)
   const [cancel, { activeStep, transactionHash }] = useCancelOffer(signer)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleCancelOffer = useCallback(async () => {
     try {
       onOpen()
-      await cancel(offerId)
+      await cancel(offer.id)
       await onCanceled()
     } catch (e) {
       onError(e as Error)
     } finally {
       onClose()
     }
-  }, [cancel, onClose, onOpen, onCanceled, offerId, onError])
+  }, [cancel, offer.id, onCanceled, onClose, onError, onOpen])
 
   return (
     <>
       <ConnectButtonWithNetworkSwitch
-        chainId={chainId}
+        chainId={offer.asset.chainId}
         {...props}
         isLoading={activeStep !== CancelOfferStep.INITIAL}
         onClick={handleCancelOffer}

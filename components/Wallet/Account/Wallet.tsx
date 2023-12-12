@@ -15,7 +15,6 @@ const WalletAccount: FC<{
   }[]
 }> = ({ account, currencies }) => {
   const { t } = useTranslation('components')
-
   return (
     <Stack spacing={12} pt={12}>
       <Stack spacing={6}>

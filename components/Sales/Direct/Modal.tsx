@@ -11,31 +11,19 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { Signer } from '@ethersproject/abstract-signer'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
-import { BlockExplorer } from '../../../hooks/useBlockExplorer'
 import List from '../../List/List'
 import type { Props as ItemProps } from './ModalItem'
 import SaleDirectModalItem from './ModalItem'
 
 export type Props = {
-  blockExplorer: BlockExplorer
-  signer: Signer | undefined
-  currentAccount: string | null | undefined
-  sales: (ItemProps['sale'] & { currency: { id: string } })[]
   chainId: number
+  sales: (ItemProps['sale'] & { currency: { id: string } })[]
   onOfferCanceled: (id: string) => Promise<void>
 }
 
-const SaleDirectModal: FC<Props> = ({
-  blockExplorer,
-  signer,
-  currentAccount,
-  sales,
-  chainId,
-  onOfferCanceled,
-}) => {
+const SaleDirectModal: FC<Props> = ({ sales, chainId, onOfferCanceled }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
@@ -71,9 +59,6 @@ const SaleDirectModal: FC<Props> = ({
                     key={sale.id}
                     chainId={chainId}
                     sale={sale}
-                    blockExplorer={blockExplorer}
-                    signer={signer}
-                    currentAccount={currentAccount}
                     onOfferCanceled={onOfferCanceled}
                   />
                 </>

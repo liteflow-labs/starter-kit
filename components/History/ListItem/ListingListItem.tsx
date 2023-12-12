@@ -4,6 +4,7 @@ import { FaTag } from '@react-icons/all-files/fa/FaTag'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
 import { FC } from 'react'
+import { AccountVerificationStatus } from '../../../graphql'
 import { formatDate } from '../../../utils'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
@@ -12,13 +13,15 @@ import WalletAddress from '../../Wallet/Address'
 
 type IProps = {
   date: Date
-  quantity: BigNumber
-  unitPrice: BigNumber
+  quantity: string
+  unitPrice: string
   fromAddress: string
   from: {
     name: string | null
     image: string | null
-    verified: boolean
+    verification: {
+      status: AccountVerificationStatus
+    } | null
   } | null
   currency: {
     decimals: number
@@ -43,8 +46,8 @@ const ListingListItem: FC<IProps> = ({
           ns="components"
           i18nKey="history.listing.listed"
           values={{
-            count: quantity.lte(Number.MAX_SAFE_INTEGER - 1)
-              ? quantity.toNumber()
+            count: BigNumber.from(quantity).lte(Number.MAX_SAFE_INTEGER - 1)
+              ? BigNumber.from(quantity).toNumber()
               : Number.MAX_SAFE_INTEGER - 1,
           }}
           components={[
@@ -89,7 +92,7 @@ const ListingListItem: FC<IProps> = ({
               >
                 {from?.name || <WalletAddress address={fromAddress} isShort />}
               </Text>
-              {from?.verified && (
+              {from?.verification?.status === 'VALIDATED' && (
                 <Icon as={HiBadgeCheck} color="brand.500" h={4} w={4} />
               )}
             </Flex>,

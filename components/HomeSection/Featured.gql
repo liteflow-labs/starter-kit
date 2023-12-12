@@ -18,12 +18,10 @@ query FetchFeaturedAssets(
         mintType
       }
       image
+      imageMimetype
       animationUrl
+      animationMimetype
       quantity
-      unlockedContent {
-        url
-        mimetype
-      }
       creator {
         address
         name

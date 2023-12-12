@@ -23,11 +23,7 @@ query BidOnAsset(
     quantity
     name
     image
-    animationUrl
-    unlockedContent {
-      url
-      mimetype
-    }
+    imageMimetype
     creator {
       address
       name
