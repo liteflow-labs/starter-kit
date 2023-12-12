@@ -12,7 +12,9 @@ export const DEFAULT_HISTORY_FILTER = [
   'LAZYMINT',
   'LISTING',
   'PURCHASE',
+  'MINT',
   'TRANSFER',
+  'BURN',
 ] as AssetHistoryAction[]
 
 const HistoryListFilter: FC<IProps> = ({ filter, onFilterChange }) => {
@@ -77,6 +79,16 @@ const HistoryListFilter: FC<IProps> = ({ filter, onFilterChange }) => {
         title: t('history.filter.transfer'),
         isActive: selection.includes('TRANSFER'),
         onClick: () => handleFilterChange('TRANSFER'),
+      },
+      {
+        title: t('history.filter.mint'),
+        isActive: selection.includes('MINT'),
+        onClick: () => handleFilterChange('MINT'),
+      },
+      {
+        title: t('history.filter.burn'),
+        isActive: selection.includes('BURN'),
+        onClick: () => handleFilterChange('BURN'),
       },
     ],
     [handleFilterChange, selection, t],

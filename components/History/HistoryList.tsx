@@ -1,4 +1,5 @@
 import { Text } from '@chakra-ui/react'
+import BurnListItem from 'components/History/ListItem/BurnListItem'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
@@ -86,24 +87,33 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
 
       case 'TRANSFER':
         invariant(history.toAddress, 'toAddress is required')
-        if (
-          history.fromAddress === '0x0000000000000000000000000000000000000000'
-        ) {
-          return (
-            <MintListItem
-              {...history}
-              key={i}
-              blockExplorer={blockExplorer}
-              toAddress={history.toAddress}
-            />
-          )
-        }
         return (
           <TransferListItem
             {...history}
             key={i}
             toAddress={history.toAddress}
             blockExplorer={blockExplorer}
+          />
+        )
+
+      case 'MINT':
+        invariant(history.toAddress, 'toAddress is required')
+        return (
+          <MintListItem
+            {...history}
+            key={i}
+            blockExplorer={blockExplorer}
+            toAddress={history.toAddress}
+          />
+        )
+
+      case 'BURN':
+        invariant(history.fromAddress, 'fromAddress is required')
+        return (
+          <BurnListItem
+            {...history}
+            key={i}
+            fromAddress={history.fromAddress}
           />
         )
 
