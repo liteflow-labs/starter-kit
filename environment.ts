@@ -66,9 +66,6 @@ export type Environment = {
   // (Optional) Bugsnag API Key, you can get one at https://www.bugsnag.com/
   BUGSNAG_API_KEY?: string
 
-  // (Optional) Hotjar ID, you can get one at https://www.hotjar.com/
-  HOTJAR_ID?: string
-
   /**
    * Theme configuration
    */
@@ -197,7 +194,6 @@ const getEnvironment = async (): Promise<Environment> => {
     BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     MAX_ROYALTIES: maxRoyaltiesPerTenThousand / 100,
     BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,
-    HOTJAR_ID: process.env.NEXT_PUBLIC_HOTJAR_ID,
     // Theme configuration
     LOGO: metadata.LOGO || '/logo.svg',
     FAVICON: metadata.FAVICON || '/favicon.svg',
