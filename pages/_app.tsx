@@ -10,7 +10,6 @@ import type { AppContext, AppInitialProps, AppProps } from 'next/app'
 import App from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import Script from 'next/script'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -233,26 +232,6 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
 
           <meta name="twitter:card" content="summary" />
         </Head>
-
-        {environment.HOTJAR_ID && (
-          <Script
-            id="hotjar"
-            strategy="afterInteractive"
-            type="text/javascript"
-          >
-            {`
-              (function(h,o,t,j,a,r){
-              h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-              h._hjSettings={hjid:${environment.HOTJAR_ID},hjsv:6};
-              a=o.getElementsByTagName('head')[0];
-              r=o.createElement('script');r.async=1;
-              r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-              a.appendChild(r);
-              })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-            `}
-          </Script>
-        )}
-
         <GoogleAnalytics strategy="lazyOnload" />
         <WagmiConfig config={client}>
           <RainbowKitProvider
