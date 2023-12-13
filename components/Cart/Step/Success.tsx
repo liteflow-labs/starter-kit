@@ -3,16 +3,17 @@ import { FaCheck } from '@react-icons/all-files/fa/FaCheck'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useCart from '../../../hooks/useCart'
 import Link from '../../Link/Link'
 
 type Props = {
   chainId: number
-  transactionHash: string
 }
 
-const CartStepSuccess: FC<Props> = ({ chainId, transactionHash }) => {
+const CartStepSuccess: FC<Props> = ({ chainId }) => {
   const { t } = useTranslation('components')
   const blockExplorer = useBlockExplorer(chainId)
+  const { transactionHash } = useCart()
   return (
     <DrawerBody py={4} px={2}>
       <Stack height="full" align="center" justify="center" spacing={4}>

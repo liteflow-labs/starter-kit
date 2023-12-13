@@ -10,7 +10,6 @@ import {
   HStack,
   Tag,
 } from '@chakra-ui/react'
-import { ContractReceipt } from 'ethers'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
@@ -43,32 +42,26 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   const { clearCart, items } = useCart()
   const [chainId, setChainId] = useState<number>()
   const [selectedItems, setSelectedItems] = useState<CartItem[]>()
-  const [receipt, setReceipt] = useState<ContractReceipt>()
+  const [showSuccess, setShowSuccess] = useState<boolean>()
   const [error, setError] = useState<Error>()
 
   const reset = useCallback(() => {
     setChainId(undefined)
     setSelectedItems(undefined)
-    setReceipt(undefined)
+    setShowSuccess(false)
     setError(undefined)
   }, [])
 
   const content = useMemo(() => {
     if (error) return <CartStepError error={error} />
-    if (chainId && receipt)
-      return (
-        <CartStepSuccess
-          chainId={chainId}
-          transactionHash={receipt.transactionHash}
-        />
-      )
+    if (chainId && showSuccess) return <CartStepSuccess chainId={chainId} />
 
     if (chainId && selectedItems)
       return (
         <CartStepTransaction
           cartItems={selectedItems}
           chainId={chainId}
-          onSubmit={setReceipt}
+          onSubmit={() => setShowSuccess(true)}
           onCancel={reset}
           onError={setError}
         />
@@ -81,7 +74,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
         }}
       />
     )
-  }, [chainId, error, receipt, selectedItems, reset])
+  }, [chainId, error, showSuccess, selectedItems, reset])
 
   useEffect(() => {
     if (isOpen) return
