@@ -77,11 +77,11 @@ const MarkdownViewer: FC<MarkdownPreviewProps> = ({ source, ...props }) => {
             hr: () => <></>,
           }}
           style={{
-            display: isOpen ? 'flex' : '-webkit-box',
-            WebkitLineClamp: 1,
+            display: 'flex',
+            height: isOpen ? 'auto' : '24px',
             overflow: isOpen ? 'visible' : 'hidden',
             textOverflow: 'ellipsis',
-            WebkitBoxOrient: 'vertical',
+            whiteSpace: isOpen ? 'normal' : 'nowrap',
           }}
           source={source}
           {...props}
