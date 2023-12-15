@@ -16,6 +16,9 @@ export const baseTheme = extendTheme({
         '.anchor': {
           display: 'none',
         },
+        p: {
+          display: 'inline-block',
+        },
         br: {
           content: '" "',
           height: 4,

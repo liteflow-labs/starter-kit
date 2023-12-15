@@ -23,6 +23,7 @@ export type IProp = {
   onPageChange?: (page: number) => void
   onLimitChange?: (limit: string) => void
   withoutLimit?: boolean
+  withoutNumbers?: boolean
   limit?: number
   limits?: number[]
 }
@@ -36,6 +37,7 @@ export default function Pagination({
   limit,
   limits,
   withoutLimit,
+  withoutNumbers,
   ...props
 }: IProp): JSX.Element {
   const { t } = useTranslation('components')
@@ -102,50 +104,56 @@ export default function Pagination({
           pointerEvents={hasPreviousPage ? undefined : 'none'}
           onClick={onPageChange ? () => onPageChange(page - 1) : undefined}
         />
-        <ButtonGroup>
-          {hasPreviousPage && (
+        {!withoutNumbers && (
+          <ButtonGroup>
+            {hasPreviousPage && (
+              <Button
+                as={onPageChange ? undefined : Link}
+                href={
+                  onPageChange
+                    ? undefined
+                    : { pathname, query: { ...query, page: page - 1 } }
+                }
+                size="sm"
+                variant="outline"
+                colorScheme="gray"
+                onClick={
+                  onPageChange ? () => onPageChange(page - 1) : undefined
+                }
+              >
+                {page - 1}
+              </Button>
+            )}
             <Button
               as={onPageChange ? undefined : Link}
-              href={
-                onPageChange
-                  ? undefined
-                  : { pathname, query: { ...query, page: page - 1 } }
-              }
+              href={onPageChange ? undefined : { pathname, query }}
               size="sm"
               variant="outline"
-              colorScheme="gray"
-              onClick={onPageChange ? () => onPageChange(page - 1) : undefined}
+              colorScheme="brand"
+              onClick={onPageChange ? () => onPageChange(page) : undefined}
             >
-              {page - 1}
+              {page}
             </Button>
-          )}
-          <Button
-            as={onPageChange ? undefined : Link}
-            href={onPageChange ? undefined : { pathname, query }}
-            size="sm"
-            variant="outline"
-            colorScheme="brand"
-            onClick={onPageChange ? () => onPageChange(page) : undefined}
-          >
-            {page}
-          </Button>
-          {hasNextPage && (
-            <Button
-              as={onPageChange ? undefined : Link}
-              href={
-                onPageChange
-                  ? undefined
-                  : { pathname, query: { ...query, page: page + 1 } }
-              }
-              size="sm"
-              variant="outline"
-              colorScheme="gray"
-              onClick={onPageChange ? () => onPageChange(page + 1) : undefined}
-            >
-              {page + 1}
-            </Button>
-          )}
-        </ButtonGroup>
+            {hasNextPage && (
+              <Button
+                as={onPageChange ? undefined : Link}
+                href={
+                  onPageChange
+                    ? undefined
+                    : { pathname, query: { ...query, page: page + 1 } }
+                }
+                size="sm"
+                variant="outline"
+                colorScheme="gray"
+                onClick={
+                  onPageChange ? () => onPageChange(page + 1) : undefined
+                }
+              >
+                {page + 1}
+              </Button>
+            )}
+          </ButtonGroup>
+        )}
         <IconButton
           as={onPageChange ? undefined : Link}
           href={
