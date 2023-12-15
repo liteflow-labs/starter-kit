@@ -18,7 +18,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { sendTransaction } from '@liteflow/core/dist/utils/transaction'
 import { FaAngleLeft } from '@react-icons/all-files/fa/FaAngleLeft'
 import { FaCheck } from '@react-icons/all-files/fa/FaCheck'
-import { ContractReceipt } from 'ethers'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import invariant from 'ts-invariant'
@@ -35,7 +34,7 @@ import CartItemSummary from '../ItemSummary'
 type Props = {
   cartItems: CartItem[]
   chainId: number
-  onSubmit: (receipt: ContractReceipt) => void
+  onSubmit: () => void
   onCancel: () => void
   onError: (error: Error) => void
 }
@@ -130,8 +129,8 @@ const CartStepTransaction: FC<Props> = ({
     if (!address) return
     try {
       setBuying(true)
-      const receipt = await checkout(cartItems)
-      onSubmit(receipt)
+      await checkout(cartItems)
+      onSubmit()
     } catch (e) {
       onError(e as Error)
     } finally {

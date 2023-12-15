@@ -1,4 +1,3 @@
-import { ContractReceipt } from 'ethers'
 import { createContext, useContext, useEffect } from 'react'
 
 export type CartItem = {
@@ -12,7 +11,8 @@ type CartContext = {
   hasItem: (id: UUID) => boolean
   clearCart: () => void
   items: CartItem[]
-  checkout: (items: CartItem[]) => Promise<ContractReceipt>
+  checkout: (items: CartItem[]) => Promise<void>
+  transactionHash: string | undefined
   registerOnCheckout: (callback: () => void) => void
   unregisterOnCheckout: (callback: () => void) => void
 }

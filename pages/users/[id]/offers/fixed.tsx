@@ -32,6 +32,7 @@ import Price from '../../../../components/Price/Price'
 import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import { OffersOrderBy, useFetchUserFixedPriceQuery } from '../../../../graphql'
+import useCart from '../../../../hooks/useCart'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -39,7 +40,6 @@ import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
-import useCart from '../../../../hooks/useCart'
 
 const FixedPricePage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
