@@ -3,8 +3,6 @@ import {
   Box,
   Center,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
   Icon,
   IconButton,
@@ -15,24 +13,22 @@ import {
   SimpleGrid,
   Skeleton,
   Stack,
-  Switch,
   Tab,
   TabList,
   Tabs,
   Text,
-  Tooltip,
+  VStack,
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAuctionStatus } from '@liteflow/react'
-import { FaInfoCircle } from '@react-icons/all-files/fa/FaInfoCircle'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import Error from 'next/error'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import BidList from '../../../components/Bid/BidList'
 import Head from '../../../components/Head'
@@ -72,7 +68,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const toast = useToast()
   const { address } = useAccount()
   const { query, replace } = useRouter()
-  const [showPreview, setShowPreview] = useState(false)
   const assetId = useRequiredQueryParamSingle('id')
   const [_chainId, collectionAddress, tokenId] = assetId.split('-')
   invariant(_chainId, 'chainId is required')
@@ -96,10 +91,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
 
   const { isValid } = useAuctionStatus(auction, bestAuctionBid)
 
-  const finalMedia = useDetectAssetMedia(asset)
-  const previewMedia = useDetectAssetMedia(
-    asset && { ...asset, unlockedContent: null },
-  )
+  const media = useDetectAssetMedia(asset)
 
   const blockExplorer = useBlockExplorer(chainId)
 
@@ -177,78 +169,15 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             {!asset ? (
               <Skeleton width="100%" height="100%" />
             ) : (
-              <>
-                <TokenMedia
-                  {...(showPreview ? previewMedia : finalMedia)}
-                  defaultText={asset.name}
-                  controls
-                  sizes="
+              <TokenMedia
+                {...media}
+                defaultText={asset.name}
+                controls
+                sizes="
               (min-width: 80em) 500px,
               (min-width: 48em) 50vw,
               100vw"
-                />
-                {asset.hasUnlockableContent && (
-                  <Flex
-                    w="full"
-                    mt={3}
-                    direction={{ base: 'column', lg: 'row' }}
-                    justify={{
-                      base: 'center',
-                      lg: isOwner ? 'space-between' : 'center',
-                    }}
-                    align="center"
-                    gap={4}
-                  >
-                    <Flex align="center" gap={1.5}>
-                      <Heading as="h3" variant="heading3" color="brand.black">
-                        {t('asset.detail.unlockable.title')}
-                      </Heading>
-                      <Tooltip
-                        label={
-                          <Text as="span" variant="caption" color="brand.black">
-                            {t('asset.detail.unlockable.tooltip')}
-                          </Text>
-                        }
-                        placement="top"
-                        rounded="xl"
-                        shadow="lg"
-                        p={3}
-                        bg="white"
-                      >
-                        <span>
-                          <Icon
-                            as={FaInfoCircle}
-                            color="gray.400"
-                            h={4}
-                            w={4}
-                            cursor="pointer"
-                          />
-                        </span>
-                      </Tooltip>
-                    </Flex>
-                    {isOwner && (
-                      <Flex as={FormControl} w="auto" align="center">
-                        <FormLabel mb={0} htmlFor="show-preview">
-                          <Heading
-                            as="h3"
-                            variant="heading3"
-                            color="brand.black"
-                          >
-                            {t('asset.detail.show-preview')}
-                          </Heading>
-                        </FormLabel>
-                        <Switch
-                          id="show-preview"
-                          isChecked={showPreview}
-                          onChange={(event) =>
-                            setShowPreview(event.target.checked)
-                          }
-                        />
-                      </Flex>
-                    )}
-                  </Flex>
-                )}
-              </>
+              />
             )}
           </Center>
         </AspectRatio>
@@ -428,7 +357,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               )}
             </Stack>
 
-            <div>
+            <Box overflow="hidden">
               <Tabs
                 isManual
                 index={tabIndex}
@@ -460,7 +389,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   ))}
                 </TabList>
               </Tabs>
-              <Box h={96} overflowY="auto" py={6}>
+              <VStack alignItems="flex-start" spacing={3} py={6} w="full">
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
                     asset={asset}
@@ -477,8 +406,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     tokenId={tokenId}
                   />
                 )}
-              </Box>
-            </div>
+              </VStack>
+            </Box>
           </>
         )}
       </SimpleGrid>

@@ -34,7 +34,6 @@ The Marketplace template includes the following features:
   - Explore users
 - Native currency and ERC20 support
 - Lazymint for NFTs
-- Unlockable content for NFTs
 - List NFTs on sale
   - Partial filling
   - Fixed price listing

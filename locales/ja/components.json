@@ -267,6 +267,15 @@
   },
   "history": {
     "none": "履歴無し",
+    "filter": {
+      "all": "すべて",
+      "lazymint": "遅延作成",
+      "listing": "リスト",
+      "purchase": "購入",
+      "transfer": "転送",
+      "mint": "Mint",
+      "burn": "Burn"
+    },
     "listing": {
       "by": "までに<0/>",
       "listed_one": "<0>{{count}}</0> エディションのリスト <1/>",
@@ -291,6 +300,11 @@
       "from": "<0/>から<1/>へ",
       "purchased_one": "<0>{{count}}</0> エディションを購入しました <1/>",
       "purchased_other": "<0>{{count}}</0> 各エディションが購入されました <1/>"
+    },
+    "burn": {
+      "quantity_one": "{{count}} エディションが燃やされました",
+      "purchased_other": "{{count}} エディションが燃やされました",
+      "by": "までに{{user}}"
     }
   },
   "modal": {
@@ -498,7 +512,7 @@
     "explore": "検索",
     "drops": "ドロップ",
     "create": "作成する",
-    "search": "検索",
+    "search": "NFT、コレクション、またはアカウントを検索する",
     "sign-in": "サインイン",
     "chat": "メッセージ",
     "signing-in": "サインイン...",
@@ -705,37 +719,6 @@
         "view": "私のNFTを見る",
         "ongoing-auction": "進行中のオークション"
       },
-      "form": {
-        "submit": "オファーを作成",
-        "validation": {
-          "required": "必須の項目です",
-          "decimals": "項目は、最大 {{ nbDecimals }} の小数をサポートします。",
-          "positive": "項目は 0 より大きい必要があります。"
-        },
-        "currency": {
-          "label": "通貨",
-          "hint": "入札可能なオークションの通貨を設定する",
-          "placeholder": "通貨の選択"
-        },
-        "price": {
-          "label": "最低落札価格",
-          "hint": "落札に必要な最低金額の設定",
-          "placeholder": "最低入札価格の入力",
-          "info": "(オプション)"
-        },
-        "start": {
-          "label": "開始日",
-          "placeholder": "今すぐ"
-        },
-        "end": {
-          "label": "終了日"
-        },
-        "banner": {
-          "title": "オークションのルール",
-          "item1": "オークションが開始すると、出品を取り消すことはできません。これによってプラットフォーム利用者が公平に利用できます。",
-          "item2": "有効期限: 長い販売期間のせいで忘れられることを防ぐために、設定した終了日である {{validity}} 過ぎると、オークションと入札はキャンセルされます。期間が終了すれば、いつでも再販売が可能です。"
-        }
-      },
       "info": {
         "title": "販売の確認",
         "reserve": "最低落札価格:",
@@ -910,11 +893,6 @@
         "category": {
           "label": "カテゴリー",
           "placeholder": "カテゴリーを選択"
-        },
-        "unlockable": {
-          "label": "ロック解除可能なコンテンツ",
-          "hint": "(オプション)",
-          "choice": "アイテムのコンテンツは、アイテムの所有者のみがロックを解除できます。"
         }
       }
     },
