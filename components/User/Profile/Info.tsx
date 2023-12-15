@@ -132,7 +132,12 @@ const UserProfileInfo: FC<Props> = ({ address, user, loginUrlForReferral }) => {
           <Heading as="h4" variant="heading2" color="brand.black">
             {t('user.info.bio')}
           </Heading>
-          <Text variant="text-sm" color="gray.500" whiteSpace="pre-wrap">
+          <Text
+            as="div"
+            variant="text-sm"
+            color="gray.500"
+            whiteSpace="pre-wrap"
+          >
             <MarkdownViewer source={user.description} />
           </Text>
         </Stack>

@@ -37,16 +37,23 @@ const SearchInput: FC<IProps> = ({
     })
   }, [onReset, push, query, pathname])
 
+  const deleteButtonActive = useMemo(
+    () => (onReset && search) || (!onReset && searchActive),
+    [onReset, search, searchActive],
+  )
+
   return (
     <InputGroup>
       <Input
         {...register(name, registerOptions)}
         type="search"
-        pr={14}
+        pr={deleteButtonActive ? 14 : 9}
+        isTruncated
+        minWidth={28}
         {...props}
       />
       <InputRightElement w={12} mr={2} pl={0} justifyContent="flex-end" gap={1}>
-        {((onReset && search) || (!onReset && searchActive)) && (
+        {deleteButtonActive && (
           <Icon
             as={HiOutlineX}
             w={5}
