@@ -263,6 +263,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   </Heading>
                   <Stack borderRadius="2xl" p={3} borderWidth="1px">
                     <Text
+                      as="div"
                       variant="text-sm"
                       color="gray.500"
                       whiteSpace="pre-wrap"
