@@ -7,13 +7,12 @@ query FetchOnSaleAssets(
   $orderBy: [AssetsOrderBy!]
 ) {
   onSale: assets(
-    # TODO: find a new way to filter on sale assets after removal of auctions
     filter: {
       quantity: { greaterThan: "0" }
-      salesAndAuctions: {
+      sales: {
         some: {
-          creatorAddress: { equalTo: $address }
-          endAt: { greaterThan: $now }
+          makerAddress: { equalTo: $address }
+          expiredAt: { greaterThan: $now }
         }
       }
     }
