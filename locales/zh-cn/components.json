@@ -198,6 +198,15 @@
   },
   "history": {
     "none": "无历史记录",
+    "filter": {
+      "all": "全部",
+      "lazymint": "懒人铸造",
+      "listing": "上架",
+      "purchase": "购买",
+      "transfer": "转让",
+      "mint": "铸造",
+      "burn": "烧毁"
+    },
     "listing": {
       "by": "截至 <0/>",
       "listed_one": "已上架 <0>{{count}}</0> 个版本，价格为 <1/>",
@@ -222,6 +231,11 @@
       "from": "从 <0/> 至 <1/>",
       "purchased_one": "已购买 <0>{{count}}</0> 个版本，价格为 <1/>",
       "purchased_other": "已购买 <0>{{count}}</0> 个版本，单价为 <1/>"
+    },
+    "burn": {
+      "quantity_one": "{{count}} 版本已烧毁",
+      "purchased_other": "{{count}} 个版本已烧毁",
+      "by": "截至 {{user}}"
     }
   },
   "modal": {
@@ -379,7 +393,7 @@
     "explore": "浏览",
     "drops": "滴",
     "create": "创建",
-    "search": "搜索",
+    "search": "搜索 NFT、集合或账户",
     "sign-in": "登录",
     "chat": "讯息",
     "signing-in": "登录中...",

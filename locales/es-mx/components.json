@@ -198,6 +198,15 @@
   },
   "history": {
     "none": "Sin historial",
+    "filter": {
+      "all": "Todo",
+      "lazymint": "Lazy Mint",
+      "listing": "Listado",
+      "purchase": "Compra",
+      "transfer": "Transferencia",
+      "mint": "Mint",
+      "burn": "Quemar"
+    },
     "listing": {
       "by": "Por <0/>",
       "listed_one": "<0>{{count}}</0> edición listada por <1/>",
@@ -222,6 +231,11 @@
       "from": "De <0/> para <1/>",
       "purchased_one": "<0>{{count}}</0> edición compradas por <1/>",
       "purchased_other": "<0>{{count}}</0> ediciones compradas por <1/> cada una"
+    },
+    "burn": {
+      "quantity_one": "{{count}} edición quemada",
+      "purchased_other": "{{count}} ediciones quemadas",
+      "by": "Por {{user}}"
     }
   },
   "modal": {
@@ -379,7 +393,7 @@
     "explore": "Explorar",
     "drops": "Gotas",
     "create": "Crear",
-    "search": "Buscar",
+    "search": "Busque NFT, colecciones o cuentas",
     "sign-in": "Iniciar sesión",
     "chat": "Mensajes",
     "signing-in": "Iniciando sesión...",

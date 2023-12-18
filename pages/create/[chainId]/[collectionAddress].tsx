@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import Head from '../../../components/Head'
@@ -25,6 +24,7 @@ import useAccount from '../../../hooks/useAccount'
 import useLocalFileURL from '../../../hooks/useLocalFileURL'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import SmallLayout from '../../../layouts/small'
+import Error from '../../_error'
 
 const CreatePage: NextPage = () => {
   const collectionAddress = useRequiredQueryParamSingle('collectionAddress')

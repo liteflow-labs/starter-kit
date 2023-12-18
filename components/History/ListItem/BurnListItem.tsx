@@ -1,8 +1,8 @@
 import { Flex, Icon, Text } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
+import { FaBurn } from '@react-icons/all-files/fa/FaBurn'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
-import { WiStars } from '@react-icons/all-files/wi/WiStars'
 import Trans from 'next-translate/Trans'
+import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import { AccountVerificationStatus } from '../../../graphql'
 import { formatDate } from '../../../utils'
@@ -16,45 +16,28 @@ type IProps = {
   fromAddress: string
   from: {
     name: string | null
+    image: string | null
     verification: {
       status: AccountVerificationStatus
     } | null
   } | null
 }
 
-const LazyMintListItem: FC<IProps> = ({
-  date,
-  from,
-  fromAddress,
-  quantity,
-}) => {
+const BurnListItem: FC<IProps> = ({ quantity, fromAddress, from, date }) => {
+  const { t } = useTranslation('components')
   return (
     <ListItem
       px={0}
-      image={<Icon as={WiStars} h={5} w={5} color="gray.400" />}
+      image={<Icon as={FaBurn} h={5} w={5} color="gray.400" />}
       label={
-        <Trans
-          ns="components"
-          i18nKey="history.lazymint.minted"
-          values={{
-            count: BigNumber.from(quantity).lte(Number.MAX_SAFE_INTEGER - 1)
-              ? BigNumber.from(quantity).toNumber()
-              : Number.MAX_SAFE_INTEGER - 1,
-          }}
-          components={[
-            <Text
-              as="span"
-              color="brand.black"
-              fontWeight="medium"
-              key="text"
-            />,
-          ]}
-        />
+        <Text as="span" color="brand.black" fontWeight="medium">
+          {t('history.burn.quantity', { value: quantity })}
+        </Text>
       }
       subtitle={
         <Trans
           ns="components"
-          i18nKey="history.lazymint.by"
+          i18nKey="history.burn.by"
           components={[
             <Flex
               display="inline-flex"
@@ -80,12 +63,12 @@ const LazyMintListItem: FC<IProps> = ({
         />
       }
       caption={
-        <Flex as="span" align="center" color="gray.400">
+        <Text as="span" color="gray.400">
           {formatDate(date)}
-        </Flex>
+        </Text>
       }
     />
   )
 }
 
-export default LazyMintListItem
+export default BurnListItem
