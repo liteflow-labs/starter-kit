@@ -8,6 +8,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 import dayjs from 'dayjs'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
 import App from 'next/app'
+import Error from 'next/error'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics, usePageViews } from 'nextjs-google-analytics'
@@ -36,7 +37,6 @@ import getEnvironment, { Environment, EnvironmentContext } from '../environment'
 import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import useEnvironment from '../hooks/useEnvironment'
 import { getTheme } from '../styles/theme'
-import Error from './_error'
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
 require('dayjs/locale/es-mx')
