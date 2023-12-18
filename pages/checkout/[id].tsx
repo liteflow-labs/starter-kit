@@ -11,7 +11,6 @@ import {
 import { BigNumber } from '@ethersproject/bignumber'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import Head from '../../components/Head'
@@ -27,6 +26,7 @@ import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle'
 import SmallLayout from '../../layouts/small'
+import Error from '../_error'
 
 type Props = {
   now: string

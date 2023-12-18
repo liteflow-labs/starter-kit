@@ -12,7 +12,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
@@ -29,6 +28,7 @@ import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import SmallLayout from '../../../layouts/small'
+import Error from '../../_error'
 
 type Props = {
   now: string
