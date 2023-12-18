@@ -1,7 +1,6 @@
 import { Flex, SimpleGrid, Skeleton, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import CollectionHeader from '../../../../components/Collection/CollectionHeader'
 import CollectionHeaderSkeleton from '../../../../components/Collection/CollectionHeaderSkeleton'
 import DropDetailSkeleton from '../../../../components/Drop/DropDetailSkeleton'
@@ -17,6 +16,7 @@ import useAccount from '../../../../hooks/useAccount'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../../layouts/large'
+import Error from '../../../_error'
 
 const DropDetail: NextPage = () => {
   const { t } = useTranslation('templates')
