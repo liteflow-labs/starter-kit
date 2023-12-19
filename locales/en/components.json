@@ -175,6 +175,14 @@
           "decimals": "Max price supports a maximum of {{ nbDecimals }} decimals."
         }
       },
+      "offers": {
+        "label": "Status",
+        "values": {
+          "all": "All",
+          "fixed": "Buy now",
+          "bids": "Has offers"
+        }
+      },
       "categories": {
         "label": "Categories"
       },

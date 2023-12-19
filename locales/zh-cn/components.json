@@ -175,6 +175,14 @@
           "decimals": "最高价格支持最多 {{ nbDecimals }} 位小数"
         }
       },
+      "offers": {
+        "label": "状态",
+        "values": {
+          "all": "都",
+          "fixed": "固定价格",
+          "bids": "有优惠"
+        }
+      },
       "categories": {
         "label": "类别"
       },

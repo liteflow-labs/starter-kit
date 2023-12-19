@@ -23,6 +23,7 @@ export type Filter = {
   minPrice: number | null
   maxPrice: number | null
   collection: string | null
+  offers: OfferFilterType | null
   currency: {
     id: string
     decimals: number
@@ -30,6 +31,11 @@ export type Filter = {
   traits: TraitFilter[]
   collectionSearch?: string
   propertySearch?: string
+}
+
+export enum OfferFilterType {
+  fixed = 'fixed',
+  bids = 'bids',
 }
 
 const chainFilter = (chains: number[]): AssetFilter =>
@@ -108,6 +114,25 @@ const maxPriceFilter = (
     } as AssetToManyOfferFilter,
   } as AssetFilter)
 
+const offersFilter = (offers: OfferFilterType, date: Date): AssetFilter => {
+  if (offers === OfferFilterType.bids) {
+    return {
+      bidsExist: true,
+      bids: { some: { expiredAt: { greaterThan: date } } },
+    } as AssetFilter
+  }
+  if (offers === OfferFilterType.fixed) {
+    return {
+      sales: {
+        some: {
+          expiredAt: { greaterThan: date },
+        },
+      },
+    } as AssetFilter
+  }
+  invariant(false, 'Invalid offer filter')
+}
+
 export const extractTraitsFromQuery = (
   query: ParsedUrlQuery,
 ): TraitFilter[] => {
@@ -142,6 +167,7 @@ export const convertFilterToAssetFilter = (
     if (filter.maxPrice)
       queryFilter.push(maxPriceFilter(filter.maxPrice, filter.currency, now))
   }
+  if (filter.offers) queryFilter.push(offersFilter(filter.offers, now))
   if (filter.traits && filter.traits.length > 0)
     queryFilter.push(traitFilter(filter.traits))
   return queryFilter
@@ -160,6 +186,7 @@ export default function useAssetFilterFromQuery(): Filter {
   const minPrice = useQueryParamSingle('minPrice', { parse: parseToFloat })
   const maxPrice = useQueryParamSingle('maxPrice', { parse: parseToFloat })
   const collection = useQueryParamSingle('collection')
+  const offers = useQueryParamSingle<OfferFilterType>('offers')
   const currencyId = useQueryParamSingle('currency')
   const currencyDecimals = useQueryParamSingle('decimals', {
     parse: parseToInt,
@@ -171,6 +198,7 @@ export default function useAssetFilterFromQuery(): Filter {
     minPrice,
     maxPrice,
     collection,
+    offers,
     currency: currencyId
       ? {
           id: currencyId,

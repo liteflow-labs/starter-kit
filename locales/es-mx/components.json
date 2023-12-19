@@ -175,6 +175,14 @@
           "decimals": "El precio máximo admite un máximo de {{ nbDecimals }} decimales."
         }
       },
+      "offers": {
+        "label": "Estatus",
+        "values": {
+          "all": "Todo",
+          "fixed": "Precio Fijo",
+          "bids": "Tiene ofertas"
+        }
+      },
       "categories": {
         "label": "Categorías"
       },

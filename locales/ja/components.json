@@ -175,6 +175,14 @@
           "decimals": "最大価格は、最大 {{ nbDecimals }} の小数をサポートします。"
         }
       },
+      "offers": {
+        "label": "状態",
+        "values": {
+          "all": "すべての",
+          "fixed": "固定価格",
+          "bids": "オファーあり"
+        }
+      },
       "categories": {
         "label": "カテゴリー"
       },
