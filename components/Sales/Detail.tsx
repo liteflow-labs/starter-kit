@@ -7,7 +7,6 @@ import SaleAuctionButton from './Auction/Button'
 import SaleAuctionInfo from './Auction/Info'
 import SaleAuctionSummary from './Auction/Summary'
 import SaleDirectButton from './Direct/Button'
-import SaleDirectInfo from './Direct/Info'
 import SaleDirectSummary from './Direct/Summary'
 import SaleOpenButton from './Open/Button'
 import SaleOpenInfo from './Open/Info'
@@ -134,13 +133,10 @@ const SaleDetail: FC<Props> = ({
             ownAllSupply={ownAllSupply}
             onOfferCanceled={onOfferCanceled}
           />
-          <SaleDirectInfo
+          <SaleOpenInfo
             assetId={asset.id}
-            chainId={asset.collection.chainId}
             isHomepage={isHomepage}
             isOwner={isOwner}
-            sales={directSales}
-            onOfferCanceled={onOfferCanceled}
           />
         </>
       ) : auction && isValid ? (
