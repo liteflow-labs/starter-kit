@@ -1,7 +1,6 @@
 import { Box, Flex, Grid, GridItem, Heading, useToast } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
@@ -16,6 +15,7 @@ import useAccount from '../../../hooks/useAccount'
 import useLoginRedirect from '../../../hooks/useLoginRedirect'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import SmallLayout from '../../../layouts/small'
+import Error from '../../_error'
 
 type Props = {
   assetId: string
