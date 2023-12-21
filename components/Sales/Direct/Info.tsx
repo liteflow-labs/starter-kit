@@ -74,7 +74,7 @@ const SaleDirectInfo: FC<Props> = ({
     const currentAccountSales = sales.filter((x) =>
       isSameAddress(x.maker.address, address),
     )
-    if (currentAccountSales.length !== 1) return null
+    if (currentAccountSales.length !== 1 || sales.length !== 1) return null
 
     const currentAccountFirstSale = sales[0]
     if (!currentAccountFirstSale) return null
