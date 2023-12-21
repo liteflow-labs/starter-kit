@@ -1,15 +1,5 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Icon,
-  Stack,
-  Text,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react'
+import { Stack, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
-import { BiBadgeCheck } from '@react-icons/all-files/bi/BiBadgeCheck'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useAccount from 'hooks/useAccount'
 import useSigner from 'hooks/useSigner'
@@ -19,7 +9,6 @@ import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import { formatError, isSameAddress } from '../../../utils'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import CancelOfferModal from '../../Modal/CancelOffer'
-import Price from '../../Price/Price'
 import SaleOpenEdit from '../Open/Info'
 
 type Sale = {
@@ -82,52 +71,16 @@ const SaleDirectInfo: FC<Props> = ({
   const cancel = useMemo(() => {
     // Only display cancel when there is a single offer owned by the current account
     if (!address) return null
-    const currentAccountFirstSale = sales.find((x) =>
+    const currentAccountSales = sales.filter((x) =>
       isSameAddress(x.maker.address, address),
     )
+    if (currentAccountSales.length !== 1) return null
+
+    const currentAccountFirstSale = sales[0]
     if (!currentAccountFirstSale) return null
 
     return (
-      <Flex
-        gap={6}
-        align={{
-          base: 'flex-start',
-          sm: 'center',
-          md: 'flex-start',
-          lg: 'center',
-        }}
-        justify="space-between"
-        rounded="xl"
-        bg="green.50"
-        p={6}
-        cursor="pointer"
-        direction={{ base: 'column', sm: 'row', md: 'column', lg: 'row' }}
-      >
-        <Flex align="center" gap={5}>
-          <Box>
-            <Flex
-              align="center"
-              justify="center"
-              rounded="lg"
-              bg="green.500"
-              h={8}
-              w={8}
-            >
-              <Icon as={BiBadgeCheck} h={6} w={6} color="white" />
-            </Flex>
-          </Box>
-          <Heading as="h5" variant="heading3" color="gray.500">
-            {t('sales.direct.info.price')}
-            <Text
-              as={Price}
-              color="brand.black"
-              ml={2}
-              fontWeight="semibold"
-              amount={currentAccountFirstSale.unitPrice}
-              currency={currentAccountFirstSale.currency}
-            />
-          </Heading>
-        </Flex>
+      <>
         <ConnectButtonWithNetworkSwitch
           chainId={chainId}
           variant="outline"
@@ -149,7 +102,7 @@ const SaleDirectInfo: FC<Props> = ({
           blockExplorer={blockExplorer}
           transactionHash={transactionHash}
         />
-      </Flex>
+      </>
     )
   }, [
     activeStep,
@@ -166,9 +119,6 @@ const SaleDirectInfo: FC<Props> = ({
 
   const create = useMemo(() => {
     if (!isOwner) return null
-    // Hide the create button if we already show the cancel button to avoid having multiple call to action
-    // This can be disabled if we want to also let the user create new offers
-    if (cancel) return null
     return (
       <SaleOpenEdit
         assetId={assetId}
@@ -176,7 +126,7 @@ const SaleDirectInfo: FC<Props> = ({
         isOwner={isOwner}
       />
     )
-  }, [assetId, isHomepage, isOwner, cancel])
+  }, [assetId, isHomepage, isOwner])
 
   if (isHomepage) return null
   if (!cancel && !create) return null
