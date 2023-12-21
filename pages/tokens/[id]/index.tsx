@@ -26,7 +26,6 @@ import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDots
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
@@ -49,6 +48,7 @@ import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../layouts/large'
 import { formatError } from '../../../utils'
+import Error from '../../_error'
 
 type Props = {
   now: string
