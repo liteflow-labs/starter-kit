@@ -2,6 +2,8 @@ import { Button, Flex, Text } from '@chakra-ui/react'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
+import useAccount from '../../../hooks/useAccount'
+import { isSameAddress } from '../../../utils'
 import Link from '../../Link/Link'
 import type { Props as ModalProps } from './Modal'
 import SaleDirectModal from './Modal'
@@ -23,6 +25,7 @@ const SaleDirectButton: FC<Props> = ({
   ownAllSupply,
   onOfferCanceled,
 }) => {
+  const { address } = useAccount()
   const { t } = useTranslation('components')
   const bid = useMemo(() => {
     if (ownAllSupply) return
@@ -44,21 +47,18 @@ const SaleDirectButton: FC<Props> = ({
 
   const buyNow = useMemo(() => {
     if (sales.length !== 1) return
-    if (!sales[0]) return
+    const sale = sales[0]
+    if (!sale) return
+    if (address && isSameAddress(sale.maker.address, address)) return
     if (ownAllSupply) return
     return (
-      <Button
-        as={Link}
-        href={`/checkout/${sales[0].id}`}
-        size="lg"
-        width="full"
-      >
+      <Button as={Link} href={`/checkout/${sale.id}`} size="lg" width="full">
         <Text as="span" isTruncated>
           {t('sales.direct.button.buy')}
         </Text>
       </Button>
     )
-  }, [sales, ownAllSupply, t])
+  }, [sales, ownAllSupply, t, address])
 
   const seeOffers = useMemo(() => {
     if (sales.length <= 1) return
