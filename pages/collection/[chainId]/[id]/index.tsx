@@ -13,7 +13,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { FC, useCallback, useMemo } from 'react'
 import CollectionHeader from '../../../../components/Collection/CollectionHeader'
@@ -50,6 +49,7 @@ import usePaginateQuery from '../../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../../layouts/large'
 import { removeEmptyFromObject } from '../../../../utils'
+import Error from '../../../_error'
 
 type Props = {
   now: string
