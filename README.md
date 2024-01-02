@@ -14,7 +14,6 @@ The Marketplace template includes the following features:
   - Featured NFTs
   - Featured collections
   - Featured users
-  - Auctions ending soon
   - Custom section with featured elements
 - Search system
   - Search NFTs
@@ -37,11 +36,9 @@ The Marketplace template includes the following features:
 - List NFTs on sale
   - Partial filling
   - Fixed price listing
-  - Timed auction listing
 - Make offers on NFTs
   - Partial filling
   - Open offer
-  - Timed auction offer
 - Purchase NFTs
 - User profile
   - Account

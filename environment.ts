@@ -17,7 +17,6 @@ type RemoteConfig = {
   hasLazyMint: boolean
   maxRoyaltiesPerTenThousand: number
   offerValiditySeconds: number
-  offerAuctionDeltaSeconds: number
   metadata: Partial<{
     REPORT_EMAIL: string
 
@@ -53,9 +52,6 @@ export type Environment = {
 
   // Default value for the number of seconds an offer is valid (users can override this) (recommendation: 28 days)
   OFFER_VALIDITY_IN_SECONDS: number
-
-  // Default value for the number of seconds an auction is valid (users can override this) (recommendation: 7 days)
-  AUCTION_VALIDITY_IN_SECONDS: number
 
   // Base URL of the website
   BASE_URL: string
@@ -153,7 +149,6 @@ const cache = new LRUCache({
           hasLazyMint
           maxRoyaltiesPerTenThousand
           offerValiditySeconds
-          offerAuctionDeltaSeconds
           metadata
         }
       }`,
@@ -180,7 +175,6 @@ const getEnvironment = async (): Promise<Environment> => {
     hasLazyMint,
     maxRoyaltiesPerTenThousand,
     offerValiditySeconds,
-    offerAuctionDeltaSeconds,
     metadata,
   } = config
 
@@ -190,7 +184,6 @@ const getEnvironment = async (): Promise<Environment> => {
     REPORT_EMAIL: metadata.REPORT_EMAIL || '',
     PAGINATION_LIMIT: 12,
     OFFER_VALIDITY_IN_SECONDS: offerValiditySeconds,
-    AUCTION_VALIDITY_IN_SECONDS: offerAuctionDeltaSeconds,
     BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     MAX_ROYALTIES: maxRoyaltiesPerTenThousand / 100,
     BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,

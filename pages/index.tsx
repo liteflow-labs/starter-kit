@@ -1,6 +1,5 @@
 import { Stack } from '@chakra-ui/react'
 import AssetsHomeSection from 'components/HomeSection/Assets'
-import AuctionsHomeSection from 'components/HomeSection/Auctions'
 import CollectionsHomeSection from 'components/HomeSection/Collections'
 import FeaturedHomeSection from 'components/HomeSection/Featured'
 import ResourcesHomeSection from 'components/HomeSection/Resources'
@@ -22,7 +21,6 @@ const HomePage: NextPage<Props> = ({ now }) => {
         <FeaturedHomeSection date={date} />
         <CollectionsHomeSection />
         <UsersHomeSection />
-        <AuctionsHomeSection date={date} />
         <AssetsHomeSection date={date} />
         <ResourcesHomeSection />
       </Stack>

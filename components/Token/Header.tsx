@@ -22,7 +22,6 @@ export type Props = {
   }[]
   isHomepage: boolean
   onOfferCanceled: (id: string) => Promise<void>
-  onAuctionAccepted: (id: string) => Promise<void>
 }
 
 const TokenHeader: FC<Props> = ({
@@ -30,7 +29,6 @@ const TokenHeader: FC<Props> = ({
   currencies,
   isHomepage,
   onOfferCanceled,
-  onAuctionAccepted,
 }) => {
   const media = useDetectAssetMedia(asset)
 
@@ -92,7 +90,6 @@ const TokenHeader: FC<Props> = ({
           currencies={chainCurrencies}
           isHomepage={isHomepage}
           onOfferCanceled={onOfferCanceled}
-          onAuctionAccepted={onAuctionAccepted}
         />
       </Stack>
     </SimpleGrid>

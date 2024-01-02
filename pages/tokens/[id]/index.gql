@@ -135,57 +135,6 @@ query FetchAsset(
       }
       totalAvailableQuantitySum
     }
-    auctions(first: 1, orderBy: CREATED_AT_DESC) {
-      nodes {
-        id
-        endAt
-        expireAt
-        reserveAmount
-        winningOffer {
-          id
-        }
-        currency {
-          image
-          decimals
-          symbol
-        }
-        bestBid: offers(
-          orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-          filter: {
-            signature: { isNull: false }
-            expiredAt: { greaterThan: $now }
-          }
-          first: 100 # TODO: implement pagination
-        ) {
-          nodes {
-            id
-            createdAt
-            expiredAt
-            availableQuantity
-            taker {
-              address
-            }
-            maker {
-              address
-              name
-              image
-              verification {
-                status
-              }
-            }
-            amount
-            unitPrice
-            currency {
-              image
-              name
-              id
-              decimals
-              symbol
-            }
-          }
-        }
-      }
-    }
   }
   currencies(
     orderBy: CREATED_AT_ASC

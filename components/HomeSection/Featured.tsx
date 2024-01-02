@@ -55,7 +55,6 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
               currencies={currencies}
               isHomepage={true}
               onOfferCanceled={reloadInfo}
-              onAuctionAccepted={reloadInfo}
             />
           ))
         : undefined,

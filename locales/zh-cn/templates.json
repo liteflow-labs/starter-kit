@@ -20,7 +20,6 @@
       "title": "知名用户",
       "explore": "探索用户"
     },
-    "auctions": "拍卖",
     "nfts": {
       "title": "著名的 NFT",
       "explore": "探索 NFT"
@@ -215,7 +214,6 @@
       "notifications": {
         "created": "您的出价已成功提交。"
       },
-      "auction": "距离拍卖结束还有",
       "highestBid": "最高出价"
     },
     "checkout": {
@@ -243,32 +241,6 @@
     }
   },
   "user": {
-    "auctions": {
-      "nav": {
-        "fixed": "固定价格",
-        "auction": "拍卖"
-      },
-      "notifications": {
-        "accepted": "拍卖已接受"
-      },
-      "orderBy": {
-        "label": "排序方式",
-        "values": {
-          "createdAtDesc": "日期：最新",
-          "createdAtAsc": "日期：最早"
-        }
-      },
-      "table": {
-        "item": "商品",
-        "price": "最高出价",
-        "status": "状态",
-        "created": "已创建",
-        "empty": {
-          "title": "未找到结果",
-          "description": "请稍后再试或在此期间浏览平台"
-        }
-      }
-    },
     "bid-placed": {
       "nav": {
         "received": "已接收",
@@ -319,7 +291,6 @@
         "accept": "接受",
         "view": "查看 NFT"
       },
-      "auction": "拍卖",
       "orderBy": {
         "label": "排序方式",
         "values": {
@@ -352,8 +323,7 @@
     },
     "fixed": {
       "nav": {
-        "fixed": "固定价格",
-        "auction": "拍卖"
+        "fixed": "固定价格"
       },
       "notifications": {
         "canceled": "要约已取消"

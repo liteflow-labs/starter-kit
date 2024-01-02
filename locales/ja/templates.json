@@ -20,7 +20,6 @@
       "title": "注目のユーザー",
       "explore": "ユーザーを探索する"
     },
-    "auctions": "オークション",
     "nfts": {
       "title": "注目すべきNFT",
       "explore": "NFTを探索する"
@@ -215,7 +214,6 @@
       "notifications": {
         "created": "入札が無事に成功jしました。"
       },
-      "auction": "オークション終了まで",
       "highestBid": "最高入札額"
     },
     "checkout": {
@@ -243,32 +241,6 @@
     }
   },
   "user": {
-    "auctions": {
-      "nav": {
-        "fixed": "固定価格",
-        "auction": "オークション"
-      },
-      "notifications": {
-        "accepted": "オークションを受け付けました"
-      },
-      "orderBy": {
-        "label": "並び替え",
-        "values": {
-          "createdAtDesc": "日付: 最も新しい",
-          "createdAtAsc": "日付: 最も古い"
-        }
-      },
-      "table": {
-        "item": "アイテム",
-        "price": "最高入札額",
-        "status": "状態",
-        "created": "作成済",
-        "empty": {
-          "title": "結果が見つかりません",
-          "description": "またお越しいただくか、プラットフォームをご覧ください"
-        }
-      }
-    },
     "bid-placed": {
       "nav": {
         "received": "受取済",
@@ -319,7 +291,6 @@
         "accept": "受け入れる",
         "view": "NFTを見る"
       },
-      "auction": "競売",
       "orderBy": {
         "label": "並び替え",
         "values": {
@@ -352,8 +323,7 @@
     },
     "fixed": {
       "nav": {
-        "fixed": "固定価格",
-        "auction": "オークション"
+        "fixed": "固定価格"
       },
       "notifications": {
         "canceled": "オファーがキャンセルされました"
