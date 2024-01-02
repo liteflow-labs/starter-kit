@@ -20,7 +20,6 @@
       "title": "Usuarias notables",
       "explore": "Explorar usuarias"
     },
-    "auctions": "Subastas",
     "nfts": {
       "title": "NFT notables",
       "explore": "Explorar NFT"
@@ -215,7 +214,6 @@
       "notifications": {
         "created": "¡Tu oferta ha sido creada!"
       },
-      "auction": "La subasta termina en: ",
       "highestBid": "Oferta más alta"
     },
     "checkout": {
@@ -243,32 +241,6 @@
     }
   },
   "user": {
-    "auctions": {
-      "nav": {
-        "fixed": "Precio Fijo",
-        "auction": "Subasta"
-      },
-      "notifications": {
-        "accepted": "Subasta aceptada"
-      },
-      "orderBy": {
-        "label": "Ordenar por",
-        "values": {
-          "createdAtDesc": "Fecha: más recientes",
-          "createdAtAsc": "Fecha: más antiguos"
-        }
-      },
-      "table": {
-        "item": "Item",
-        "price": "Oferta más alta",
-        "status": "Estatus",
-        "created": "Creado",
-        "empty": {
-          "title": "No Se Han Encontrado Resultados",
-          "description": "Vuelve más tarde o explora la plataforma mientras tanto"
-        }
-      }
-    },
     "bid-placed": {
       "nav": {
         "received": "Recibida",
@@ -319,7 +291,6 @@
         "accept": "Aceptar",
         "view": "Ver NFT"
       },
-      "auction": "Subasta",
       "orderBy": {
         "label": "Ordenar por",
         "values": {
@@ -352,8 +323,7 @@
     },
     "fixed": {
       "nav": {
-        "fixed": "Precio Fijo",
-        "auction": "Subasta"
+        "fixed": "Precio Fijo"
       },
       "notifications": {
         "canceled": "Oferta cancelada"

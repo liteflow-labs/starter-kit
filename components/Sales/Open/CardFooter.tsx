@@ -51,7 +51,7 @@ const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
         ) : bestBid ? (
           <>
             <Text as="span" variant="subtitle2" mr={1}>
-              {t('sales.auction.card-footer.highest-bid')}
+              {t('sales.open.card-footer.highest-bid')}
             </Text>
             <Text
               as={Price}

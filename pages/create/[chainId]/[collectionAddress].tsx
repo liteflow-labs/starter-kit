@@ -137,7 +137,6 @@ const CreatePage: NextPage = () => {
                   ...asset,
                   creator,
                   bestBid: { nodes: [] },
-                  auctions: undefined,
                   firstSale: undefined,
                 }}
               />
