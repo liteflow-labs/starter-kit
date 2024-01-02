@@ -48,7 +48,6 @@ type FormData = {
   quantity: string
   currencyId: string
   expiredAt: string
-  auctionExpirationDate: string
 }
 
 type Props = {
@@ -69,8 +68,7 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
   const signer = useSigner()
   const { address: account } = useAccount()
   const [createOffer, { activeStep, transactionHash }] = useCreateOffer(signer)
-  const { AUCTION_VALIDITY_IN_SECONDS, OFFER_VALIDITY_IN_SECONDS } =
-    useEnvironment()
+  const { OFFER_VALIDITY_IN_SECONDS } = useEnvironment()
   const blockExplorer = useBlockExplorer(asset.chainId)
   const toast = useToast()
   const {
@@ -79,10 +77,6 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
     onClose: createOfferOnClose,
   } = useDisclosure()
 
-  const auctionId = useMemo(
-    () => asset.auctions.nodes[0]?.id,
-    [asset.auctions.nodes],
-  )
   const isMultiple = useMemo(
     () => asset.collection.standard === 'ERC1155',
     [asset.collection.standard],
@@ -92,13 +86,6 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
     [asset.ownerships.nodes],
   )
 
-  const defaultAuctionExpirationValue = useMemo(
-    () =>
-      formatDateDatetime(
-        dayjs().add(AUCTION_VALIDITY_IN_SECONDS, 'second').toISOString(),
-      ),
-    [AUCTION_VALIDITY_IN_SECONDS],
-  )
   const defaultExpirationValue = useMemo(
     () =>
       formatDateDatetime(
@@ -126,7 +113,6 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
       quantity: '1',
       currencyId: currencies[0]?.id,
       expiredAt: defaultExpirationValue,
-      auctionExpirationDate: defaultAuctionExpirationValue,
     },
   })
 
@@ -134,13 +120,7 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
     const defaultCurrency = currencies[0]?.id
     if (defaultCurrency) setValue('currencyId', defaultCurrency)
     setValue('expiredAt', defaultExpirationValue)
-    setValue('auctionExpirationDate', defaultAuctionExpirationValue)
-  }, [
-    currencies,
-    defaultExpirationValue,
-    defaultAuctionExpirationValue,
-    setValue,
-  ])
+  }, [currencies, defaultExpirationValue, setValue])
 
   const price = watch('bid')
   const quantity = watch('quantity')
@@ -177,7 +157,7 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
   }, [balance, feesPerTenThousand, loadingFees, priceUnit, quantityBN])
 
   const onSubmit = handleSubmit(async ({ expiredAt }) => {
-    if (!auctionId && !expiredAt) throw new Error('expiredAt is required')
+    if (!expiredAt) throw new Error('expiredAt is required')
     invariant(currency?.address, 'currency address is required')
     try {
       createOfferOnOpen()
@@ -196,8 +176,7 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
           : ownerAddress
           ? toAddress(ownerAddress)
           : undefined,
-        expiredAt: auctionId ? undefined : new Date(expiredAt),
-        auctionId,
+        expiredAt: new Date(expiredAt),
       })
 
       onCreated(id)
@@ -210,18 +189,6 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
       createOfferOnClose()
     }
   })
-
-  const expirationProps = useMemo(
-    () =>
-      auctionId
-        ? { ...register('auctionExpirationDate'), disabled: true }
-        : {
-            ...register('expiredAt', {
-              required: t('offer.form.bid.validation.required'),
-            }),
-          },
-    [auctionId, register, t],
-  )
 
   if (!currency) return <></>
   return (
@@ -390,10 +357,12 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
           </FormHelperText>
         </HStack>
         <Input
+          {...register('expiredAt', {
+            required: t('offer.form.bid.validation.required'),
+          })}
           type="datetime-local"
           min={minDate}
           max={maxDate}
-          {...expirationProps}
         />
         {errors.expiredAt && (
           <FormErrorMessage>{errors.expiredAt.message}</FormErrorMessage>

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Icon,
   Stack,
@@ -194,11 +193,6 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                           >
                             <Text as="span" noOfLines={1}>
                               {item.asset.name}
-                              {item.auctionId && (
-                                <Tag size="sm" ml={2}>
-                                  {t('user.bid-received.auction')}
-                                </Tag>
-                              )}
                             </Text>
                             {BigNumber.from(item.availableQuantity).gt(1) && (
                               <Text
@@ -229,35 +223,25 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>
-                        {ownerLoggedIn &&
-                          (item.auctionId ? (
-                            <Button
-                              as={Link}
-                              variant="outline"
-                              colorScheme="gray"
-                              href={`/tokens/${item.asset.id}`}
-                            >
-                              {t('user.bid-received.actions.view')}
-                            </Button>
-                          ) : (
-                            <AcceptOfferButton
-                              offer={item}
-                              title={t('user.bid-received.accept.title')}
-                              variant="outline"
-                              colorScheme="gray"
-                              onAccepted={onAccepted}
-                              onError={(e) =>
-                                toast({
-                                  status: 'error',
-                                  title: formatError(e),
-                                })
-                              }
-                            >
-                              <Text as="span" isTruncated>
-                                {t('user.bid-received.actions.accept')}
-                              </Text>
-                            </AcceptOfferButton>
-                          ))}
+                        {ownerLoggedIn && (
+                          <AcceptOfferButton
+                            offer={item}
+                            title={t('user.bid-received.accept.title')}
+                            variant="outline"
+                            colorScheme="gray"
+                            onAccepted={onAccepted}
+                            onError={(e) =>
+                              toast({
+                                status: 'error',
+                                title: formatError(e),
+                              })
+                            }
+                          >
+                            <Text as="span" isTruncated>
+                              {t('user.bid-received.actions.accept')}
+                            </Text>
+                          </AcceptOfferButton>
+                        )}
                       </Td>
                     </Tr>
                   ))}

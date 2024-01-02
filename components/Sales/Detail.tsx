@@ -1,11 +1,7 @@
 import { Stack } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAuctionStatus } from '@liteflow/react'
 import { FC, useMemo } from 'react'
 import { AccountVerificationStatus, Standard } from '../../graphql'
-import SaleAuctionButton from './Auction/Button'
-import SaleAuctionInfo from './Auction/Info'
-import SaleAuctionSummary from './Auction/Summary'
 import SaleDirectButton from './Direct/Button'
 import SaleDirectSummary from './Direct/Summary'
 import SaleOpenButton from './Open/Button'
@@ -45,41 +41,6 @@ export type Props = {
         }
       }[]
     }
-    auctions: {
-      nodes: {
-        id: string
-        endAt: Date
-        expireAt: Date
-        reserveAmount: string
-        winningOffer:
-          | {
-              id: string
-            }
-          | null
-          | undefined
-        bestBid: {
-          nodes: {
-            amount: string
-            unitPrice: string
-            currency: {
-              decimals: number
-              symbol: string
-              image: string
-            }
-            maker: {
-              address: string
-              image: string | null
-              name: string | null
-            }
-          }[]
-        }
-        currency: {
-          decimals: number
-          image: string
-          symbol: string
-        }
-      }[]
-    }
   }
   currencies: {
     chainId: number
@@ -89,7 +50,6 @@ export type Props = {
 
   // Callbacks
   onOfferCanceled: (id: string) => Promise<void>
-  onAuctionAccepted: (id: string) => Promise<void>
 }
 
 const SaleDetail: FC<Props> = ({
@@ -97,12 +57,7 @@ const SaleDetail: FC<Props> = ({
   currencies,
   isHomepage,
   onOfferCanceled,
-  onAuctionAccepted,
 }) => {
-  const auction = asset.auctions.nodes[0]
-  const bestAuctionBid = auction?.bestBid?.nodes[0]
-  const { ended, isValid } = useAuctionStatus(auction, bestAuctionBid)
-
   const isOwner = useMemo(
     () => BigNumber.from(asset.owned?.quantity || 0).gt('0'),
     [asset.owned?.quantity],
@@ -137,29 +92,6 @@ const SaleDetail: FC<Props> = ({
             assetId={asset.id}
             isHomepage={isHomepage}
             isOwner={isOwner}
-          />
-        </>
-      ) : auction && isValid ? (
-        <>
-          <SaleAuctionSummary
-            auction={auction}
-            bestAuctionBid={bestAuctionBid}
-            isOwner={isOwner}
-          />
-          <SaleAuctionButton
-            assetId={asset.id}
-            isEnded={ended}
-            isOwner={isOwner}
-            isHomepage={isHomepage}
-          />
-          <SaleAuctionInfo
-            assetId={asset.id}
-            chainId={asset.collection.chainId}
-            auction={auction}
-            bestAuctionBid={bestAuctionBid}
-            isOwner={isOwner}
-            isHomepage={isHomepage}
-            onAuctionAccepted={onAuctionAccepted}
           />
         </>
       ) : (
