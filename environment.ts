@@ -134,7 +134,6 @@ const getEnvironment = async (
     domain,
     maxRoyaltiesPerTenThousand,
     offerValiditySeconds,
-    offerAuctionDeltaSeconds,
     hasLazyMint,
   } = await response.json()
   return {
@@ -143,7 +142,7 @@ const getEnvironment = async (
     REPORT_EMAIL: metadata?.REPORT_EMAIL || '',
     PAGINATION_LIMIT: 12,
     OFFER_VALIDITY_IN_SECONDS: offerValiditySeconds,
-    AUCTION_VALIDITY_IN_SECONDS: offerAuctionDeltaSeconds,
+    AUCTION_VALIDITY_IN_SECONDS: 3600,
     BASE_URL: domain || process.env.NEXT_PUBLIC_BASE_URL,
     MAX_ROYALTIES: maxRoyaltiesPerTenThousand / 100,
     BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,

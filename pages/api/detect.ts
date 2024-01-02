@@ -23,11 +23,10 @@ export default async function detect(
     domain: string
     maxRoyaltiesPerTenThousand: number
     offerValiditySeconds: number
-    offerAuctionDeltaSeconds: number
     hasLazyMint: boolean
     metadata: any
   }>(
-    `SELECT id, name, domain, "maxRoyaltiesPerTenThousand", "offerValiditySeconds", "offerAuctionDeltaSeconds", "hasLazyMint", metadata 
+    `SELECT id, name, domain, "maxRoyaltiesPerTenThousand", "offerValiditySeconds", "hasLazyMint", metadata 
       FROM organization."Organization" 
       WHERE domain = $1 LIMIT 1;`,
     [domain],
@@ -39,7 +38,6 @@ export default async function detect(
     domain: organization.domain,
     maxRoyaltiesPerTenThousand: organization.maxRoyaltiesPerTenThousand,
     offerValiditySeconds: organization.offerValiditySeconds,
-    offerAuctionDeltaSeconds: organization.offerAuctionDeltaSeconds,
     hasLazyMint: organization.hasLazyMint,
   })
 }
