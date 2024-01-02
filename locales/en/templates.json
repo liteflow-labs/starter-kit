@@ -20,7 +20,6 @@
       "title": "Notable Users",
       "explore": "Explore users"
     },
-    "auctions": "Auctions",
     "nfts": {
       "title": "Notable NFTs",
       "explore": "Explore NFTs"
@@ -215,7 +214,6 @@
       "notifications": {
         "created": "Your bid has been successfully placed."
       },
-      "auction": "Auction ending in",
       "highestBid": "Highest bid"
     },
     "checkout": {
@@ -243,32 +241,6 @@
     }
   },
   "user": {
-    "auctions": {
-      "nav": {
-        "fixed": "Fixed price",
-        "auction": "Auction"
-      },
-      "notifications": {
-        "accepted": "Auction accepted"
-      },
-      "orderBy": {
-        "label": "Sort by",
-        "values": {
-          "createdAtDesc": "Date: Newest",
-          "createdAtAsc": "Date: Oldest"
-        }
-      },
-      "table": {
-        "item": "Item",
-        "price": "Highest bid",
-        "status": "Status",
-        "created": "Created",
-        "empty": {
-          "title": "No Results Found",
-          "description": "Come back later or browse the platform in the meantime"
-        }
-      }
-    },
     "bid-placed": {
       "nav": {
         "received": "Received",
@@ -319,7 +291,6 @@
         "accept": "Accept",
         "view": "View NFT"
       },
-      "auction": "Auction",
       "orderBy": {
         "label": "Sort by",
         "values": {
@@ -352,8 +323,7 @@
     },
     "fixed": {
       "nav": {
-        "fixed": "Fixed price",
-        "auction": "Auction"
+        "fixed": "Fixed price"
       },
       "notifications": {
         "canceled": "Offer canceled"

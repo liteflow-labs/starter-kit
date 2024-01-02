@@ -3,10 +3,7 @@ import type { ParsedUrlQuery } from 'querystring'
 import invariant from 'ts-invariant'
 import {
   AssetFilter,
-  AssetToManyAuctionFilter,
   AssetToManyOfferFilter,
-  AuctionFilter,
-  DatetimeFilter,
   IntFilter,
   OfferFilter,
   Uint256Filter,
@@ -38,7 +35,7 @@ export type Filter = {
 
 export enum OfferFilterType {
   fixed = 'fixed',
-  auction = 'auction',
+  bids = 'bids',
 }
 
 const chainFilter = (chains: number[]): AssetFilter =>
@@ -118,13 +115,10 @@ const maxPriceFilter = (
   } as AssetFilter)
 
 const offersFilter = (offers: OfferFilterType, date: Date): AssetFilter => {
-  if (offers === OfferFilterType.auction) {
+  if (offers === OfferFilterType.bids) {
     return {
-      auctions: {
-        some: {
-          endAt: { greaterThan: date } as DatetimeFilter,
-        } as AuctionFilter,
-      } as AssetToManyAuctionFilter,
+      bidsExist: true,
+      bids: { some: { expiredAt: { greaterThan: date } } },
     } as AssetFilter
   }
   if (offers === OfferFilterType.fixed) {
