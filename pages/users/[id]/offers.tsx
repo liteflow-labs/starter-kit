@@ -6,7 +6,6 @@ import {
   Stack,
   Table,
   TableContainer,
-  Tag,
   Tbody,
   Td,
   Text,
@@ -22,23 +21,23 @@ import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
-import CancelOfferButton from '../../../../components/Button/CancelOffer'
-import Empty from '../../../../components/Empty/Empty'
-import Image from '../../../../components/Image/Image'
-import Link from '../../../../components/Link/Link'
-import Loader from '../../../../components/Loader'
-import Pagination from '../../../../components/Pagination/Pagination'
-import Price from '../../../../components/Price/Price'
-import UserProfileTemplate from '../../../../components/Profile'
-import Select from '../../../../components/Select/Select'
-import { OffersOrderBy, useFetchUserFixedPriceQuery } from '../../../../graphql'
-import useEnvironment from '../../../../hooks/useEnvironment'
-import useOrderByQuery from '../../../../hooks/useOrderByQuery'
-import usePaginate from '../../../../hooks/usePaginate'
-import usePaginateQuery from '../../../../hooks/usePaginateQuery'
-import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParamSingle'
-import LargeLayout from '../../../../layouts/large'
-import { dateFromNow, formatError } from '../../../../utils'
+import CancelOfferButton from '../../../components/Button/CancelOffer'
+import Empty from '../../../components/Empty/Empty'
+import Image from '../../../components/Image/Image'
+import Link from '../../../components/Link/Link'
+import Loader from '../../../components/Loader'
+import Pagination from '../../../components/Pagination/Pagination'
+import Price from '../../../components/Price/Price'
+import UserProfileTemplate from '../../../components/Profile'
+import Select from '../../../components/Select/Select'
+import { OffersOrderBy, useFetchUserFixedPriceQuery } from '../../../graphql'
+import useEnvironment from '../../../hooks/useEnvironment'
+import useOrderByQuery from '../../../hooks/useOrderByQuery'
+import usePaginate from '../../../hooks/usePaginate'
+import usePaginateQuery from '../../../hooks/usePaginateQuery'
+import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
+import LargeLayout from '../../../layouts/large'
+import { dateFromNow, formatError } from '../../../utils'
 
 const FixedPricePage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
@@ -84,72 +83,33 @@ const FixedPricePage: NextPage = () => {
         loginUrlForReferral={BASE_URL + '/login'}
       >
         <Stack spacing={6}>
-          <Flex
-            justify={{ md: 'space-between' }}
-            align={{ md: 'center' }}
-            gap={4}
-            direction={{ base: 'column', md: 'row' }}
-          >
-            <Flex as="nav" gap={2}>
-              <Link href={`/users/${userAddress}/offers`}>
-                <Tag
-                  size="lg"
-                  colorScheme="brand"
-                  border="1px"
-                  borderColor="brand.500"
-                  borderRadius="full"
-                >
-                  <Text as="span" variant="text-sm" color="brand.600">
-                    {t('user.fixed.nav.fixed')}
-                  </Text>
-                </Tag>
-              </Link>
-              <Link href={`/users/${userAddress}/offers/auction`}>
-                <Tag
-                  size="lg"
-                  variant="outline"
-                  borderRadius="full"
-                  boxShadow="none"
-                  border="1px"
-                  borderColor="gray.200"
-                  _hover={{
-                    bgColor: 'gray.100',
-                  }}
-                >
-                  <Text as="span" variant="text-sm" color="brand.black">
-                    {t('user.fixed.nav.auction')}
-                  </Text>
-                </Tag>
-              </Link>
-            </Flex>
-            <Box ml="auto" w={{ base: 'full', md: 'min-content' }}>
-              <Select<OffersOrderBy>
-                label={t('user.fixed.orderBy.label')}
-                name="Sort by"
-                onChange={changeOrder}
-                choices={[
-                  {
-                    label: t('user.fixed.orderBy.values.createdAtDesc'),
-                    value: 'CREATED_AT_DESC',
-                  },
-                  {
-                    label: t('user.fixed.orderBy.values.createdAtAsc'),
-                    value: 'CREATED_AT_ASC',
-                  },
-                  {
-                    label: t('user.fixed.orderBy.values.unitPriceAsc'),
-                    value: 'UNIT_PRICE_IN_REF_ASC',
-                  },
-                  {
-                    label: t('user.fixed.orderBy.values.unitPriceDesc'),
-                    value: 'UNIT_PRICE_IN_REF_DESC',
-                  },
-                ]}
-                value={orderBy}
-                inlineLabel
-              />
-            </Box>
-          </Flex>
+          <Box ml="auto" w={{ base: 'full', md: 'min-content' }}>
+            <Select<OffersOrderBy>
+              label={t('user.fixed.orderBy.label')}
+              name="Sort by"
+              onChange={changeOrder}
+              choices={[
+                {
+                  label: t('user.fixed.orderBy.values.createdAtDesc'),
+                  value: 'CREATED_AT_DESC',
+                },
+                {
+                  label: t('user.fixed.orderBy.values.createdAtAsc'),
+                  value: 'CREATED_AT_ASC',
+                },
+                {
+                  label: t('user.fixed.orderBy.values.unitPriceAsc'),
+                  value: 'UNIT_PRICE_IN_REF_ASC',
+                },
+                {
+                  label: t('user.fixed.orderBy.values.unitPriceDesc'),
+                  value: 'UNIT_PRICE_IN_REF_DESC',
+                },
+              ]}
+              value={orderBy}
+              inlineLabel
+            />
+          </Box>
 
           {offers === undefined ? (
             <Loader />

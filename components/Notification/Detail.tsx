@@ -9,15 +9,6 @@ import Link from '../Link/Link'
 import AccountImage from '../Wallet/Image'
 import {
   AccountVerificationValidated,
-  AuctionBidCreated,
-  AuctionBidExpired,
-  AuctionEndedNoBids,
-  AuctionEndedReservePriceBuyer,
-  AuctionEndedReservePriceSeller,
-  AuctionEndedWonBuyer,
-  AuctionEndedWonSeller,
-  AuctionExpireSoon,
-  AuctionExpired,
   BidAccepted,
   BidCreated,
   BidExpired,
@@ -34,13 +25,6 @@ export type IProps = {
     account: {
       address: string
       image: string | null
-    }
-  } | null
-  auction: {
-    asset: {
-      id: string
-      image: string
-      name: string
     }
   } | null
   offer: {
@@ -74,7 +58,6 @@ export default function NotificationDetail({
   action,
   createdAt,
   accountVerification,
-  auction,
   offer,
   trade,
   refereeAccount,
@@ -112,46 +95,6 @@ export default function NotificationDetail({
         invariant(offer, 'offer is required')
         return BidCreated({ currentAccount, offer })
 
-      case 'AUCTION_BID_CREATED':
-        invariant(auction, 'auction is required')
-        invariant(offer, 'offer is required')
-        return AuctionBidCreated({ auction, currentAccount, offer })
-
-      case 'AUCTION_BID_EXPIRED':
-        invariant(auction, 'auction is required')
-        invariant(offer, 'offer is required')
-        return AuctionBidExpired({ auction, currentAccount, offer })
-
-      case 'AUCTION_ENDED_WON_SELLER':
-        invariant(auction, 'auction is required')
-        invariant(offer, 'offer is required')
-        return AuctionEndedWonSeller({ auction, currentAccount, offer })
-
-      case 'AUCTION_ENDED_RESERVEPRICE_SELLER':
-        invariant(auction, 'auction is required')
-        return AuctionEndedReservePriceSeller({ auction, currentAccount })
-
-      case 'AUCTION_ENDED_NOBIDS':
-        invariant(auction, 'auction is required')
-        return AuctionEndedNoBids({ auction, currentAccount })
-
-      case 'AUCTION_ENDED_WON_BUYER':
-        invariant(auction, 'auction is required')
-        return AuctionEndedWonBuyer({ auction })
-
-      case 'AUCTION_ENDED_RESERVEPRICE_BUYER':
-        invariant(auction, 'auction is required')
-        return AuctionEndedReservePriceBuyer({ auction })
-
-      case 'AUCTION_EXPIRE_SOON':
-        invariant(auction, 'auction is required')
-        invariant(offer, 'offer is required')
-        return AuctionExpireSoon({ auction, currentAccount, offer })
-
-      case 'AUCTION_EXPIRED':
-        invariant(auction, 'auction is required')
-        return AuctionExpired({ auction, currentAccount })
-
       case 'BID_EXPIRED':
         invariant(offer, 'offer is required')
         return BidExpired({ currentAccount, offer })
@@ -170,7 +113,6 @@ export default function NotificationDetail({
     accountVerification,
     offer,
     trade,
-    auction,
     refereeAccount,
   ])
 

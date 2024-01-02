@@ -184,11 +184,6 @@ const BidPlacedPage: NextPage = () => {
                           >
                             <Text as="span" noOfLines={1}>
                               {item.asset.name}
-                              {item.auctionId && (
-                                <Tag size="sm" ml={2}>
-                                  {t('user.bid-received.auction')}
-                                </Tag>
-                              )}
                             </Text>
                             {BigNumber.from(item.availableQuantity).gt(1) && (
                               <Text

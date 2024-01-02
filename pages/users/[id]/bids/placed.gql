@@ -26,7 +26,6 @@ query FetchUserBidsPlaced(
       availableQuantity
       expiredAt
       createdAt
-      auctionId
       maker {
         address
         name

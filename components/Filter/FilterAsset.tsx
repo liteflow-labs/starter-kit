@@ -59,7 +59,7 @@ export const NoFilter: Filter = {
 const offerTypes = [
   { key: 'all', value: null },
   { key: 'fixed', value: OfferFilterType.fixed },
-  { key: 'auction', value: OfferFilterType.auction },
+  { key: 'bids', value: OfferFilterType.bids },
 ]
 
 const FilterAsset: NextPage<Props> = ({
