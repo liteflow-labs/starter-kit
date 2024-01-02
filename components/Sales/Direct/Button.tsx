@@ -73,6 +73,8 @@ const SaleDirectButton: FC<Props> = ({
           isLoading={activeStep !== CancelOfferStep.INITIAL}
           width="full"
           size="lg"
+          variant="outline"
+          colorScheme="gray"
         >
           <Text as="span" isTruncated>
             {t('sales.direct.info.cancel')}
@@ -107,8 +109,8 @@ const SaleDirectButton: FC<Props> = ({
       <Button
         as={Link}
         href={`/tokens/${assetId}/bid`}
-        variant="outline"
-        colorScheme="gray"
+        variant={cancel ? 'solid' : 'outline'}
+        colorScheme={cancel ? undefined : 'gray'}
         size="lg"
         width="full"
       >
@@ -117,7 +119,7 @@ const SaleDirectButton: FC<Props> = ({
         </Text>
       </Button>
     )
-  }, [ownAllSupply, assetId, t])
+  }, [assetId, cancel, ownAllSupply, t])
 
   const buyNow = useMemo(() => {
     if (sales.length !== 1) return
@@ -167,8 +169,8 @@ const SaleDirectButton: FC<Props> = ({
 
   return (
     <Flex gap={6} direction={{ base: 'column', md: 'row' }}>
-      {bid}
       {cancel}
+      {bid}
       {buyNow}
       {seeOffers}
     </Flex>
