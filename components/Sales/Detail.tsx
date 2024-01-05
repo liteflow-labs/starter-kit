@@ -3,11 +3,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { FC, useMemo } from 'react'
 import { AccountVerificationStatus, Standard } from '../../graphql'
 import SaleDirectButton from './Direct/Button'
-import SaleDirectInfo from './Direct/Info'
 import SaleDirectSummary from './Direct/Summary'
 import SaleOpenButton from './Open/Button'
-import SaleOpenInfo from './Open/Info'
 import SaleOpenSummary from './Open/Summary'
+import SaleAction from './SaleAction'
 
 export type Props = {
   asset: {
@@ -89,14 +88,6 @@ const SaleDetail: FC<Props> = ({
             ownAllSupply={ownAllSupply}
             onOfferCanceled={onOfferCanceled}
           />
-          <SaleDirectInfo
-            assetId={asset.id}
-            chainId={asset.collection.chainId}
-            isHomepage={isHomepage}
-            isOwner={isOwner}
-            sales={directSales}
-            onOfferCanceled={onOfferCanceled}
-          />
         </>
       ) : (
         <>
@@ -106,13 +97,13 @@ const SaleDetail: FC<Props> = ({
             isHomepage={isHomepage}
             ownAllSupply={ownAllSupply}
           />
-          <SaleOpenInfo
-            assetId={asset.id}
-            isHomepage={isHomepage}
-            isOwner={isOwner}
-          />
         </>
       )}
+      <SaleAction
+        assetId={asset.id}
+        isHomepage={isHomepage}
+        isOwner={isOwner}
+      />
     </Stack>
   )
 }

@@ -53,7 +53,7 @@ const SaleDirectModal: FC<Props> = ({ sales, chainId, onOfferCanceled }) => {
               {sales.map((sale, i) => (
                 <>
                   {i > 0 && sales[i - 1]?.currency.id !== sale.currency.id && (
-                    <hr />
+                    <hr key={sale.id} />
                   )}
                   <SaleDirectModalItem
                     key={sale.id}
