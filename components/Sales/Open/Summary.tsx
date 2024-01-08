@@ -1,4 +1,4 @@
-import { Flex, Heading, Stack } from '@chakra-ui/react'
+import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import Image from '../../Image/Image'
@@ -11,26 +11,31 @@ export type Props = {
 
 const SaleOpenSummary: FC<Props> = ({ currencies }) => {
   const { t } = useTranslation('components')
+
+  const currencyStyles = {
+    align: 'center',
+    justify: 'center',
+    h: 8,
+    w: 8,
+    overflow: 'hidden',
+    rounded: 'full',
+    borderWidth: '1px',
+    borderColor: 'gray.200',
+  }
+
   return (
     <Stack spacing={3}>
       <Heading as="h5" variant="heading3" color="gray.500">
         {t('sales.open.summary.open')}
       </Heading>
       <Flex _first={{ ml: 0 }}>
-        {currencies.map((currency, i) => (
+        {currencies.slice(0, 5).map((currency, i) => (
           <Flex
-            position="relative"
-            as="span"
-            align="center"
-            justify="center"
-            h={8}
-            w={8}
-            overflow="hidden"
-            rounded="full"
-            borderWidth="1px"
-            borderColor="gray.200"
-            ml={i > 0 ? -2 : undefined}
             key={i}
+            as="span"
+            position="relative"
+            ml={i > 0 ? -2 : undefined}
+            {...currencyStyles}
           >
             <Image
               src={currency.image}
@@ -41,6 +46,15 @@ const SaleOpenSummary: FC<Props> = ({ currencies }) => {
             />
           </Flex>
         ))}
+        {currencies.length > 5 && (
+          <Flex ml={-2} zIndex={10}>
+            <Flex as="span" bgColor="brand.50" {...currencyStyles}>
+              <Text as="span" variant="caption" color="brand.500">
+                {`+${currencies.length >= 103 ? 99 : currencies.length - 4}`}
+              </Text>
+            </Flex>
+          </Flex>
+        )}
         <Heading as="h2" variant="subtitle" color="brand.black" ml={2}>
           {t('sales.open.summary.offer')}
         </Heading>
