@@ -9,6 +9,8 @@ export type Props = {
   }[]
 }
 
+const SLICE_LIMIT = 5
+
 const SaleOpenSummary: FC<Props> = ({ currencies }) => {
   const { t } = useTranslation('components')
 
@@ -29,7 +31,7 @@ const SaleOpenSummary: FC<Props> = ({ currencies }) => {
         {t('sales.open.summary.open')}
       </Heading>
       <Flex _first={{ ml: 0 }}>
-        {currencies.slice(0, 5).map((currency, i) => (
+        {currencies.slice(0, SLICE_LIMIT).map((currency, i) => (
           <Flex
             key={i}
             as="span"
@@ -46,11 +48,15 @@ const SaleOpenSummary: FC<Props> = ({ currencies }) => {
             />
           </Flex>
         ))}
-        {currencies.length > 5 && (
+        {currencies.length > SLICE_LIMIT && (
           <Flex ml={-2} zIndex={10}>
             <Flex as="span" bgColor="brand.50" {...currencyStyles}>
               <Text as="span" variant="caption" color="brand.500">
-                {`+${currencies.length >= 103 ? 99 : currencies.length - 4}`}
+                {`+${
+                  currencies.length >= 103
+                    ? 99
+                    : currencies.length - SLICE_LIMIT
+                }`}
               </Text>
             </Flex>
           </Flex>
