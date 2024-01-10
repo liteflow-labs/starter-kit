@@ -241,7 +241,7 @@
         "values": {
           "all": "All",
           "fixed": "Buy now",
-          "auction": "Timed auction"
+          "bids": "Has offers"
         }
       },
       "categories": {
@@ -308,56 +308,6 @@
     }
   },
   "modal": {
-    "accept-auction": {
-      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
-      "action": "View on {{name}}",
-      "auction": {
-        "resolve": {
-          "title": "Auction is being checked",
-          "description": "We are finding and verifying the best bid"
-        },
-        "default": {
-          "title": "Auction has been approved",
-          "description": "Completed"
-        }
-      },
-      "approval": {
-        "resolve": {
-          "title": "We need your permission",
-          "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
-        },
-        "signature": {
-          "title": "We need your permission",
-          "description": "Approve permission in your wallet to continue, this action will cost you gas fees but you will only have to do it one time per token"
-        },
-        "pending": {
-          "title": "Approval is pending",
-          "description": "Request is being processed"
-        },
-        "default": {
-          "title": "Permission has been approved",
-          "description": "Completed"
-        }
-      },
-      "transaction": {
-        "approval": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "signature": {
-          "title": "Your confirmation is required",
-          "description": "Open and confirm transaction in your wallet"
-        },
-        "pending": {
-          "title": "Confirmation is pending",
-          "description": "0/2 completed - Transaction is pending on Blockchain"
-        },
-        "ownership": {
-          "title": "Confirmation is pending",
-          "description": "1/2 completed - Ownership is being checked"
-        }
-      }
-    },
     "accept-offer": {
       "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
       "action": {
@@ -553,21 +503,6 @@
   },
   "notification": {
     "account-verification-validated": "Your profile has been verified. <0>Check my profile</0>",
-    "auction": {
-      "bid": {
-        "created": "You have received a new bid of <0/> for your auction on <1>{{name}}</1>",
-        "expired": "Your bid of <0/> for the auction on <1>{{name}}</1> has met the expiration date. The bid has been canceled"
-      },
-      "ended": {
-        "no-bids": "Your auction for <0>{{name}}</0> has ended but no bids were placed. Create a new sale today!",
-        "reserve-price-buyer": "The auction for <0>{{name}}</0> has ended but the reserve price hasn’t been met.",
-        "reserve-price-seller": "Your auction for <0>{{name}}</0> has ended but your reserve price hasn’t been met. Create a new sale today!",
-        "won-buyer": "Congratulations 🎉 You won the auction for <0>{{name}}</0>! Wait for the owner’s confirmation to receive the ownership",
-        "won-seller": "Congratulations 🎉 Your auction for <0>{{name}}</0> has been won for <1/>! Confirm the sale to collect the funds"
-      },
-      "expired": "The expiration date has been met for <0>{{name}}</0>. The auction and its bids have been canceled. Create a new sale!",
-      "expire-soon": "Your auction for <0>{{name}}</0> and its winning bid of <1/> will expire in less than 24 hours 🔥 Confirm the sale before it’s too late!"
-    },
     "bid": {
       "accepted": {
         "one": "Congratulations 🎉 your bid for <0>{{count}}</0> edition of <1>{{name}}</1> for <2/> has been accepted.",
@@ -664,82 +599,6 @@
     }
   },
   "sales": {
-    "auction": {
-      "success": {
-        "ended": "The auction has ended with a winner 🎉",
-        "highest-bid": "Highest bid",
-        "offer": "<0/> <1>by</1> <2/>",
-        "banner-owner": {
-          "title": "Confirm the sale before {{date}}",
-          "description": "After that date, the auction and its bids will be canceled."
-        },
-        "banner": {
-          "title": "The seller has until the {{date}} to confirm the sale",
-          "description": "After that date, the auction and its bids will be canceled."
-        }
-      },
-      "failed-no-bid": {
-        "ended": "The auction has ended",
-        "highest-bid": "Highest bid",
-        "no-bids": "No bids yet",
-        "banner": {
-          "title": "No bids have been placed",
-          "description": "The auction has ended but no bids have been placed."
-        }
-      },
-      "failed-no-reserve": {
-        "ended": "The auction has ended",
-        "highest-bid": "Highest bid",
-        "offer": "<0/> <1>by</1> <2/>",
-        "banner": {
-          "title": "Reserve price not met",
-          "description": "The auction has ended but the reserve price hasn't been met."
-        }
-      },
-      "in-progress": {
-        "highest-bid": "Highest bid",
-        "open": "Open for bids",
-        "offer": "Make an offer",
-        "ending": "Auction ending in"
-      },
-      "action": {
-        "cancel": "Cancel",
-        "accept": "Accept",
-        "new-sale": "New Sale",
-        "title": "Accept Auction"
-      },
-      "button": {
-        "place-bid": "Place a bid",
-        "view": "View Collectible"
-      },
-      "card-footer": {
-        "highest-bid": "Bid",
-        "place-bid": "Place a bid",
-        "no-bids": "No bids yet",
-        "view": "View my NFT",
-        "ongoing-auction": "Ongoing Auction"
-      },
-      "info": {
-        "title": "Confirm the sale",
-        "reserve": "Reserve price:",
-        "no-bids": {
-          "title": "You own this Collectible",
-          "action": "Sell Collectible"
-        },
-        "no-reserve": {
-          "title": "You own this Collectible",
-          "action": "Sell Collectible"
-        },
-        "with-reserve": {
-          "title": "You own this Collectible",
-          "action": "Confirm sale"
-        }
-      },
-      "status": {
-        "active": "Active",
-        "ended": "Ended"
-      }
-    },
     "direct": {
       "button": {
         "place-bid": "Place a bid",
@@ -828,6 +687,7 @@
         "place-bid": "Place a bid"
       },
       "card-footer": {
+        "highest-bid": "Bid",
         "open": "Open for bids",
         "place-bid": "Place a bid",
         "view": "View my NFT"

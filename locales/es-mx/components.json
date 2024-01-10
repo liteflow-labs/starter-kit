@@ -241,7 +241,7 @@
         "values": {
           "all": "Todo",
           "fixed": "Precio Fijo",
-          "auction": "Subasta"
+          "bids": "Tiene ofertas"
         }
       },
       "categories": {
@@ -308,56 +308,6 @@
     }
   },
   "modal": {
-    "accept-auction": {
-      "description": "Confirma la transacción en tu Wallet para continuar, ésta acción tendrá un costo (gas)",
-      "action": "Ver en {{name}}",
-      "auction": {
-        "resolve": {
-          "title": "La subasta está siendo verificada",
-          "description": "Estamos buscando y verificando la mejor oferta"
-        },
-        "default": {
-          "title": "La subasta ha sido aprobada",
-          "description": "Completada"
-        }
-      },
-      "approval": {
-        "resolve": {
-          "title": "Necesitamos tu permiso",
-          "description": "Aprueba el permiso en tu wallet para continuar, ésta acción tendrá un costo (gas) pero sólo es necesaria una vez por moneda"
-        },
-        "signature": {
-          "title": "Necesitamos tu permiso",
-          "description": "Aprueba el permiso en tu wallet para continuar, ésta acción tendrá un costo (gas) pero sólo es necesaria una vez por moneda"
-        },
-        "pending": {
-          "title": "Aprobación pendiente",
-          "description": "La solicitud está siendo procesada"
-        },
-        "default": {
-          "title": "Los permisos han sido aprobados",
-          "description": "Completada"
-        }
-      },
-      "transaction": {
-        "approval": {
-          "title": "Requerimos tu Confirmación",
-          "description": "Confirma la transacción en tu Wallet"
-        },
-        "signature": {
-          "title": "Requerimos tu Confirmación",
-          "description": "Confirma la transacción en tu Wallet"
-        },
-        "pending": {
-          "title": "La confirmación está pendiente",
-          "description": "0/2 completado - La transacción está siendo procesada"
-        },
-        "ownership": {
-          "title": "Confirmation is pending",
-          "description": "1/2 completado - Verificando transacción"
-        }
-      }
-    },
     "accept-offer": {
       "description": "Confirma la transacción en tu Wallet para continuar, ésta acción tendrá un costo (gas)",
       "action": {
@@ -553,21 +503,6 @@
   },
   "notification": {
     "account-verification-validated": "Tu perfil ha sido verificado. <0>Ver mi perfil</0>",
-    "auction": {
-      "bid": {
-        "created": "Has recibido una nueva oferta por <0/> en tu subasta de <1>{{name}}</1>",
-        "expired": "Tu oferta de <0/> en la subasta de <1>{{name}}</1> ha llegado a su fecha de expiración. La oferta se ha cancelado."
-      },
-      "ended": {
-        "no-bids": "Tu subasta de <0>{{name}}</0> ha terminado pero no recibiste ninguna oferta. ¡Crea una nueva venta!",
-        "reserve-price-buyer": "La subasta de <0>{{name}}</0> ha terminado pero el precio de reserva no ha sido alcanzado.",
-        "reserve-price-seller": "Tu subasta de <0>{{name}}</0> ha terminado pero tu precio de reserva no ha sido alcanzado. ¡Crea una nueva venta!",
-        "won-buyer": "Felicitaciones 🎉 Ganaste la subaste de <0>{{name}}</0>! Espera la confirmación del propietario para recibir la propiedad",
-        "won-seller": "Felicitaciones 🎉 Tu subasta de <0>{{name}}</0> ha sido ganada por <1/>! Confirma la venta para recibir el pago."
-      },
-      "expired": "La subasta de <0>{{name}}</0> ha llegado a su fecha de expiración. La subasta y sus ofertas han sido canceladas. ¡Crea una nueva venta!",
-      "expire-soon": "Tu subasta de <0>{{name}}</0> y la oferta ganadora de <1/> van a expirar en menos de 24 horas 🔥 ¡Confirma la venta antes que sea tarde!"
-    },
     "bid": {
       "accepted": {
         "one": "Felicitaciones 🎉 Tu oferta por <0>{{count}}</0> edición de <1>{{name}}</1> por <2/> ha sido aceptada.",
@@ -664,82 +599,6 @@
     }
   },
   "sales": {
-    "auction": {
-      "success": {
-        "ended": "La subasta ha finalizado con un ganador 🎉",
-        "highest-bid": "Oferta más alta",
-        "offer": "<0/> <1>por</1> <2/>",
-        "banner-owner": {
-          "title": "Confirma la venta antes de {{date}}",
-          "description": "Después de la fecha, la subasta y sus ofertas serán canceladas."
-        },
-        "banner": {
-          "title": "El vendedor tiene hasta {{date}} para confirmar la venta",
-          "description": "Después de la fecha, la subasta y sus ofertas serán canceladas."
-        }
-      },
-      "failed-no-bid": {
-        "ended": "La subasta ha finalizado",
-        "highest-bid": "Oferta más alta",
-        "no-bids": "Sin ofertas",
-        "banner": {
-          "title": "No se han recibido ofertas",
-          "description": "La subasta terminó pero no se recibieron ofertas."
-        }
-      },
-      "failed-no-reserve": {
-        "ended": "La subasta ha finalizado",
-        "highest-bid": "Oferta más alta",
-        "offer": "<0/> <1>por</1> <2/>",
-        "banner": {
-          "title": "El precio de reserva no se ha alcanzado",
-          "description": "La subasta ha terminado pero no se ha alcanzado el precio de reserva definido por el vendedor."
-        }
-      },
-      "in-progress": {
-        "highest-bid": "Oferta más alta",
-        "open": "Abierto a ofertas",
-        "offer": "Crea una oferta",
-        "ending": "La subasta termina en"
-      },
-      "action": {
-        "cancel": "Cancelar",
-        "accept": "Aceptar",
-        "new-sale": "Nueva Venta",
-        "title": "Aceptar Subasta"
-      },
-      "button": {
-        "place-bid": "Crear Oferta",
-        "view": "Ver Coleccionable"
-      },
-      "card-footer": {
-        "highest-bid": "Oferta",
-        "place-bid": "Crear una oferta",
-        "no-bids": "Aún no hay ofertas",
-        "view": "Ver mi NFT",
-        "ongoing-auction": "Subasta en curso"
-      },
-      "info": {
-        "title": "Confirma la venta",
-        "reserve": "Precio de reserva:",
-        "no-bids": {
-          "title": "Eres propietario de este coleccionable",
-          "action": "Vender Coleccionable"
-        },
-        "no-reserve": {
-          "title": "Eres propietario de este coleccionable",
-          "action": "Vender Coleccionable"
-        },
-        "with-reserve": {
-          "title": "Eres propietario de este coleccionable",
-          "action": "Confirma la venta"
-        }
-      },
-      "status": {
-        "active": "Activa",
-        "ended": "Finalizada"
-      }
-    },
     "direct": {
       "button": {
         "place-bid": "Crear una oferta",
@@ -828,6 +687,7 @@
         "place-bid": "Crear una oferta"
       },
       "card-footer": {
+        "highest-bid": "Oferta",
         "open": "Abierto a ofertas",
         "place-bid": "Crear una oferta",
         "view": "Ver mi NFT"

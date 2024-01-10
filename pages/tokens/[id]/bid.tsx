@@ -1,27 +1,12 @@
-import {
-  Box,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  Icon,
-  Stack,
-  useToast,
-} from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
-import { HiOutlineClock } from '@react-icons/all-files/hi/HiOutlineClock'
+import { Box, Flex, Grid, GridItem, Heading, useToast } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
-import Countdown from '../../../components/Countdown/Countdown'
 import Head from '../../../components/Head'
-import Image from '../../../components/Image/Image'
 import BackButton from '../../../components/Navbar/BackButton'
 import OfferFormBid from '../../../components/Offer/Form/Bid'
-import Price from '../../../components/Price/Price'
 import SkeletonForm from '../../../components/Skeleton/Form'
 import SkeletonTokenCard from '../../../components/Skeleton/TokenCard'
 import TokenCard from '../../../components/Token/Card'
@@ -29,6 +14,7 @@ import { useBidOnAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import SmallLayout from '../../../layouts/small'
+import Error from '../../_error'
 
 type Props = {
   now: string
@@ -57,17 +43,6 @@ const BidPage: NextPage<Props> = ({ now }) => {
     },
   })
   const asset = data?.asset
-
-  const auction = useMemo(
-    () => (asset?.auctions.nodes[0] ? asset.auctions.nodes[0] : undefined),
-    [asset],
-  )
-  const bidCurrencies = useMemo(
-    () => (auction ? [auction.currency] : data?.currencies?.nodes),
-    [auction, data],
-  )
-
-  const highestBid = useMemo(() => auction?.bestBid.nodes[0], [auction])
 
   const onCreated = useCallback(async () => {
     toast({
@@ -112,72 +87,12 @@ const BidPage: NextPage<Props> = ({ now }) => {
         </GridItem>
         <GridItem>
           <Flex direction="column" flex="1 1 0%">
-            {auction && (
-              <>
-                <Stack mb={highestBid ? 6 : 0} spacing={3}>
-                  <Heading as="h5" variant="heading3" color="gray.500">
-                    {t('offers.bid.auction')}
-                  </Heading>
-                  <Flex align="center" gap={3}>
-                    <Flex
-                      as="span"
-                      bgColor="brand.500"
-                      h={8}
-                      w={8}
-                      align="center"
-                      justify="center"
-                      rounded="full"
-                    >
-                      <Icon as={HiOutlineClock} h={5} w={5} color="white" />
-                    </Flex>
-                    <Heading as="h2" variant="subtitle" color="brand.black">
-                      <Countdown date={auction.endAt} />
-                    </Heading>
-                  </Flex>
-                </Stack>
-                {highestBid && (
-                  <Stack spacing={3}>
-                    <Heading as="h5" variant="heading3" color="gray.500">
-                      {t('offers.bid.highestBid')}
-                    </Heading>
-                    <Flex align="center" gap={3}>
-                      <Flex
-                        position="relative"
-                        align="center"
-                        justify="center"
-                        h={8}
-                        w={8}
-                        rounded="full"
-                        border="1px"
-                        borderColor="gray.200"
-                      >
-                        <Image
-                          src={highestBid.currency.image}
-                          alt={`${highestBid.currency.symbol} Logo`}
-                          fill
-                          sizes="30px"
-                          objectFit="cover"
-                        />
-                      </Flex>
-                      <Heading as="h2" variant="subtitle" color="brand.black">
-                        <Price
-                          amount={BigNumber.from(highestBid.unitPrice)}
-                          currency={highestBid.currency}
-                        />
-                      </Heading>
-                    </Flex>
-                  </Stack>
-                )}
-                <Box as="hr" my={8} />
-              </>
-            )}
-
-            {!asset || !bidCurrencies ? (
+            {!asset || !data?.currencies?.nodes ? (
               <SkeletonForm items={2} />
             ) : (
               <OfferFormBid
                 asset={asset}
-                currencies={bidCurrencies}
+                currencies={data.currencies.nodes}
                 onCreated={onCreated}
               />
             )}

@@ -11,7 +11,7 @@ type Props = {
   isHomepage: boolean
 }
 
-const SaleOpenInfo: FC<Props> = ({ assetId, isOwner, isHomepage }) => {
+const SaleAction: FC<Props> = ({ assetId, isOwner, isHomepage }) => {
   const { t } = useTranslation('components')
   if (!isOwner) return null
   if (isHomepage) return null
@@ -68,4 +68,4 @@ const SaleOpenInfo: FC<Props> = ({ assetId, isOwner, isHomepage }) => {
   )
 }
 
-export default SaleOpenInfo
+export default SaleAction

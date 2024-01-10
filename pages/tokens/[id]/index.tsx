@@ -21,12 +21,10 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAuctionStatus } from '@liteflow/react'
 import { HiOutlineDotsHorizontal } from '@react-icons/all-files/hi/HiOutlineDotsHorizontal'
 import useRefreshAsset from 'hooks/useRefreshAsset'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import Error from 'next/error'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import invariant from 'ts-invariant'
@@ -50,6 +48,7 @@ import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../layouts/large'
 import { formatError } from '../../../utils'
+import Error from '../../_error'
 
 type Props = {
   now: string
@@ -86,10 +85,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     },
   })
   const asset = data?.asset
-  const auction = asset?.auctions.nodes[0]
-  const bestAuctionBid = auction?.bestBid?.nodes[0]
-
-  const { isValid } = useAuctionStatus(auction, bestAuctionBid)
 
   const media = useDetectAssetMedia(asset)
 
@@ -115,11 +110,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const assetExternalURL = useMemo(
     () => blockExplorer.token(collectionAddress, tokenId),
     [blockExplorer, collectionAddress, tokenId],
-  )
-
-  const bids = useMemo(
-    () => (auction && isValid ? auction.bestBid.nodes : asset?.bids.nodes),
-    [asset?.bids.nodes, auction, isValid],
   )
 
   const refresh = useCallback(async () => {
@@ -251,7 +241,6 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               currencies={data.currencies?.nodes}
               isHomepage={false}
               onOfferCanceled={refresh}
-              onAuctionAccepted={refresh}
             />
           )}
         </Flex>
@@ -266,6 +255,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                   </Heading>
                   <Stack borderRadius="2xl" p={3} borderWidth="1px">
                     <Text
+                      as="div"
                       variant="text-sm"
                       color="gray.500"
                       whiteSpace="pre-wrap"
@@ -393,8 +383,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
                     asset={asset}
-                    bids={bids}
-                    preventAcceptation={!isOwner || !!auction}
+                    bids={asset.bids.nodes}
+                    preventAcceptation={!isOwner}
                     onAccepted={refresh}
                     onCanceled={refresh}
                   />
