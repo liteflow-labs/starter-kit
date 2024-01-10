@@ -280,7 +280,7 @@ const getEnvironment = async (): Promise<Environment> => {
         blockExplorers: {
           default: {
             name: 'Neonscan',
-            url: 'https://neonscan.org',
+            url: 'https://devnet.neonscan.org',
           },
         },
         contracts: {
