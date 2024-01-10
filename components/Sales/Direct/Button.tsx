@@ -9,6 +9,7 @@ import { useAccount } from 'wagmi'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useSigner from '../../../hooks/useSigner'
 import { formatError, isSameAddress } from '../../../utils'
+import CheckoutButton from '../../Button/CheckoutButton'
 import Link from '../../Link/Link'
 import type { Props as ModalProps } from './Modal'
 import SaleDirectModal from './Modal'
@@ -129,11 +130,11 @@ const SaleDirectButton: FC<Props> = ({
     // Only display buy now when there is a single offer not owned by the current account
     if (isSameAddress(sale.maker.address, address)) return
     return (
-      <Button as={Link} href={`/checkout/${sale.id}`} size="lg" width="full">
+      <CheckoutButton offer={sale} size="lg">
         <Text as="span" isTruncated>
           {t('sales.direct.button.buy')}
         </Text>
-      </Button>
+      </CheckoutButton>
     )
   }, [address, sales, t])
 
