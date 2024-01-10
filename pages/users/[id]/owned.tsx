@@ -10,6 +10,7 @@ import {
   useFetchOwnedAssetsQuery,
 } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
+import useCart from '../../../hooks/useCart'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
 import usePaginate from '../../../hooks/usePaginate'
@@ -32,7 +33,7 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
 
   const date = useMemo(() => new Date(now), [now])
-  const { data } = useFetchOwnedAssetsQuery({
+  const { data, refetch } = useFetchOwnedAssetsQuery({
     variables: {
       address: userAddress,
       currentAddress: address || '',
@@ -42,6 +43,8 @@ const OwnedPage: NextPage<Props> = ({ now }) => {
       now: date,
     },
   })
+
+  useCart({ onCheckout: refetch })
 
   const assets = useMemo(
     () =>

@@ -1,4 +1,4 @@
-schema: ${NEXT_PUBLIC_GRAPHQL_URL:node_modules/@nft/api-graphql/schema.graphql}
+schema: './node_modules/@nft/api-graphql/schema.graphql'
 documents:
   - './pages/**/*.gql'
   - './components/**/*.gql'
