@@ -228,7 +228,7 @@ const getEnvironment = async (): Promise<Environment> => {
             url: 'https://phoenix.lightlink.io',
           },
         },
-      } as Chain,
+      },
       {
         name: 'LightLink Pegasus Testnet',
         network: 'lightlink-pegasus',
@@ -259,7 +259,38 @@ const getEnvironment = async (): Promise<Environment> => {
             url: 'https://pegasus.lightlink.io',
           },
         },
-      } as Chain,
+      },
+      {
+        id: 245022926,
+        network: 'neonDevnet',
+        name: 'Neon EVM DevNet',
+        nativeCurrency: {
+          name: 'NEON',
+          symbol: 'NEON',
+          decimals: 18,
+        },
+        rpcUrls: {
+          default: {
+            http: ['https://devnet.neonevm.org'],
+          },
+          public: {
+            http: ['https://devnet.neonevm.org'],
+          },
+        },
+        blockExplorers: {
+          default: {
+            name: 'Neonscan',
+            url: 'https://neonscan.org',
+          },
+        },
+        contracts: {
+          multicall3: {
+            address: '0xca11bde05977b3631167028862be2a173976ca11',
+            blockCreated: 205206112,
+          },
+        },
+        testnet: true,
+      },
     ],
     WALLET_CONNECT_PROJECT_ID:
       process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
