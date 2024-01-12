@@ -30,6 +30,7 @@ import {
 } from 'wagmi'
 import getClient from '../client'
 import Banner from '../components/Banner/Banner'
+import CartContext from '../components/CartContext'
 import Footer from '../components/Footer/Footer'
 import Navbar from '../components/Navbar/Navbar'
 import connectors from '../connectors'
@@ -250,13 +251,15 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
                   endpoint={process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL}
                 >
                   <AccountProvider onError={setErrorCode}>
-                    <Layout>
-                      {errorCode ? (
-                        <Error statusCode={errorCode} />
-                      ) : (
-                        <Component {...pageProps} />
-                      )}
-                    </Layout>
+                    <CartContext>
+                      <Layout>
+                        {errorCode ? (
+                          <Error statusCode={errorCode} />
+                        ) : (
+                          <Component {...pageProps} />
+                        )}
+                      </Layout>
+                    </CartContext>
                   </AccountProvider>
                 </LiteflowProvider>
               </ChakraProvider>

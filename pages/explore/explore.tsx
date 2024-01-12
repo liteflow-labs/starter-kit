@@ -33,6 +33,7 @@ import useAssetFilterFromQuery, {
   convertFilterToAssetFilter,
 } from '../../hooks/useAssetFilterFromQuery'
 import useAssetFilterState from '../../hooks/useAssetFilterState'
+import useCart from '../../hooks/useCart'
 import useEnvironment from '../../hooks/useEnvironment'
 import useOrderByQuery from '../../hooks/useOrderByQuery'
 import usePaginate from '../../hooks/usePaginate'
@@ -56,7 +57,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   const filter = useAssetFilterFromQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>('BEST_PRICE_ASC')
   const { page, limit, offset } = usePaginateQuery()
-  const { data: assetsData } = useFetchAllErc721And1155Query({
+  const { data: assetsData, refetch } = useFetchAllErc721And1155Query({
     variables: {
       now: date,
       address: address || '',
@@ -66,6 +67,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
       filter: convertFilterToAssetFilter(filter, date),
     },
   })
+  useCart({ onCheckout: refetch })
 
   const { showFilters, toggleFilters, close, count } =
     useAssetFilterState(filter)

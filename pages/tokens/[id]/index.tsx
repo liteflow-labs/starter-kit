@@ -42,6 +42,7 @@ import TraitList from '../../../components/Trait/TraitList'
 import { useFetchAssetQuery } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
+import useCart from '../../../hooks/useCart'
 import useDetectAssetMedia from '../../../hooks/useDetectAssetMedia'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
@@ -116,6 +117,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
       now: new Date(),
     })
   }, [refetch])
+
+  useCart({ onCheckout: refetch })
 
   const refreshAsset = useRefreshAsset()
   const refreshMetadata = useCallback(
