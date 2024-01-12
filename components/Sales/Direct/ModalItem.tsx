@@ -1,11 +1,4 @@
-import {
-  Button,
-  Flex,
-  Icon,
-  Text,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react'
+import { Flex, Icon, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CancelOfferStep, useCancelOffer } from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
@@ -16,6 +9,7 @@ import useAccount from '../../../hooks/useAccount'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useSigner from '../../../hooks/useSigner'
 import { formatDate, formatError, isSameAddress } from '../../../utils'
+import CheckoutButton from '../../Button/CheckoutButton'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import Link from '../../Link/Link'
 import { ListItem } from '../../List/List'
@@ -156,11 +150,11 @@ const SaleDirectModalItem: FC<Props> = ({ sale, chainId, onOfferCanceled }) => {
               </Text>
             </ConnectButtonWithNetworkSwitch>
           ) : (
-            <Button as={Link} href={`/checkout/${sale.id}`}>
+            <CheckoutButton offer={sale}>
               <Text as="span" isTruncated>
                 {t('sales.direct.modal-item.buy')}
               </Text>
-            </Button>
+            </CheckoutButton>
           )
         }
       />

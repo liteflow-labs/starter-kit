@@ -1,6 +1,7 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { Divider, Flex, HStack, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
+import AddToCartButton from '../../Button/AddToCart'
 import Link from '../../Link/Link'
 import Price from '../../Price/Price'
 
@@ -71,26 +72,40 @@ const SaleDirectCardFooter: FC<Props> = ({
   }, [hasMultiCurrency, numberOfSales, sale.currency, sale.unitPrice, t])
 
   return (
-    <Flex
-      as={Link}
-      href={`/checkout/${sale.id}`}
-      py={2}
-      px={4}
-      bgColor={showButton ? 'brand.500' : 'gray.100'}
-    >
-      <Text
-        variant="subtitle2"
-        color={showButton ? 'white' : 'gray.500'}
-        noOfLines={1}
-        wordBreak="break-all"
+    <HStack gap={0}>
+      <Flex
+        as={Link}
+        href={`/checkout/${sale.id}`}
+        py={2}
+        px={4}
+        bgColor={showButton ? 'brand.500' : 'gray.100'}
+        width="full"
       >
-        {showButton
-          ? isOwner
-            ? t('sales.direct.card-footer.view')
-            : t('sales.direct.card-footer.purchase')
-          : chip}
-      </Text>
-    </Flex>
+        <Text
+          variant="subtitle2"
+          color={showButton ? 'white' : 'gray.500'}
+          noOfLines={1}
+          wordBreak="break-all"
+        >
+          {showButton
+            ? isOwner // TODO: we can be owner and still purchase for erc1155
+              ? t('sales.direct.card-footer.view')
+              : t('sales.direct.card-footer.purchase')
+            : chip}
+        </Text>
+      </Flex>
+      {showButton && (
+        <>
+          <Divider orientation="vertical" />
+          <AddToCartButton
+            offerId={sale.id}
+            isDisabled={isOwner} // TODO: we can be owner and still purchase for erc1155
+            borderRadius="none"
+            h={9}
+          />
+        </>
+      )}
+    </HStack>
   )
 }
 

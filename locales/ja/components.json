@@ -1,4 +1,65 @@
 {
+  "cart": {
+    "add-to-cart": {
+      "button": {
+        "add": "カートに追加",
+        "remove": "カートから削除"
+      },
+      "toast": {
+        "add": "カートに追加されました",
+        "remove": "カートから削除されました"
+      }
+    },
+    "drawer": {
+      "title": "カート",
+      "back": "カートに戻る",
+      "error": "もう一度やり直してください",
+      "clear-all": "すべてクリア",
+      "list-item": {
+        "not-available": "利用不可",
+        "tooltip": "他の人が購入したか、販売者が販売を削除したか、出品の有効期限が切れたため、商品を入手できません。",
+        "remove": "取り除く"
+      }
+    },
+    "step": {
+      "error": {
+        "title": "エラー",
+        "description": "取引でエラーが発生しました"
+      },
+      "selection": {
+        "empty": {
+          "title": "カートに商品がありません",
+          "description": "開始するにはアイテムを追加してください。",
+          "action": "NFTを探索する"
+        },
+        "button": {
+          "label": "を続行",
+          "aria-label": "続く"
+        }
+      },
+      "success": {
+        "title": "おめでとう",
+        "description": "取引は成功しました",
+        "action": "トランザクションの表示"
+      },
+      "transaction": {
+        "empty": {
+          "title": "利用できないアイテム",
+          "description": "カート上の商品は他の人によって購入されたか、販売者が販売から削除したか、出品の有効期限が切れています。"
+        },
+        "summary": {
+          "title": "まとめ",
+          "price": "価格"
+        },
+        "button": {
+          "approve": "承認する {{value}}",
+          "purchase": "購入",
+          "aria-label": "続く",
+          "insufficient": "資金不足"
+        }
+      }
+    }
+  },
   "account": {
     "title": "アカウント",
     "tabs": {

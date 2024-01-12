@@ -32,6 +32,7 @@ import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
 import { TradesOrderBy, useFetchUserTradeSoldQuery } from '../../../../graphql'
 import { blockExplorer } from '../../../../hooks/useBlockExplorer'
+import useCart from '../../../../hooks/useCart'
 import useEnvironment from '../../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../../hooks/useOrderByQuery'
 import usePaginate from '../../../../hooks/usePaginate'
@@ -49,7 +50,7 @@ const TradeSoldPage: NextPage = () => {
   const { changeLimit } = usePaginate()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const { data } = useFetchUserTradeSoldQuery({
+  const { data, refetch } = useFetchUserTradeSoldQuery({
     variables: {
       address: userAddress,
       limit,
@@ -57,6 +58,8 @@ const TradeSoldPage: NextPage = () => {
       orderBy,
     },
   })
+
+  useCart({ onCheckout: refetch })
   const trades = data?.trades?.nodes
 
   const changeOrder = useCallback(
