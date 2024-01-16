@@ -85,7 +85,6 @@ const TokenFormCreate: FC<Props> = ({
   const res = useWatch({ control })
   useEffect(() => onInputChange(res), [res, onInputChange])
 
-  // const [transform] = useFileTransformer()
   const [createNFT, { activeStep, transactionHash }] = useCreateNFT(signer)
 
   const categories = useMemo(
@@ -119,7 +118,6 @@ const TokenFormCreate: FC<Props> = ({
               content: data.content,
               preview: data.preview,
               isAnimation: data.isAnimation,
-              isPrivate: false,
             },
           },
         },
@@ -136,21 +134,6 @@ const TokenFormCreate: FC<Props> = ({
       createCollectibleOnClose()
     }
   })
-
-  // TODO: activate this again when we want to reactivate the automatic blur with useFileTransformer()
-  // useEffect(() => {
-  //   if (!res.content) {
-  //     setValue('preview', undefined)
-  //     return
-  //   }
-  //   if (!res.isPrivate || res.isAnimation) return
-  //   void transform(res.content).then((file) => {
-  //     setValue('preview', file)
-  //   })
-  //   return () => {
-  //     setValue('preview', undefined)
-  //   }
-  // }, [res.content, res.isAnimation, res.isPrivate, transform, setValue])
 
   return (
     <Stack
