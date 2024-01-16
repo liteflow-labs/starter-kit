@@ -24,7 +24,8 @@
     "step": {
       "error": {
         "title": "Error",
-        "description": "Hubo un error con tu transacción"
+        "description": "Hubo un error con tu transacción",
+        "action": "Regresa"
       },
       "selection": {
         "empty": {

@@ -24,7 +24,8 @@
     "step": {
       "error": {
         "title": "错误",
-        "description": "您的交易出现错误"
+        "description": "您的交易出现错误",
+        "action": "回去"
       },
       "selection": {
         "empty": {

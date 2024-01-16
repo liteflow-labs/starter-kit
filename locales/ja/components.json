@@ -24,7 +24,8 @@
     "step": {
       "error": {
         "title": "エラー",
-        "description": "取引でエラーが発生しました"
+        "description": "取引でエラーが発生しました",
+        "action": "戻る"
       },
       "selection": {
         "empty": {

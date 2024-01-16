@@ -53,7 +53,8 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   }, [])
 
   const content = useMemo(() => {
-    if (error) return <CartStepError error={error} />
+    if (error)
+      return <CartStepError error={error} onBack={() => setError(undefined)} />
     if (chainId && showSuccess) return <CartStepSuccess chainId={chainId} />
 
     if (chainId && selectedItems)
