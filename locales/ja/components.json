@@ -41,7 +41,9 @@
       "success": {
         "title": "おめでとう",
         "description": "取引は成功しました",
-        "action": "トランザクションの表示"
+        "action": "トランザクションの表示",
+        "owned": "チェック項目",
+        "back": "ショッピングを続ける"
       },
       "transaction": {
         "empty": {

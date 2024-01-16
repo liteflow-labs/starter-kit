@@ -41,7 +41,9 @@
       "success": {
         "title": "Felicidades",
         "description": "Su transacción fue exitosa",
-        "action": "Ver transacción"
+        "action": "Ver transacción",
+        "owned": "Comprobar artículos",
+        "back": "Seguir comprando"
       },
       "transaction": {
         "empty": {

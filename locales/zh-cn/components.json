@@ -41,7 +41,9 @@
       "success": {
         "title": "恭喜你",
         "description": "您的交易已成功",
-        "action": "查看交易"
+        "action": "查看交易",
+        "owned": "检查项目",
+        "back": "继续购物"
       },
       "transaction": {
         "empty": {

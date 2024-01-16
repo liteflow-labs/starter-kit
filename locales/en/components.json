@@ -41,7 +41,9 @@
       "success": {
         "title": "Congratulations",
         "description": "Your transaction was successful",
-        "action": "View transaction"
+        "action": "View transaction",
+        "owned": "Check items",
+        "back": "Continue shopping"
       },
       "transaction": {
         "empty": {
