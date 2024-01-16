@@ -116,6 +116,15 @@ export const baseTheme = extendTheme({
         colorScheme: 'brand',
       },
     },
+    Drawer: {
+      variants: {
+        cart: {
+          dialog: {
+            maxWidth: '375px',
+          },
+        },
+      },
+    },
     Accordion: {
       baseStyle: {
         container: {

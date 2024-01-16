@@ -90,12 +90,7 @@ const CartDrawer: FC<Props> = ({ isOpen, onClose }) => {
   }, [events, onClose])
 
   return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={onClose}
-      placement="right"
-      size={{ base: 'full', sm: 'xs' }}
-    >
+    <Drawer isOpen={isOpen} onClose={onClose} placement="right" variant="cart">
       <DrawerOverlay />
       <DrawerContent
         mt={{ base: 0, sm: 16 }}
