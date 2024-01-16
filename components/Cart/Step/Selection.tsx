@@ -20,7 +20,6 @@ import useCart, { CartItem } from '../../../hooks/useCart'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useNow from '../../../hooks/useNow'
 import { dateIsBefore } from '../../../utils'
-import Image from '../../Image/Image'
 import Link from '../../Link/Link'
 import List, { ListItem } from '../../List/List'
 import CartDrawerListItem from '../CartDrawerListItem'
@@ -218,17 +217,6 @@ const CartStepSelection: FC<Props> = ({ onSubmit }) => {
           type="submit"
         >
           {t('cart.step.selection.button.label')}
-          {selectedChain && (
-            <Image
-              src={selectedChain.image}
-              alt={selectedChain.name}
-              width={16}
-              height={16}
-              h={4}
-              w={4}
-              ml={1}
-            />
-          )}
         </Button>
       </DrawerFooter>
     </VStack>

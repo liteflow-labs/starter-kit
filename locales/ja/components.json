@@ -34,7 +34,7 @@
           "action": "NFTを探索する"
         },
         "button": {
-          "label": "を続行",
+          "label": "続く",
           "aria-label": "続く"
         }
       },

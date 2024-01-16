@@ -34,7 +34,7 @@
           "action": "Explore NFTs"
         },
         "button": {
-          "label": "Continue with",
+          "label": "Continue",
           "aria-label": "Continue"
         }
       },
