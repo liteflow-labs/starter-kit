@@ -79,6 +79,7 @@ const CartItemSummary: FC<Props> = ({ chainId, cartItems }) => {
         borderWidth="2px"
         p={2}
         shadow="sm"
+        w="full"
         h="full"
       >
         {orderedCartItems?.map((offer, i) => (
