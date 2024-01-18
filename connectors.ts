@@ -1,4 +1,4 @@
-import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector'
+import { UniversalWalletConnector } from '@magiclabs/wagmi-connector'
 import {
   connectorsForWallets,
   Wallet,
@@ -76,7 +76,7 @@ function connectors(environment: Environment): ClientWithChain {
     ]
 
     return {
-      connectors: connectorsForWallets(wallets),
+      connectors: connectorsForWallets(wallets)(),
       wallets,
     }
   }
@@ -113,7 +113,7 @@ function emailConnector({
     iconUrl: '/magic.svg',
     iconBackground: '#fff',
     createConnector: () => {
-      const connector = new MagicConnectConnector({
+      const connector = new UniversalWalletConnector({
         chains: chains,
         options: {
           apiKey: apiKey,
@@ -132,7 +132,7 @@ function emailConnector({
             },
           ],
         },
-      }) as unknown as Connector
+      })
       return {
         connector,
       }
