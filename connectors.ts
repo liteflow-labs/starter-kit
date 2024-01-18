@@ -12,8 +12,6 @@ import {
   rainbowWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import type { Chain, Config, Connector } from 'wagmi'
-import { configureChains, createConfig } from 'wagmi'
 import {
   bsc,
   bscTestnet,
@@ -21,7 +19,9 @@ import {
   mainnet,
   polygon,
   polygonMumbai,
-} from 'wagmi/chains'
+} from 'viem/chains'
+import type { Chain, Config } from 'wagmi'
+import { configureChains, createConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { Environment } from './environment'
