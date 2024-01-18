@@ -47,7 +47,7 @@ const LoginPage: NextPage = () => {
   // redirect user if account is found
   useEffect(() => {
     if (!isLoggedIn) return
-    acceptInvitation().finally(redirect)
+    void acceptInvitation().finally(redirect)
   }, [isLoggedIn, redirect, acceptInvitation])
 
   useEffect(() => openConnectModal && openConnectModal(), [openConnectModal])
