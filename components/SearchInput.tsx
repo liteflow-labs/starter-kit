@@ -2,11 +2,12 @@ import { Icon, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
 import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { HiOutlineX } from '@react-icons/all-files/hi/HiOutlineX'
 import { useRouter } from 'next/router'
-import { FC, HTMLAttributes, useCallback, useMemo } from 'react'
+import { FC, InputHTMLAttributes, useCallback, useMemo } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { removeEmptyFromObject } from '../utils'
 
-type IProps = HTMLAttributes<any> & {
+// Omit size from InputHTMLAttributes because of the chakra-ui Input component
+type IProps = Omit<InputHTMLAttributes<any>, 'size'> & {
   name: string
   registerOptions?: RegisterOptions
   onReset?: () => void

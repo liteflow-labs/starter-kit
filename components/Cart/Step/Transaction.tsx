@@ -221,8 +221,8 @@ const CartStepTransaction: FC<Props> = ({
             {loading
               ? ''
               : hasEnoughBalance
-              ? t('cart.step.transaction.button.purchase')
-              : t('cart.step.transaction.button.insufficient')}
+                ? t('cart.step.transaction.button.purchase')
+                : t('cart.step.transaction.button.insufficient')}
           </ConnectButtonWithNetworkSwitch>
         </HStack>
       </DrawerFooter>

@@ -73,7 +73,7 @@ const MarkdownViewer: FC<MarkdownPreviewProps> = ({ source, ...props }) => {
             h4: (props) => <Text {...props} />,
             h5: (props) => <Text {...props} />,
             h6: (props) => <Text {...props} />,
-            code: (props) => <Text {...props} />,
+            code: (props) => <Text {...(props as any)} />, // TODO: fix this type
             hr: () => <></>,
           }}
           style={{
