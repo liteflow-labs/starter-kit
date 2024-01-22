@@ -10,6 +10,7 @@ import {
   mainnet as ethereumMainnet,
   polygon,
   polygonMumbai,
+  arbitrumSepolia,
 } from 'wagmi/chains'
 
 type RemoteConfig = {
@@ -199,6 +200,7 @@ const getEnvironment = async (): Promise<Environment> => {
       bsc,
       polygon,
       polygonMumbai,
+      arbitrumSepolia,
       {
         name: 'LightLink Phoenix',
         network: 'lightlink-phoenix',
