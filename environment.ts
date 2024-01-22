@@ -10,6 +10,7 @@ import {
   mainnet as ethereumMainnet,
   polygon,
   polygonMumbai,
+  arbitrum,
   arbitrumSepolia,
 } from 'wagmi/chains'
 
@@ -200,6 +201,7 @@ const getEnvironment = async (): Promise<Environment> => {
       bsc,
       polygon,
       polygonMumbai,
+      arbitrum,
       arbitrumSepolia,
       {
         name: 'LightLink Phoenix',
