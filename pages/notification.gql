@@ -17,6 +17,8 @@ query GetNotifications($address: Address!, $cursor: Cursor) {
     first: 12
     orderBy: CREATED_AT_DESC
     after: $cursor
+    includeWhenCollectionDeleted: YES
+    includeWhenTradeDeleted: YES
   ) {
     pageInfo {
       hasNextPage
