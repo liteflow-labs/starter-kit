@@ -167,7 +167,7 @@ const TradeSoldPage: NextPage = () => {
                             as={Link}
                             href={
                               item.asset.deletedAt
-                                ? undefined // no link if asset is deleted
+                                ? 'LINK TO DISABLE' // no link if asset is deleted
                                 : `/tokens/${item.asset.id}`
                             }
                             gap={3}
