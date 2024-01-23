@@ -163,7 +163,11 @@ const BidPlacedPage: NextPage = () => {
                       <Td>
                         <Flex
                           as={Link}
-                          href={`/tokens/${item.asset.id}`}
+                          href={
+                            item.asset.deletedAt
+                              ? undefined // no link if asset is deleted
+                              : `/tokens/${item.asset.id}`
+                          }
                           gap={3}
                         >
                           <Image
@@ -239,7 +243,11 @@ const BidPlacedPage: NextPage = () => {
                             ) : (
                               <Button
                                 as={Link}
-                                href={`/tokens/${item.asset.id}/bid`}
+                                href={
+                                  item.asset.deletedAt
+                                    ? undefined // no link if asset is deleted
+                                    : `/tokens/${item.asset.id}/bid`
+                                }
                                 variant="outline"
                                 colorScheme="gray"
                               >

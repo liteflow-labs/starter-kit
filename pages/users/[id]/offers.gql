@@ -13,6 +13,8 @@ query FetchUserFixedPrice(
       signature: { isNull: false }
       makerAddress: { equalTo: $address }
     }
+    includeWhenAssetDeleted: YES
+    includeWhenCurrencyDeleted: : YES
   ) {
     pageInfo {
       hasNextPage
@@ -43,6 +45,7 @@ query FetchUserFixedPrice(
         owned: ownership(ownerAddress: $address) {
           quantity
         }
+        deletedAt
       }
       currency {
         id
@@ -50,6 +53,7 @@ query FetchUserFixedPrice(
         image
         decimals
         symbol
+        deletedAt
       }
     }
   }

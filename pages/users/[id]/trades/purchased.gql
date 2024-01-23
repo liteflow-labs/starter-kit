@@ -47,6 +47,7 @@ query FetchUserTradePurchased(
         name
         imageMimetype
         image
+        deletedAt
       }
     }
   }

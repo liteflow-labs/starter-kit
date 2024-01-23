@@ -165,7 +165,11 @@ const TradeSoldPage: NextPage = () => {
                         {item.asset ? (
                           <Flex
                             as={Link}
-                            href={`/tokens/${item.asset.id}`}
+                            href={
+                              item.asset.deletedAt
+                                ? undefined // no link if asset is deleted
+                                : `/tokens/${item.asset.id}`
+                            }
                             gap={3}
                           >
                             <Image
