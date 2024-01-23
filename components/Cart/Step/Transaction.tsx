@@ -221,6 +221,7 @@ const CartStepTransaction: FC<Props> = ({
           <ConnectButtonWithNetworkSwitch
             chainId={chainId}
             isDisabled={!allApproved || !hasEnoughBalance || loading}
+            isLoading={loading}
             flexGrow={1}
             borderLeftRadius="none"
             onClick={() => submit()}
