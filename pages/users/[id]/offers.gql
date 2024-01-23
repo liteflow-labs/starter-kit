@@ -14,7 +14,7 @@ query FetchUserFixedPrice(
       makerAddress: { equalTo: $address }
     }
     includeWhenAssetDeleted: YES
-    includeWhenCurrencyDeleted: : YES
+    includeWhenCurrencyDeleted: YES
   ) {
     pageInfo {
       hasNextPage
