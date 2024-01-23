@@ -174,8 +174,8 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
         taker: isMultiple
           ? undefined // Keep the bid open for anyone that can fill it
           : ownerAddress
-          ? toAddress(ownerAddress)
-          : undefined,
+            ? toAddress(ownerAddress)
+            : undefined,
         expiredAt: new Date(expiredAt),
       })
 

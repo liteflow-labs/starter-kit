@@ -104,13 +104,16 @@ const CartStepSelection: FC<Props> = ({ onSubmit }) => {
   }, [items, offers, now])
 
   const itemsWithOffersByChain = useMemo(() => {
-    return itemsWithOffers.reduce((prev, item) => {
-      const chainId = item.offer.asset.chainId
-      return {
-        ...prev,
-        [chainId]: [...(prev[chainId] || []), item],
-      }
-    }, {} as Record<number, typeof itemsWithOffers>)
+    return itemsWithOffers.reduce(
+      (prev, item) => {
+        const chainId = item.offer.asset.chainId
+        return {
+          ...prev,
+          [chainId]: [...(prev[chainId] || []), item],
+        }
+      },
+      {} as Record<number, typeof itemsWithOffers>,
+    )
   }, [itemsWithOffers])
 
   const selectedChain = useMemo(
