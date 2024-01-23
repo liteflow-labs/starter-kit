@@ -9,6 +9,9 @@ query FetchUserTradeSold(
     first: $limit
     offset: $offset
     filter: { sellerAddress: { equalTo: $address } }
+    includeWhenAssetDeleted: YES
+    includeWhenCollectionDeleted: YES
+    includeWhenCurrencyDeleted: YES
   ) {
     pageInfo {
       hasNextPage
