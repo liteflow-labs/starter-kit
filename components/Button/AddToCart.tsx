@@ -1,6 +1,6 @@
 import { ButtonProps, IconButton, useToast } from '@chakra-ui/react'
-import { FaMinus } from '@react-icons/all-files/fa/FaMinus'
-import { FaShoppingCart } from '@react-icons/all-files/fa/FaShoppingCart'
+import { MdRemoveShoppingCart } from '@react-icons/all-files/md/MdRemoveShoppingCart'
+import { MdShoppingCart } from '@react-icons/all-files/md/MdShoppingCart'
 import useTranslation from 'next-translate/useTranslation'
 import { JSX, PropsWithChildren, useCallback } from 'react'
 import useCart from '../../hooks/useCart'
@@ -45,7 +45,7 @@ export default function AddToCartButton({
           : t('cart.add-to-cart.button.add')
       }
       onClick={addOrRemoveFromCart}
-      icon={hasItem(offerId) ? <FaMinus /> : <FaShoppingCart />}
+      icon={hasItem(offerId) ? <MdRemoveShoppingCart /> : <MdShoppingCart />}
     />
   )
 }

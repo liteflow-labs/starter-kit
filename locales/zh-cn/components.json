@@ -24,7 +24,8 @@
     "step": {
       "error": {
         "title": "错误",
-        "description": "您的交易出现错误"
+        "description": "您的交易出现错误",
+        "action": "回去"
       },
       "selection": {
         "empty": {
@@ -40,7 +41,9 @@
       "success": {
         "title": "恭喜你",
         "description": "您的交易已成功",
-        "action": "查看交易"
+        "action": "查看交易",
+        "owned": "检查项目",
+        "back": "继续购物"
       },
       "transaction": {
         "empty": {
@@ -427,6 +430,25 @@
         "signature": {
           "title": "需要签名",
           "description": "在钱包中打开并确认交易"
+        }
+      }
+    },
+    "batch-purchase": {
+      "title": "Purchase",
+      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
+      "action": "View on {{name}}",
+      "transaction": {
+        "signature": {
+          "title": "Your confirmation is required",
+          "description": "Open and confirm transaction in your wallet"
+        },
+        "pending": {
+          "title": "Confirmation is pending",
+          "description": "0/2 completed - Transaction is pending on Blockchain"
+        },
+        "ownership": {
+          "title": "Confirmation is pending",
+          "description": "1/2 completed - Ownership is being checked"
         }
       }
     },
