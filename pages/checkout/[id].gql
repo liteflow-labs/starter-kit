@@ -22,6 +22,7 @@ query Checkout($id: UUID!) {
       id
       decimals
       symbol
+      deletedAt
     }
   }
 }
@@ -39,6 +40,7 @@ query FetchAssetForCheckout(
     tokenId: $tokenId
   ) {
     id
+    deletedAt
     chainId
     collectionAddress
     tokenId
