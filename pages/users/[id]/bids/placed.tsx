@@ -241,20 +241,18 @@ const BidPlacedPage: NextPage = () => {
                                 </Text>
                               </CancelOfferButton>
                             ) : (
-                              <Button
-                                as={Link}
-                                href={
-                                  item.asset.deletedAt
-                                    ? 'LINK TO DISABLE' // no link if asset is deleted
-                                    : `/tokens/${item.asset.id}/bid`
-                                }
-                                variant="outline"
-                                colorScheme="gray"
-                              >
-                                <Text as="span" isTruncated>
-                                  {t('user.bid-placed.actions.new')}
-                                </Text>
-                              </Button>
+                              !item.asset.deletedAt && ( // only display new button if asset is not deleted
+                                <Button
+                                  as={Link}
+                                  href={`/tokens/${item.asset.id}/bid`}
+                                  variant="outline"
+                                  colorScheme="gray"
+                                >
+                                  <Text as="span" isTruncated>
+                                    {t('user.bid-placed.actions.new')}
+                                  </Text>
+                                </Button>
+                              )
                             )}
                           </>
                         )}
