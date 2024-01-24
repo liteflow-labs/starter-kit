@@ -3,6 +3,8 @@ import { LRUCache } from 'lru-cache'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
+  arbitrum,
+  arbitrumSepolia,
   bsc,
   bscTestnet,
   Chain,
@@ -10,8 +12,6 @@ import {
   mainnet as ethereumMainnet,
   polygon,
   polygonMumbai,
-  arbitrum,
-  arbitrumSepolia,
 } from 'wagmi/chains'
 
 type RemoteConfig = {
