@@ -1,4 +1,4 @@
-import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector'
+import { UniversalWalletConnector } from '@magiclabs/wagmi-connector'
 import {
   connectorsForWallets,
   Wallet,
@@ -12,8 +12,6 @@ import {
   rainbowWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import type { Chain, Config, Connector } from 'wagmi'
-import { configureChains, createConfig } from 'wagmi'
 import {
   bsc,
   bscTestnet,
@@ -21,7 +19,9 @@ import {
   mainnet,
   polygon,
   polygonMumbai,
-} from 'wagmi/chains'
+} from 'viem/chains'
+import type { Chain, Config } from 'wagmi'
+import { configureChains, createConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { Environment } from './environment'
@@ -76,7 +76,7 @@ function connectors(environment: Environment): ClientWithChain {
     ]
 
     return {
-      connectors: connectorsForWallets(wallets),
+      connectors: connectorsForWallets(wallets)(),
       wallets,
     }
   }
@@ -113,7 +113,7 @@ function emailConnector({
     iconUrl: '/magic.svg',
     iconBackground: '#fff',
     createConnector: () => {
-      const connector = new MagicConnectConnector({
+      const connector = new UniversalWalletConnector({
         chains: chains,
         options: {
           apiKey: apiKey,
@@ -132,7 +132,7 @@ function emailConnector({
             },
           ],
         },
-      }) as unknown as Connector
+      })
       return {
         connector,
       }

@@ -11,7 +11,7 @@ export type Filter = {
 const chainFilter = (chains: number[]): CollectionFilter =>
   ({
     chainId: { in: chains } as IntFilter,
-  } as CollectionFilter)
+  }) as CollectionFilter
 
 const searchFilter = (search: string): CollectionFilter =>
   ({
@@ -20,7 +20,7 @@ const searchFilter = (search: string): CollectionFilter =>
       { address: { includesInsensitive: search } } as CollectionFilter,
       { description: { includesInsensitive: search } } as CollectionFilter,
     ],
-  } as CollectionFilter)
+  }) as CollectionFilter
 
 export const convertFilterToCollectionFilter = (
   filter: Filter,
