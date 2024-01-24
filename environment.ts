@@ -8,6 +8,8 @@ import {
   Chain,
   goerli as ethereumGoerli,
   mainnet as ethereumMainnet,
+  neonDevnet,
+  neonMainnet,
   polygon,
   polygonMumbai,
 } from 'wagmi/chains'
@@ -199,6 +201,8 @@ const getEnvironment = async (): Promise<Environment> => {
       bsc,
       polygon,
       polygonMumbai,
+      neonMainnet,
+      neonDevnet,
       {
         name: 'LightLink Phoenix',
         network: 'lightlink-phoenix',
@@ -259,68 +263,6 @@ const getEnvironment = async (): Promise<Environment> => {
             url: 'https://pegasus.lightlink.io',
           },
         },
-      },
-      {
-        id: 245022934,
-        network: 'neonMainnet',
-        name: 'Neon EVM MainNet',
-        nativeCurrency: {
-          name: 'NEON',
-          symbol: 'NEON',
-          decimals: 18,
-        },
-        rpcUrls: {
-          default: {
-            http: ['https://neon-proxy-mainnet.solana.p2p.org'],
-          },
-          public: {
-            http: ['https://neon-proxy-mainnet.solana.p2p.org'],
-          },
-        },
-        blockExplorers: {
-          default: {
-            name: 'Neonscan',
-            url: 'https://neonscan.org',
-          },
-        },
-        contracts: {
-          multicall3: {
-            address: '0xca11bde05977b3631167028862be2a173976ca11',
-            blockCreated: 206545524,
-          },
-        },
-        testnet: false,
-      },
-      {
-        id: 245022926,
-        network: 'neonDevnet',
-        name: 'Neon EVM DevNet',
-        nativeCurrency: {
-          name: 'NEON',
-          symbol: 'NEON',
-          decimals: 18,
-        },
-        rpcUrls: {
-          default: {
-            http: ['https://devnet.neonevm.org'],
-          },
-          public: {
-            http: ['https://devnet.neonevm.org'],
-          },
-        },
-        blockExplorers: {
-          default: {
-            name: 'Neonscan',
-            url: 'https://devnet.neonscan.org',
-          },
-        },
-        contracts: {
-          multicall3: {
-            address: '0xca11bde05977b3631167028862be2a173976ca11',
-            blockCreated: 205206112,
-          },
-        },
-        testnet: true,
       },
     ],
     WALLET_CONNECT_PROJECT_ID:
