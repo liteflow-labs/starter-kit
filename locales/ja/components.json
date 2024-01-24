@@ -24,7 +24,8 @@
     "step": {
       "error": {
         "title": "エラー",
-        "description": "取引でエラーが発生しました"
+        "description": "取引でエラーが発生しました",
+        "action": "戻る"
       },
       "selection": {
         "empty": {
@@ -33,14 +34,16 @@
           "action": "NFTを探索する"
         },
         "button": {
-          "label": "を続行",
+          "label": "続く",
           "aria-label": "続く"
         }
       },
       "success": {
         "title": "おめでとう",
         "description": "取引は成功しました",
-        "action": "トランザクションの表示"
+        "action": "トランザクションの表示",
+        "owned": "チェック項目",
+        "back": "ショッピングを続ける"
       },
       "transaction": {
         "empty": {
@@ -427,6 +430,25 @@
         "signature": {
           "title": "署名が必要です",
           "description": "ウォレットを開き、トランザクションを確認してください"
+        }
+      }
+    },
+    "batch-purchase": {
+      "title": "Purchase",
+      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
+      "action": "View on {{name}}",
+      "transaction": {
+        "signature": {
+          "title": "Your confirmation is required",
+          "description": "Open and confirm transaction in your wallet"
+        },
+        "pending": {
+          "title": "Confirmation is pending",
+          "description": "0/2 completed - Transaction is pending on Blockchain"
+        },
+        "ownership": {
+          "title": "Confirmation is pending",
+          "description": "1/2 completed - Ownership is being checked"
         }
       }
     },
