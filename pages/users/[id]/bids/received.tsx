@@ -173,9 +173,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                         <Flex
                           as={Link}
                           href={`/tokens/${item.asset.id}`}
-                          pointerEvents={
-                            item.asset.deletedAt ? 'none' : undefined // disable link if asset is deleted
-                          }
+                          condition={!item.asset.deletedAt} // disable link if asset is deleted
                           gap={3}
                         >
                           <Image
