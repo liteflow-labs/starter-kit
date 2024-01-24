@@ -8,7 +8,7 @@ query FetchUserTradeSold(
     orderBy: $orderBy
     first: $limit
     offset: $offset
-    filter: { sellerAddress: { equalTo: $address } }
+    filter: { sellerAddress: { equalTo: $address }, offerExists: true }
     includeWhenAssetDeleted: YES
     includeWhenCollectionDeleted: YES
     includeWhenCurrencyDeleted: YES
