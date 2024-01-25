@@ -111,6 +111,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
         currency,
         collectionSearch, // exclude from query
         propertySearch, // exclude from query
+        chains, // exclude from filter and query, already set from the collection
         ...otherFilters
       } = filter
       const cleanData = removeEmptyFromObject({
