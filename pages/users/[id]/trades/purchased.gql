@@ -8,7 +8,13 @@ query FetchUserTradePurchased(
     orderBy: $orderBy
     first: $limit
     offset: $offset
-    filter: { buyerAddress: { equalTo: $address }, offerExists: true }
+    filter: {
+      buyerAddress: { equalTo: $address }
+      or: [
+        { deletedAt: { isNull: true } } # include trades not deleted
+        { deletedAt: { isNull: false }, offerExists: true } # include trades deleted but related to an offer
+      ]
+    }
     includeWhenAssetDeleted: YES
     includeWhenCollectionDeleted: YES
     includeWhenCurrencyDeleted: YES
