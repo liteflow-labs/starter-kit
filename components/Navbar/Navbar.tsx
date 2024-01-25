@@ -46,6 +46,7 @@ import SearchInput from '../SearchInput'
 import Select from '../Select/Select'
 import AccountImage from '../Wallet/Image'
 
+
 type MultiLang = {
   pathname: string
   locale: string | undefined
