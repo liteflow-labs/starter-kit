@@ -3,6 +3,8 @@ import { LRUCache } from 'lru-cache'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
+  arbitrum,
+  arbitrumSepolia,
   bsc,
   bscTestnet,
   Chain,
@@ -199,6 +201,8 @@ const getEnvironment = async (): Promise<Environment> => {
       bsc,
       polygon,
       polygonMumbai,
+      arbitrum,
+      arbitrumSepolia,
       {
         name: 'LightLink Phoenix',
         network: 'lightlink-phoenix',
