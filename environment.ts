@@ -24,6 +24,17 @@ type RemoteConfig = {
     FAVICON: string
     BRAND_COLOR: string
 
+    HOME_BANNERS: {
+      image: string
+      title: string
+      content?: string
+      textColor?: string
+      button: {
+        text: string
+        href: string
+        isExternal?: boolean
+      }
+    }[]
     FEATURED_TOKEN: string[]
     HOME_COLLECTIONS: string[]
     HOME_USERS: string[]
@@ -94,6 +105,33 @@ export type Environment = {
   /**
    * Home page configuration
    */
+
+  // List of banners to be displayed on the homepage
+  HOME_BANNERS: {
+    // URL of the image to display
+    image: string
+
+    // Title of the banner
+    title: string
+
+    // (Optional) Content of the banner
+    content?: string
+
+    // (Optional) Text color of the banner
+    textColor?: string
+
+    // Button to display on the banner
+    button: {
+      // Text of the button
+      text: string
+
+      // URL to redirect to when the button is clicked
+      href: string
+
+      // (Optional) Whether the URL is external or not (default: false)
+      isExternal?: boolean
+    }
+  }[]
 
   // Ordered list of tokens to be highlighted on the homepage with the following format: [chainId]-[contractAddress]-[tokenId]
   FEATURED_TOKEN: string[]
@@ -266,6 +304,7 @@ const getEnvironment = async (): Promise<Environment> => {
     MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
     ALCHEMY_API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
     // Home page configuration
+    HOME_BANNERS: metadata.HOME_BANNERS || [],
     FEATURED_TOKEN: metadata.FEATURED_TOKEN || [],
     HOME_COLLECTIONS: metadata.HOME_COLLECTIONS || [],
     HOME_USERS: metadata.HOME_USERS || [],
