@@ -10,6 +10,8 @@ import {
   Chain,
   goerli as ethereumGoerli,
   mainnet as ethereumMainnet,
+  neonDevnet,
+  neonMainnet,
   polygon,
   polygonMumbai,
 } from 'wagmi/chains'
@@ -201,6 +203,8 @@ const getEnvironment = async (): Promise<Environment> => {
       bsc,
       polygon,
       polygonMumbai,
+      neonMainnet,
+      neonDevnet,
       arbitrum,
       arbitrumSepolia,
       {
@@ -232,7 +236,7 @@ const getEnvironment = async (): Promise<Environment> => {
             url: 'https://phoenix.lightlink.io',
           },
         },
-      } as Chain,
+      },
       {
         name: 'LightLink Pegasus Testnet',
         network: 'lightlink-pegasus',
@@ -263,7 +267,7 @@ const getEnvironment = async (): Promise<Environment> => {
             url: 'https://pegasus.lightlink.io',
           },
         },
-      } as Chain,
+      },
     ],
     WALLET_CONNECT_PROJECT_ID:
       process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
