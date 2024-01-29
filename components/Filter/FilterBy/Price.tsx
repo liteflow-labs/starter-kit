@@ -17,7 +17,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-import { FC, useMemo } from 'react'
+import { FC, useCallback, useEffect, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useFetchCurrenciesQuery } from '../../../graphql'
 import { Filter } from '../../../hooks/useAssetFilterFromQuery'
@@ -58,12 +58,30 @@ const FilterByPrice: FC<Props> = ({
 
   const currency = useMemo(() => {
     if (currencies === undefined) return undefined
-    if (currencies.length === 1) return currencies[0]
-    return (
-      currencies.find((x) => x.id === filterResult.currency?.id) ||
-      currencies[0]
-    )
+    return filterResult.currency
+      ? currencies.find((x) => x.id === filterResult.currency?.id)
+      : currencies[0]
   }, [currencies, filterResult.currency])
+
+  useEffect(() => {
+    if (currency) {
+      setValue('currency', { id: currency.id, decimals: currency.decimals })
+    }
+    if (filterResult.minPrice) {
+      setValue('minPrice', filterResult.minPrice)
+    }
+    if (filterResult.maxPrice) {
+      setValue('maxPrice', filterResult.maxPrice)
+    }
+  }, [currency, filterResult.maxPrice, filterResult.minPrice, setValue])
+
+  const onSubmit = useCallback(() => {
+    onFilterChange({
+      currency: filterResult.currency,
+      minPrice: filterResult.minPrice,
+      maxPrice: filterResult.maxPrice,
+    })
+  }, [filterResult, onFilterChange])
 
   if (!currencies)
     return (
@@ -107,16 +125,17 @@ const FilterByPrice: FC<Props> = ({
               control={control}
               placeholder={t('filters.assets.currency.placeholder')}
               choices={currencies.map((x) => ({
-                value: x,
+                value: { id: x.id, decimals: x.decimals },
                 label: x.symbol,
                 image: x.image,
                 caption: x.name,
               }))}
-              value={currency}
+              value={{ id: currency.id, decimals: currency.decimals }}
               required
               isDisabled={isSubmitting}
-              onChange={(x: any) => setValue('currency', x)}
-              sortAlphabetically
+              onChange={(x: any) =>
+                setValue('currency', { id: x.id, decimals: x.decimals })
+              }
             />
           )}
 
@@ -158,6 +177,7 @@ const FilterByPrice: FC<Props> = ({
                         }
                       },
                     })}
+                    value={filterResult.minPrice || undefined}
                   />
                 </NumberInput>
                 <InputRightElement pointerEvents="none">
@@ -213,6 +233,7 @@ const FilterByPrice: FC<Props> = ({
                         }
                       },
                     })}
+                    value={filterResult.maxPrice || undefined}
                   />
                   <InputRightElement pointerEvents="none">
                     <Image
@@ -233,7 +254,7 @@ const FilterByPrice: FC<Props> = ({
             </FormControl>
           </Flex>
 
-          <Button isDisabled={isSubmitting} onClick={() => onFilterChange()}>
+          <Button isDisabled={isSubmitting} onClick={onSubmit}>
             <Text as="span" isTruncated>
               {t('filters.assets.submit')}
             </Text>

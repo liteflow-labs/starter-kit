@@ -30,7 +30,7 @@ type IProps<T> = HTMLAttributes<any> & {
     image?: string
     caption?: string
   }[]
-  value?: T
+  value?: T | { id: string }
   onChange?(value: T | T[] | undefined): void
   isDisabled?: boolean
   error?: FieldError | undefined
@@ -64,7 +64,10 @@ const Select = <T,>({
   ...props
 }: IProps<T>): ReactElement => {
   const selectedChoice = useMemo(
-    () => choices.find((x) => x.value === value),
+    () =>
+      typeof value === 'string'
+        ? choices.find((x) => x.value === value)
+        : choices.find((x: any) => x.value.id === value?.id),
     [choices, value],
   )
 
