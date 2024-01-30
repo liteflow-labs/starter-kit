@@ -11,6 +11,7 @@ query FetchAsset(
     tokenId: $tokenId
   ) {
     id
+    deletedAt
     tokenId
     tokenUri
     chainId

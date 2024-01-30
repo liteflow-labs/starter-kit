@@ -37,7 +37,7 @@ const searchFilter = (search: string): AccountFilter =>
       { address: { includesInsensitive: search } } as AccountFilter,
       { description: { includesInsensitive: search } } as AccountFilter,
     ],
-  } as AccountFilter)
+  }) as AccountFilter
 
 const UsersPage: NextPage<Props> = () => {
   const { PAGINATION_LIMIT } = useEnvironment()

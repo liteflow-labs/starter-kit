@@ -40,8 +40,8 @@ const Radio: FC<IProps> = ({ choice, ...props }) => {
           choice.disabled
             ? 'transparent'
             : props.isChecked
-            ? 'brand.500'
-            : 'gray.200'
+              ? 'brand.500'
+              : 'gray.200'
         }
         py={7}
         pl={5}

@@ -1,5 +1,5 @@
 import { useAuthenticate, useIsLoggedIn } from '@liteflow/react'
-import jwtDecode, { JwtPayload } from 'jwt-decode'
+import { JwtPayload, jwtDecode } from 'jwt-decode'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 import { Connector, useAccount as useWagmiAccount } from 'wagmi'

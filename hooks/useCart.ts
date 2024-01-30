@@ -1,3 +1,4 @@
+import { BatchPurchaseStep } from '@liteflow/react/dist/useBatchPurchase'
 import { createContext, useContext, useEffect } from 'react'
 
 export type CartItem = {
@@ -12,6 +13,7 @@ type CartContext = {
   clearCart: () => void
   items: CartItem[]
   checkout: (items: CartItem[]) => Promise<void>
+  activeStep: BatchPurchaseStep
   transactionHash: string | undefined
   registerOnCheckout: (callback: () => void) => void
   unregisterOnCheckout: (callback: () => void) => void

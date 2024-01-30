@@ -164,6 +164,7 @@ const BidPlacedPage: NextPage = () => {
                         <Flex
                           as={Link}
                           href={`/tokens/${item.asset.id}`}
+                          condition={!item.asset.deletedAt} // disable link if asset is deleted
                           gap={3}
                         >
                           <Image
@@ -237,16 +238,18 @@ const BidPlacedPage: NextPage = () => {
                                 </Text>
                               </CancelOfferButton>
                             ) : (
-                              <Button
-                                as={Link}
-                                href={`/tokens/${item.asset.id}/bid`}
-                                variant="outline"
-                                colorScheme="gray"
-                              >
-                                <Text as="span" isTruncated>
-                                  {t('user.bid-placed.actions.new')}
-                                </Text>
-                              </Button>
+                              !item.asset.deletedAt && ( // only display new button if asset is not deleted
+                                <Button
+                                  as={Link}
+                                  href={`/tokens/${item.asset.id}/bid`}
+                                  variant="outline"
+                                  colorScheme="gray"
+                                >
+                                  <Text as="span" isTruncated>
+                                    {t('user.bid-placed.actions.new')}
+                                  </Text>
+                                </Button>
+                              )
                             )}
                           </>
                         )}

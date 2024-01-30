@@ -22,7 +22,7 @@ import SkeletonImageAndText from '../../components/Skeleton/ImageAndText'
 import SkeletonTokenCard from '../../components/Skeleton/TokenCard'
 import TokenCard from '../../components/Token/Card'
 import Avatar from '../../components/User/Avatar'
-import { useCheckoutQuery, useFetchAssetForCheckoutQuery } from '../../graphql'
+import { useCheckoutQuery } from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle'
 import SmallLayout from '../../layouts/small'
@@ -41,20 +41,15 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
 
   const date = useMemo(() => new Date(now), [now])
-  const { data: offerData } = useCheckoutQuery({ variables: { id: offerId } })
-  const offer = offerData?.offer
-
-  const { data: assetData } = useFetchAssetForCheckoutQuery({
+  const { data: offerData } = useCheckoutQuery({
     variables: {
-      now: date,
+      id: offerId,
       address: address || '',
-      chainId: offer?.asset.chainId || 0,
-      collectionAddress: offer?.asset.collectionAddress || '',
-      tokenId: offer?.asset.tokenId || '',
+      now: date,
     },
-    skip: !offer,
   })
-  const asset = assetData?.asset
+  const offer = offerData?.offer
+  const asset = offer?.asset
 
   const priceUnit = useMemo(
     () => (offer ? BigNumber.from(offer.unitPrice) : undefined),
@@ -74,7 +69,12 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${asset.id}`)
   }, [asset, toast, t, push])
 
-  if (offer === null || asset === null) {
+  if (
+    offer === null ||
+    asset === null ||
+    asset?.deletedAt ||
+    offer?.currency.deletedAt
+  ) {
     return <Error statusCode={404} />
   }
   return (
