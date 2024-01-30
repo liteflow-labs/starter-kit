@@ -153,15 +153,15 @@ const Dropzone: FC<IProps> = ({
           isDragActive
             ? 'blue.600'
             : isDragReject || error || fileRejections.length > 0
-            ? 'red.500'
-            : 'gray.200'
+              ? 'red.500'
+              : 'gray.200'
         }
         bgColor={
           isDragActive
             ? 'blue.100'
             : isDragReject || error || fileRejections.length > 0
-            ? 'red.100'
-            : 'white'
+              ? 'red.100'
+              : 'white'
         }
         p={6}
         {...getRootProps()}

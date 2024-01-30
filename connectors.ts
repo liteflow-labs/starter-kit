@@ -1,4 +1,4 @@
-import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector'
+import { UniversalWalletConnector } from '@magiclabs/wagmi-connector'
 import {
   connectorsForWallets,
   Wallet,
@@ -12,16 +12,8 @@ import {
   rainbowWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import type { Chain, Config, Connector } from 'wagmi'
+import type { Chain, Config } from 'wagmi'
 import { configureChains, createConfig } from 'wagmi'
-import {
-  bsc,
-  bscTestnet,
-  goerli,
-  mainnet,
-  polygon,
-  polygonMumbai,
-} from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { Environment } from './environment'
@@ -76,7 +68,7 @@ function connectors(environment: Environment): ClientWithChain {
     ]
 
     return {
-      connectors: connectorsForWallets(wallets),
+      connectors: connectorsForWallets(wallets)(),
       wallets,
     }
   }
@@ -104,7 +96,7 @@ function emailConnector({
   chains,
   apiKey,
 }: {
-  chains: any[]
+  chains: Chain[]
   apiKey: string
 }): Wallet {
   return {
@@ -113,26 +105,19 @@ function emailConnector({
     iconUrl: '/magic.svg',
     iconBackground: '#fff',
     createConnector: () => {
-      const connector = new MagicConnectConnector({
+      const connector = new UniversalWalletConnector({
         chains: chains,
         options: {
           apiKey: apiKey,
-          networks: [
-            { chainId: mainnet.id, rpcUrl: 'https://rpc.ankr.com/eth' },
-            { chainId: goerli.id, rpcUrl: 'https://rpc.ankr.com/eth_goerli' },
-            { chainId: polygon.id, rpcUrl: 'https://rpc.ankr.com/polygon' },
-            {
-              chainId: polygonMumbai.id,
-              rpcUrl: 'https://rpc.ankr.com/polygon_mumbai',
-            },
-            { chainId: bsc.id, rpcUrl: 'https://rpc.ankr.com/bsc' },
-            {
-              chainId: bscTestnet.id,
-              rpcUrl: 'https://rpc.ankr.com/bsc_testnet_chapel',
-            },
-          ],
+          networks: chains.map((chain) => ({
+            chainId: chain.id,
+            rpcUrl:
+              chain.id === 1 // the default provider for Ethereum Mainnet (cloudflare) is not working with Magic
+                ? 'https://rpc.ankr.com/eth'
+                : chain.rpcUrls.default.http[0]!,
+          })),
         },
-      }) as unknown as Connector
+      })
       return {
         connector,
       }

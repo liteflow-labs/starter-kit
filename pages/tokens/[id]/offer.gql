@@ -11,6 +11,7 @@ query OfferForAsset(
     tokenId: $tokenId
   ) {
     id
+    deletedAt
     chainId
     collectionAddress
     tokenId

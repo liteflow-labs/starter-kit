@@ -24,7 +24,8 @@
     "step": {
       "error": {
         "title": "Error",
-        "description": "Hubo un error con tu transacción"
+        "description": "Hubo un error con tu transacción",
+        "action": "Regresa"
       },
       "selection": {
         "empty": {
@@ -33,14 +34,16 @@
           "action": "Explorar las NFT"
         },
         "button": {
-          "label": "Continua con",
+          "label": "Continuar",
           "aria-label": "Continuar"
         }
       },
       "success": {
         "title": "Felicidades",
         "description": "Su transacción fue exitosa",
-        "action": "Ver transacción"
+        "action": "Ver transacción",
+        "owned": "Comprobar artículos",
+        "back": "Seguir comprando"
       },
       "transaction": {
         "empty": {
@@ -427,6 +430,25 @@
         "signature": {
           "title": "Requerimos una firma con tu wallet",
           "description": "Abre tu wallet y firma el mensaje para continuar"
+        }
+      }
+    },
+    "batch-purchase": {
+      "title": "Purchase",
+      "description": "Confirm transaction in your wallet to continue, this action will cost you gas fees.",
+      "action": "View on {{name}}",
+      "transaction": {
+        "signature": {
+          "title": "Your confirmation is required",
+          "description": "Open and confirm transaction in your wallet"
+        },
+        "pending": {
+          "title": "Confirmation is pending",
+          "description": "0/2 completed - Transaction is pending on Blockchain"
+        },
+        "ownership": {
+          "title": "Confirmation is pending",
+          "description": "1/2 completed - Ownership is being checked"
         }
       }
     },

@@ -41,7 +41,7 @@ export enum OfferFilterType {
 const chainFilter = (chains: number[]): AssetFilter =>
   ({
     chainId: { in: chains } as IntFilter,
-  } as AssetFilter)
+  }) as AssetFilter
 
 const searchFilter = (search: string): AssetFilter =>
   ({
@@ -50,7 +50,7 @@ const searchFilter = (search: string): AssetFilter =>
       { description: { includesInsensitive: search } } as AssetFilter,
       { creatorAddress: { includesInsensitive: search } } as AssetFilter,
     ],
-  } as AssetFilter)
+  }) as AssetFilter
 
 const traitFilter = (traits: TraitFilter[]): AssetFilter =>
   ({
@@ -62,7 +62,7 @@ const traitFilter = (traits: TraitFilter[]): AssetFilter =>
         },
       },
     })),
-  } as AssetFilter)
+  }) as AssetFilter
 
 const collectionFilter = (collection: string): AssetFilter => {
   const [chainId, address] = collection.split('-')
@@ -92,7 +92,7 @@ const minPriceFilter = (
         } as Uint256Filter,
       } as OfferFilter,
     } as AssetToManyOfferFilter,
-  } as AssetFilter)
+  }) as AssetFilter
 
 const maxPriceFilter = (
   maxPrice: number,
@@ -112,7 +112,7 @@ const maxPriceFilter = (
         } as Uint256Filter,
       } as OfferFilter,
     } as AssetToManyOfferFilter,
-  } as AssetFilter)
+  }) as AssetFilter
 
 const offersFilter = (offers: OfferFilterType, date: Date): AssetFilter => {
   if (offers === OfferFilterType.bids) {

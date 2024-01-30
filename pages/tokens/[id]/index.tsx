@@ -140,7 +140,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     [refresh, refreshAsset, toast],
   )
 
-  if (asset === null) return <Error statusCode={404} />
+  if (asset === null || asset?.deletedAt) return <Error statusCode={404} />
   return (
     <LargeLayout>
       <Head

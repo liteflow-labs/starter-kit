@@ -35,6 +35,7 @@ type IProps<T> = HTMLAttributes<any> & {
   isDisabled?: boolean
   error?: FieldError | undefined
   name: string
+  placeholder?: string
   hint?: string
   required?: boolean
   control?: Control<any, object>
