@@ -18,6 +18,7 @@ const BannerHomeSection = () => {
           alignItems="center"
           h="500px"
           flex="0 0 100%"
+          bg="gray.100"
         >
           <Image
             src={banner.image}
@@ -25,6 +26,7 @@ const BannerHomeSection = () => {
             fill
             sizes="(min-width: 80em) 1216px, 100vw"
             objectFit="cover"
+            priority
           />
           <Flex
             flexDirection="column"
