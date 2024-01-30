@@ -19,6 +19,8 @@ query FetchAssetHistory(
       orderBy: DATE_DESC
       first: $limit
       offset: $offset
+      includeWhenAssetDeleted: YES
+      includeWhenCurrencyDeleted: YES
     ) {
       pageInfo {
         hasNextPage

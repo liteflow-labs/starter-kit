@@ -16,5 +16,6 @@ query FetchAccountAndCollection(
     address
     name
     standard
+    deletedAt
   }
 }

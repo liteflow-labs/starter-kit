@@ -63,7 +63,7 @@ const OfferPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${assetId}`)
   }, [toast, t, push, assetId])
 
-  if (asset === null) return <Error statusCode={404} />
+  if (asset === null || asset?.deletedAt) return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head

@@ -148,7 +148,8 @@ const CollectionPage: FC<Props> = ({ now }) => {
 
   const { changeLimit } = usePaginate()
 
-  if (collection === null) return <Error statusCode={404} />
+  if (collection === null || collection?.deletedAt)
+    return <Error statusCode={404} />
   return (
     <LargeLayout>
       <Head

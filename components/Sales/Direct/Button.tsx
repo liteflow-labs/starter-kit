@@ -124,11 +124,10 @@ const SaleDirectButton: FC<Props> = ({
 
   const buyNow = useMemo(() => {
     if (sales.length !== 1) return
-    if (!address) return
     const sale = sales[0]
     if (!sale) return
     // Only display buy now when there is a single offer not owned by the current account
-    if (isSameAddress(sale.maker.address, address)) return
+    if (address && isSameAddress(sale.maker.address, address)) return
     return (
       <CheckoutButton offer={sale} size="lg">
         <Text as="span" isTruncated>

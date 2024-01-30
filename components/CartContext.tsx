@@ -10,7 +10,8 @@ const CartContext: FC<PropsWithChildren> = (props) => {
   const { address } = useAccount()
   const signer = useSigner()
   const [transactionHash, setTransactionHash] = useState<string>()
-  const [batchPurchase, { transactionHash: txHash }] = useBatchPurchase(signer)
+  const [batchPurchase, { transactionHash: txHash, activeStep }] =
+    useBatchPurchase(signer)
   const [onCheckoutCallbacks, setOnCheckoutCallbacks] = useState<
     (() => void)[]
   >([])
@@ -86,6 +87,7 @@ const CartContext: FC<PropsWithChildren> = (props) => {
         removeItem,
         clearCart,
         checkout,
+        activeStep,
         transactionHash,
         registerOnCheckout,
         unregisterOnCheckout,
