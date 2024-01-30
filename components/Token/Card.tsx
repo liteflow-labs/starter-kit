@@ -72,6 +72,9 @@ export type Props = {
               decimals: number
               symbol: string
             }
+            maker: {
+              address: string
+            }
           }[]
         }
       | undefined
@@ -107,7 +110,6 @@ const TokenCard: FC<Props> = ({ asset }) => {
           sale={sale}
           numberOfSales={numberOfSales}
           hasMultiCurrency={hasMultiCurrency}
-          isOwner={isOwner}
           showButton={isHovered}
         />
       )
