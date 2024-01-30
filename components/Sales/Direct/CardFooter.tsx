@@ -33,6 +33,8 @@ const SaleDirectCardFooter: FC<Props> = ({
   const { t } = useTranslation('components')
   const { address } = useAccount()
 
+  // TODO: we should have a modal if there is more than one sale like we have on detail page
+  // issue is tracked on https://github.com/liteflow-labs/starter-kit/issues/529 for this modal improvement
   const isOwner = useMemo(
     () => (address ? isSameAddress(sale.maker.address, address) : false),
     [address, sale.maker],
