@@ -68,6 +68,9 @@ query FetchAllERC721And1155(
             decimals
             symbol
           }
+          maker {
+            address
+          }
         }
       }
       creator {

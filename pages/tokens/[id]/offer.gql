@@ -65,6 +65,9 @@ query OfferForAsset(
           decimals
           symbol
         }
+        maker {
+          address
+        }
       }
     }
     creator {

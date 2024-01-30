@@ -136,6 +136,9 @@ query FetchCollectionAssets(
             decimals
             symbol
           }
+          maker {
+            address
+          }
         }
       }
     }
