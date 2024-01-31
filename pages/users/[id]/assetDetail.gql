@@ -48,6 +48,9 @@ fragment AssetDetail on Asset {
         decimals
         symbol
       }
+      maker {
+        address
+      }
     }
   }
   creator {
