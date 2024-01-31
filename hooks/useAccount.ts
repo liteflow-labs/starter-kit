@@ -1,6 +1,6 @@
 import { useAuthenticate, useIsLoggedIn } from '@liteflow/react'
 import { JwtPayload, jwtDecode } from 'jwt-decode'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 import { Connector, useAccount as useWagmiAccount } from 'wagmi'
 import { walletClientToSigner } from './useSigner'
@@ -12,6 +12,7 @@ type AccountDetail = {
   jwtToken: string | null
   logout: () => Promise<void>
   login: (connector: Connector) => Promise<void>
+  signature: (connector: Connector) => Promise<void>
 }
 
 export const COOKIE_JWT_TOKEN = 'jwt-token'
@@ -57,14 +58,6 @@ export default function useAccount(): AccountDetail {
     [isLoggedInWhileReconnect, isLoggedInToAPI],
   )
 
-  // Reconnect based on the token and mark as logged in
-  useEffect(() => {
-    if (isLoggedInToAPI) return
-    if (!isReconnecting) return
-    if (!jwt) return
-    setAuthenticationToken(jwt.token)
-  }, [isLoggedInToAPI, isReconnecting, jwt, setAuthenticationToken])
-
   const login = useCallback(
     async (connector: Connector) => {
       const wallet = await connector.getWalletClient()
@@ -73,6 +66,14 @@ export default function useAccount(): AccountDetail {
       if (jwt && currentAddress === jwt.address) {
         return setAuthenticationToken(jwt.token)
       }
+    },
+    [jwt, setAuthenticationToken],
+  )
+
+  const signature = useCallback(
+    async (connector: Connector) => {
+      const wallet = await connector.getWalletClient()
+      const signer = walletClientToSigner(wallet)
       const { jwtToken } = await authenticate(signer)
 
       const newJwt = jwtDecode<JwtPayload>(jwtToken)
@@ -86,7 +87,7 @@ export default function useAccount(): AccountDetail {
           : {}),
       })
     },
-    [jwt, authenticate, setAuthenticationToken, setCookie],
+    [authenticate, setCookie],
   )
 
   // Server side
@@ -98,6 +99,7 @@ export default function useAccount(): AccountDetail {
       isConnected: !!jwt,
       logout,
       login,
+      signature,
     }
   }
 
@@ -108,5 +110,6 @@ export default function useAccount(): AccountDetail {
     isConnected,
     logout,
     login,
+    signature,
   }
 }

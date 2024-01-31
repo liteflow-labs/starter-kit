@@ -475,6 +475,12 @@
       "title": "Sign in with your wallet",
       "description": "Connect with one of the following options.",
       "alternative": "Or sign in with"
+    },
+    "signature": {
+      "title": "Signature",
+      "sub-title": "Verify your account",
+      "description": "To complete the connection, you must sign a message in your wallet to verify that you are the owner of this account.",
+      "action": "Send message"
     }
   },
   "back": "Go back",
