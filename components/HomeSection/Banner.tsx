@@ -8,7 +8,7 @@ import Slider from '../Slider/Slider'
 const BannerHomeSection = () => {
   const { HOME_BANNERS } = useEnvironment()
 
-  if (HOME_BANNERS.length === 0) return null
+  if (!HOME_BANNERS.length) return null
   return (
     <Flex as={HOME_BANNERS.length > 1 ? Slider : 'div'}>
       {HOME_BANNERS.map((banner) => (
