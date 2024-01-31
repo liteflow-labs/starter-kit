@@ -135,6 +135,7 @@ const FixedPricePage: NextPage = () => {
                         <Flex
                           as={Link}
                           href={`/tokens/${item.asset.id}`}
+                          condition={!item.asset.deletedAt} // disable link if asset is deleted
                           gap={3}
                         >
                           <Image
@@ -207,7 +208,9 @@ const FixedPricePage: NextPage = () => {
                               </CancelOfferButton>
                             ) : BigNumber.from(
                                 item.asset.owned?.quantity || 0,
-                              ).gt(0) ? (
+                              ).gt(0) &&
+                              !item.asset.deletedAt && // only display new button if asset and currency are not deleted
+                              !item.currency.deletedAt ? (
                               <Button
                                 as={Link}
                                 href={`/tokens/${item.asset.id}/offer`}

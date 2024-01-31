@@ -173,6 +173,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                         <Flex
                           as={Link}
                           href={`/tokens/${item.asset.id}`}
+                          condition={!item.asset.deletedAt} // disable link if asset is deleted
                           gap={3}
                         >
                           <Image
@@ -223,25 +224,27 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
                       </Td>
                       <Td>{dateFromNow(item.createdAt)}</Td>
                       <Td isNumeric>
-                        {ownerLoggedIn && (
-                          <AcceptOfferButton
-                            offer={item}
-                            title={t('user.bid-received.accept.title')}
-                            variant="outline"
-                            colorScheme="gray"
-                            onAccepted={onAccepted}
-                            onError={(e) =>
-                              toast({
-                                status: 'error',
-                                title: formatError(e),
-                              })
-                            }
-                          >
-                            <Text as="span" isTruncated>
-                              {t('user.bid-received.actions.accept')}
-                            </Text>
-                          </AcceptOfferButton>
-                        )}
+                        {ownerLoggedIn &&
+                          !item.asset.deletedAt && // only display accept button if asset and currency are not deleted
+                          !item.currency.deletedAt && (
+                            <AcceptOfferButton
+                              offer={item}
+                              title={t('user.bid-received.accept.title')}
+                              variant="outline"
+                              colorScheme="gray"
+                              onAccepted={onAccepted}
+                              onError={(e) =>
+                                toast({
+                                  status: 'error',
+                                  title: formatError(e),
+                                })
+                              }
+                            >
+                              <Text as="span" isTruncated>
+                                {t('user.bid-received.actions.accept')}
+                              </Text>
+                            </AcceptOfferButton>
+                          )}
                       </Td>
                     </Tr>
                   ))}

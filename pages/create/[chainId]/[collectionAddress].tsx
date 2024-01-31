@@ -100,7 +100,8 @@ const CreatePage: NextPage = () => {
     [push, t, toast],
   )
 
-  if (collection === null) return <Error statusCode={404} />
+  if (collection === null || collection?.deletedAt)
+    return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head

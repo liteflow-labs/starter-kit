@@ -1,6 +1,8 @@
 import { Divider, Flex, HStack, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
+import useAccount from '../../../hooks/useAccount'
+import { isSameAddress } from '../../../utils'
 import AddToCartButton from '../../Button/AddToCart'
 import Link from '../../Link/Link'
 import Price from '../../Price/Price'
@@ -13,10 +15,12 @@ type Props = {
       decimals: number
       symbol: string
     }
+    maker: {
+      address: string
+    }
   }
   numberOfSales: number
   hasMultiCurrency: boolean
-  isOwner: boolean
   showButton?: boolean
 }
 
@@ -24,10 +28,18 @@ const SaleDirectCardFooter: FC<Props> = ({
   sale,
   numberOfSales,
   hasMultiCurrency,
-  isOwner,
   showButton = true,
 }) => {
   const { t } = useTranslation('components')
+  const { address } = useAccount()
+
+  // TODO: we should have a modal if there is more than one sale like we have on detail page
+  // issue is tracked on https://github.com/liteflow-labs/starter-kit/issues/529 for this modal improvement
+  const isOwner = useMemo(
+    () => (address ? isSameAddress(sale.maker.address, address) : false),
+    [address, sale.maker],
+  )
+
   const chip = useMemo(() => {
     switch (numberOfSales) {
       case 0:
@@ -94,7 +106,7 @@ const SaleDirectCardFooter: FC<Props> = ({
             : chip}
         </Text>
       </Flex>
-      {showButton && (
+      {showButton && address && (
         <>
           <Divider orientation="vertical" />
           <AddToCartButton

@@ -69,7 +69,12 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
     await push(`/tokens/${asset.id}`)
   }, [asset, toast, t, push])
 
-  if (offer === null || asset === null) {
+  if (
+    offer === null ||
+    asset === null ||
+    asset?.deletedAt ||
+    offer?.currency.deletedAt
+  ) {
     return <Error statusCode={404} />
   }
   return (

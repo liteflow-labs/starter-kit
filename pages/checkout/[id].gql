@@ -7,6 +7,7 @@ query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
       collectionAddress
       tokenId
       id
+      deletedAt
       collection {
         chainId
         address
@@ -62,6 +63,9 @@ query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
             decimals
             symbol
           }
+          maker {
+            address
+          }
         }
       }
     }
@@ -80,6 +84,7 @@ query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
       id
       decimals
       symbol
+      deletedAt
     }
   }
 }
