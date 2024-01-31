@@ -63,6 +63,9 @@ query Checkout($id: UUID!, $address: Address, $now: Datetime!) {
             decimals
             symbol
           }
+          maker {
+            address
+          }
         }
       }
     }
