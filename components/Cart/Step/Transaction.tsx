@@ -32,7 +32,7 @@ import useSigner from '../../../hooks/useSigner'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import List, { ListItem } from '../../List/List'
 import BatchPurchaseModal from '../../Modal/BatchPurchase'
-import Price, { formatPrice } from '../../Price/Price'
+import Price from '../../Price/Price'
 import CartItemSummary from '../ItemSummary'
 
 type Props = {
@@ -190,7 +190,7 @@ const CartStepTransaction: FC<Props> = ({
                       isLoading={approvalLoading[item.currency.id] || false}
                     >
                       {t('cart.step.transaction.button.approve', {
-                        value: formatPrice(item.amount, item.currency),
+                        value: item.currency.symbol,
                       })}
                     </ConnectButtonWithNetworkSwitch>
                   ) : balances[item.currency.id] &&
