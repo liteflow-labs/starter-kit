@@ -17,6 +17,8 @@ query FetchUserBidsReceived(
       makerAddress: { notEqualTo: $address }
       asset: { ownerships: { some: { ownerAddress: { equalTo: $address } } } }
     }
+    includeWhenAssetDeleted: YES
+    includeWhenCurrencyDeleted: YES
   ) {
     pageInfo {
       hasNextPage
@@ -43,6 +45,7 @@ query FetchUserBidsReceived(
         id
         decimals
         symbol
+        deletedAt
       }
       asset {
         id
@@ -52,6 +55,7 @@ query FetchUserBidsReceived(
         name
         image
         imageMimetype
+        deletedAt
       }
     }
   }
