@@ -65,8 +65,8 @@ const FilterByTrait: FC<Props> = ({
     notifyOnNetworkStatusChange: true,
   })
 
-  const traitsData = data?.collection?.traitsOfCollection.nodes
-  const hasNextPage = data?.collection?.traitsOfCollection.pageInfo.hasNextPage
+  const traitsData = data?.collectionTraits?.nodes
+  const hasNextPage = data?.collectionTraits?.pageInfo.hasNextPage
 
   const loadMore = useCallback(async () => {
     const newOffset = offset + PAGINATION_LIMIT
@@ -76,22 +76,16 @@ const FilterByTrait: FC<Props> = ({
         // Cannot use concatToQuery function because of nested cache
         // Nested cache comes from the shape of FetchCollectionTraits query above
         updateQuery: (prevResult, { fetchMoreResult }) => {
-          if (
-            !fetchMoreResult ||
-            !fetchMoreResult.collection?.traitsOfCollection
-          )
+          if (!fetchMoreResult || !fetchMoreResult.collectionTraits)
             return prevResult
           return {
             ...fetchMoreResult,
-            collection: {
-              ...fetchMoreResult.collection,
-              traitsOfCollection: {
-                ...fetchMoreResult.collection.traitsOfCollection,
-                nodes: [
-                  ...(prevResult?.collection?.traitsOfCollection.nodes || []),
-                  ...fetchMoreResult.collection.traitsOfCollection.nodes,
-                ],
-              },
+            collectionTraits: {
+              ...fetchMoreResult.collectionTraits,
+              nodes: [
+                ...(prevResult?.collectionTraits?.nodes || []),
+                ...fetchMoreResult.collectionTraits.nodes,
+              ],
             },
           }
         },
