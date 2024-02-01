@@ -55,7 +55,7 @@ const UsersPage: NextPage<Props> = () => {
       limit,
       offset,
       orderBy,
-      filter: search ? searchFilter(search) : null,
+      filter: search ? searchFilter(search) : [],
     },
   })
 
