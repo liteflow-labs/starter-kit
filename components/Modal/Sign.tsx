@@ -63,7 +63,6 @@ const SignModal: FC<Props> = ({ connector, isOpen, onClose }) => {
           <Text variant="text-sm">{t('modal.signature.description')}</Text>
         </ModalBody>
         <ModalFooter as="div">
-          {/* TODO: add loader */}
           <Button onClick={onSign} mx="auto" size="md">
             {t('modal.signature.action')}
           </Button>
