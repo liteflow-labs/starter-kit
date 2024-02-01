@@ -12,14 +12,6 @@ import {
   rainbowWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import {
-  bsc,
-  bscTestnet,
-  goerli,
-  mainnet,
-  polygon,
-  polygonMumbai,
-} from 'viem/chains'
 import type { Chain, Config } from 'wagmi'
 import { configureChains, createConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -104,7 +96,7 @@ function emailConnector({
   chains,
   apiKey,
 }: {
-  chains: any[]
+  chains: Chain[]
   apiKey: string
 }): Wallet {
   return {
@@ -117,20 +109,13 @@ function emailConnector({
         chains: chains,
         options: {
           apiKey: apiKey,
-          networks: [
-            { chainId: mainnet.id, rpcUrl: 'https://rpc.ankr.com/eth' },
-            { chainId: goerli.id, rpcUrl: 'https://rpc.ankr.com/eth_goerli' },
-            { chainId: polygon.id, rpcUrl: 'https://rpc.ankr.com/polygon' },
-            {
-              chainId: polygonMumbai.id,
-              rpcUrl: 'https://rpc.ankr.com/polygon_mumbai',
-            },
-            { chainId: bsc.id, rpcUrl: 'https://rpc.ankr.com/bsc' },
-            {
-              chainId: bscTestnet.id,
-              rpcUrl: 'https://rpc.ankr.com/bsc_testnet_chapel',
-            },
-          ],
+          networks: chains.map((chain) => ({
+            chainId: chain.id,
+            rpcUrl:
+              chain.id === 1 // the default provider for Ethereum Mainnet (cloudflare) is not working with Magic
+                ? 'https://rpc.ankr.com/eth'
+                : chain.rpcUrls.default.http[0]!,
+          })),
         },
       })
       return {

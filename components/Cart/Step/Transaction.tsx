@@ -13,9 +13,11 @@ import {
   IconButton,
   Text,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { sendTransaction } from '@liteflow/core/dist/utils/transaction'
+import { BatchPurchaseStep } from '@liteflow/react/dist/useBatchPurchase'
 import { FaAngleLeft } from '@react-icons/all-files/fa/FaAngleLeft'
 import { FaCheck } from '@react-icons/all-files/fa/FaCheck'
 import useTranslation from 'next-translate/useTranslation'
@@ -24,11 +26,13 @@ import invariant from 'ts-invariant'
 import { useCreateApprovalMutation } from '../../../graphql'
 import useAccount from '../../../hooks/useAccount'
 import useBalances from '../../../hooks/useBalances'
+import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useCart, { CartItem } from '../../../hooks/useCart'
 import useSigner from '../../../hooks/useSigner'
 import ConnectButtonWithNetworkSwitch from '../../Button/ConnectWithNetworkSwitch'
 import List, { ListItem } from '../../List/List'
-import Price, { formatPrice } from '../../Price/Price'
+import BatchPurchaseModal from '../../Modal/BatchPurchase'
+import Price from '../../Price/Price'
 import CartItemSummary from '../ItemSummary'
 
 type Props = {
@@ -48,8 +52,11 @@ const CartStepTransaction: FC<Props> = ({
 }) => {
   const { t } = useTranslation('components')
   const signer = useSigner()
-  const { checkout } = useCart()
+  const { checkout, activeStep, transactionHash } = useCart()
   const { address } = useAccount()
+  const blockExplorer = useBlockExplorer(chainId)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const approvalItems = useMemo(
     () =>
       cartItems.map((x) => ({
@@ -73,8 +80,11 @@ const CartStepTransaction: FC<Props> = ({
   )
 
   const loading = useMemo(
-    () => loadingBalance || loadingApproval,
-    [loadingBalance, loadingApproval],
+    () =>
+      activeStep !== BatchPurchaseStep.INITIAL ||
+      loadingBalance ||
+      loadingApproval,
+    [activeStep, loadingApproval, loadingBalance],
   )
 
   const hasEnoughBalance = useMemo(
@@ -85,8 +95,6 @@ const CartStepTransaction: FC<Props> = ({
       }) || false,
     [data, balances],
   )
-
-  const [buying, setBuying] = useState(false)
 
   useEffect(() => {
     if (!address) return
@@ -128,15 +136,15 @@ const CartStepTransaction: FC<Props> = ({
   const submit = useCallback(async () => {
     if (!address) return
     try {
-      setBuying(true)
+      onOpen()
       await checkout(cartItems)
       onSubmit()
     } catch (e) {
       onError(e as Error)
     } finally {
-      setBuying(false)
+      onClose()
     }
-  }, [address, cartItems, onSubmit, onError, checkout])
+  }, [address, cartItems, checkout, onClose, onError, onOpen, onSubmit])
 
   if (called && data?.createCheckoutApprovalTransactions.length === 0)
     return (
@@ -182,7 +190,7 @@ const CartStepTransaction: FC<Props> = ({
                       isLoading={approvalLoading[item.currency.id] || false}
                     >
                       {t('cart.step.transaction.button.approve', {
-                        value: formatPrice(item.amount, item.currency),
+                        value: item.currency.symbol,
                       })}
                     </ConnectButtonWithNetworkSwitch>
                   ) : balances[item.currency.id] &&
@@ -213,7 +221,7 @@ const CartStepTransaction: FC<Props> = ({
           <ConnectButtonWithNetworkSwitch
             chainId={chainId}
             isDisabled={!allApproved || !hasEnoughBalance || loading}
-            isLoading={buying || loading}
+            isLoading={loading}
             flexGrow={1}
             borderLeftRadius="none"
             onClick={() => submit()}
@@ -226,6 +234,13 @@ const CartStepTransaction: FC<Props> = ({
           </ConnectButtonWithNetworkSwitch>
         </HStack>
       </DrawerFooter>
+      <BatchPurchaseModal
+        isOpen={isOpen}
+        onClose={onClose}
+        step={activeStep}
+        blockExplorer={blockExplorer}
+        transactionHash={transactionHash}
+      />
     </>
   )
 }

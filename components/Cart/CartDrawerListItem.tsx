@@ -130,6 +130,7 @@ const CartDrawerListItem: FC<Props> = ({ offer }) => {
       _hover={{
         bgColor: 'brand.50',
       }}
+      cursor="auto"
       rounded="xl"
     />
   )

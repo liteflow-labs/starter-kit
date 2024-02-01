@@ -14,6 +14,8 @@ query FetchUserBidsPlaced(
       signature: { isNull: false }
       makerAddress: { equalTo: $address }
     }
+    includeWhenAssetDeleted: YES
+    includeWhenCurrencyDeleted: YES
   ) {
     pageInfo {
       hasNextPage
@@ -49,6 +51,7 @@ query FetchUserBidsPlaced(
         name
         image
         imageMimetype
+        deletedAt
       }
     }
   }
