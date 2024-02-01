@@ -12,7 +12,7 @@ type Props = {
   isSingle: boolean
   price: BigNumber
   quantity: BigNumber
-  feesOnTopPerTenThousand?: number | undefined
+  feesOnTopPerTenThousand?: BigNumber | undefined
   noFees?: boolean
 }
 
@@ -66,7 +66,7 @@ const Summary: FC<Props> = ({
           ) : (
             <Heading as={Flex} variant="heading3" color="gray.500" mb={2}>
               {t('offer.summary.fees', {
-                value: feesOnTopPerTenThousand / 100,
+                value: feesOnTopPerTenThousand.div(100).toString(),
               })}
               <Text
                 as={Price}
