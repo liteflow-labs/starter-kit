@@ -127,7 +127,7 @@ function AccountProvider({
   onError,
 }: PropsWithChildren<{ onError: (code: number) => void }>) {
   const { LITEFLOW_API_KEY, BASE_URL } = useEnvironment()
-  const { jwtToken, login, logout, signature } = useAccount()
+  const { jwtToken, login, logout, sign } = useAccount()
   const { disconnect } = useDisconnect()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [cookies] = useCookies<string, COOKIES>([COOKIE_JWT_TOKEN])
@@ -151,13 +151,13 @@ function AccountProvider({
   const onSignature = useCallback(async () => {
     if (!connector) return
     try {
-      await signature(connector)
+      await sign(connector)
     } catch (e: any) {
       disconnect()
     } finally {
       onClose()
     }
-  }, [connector, disconnect, onClose, signature])
+  }, [connector, disconnect, onClose, sign])
 
   // handle change of account
   useEffect(() => {

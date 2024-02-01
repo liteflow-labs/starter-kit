@@ -12,7 +12,7 @@ type AccountDetail = {
   jwtToken: string | null
   logout: () => Promise<void>
   login: (connector: Connector) => Promise<void>
-  signature: (connector: Connector) => Promise<void>
+  sign: (connector: Connector) => Promise<void>
 }
 
 export const COOKIE_JWT_TOKEN = 'jwt-token'
@@ -70,7 +70,7 @@ export default function useAccount(): AccountDetail {
     [jwt, setAuthenticationToken],
   )
 
-  const signature = useCallback(
+  const sign = useCallback(
     async (connector: Connector) => {
       const wallet = await connector.getWalletClient()
       const signer = walletClientToSigner(wallet)
@@ -99,7 +99,7 @@ export default function useAccount(): AccountDetail {
       isConnected: !!jwt,
       logout,
       login,
-      signature,
+      sign,
     }
   }
 
@@ -110,6 +110,6 @@ export default function useAccount(): AccountDetail {
     isConnected,
     logout,
     login,
-    signature,
+    sign,
   }
 }
