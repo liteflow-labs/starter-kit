@@ -2,13 +2,13 @@ query FetchExploreUsers(
   $limit: Int!
   $offset: Int!
   $orderBy: [AccountsOrderBy!]
-  $filter: [AccountFilter!]
+  $filter: AccountFilter
 ) {
   users: accounts(
     first: $limit
     offset: $offset
     orderBy: $orderBy
-    filter: { isImported: { equalTo: false }, and: $filter }
+    filter: $filter
   ) {
     pageInfo {
       hasNextPage
