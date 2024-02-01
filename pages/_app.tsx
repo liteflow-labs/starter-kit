@@ -150,7 +150,9 @@ function AccountProvider({
   // handle change of account
   useEffect(() => {
     if (!connector) return
-    const handleLogin = () => login(connector)
+    const handleLogin = () => {
+      login(connector).then(onOpen).catch(onError)
+    }
     connector.on('change', handleLogin)
     return () => {
       connector.off('change', handleLogin)
