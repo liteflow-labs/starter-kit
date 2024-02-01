@@ -18,7 +18,6 @@ import React, {
   Fragment,
   JSX,
   PropsWithChildren,
-  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -32,7 +31,7 @@ import {
 import getClient from '../client'
 import CartContext from '../components/CartContext'
 import Footer from '../components/Footer/Footer'
-import SignatureModal from '../components/Modal/Signature'
+import SignModal from '../components/Modal/Sign'
 import Navbar from '../components/Navbar/Navbar'
 import connectors from '../connectors'
 import getEnvironment, { Environment, EnvironmentContext } from '../environment'
@@ -127,7 +126,7 @@ function AccountProvider({
   onError,
 }: PropsWithChildren<{ onError: (code: number) => void }>) {
   const { LITEFLOW_API_KEY, BASE_URL } = useEnvironment()
-  const { jwtToken, login, logout, sign } = useAccount()
+  const { jwtToken, login, logout } = useAccount()
   const { disconnect } = useDisconnect()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [cookies] = useCookies<string, COOKIES>([COOKIE_JWT_TOKEN])
@@ -147,17 +146,6 @@ function AccountProvider({
       void logout()
     },
   })
-
-  const onSignature = useCallback(async () => {
-    if (!connector) return
-    try {
-      await sign(connector)
-    } catch (e: any) {
-      disconnect()
-    } finally {
-      onClose()
-    }
-  }, [connector, disconnect, onClose, sign])
 
   // handle change of account
   useEffect(() => {
@@ -186,14 +174,7 @@ function AccountProvider({
   return (
     <>
       <ApolloProvider client={client}>{children}</ApolloProvider>
-      <SignatureModal
-        isOpen={isOpen}
-        onClose={() => {
-          onClose()
-          disconnect()
-        }}
-        onSignature={onSignature}
-      />
+      <SignModal connector={connector} isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
