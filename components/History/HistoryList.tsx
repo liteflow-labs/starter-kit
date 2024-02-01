@@ -57,12 +57,10 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
       filter,
     },
   })
-  const histories = historyData?.asset?.histories.nodes
+  const histories = historyData?.assetHistories?.nodes
 
   const ListItem = (
-    history: NonNullable<
-      FetchAssetHistoryQuery['asset']
-    >['histories']['nodes'][0],
+    history: NonNullable<FetchAssetHistoryQuery['assetHistories']>['nodes'][0],
     i: number,
   ) => {
     switch (history.action) {
@@ -140,9 +138,9 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
         <Pagination
           page={page}
           onPageChange={setPage}
-          hasNextPage={historyData?.asset?.histories.pageInfo.hasNextPage}
+          hasNextPage={historyData?.assetHistories?.pageInfo.hasNextPage}
           hasPreviousPage={
-            historyData?.asset?.histories.pageInfo.hasPreviousPage
+            historyData?.assetHistories?.pageInfo.hasPreviousPage
           }
           withoutLimit
           withoutNumbers
