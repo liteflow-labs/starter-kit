@@ -41,18 +41,18 @@ export type Props = {
         }
       }[]
     }
-    sales: {
-      totalAvailableQuantitySum: string
-    }
+  }
+  sales: {
+    totalAvailableQuantitySum: string
   }
 }
 
-const TokenMetadata: FC<Props> = ({ asset }) => {
+const TokenMetadata: FC<Props> = ({ asset, sales }) => {
   const { t } = useTranslation('components')
 
   const isOpenCollection = asset.collection.mintType === 'PUBLIC'
   const numberOfOwners = asset.ownerships.totalCount
-  const saleSupply = BigNumber.from(asset.sales.totalAvailableQuantitySum)
+  const saleSupply = BigNumber.from(sales.totalAvailableQuantitySum)
   const totalSupply = BigNumber.from(asset.quantity)
   const owners = asset.ownerships.nodes
 

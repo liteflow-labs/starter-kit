@@ -85,6 +85,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     },
   })
   const asset = data?.asset
+  const sales = data?.sales
+  const bids = data?.bids
 
   const media = useDetectAssetMedia(asset)
 
@@ -225,12 +227,12 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             )}
           </Flex>
 
-          {!asset ? (
+          {!asset || !sales ? (
             <SkeletonProperty items={3} />
           ) : (
-            <TokenMetadata asset={asset} />
+            <TokenMetadata asset={asset} sales={sales} />
           )}
-          {!asset || !data?.currencies?.nodes ? (
+          {!asset || !sales || !data?.currencies?.nodes ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
@@ -238,6 +240,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           ) : (
             <SaleDetail
               asset={asset}
+              sales={sales}
               currencies={data.currencies?.nodes}
               isHomepage={false}
               onOfferCanceled={refresh}
@@ -245,7 +248,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           )}
         </Flex>
 
-        {asset && (
+        {asset && bids && (
           <>
             <Stack p={6} spacing={6}>
               {asset.description && (
@@ -383,7 +386,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
                     asset={asset}
-                    bids={asset.bids.nodes}
+                    bids={bids.nodes}
                     preventAcceptation={!isOwner}
                     onAccepted={refresh}
                     onCanceled={refresh}
