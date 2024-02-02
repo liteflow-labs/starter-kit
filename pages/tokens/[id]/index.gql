@@ -127,7 +127,7 @@ query FetchAsset(
       tokenId: { equalTo: $tokenId }
       expiredAt: { greaterThan: $now }
     }
-    first: 100 # TODO: implement pagination
+    first: 100 # TODO: implement pagination. when implementing pagination, find a way to get availableQuantity of all sales
   ) {
     nodes {
       id

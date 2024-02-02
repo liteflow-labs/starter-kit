@@ -72,7 +72,7 @@ query FetchFeaturedAssets(
   sales: offerOpenSales(
     orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
     filter: { expiredAt: { greaterThan: $now }, and: $salesFilter }
-    first: 100 # TODO: implement pagination
+    first: 100 # TODO: implement pagination. when implementing pagination, find a way to get availableQuantity of all sales
   ) {
     nodes {
       id
