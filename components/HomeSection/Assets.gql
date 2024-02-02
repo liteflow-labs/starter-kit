@@ -13,11 +13,7 @@ query FetchDefaultAssetIds($limit: Int!) {
   }
 }
 
-query FetchAssets(
-  $limit: Int!
-  $assetIds: [String!]!
-  $address: Address
-) {
+query FetchAssets($limit: Int!, $assetIds: [String!]!, $address: Address) {
   assets(
     filter: { quantity: { greaterThan: "0" }, id: { in: $assetIds } }
     first: $limit
