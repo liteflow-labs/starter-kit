@@ -87,6 +87,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   const asset = data?.asset
   const sales = data?.sales
   const bids = data?.bids
+  const ownerships = data?.ownerships
 
   const media = useDetectAssetMedia(asset)
 
@@ -227,10 +228,14 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             )}
           </Flex>
 
-          {!asset || !sales ? (
+          {!asset || !sales || !ownerships ? (
             <SkeletonProperty items={3} />
           ) : (
-            <TokenMetadata asset={asset} sales={sales} />
+            <TokenMetadata
+              asset={asset}
+              sales={sales}
+              ownerships={ownerships}
+            />
           )}
           {!asset || !sales || !data?.currencies?.nodes ? (
             <>
