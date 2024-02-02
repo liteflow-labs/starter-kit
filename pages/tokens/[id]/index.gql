@@ -150,7 +150,6 @@ query FetchAsset(
         }
       }
     }
-    totalAvailableQuantitySum
   }
   currencies(
     orderBy: CREATED_AT_ASC

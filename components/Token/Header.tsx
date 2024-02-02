@@ -10,12 +10,13 @@ import { FC, useMemo } from 'react'
 import { FetchFeaturedAssetsQuery } from '../../graphql'
 import useDetectAssetMedia from '../../hooks/useDetectAssetMedia'
 import Link from '../Link/Link'
-import SaleDetail from '../Sales/Detail'
+import SaleDetail, { Props as SaleDetailProps } from '../Sales/Detail'
 import TokenMedia from '../Token/Media'
-import TokenMetadata from '../Token/Metadata'
+import TokenMetadata, { Props as TokenMetadataProps } from '../Token/Metadata'
 
 export type Props = {
   asset: NonNullable<FetchFeaturedAssetsQuery['assets']>['nodes'][0]
+  sales: TokenMetadataProps['sales'] & SaleDetailProps['sales']
   currencies: {
     chainId: number
     image: string
@@ -26,6 +27,7 @@ export type Props = {
 
 const TokenHeader: FC<Props> = ({
   asset,
+  sales,
   currencies,
   isHomepage,
   onOfferCanceled,
@@ -86,12 +88,12 @@ const TokenHeader: FC<Props> = ({
         </Stack>
         <TokenMetadata
           asset={asset}
-          sales={asset.sales}
+          sales={sales}
           ownerships={asset.ownerships}
         />
         <SaleDetail
           asset={asset}
-          sales={asset.sales}
+          sales={sales}
           currencies={chainCurrencies}
           isHomepage={isHomepage}
           onOfferCanceled={onOfferCanceled}

@@ -8,7 +8,12 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import { FC, useCallback, useMemo } from 'react'
-import { useFetchFeaturedAssetsQuery } from '../../graphql'
+import invariant from 'ts-invariant'
+import {
+  AssetFilter,
+  OfferOpenSaleFilter,
+  useFetchFeaturedAssetsQuery,
+} from '../../graphql'
 import useAccount from '../../hooks/useAccount'
 import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
@@ -23,9 +28,27 @@ type Props = {
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
   const { FEATURED_TOKEN } = useEnvironment()
   const { address } = useAccount()
+  const idFilters = {
+    or: FEATURED_TOKEN.map((x) => x.split('-')).map(
+      ([chainId, collectionAddress, tokenId]) => {
+        invariant(
+          chainId !== undefined &&
+            collectionAddress !== undefined &&
+            tokenId !== undefined,
+          'invalid feature token',
+        )
+        return {
+          collectionAddress: { equalTo: collectionAddress.toLowerCase() },
+          chainId: { equalTo: parseInt(chainId, 10) },
+          tokenId: { equalTo: tokenId },
+        }
+      },
+    ),
+  }
   const featureAssetsQuery = useFetchFeaturedAssetsQuery({
     variables: {
-      featuredIds: FEATURED_TOKEN,
+      assetFilter: idFilters as AssetFilter,
+      salesFilter: idFilters as OfferOpenSaleFilter,
       now: date,
       address: address || '',
     },
@@ -34,6 +57,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
   useHandleQueryError(featureAssetsQuery)
 
   const currencies = featureAssetsQuery.data?.currencies?.nodes
+  const sales = featureAssetsQuery.data?.sales?.nodes
 
   const featured = useOrderByKey(
     FEATURED_TOKEN,
@@ -45,21 +69,27 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
     void featureAssetsQuery.refetch()
   }, [featureAssetsQuery])
 
-  const featuredAssets = useMemo(
-    () =>
-      featured && currencies
-        ? featured.map((asset) => (
-            <TokenHeader
-              key={asset.id}
-              asset={asset}
-              currencies={currencies}
-              isHomepage={true}
-              onOfferCanceled={reloadInfo}
-            />
-          ))
-        : undefined,
-    [featured, reloadInfo, currencies],
-  )
+  const featuredAssets = useMemo(() => {
+    if (!featured || !currencies || !sales) return undefined
+    return featured.map((asset) => {
+      const salesOfAsset = sales.filter(
+        (sale) =>
+          sale.chainId === asset.chainId &&
+          sale.collectionAddress === asset.collectionAddress &&
+          sale.tokenId === asset.tokenId,
+      )
+      return (
+        <TokenHeader
+          key={asset.id}
+          asset={asset}
+          sales={salesOfAsset}
+          currencies={currencies}
+          isHomepage={true}
+          onOfferCanceled={reloadInfo}
+        />
+      )
+    })
+  }, [featured, currencies, sales, reloadInfo])
 
   if (!FEATURED_TOKEN.length) return null
   if (!featuredAssets)

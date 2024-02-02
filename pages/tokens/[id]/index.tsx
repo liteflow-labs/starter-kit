@@ -233,7 +233,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           ) : (
             <TokenMetadata
               asset={asset}
-              sales={sales}
+              sales={sales.nodes}
               ownerships={ownerships}
             />
           )}
@@ -245,7 +245,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           ) : (
             <SaleDetail
               asset={asset}
-              sales={sales}
+              sales={sales.nodes}
               currencies={data.currencies?.nodes}
               isHomepage={false}
               onOfferCanceled={refresh}
