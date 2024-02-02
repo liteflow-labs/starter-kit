@@ -25,12 +25,12 @@ type IProps<T> = HTMLAttributes<any> & {
   dropdownMaxHeight?: string | number
   label?: string
   choices: {
-    value: T
+    value: any
     label: string
     image?: string
     caption?: string
   }[]
-  value?: T | { id: string }
+  value?: any
   onChange?(value: T | T[] | undefined): void
   isDisabled?: boolean
   error?: FieldError | undefined
