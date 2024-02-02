@@ -28,7 +28,9 @@ import TokenMedia from './Media'
 
 export type Props = {
   asset: {
-    id: string
+    chainId: number
+    collectionAddress: string
+    tokenId: string
     name: string
     collection: {
       address: string
@@ -106,14 +108,14 @@ const TokenCard: FC<Props> = ({ asset }) => {
       )
     return (
       <SaleOpenCardFooter
-        assetId={asset.id}
+        asset={asset}
         bestBid={bestBid}
         isOwner={isOwner}
         showButton={isHovered}
       />
     )
   }, [
-    asset.id,
+    asset,
     bestBid,
     hasMultiCurrency,
     isHovered,
@@ -139,7 +141,7 @@ const TokenCard: FC<Props> = ({ asset }) => {
     >
       <Flex
         as={Link}
-        href={`/tokens/${asset.id}`}
+        href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`}
         w="full"
         position="relative"
         bg="gray.100"
@@ -217,7 +219,9 @@ const TokenCard: FC<Props> = ({ asset }) => {
               {asset.collection.name}
             </Text>
           </Link>
-          <Link href={`/tokens/${asset.id}`}>
+          <Link
+            href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`}
+          >
             <Heading
               as="h4"
               variant="heading2"

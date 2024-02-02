@@ -21,7 +21,6 @@ query FetchCartItems($offerIds: [UUID!]!) {
         symbol
       }
       asset {
-        id
         chainId
         collectionAddress
         tokenId

@@ -64,7 +64,7 @@ const FeaturedToken: FC<Props> = ({
       <Box my="auto" p={{ base: 6, md: 12 }} textAlign="center">
         <Flex
           as={Link}
-          href={`/tokens/${asset?.id}`}
+          href={`/tokens/${asset?.chainId}-${asset?.collection.address}-${asset?.tokenId}`}
           condition={!!asset}
           mx="auto"
           maxH="sm"

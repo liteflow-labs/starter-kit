@@ -26,7 +26,7 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
             <TokenHeader
               key={index}
               chainId={parseInt(chainId, 10)}
-              collectionAddress={collectionAddress}
+              collectionAddress={collectionAddress.toLowerCase()}
               tokenId={tokenId}
               date={date}
             />

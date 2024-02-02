@@ -10,7 +10,6 @@ query FetchFeaturedToken(
     collectionAddress: $collectionAddress
     tokenId: $tokenId
   ) {
-    id
     chainId
     collectionAddress
     tokenId

@@ -15,7 +15,11 @@ import type { Props as ModalProps } from './Modal'
 import SaleDirectModal from './Modal'
 
 export type Props = {
-  assetId: string
+  asset: {
+    chainId: number
+    collectionAddress: string
+    tokenId: string
+  }
   chainId: number
   isHomepage: boolean
   sales: ModalProps['sales']
@@ -24,7 +28,7 @@ export type Props = {
 }
 
 const SaleDirectButton: FC<Props> = ({
-  assetId,
+  asset,
   chainId,
   isHomepage,
   sales,
@@ -109,7 +113,7 @@ const SaleDirectButton: FC<Props> = ({
     return (
       <Button
         as={Link}
-        href={`/tokens/${assetId}/bid`}
+        href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}/bid`}
         variant={cancel ? 'solid' : 'outline'}
         colorScheme={cancel ? undefined : 'gray'}
         size="lg"
@@ -120,7 +124,7 @@ const SaleDirectButton: FC<Props> = ({
         </Text>
       </Button>
     )
-  }, [assetId, cancel, ownAllSupply, t])
+  }, [asset, cancel, ownAllSupply, t])
 
   const buyNow = useMemo(() => {
     if (sales.length !== 1) return
@@ -152,7 +156,7 @@ const SaleDirectButton: FC<Props> = ({
     return (
       <Button
         as={Link}
-        href={`/tokens/${assetId}`}
+        href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`}
         variant="outline"
         colorScheme="gray"
         bgColor="white"

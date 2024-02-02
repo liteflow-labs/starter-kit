@@ -73,7 +73,6 @@ query FetchCollectionAssets(
       hasPreviousPage
     }
     nodes {
-      id
       chainId
       collectionAddress
       tokenId

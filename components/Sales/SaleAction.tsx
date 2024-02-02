@@ -6,18 +6,25 @@ import Link from 'next/link'
 import { FC } from 'react'
 
 type Props = {
-  assetId: string
+  asset: {
+    chainId: number
+    collectionAddress: string
+    tokenId: string
+  }
   isOwner: boolean
   isHomepage: boolean
 }
 
-const SaleAction: FC<Props> = ({ assetId, isOwner, isHomepage }) => {
+const SaleAction: FC<Props> = ({ asset, isOwner, isHomepage }) => {
   const { t } = useTranslation('components')
   if (!isOwner) return null
   if (isHomepage) return null
 
   return (
-    <Link href={`/tokens/${assetId}/offer`} passHref>
+    <Link
+      href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}/offer`}
+      passHref
+    >
       <Flex
         gap={6}
         align={{

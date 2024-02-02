@@ -6,7 +6,6 @@ query Checkout($id: UUID!, $address: Address) {
       chainId
       collectionAddress
       tokenId
-      id
       deletedAt
       collection {
         chainId

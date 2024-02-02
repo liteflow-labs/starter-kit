@@ -163,7 +163,7 @@ const BidPlacedPage: NextPage = () => {
                       <Td>
                         <Flex
                           as={Link}
-                          href={`/tokens/${item.asset.id}`}
+                          href={`/tokens/${item.asset.chainId}-${item.asset.collectionAddress}-${item.asset.tokenId}`}
                           condition={!item.asset.deletedAt} // disable link if asset is deleted
                           gap={3}
                         >
@@ -241,7 +241,7 @@ const BidPlacedPage: NextPage = () => {
                               !item.asset.deletedAt && ( // only display new button if asset is not deleted
                                 <Button
                                   as={Link}
-                                  href={`/tokens/${item.asset.id}/bid`}
+                                  href={`/tokens/${item.asset.chainId}-${item.asset.collectionAddress}-${item.asset.tokenId}/bid`}
                                   variant="outline"
                                   colorScheme="gray"
                                 >

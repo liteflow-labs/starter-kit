@@ -57,7 +57,9 @@ const CreatePage: NextPage = () => {
   const asset = useMemo(() => {
     if (!collection) return
     return {
-      id: '--',
+      chainId: 0,
+      collectionAddress: '',
+      tokenId: '',
       image: imageLocal?.url || '',
       imageMimetype: imageLocal?.mimetype || null,
       animationUrl: animationLocal?.url || null,
@@ -90,12 +92,18 @@ const CreatePage: NextPage = () => {
   )
 
   const onCreated = useCallback(
-    async (assetId: string) => {
+    async (asset: {
+      chainId: number
+      collectionAddress: string
+      tokenId: string
+    }) => {
       toast({
         title: t('asset.form.notifications.created'),
         status: 'success',
       })
-      await push(`/tokens/${assetId}`)
+      await push(
+        `/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`,
+      )
     },
     [push, t, toast],
   )

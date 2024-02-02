@@ -10,7 +10,9 @@ import SaleAction from './SaleAction'
 
 export type Props = {
   asset: {
-    id: string
+    chainId: number
+    collectionAddress: string
+    tokenId: string
     quantity: string
     collection: {
       chainId: number
@@ -80,7 +82,7 @@ const SaleDetail: FC<Props> = ({
         <>
           <SaleDirectSummary sales={directSales} isSingle={isSingle} />
           <SaleDirectButton
-            assetId={asset.id}
+            asset={asset}
             chainId={asset.collection.chainId}
             sales={directSales}
             isHomepage={isHomepage}
@@ -92,17 +94,13 @@ const SaleDetail: FC<Props> = ({
         <>
           <SaleOpenSummary currencies={currencies} />
           <SaleOpenButton
-            assetId={asset.id}
+            asset={asset}
             isHomepage={isHomepage}
             ownAllSupply={ownAllSupply}
           />
         </>
       )}
-      <SaleAction
-        assetId={asset.id}
-        isHomepage={isHomepage}
-        isOwner={isOwner}
-      />
+      <SaleAction asset={asset} isHomepage={isHomepage} isOwner={isOwner} />
     </Stack>
   )
 }
