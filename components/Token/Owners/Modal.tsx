@@ -29,27 +29,27 @@ export type Props = {
     chainId: number
     collectionAddress: string
     tokenId: string
-    ownerships: {
-      totalCount: number
-      nodes: {
-        ownerAddress: string
-        quantity: string
-        owner: {
-          address: string
-          name: string | null
-          image: string | null
-          verification: {
-            status: AccountVerificationStatus
-          } | null
-        }
-      }[]
-    }
+  }
+  ownerships: {
+    totalCount: number
+    nodes: {
+      ownerAddress: string
+      quantity: string
+      owner: {
+        address: string
+        name: string | null
+        image: string | null
+        verification: {
+          status: AccountVerificationStatus
+        } | null
+      }
+    }[]
   }
 }
 
 const OwnerPaginationLimit = 8
 
-const OwnersModal: FC<Props> = ({ asset }) => {
+const OwnersModal: FC<Props> = ({ asset, ownerships }) => {
   const { t } = useTranslation('components')
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [page, setPage] = useState(1)
@@ -76,10 +76,7 @@ const OwnersModal: FC<Props> = ({ asset }) => {
 
   return (
     <>
-      <OwnersModalActivator
-        ownerships={asset.ownerships}
-        onClick={openOwners}
-      />
+      <OwnersModalActivator ownerships={ownerships} onClick={openOwners} />
       <Modal
         isOpen={isOpen}
         onClose={closeOwners}
@@ -103,7 +100,7 @@ const OwnersModal: FC<Props> = ({ asset }) => {
                 px={2.5}
               >
                 <Text as="span" variant="caption" color="brand.500">
-                  {asset.ownerships.totalCount}
+                  {ownerships.totalCount}
                 </Text>
               </Flex>
             </Flex>

@@ -64,10 +64,11 @@ export default function useFees({
     tokenId,
   ])
 
-  const feesPerTenThousand = useMemo(
-    () => (data?.orderFees || previousData?.orderFees)?.valuePerTenThousand,
-    [data?.orderFees, previousData?.orderFees],
-  )
+  const feesPerTenThousand = useMemo(() => {
+    const value = (data?.orderFees || previousData?.orderFees)?.value
+    if (value === undefined) return undefined
+    return BigNumber.from(value) // TODO: take into account orderFees.precision
+  }, [data?.orderFees, previousData?.orderFees])
 
   return {
     feesPerTenThousand,

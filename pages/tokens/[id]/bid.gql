@@ -75,11 +75,6 @@ query BidOnAsset(
         }
       }
     }
-    ownerships(first: 1) {
-      nodes {
-        ownerAddress
-      }
-    }
   }
   currencies(
     orderBy: CREATED_AT_ASC
