@@ -59,7 +59,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
   const { page, limit, offset } = usePaginateQuery()
   const { data: assetsData, refetch } = useFetchAllErc721And1155Query({
     variables: {
-      now: date,
       address: address || '',
       limit,
       offset,

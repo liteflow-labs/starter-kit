@@ -28,11 +28,7 @@ import useRequiredQueryParamSingle from '../../hooks/useRequiredQueryParamSingle
 import SmallLayout from '../../layouts/small'
 import Error from '../_error'
 
-type Props = {
-  now: string
-}
-
-const CheckoutPage: NextPage<Props> = ({ now }) => {
+const CheckoutPage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
@@ -40,12 +36,10 @@ const CheckoutPage: NextPage<Props> = ({ now }) => {
 
   const { address } = useAccount()
 
-  const date = useMemo(() => new Date(now), [now])
   const { data: offerData } = useCheckoutQuery({
     variables: {
       id: offerId,
       address: address || '',
-      now: date,
     },
   })
   const offer = offerData?.offer

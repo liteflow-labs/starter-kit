@@ -16,11 +16,7 @@ import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSin
 import SmallLayout from '../../../layouts/small'
 import Error from '../../_error'
 
-type Props = {
-  now: string
-}
-
-const BidPage: NextPage<Props> = ({ now }) => {
+const BidPage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
@@ -32,13 +28,11 @@ const BidPage: NextPage<Props> = ({ now }) => {
   )
   invariant(chainId && collectionAddress && tokenId, 'Invalid asset id')
 
-  const date = useMemo(() => new Date(now), [now])
   const { data } = useBidOnAssetQuery({
     variables: {
       chainId: parseInt(chainId, 10),
       collectionAddress: collectionAddress,
       tokenId: tokenId,
-      now: date,
       address: address || '',
     },
   })

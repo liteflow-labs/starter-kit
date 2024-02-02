@@ -6,15 +6,13 @@ import Price from '../../Price/Price'
 
 type Props = {
   assetId: string
-  bestBid:
-    | {
-        unitPrice: string
-        currency: {
-          decimals: number
-          symbol: string
-        }
-      }
-    | undefined
+  bestBid: {
+    unitPrice: string
+    currency: {
+      decimals: number
+      symbol: string
+    }
+  } | null
   isOwner: boolean
   showButton?: boolean
 }
