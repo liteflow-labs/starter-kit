@@ -84,7 +84,11 @@ const TokenHeader: FC<Props> = ({
             {asset.name}
           </Heading>
         </Stack>
-        <TokenMetadata asset={asset} sales={asset.sales} />
+        <TokenMetadata
+          asset={asset}
+          sales={asset.sales}
+          ownerships={asset.ownerships}
+        />
         <SaleDetail
           asset={asset}
           sales={asset.sales}
