@@ -9,7 +9,7 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react'
-import { useInvitation, useIsLoggedIn } from '@liteflow/react'
+import { useCreateInvitation, useIsLoggedIn } from '@liteflow/react'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import { HiOutlineClipboard } from '@react-icons/all-files/hi/HiOutlineClipboard'
 import { HiOutlineGlobeAlt } from '@react-icons/all-files/hi/HiOutlineGlobeAlt'
@@ -47,7 +47,7 @@ const UserProfileInfo: FC<Props> = ({ address, user, loginUrlForReferral }) => {
   const { t } = useTranslation('components')
   const signer = useSigner()
   const { create: createReferralLink, creating: creatingReferralLink } =
-    useInvitation(signer)
+    useCreateInvitation(signer)
   const { isLoggedIn } = useAccount()
   const toast = useToast()
   const [referralUrl, setReferralUrl] = useState<string>()

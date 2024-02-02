@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, useToast } from '@chakra-ui/react'
-import { useInvitation } from '@liteflow/react'
+import { useAcceptInvitation } from '@liteflow/react'
 import { ConnectButton, useConnectModal } from '@rainbow-me/rainbowkit'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
@@ -8,17 +8,15 @@ import { useCallback, useEffect } from 'react'
 import Head from '../components/Head'
 import BackButton from '../components/Navbar/BackButton'
 import useAccount from '../hooks/useAccount'
-import useSigner from '../hooks/useSigner'
 import SmallLayout from '../layouts/small'
 
 const LoginPage: NextPage = () => {
-  const signer = useSigner()
   const { t } = useTranslation('templates')
   const { back, query, replace } = useRouter()
   const referral = Array.isArray(query.ref) ? query.ref[0] : query.ref
   const { isLoggedIn } = useAccount()
   const { openConnectModal } = useConnectModal()
-  const { accept } = useInvitation(signer)
+  const { accept } = useAcceptInvitation()
   const toast = useToast()
 
   const acceptInvitation = useCallback(async () => {
