@@ -54,25 +54,30 @@ query FetchAsset(
     owned: ownership(ownerAddress: $address) {
       quantity
     }
-    ownerships(
-      orderBy: [
-        QUANTITY_DESC
-        ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
-        OWNER_ADDRESS_ASC
-      ]
-      first: 5
-    ) {
-      totalCount
-      nodes {
-        ownerAddress
-        quantity
-        owner {
-          address
-          name
-          image
-          verification {
-            status
-          }
+  }
+  ownerships(
+    filter: {
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $collectionAddress }
+      tokenId: { equalTo: $tokenId }
+    }
+    orderBy: [
+      QUANTITY_DESC
+      ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
+      OWNER_ADDRESS_ASC
+    ]
+    first: 5
+  ) {
+    totalCount
+    nodes {
+      ownerAddress
+      quantity
+      owner {
+        address
+        name
+        image
+        verification {
+          status
         }
       }
     }
