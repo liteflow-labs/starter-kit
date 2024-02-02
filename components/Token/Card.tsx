@@ -53,14 +53,12 @@ export type Props = {
     } | null
     quantity: string
     bestBid: {
-      nodes: {
-        unitPrice: string
-        currency: {
-          decimals: number
-          symbol: string
-        }
-      }[]
-    }
+      unitPrice: string
+      currency: {
+        decimals: number
+        symbol: string
+      }
+    } | null
     firstSale:
       | {
           totalCount: number
@@ -92,8 +90,7 @@ const TokenCard: FC<Props> = ({ asset }) => {
   const media = useDetectAssetMedia(asset)
 
   const sale = asset.firstSale?.nodes[0]
-  const bestBid =
-    asset.bestBid?.nodes?.length > 0 ? asset.bestBid.nodes[0] : undefined
+  const bestBid = asset.bestBid
   const numberOfSales = asset.firstSale?.totalCount || 0
   const hasMultiCurrency = asset.firstSale?.totalCurrencyDistinctCount
     ? asset.firstSale.totalCurrencyDistinctCount > 1

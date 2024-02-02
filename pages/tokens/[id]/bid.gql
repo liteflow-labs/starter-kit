@@ -36,21 +36,15 @@ query BidOnAsset(
     owned: ownership(ownerAddress: $address) {
       quantity
     }
-    bestBid: bids(
-      orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-      filter: { expiredAt: { greaterThan: $now } }
-      first: 1
-    ) {
-      nodes {
-        unitPrice
-        amount
-        currency {
-          image
-          name
-          id
-          decimals
-          symbol
-        }
+    bestBid {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
       }
     }
     firstSale: sales(
