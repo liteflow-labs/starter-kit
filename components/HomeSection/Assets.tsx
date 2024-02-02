@@ -62,7 +62,6 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {
-      now: date,
       limit: PAGINATION_LIMIT,
       assetIds: assetIds || [],
       address: address || '',

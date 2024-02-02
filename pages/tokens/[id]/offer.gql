@@ -3,7 +3,6 @@ query OfferForAsset(
   $collectionAddress: Address!
   $tokenId: String!
   $address: Address
-  $now: Datetime!
 ) {
   asset(
     chainId: $chainId
@@ -42,28 +41,22 @@ query OfferForAsset(
         symbol
       }
     }
-    firstSale: sales(
-      first: 1
-      orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-      filter: { expiredAt: { greaterThan: $now } }
-    ) {
-      totalCount
-      totalCurrencyDistinctCount
-      nodes {
+    firstSale {
+      id
+      unitPrice
+      currency {
+        image
+        name
         id
-        unitPrice
-        currency {
-          image
-          name
-          id
-          decimals
-          symbol
-        }
-        maker {
-          address
-        }
+        decimals
+        symbol
+      }
+      maker {
+        address
       }
     }
+    totalSalesCount
+    totalSalesCurrencyDistinctCount
     creator {
       address
       name

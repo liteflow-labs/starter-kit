@@ -19,7 +19,6 @@ import Error from '../../_error'
 
 type Props = {
   assetId: string
-  now: string
   currentAccount: string | null
   meta: {
     title: string
@@ -28,7 +27,7 @@ type Props = {
   }
 }
 
-const OfferPage: NextPage<Props> = ({ now }) => {
+const OfferPage: NextPage<Props> = () => {
   const { t } = useTranslation('templates')
   const { back, push } = useRouter()
   const toast = useToast()
@@ -41,13 +40,11 @@ const OfferPage: NextPage<Props> = ({ now }) => {
   )
   invariant(chainId && collectionAddress && tokenId, 'Invalid asset id')
 
-  const date = useMemo(() => new Date(now), [now])
   const { data } = useOfferForAssetQuery({
     variables: {
       chainId: parseInt(chainId, 10),
       collectionAddress: collectionAddress,
       tokenId: tokenId,
-      now: date,
       address: address || '',
     },
   })

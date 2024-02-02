@@ -14,7 +14,6 @@ query FetchDefaultAssetIds($limit: Int!) {
 }
 
 query FetchAssets(
-  $now: Datetime!
   $limit: Int!
   $assetIds: [String!]!
   $address: Address
@@ -60,28 +59,22 @@ query FetchAssets(
           symbol
         }
       }
-      firstSale: sales(
-        first: 1
-        orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-        filter: { expiredAt: { greaterThan: $now } }
-      ) {
-        totalCount
-        totalCurrencyDistinctCount
-        nodes {
+      firstSale {
+        id
+        unitPrice
+        currency {
+          image
+          name
           id
-          unitPrice
-          currency {
-            image
-            name
-            id
-            decimals
-            symbol
-          }
-          maker {
-            address
-          }
+          decimals
+          symbol
+        }
+        maker {
+          address
         }
       }
+      totalSalesCount
+      totalSalesCurrencyDistinctCount
     }
   }
 }

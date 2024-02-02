@@ -91,7 +91,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { data: assetData } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
-      now: date,
       currentAccount: address || '',
       limit,
       offset,
