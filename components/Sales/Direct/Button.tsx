@@ -20,7 +20,6 @@ export type Props = {
     collectionAddress: string
     tokenId: string
   }
-  chainId: number
   isHomepage: boolean
   sales: ModalProps['sales']
   ownAllSupply: boolean
@@ -29,7 +28,6 @@ export type Props = {
 
 const SaleDirectButton: FC<Props> = ({
   asset,
-  chainId,
   isHomepage,
   sales,
   ownAllSupply,
@@ -40,7 +38,7 @@ const SaleDirectButton: FC<Props> = ({
   const [cancelOffer, { activeStep, transactionHash }] = useCancelOffer(signer)
   const toast = useToast()
   const { address } = useAccount()
-  const blockExplorer = useBlockExplorer(chainId)
+  const blockExplorer = useBlockExplorer(asset.chainId)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleCancel = useCallback(
@@ -73,7 +71,7 @@ const SaleDirectButton: FC<Props> = ({
     return (
       <>
         <ConnectButtonWithNetworkSwitch
-          chainId={chainId}
+          chainId={asset.chainId}
           onClick={() => handleCancel(sale.id)}
           isLoading={activeStep !== CancelOfferStep.INITIAL}
           width="full"
@@ -98,8 +96,8 @@ const SaleDirectButton: FC<Props> = ({
   }, [
     activeStep,
     address,
+    asset.chainId,
     blockExplorer,
-    chainId,
     handleCancel,
     isOpen,
     onClose,
@@ -145,12 +143,12 @@ const SaleDirectButton: FC<Props> = ({
     if (sales.length <= 1) return
     return (
       <SaleDirectModal
-        chainId={chainId}
+        chainId={asset.chainId}
         sales={sales}
         onOfferCanceled={onOfferCanceled}
       />
     )
-  }, [chainId, sales, onOfferCanceled])
+  }, [asset.chainId, sales, onOfferCanceled])
 
   if (ownAllSupply && isHomepage)
     return (

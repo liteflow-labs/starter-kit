@@ -15,7 +15,6 @@ export type Props = {
     tokenId: string
     quantity: string
     collection: {
-      chainId: number
       standard: Standard
     }
     owned: {
@@ -83,7 +82,6 @@ const SaleDetail: FC<Props> = ({
           <SaleDirectSummary sales={directSales} isSingle={isSingle} />
           <SaleDirectButton
             asset={asset}
-            chainId={asset.collection.chainId}
             sales={directSales}
             isHomepage={isHomepage}
             ownAllSupply={ownAllSupply}
