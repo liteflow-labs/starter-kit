@@ -1,9 +1,7 @@
 import { Divider, Heading, SimpleGrid } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useCallback, useMemo } from 'react'
-import invariant from 'ts-invariant'
 import DropCard from '../components/Drop/DropCard'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
@@ -27,38 +25,47 @@ const DropsPage: NextPage<Props> = ({ now }) => {
   const { page, limit, offset } = usePaginateQuery()
   const { changeLimit } = usePaginate()
 
-  const { data, loading, refetch } = useFetchDropsQuery({
+  const { data, refetch } = useFetchDropsQuery({
     variables: { now: date, limit, offset },
   })
 
+  // only keep one active drop per collection
   const activeDrops = useMemo(() => {
-    const inprogressDrops = data?.inProgress?.nodes || []
-    const upcomingDrops = data?.upcoming?.nodes || []
-    return [...inprogressDrops, ...upcomingDrops]
-  }, [data?.inProgress?.nodes, data?.upcoming?.nodes])
+    return data?.active?.nodes.filter(
+      (drop, i, arr) =>
+        arr.findIndex(
+          (x) =>
+            x.collection.chainId === drop.collection.chainId &&
+            x.collection.address === drop.collection.address,
+        ) === i,
+    )
+  }, [data?.active?.nodes])
 
-  const endedDrops = useMemo(
-    () => data?.ended?.nodes || [],
-    [data?.ended?.nodes],
-  )
-
-  const isEmpty = useMemo(
-    () => endedDrops.length === 0 && activeDrops.length === 0,
-    [endedDrops.length, activeDrops.length],
-  )
+  const endedDrops = useMemo(() => {
+    return (
+      data?.ended?.nodes
+        // remove drops with a collection already in an active drop
+        .filter(
+          (drop) =>
+            !data.active?.nodes?.some(
+              (x) =>
+                x.collection.chainId === drop.collection.chainId &&
+                x.collection.address === drop.collection.address,
+            ),
+        )
+        // only keep one active drop per collection
+        .filter(
+          (drop, i, arr) =>
+            arr.findIndex(
+              (x) =>
+                x.collection.chainId === drop.collection.chainId &&
+                x.collection.address === drop.collection.address,
+            ) === i,
+        )
+    )
+  }, [data?.active?.nodes, data?.ended?.nodes])
 
   const onCountdownEnd = useCallback(async () => await refetch(), [refetch])
-
-  const calculateTotalSupply = useCallback(
-    (drops: { supply: string | null }[]) =>
-      drops.some((x) => !x.supply)
-        ? null
-        : drops.reduce(
-            (acc, drop) => acc.add(BigNumber.from(drop.supply)),
-            BigNumber.from(0),
-          ),
-    [],
-  )
 
   return (
     <LargeLayout>
@@ -66,11 +73,11 @@ const DropsPage: NextPage<Props> = ({ now }) => {
       <Heading as="h1" variant="title" color="brand.black" mb={4}>
         {t('drops.title')}
       </Heading>
-      {loading ? (
+      {!activeDrops || !endedDrops ? (
         <SkeletonGrid items={4} columns={{ base: 1, md: 2 }} spacing={3}>
           <SkeletonDropCard />
         </SkeletonGrid>
-      ) : isEmpty ? (
+      ) : activeDrops.length === 0 && endedDrops.length === 0 ? (
         <Empty
           title={t('drops.empty.title')}
           description={t('drops.empty.description')}
@@ -87,17 +94,11 @@ const DropsPage: NextPage<Props> = ({ now }) => {
               w="full"
               mb={endedDrops.length > 0 ? 8 : 0}
             >
-              {activeDrops.map((drop, i) => {
-                invariant(
-                  drop.drops.nodes[0],
-                  'drops must have at least one drop',
-                )
+              {activeDrops.map((drop) => {
                 return (
                   <DropCard
-                    key={i}
-                    collection={{ ...drop }}
-                    drop={drop.drops.nodes[0]}
-                    totalSupply={calculateTotalSupply(drop.drops.nodes)}
+                    key={drop.id}
+                    drop={drop}
                     onCountdownEnd={onCountdownEnd}
                   />
                 )
@@ -111,19 +112,8 @@ const DropsPage: NextPage<Props> = ({ now }) => {
                 {t('drops.past-drops')}
               </Heading>
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} w="full">
-                {endedDrops.map((drop, i) => {
-                  invariant(
-                    drop.lastDrop.nodes[0],
-                    'drops must have at least one drop',
-                  )
-                  return (
-                    <DropCard
-                      key={i}
-                      collection={{ ...drop }}
-                      drop={drop.lastDrop.nodes[0]}
-                      totalSupply={calculateTotalSupply(drop.allDrops.nodes)}
-                    />
-                  )
+                {endedDrops.map((drop) => {
+                  return <DropCard key={drop.id} drop={drop} />
                 })}
               </SimpleGrid>
             </>
