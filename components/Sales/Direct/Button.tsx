@@ -15,8 +15,11 @@ import type { Props as ModalProps } from './Modal'
 import SaleDirectModal from './Modal'
 
 export type Props = {
-  assetId: string
-  chainId: number
+  asset: {
+    chainId: number
+    collectionAddress: string
+    tokenId: string
+  }
   isHomepage: boolean
   sales: ModalProps['sales']
   ownAllSupply: boolean
@@ -24,8 +27,7 @@ export type Props = {
 }
 
 const SaleDirectButton: FC<Props> = ({
-  assetId,
-  chainId,
+  asset,
   isHomepage,
   sales,
   ownAllSupply,
@@ -36,7 +38,7 @@ const SaleDirectButton: FC<Props> = ({
   const [cancelOffer, { activeStep, transactionHash }] = useCancelOffer(signer)
   const toast = useToast()
   const { address } = useAccount()
-  const blockExplorer = useBlockExplorer(chainId)
+  const blockExplorer = useBlockExplorer(asset.chainId)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleCancel = useCallback(
@@ -69,7 +71,7 @@ const SaleDirectButton: FC<Props> = ({
     return (
       <>
         <ConnectButtonWithNetworkSwitch
-          chainId={chainId}
+          chainId={asset.chainId}
           onClick={() => handleCancel(sale.id)}
           isLoading={activeStep !== CancelOfferStep.INITIAL}
           width="full"
@@ -94,8 +96,8 @@ const SaleDirectButton: FC<Props> = ({
   }, [
     activeStep,
     address,
+    asset.chainId,
     blockExplorer,
-    chainId,
     handleCancel,
     isOpen,
     onClose,
@@ -109,7 +111,7 @@ const SaleDirectButton: FC<Props> = ({
     return (
       <Button
         as={Link}
-        href={`/tokens/${assetId}/bid`}
+        href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}/bid`}
         variant={cancel ? 'solid' : 'outline'}
         colorScheme={cancel ? undefined : 'gray'}
         size="lg"
@@ -120,7 +122,7 @@ const SaleDirectButton: FC<Props> = ({
         </Text>
       </Button>
     )
-  }, [assetId, cancel, ownAllSupply, t])
+  }, [asset, cancel, ownAllSupply, t])
 
   const buyNow = useMemo(() => {
     if (sales.length !== 1) return
@@ -141,18 +143,18 @@ const SaleDirectButton: FC<Props> = ({
     if (sales.length <= 1) return
     return (
       <SaleDirectModal
-        chainId={chainId}
+        chainId={asset.chainId}
         sales={sales}
         onOfferCanceled={onOfferCanceled}
       />
     )
-  }, [chainId, sales, onOfferCanceled])
+  }, [asset.chainId, sales, onOfferCanceled])
 
   if (ownAllSupply && isHomepage)
     return (
       <Button
         as={Link}
-        href={`/tokens/${assetId}`}
+        href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`}
         variant="outline"
         colorScheme="gray"
         bgColor="white"

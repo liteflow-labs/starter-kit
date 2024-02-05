@@ -23,6 +23,7 @@ import { CreateNftStep, useCreateNFT } from '@liteflow/react'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
+import invariant from 'ts-invariant'
 import { Standard } from '../../../graphql'
 import useBlockExplorer from '../../../hooks/useBlockExplorer'
 import useEnvironment from '../../../hooks/useEnvironment'
@@ -51,7 +52,11 @@ type Props = {
     address: string
     standard: Standard
   }
-  onCreated: (id: string) => void
+  onCreated: (asset: {
+    chainId: number
+    collectionAddress: string
+    tokenId: string
+  }) => void
   onInputChange: (data: Partial<FormData>) => void
 }
 
@@ -124,7 +129,20 @@ const TokenFormCreate: FC<Props> = ({
         LAZYMINT,
       )
 
-      onCreated(assetId)
+      // TODO: need to update lib to return the full asset ids
+      const [chainId, collectionAddress, tokenId] = assetId.split('-')
+      invariant(
+        chainId !== undefined &&
+          collectionAddress !== undefined &&
+          tokenId !== undefined,
+        'ChainId, collectionAddress and tokenId should be defined',
+      )
+
+      onCreated({
+        chainId: parseInt(chainId, 10),
+        collectionAddress,
+        tokenId,
+      })
     } catch (e) {
       toast({
         title: formatError(e),

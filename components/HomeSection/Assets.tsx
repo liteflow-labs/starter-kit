@@ -11,7 +11,9 @@ import {
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import {
+  AssetFilter,
   useFetchAssetsQuery,
   useFetchDefaultAssetIdsQuery,
 } from '../../graphql'
@@ -57,13 +59,31 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
       }
       return randomTokens
     }
-    return defaultAssetData?.assets?.nodes.map((x) => x.id)
+    return defaultAssetData?.assets?.nodes.map(
+      (x) => `${x.chainId}-${x.collectionAddress}-${x.tokenId}`,
+    )
   }, [HOME_TOKENS, PAGINATION_LIMIT, defaultAssetData, date])
 
   const assetsQuery = useFetchAssetsQuery({
     variables: {
       limit: PAGINATION_LIMIT,
-      assetIds: assetIds || [],
+      filter: {
+        or: (assetIds || [])
+          .map((x) => x.split('-'))
+          .map(([chainId, collectionAddress, tokenId]) => {
+            invariant(
+              chainId !== undefined &&
+                collectionAddress !== undefined &&
+                tokenId !== undefined,
+              'invalid collection',
+            )
+            return {
+              collectionAddress: { equalTo: collectionAddress.toLowerCase() },
+              chainId: { equalTo: parseInt(chainId, 10) },
+              tokenId: { equalTo: tokenId },
+            }
+          }),
+      } as AssetFilter,
       address: address || '',
     },
     skip: assetIds === undefined,
@@ -71,10 +91,8 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
   useHandleQueryError(assetsQuery)
   const assetData = assetsQuery.data
 
-  const assets = useOrderByKey(
-    assetIds,
-    assetData?.assets?.nodes,
-    (asset) => asset.id,
+  const assets = useOrderByKey(assetIds, assetData?.assets?.nodes, (asset) =>
+    [asset.chainId, asset.collectionAddress, asset.tokenId].join('-'),
   )
 
   if (!assets)

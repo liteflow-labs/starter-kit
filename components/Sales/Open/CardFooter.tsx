@@ -5,7 +5,11 @@ import Link from '../../Link/Link'
 import Price from '../../Price/Price'
 
 type Props = {
-  assetId: string
+  asset: {
+    chainId: number
+    collectionAddress: string
+    tokenId: string
+  }
   bestBid: {
     unitPrice: string
     currency: {
@@ -18,7 +22,7 @@ type Props = {
 }
 
 const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
-  assetId,
+  asset,
   bestBid,
   isOwner,
   showButton = true,
@@ -28,7 +32,7 @@ const SaleOpenCardFooter: FC<HTMLAttributes<any> & Props> = ({
   return (
     <Box
       as={Link}
-      href={`/tokens/${assetId}${!isOwner ? '/bid' : ''}`}
+      href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}${!isOwner ? '/bid' : ''}`}
       py={2}
       px={4}
       bgColor={showButton ? 'brand.500' : 'gray.100'}

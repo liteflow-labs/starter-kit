@@ -1,5 +1,4 @@
 fragment AssetDetail on Asset {
-  id
   chainId
   collectionAddress
   tokenId

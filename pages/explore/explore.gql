@@ -16,7 +16,6 @@ query FetchAllERC721And1155(
       hasPreviousPage
     }
     nodes {
-      id
       chainId
       collectionAddress
       tokenId

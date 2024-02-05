@@ -9,7 +9,6 @@ query BidOnAsset(
     collectionAddress: $collectionAddress
     tokenId: $tokenId
   ) {
-    id
     deletedAt
     chainId
     collectionAddress

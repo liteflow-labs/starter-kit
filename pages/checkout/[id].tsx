@@ -60,7 +60,9 @@ const CheckoutPage: NextPage = () => {
       title: t('offers.checkout.notifications.purchased'),
       status: 'success',
     })
-    await push(`/tokens/${asset.id}`)
+    await push(
+      `/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`,
+    )
   }, [asset, toast, t, push])
 
   if (

@@ -5,19 +5,23 @@ import { FC } from 'react'
 import Link from '../../Link/Link'
 
 type Props = {
-  assetId: string
+  asset: {
+    chainId: number
+    collectionAddress: string
+    tokenId: string
+  }
   isHomepage: boolean
   ownAllSupply: boolean
 }
 
-const SaleOpenButton: FC<Props> = ({ assetId, isHomepage, ownAllSupply }) => {
+const SaleOpenButton: FC<Props> = ({ asset, isHomepage, ownAllSupply }) => {
   const { t } = useTranslation('components')
 
   if (ownAllSupply && isHomepage)
     return (
       <Button
         as={Link}
-        href={`/tokens/${assetId}`}
+        href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`}
         variant="outline"
         colorScheme="gray"
         bgColor="white"
@@ -34,7 +38,12 @@ const SaleOpenButton: FC<Props> = ({ assetId, isHomepage, ownAllSupply }) => {
   if (ownAllSupply) return null
 
   return (
-    <Button as={Link} href={`/tokens/${assetId}/bid`} size="lg" width="full">
+    <Button
+      as={Link}
+      href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}/bid`}
+      size="lg"
+      width="full"
+    >
       <Text as="span" isTruncated>
         {t('sales.open.button.place-bid')}
       </Text>

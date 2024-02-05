@@ -5,7 +5,6 @@ query FetchDefaultAssetIds($limit: Int!) {
     first: $limit
   ) {
     nodes {
-      id
       chainId
       collectionAddress
       tokenId
@@ -13,13 +12,12 @@ query FetchDefaultAssetIds($limit: Int!) {
   }
 }
 
-query FetchAssets($limit: Int!, $assetIds: [String!]!, $address: Address) {
+query FetchAssets($limit: Int!, $filter: [AssetFilter!]!, $address: Address) {
   assets(
-    filter: { quantity: { greaterThan: "0" }, id: { in: $assetIds } }
+    filter: { quantity: { greaterThan: "0" }, and: $filter }
     first: $limit
   ) {
     nodes {
-      id
       chainId
       collectionAddress
       tokenId

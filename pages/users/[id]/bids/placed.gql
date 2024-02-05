@@ -44,7 +44,6 @@ query FetchUserBidsPlaced(
         symbol
       }
       asset {
-        id
         chainId
         collectionAddress
         tokenId

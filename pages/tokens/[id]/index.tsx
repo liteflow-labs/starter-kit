@@ -126,9 +126,13 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
 
   const refreshAsset = useRefreshAsset()
   const refreshMetadata = useCallback(
-    async (assetId: string) => {
+    async (asset: {
+      chainId: number
+      collectionAddress: string
+      tokenId: string
+    }) => {
       try {
-        await refreshAsset(assetId)
+        await refreshAsset(asset)
         await refresh()
         toast({
           title: 'Successfully refreshed metadata',
@@ -210,7 +214,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
                   />
                   <MenuList>
-                    <MenuItem onClick={() => refreshMetadata(asset.id)}>
+                    <MenuItem onClick={() => refreshMetadata(asset)}>
                       {t('asset.detail.menu.refresh-metadata')}
                     </MenuItem>
                     <Link

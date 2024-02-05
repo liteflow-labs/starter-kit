@@ -134,7 +134,7 @@ const FixedPricePage: NextPage = () => {
                       <Td>
                         <Flex
                           as={Link}
-                          href={`/tokens/${item.asset.id}`}
+                          href={`/tokens/${item.asset.chainId}-${item.asset.collectionAddress}-${item.asset.tokenId}`}
                           condition={!item.asset.deletedAt} // disable link if asset is deleted
                           gap={3}
                         >
@@ -213,7 +213,7 @@ const FixedPricePage: NextPage = () => {
                               !item.currency.deletedAt ? (
                               <Button
                                 as={Link}
-                                href={`/tokens/${item.asset.id}/offer`}
+                                href={`/tokens/${item.asset.chainId}-${item.asset.collectionAddress}-${item.asset.tokenId}/offer`}
                                 variant="outline"
                                 colorScheme="gray"
                               >
