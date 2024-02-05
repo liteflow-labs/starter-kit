@@ -28,42 +28,8 @@ const DropsPage: NextPage<Props> = ({ now }) => {
   const { data, refetch } = useFetchDropsQuery({
     variables: { now: date, limit, offset },
   })
-
-  // only keep one active drop per collection
-  const activeDrops = useMemo(() => {
-    return data?.active?.nodes.filter(
-      (drop, i, arr) =>
-        arr.findIndex(
-          (x) =>
-            x.collection.chainId === drop.collection.chainId &&
-            x.collection.address === drop.collection.address,
-        ) === i,
-    )
-  }, [data?.active?.nodes])
-
-  const endedDrops = useMemo(() => {
-    return (
-      data?.ended?.nodes
-        // remove drops with a collection already in an active drop
-        .filter(
-          (drop) =>
-            !data.active?.nodes?.some(
-              (x) =>
-                x.collection.chainId === drop.collection.chainId &&
-                x.collection.address === drop.collection.address,
-            ),
-        )
-        // only keep one active drop per collection
-        .filter(
-          (drop, i, arr) =>
-            arr.findIndex(
-              (x) =>
-                x.collection.chainId === drop.collection.chainId &&
-                x.collection.address === drop.collection.address,
-            ) === i,
-        )
-    )
-  }, [data?.active?.nodes, data?.ended?.nodes])
+  const activeDrops = data?.active?.nodes
+  const endedDrops = data?.ended?.nodes
 
   const onCountdownEnd = useCallback(async () => await refetch(), [refetch])
 
