@@ -85,8 +85,9 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     },
   })
   const asset = data?.asset
-  const sales = data?.sales
-  const bids = data?.bids
+  const sales = data?.sales?.nodes
+  const bids = data?.bids?.nodes
+  const currencies = data?.currencies?.nodes
   const ownerships = data?.ownerships
 
   const media = useDetectAssetMedia(asset)
@@ -237,7 +238,8 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
               ownerships={ownerships}
             />
           )}
-          {!asset || !sales || !data?.currencies?.nodes ? (
+
+          {!asset || !sales || !currencies ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
@@ -246,7 +248,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             <SaleDetail
               asset={asset}
               sales={sales}
-              currencies={data.currencies?.nodes}
+              currencies={currencies}
               isHomepage={false}
               onOfferCanceled={refresh}
             />
@@ -391,7 +393,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
                     asset={asset}
-                    bids={bids.nodes}
+                    bids={bids}
                     preventAcceptation={!isOwner}
                     onAccepted={refresh}
                     onCanceled={refresh}

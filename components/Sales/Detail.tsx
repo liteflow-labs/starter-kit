@@ -21,27 +21,25 @@ export type Props = {
     } | null
   }
   sales: {
-    nodes: {
+    id: string
+    unitPrice: string
+    expiredAt: Date
+    availableQuantity: string
+    maker: {
+      address: string
+      image: string | null
+      name: string | null
+      verification: {
+        status: AccountVerificationStatus
+      } | null
+    }
+    currency: {
       id: string
-      unitPrice: string
-      expiredAt: Date
-      availableQuantity: string
-      maker: {
-        address: string
-        image: string | null
-        name: string | null
-        verification: {
-          status: AccountVerificationStatus
-        } | null
-      }
-      currency: {
-        id: string
-        decimals: number
-        image: string
-        symbol: string
-      }
-    }[]
-  }
+      decimals: number
+      image: string
+      symbol: string
+    }
+  }[]
   currencies: {
     chainId: number
     image: string
@@ -74,7 +72,7 @@ const SaleDetail: FC<Props> = ({
     () => asset.collection.standard === 'ERC721',
     [asset.collection.standard],
   )
-  const directSales = sales.nodes
+  const directSales = sales
 
   return (
     <Stack spacing={8}>
