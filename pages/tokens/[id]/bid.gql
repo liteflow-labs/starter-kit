@@ -3,7 +3,6 @@ query BidOnAsset(
   $collectionAddress: Address!
   $tokenId: String!
   $address: Address
-  $now: Datetime!
 ) {
   asset(
     chainId: $chainId
@@ -11,6 +10,7 @@ query BidOnAsset(
     tokenId: $tokenId
   ) {
     id
+    deletedAt
     chainId
     collectionAddress
     tokenId
@@ -35,47 +35,33 @@ query BidOnAsset(
     owned: ownership(ownerAddress: $address) {
       quantity
     }
-    bestBid: bids(
-      orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-      filter: { expiredAt: { greaterThan: $now } }
-      first: 1
-    ) {
-      nodes {
-        unitPrice
-        amount
-        currency {
-          image
-          name
-          id
-          decimals
-          symbol
-        }
-      }
-    }
-    firstSale: sales(
-      first: 1
-      orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-      filter: { expiredAt: { greaterThan: $now } }
-    ) {
-      totalCount
-      totalCurrencyDistinctCount
-      nodes {
+    bestBid {
+      unitPrice
+      amount
+      currency {
+        image
+        name
         id
-        unitPrice
-        currency {
-          image
-          name
-          id
-          decimals
-          symbol
-        }
+        decimals
+        symbol
       }
     }
-    ownerships(first: 1) {
-      nodes {
-        ownerAddress
+    firstSale {
+      id
+      unitPrice
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
+      maker {
+        address
       }
     }
+    totalSalesCount
+    totalSalesCurrencyDistinctCount
   }
   currencies(
     orderBy: CREATED_AT_ASC

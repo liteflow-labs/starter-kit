@@ -6,52 +6,50 @@ query FetchAssetHistory(
   $offset: Int!
   $filter: [AssetHistoryAction!]
 ) {
-  asset(
-    chainId: $chainId
-    collectionAddress: $collectionAddress
-    tokenId: $tokenId
+  assetHistories(
+    filter: {
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $collectionAddress }
+      tokenId: { equalTo: $tokenId }
+      action: { in: $filter }
+    }
+    orderBy: DATE_DESC
+    first: $limit
+    offset: $offset
+    includeWhenAssetDeleted: YES
+    includeWhenCurrencyDeleted: YES
   ) {
-    chainId
-    collectionAddress
-    tokenId
-    histories(
-      filter: { action: { in: $filter } }
-      orderBy: DATE_DESC
-      first: $limit
-      offset: $offset
-    ) {
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      action
+      date
+      unitPrice
+      quantity
+      fromAddress
+      from {
+        address
+        name
+        image
+        verification {
+          status
+        }
       }
-      nodes {
-        action
-        date
-        unitPrice
-        quantity
-        fromAddress
-        from {
-          address
-          name
-          image
-          verification {
-            status
-          }
+      toAddress
+      to {
+        address
+        name
+        image
+        verification {
+          status
         }
-        toAddress
-        to {
-          address
-          name
-          image
-          verification {
-            status
-          }
-        }
-        transactionHash
-        currency {
-          decimals
-          symbol
-        }
+      }
+      transactionHash
+      currency {
+        decimals
+        symbol
       }
     }
   }

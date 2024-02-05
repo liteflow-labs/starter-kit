@@ -100,7 +100,8 @@ const CreatePage: NextPage = () => {
     [push, t, toast],
   )
 
-  if (collection === null) return <Error statusCode={404} />
+  if (collection === null || collection?.deletedAt)
+    return <Error statusCode={404} />
   return (
     <SmallLayout>
       <Head
@@ -136,8 +137,10 @@ const CreatePage: NextPage = () => {
                 asset={{
                   ...asset,
                   creator,
-                  bestBid: { nodes: [] },
-                  firstSale: undefined,
+                  bestBid: null,
+                  firstSale: null,
+                  totalSalesCount: 0,
+                  totalSalesCurrencyDistinctCount: 0,
                 }}
               />
             )}

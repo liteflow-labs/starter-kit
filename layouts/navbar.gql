@@ -3,8 +3,15 @@ query NavbarAccount($account: Address!, $lastNotification: Datetime!) {
     address
     name
     image
-    notifications(filter: { createdAt: { greaterThan: $lastNotification } }) {
-      totalCount
+  }
+  notifications(
+    filter: {
+      accountAddress: { equalTo: $account }
+      createdAt: { greaterThan: $lastNotification }
     }
+    includeWhenCollectionDeleted: YES
+    includeWhenTradeDeleted: YES
+  ) {
+    totalCount
   }
 }

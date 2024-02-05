@@ -11,6 +11,7 @@ query FetchAsset(
     tokenId: $tokenId
   ) {
     id
+    deletedAt
     tokenId
     tokenUri
     chainId
@@ -50,91 +51,106 @@ query FetchAsset(
         status
       }
     }
-    bids(
-      orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-      filter: { expiredAt: { greaterThan: $now } }
-      first: 100 # TODO: implement pagination
-    ) {
-      nodes {
-        id
-        createdAt
-        expiredAt
-        availableQuantity
-        taker {
-          address
-        }
-        maker {
-          address
-          name
-          image
-          verification {
-            status
-          }
-        }
-        unitPrice
-        amount
-        currency {
-          image
-          name
-          id
-          decimals
-          symbol
-        }
-      }
-    }
     owned: ownership(ownerAddress: $address) {
       quantity
     }
-    ownerships(
-      orderBy: [
-        QUANTITY_DESC
-        ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
-        OWNER_ADDRESS_ASC
-      ]
-      first: 5
-    ) {
-      totalCount
-      nodes {
-        ownerAddress
-        quantity
-        owner {
-          address
-          name
-          image
-          verification {
-            status
-          }
+  }
+  ownerships(
+    filter: {
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $collectionAddress }
+      tokenId: { equalTo: $tokenId }
+    }
+    orderBy: [
+      QUANTITY_DESC
+      ACCOUNT_BY_OWNER_ADDRESS__NAME_ASC
+      OWNER_ADDRESS_ASC
+    ]
+    first: 5
+  ) {
+    totalCount
+    nodes {
+      ownerAddress
+      quantity
+      owner {
+        address
+        name
+        image
+        verification {
+          status
         }
       }
     }
-    sales(
-      orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-      filter: { expiredAt: { greaterThan: $now } }
-      first: 100 # TODO: implement pagination
-    ) {
-      nodes {
+  }
+  bids: offerOpenBuys(
+    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
+    filter: {
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $collectionAddress }
+      tokenId: { equalTo: $tokenId }
+      expiredAt: { greaterThan: $now }
+    }
+    first: 100 # TODO: implement pagination
+  ) {
+    nodes {
+      id
+      createdAt
+      expiredAt
+      availableQuantity
+      taker {
+        address
+      }
+      maker {
+        address
+        name
+        image
+        verification {
+          status
+        }
+      }
+      unitPrice
+      amount
+      currency {
+        image
+        name
         id
-        unitPrice
-        expiredAt
-        availableQuantity
-        currency {
-          image
-          name
-          id
-          decimals
-          symbol
-        }
-        maker {
-          image
-          address
-          name
-          verification {
-            status
-          }
+        decimals
+        symbol
+      }
+    }
+  }
+  sales: offerOpenSales(
+    orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
+    filter: {
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $collectionAddress }
+      tokenId: { equalTo: $tokenId }
+      expiredAt: { greaterThan: $now }
+    }
+    first: 100 # TODO: implement pagination
+  ) {
+    nodes {
+      id
+      unitPrice
+      expiredAt
+      availableQuantity
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
+      maker {
+        image
+        address
+        name
+        verification {
+          status
         }
       }
-      totalAvailableQuantitySum
     }
+    totalAvailableQuantitySum
   }
   currencies(
     orderBy: CREATED_AT_ASC

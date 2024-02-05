@@ -91,7 +91,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { data: assetData } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
-      now: date,
       currentAccount: address || '',
       limit,
       offset,
@@ -149,7 +148,8 @@ const CollectionPage: FC<Props> = ({ now }) => {
 
   const { changeLimit } = usePaginate()
 
-  if (collection === null) return <Error statusCode={404} />
+  if (collection === null || collection?.deletedAt)
+    return <Error statusCode={404} />
   return (
     <LargeLayout>
       <Head

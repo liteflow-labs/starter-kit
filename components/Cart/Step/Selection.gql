@@ -34,10 +34,6 @@ query FetchCartItems($offerIds: [UUID!]!) {
         name
         image
         imageMimetype
-        unlockedContent {
-          url
-          mimetype
-        }
         animationUrl
         animationMimetype
       }

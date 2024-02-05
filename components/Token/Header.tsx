@@ -84,9 +84,14 @@ const TokenHeader: FC<Props> = ({
             {asset.name}
           </Heading>
         </Stack>
-        <TokenMetadata asset={asset} />
+        <TokenMetadata
+          asset={asset}
+          sales={asset.sales}
+          ownerships={asset.ownerships}
+        />
         <SaleDetail
           asset={asset}
+          sales={asset.sales}
           currencies={chainCurrencies}
           isHomepage={isHomepage}
           onOfferCanceled={onOfferCanceled}

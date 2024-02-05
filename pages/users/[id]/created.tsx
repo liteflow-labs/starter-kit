@@ -13,11 +13,7 @@ import usePaginateQuery from '../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../layouts/large'
 
-type Props = {
-  now: string
-}
-
-const CreatedPage: NextPage<Props> = ({ now }) => {
+const CreatedPage: NextPage = () => {
   const { PAGINATION_LIMIT, BASE_URL } = useEnvironment()
   const { t } = useTranslation('templates')
   const { pathname, replace, query } = useRouter()
@@ -27,7 +23,6 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const date = useMemo(() => new Date(now), [now])
   const { data } = useFetchCreatedAssetsQuery({
     variables: {
       address: userAddress,
@@ -35,7 +30,6 @@ const CreatedPage: NextPage<Props> = ({ now }) => {
       limit,
       offset,
       orderBy,
-      now: date,
     },
   })
 

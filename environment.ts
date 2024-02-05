@@ -3,11 +3,15 @@ import { LRUCache } from 'lru-cache'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
+  arbitrum,
+  arbitrumSepolia,
   bsc,
   bscTestnet,
   Chain,
   goerli as ethereumGoerli,
   mainnet as ethereumMainnet,
+  neonDevnet,
+  neonMainnet,
   polygon,
   polygonMumbai,
 } from 'wagmi/chains'
@@ -24,6 +28,17 @@ type RemoteConfig = {
     FAVICON: string
     BRAND_COLOR: string
 
+    HOME_BANNERS: {
+      image: string
+      title: string
+      content?: string
+      textColor?: string
+      button: {
+        text: string
+        href: string
+        isExternal?: boolean
+      }
+    }[]
     FEATURED_TOKEN: string[]
     HOME_COLLECTIONS: string[]
     HOME_USERS: string[]
@@ -94,6 +109,33 @@ export type Environment = {
   /**
    * Home page configuration
    */
+
+  // List of banners to be displayed on the homepage
+  HOME_BANNERS: {
+    // URL of the image to display
+    image: string
+
+    // Title of the banner
+    title: string
+
+    // (Optional) Content of the banner
+    content?: string
+
+    // (Optional) Text color of the banner
+    textColor?: string
+
+    // Button to display on the banner
+    button: {
+      // Text of the button
+      text: string
+
+      // URL to redirect to when the button is clicked
+      href: string
+
+      // (Optional) Whether the URL is external or not (default: false)
+      isExternal?: boolean
+    }
+  }[]
 
   // Ordered list of tokens to be highlighted on the homepage with the following format: [chainId]-[contractAddress]-[tokenId]
   FEATURED_TOKEN: string[]
@@ -199,6 +241,10 @@ const getEnvironment = async (): Promise<Environment> => {
       bsc,
       polygon,
       polygonMumbai,
+      neonMainnet,
+      neonDevnet,
+      arbitrum,
+      arbitrumSepolia,
       {
         name: 'LightLink Phoenix',
         network: 'lightlink-phoenix',
@@ -228,7 +274,7 @@ const getEnvironment = async (): Promise<Environment> => {
             url: 'https://phoenix.lightlink.io',
           },
         },
-      } as Chain,
+      },
       {
         name: 'LightLink Pegasus Testnet',
         network: 'lightlink-pegasus',
@@ -259,13 +305,14 @@ const getEnvironment = async (): Promise<Environment> => {
             url: 'https://pegasus.lightlink.io',
           },
         },
-      } as Chain,
+      },
     ],
     WALLET_CONNECT_PROJECT_ID:
       process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
     MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
     ALCHEMY_API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
     // Home page configuration
+    HOME_BANNERS: metadata.HOME_BANNERS || [],
     FEATURED_TOKEN: metadata.FEATURED_TOKEN || [],
     HOME_COLLECTIONS: metadata.HOME_COLLECTIONS || [],
     HOME_USERS: metadata.HOME_USERS || [],

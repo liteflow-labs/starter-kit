@@ -26,35 +26,35 @@ export type Props = {
         status: AccountVerificationStatus
       } | null
     }
-    ownerships: {
-      totalCount: number
-      nodes: {
-        ownerAddress: string
-        quantity: string
-        owner: {
-          address: string
-          name: string | null
-          image: string | null
-          verification: {
-            status: AccountVerificationStatus
-          } | null
-        }
-      }[]
-    }
-    sales: {
-      totalAvailableQuantitySum: string
-    }
+  }
+  ownerships: {
+    totalCount: number
+    nodes: {
+      ownerAddress: string
+      quantity: string
+      owner: {
+        address: string
+        name: string | null
+        image: string | null
+        verification: {
+          status: AccountVerificationStatus
+        } | null
+      }
+    }[]
+  }
+  sales: {
+    totalAvailableQuantitySum: string
   }
 }
 
-const TokenMetadata: FC<Props> = ({ asset }) => {
+const TokenMetadata: FC<Props> = ({ asset, sales, ownerships }) => {
   const { t } = useTranslation('components')
 
   const isOpenCollection = asset.collection.mintType === 'PUBLIC'
-  const numberOfOwners = asset.ownerships.totalCount
-  const saleSupply = BigNumber.from(asset.sales.totalAvailableQuantitySum)
+  const numberOfOwners = ownerships.totalCount
+  const saleSupply = BigNumber.from(sales.totalAvailableQuantitySum)
   const totalSupply = BigNumber.from(asset.quantity)
-  const owners = asset.ownerships.nodes
+  const owners = ownerships.nodes
 
   return (
     <Flex wrap="wrap" rowGap={6} columnGap={8}>
@@ -81,7 +81,7 @@ const TokenMetadata: FC<Props> = ({ asset }) => {
           <Heading as="h5" variant="heading3" color="gray.500">
             {t('token.metadata.owners')}
           </Heading>
-          <OwnersModal asset={asset} />
+          <OwnersModal asset={asset} ownerships={ownerships} />
         </Stack>
       )}
       {asset.collection.standard === 'ERC721' && (
