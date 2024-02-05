@@ -9,7 +9,6 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { BigNumber } from '@ethersproject/bignumber'
 import { HiArrowNarrowRight } from '@react-icons/all-files/hi/HiArrowNarrowRight'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
@@ -25,21 +24,21 @@ import Link from '../Link/Link'
 import Price from '../Price/Price'
 
 type Props = {
-  collection: {
-    address: string
-    chainId: number
-    cover: string | null
-    image: string | null
-    name: string
-    deployer: {
-      address: string
-      name: string | null
-      verification: {
-        status: AccountVerificationStatus
-      } | null
-    }
-  }
   drop: {
+    collection: {
+      address: string
+      chainId: number
+      cover: string | null
+      image: string | null
+      name: string
+      deployer: {
+        address: string
+        name: string | null
+        verification: {
+          status: AccountVerificationStatus
+        } | null
+      }
+    }
     startDate: Date
     endDate: Date
     unitPrice: string
@@ -48,17 +47,12 @@ type Props = {
       symbol: string
       image: string
     }
+    supply: string | null
   }
-  totalSupply: BigNumber | null
   onCountdownEnd?: () => void
 }
 
-export default function DropCard({
-  collection,
-  drop,
-  totalSupply,
-  onCountdownEnd,
-}: Props) {
+export default function DropCard({ drop, onCountdownEnd }: Props) {
   const { t } = useTranslation('components')
   const status = useTimeStatus(drop)
 
@@ -71,7 +65,7 @@ export default function DropCard({
   return (
     <Box
       as={Link}
-      href={`/collection/${collection.chainId}/${collection.address}/drop`}
+      href={`/collection/${drop.collection.chainId}/${drop.collection.address}/drop`}
       borderWidth="1px"
       borderRadius="2xl"
       w="full"
@@ -90,10 +84,10 @@ export default function DropCard({
         }}
         bg="gray.100"
       >
-        {collection.cover && (
+        {drop.collection.cover && (
           <Image
-            src={collection.cover}
-            alt={collection.name}
+            src={drop.collection.cover}
+            alt={drop.collection.name}
             fill
             sizes="(min-width: 62em) 600px, 100vw"
             objectFit="cover"
@@ -140,10 +134,10 @@ export default function DropCard({
         mb={4}
         bg="gray.200"
       >
-        {collection.image && (
+        {drop.collection.image && (
           <Image
-            src={collection.image}
-            alt={collection.name}
+            src={drop.collection.image}
+            alt={drop.collection.name}
             fill
             sizes="72px"
             objectFit="cover"
@@ -154,34 +148,34 @@ export default function DropCard({
       <Flex position="relative" justifyContent="space-between" gap={4} w="full">
         <Flex flexDir="column" gap={1}>
           <Heading variant="heading2" color="white" isTruncated>
-            {collection.name}
+            {drop.collection.name}
           </Heading>
 
           <Flex alignItems="center" gap={1.5}>
             <Text variant="button2" color="white">
               {t('drop.by', {
                 address:
-                  collection.deployer.name ||
-                  formatAddress(collection.deployer.address, 10),
+                  drop.collection.deployer.name ||
+                  formatAddress(drop.collection.deployer.address, 10),
               })}
             </Text>
-            {collection.deployer.verification?.status === 'VALIDATED' && (
+            {drop.collection.deployer.verification?.status === 'VALIDATED' && (
               <Icon as={HiBadgeCheck} color="brand.500" h={4} w={4} />
             )}
           </Flex>
 
           <Flex alignItems="center" gap={2}>
-            {totalSupply ? (
+            {drop.supply ? (
               <Text variant="caption" color="white">
                 <Trans
                   ns="components"
                   i18nKey="drop.supply.available"
                   values={{
-                    count: totalSupply.toNumber(),
+                    count: parseInt(drop.supply, 10),
                   }}
                   components={[
                     <>
-                      {numbro(totalSupply).format({
+                      {numbro(drop.supply).format({
                         thousandSeparated: true,
                       })}
                     </>,
