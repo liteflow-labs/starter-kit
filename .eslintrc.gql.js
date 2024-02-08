@@ -1,10 +1,6 @@
 module.exports = {
   root: true,
   parser: '@graphql-eslint/eslint-plugin',
-  parserOptions: {
-    schema: 'node_modules/@nft/api-graphql/schema.graphql',
-    operations: '**/*.gql',
-  },
   plugins: ['@graphql-eslint/eslint-plugin'],
   extends: ['plugin:@graphql-eslint/operations-recommended'],
   rules: {

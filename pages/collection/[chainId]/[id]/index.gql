@@ -50,7 +50,6 @@ query FetchCollectionMetrics($collectionAddress: Address!, $chainId: Int!) {
 
 query FetchCollectionAssets(
   $currentAccount: Address!
-  $now: Datetime!
   $offset: Int!
   $limit: Int!
   $chainId: Int!
@@ -74,7 +73,6 @@ query FetchCollectionAssets(
       hasPreviousPage
     }
     nodes {
-      id
       chainId
       collectionAddress
       tokenId
@@ -103,41 +101,33 @@ query FetchCollectionAssets(
         quantity
       }
       quantity
-      bestBid: bids(
-        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-        filter: { expiredAt: { greaterThan: $now } }
-        first: 1
-      ) {
-        nodes {
-          unitPrice
-          amount
-          currency {
-            image
-            name
-            id
-            decimals
-            symbol
-          }
-        }
-      }
-      firstSale: sales(
-        first: 1
-        orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-        filter: { expiredAt: { greaterThan: $now } }
-      ) {
-        totalCount
-        totalCurrencyDistinctCount
-        nodes {
+      bestBid {
+        unitPrice
+        amount
+        currency {
+          image
+          name
           id
-          unitPrice
-          currency {
-            image
-            id
-            decimals
-            symbol
-          }
+          decimals
+          symbol
         }
       }
+      firstSale {
+        id
+        unitPrice
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
+        maker {
+          address
+        }
+      }
+      totalSalesCount
+      totalSalesCurrencyDistinctCount
     }
   }
 }

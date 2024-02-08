@@ -28,7 +28,9 @@ import TokenMedia from './Media'
 
 export type Props = {
   asset: {
-    id: string
+    chainId: number
+    collectionAddress: string
+    tokenId: string
     name: string
     collection: {
       address: string
@@ -53,28 +55,25 @@ export type Props = {
     } | null
     quantity: string
     bestBid: {
-      nodes: {
-        unitPrice: string
-        currency: {
-          decimals: number
-          symbol: string
-        }
-      }[]
-    }
-    firstSale:
-      | {
-          totalCount: number
-          totalCurrencyDistinctCount: number
-          nodes: {
-            id: string
-            unitPrice: string
-            currency: {
-              decimals: number
-              symbol: string
-            }
-          }[]
-        }
-      | undefined
+      unitPrice: string
+      currency: {
+        decimals: number
+        symbol: string
+      }
+    } | null
+    firstSale: {
+      id: string
+      unitPrice: string
+      currency: {
+        decimals: number
+        symbol: string
+      }
+      maker: {
+        address: string
+      }
+    } | null
+    totalSalesCount: number
+    totalSalesCurrencyDistinctCount: number
   }
 }
 
@@ -88,13 +87,10 @@ const TokenCard: FC<Props> = ({ asset }) => {
   const [isHovered, setIsHovered] = useState(false)
   const media = useDetectAssetMedia(asset)
 
-  const sale = asset.firstSale?.nodes[0]
-  const bestBid =
-    asset.bestBid?.nodes?.length > 0 ? asset.bestBid.nodes[0] : undefined
-  const numberOfSales = asset.firstSale?.totalCount || 0
-  const hasMultiCurrency = asset.firstSale?.totalCurrencyDistinctCount
-    ? asset.firstSale.totalCurrencyDistinctCount > 1
-    : false
+  const sale = asset.firstSale
+  const bestBid = asset.bestBid
+  const numberOfSales = asset.totalSalesCount
+  const hasMultiCurrency = asset.totalSalesCurrencyDistinctCount > 1
   const chainName = useMemo(
     () => CHAINS.find((x) => x.id === asset.collection.chainId)?.name,
     [asset.collection.chainId, CHAINS],
@@ -107,20 +103,19 @@ const TokenCard: FC<Props> = ({ asset }) => {
           sale={sale}
           numberOfSales={numberOfSales}
           hasMultiCurrency={hasMultiCurrency}
-          isOwner={isOwner}
           showButton={isHovered}
         />
       )
     return (
       <SaleOpenCardFooter
-        assetId={asset.id}
+        asset={asset}
         bestBid={bestBid}
         isOwner={isOwner}
         showButton={isHovered}
       />
     )
   }, [
-    asset.id,
+    asset,
     bestBid,
     hasMultiCurrency,
     isHovered,
@@ -146,7 +141,7 @@ const TokenCard: FC<Props> = ({ asset }) => {
     >
       <Flex
         as={Link}
-        href={`/tokens/${asset.id}`}
+        href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`}
         w="full"
         position="relative"
         bg="gray.100"
@@ -224,7 +219,9 @@ const TokenCard: FC<Props> = ({ asset }) => {
               {asset.collection.name}
             </Text>
           </Link>
-          <Link href={`/tokens/${asset.id}`}>
+          <Link
+            href={`/tokens/${asset.chainId}-${asset.collectionAddress}-${asset.tokenId}`}
+          >
             <Heading
               as="h4"
               variant="heading2"

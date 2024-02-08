@@ -1,47 +1,31 @@
-query FetchAsset(
+query FetchFeaturedToken(
   $chainId: Int!
   $collectionAddress: Address!
   $tokenId: String!
-  $address: Address
   $now: Datetime!
+  $address: Address
 ) {
   asset(
     chainId: $chainId
     collectionAddress: $collectionAddress
     tokenId: $tokenId
   ) {
-    deletedAt
-    tokenId
-    tokenUri
     chainId
     collectionAddress
+    tokenId
+    name
     collection {
       chainId
-      name
       address
+      name
       standard
-      supply
       mintType
     }
-    name
-    description
-    traits(
-      orderBy: TYPE_ASC
-      first: 100 # TODO: implement pagination
-    ) {
-      nodes {
-        type
-        value
-        collectionTraitValue {
-          numberOfAssets
-        }
-      }
-    }
-    quantity
     image
     imageMimetype
     animationUrl
     animationMimetype
+    quantity
     creator {
       address
       name
@@ -52,6 +36,17 @@ query FetchAsset(
     }
     owned: ownership(ownerAddress: $address) {
       quantity
+    }
+    bestBid {
+      unitPrice
+      amount
+      currency {
+        image
+        name
+        id
+        decimals
+        symbol
+      }
     }
   }
   ownerships(
@@ -81,43 +76,6 @@ query FetchAsset(
       }
     }
   }
-  bids: offerOpenBuys(
-    orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-    filter: {
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $collectionAddress }
-      tokenId: { equalTo: $tokenId }
-      expiredAt: { greaterThan: $now }
-    }
-    first: 100 # TODO: implement pagination
-  ) {
-    nodes {
-      id
-      createdAt
-      expiredAt
-      availableQuantity
-      taker {
-        address
-      }
-      maker {
-        address
-        name
-        image
-        verification {
-          status
-        }
-      }
-      unitPrice
-      amount
-      currency {
-        image
-        name
-        id
-        decimals
-        symbol
-      }
-    }
-  }
   sales: offerOpenSales(
     orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
     filter: {
@@ -129,9 +87,12 @@ query FetchAsset(
   ) {
     nodes {
       id
+      chainId
+      collectionAddress
+      tokenId
       unitPrice
-      expiredAt
       availableQuantity
+      expiredAt
       currency {
         image
         name
@@ -157,12 +118,7 @@ query FetchAsset(
     }
   ) {
     nodes {
-      id
       chainId
-      address
-      decimals
-      symbol
-      name
       image
     }
   }

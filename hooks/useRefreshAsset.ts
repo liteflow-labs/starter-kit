@@ -8,18 +8,25 @@ import {
 export default function useRefreshAsset(
   max = 12,
   interval = 5000,
-): (assetId: string) => Promise<void> {
+): (asset: {
+  chainId: number
+  collectionAddress: string
+  tokenId: string
+}) => Promise<void> {
   const [refreshAssetMutation] = useRefreshAssetMutation()
 
   const [_getAssetData] = useGetAssetDataForRefreshLazyQuery()
   const getAssetData = useCallback(
-    async (assetId: string) => {
-      const [chainId, collectionAddress, tokenId] = assetId.split('-')
+    async (asset: {
+      chainId: number
+      collectionAddress: string
+      tokenId: string
+    }) => {
       const { data } = await _getAssetData({
         variables: {
-          chainId: chainId ? parseInt(chainId, 10) : 0,
-          collectionAddress: collectionAddress || '',
-          tokenId: tokenId || '',
+          chainId: asset.chainId,
+          collectionAddress: asset.collectionAddress,
+          tokenId: asset.tokenId,
         },
         fetchPolicy: 'no-cache', // Disable the Apollo cache so that the polling gets the latest value
         // fetchPolicy: 'network-only', // with this fetch policy Apollo automatically executes a another query to refresh the Asset loaded by the main page
@@ -31,12 +38,19 @@ export default function useRefreshAsset(
   )
 
   const pollAsset = useCallback(
-    async (assetId: string, initialUpdatedAt: Date) => {
+    async (
+      asset: {
+        chainId: number
+        collectionAddress: string
+        tokenId: string
+      },
+      initialUpdatedAt: Date,
+    ) => {
       // poll the api until the asset is updated
       let i = 0
       while (i < max) {
         // fetch
-        const { updatedAt } = await getAssetData(assetId)
+        const { updatedAt } = await getAssetData(asset)
 
         // check if updatedAt is more recent, if yes, stop polling
         if (
@@ -53,14 +67,18 @@ export default function useRefreshAsset(
   )
 
   const refreshAsset = useCallback(
-    async (assetId: string) => {
+    async (asset: {
+      chainId: number
+      collectionAddress: string
+      tokenId: string
+    }) => {
       // fetch the last updated date of this asset
       const {
         updatedAt: initialUpdatedAt,
         chainId,
         collectionAddress,
         tokenId,
-      } = await getAssetData(assetId)
+      } = await getAssetData(asset)
 
       // ask backend to refresh asset
       await refreshAssetMutation({
@@ -72,7 +90,7 @@ export default function useRefreshAsset(
       })
 
       // poll until asset is refreshed or poll timeout
-      await pollAsset(assetId, initialUpdatedAt)
+      await pollAsset(asset, initialUpdatedAt)
     },
     [getAssetData, pollAsset, refreshAssetMutation],
   )

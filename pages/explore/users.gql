@@ -8,7 +8,7 @@ query FetchExploreUsers(
     first: $limit
     offset: $offset
     orderBy: $orderBy
-    filter: { isImported: { equalTo: false }, and: $filter }
+    filter: { and: $filter }
   ) {
     pageInfo {
       hasNextPage

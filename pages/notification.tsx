@@ -12,7 +12,7 @@ import {
 import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import Empty from '../components/Empty/Empty'
 import Head from '../components/Head'
@@ -25,12 +25,15 @@ import useLoginRedirect from '../hooks/useLoginRedirect'
 import SmallLayout from '../layouts/small'
 import { formatError } from '../utils'
 
+const PAGINATION_LIMIT = 12
+
 const NotificationPage: NextPage = ({}) => {
   const { t } = useTranslation('templates')
   const toast = useToast()
   const { address } = useAccount()
   useLoginRedirect()
   const [_, setCookies] = useCookies()
+  const [offset, setOffset] = useState(0)
 
   const {
     data: notificationData,
@@ -38,7 +41,8 @@ const NotificationPage: NextPage = ({}) => {
     networkStatus,
   } = useGetNotificationsQuery({
     variables: {
-      cursor: null,
+      offset: 0, // the offset change must be done when calling the fetchMore function to concat queries' results
+      limit: PAGINATION_LIMIT,
       address: address || '',
     },
     notifyOnNetworkStatusChange: true,
@@ -47,23 +51,22 @@ const NotificationPage: NextPage = ({}) => {
 
   const notifications = notificationData?.notifications?.nodes
   const hasNextPage = notificationData?.notifications?.pageInfo.hasNextPage
-  const endCursor = notificationData?.notifications?.pageInfo.endCursor
 
   const loadMore = useCallback(async () => {
+    const newOffset = offset + PAGINATION_LIMIT
     try {
       await fetchMore({
-        variables: {
-          cursor: endCursor,
-        },
+        variables: { offset: newOffset },
         updateQuery: concatToQuery('notifications'),
       })
+      setOffset(newOffset)
     } catch (e) {
       toast({
         title: formatError(e),
         status: 'error',
       })
     }
-  }, [endCursor, fetchMore, toast])
+  }, [fetchMore, offset, toast])
 
   useEffect(() => {
     if (!address) return

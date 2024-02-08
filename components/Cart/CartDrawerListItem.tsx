@@ -23,7 +23,9 @@ type Props = {
       symbol: string
     }
     asset: {
-      id: string
+      chainId: number
+      collectionAddress: string
+      tokenId: string
       image: string
       name: string
       collection: {
@@ -47,7 +49,9 @@ const CartDrawerListItem: FC<Props> = ({ offer }) => {
   return (
     <ListItem
       image={
-        <Link href={`/tokens/${offer.asset.id}`}>
+        <Link
+          href={`/tokens/${offer.asset.chainId}-${offer.asset.collectionAddress}-${offer.asset.tokenId}`}
+        >
           <Image
             src={offer.asset.image}
             alt={offer.asset.name}
@@ -62,7 +66,7 @@ const CartDrawerListItem: FC<Props> = ({ offer }) => {
       label={
         <Text
           as={Link}
-          href={`/tokens/${offer.asset.id}`}
+          href={`/tokens/${offer.asset.chainId}-${offer.asset.collectionAddress}-${offer.asset.tokenId}`}
           variant="subtitle2"
           color="gray.800"
           title={offer.asset.name}

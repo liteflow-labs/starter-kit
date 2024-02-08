@@ -67,10 +67,8 @@ const traitFilter = (traits: TraitFilter[]): AssetFilter =>
 const collectionFilter = (collection: string): AssetFilter => {
   const [chainId, address] = collection.split('-')
   return {
-    collection: {
-      chainId: { equalTo: chainId && parseInt(chainId, 10) },
-      address: { equalTo: address },
-    },
+    chainId: { equalTo: chainId && parseInt(chainId, 10) },
+    collectionAddress: { equalTo: address },
   } as AssetFilter
 }
 

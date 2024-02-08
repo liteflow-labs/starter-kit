@@ -81,10 +81,6 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
     () => asset.collection.standard === 'ERC1155',
     [asset.collection.standard],
   )
-  const ownerAddress = useMemo(
-    () => asset.ownerships.nodes[0]?.ownerAddress,
-    [asset.ownerships.nodes],
-  )
 
   const defaultExpirationValue = useMemo(
     () =>
@@ -171,11 +167,6 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
         chain: asset.chainId,
         collection: toAddress(asset.collectionAddress),
         token: asset.tokenId,
-        taker: isMultiple
-          ? undefined // Keep the bid open for anyone that can fill it
-          : ownerAddress
-            ? toAddress(ownerAddress)
-            : undefined,
         expiredAt: new Date(expiredAt),
       })
 

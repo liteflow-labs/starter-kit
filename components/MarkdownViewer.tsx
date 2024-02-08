@@ -22,7 +22,11 @@ const MDPreview = dynamic<MarkdownPreviewProps>(
   },
 )
 
-const MarkdownViewer: FC<MarkdownPreviewProps> = ({ source, ...props }) => {
+const MarkdownViewer: FC<MarkdownPreviewProps & { noTruncate?: boolean }> = ({
+  noTruncate,
+  source,
+  ...props
+}) => {
   const { t } = useTranslation('components')
   const { colorMode } = useColorMode()
   const [isMultiline, setMultiline] = useState(false)
@@ -30,6 +34,7 @@ const MarkdownViewer: FC<MarkdownPreviewProps> = ({ source, ...props }) => {
   const invisibleRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (noTruncate) return setOpen(true)
     const element = invisibleRef.current
     const ONE_LINE_HEIGHT = 24
     if (
@@ -40,7 +45,7 @@ const MarkdownViewer: FC<MarkdownPreviewProps> = ({ source, ...props }) => {
     ) {
       setMultiline(true)
     }
-  }, [source])
+  }, [noTruncate, source])
 
   return (
     <Box position="relative">

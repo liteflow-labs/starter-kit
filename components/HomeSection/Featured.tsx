@@ -1,20 +1,9 @@
-import {
-  Box,
-  Flex,
-  SimpleGrid,
-  Skeleton,
-  SkeletonText,
-  Spacer,
-  Stack,
-} from '@chakra-ui/react'
-import { FC, useCallback, useMemo } from 'react'
-import { useFetchFeaturedAssetsQuery } from '../../graphql'
-import useAccount from '../../hooks/useAccount'
+import { Flex } from '@chakra-ui/react'
+import { FC, useMemo } from 'react'
+import invariant from 'ts-invariant'
 import useEnvironment from '../../hooks/useEnvironment'
-import useHandleQueryError from '../../hooks/useHandleQueryError'
-import { useOrderByKey } from '../../hooks/useOrderByKey'
 import Slider from '../Slider/Slider'
-import TokenHeader from '../Token/Header'
+import TokenHeader from './FeaturedToken'
 
 type Props = {
   date: Date
@@ -22,65 +11,33 @@ type Props = {
 
 const FeaturedHomeSection: FC<Props> = ({ date }) => {
   const { FEATURED_TOKEN } = useEnvironment()
-  const { address } = useAccount()
-  const featureAssetsQuery = useFetchFeaturedAssetsQuery({
-    variables: {
-      featuredIds: FEATURED_TOKEN,
-      now: date,
-      address: address || '',
-    },
-    skip: !FEATURED_TOKEN.length,
-  })
-  useHandleQueryError(featureAssetsQuery)
-
-  const currencies = featureAssetsQuery.data?.currencies?.nodes
-
-  const featured = useOrderByKey(
-    FEATURED_TOKEN,
-    featureAssetsQuery.data?.assets?.nodes,
-    (asset) => asset.id,
-  )
-
-  const reloadInfo = useCallback(async () => {
-    void featureAssetsQuery.refetch()
-  }, [featureAssetsQuery])
 
   const featuredAssets = useMemo(
     () =>
-      featured && currencies
-        ? featured.map((asset) => (
+      FEATURED_TOKEN.map((x) => x.split('-')).map(
+        ([chainId, collectionAddress, tokenId], index) => {
+          invariant(
+            chainId !== undefined &&
+              collectionAddress !== undefined &&
+              tokenId !== undefined,
+            'invalid feature token',
+          )
+          return (
             <TokenHeader
-              key={asset.id}
-              asset={asset}
-              currencies={currencies}
-              isHomepage={true}
-              onOfferCanceled={reloadInfo}
+              key={index}
+              chainId={parseInt(chainId, 10)}
+              collectionAddress={collectionAddress.toLowerCase()}
+              tokenId={tokenId}
+              date={date}
             />
-          ))
-        : undefined,
-    [featured, reloadInfo, currencies],
+          )
+        },
+      ),
+    [FEATURED_TOKEN, date],
   )
 
-  if (!FEATURED_TOKEN.length) return null
-  if (!featuredAssets)
-    return (
-      <SimpleGrid spacing={4} flex="0 0 100%" columns={{ base: 0, md: 2 }}>
-        <Box my="auto" p={{ base: 6, md: 12 }} textAlign="center">
-          <Skeleton width={384} height={384} borderRadius={'2xl'} />
-        </Box>
-        <Stack spacing={8} p={{ base: 6, md: 12 }}>
-          <Stack spacing={1}>
-            <Skeleton width={200} height={6} />
-            <Skeleton width={400} height={8} />
-          </Stack>
-          <SkeletonText />
-          <Spacer />
-          <Skeleton width="100%" height={12} borderRadius={'2xl'} />
-        </Stack>
-      </SimpleGrid>
-    )
-  if (featuredAssets.length === 0) return null
-  if (featuredAssets.length === 1) return <header>{featuredAssets}</header>
+  if (FEATURED_TOKEN.length === 0) return null
+  if (FEATURED_TOKEN.length === 1) return <header>{featuredAssets}</header>
   return (
     <header>
       <Flex as={Slider}>{featuredAssets}</Flex>
