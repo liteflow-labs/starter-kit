@@ -30,10 +30,10 @@ type RemoteConfig = {
 
     HOME_BANNERS: {
       image: string
-      title: string
+      title?: string
       content?: string
-      textColor?: string
-      button: {
+      textColor: string
+      button?: {
         text: string
         href: string
         isExternal?: boolean
