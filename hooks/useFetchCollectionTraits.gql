@@ -1,33 +1,33 @@
 query FetchCollectionTraits(
   $chainId: Int!
   $address: Address!
-  $filter: CollectionTraitFilter!
+  $filter: [CollectionTraitFilter!]
   $limit: Int!
   $offset: Int!
 ) {
-  collection(chainId: $chainId, address: $address) {
-    chainId
-    address
-    traitsOfCollection(
-      orderBy: [TYPE_ASC]
-      first: $limit
-      filter: $filter
-      offset: $offset
-    ) {
-      pageInfo {
-        hasNextPage
-      }
-      nodes {
-        type
-        numberOfValues
-        values(
-          first: 50 # TODO: implement pagination
-          orderBy: [NUMBER_OF_ASSETS_DESC, VALUE_ASC]
-        ) {
-          nodes {
-            value
-            numberOfAssets
-          }
+  collectionTraits(
+    orderBy: [TYPE_ASC]
+    first: $limit
+    filter: {
+      chainId: { equalTo: $chainId }
+      collectionAddress: { equalTo: $address }
+      and: $filter
+    }
+    offset: $offset
+  ) {
+    pageInfo {
+      hasNextPage
+    }
+    nodes {
+      type
+      numberOfValues
+      values(
+        first: 50 # TODO: implement pagination
+        orderBy: [NUMBER_OF_ASSETS_DESC, VALUE_ASC]
+      ) {
+        nodes {
+          value
+          numberOfAssets
         }
       }
     }

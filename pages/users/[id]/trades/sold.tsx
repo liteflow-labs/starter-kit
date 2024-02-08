@@ -165,7 +165,7 @@ const TradeSoldPage: NextPage = () => {
                         {item.asset ? (
                           <Flex
                             as={Link}
-                            href={`/tokens/${item.asset.id}`}
+                            href={`/tokens/${item.asset.chainId}-${item.asset.collectionAddress}-${item.asset.tokenId}`}
                             condition={!item.asset.deletedAt} // disable link if asset is deleted
                             gap={3}
                           >

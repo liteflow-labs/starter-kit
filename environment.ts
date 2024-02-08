@@ -74,6 +74,33 @@ export type Environment = {
    * Home page configuration
    */
 
+  // List of banners to be displayed on the homepage
+  HOME_BANNERS: {
+    // URL of the image to display
+    image: string
+
+    // Title of the banner
+    title: string
+
+    // (Optional) Content of the banner
+    content?: string
+
+    // (Optional) Text color of the banner
+    textColor?: string
+
+    // Button to display on the banner
+    button: {
+      // Text of the button
+      text: string
+
+      // URL to redirect to when the button is clicked
+      href: string
+
+      // (Optional) Whether the URL is external or not (default: false)
+      isExternal?: boolean
+    }
+  }[]
+
   // Ordered list of tokens to be highlighted on the homepage with the following format: [chainId]-[contractAddress]-[tokenId]
   FEATURED_TOKEN: string[]
 
@@ -229,10 +256,11 @@ const getEnvironment = async (
     MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
     ALCHEMY_API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
     // Home page configuration
-    FEATURED_TOKEN: metadata?.FEATURED_TOKEN || [],
-    HOME_COLLECTIONS: metadata?.HOME_COLLECTIONS || [],
-    HOME_USERS: metadata?.HOME_USERS || [],
-    HOME_TOKENS: metadata?.HOME_TOKENS || [],
+    HOME_BANNERS: metadata.HOME_BANNERS || [],
+    FEATURED_TOKEN: metadata.FEATURED_TOKEN || [],
+    HOME_COLLECTIONS: metadata.HOME_COLLECTIONS || [],
+    HOME_USERS: metadata.HOME_USERS || [],
+    HOME_TOKENS: metadata.HOME_TOKENS || [],
     // SEO Configuration
     META_COMPANY_NAME: metadata?.META_COMPANY_NAME || 'Liteflow',
     META_TITLE: metadata?.META_TITLE || 'Acme NFT Marketplace',

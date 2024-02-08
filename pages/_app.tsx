@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
-import { Box, ChakraProvider } from '@chakra-ui/react'
+import { Box, ChakraProvider, useDisclosure } from '@chakra-ui/react'
 import { LiteflowProvider } from '@liteflow/react'
 import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -22,7 +22,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { Cookies, CookiesProvider } from 'react-cookie'
+import { Cookies, CookiesProvider, useCookies } from 'react-cookie'
 import {
   WagmiConfig,
   useDisconnect,
@@ -32,6 +32,7 @@ import getClient from '../client'
 import Banner from '../components/Banner/Banner'
 import CartContext from '../components/CartContext'
 import Footer from '../components/Footer/Footer'
+import SignModal from '../components/Modal/Sign'
 import Navbar from '../components/Navbar/Navbar'
 import connectors from '../connectors'
 import getEnvironment, { Environment, EnvironmentContext } from '../environment'
@@ -127,14 +128,18 @@ function AccountProvider({
   onError,
 }: PropsWithChildren<{ onError: (code: number) => void }>) {
   const { LITEFLOW_API_KEY, BASE_URL } = useEnvironment()
-  const { login, jwtToken, logout } = useAccount()
+  const { jwtToken, login, logout } = useAccount()
   const { disconnect } = useDisconnect()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [cookies] = useCookies<string, COOKIES>([COOKIE_JWT_TOKEN])
 
   const { connector } = useWagmiAccount({
     async onConnect({ connector }) {
       if (!connector) return
       try {
         await login(connector)
+        // jwtToken from useAccount is null on refresh, so we need to check the cookies
+        if (!cookies[COOKIE_JWT_TOKEN]) onOpen()
       } catch (e: any) {
         disconnect()
       }
@@ -147,12 +152,14 @@ function AccountProvider({
   // handle change of account
   useEffect(() => {
     if (!connector) return
-    const handleLogin = () => login(connector)
+    const handleLogin = () => {
+      login(connector).then(onOpen).catch(onError)
+    }
     connector.on('change', handleLogin)
     return () => {
       connector.off('change', handleLogin)
     }
-  }, [connector, login])
+  }, [connector, login, onError, onOpen])
 
   const client = useMemo(
     // The client needs to be reset when the jwtToken changes but only on the client as the server will
@@ -168,7 +175,12 @@ function AccountProvider({
     [jwtToken, onError, LITEFLOW_API_KEY, BASE_URL],
   )
 
-  return <ApolloProvider client={client}>{children}</ApolloProvider>
+  return (
+    <>
+      <ApolloProvider client={client}>{children}</ApolloProvider>
+      <SignModal connector={connector} isOpen={isOpen} onClose={onClose} />
+    </>
+  )
 }
 
 export type MyAppProps = {

@@ -1,4 +1,4 @@
-query GetNotifications($address: Address!, $cursor: Cursor) {
+query GetNotifications($address: Address!, $limit: Int!, $offset: Int!) {
   notifications(
     filter: {
       accountAddress: { equalTo: $address }
@@ -14,15 +14,14 @@ query GetNotifications($address: Address!, $cursor: Cursor) {
         ]
       }
     }
-    first: 12
+    first: $limit
     orderBy: CREATED_AT_DESC
-    after: $cursor
+    offset: $offset
     includeWhenCollectionDeleted: YES
     includeWhenTradeDeleted: YES
   ) {
     pageInfo {
       hasNextPage
-      endCursor
     }
     nodes {
       id

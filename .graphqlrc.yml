@@ -1,0 +1,2 @@
+schema: './node_modules/@nft/api-graphql/schema.graphql'
+documents: '{components,hooks,pages}/**/*.{graphql,gql}'

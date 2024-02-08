@@ -5,7 +5,6 @@ query FetchDefaultAssetIds($limit: Int!) {
     first: $limit
   ) {
     nodes {
-      id
       chainId
       collectionAddress
       tokenId
@@ -13,18 +12,12 @@ query FetchDefaultAssetIds($limit: Int!) {
   }
 }
 
-query FetchAssets(
-  $now: Datetime!
-  $limit: Int!
-  $assetIds: [String!]!
-  $address: Address
-) {
+query FetchAssets($limit: Int!, $filter: [AssetFilter!]!, $address: Address) {
   assets(
-    filter: { quantity: { greaterThan: "0" }, id: { in: $assetIds } }
+    filter: { quantity: { greaterThan: "0" }, and: $filter }
     first: $limit
   ) {
     nodes {
-      id
       chainId
       collectionAddress
       tokenId
@@ -49,42 +42,33 @@ query FetchAssets(
       owned: ownership(ownerAddress: $address) {
         quantity
       }
-      bestBid: bids(
-        orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-        filter: { expiredAt: { greaterThan: $now } }
-        first: 1
-      ) {
-        nodes {
-          unitPrice
-          amount
-          currency {
-            image
-            name
-            id
-            decimals
-            symbol
-          }
-        }
-      }
-      firstSale: sales(
-        first: 1
-        orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-        filter: { expiredAt: { greaterThan: $now } }
-      ) {
-        totalCount
-        totalCurrencyDistinctCount
-        nodes {
+      bestBid {
+        unitPrice
+        amount
+        currency {
+          image
+          name
           id
-          unitPrice
-          currency {
-            image
-            name
-            id
-            decimals
-            symbol
-          }
+          decimals
+          symbol
         }
       }
+      firstSale {
+        id
+        unitPrice
+        currency {
+          image
+          name
+          id
+          decimals
+          symbol
+        }
+        maker {
+          address
+        }
+      }
+      totalSalesCount
+      totalSalesCurrencyDistinctCount
     }
   }
 }
