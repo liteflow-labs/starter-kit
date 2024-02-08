@@ -19,6 +19,8 @@ const BannerHomeSection = () => {
           h="500px"
           flex="0 0 100%"
           bg="gray.100"
+          rounded="lg"
+          overflow="hidden"
         >
           <Image
             src={banner.image}
