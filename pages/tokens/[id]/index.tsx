@@ -85,6 +85,10 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
     },
   })
   const asset = data?.asset
+  const sales = data?.sales?.nodes
+  const bids = data?.bids?.nodes
+  const currencies = data?.currencies?.nodes
+  const ownerships = data?.ownerships
 
   const media = useDetectAssetMedia(asset)
 
@@ -122,9 +126,13 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
 
   const refreshAsset = useRefreshAsset()
   const refreshMetadata = useCallback(
-    async (assetId: string) => {
+    async (asset: {
+      chainId: number
+      collectionAddress: string
+      tokenId: string
+    }) => {
       try {
-        await refreshAsset(assetId)
+        await refreshAsset(asset)
         await refresh()
         toast({
           title: 'Successfully refreshed metadata',
@@ -206,7 +214,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                     icon={<Icon as={HiOutlineDotsHorizontal} w={5} h={5} />}
                   />
                   <MenuList>
-                    <MenuItem onClick={() => refreshMetadata(asset.id)}>
+                    <MenuItem onClick={() => refreshMetadata(asset)}>
                       {t('asset.detail.menu.refresh-metadata')}
                     </MenuItem>
                     <Link
@@ -225,12 +233,17 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
             )}
           </Flex>
 
-          {!asset ? (
+          {!asset || !sales || !ownerships ? (
             <SkeletonProperty items={3} />
           ) : (
-            <TokenMetadata asset={asset} />
+            <TokenMetadata
+              asset={asset}
+              sales={sales}
+              ownerships={ownerships}
+            />
           )}
-          {!asset || !data?.currencies?.nodes ? (
+
+          {!asset || !sales || !currencies ? (
             <>
               <SkeletonProperty items={1} />
               <Skeleton height="40px" width="100%" />
@@ -238,14 +251,15 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
           ) : (
             <SaleDetail
               asset={asset}
-              currencies={data.currencies?.nodes}
+              sales={sales}
+              currencies={currencies}
               isHomepage={false}
               onOfferCanceled={refresh}
             />
           )}
         </Flex>
 
-        {asset && (
+        {asset && bids && (
           <>
             <Stack p={6} spacing={6}>
               {asset.description && (
@@ -383,7 +397,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 {(!query.filter || query.filter === AssetTabs.bids) && (
                   <BidList
                     asset={asset}
-                    bids={asset.bids.nodes}
+                    bids={bids}
                     preventAcceptation={!isOwner}
                     onAccepted={refresh}
                     onCanceled={refresh}

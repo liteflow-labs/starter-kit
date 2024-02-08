@@ -475,6 +475,12 @@
       "title": "使用钱包登录",
       "description": "使用以下选项之一进行连接。",
       "alternative": "或使用"
+    },
+    "signature": {
+      "title": "Signature",
+      "sub-title": "Verify your account",
+      "description": "To complete the connection, you must sign a message in your wallet to verify that you are the owner of this account.",
+      "action": "Send message"
     }
   },
   "back": "返回",

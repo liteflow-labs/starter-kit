@@ -48,7 +48,6 @@ query FetchUserBidsReceived(
         deletedAt
       }
       asset {
-        id
         chainId
         collectionAddress
         tokenId

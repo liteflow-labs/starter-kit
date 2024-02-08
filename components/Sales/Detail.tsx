@@ -10,38 +10,37 @@ import SaleAction from './SaleAction'
 
 export type Props = {
   asset: {
-    id: string
+    chainId: number
+    collectionAddress: string
+    tokenId: string
     quantity: string
     collection: {
-      chainId: number
       standard: Standard
     }
     owned: {
       quantity: string
     } | null
-    sales: {
-      nodes: {
-        id: string
-        unitPrice: string
-        expiredAt: Date
-        availableQuantity: string
-        maker: {
-          address: string
-          image: string | null
-          name: string | null
-          verification: {
-            status: AccountVerificationStatus
-          } | null
-        }
-        currency: {
-          id: string
-          decimals: number
-          image: string
-          symbol: string
-        }
-      }[]
-    }
   }
+  sales: {
+    id: string
+    unitPrice: string
+    expiredAt: Date
+    availableQuantity: string
+    maker: {
+      address: string
+      image: string | null
+      name: string | null
+      verification: {
+        status: AccountVerificationStatus
+      } | null
+    }
+    currency: {
+      id: string
+      decimals: number
+      image: string
+      symbol: string
+    }
+  }[]
   currencies: {
     chainId: number
     image: string
@@ -54,6 +53,7 @@ export type Props = {
 
 const SaleDetail: FC<Props> = ({
   asset,
+  sales,
   currencies,
   isHomepage,
   onOfferCanceled,
@@ -73,7 +73,7 @@ const SaleDetail: FC<Props> = ({
     () => asset.collection.standard === 'ERC721',
     [asset.collection.standard],
   )
-  const directSales = asset.sales.nodes
+  const directSales = sales
 
   return (
     <Stack spacing={8}>
@@ -81,8 +81,7 @@ const SaleDetail: FC<Props> = ({
         <>
           <SaleDirectSummary sales={directSales} isSingle={isSingle} />
           <SaleDirectButton
-            assetId={asset.id}
-            chainId={asset.collection.chainId}
+            asset={asset}
             sales={directSales}
             isHomepage={isHomepage}
             ownAllSupply={ownAllSupply}
@@ -93,17 +92,13 @@ const SaleDetail: FC<Props> = ({
         <>
           <SaleOpenSummary currencies={currencies} />
           <SaleOpenButton
-            assetId={asset.id}
+            asset={asset}
             isHomepage={isHomepage}
             ownAllSupply={ownAllSupply}
           />
         </>
       )}
-      <SaleAction
-        assetId={asset.id}
-        isHomepage={isHomepage}
-        isOwner={isOwner}
-      />
+      <SaleAction asset={asset} isHomepage={isHomepage} isOwner={isOwner} />
     </Stack>
   )
 }

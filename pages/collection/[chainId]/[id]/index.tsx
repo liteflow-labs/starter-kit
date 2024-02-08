@@ -91,7 +91,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const { data: assetData } = useFetchCollectionAssetsQuery({
     variables: {
       collectionAddress,
-      now: date,
       currentAccount: address || '',
       limit,
       offset,
@@ -111,6 +110,7 @@ const CollectionPage: FC<Props> = ({ now }) => {
         currency,
         collectionSearch, // exclude from query
         propertySearch, // exclude from query
+        chains, // exclude from filter and query, already set from the collection
         ...otherFilters
       } = filter
       const cleanData = removeEmptyFromObject({
