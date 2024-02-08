@@ -39,16 +39,18 @@ const BannerHomeSection = () => {
               px={{ base: 8, sm: 12, lg: 24 }}
               color={banner.textColor}
             >
-              <VStack alignItems="flex-start" spacing={1}>
-                {banner.title && (
-                  <Heading variant="title">{banner.title}</Heading>
-                )}
-                {banner.content && (
-                  <Box>
-                    <MarkdownViewer source={banner.content} noTruncate />
-                  </Box>
-                )}
-              </VStack>
+              {(banner.title || banner.content) && (
+                <VStack alignItems="flex-start" spacing={1}>
+                  {banner.title && (
+                    <Heading variant="title">{banner.title}</Heading>
+                  )}
+                  {banner.content && (
+                    <Box>
+                      <MarkdownViewer source={banner.content} noTruncate />
+                    </Box>
+                  )}
+                </VStack>
+              )}
               {banner.button && (
                 <Button
                   as={Link}
