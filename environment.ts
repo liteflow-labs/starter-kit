@@ -30,10 +30,10 @@ type RemoteConfig = {
 
     HOME_BANNERS: {
       image: string
-      title: string
+      title?: string
       content?: string
-      textColor?: string
-      button: {
+      textColor: string
+      button?: {
         text: string
         href: string
         isExternal?: boolean
@@ -115,17 +115,17 @@ export type Environment = {
     // URL of the image to display
     image: string
 
-    // Title of the banner
-    title: string
+    // (Optional) Title of the banner
+    title?: string
 
     // (Optional) Content of the banner
     content?: string
 
-    // (Optional) Text color of the banner
-    textColor?: string
+    // Text color of the banner. Default is white
+    textColor: string
 
-    // Button to display on the banner
-    button: {
+    // (Optional) Button to display on the banner
+    button?: {
       // Text of the button
       text: string
 
