@@ -52,7 +52,7 @@ const FilterByTrait: FC<Props> = ({
       chainId: collection.chainId,
       offset: 0, // the offset change must be done when calling the fetchMore function to concat queries' results
       limit: PAGINATION_LIMIT,
-      traitType: filterResult.propertySearch || null,
+      search: filterResult.propertySearch || null,
     },
     notifyOnNetworkStatusChange: true,
   })

@@ -1,7 +1,7 @@
 query FetchCollectionTraits(
   $chainId: Int!
   $address: Address!
-  $traitType: String
+  $search: String
   $limit: Int!
   $offset: Int!
 ) {
@@ -11,7 +11,7 @@ query FetchCollectionTraits(
     condition: {
       chainId: $chainId
       collectionAddress: $address
-      type: $traitType
+      search: $search
     }
     offset: $offset
   ) {
