@@ -52,18 +52,11 @@ query FetchCollectionAssets(
   $currentAccount: Address!
   $offset: Int!
   $limit: Int!
-  $chainId: Int!
-  $collectionAddress: Address!
+  $condition: AssetCondition!
   $orderBy: [AssetsOrderBy!]
-  $filter: [AssetFilter!]
 ) {
   assets(
-    filter: {
-      quantity: { greaterThan: "0" }
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $collectionAddress }
-      and: $filter
-    }
+    condition: $condition
     orderBy: $orderBy
     first: $limit
     offset: $offset

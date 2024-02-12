@@ -26,9 +26,9 @@ query FetchCollectionDrops(
   $chainId: Int!
 ) {
   drops(
-    filter: {
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $address }
+    condition: {
+      chainId: $chainId
+      collectionAddress: $address
     }
     orderBy: START_DATE_ASC
   ) {

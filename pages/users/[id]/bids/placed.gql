@@ -1,19 +1,14 @@
 query FetchUserBidsPlaced(
   $limit: Int!
   $offset: Int!
-  $orderBy: [OffersOrderBy!]
+  $orderBy: [OfferOpenBuysOrderBy!]
   $address: Address!
 ) {
-  bids: offers(
+  bids: openOffers(
     orderBy: $orderBy
     first: $limit
     offset: $offset
-    filter: {
-      type: { equalTo: BUY }
-      availableQuantity: { greaterThan: "0" }
-      signature: { isNull: false }
-      makerAddress: { equalTo: $address }
-    }
+    condition: { status: ACTIVE, makerAddress: $address }
     includeWhenAssetDeleted: YES
     includeWhenCurrencyDeleted: YES
   ) {

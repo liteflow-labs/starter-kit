@@ -29,7 +29,7 @@ const CartItemSummary: FC<Props> = ({ chainId, cartItems }) => {
 
   const orderedCartItems = useOrderByKey(
     offerIds,
-    data?.offerOpenSales?.nodes,
+    data?.listings?.nodes,
     (offers) => offers.id,
   )
 

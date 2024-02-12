@@ -3,10 +3,10 @@ query FetchAllERC721And1155(
   $limit: Int!
   $offset: Int!
   $orderBy: [AssetsOrderBy!]
-  $filter: [AssetFilter!]
+  $condition: AssetCondition
 ) {
   assets(
-    filter: { quantity: { greaterThan: "0" }, and: $filter }
+    condition: $condition
     first: $limit
     offset: $offset
     orderBy: $orderBy

@@ -3,11 +3,7 @@ import { useOrderByKey } from 'hooks/useOrderByKey'
 import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import invariant from 'ts-invariant'
-import {
-  CollectionFilter,
-  FetchCollectionsQuery,
-  useFetchCollectionsQuery,
-} from '../../graphql'
+import { FetchCollectionsQuery, useFetchCollectionsQuery } from '../../graphql'
 import useEnvironment from '../../hooks/useEnvironment'
 import useHandleQueryError from '../../hooks/useHandleQueryError'
 import HomeGridSection from './Grid'
@@ -19,17 +15,15 @@ const CollectionsHomeSection: FC<Props> = () => {
   const { t } = useTranslation('templates')
   const collectionsQuery = useFetchCollectionsQuery({
     variables: {
-      filter: {
-        or: HOME_COLLECTIONS.map((x) => x.split('-')).map(
-          ([chainId, collectionAddress]) => {
-            invariant(chainId && collectionAddress, 'invalid collection')
-            return {
-              address: { equalTo: collectionAddress.toLowerCase() },
-              chainId: { equalTo: parseInt(chainId, 10) },
-            }
-          },
-        ),
-      } as CollectionFilter,
+      ids: HOME_COLLECTIONS.map((x) => x.split('-')).map(
+        ([chainId, collectionAddress]) => {
+          invariant(chainId && collectionAddress, 'invalid collection')
+          return {
+            address: collectionAddress.toLowerCase(),
+            chainId: parseInt(chainId, 10),
+          }
+        },
+      ),
       limit: PAGINATION_LIMIT,
     },
     skip: !HOME_COLLECTIONS.length,

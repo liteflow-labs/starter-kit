@@ -3,7 +3,6 @@ query FetchAsset(
   $collectionAddress: Address!
   $tokenId: String!
   $address: Address
-  $now: Datetime!
 ) {
   asset(
     chainId: $chainId
@@ -55,10 +54,10 @@ query FetchAsset(
     }
   }
   ownerships(
-    filter: {
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $collectionAddress }
-      tokenId: { equalTo: $tokenId }
+    condition: {
+      chainId: $chainId
+      collectionAddress: $collectionAddress
+      tokenId: $tokenId
     }
     orderBy: [
       QUANTITY_DESC
@@ -81,13 +80,13 @@ query FetchAsset(
       }
     }
   }
-  bids: offerOpenBuys(
+  bids: openOffers(
     orderBy: [UNIT_PRICE_IN_REF_DESC, CREATED_AT_ASC]
-    filter: {
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $collectionAddress }
-      tokenId: { equalTo: $tokenId }
-      expiredAt: { greaterThan: $now }
+    condition: {
+      chainId: $chainId
+      collectionAddress: $collectionAddress
+      tokenId: $tokenId
+      status: ACTIVE
     }
     first: 100 # TODO: implement pagination
   ) {
@@ -118,13 +117,13 @@ query FetchAsset(
       }
     }
   }
-  sales: offerOpenSales(
+  sales: listings(
     orderBy: [UNIT_PRICE_IN_REF_ASC, CREATED_AT_ASC]
-    filter: {
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $collectionAddress }
-      tokenId: { equalTo: $tokenId }
-      expiredAt: { greaterThan: $now }
+    condition: {
+      chainId: $chainId
+      collectionAddress: $collectionAddress
+      tokenId: $tokenId
+      status: ACTIVE
     } # TODO: implement pagination. when implementing pagination, find a way to get availableQuantity of all sales
   ) {
     nodes {
@@ -151,9 +150,9 @@ query FetchAsset(
   }
   currencies(
     orderBy: CREATED_AT_ASC
-    filter: {
-      chainId: { equalTo: $chainId }
-      address: { isNull: false } # keep only non-native currency. Cannot create bid with native currency.
+    condition: {
+      chainId: $chainId
+      onlyToken: true # keep only non-native currency. Cannot create bid with native currency.
     }
   ) {
     nodes {

@@ -23,7 +23,7 @@ const HomePage: NextPage<Props> = ({ now }) => {
       <Head />
       <Stack spacing={12}>
         <BannerHomeSection />
-        <FeaturedHomeSection date={date} />
+        <FeaturedHomeSection />
         <CollectionsHomeSection />
         <UsersHomeSection />
         <AssetsHomeSection date={date} />

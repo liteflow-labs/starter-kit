@@ -30,7 +30,10 @@ import Pagination from '../../../components/Pagination/Pagination'
 import Price from '../../../components/Price/Price'
 import UserProfileTemplate from '../../../components/Profile'
 import Select from '../../../components/Select/Select'
-import { OffersOrderBy, useFetchUserFixedPriceQuery } from '../../../graphql'
+import {
+  OfferOpenSalesOrderBy,
+  useFetchUserFixedPriceQuery,
+} from '../../../graphql'
 import useCart from '../../../hooks/useCart'
 import useEnvironment from '../../../hooks/useEnvironment'
 import useOrderByQuery from '../../../hooks/useOrderByQuery'
@@ -45,7 +48,7 @@ const FixedPricePage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
-  const orderBy = useOrderByQuery<OffersOrderBy>('CREATED_AT_DESC')
+  const orderBy = useOrderByQuery<OfferOpenSalesOrderBy>('CREATED_AT_DESC')
   const { changeLimit } = usePaginate()
   const toast = useToast()
   const userAddress = useRequiredQueryParamSingle('id')
@@ -87,7 +90,7 @@ const FixedPricePage: NextPage = () => {
       >
         <Stack spacing={6}>
           <Box ml="auto" w={{ base: 'full', md: 'min-content' }}>
-            <Select<OffersOrderBy>
+            <Select<OfferOpenSalesOrderBy>
               label={t('user.fixed.orderBy.label')}
               name="Sort by"
               onChange={changeOrder}

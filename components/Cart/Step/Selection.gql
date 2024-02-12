@@ -1,5 +1,5 @@
 query FetchCartItems($offerIds: [UUID!]!) {
-  offerOpenSales(filter: { id: { in: $offerIds } }) {
+  listings(condition: { ids: $offerIds, status: ACTIVE }) {
     nodes {
       id
       type

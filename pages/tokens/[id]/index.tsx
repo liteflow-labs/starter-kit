@@ -50,10 +50,6 @@ import LargeLayout from '../../../layouts/large'
 import { formatError } from '../../../utils'
 import Error from '../../_error'
 
-type Props = {
-  now: string
-}
-
 enum AssetTabs {
   bids = 'bids',
   history = 'history',
@@ -61,7 +57,7 @@ enum AssetTabs {
 
 const tabs = [AssetTabs.bids, AssetTabs.history]
 
-const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
+const DetailPage: NextPage = () => {
   const { CHAINS, REPORT_EMAIL } = useEnvironment()
   const { t } = useTranslation('templates')
   const toast = useToast()
@@ -74,13 +70,11 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   invariant(tokenId, 'tokenId is required')
   const chainId = parseInt(_chainId, 10)
 
-  const date = useMemo(() => new Date(nowProp), [nowProp])
   const { data, refetch } = useFetchAssetQuery({
     variables: {
       chainId,
       collectionAddress,
       tokenId,
-      now: date,
       address: address || '',
     },
   })
@@ -117,9 +111,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
   )
 
   const refresh = useCallback(async () => {
-    await refetch({
-      now: new Date(),
-    })
+    await refetch()
   }, [refetch])
 
   useCart({ onCheckout: refetch })

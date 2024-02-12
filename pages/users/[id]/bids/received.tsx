@@ -20,7 +20,7 @@ import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import AcceptOfferButton from '../../../../components/Button/AcceptOffer'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
@@ -32,7 +32,7 @@ import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
 import {
-  OffersOrderBy,
+  OfferOpenBuysOrderBy,
   useFetchUserBidsReceivedQuery,
 } from '../../../../graphql'
 import useEnvironment from '../../../../hooks/useEnvironment'
@@ -43,29 +43,23 @@ import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParam
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
-type Props = {
-  now: string
-}
-
-const BidReceivedPage: NextPage<Props> = ({ now }) => {
+const BidReceivedPage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
-  const orderBy = useOrderByQuery<OffersOrderBy>('CREATED_AT_DESC')
+  const orderBy = useOrderByQuery<OfferOpenBuysOrderBy>('CREATED_AT_DESC')
   const { changeLimit } = usePaginate()
   const toast = useToast()
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
-  const date = useMemo(() => new Date(now), [now])
   const { data, refetch } = useFetchUserBidsReceivedQuery({
     variables: {
       address: userAddress,
       limit,
       offset,
       orderBy,
-      now: date,
     },
   })
   const bids = data?.bids?.nodes
@@ -132,7 +126,7 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
               </Link>
             </Flex>
             <Box ml="auto" w={{ base: 'full', md: 'min-content' }}>
-              <Select<OffersOrderBy>
+              <Select<OfferOpenBuysOrderBy>
                 label={t('user.bid-received.orderBy.label')}
                 name="Sort by"
                 onChange={changeOrder}

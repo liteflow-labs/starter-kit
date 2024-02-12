@@ -1,18 +1,14 @@
 query FetchUserFixedPrice(
   $limit: Int!
   $offset: Int!
-  $orderBy: [OffersOrderBy!]
+  $orderBy: [OfferOpenSalesOrderBy!]
   $address: Address!
 ) {
-  offers: offers(
+  offers: listings(
     orderBy: $orderBy
     first: $limit
     offset: $offset
-    filter: {
-      type: { equalTo: SALE }
-      signature: { isNull: false }
-      makerAddress: { equalTo: $address }
-    }
+    condition: { makerAddress: $address }
     includeWhenAssetDeleted: YES
     includeWhenCurrencyDeleted: YES
   ) {

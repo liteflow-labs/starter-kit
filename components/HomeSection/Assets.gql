@@ -1,9 +1,5 @@
 query FetchDefaultAssetIds($limit: Int!) {
-  assets(
-    filter: { quantity: { greaterThan: "0" } }
-    orderBy: CREATED_AT_DESC
-    first: $limit
-  ) {
+  assets(orderBy: CREATED_AT_DESC, first: $limit) {
     nodes {
       chainId
       collectionAddress
@@ -12,11 +8,12 @@ query FetchDefaultAssetIds($limit: Int!) {
   }
 }
 
-query FetchAssets($limit: Int!, $filter: [AssetFilter!]!, $address: Address) {
-  assets(
-    filter: { quantity: { greaterThan: "0" }, and: $filter }
-    first: $limit
-  ) {
+query FetchAssets(
+  $limit: Int!
+  $ids: [AssetIdsCondition!]!
+  $address: Address
+) {
+  assets(condition: { ids: $ids }, first: $limit) {
     nodes {
       chainId
       collectionAddress

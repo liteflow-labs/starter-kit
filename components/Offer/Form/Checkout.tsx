@@ -41,7 +41,7 @@ type FormData = {
 }
 
 type Props = {
-  offer: NonNullable<CheckoutQuery['offer']>
+  offer: NonNullable<CheckoutQuery['listing']>
   onPurchased: () => void
   multiple?: boolean
 }
