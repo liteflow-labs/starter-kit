@@ -6,12 +6,7 @@ query FetchOnSaleAssets(
   $orderBy: [AssetsOrderBy!]
 ) {
   onSale: assets(
-    condition: {
-      listings: {
-        status: ACTIVE
-        makerAddress: $address
-      }
-    }
+    condition: { listings: { status: ACTIVE, makerAddress: $address } }
     first: $limit
     offset: $offset
     orderBy: $orderBy
