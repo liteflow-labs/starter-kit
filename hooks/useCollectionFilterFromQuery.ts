@@ -11,12 +11,14 @@ export type Filter = {
 export const convertFilterToCollectionFilter = (
   filter: Filter,
 ): CollectionCondition => {
-  return {
-    chainIds: filter.chains,
-    ids: null,
-    mintType: null,
-    search: filter.search,
-  }
+  const queryFilter: Partial<CollectionCondition> = {}
+
+  if (filter.chains && filter.chains.length > 0)
+    queryFilter.chainIds = filter.chains
+
+  if (filter.search) queryFilter.search = filter.search
+
+  return queryFilter as CollectionCondition
 }
 
 const parseToInt = (value?: string): number => {

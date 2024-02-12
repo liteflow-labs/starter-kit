@@ -47,18 +47,16 @@ export const extractTraitsFromQuery = (
 }
 
 export const convertFilterToAssetFilter = (filter: Filter): AssetCondition => {
-  const queryFilter: AssetCondition = {
-    chainIds: filter.chains,
-    search: filter.search,
-    chainId: null,
-    collectionAddress: null,
-    creatorAddress: null,
-    ids: null,
-    listings: null,
-    openOffers: null,
-    tokenId: null,
-    traits: filter.traits,
-  }
+  const queryFilter: Partial<AssetCondition> = {}
+
+  if (filter.chains && filter.chains.length > 0)
+    queryFilter.chainIds = filter.chains
+
+  if (filter.search) queryFilter.search = filter.search
+
+  if (filter.traits && filter.traits.length > 0)
+    queryFilter.traits = filter.traits
+
   if (filter.collection) {
     const [chainId, collectionAddress] = filter.collection.split('-')
     queryFilter.chainId = chainId ? parseInt(chainId, 10) : null
@@ -107,7 +105,7 @@ export const convertFilterToAssetFilter = (filter: Filter): AssetCondition => {
     }
   }
 
-  return queryFilter
+  return queryFilter as AssetCondition
 }
 
 const parseToFloat = (value?: string) => (value ? parseFloat(value) : null)
