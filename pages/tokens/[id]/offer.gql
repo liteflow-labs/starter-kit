@@ -29,7 +29,7 @@ query OfferForAsset(
       quantity
     }
     quantity
-    bestBid {
+    bestOpenOffer {
       unitPrice
       amount
       currency {
@@ -40,7 +40,7 @@ query OfferForAsset(
         symbol
       }
     }
-    firstSale {
+    bestListing {
       id
       unitPrice
       currency {
@@ -54,8 +54,8 @@ query OfferForAsset(
         address
       }
     }
-    totalSalesCount
-    totalSalesCurrencyDistinctCount
+    totalListingsCount
+    totalListingsCurrencyDistinctCount
     creator {
       address
       name
