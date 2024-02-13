@@ -39,7 +39,7 @@ query FetchAssets(
       owned: ownership(ownerAddress: $address) {
         quantity
       }
-      bestBid {
+      bestOpenOffer {
         unitPrice
         amount
         currency {
@@ -50,7 +50,7 @@ query FetchAssets(
           symbol
         }
       }
-      firstSale {
+      bestListing {
         id
         unitPrice
         currency {
@@ -64,8 +64,8 @@ query FetchAssets(
           address
         }
       }
-      totalSalesCount
-      totalSalesCurrencyDistinctCount
+      totalListingsCount
+      totalListingsCurrencyDistinctCount
     }
   }
 }
