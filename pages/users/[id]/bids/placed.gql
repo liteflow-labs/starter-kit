@@ -1,7 +1,7 @@
 query FetchUserBidsPlaced(
   $limit: Int!
   $offset: Int!
-  $orderBy: [OfferOpenBuysOrderBy!]
+  $orderBy: [OffersOrderBy!]
   $address: Address!
 ) {
   bids: openOffers(

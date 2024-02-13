@@ -1,7 +1,7 @@
 query FetchUserFixedPrice(
   $limit: Int!
   $offset: Int!
-  $orderBy: [OfferOpenSalesOrderBy!]
+  $orderBy: [OffersOrderBy!]
   $address: Address!
 ) {
   offers: listings(

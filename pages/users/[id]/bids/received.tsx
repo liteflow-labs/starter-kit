@@ -32,7 +32,7 @@ import UserProfileTemplate from '../../../../components/Profile'
 import Select from '../../../../components/Select/Select'
 import Avatar from '../../../../components/User/Avatar'
 import {
-  OfferOpenBuysOrderBy,
+  OffersOrderBy,
   useFetchUserBidsReceivedQuery,
 } from '../../../../graphql'
 import useEnvironment from '../../../../hooks/useEnvironment'
@@ -48,7 +48,7 @@ const BidReceivedPage: NextPage = () => {
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
   const { limit, offset, page } = usePaginateQuery()
-  const orderBy = useOrderByQuery<OfferOpenBuysOrderBy>('CREATED_AT_DESC')
+  const orderBy = useOrderByQuery<OffersOrderBy>('CREATED_AT_DESC')
   const { changeLimit } = usePaginate()
   const toast = useToast()
   const userAddress = useRequiredQueryParamSingle('id')
@@ -126,7 +126,7 @@ const BidReceivedPage: NextPage = () => {
               </Link>
             </Flex>
             <Box ml="auto" w={{ base: 'full', md: 'min-content' }}>
-              <Select<OfferOpenBuysOrderBy>
+              <Select<OffersOrderBy>
                 label={t('user.bid-received.orderBy.label')}
                 name="Sort by"
                 onChange={changeOrder}
