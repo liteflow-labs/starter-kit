@@ -28,7 +28,7 @@ query Checkout($id: UUID!, $address: Address) {
         quantity
       }
       quantity
-      bestBid {
+      bestOpenOffer {
         unitPrice
         amount
         currency {
@@ -39,7 +39,7 @@ query Checkout($id: UUID!, $address: Address) {
           symbol
         }
       }
-      firstSale {
+      bestListing {
         id
         unitPrice
         currency {
@@ -53,8 +53,8 @@ query Checkout($id: UUID!, $address: Address) {
           address
         }
       }
-      totalSalesCount
-      totalSalesCurrencyDistinctCount
+      totalListingsCount
+      totalListingsCurrencyDistinctCount
     }
     maker {
       address
