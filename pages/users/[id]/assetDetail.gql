@@ -14,7 +14,7 @@ fragment AssetDetail on Asset {
   imageMimetype
   animationUrl
   animationMimetype
-  bestBid {
+  bestOpenOffer {
     unitPrice
     amount
     currency {
@@ -25,7 +25,7 @@ fragment AssetDetail on Asset {
       symbol
     }
   }
-  firstSale {
+  bestListing {
     id
     unitPrice
     currency {
@@ -39,8 +39,8 @@ fragment AssetDetail on Asset {
       address
     }
   }
-  totalSalesCount
-  totalSalesCurrencyDistinctCount
+  totalListingsCount
+  totalListingsCurrencyDistinctCount
   creator {
     address
     name

@@ -54,14 +54,14 @@ export type Props = {
       quantity: string
     } | null
     quantity: string
-    bestBid: {
+    bestOpenOffer: {
       unitPrice: string
       currency: {
         decimals: number
         symbol: string
       }
     } | null
-    firstSale: {
+    bestListing: {
       id: string
       unitPrice: string
       currency: {
@@ -72,8 +72,8 @@ export type Props = {
         address: string
       }
     } | null
-    totalSalesCount: number
-    totalSalesCurrencyDistinctCount: number
+    totalListingsCount: number
+    totalListingsCurrencyDistinctCount: number
   }
 }
 
@@ -87,10 +87,10 @@ const TokenCard: FC<Props> = ({ asset }) => {
   const [isHovered, setIsHovered] = useState(false)
   const media = useDetectAssetMedia(asset)
 
-  const sale = asset.firstSale
-  const bestBid = asset.bestBid
-  const numberOfSales = asset.totalSalesCount
-  const hasMultiCurrency = asset.totalSalesCurrencyDistinctCount > 1
+  const sale = asset.bestListing
+  const bestBid = asset.bestOpenOffer
+  const numberOfSales = asset.totalListingsCount
+  const hasMultiCurrency = asset.totalListingsCurrencyDistinctCount > 1
   const chainName = useMemo(
     () => CHAINS.find((x) => x.id === asset.collection.chainId)?.name,
     [asset.collection.chainId, CHAINS],
