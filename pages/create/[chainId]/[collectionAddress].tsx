@@ -145,10 +145,10 @@ const CreatePage: NextPage = () => {
                 asset={{
                   ...asset,
                   creator,
-                  bestBid: null,
-                  firstSale: null,
-                  totalSalesCount: 0,
-                  totalSalesCurrencyDistinctCount: 0,
+                  bestOpenOffer: null,
+                  bestListing: null,
+                  totalListingsCount: 0,
+                  totalListingsCurrencyDistinctCount: 0,
                 }}
               />
             )}

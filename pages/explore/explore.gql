@@ -32,7 +32,7 @@ query FetchAllERC721And1155(
         quantity
       }
       quantity
-      bestBid {
+      bestOpenOffer {
         unitPrice
         amount
         currency {
@@ -43,7 +43,7 @@ query FetchAllERC721And1155(
           symbol
         }
       }
-      firstSale {
+      bestListing {
         id
         unitPrice
         currency {
@@ -57,8 +57,8 @@ query FetchAllERC721And1155(
           address
         }
       }
-      totalSalesCount
-      totalSalesCurrencyDistinctCount
+      totalListingsCount
+      totalListingsCurrencyDistinctCount
       creator {
         address
         name

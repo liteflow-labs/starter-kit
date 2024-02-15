@@ -101,7 +101,7 @@ query FetchCollectionAssets(
         quantity
       }
       quantity
-      bestBid {
+      bestOpenOffer {
         unitPrice
         amount
         currency {
@@ -112,7 +112,7 @@ query FetchCollectionAssets(
           symbol
         }
       }
-      firstSale {
+      bestListing {
         id
         unitPrice
         currency {
@@ -126,8 +126,8 @@ query FetchCollectionAssets(
           address
         }
       }
-      totalSalesCount
-      totalSalesCurrencyDistinctCount
+      totalListingsCount
+      totalListingsCurrencyDistinctCount
     }
   }
 }

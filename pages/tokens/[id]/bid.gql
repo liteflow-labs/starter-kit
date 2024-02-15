@@ -34,7 +34,7 @@ query BidOnAsset(
     owned: ownership(ownerAddress: $address) {
       quantity
     }
-    bestBid {
+    bestOpenOffer {
       unitPrice
       amount
       currency {
@@ -45,7 +45,7 @@ query BidOnAsset(
         symbol
       }
     }
-    firstSale {
+    bestListing {
       id
       unitPrice
       currency {
@@ -59,8 +59,8 @@ query BidOnAsset(
         address
       }
     }
-    totalSalesCount
-    totalSalesCurrencyDistinctCount
+    totalListingsCount
+    totalListingsCurrencyDistinctCount
   }
   currencies(
     orderBy: CREATED_AT_ASC
