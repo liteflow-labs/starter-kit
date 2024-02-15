@@ -8,7 +8,7 @@ query FetchUserBidsPlaced(
     orderBy: $orderBy
     first: $limit
     offset: $offset
-    condition: { status: ACTIVE, makerAddress: $address }
+    condition: { status: [ACTIVE, EXPIRED], makerAddress: $address }
     includeWhenAssetDeleted: YES
     includeWhenCurrencyDeleted: YES
   ) {
