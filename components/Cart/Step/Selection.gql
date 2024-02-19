@@ -1,5 +1,5 @@
 query FetchCartItems($offerIds: [UUID!]!) {
-  listings(condition: { ids: $offerIds, status: ACTIVE }) {
+  listings(condition: { ids: $offerIds, status: [ACTIVE, EXPIRED] }) {
     nodes {
       id
       type
