@@ -1,7 +1,12 @@
 import { useRouter } from 'next/router'
 import type { ParsedUrlQuery } from 'querystring'
 import invariant from 'ts-invariant'
-import { AssetCondition, AssetTraitsCondition } from '../graphql'
+import {
+  AssetCondition,
+  AssetListingsCondition,
+  AssetOpenOffersCondition,
+  AssetTraitsCondition,
+} from '../graphql'
 import { parseBigNumber } from './useParseBigNumber'
 import useQueryParamMulti from './useQueryParamMulti'
 import useQueryParamSingle from './useQueryParamSingle'
@@ -59,28 +64,29 @@ export const convertFilterToAssetFilter = (filter: Filter): AssetCondition => {
 
   if (filter.collection) {
     const [chainId, collectionAddress] = filter.collection.split('-')
-    queryFilter.chainId = chainId ? parseInt(chainId, 10) : null
-    queryFilter.collectionAddress = collectionAddress ? collectionAddress : null
+    if (chainId && collectionAddress) {
+      queryFilter.chainId = parseInt(chainId, 10)
+      queryFilter.collectionAddress = collectionAddress
+    }
   }
 
   if (filter.currency) {
     queryFilter.listings = {
       currencyId: filter.currency.id,
-      makerAddress: null,
       maxUnitPrice: filter.maxPrice
         ? parseBigNumber(
             filter.maxPrice.toString(),
             filter.currency.decimals,
           ).toString()
-        : null,
+        : undefined,
       minUnitPrice: filter.minPrice
         ? parseBigNumber(
             filter.minPrice.toString(),
             filter.currency.decimals,
           ).toString()
-        : null,
+        : undefined,
       status: 'ACTIVE' as const,
-    }
+    } as AssetListingsCondition // force type to avoid putting other params with null value. codegen issue.
   }
 
   if (
@@ -88,21 +94,14 @@ export const convertFilterToAssetFilter = (filter: Filter): AssetCondition => {
     !queryFilter.listings // If we already have a listing filter, we don't need to add the listing.status filter because it's already set
   ) {
     queryFilter.listings = {
-      currencyId: null,
-      makerAddress: null,
-      maxUnitPrice: null,
-      minUnitPrice: null,
       status: 'ACTIVE' as const,
-    }
+    } as AssetListingsCondition // force type to avoid putting other params with null value. codegen issue.
   }
 
   if (filter.offers === OfferFilterType.bids) {
     queryFilter.openOffers = {
-      currencyId: null,
-      maxUnitPrice: null,
-      minUnitPrice: null,
       status: 'ACTIVE' as const,
-    }
+    } as AssetOpenOffersCondition // force type to avoid putting other params with null value. codegen issue.
   }
 
   return queryFilter as AssetCondition
