@@ -6,10 +6,10 @@ query FetchOwners(
   $limit: Int!
 ) {
   ownerships(
-    filter: {
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $collectionAddress }
-      tokenId: { equalTo: $tokenId }
+    condition: {
+      chainId: $chainId
+      collectionAddress: $collectionAddress
+      tokenId: $tokenId
     }
     offset: $offset
     first: $limit

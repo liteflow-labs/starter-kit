@@ -1,5 +1,5 @@
 import invariant from 'ts-invariant'
-import { CollectionFilter, IntFilter } from '../graphql'
+import { CollectionCondition } from '../graphql'
 import useQueryParamMulti from './useQueryParamMulti'
 import useQueryParamSingle from './useQueryParamSingle'
 
@@ -8,28 +8,17 @@ export type Filter = {
   search: string | null
 }
 
-const chainFilter = (chains: number[]): CollectionFilter =>
-  ({
-    chainId: { in: chains } as IntFilter,
-  }) as CollectionFilter
-
-const searchFilter = (search: string): CollectionFilter =>
-  ({
-    or: [
-      { name: { includesInsensitive: search } } as CollectionFilter,
-      { address: { includesInsensitive: search } } as CollectionFilter,
-      { description: { includesInsensitive: search } } as CollectionFilter,
-    ],
-  }) as CollectionFilter
-
 export const convertFilterToCollectionFilter = (
   filter: Filter,
-): CollectionFilter[] => {
-  const queryFilter = []
+): CollectionCondition => {
+  const queryFilter: Partial<CollectionCondition> = {}
+
   if (filter.chains && filter.chains.length > 0)
-    queryFilter.push(chainFilter(filter.chains))
-  if (filter.search) queryFilter.push(searchFilter(filter.search))
-  return queryFilter
+    queryFilter.chainIds = filter.chains
+
+  if (filter.search) queryFilter.search = filter.search
+
+  return queryFilter as CollectionCondition
 }
 
 const parseToInt = (value?: string): number => {

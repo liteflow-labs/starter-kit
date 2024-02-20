@@ -4,14 +4,14 @@ query FetchAssetHistory(
   $tokenId: String!
   $limit: Int!
   $offset: Int!
-  $filter: [AssetHistoryAction!]
+  $actions: [AssetHistoryAction!]
 ) {
   assetHistories(
-    filter: {
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $collectionAddress }
-      tokenId: { equalTo: $tokenId }
-      action: { in: $filter }
+    condition: {
+      chainId: $chainId
+      collectionAddress: $collectionAddress
+      tokenId: $tokenId
+      actions: $actions
     }
     orderBy: DATE_DESC
     first: $limit

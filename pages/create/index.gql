@@ -1,6 +1,6 @@
 query FetchCollectionsForMint {
   collections(
-    filter: { mintType: { equalTo: PUBLIC } }
+    condition: { mintType: PUBLIC }
     orderBy: CREATED_AT_ASC
     first: 100 # TODO: implement pagination
   ) {

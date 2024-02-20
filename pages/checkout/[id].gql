@@ -1,5 +1,5 @@
 query Checkout($id: UUID!, $address: Address) {
-  offer(id: $id) {
+  listing(id: $id) {
     id
     type
     asset {

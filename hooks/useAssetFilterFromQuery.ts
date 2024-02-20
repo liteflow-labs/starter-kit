@@ -2,20 +2,14 @@ import { useRouter } from 'next/router'
 import type { ParsedUrlQuery } from 'querystring'
 import invariant from 'ts-invariant'
 import {
-  AssetFilter,
-  AssetToManyOfferFilter,
-  IntFilter,
-  OfferFilter,
-  Uint256Filter,
+  AssetCondition,
+  AssetListingsCondition,
+  AssetOpenOffersCondition,
+  AssetTraitsCondition,
 } from '../graphql'
 import { parseBigNumber } from './useParseBigNumber'
 import useQueryParamMulti from './useQueryParamMulti'
 import useQueryParamSingle from './useQueryParamSingle'
-
-type TraitFilter = {
-  type: string
-  values: string[]
-}
 
 export type Filter = {
   chains: number[]
@@ -28,7 +22,7 @@ export type Filter = {
     id: string
     decimals: number
   } | null
-  traits: TraitFilter[]
+  traits: AssetTraitsCondition[]
   collectionSearch?: string
   propertySearch?: string
 }
@@ -38,103 +32,10 @@ export enum OfferFilterType {
   bids = 'bids',
 }
 
-const chainFilter = (chains: number[]): AssetFilter =>
-  ({
-    chainId: { in: chains } as IntFilter,
-  }) as AssetFilter
-
-const searchFilter = (search: string): AssetFilter =>
-  ({
-    or: [
-      { name: { includesInsensitive: search } } as AssetFilter,
-      { description: { includesInsensitive: search } } as AssetFilter,
-      { creatorAddress: { includesInsensitive: search } } as AssetFilter,
-    ],
-  }) as AssetFilter
-
-const traitFilter = (traits: TraitFilter[]): AssetFilter =>
-  ({
-    and: traits.map(({ type, values }) => ({
-      traits: {
-        some: {
-          type: { equalTo: type },
-          value: { in: values },
-        },
-      },
-    })),
-  }) as AssetFilter
-
-const collectionFilter = (collection: string): AssetFilter => {
-  const [chainId, address] = collection.split('-')
-  return {
-    chainId: { equalTo: chainId && parseInt(chainId, 10) },
-    collectionAddress: { equalTo: address },
-  } as AssetFilter
-}
-
-const minPriceFilter = (
-  minPrice: number,
-  currency: { id: string; decimals: number },
-  date: Date,
-): AssetFilter =>
-  ({
-    sales: {
-      some: {
-        expiredAt: { greaterThan: date },
-        currencyId: { equalTo: currency.id },
-        unitPrice: {
-          greaterThanOrEqualTo: parseBigNumber(
-            minPrice.toString(),
-            currency.decimals,
-          ).toString(),
-        } as Uint256Filter,
-      } as OfferFilter,
-    } as AssetToManyOfferFilter,
-  }) as AssetFilter
-
-const maxPriceFilter = (
-  maxPrice: number,
-  currency: { id: string; decimals: number },
-  date: Date,
-): AssetFilter =>
-  ({
-    sales: {
-      some: {
-        expiredAt: { greaterThan: date },
-        currencyId: { equalTo: currency.id },
-        unitPrice: {
-          lessThanOrEqualTo: parseBigNumber(
-            maxPrice.toString(),
-            currency.decimals,
-          ).toString(),
-        } as Uint256Filter,
-      } as OfferFilter,
-    } as AssetToManyOfferFilter,
-  }) as AssetFilter
-
-const offersFilter = (offers: OfferFilterType, date: Date): AssetFilter => {
-  if (offers === OfferFilterType.bids) {
-    return {
-      bidsExist: true,
-      bids: { some: { expiredAt: { greaterThan: date } } },
-    } as AssetFilter
-  }
-  if (offers === OfferFilterType.fixed) {
-    return {
-      sales: {
-        some: {
-          expiredAt: { greaterThan: date },
-        },
-      },
-    } as AssetFilter
-  }
-  invariant(false, 'Invalid offer filter')
-}
-
 export const extractTraitsFromQuery = (
   query: ParsedUrlQuery,
-): TraitFilter[] => {
-  const traits: TraitFilter[] = []
+): AssetTraitsCondition[] => {
+  const traits: AssetTraitsCondition[] = []
   for (const typeQuery in query) {
     const typeMatch = typeQuery.match(/^traits\[(.+)\]$/)
     if (!typeMatch) continue
@@ -150,25 +51,60 @@ export const extractTraitsFromQuery = (
   return traits
 }
 
-export const convertFilterToAssetFilter = (
-  filter: Filter,
-  now: Date,
-): AssetFilter[] => {
-  const queryFilter = []
+export const convertFilterToAssetFilter = (filter: Filter): AssetCondition => {
+  const queryFilter: Partial<AssetCondition> = {}
+
   if (filter.chains && filter.chains.length > 0)
-    queryFilter.push(chainFilter(filter.chains))
-  if (filter.search) queryFilter.push(searchFilter(filter.search))
-  if (filter.collection) queryFilter.push(collectionFilter(filter.collection))
-  if (filter.currency) {
-    if (filter.minPrice)
-      queryFilter.push(minPriceFilter(filter.minPrice, filter.currency, now))
-    if (filter.maxPrice)
-      queryFilter.push(maxPriceFilter(filter.maxPrice, filter.currency, now))
-  }
-  if (filter.offers) queryFilter.push(offersFilter(filter.offers, now))
+    queryFilter.chainIds = filter.chains
+
+  if (filter.search) queryFilter.search = filter.search
+
   if (filter.traits && filter.traits.length > 0)
-    queryFilter.push(traitFilter(filter.traits))
-  return queryFilter
+    queryFilter.traits = filter.traits
+
+  if (filter.collection) {
+    const [chainId, collectionAddress] = filter.collection.split('-')
+    if (chainId && collectionAddress) {
+      queryFilter.chainId = parseInt(chainId, 10)
+      queryFilter.collectionAddress = collectionAddress
+    }
+  }
+
+  if (filter.currency) {
+    queryFilter.listings = {
+      currencyId: filter.currency.id,
+      maxUnitPrice: filter.maxPrice
+        ? parseBigNumber(
+            filter.maxPrice.toString(),
+            filter.currency.decimals,
+          ).toString()
+        : undefined,
+      minUnitPrice: filter.minPrice
+        ? parseBigNumber(
+            filter.minPrice.toString(),
+            filter.currency.decimals,
+          ).toString()
+        : undefined,
+      status: 'ACTIVE' as const,
+    } as AssetListingsCondition // force type to avoid putting other params with null value. codegen issue.
+  }
+
+  if (
+    filter.offers === OfferFilterType.fixed &&
+    !queryFilter.listings // If we already have a listing filter, we don't need to add the listing.status filter because it's already set
+  ) {
+    queryFilter.listings = {
+      status: 'ACTIVE' as const,
+    } as AssetListingsCondition // force type to avoid putting other params with null value. codegen issue.
+  }
+
+  if (filter.offers === OfferFilterType.bids) {
+    queryFilter.openOffers = {
+      status: 'ACTIVE' as const,
+    } as AssetOpenOffersCondition // force type to avoid putting other params with null value. codegen issue.
+  }
+
+  return queryFilter as AssetCondition
 }
 
 const parseToFloat = (value?: string) => (value ? parseFloat(value) : null)
