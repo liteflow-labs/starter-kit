@@ -305,9 +305,9 @@
       "purchased_other": "<0>{{count}}</0> ediciones compradas por <1/> cada una"
     },
     "burn": {
-      "quantity_one": "{{count}} edición quemada",
-      "purchased_other": "{{count}} ediciones quemadas",
-      "by": "Por {{user}}"
+      "quantity_one": "<0>{{count}}</0> edición quemada",
+      "purchased_other": "<0>{{count}}</0> ediciones quemadas",
+      "by": "Por <0/>"
     }
   },
   "modal": {

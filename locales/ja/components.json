@@ -305,9 +305,9 @@
       "purchased_other": "<0>{{count}}</0> 各エディションが購入されました <1/>"
     },
     "burn": {
-      "quantity_one": "{{count}} エディションが燃やされました",
-      "purchased_other": "{{count}} エディションが燃やされました",
-      "by": "までに{{user}}"
+      "quantity_one": "<0>{{count}}</0> エディションが燃やされました",
+      "purchased_other": "<0>{{count}}</0> エディションが燃やされました",
+      "by": "までに<0/>"
     }
   },
   "modal": {
