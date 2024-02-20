@@ -1,8 +1,8 @@
 import { Flex, Icon, Text } from '@chakra-ui/react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { FaBurn } from '@react-icons/all-files/fa/FaBurn'
 import { HiBadgeCheck } from '@react-icons/all-files/hi/HiBadgeCheck'
 import Trans from 'next-translate/Trans'
-import useTranslation from 'next-translate/useTranslation'
 import { FC } from 'react'
 import { AccountVerificationStatus } from '../../../graphql'
 import { formatDate } from '../../../utils'
@@ -24,15 +24,28 @@ type IProps = {
 }
 
 const BurnListItem: FC<IProps> = ({ quantity, fromAddress, from, date }) => {
-  const { t } = useTranslation('components')
   return (
     <ListItem
       px={0}
       image={<Icon as={FaBurn} h={5} w={5} color="gray.400" />}
       label={
-        <Text as="span" color="brand.black" fontWeight="medium">
-          {t('history.burn.quantity', { value: quantity })}
-        </Text>
+        <Trans
+          ns="components"
+          i18nKey="history.burn.quantity"
+          values={{
+            count: BigNumber.from(quantity).lte(Number.MAX_SAFE_INTEGER - 1)
+              ? BigNumber.from(quantity).toNumber()
+              : Number.MAX_SAFE_INTEGER - 1,
+          }}
+          components={[
+            <Text
+              key="quantity"
+              as="span"
+              color="brand.black"
+              fontWeight="medium"
+            />,
+          ]}
+        />
       }
       subtitle={
         <Trans
