@@ -2,13 +2,13 @@ query FetchExploreCollections(
   $limit: Int!
   $offset: Int!
   $orderBy: [CollectionsOrderBy!]
-  $filter: [CollectionFilter!]
+  $condition: CollectionCondition
 ) {
   collections(
     first: $limit
     offset: $offset
     orderBy: $orderBy
-    filter: { and: $filter }
+    condition: $condition
   ) {
     pageInfo {
       hasNextPage

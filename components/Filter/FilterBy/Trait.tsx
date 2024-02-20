@@ -20,11 +20,7 @@ import SearchInput from 'components/SearchInput'
 import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import {
-  CollectionTraitFilter,
-  StringFilter,
-  useFetchCollectionTraitsQuery,
-} from '../../../graphql'
+import { useFetchCollectionTraitsQuery } from '../../../graphql'
 import { Filter } from '../../../hooks/useAssetFilterFromQuery'
 import { formatError } from '../../../utils'
 
@@ -56,11 +52,7 @@ const FilterByTrait: FC<Props> = ({
       chainId: collection.chainId,
       offset: 0, // the offset change must be done when calling the fetchMore function to concat queries' results
       limit: PAGINATION_LIMIT,
-      filter: {
-        type: {
-          includesInsensitive: filterResult.propertySearch || '',
-        } as StringFilter,
-      } as CollectionTraitFilter,
+      search: filterResult.propertySearch || null,
     },
     notifyOnNetworkStatusChange: true,
   })
@@ -199,7 +191,7 @@ const FilterByTrait: FC<Props> = ({
                           defaultValue={
                             filterResult?.traits?.find(
                               (trait) => trait.type === type,
-                            )?.values
+                            )?.values || undefined
                           }
                         >
                           <Stack spacing={1}>

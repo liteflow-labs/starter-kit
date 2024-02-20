@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useCallback } from 'react'
 import CollectionHeader from '../../../../components/Collection/CollectionHeader'
 import CollectionHeaderSkeleton from '../../../../components/Collection/CollectionHeaderSkeleton'
 import CollectionMetrics from '../../../../components/Collection/CollectionMetrics'
@@ -51,11 +51,7 @@ import LargeLayout from '../../../../layouts/large'
 import { removeEmptyFromObject } from '../../../../utils'
 import Error from '../../../_error'
 
-type Props = {
-  now: string
-}
-
-const CollectionPage: FC<Props> = ({ now }) => {
+const CollectionPage: FC = () => {
   const { PAGINATION_LIMIT } = useEnvironment()
   const { query, push, pathname } = useRouter()
   const chainId = useRequiredQueryParamSingle<number>('chainId', {
@@ -67,7 +63,6 @@ const CollectionPage: FC<Props> = ({ now }) => {
     { fallback: 'md' },
   )
   const { t } = useTranslation('templates')
-  const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
   const { data: collectionData } = useFetchCollectionDetailsQuery({
     variables: {
@@ -90,13 +85,15 @@ const CollectionPage: FC<Props> = ({ now }) => {
   const filter = useAssetFilterFromQuery()
   const { data: assetData } = useFetchCollectionAssetsQuery({
     variables: {
-      collectionAddress,
       currentAccount: address || '',
       limit,
       offset,
       orderBy,
-      chainId: chainId,
-      filter: convertFilterToAssetFilter(filter, date),
+      condition: {
+        ...convertFilterToAssetFilter(filter),
+        chainId,
+        collectionAddress,
+      },
     },
   })
   const assets = assetData?.assets?.nodes

@@ -6,7 +6,7 @@ query FetchOwnedAssets(
   $orderBy: [OwnershipsOrderBy!]
 ) {
   owned: ownerships(
-    filter: { ownerAddress: { equalTo: $address }, assetExists: true }
+    condition: { ownerAddress: $address }
     first: $limit
     offset: $offset
     orderBy: $orderBy

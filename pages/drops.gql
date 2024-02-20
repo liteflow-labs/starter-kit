@@ -27,18 +27,20 @@ fragment DropDetail on Drop {
   }
 }
 
-query FetchDrops($now: Datetime!, $limit: Int!, $offset: Int!) {
-  active: drops(
-    orderBy: [START_DATE_ASC]
-    filter: { endDate: { greaterThan: $now } }
-  ) {
+query FetchDrops($limit: Int!, $offset: Int!) {
+  active: drops(orderBy: [START_DATE_ASC], condition: { status: ACTIVE }) {
+    nodes {
+      ...DropDetail
+    }
+  }
+  upcoming: drops(orderBy: [START_DATE_ASC], condition: { status: UPCOMING }) {
     nodes {
       ...DropDetail
     }
   }
   ended: drops(
     orderBy: [START_DATE_DESC]
-    filter: { endDate: { lessThanOrEqualTo: $now } }
+    condition: { status: ENDED }
     first: $limit
     offset: $offset
   ) {
