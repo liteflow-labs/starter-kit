@@ -306,7 +306,7 @@
     },
     "burn": {
       "quantity_one": "<0>{{count}}</0> edición quemada",
-      "purchased_other": "<0>{{count}}</0> ediciones quemadas",
+      "quantity_other": "<0>{{count}}</0> ediciones quemadas",
       "by": "Por <0/>"
     }
   },

@@ -306,7 +306,7 @@
     },
     "burn": {
       "quantity_one": "<0>{{count}}</0> エディションが燃やされました",
-      "purchased_other": "<0>{{count}}</0> エディションが燃やされました",
+      "quantity_other": "<0>{{count}}</0> エディションが燃やされました",
       "by": "までに<0/>"
     }
   },

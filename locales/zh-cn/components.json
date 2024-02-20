@@ -306,7 +306,7 @@
     },
     "burn": {
       "quantity_one": "<0>{{count}}</0> 版本已烧毁",
-      "purchased_other": "<0>{{count}}</0> 个版本已烧毁",
+      "quantity_other": "<0>{{count}}</0> 个版本已烧毁",
       "by": "截至 <0/>"
     }
   },
