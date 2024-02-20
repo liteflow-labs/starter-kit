@@ -42,7 +42,7 @@ const CheckoutPage: NextPage = () => {
       address: address || '',
     },
   })
-  const offer = offerData?.offer
+  const offer = offerData?.listing
   const asset = offer?.asset
 
   const priceUnit = useMemo(

@@ -6,10 +6,7 @@ query FetchCreatedAssets(
   $orderBy: [AssetsOrderBy!]
 ) {
   created: assets(
-    filter: {
-      quantity: { greaterThan: "0" }
-      creatorAddress: { equalTo: $address }
-    }
+    condition: { creatorAddress: $address }
     first: $limit
     offset: $offset
     orderBy: $orderBy

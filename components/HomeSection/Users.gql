@@ -1,5 +1,5 @@
 query FetchUsers($limit: Int!, $userIds: [Address!]!) {
-  users: accounts(filter: { address: { in: $userIds } }, first: $limit) {
+  users: accounts(condition: { addresses: $userIds }, first: $limit) {
     nodes {
       username
       address
