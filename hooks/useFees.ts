@@ -19,9 +19,7 @@ export default function useFees({
   quantity: BigNumber
   debounceTimeout?: number
 }) {
-  const [fetchFees, { data, previousData }] = useFeesLazyQuery({
-    ssr: false,
-  })
+  const [fetchFees, { data, previousData }] = useFeesLazyQuery()
   const [loading, setLoading] = useState(false) // manual state to tell if the fetch is in progress. Cannot use the loading param from useFeesLazyQuery because of the debounce feature
   useEffect(() => {
     if (currencyId === undefined) return
