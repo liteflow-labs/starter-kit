@@ -71,7 +71,7 @@ class MyDocument extends Document {
       `${
         // make the cache private if user is logged in
         jwt ? 'private' : 'public'
-      }, max-age=10, stale-while-revalidate=10`,
+      }, max-age=10, stale-while-revalidate=50`,
     )
 
     const environment = await getEnvironment()
