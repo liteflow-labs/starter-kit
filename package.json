@@ -79,5 +79,13 @@
     "prettier": "^3.2.4",
     "prettier-plugin-organize-imports": "^3.2.4",
     "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "@wagmi/connectors": {
+      "@walletconnect/ethereum-provider": "^2.11.0",
+      "@walletconnect/legacy-provider": "^2.0.0",
+      "@walletconnect/modal": "^2.6.2",
+      "@walletconnect/utils": "^2.11.0"
+    }
   }
 }
