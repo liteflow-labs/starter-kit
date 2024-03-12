@@ -11,7 +11,7 @@ type AccountDetail = {
   address?: string
   jwtToken: string | null
   logout: () => Promise<void>
-  login: (connector: Connector) => Promise<void>
+  login: (connector: Connector) => Promise<boolean>
   sign: (connector: Connector) => Promise<void>
 }
 
@@ -64,8 +64,12 @@ export default function useAccount(): AccountDetail {
       const signer = walletClientToSigner(wallet)
       const currentAddress = (await signer.getAddress()).toLowerCase()
       if (jwt && currentAddress === jwt.address) {
-        return setAuthenticationToken(jwt.token)
+        setAuthenticationToken(jwt.token)
+        // fully login, nothing to do
+        return true
       }
+      // not fully login, need to sign
+      return false
     },
     [jwt, setAuthenticationToken],
   )
@@ -76,6 +80,7 @@ export default function useAccount(): AccountDetail {
       const signer = walletClientToSigner(wallet)
       const { jwtToken } = await authenticate(signer)
 
+      setAuthenticationToken(jwtToken)
       const newJwt = jwtDecode<JwtPayload>(jwtToken)
       setCookie(COOKIE_JWT_TOKEN, jwtToken, {
         ...COOKIE_OPTIONS,
@@ -87,7 +92,7 @@ export default function useAccount(): AccountDetail {
           : {}),
       })
     },
-    [authenticate, setCookie],
+    [authenticate, setAuthenticationToken, setCookie],
   )
 
   // Server side
