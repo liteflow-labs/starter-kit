@@ -1,17 +1,17 @@
 query FetchCollectionTraits(
   $chainId: Int!
   $address: Address!
-  $filter: [CollectionTraitFilter!]
+  $search: String
   $limit: Int!
   $offset: Int!
 ) {
   collectionTraits(
     orderBy: [TYPE_ASC]
     first: $limit
-    filter: {
-      chainId: { equalTo: $chainId }
-      collectionAddress: { equalTo: $address }
-      and: $filter
+    condition: {
+      chainId: $chainId
+      collectionAddress: $address
+      search: $search
     }
     offset: $offset
   ) {

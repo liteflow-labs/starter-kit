@@ -1,12 +1,13 @@
 query SearchCollection(
-  $filter: CollectionFilter!
+  $chainIds: [Int!]
+  $search: String
   $limit: Int!
   $offset: Int!
 ) {
   collections(
     orderBy: TOTAL_VOLUME_DESC
     first: $limit
-    filter: $filter
+    condition: { chainIds: $chainIds, search: $search }
     offset: $offset
   ) {
     pageInfo {

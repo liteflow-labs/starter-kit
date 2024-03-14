@@ -65,10 +65,7 @@ query OfferForAsset(
       }
     }
   }
-  currencies(
-    orderBy: CREATED_AT_ASC
-    filter: { chainId: { equalTo: $chainId } }
-  ) {
+  currencies(orderBy: CREATED_AT_ASC, condition: { chainId: $chainId }) {
     nodes {
       id
       chainId

@@ -13,7 +13,6 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useMemo } from 'react'
 import invariant from 'ts-invariant'
 import {
-  AssetFilter,
   useFetchAssetsQuery,
   useFetchDefaultAssetIdsQuery,
 } from '../../graphql'
@@ -67,23 +66,21 @@ const AssetsHomeSection: FC<Props> = ({ date }) => {
   const assetsQuery = useFetchAssetsQuery({
     variables: {
       limit: PAGINATION_LIMIT,
-      filter: {
-        or: (assetIds || [])
-          .map((x) => x.split('-'))
-          .map(([chainId, collectionAddress, tokenId]) => {
-            invariant(
-              chainId !== undefined &&
-                collectionAddress !== undefined &&
-                tokenId !== undefined,
-              'invalid collection',
-            )
-            return {
-              collectionAddress: { equalTo: collectionAddress.toLowerCase() },
-              chainId: { equalTo: parseInt(chainId, 10) },
-              tokenId: { equalTo: tokenId },
-            }
-          }),
-      } as AssetFilter,
+      ids: (assetIds || [])
+        .map((x) => x.split('-'))
+        .map(([chainId, collectionAddress, tokenId]) => {
+          invariant(
+            chainId !== undefined &&
+              collectionAddress !== undefined &&
+              tokenId !== undefined,
+            'invalid collection',
+          )
+          return {
+            collectionAddress: collectionAddress.toLowerCase(),
+            chainId: parseInt(chainId, 10),
+            tokenId: tokenId,
+          }
+        }),
       address: address || '',
     },
     skip: assetIds === undefined,

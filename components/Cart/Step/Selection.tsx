@@ -53,14 +53,14 @@ const CartStepSelection: FC<Props> = ({ onSubmit }) => {
 
   const offers = useMemo(
     () =>
-      (data?.offerOpenSales?.nodes || []).reduce(
+      (data?.listings?.nodes || []).reduce(
         (prev, x) => ({ ...prev, [x.id]: x }),
         {} as Record<
           string,
-          NonNullable<FetchCartItemsQuery['offerOpenSales']>['nodes'][number]
+          NonNullable<FetchCartItemsQuery['listings']>['nodes'][number]
         >,
       ),
-    [data?.offerOpenSales?.nodes],
+    [data?.listings?.nodes],
   )
 
   const nonExpiredSelectedCartItems = useMemo(

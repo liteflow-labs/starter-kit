@@ -54,7 +54,7 @@ const HistoryList: FC<IProps> = ({ chainId, collectionAddress, tokenId }) => {
       tokenId,
       limit: LIMIT,
       offset,
-      filter,
+      actions: filter,
     },
   })
   const histories = historyData?.assetHistories?.nodes

@@ -5,11 +5,7 @@ import useEnvironment from '../../hooks/useEnvironment'
 import Slider from '../Slider/Slider'
 import TokenHeader from './FeaturedToken'
 
-type Props = {
-  date: Date
-}
-
-const FeaturedHomeSection: FC<Props> = ({ date }) => {
+const FeaturedHomeSection: FC = () => {
   const { FEATURED_TOKEN } = useEnvironment()
 
   const featuredAssets = useMemo(
@@ -28,12 +24,11 @@ const FeaturedHomeSection: FC<Props> = ({ date }) => {
               chainId={parseInt(chainId, 10)}
               collectionAddress={collectionAddress.toLowerCase()}
               tokenId={tokenId}
-              date={date}
             />
           )
         },
       ),
-    [FEATURED_TOKEN, date],
+    [FEATURED_TOKEN],
   )
 
   if (FEATURED_TOKEN.length === 0) return null

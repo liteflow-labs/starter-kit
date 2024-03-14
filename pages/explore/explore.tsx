@@ -15,7 +15,7 @@ import {
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import Empty from '../../components/Empty/Empty'
 import ExploreTemplate from '../../components/Explore'
 import FilterAsset, { NoFilter } from '../../components/Filter/FilterAsset'
@@ -40,11 +40,7 @@ import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
 import { removeEmptyFromObject } from '../../utils'
 
-type Props = {
-  now: string
-}
-
-const ExplorePage: NextPage<Props> = ({ now }) => {
+const ExplorePage: NextPage = () => {
   const { PAGINATION_LIMIT } = useEnvironment()
   const { query, pathname, push } = useRouter()
   const isSmall = useBreakpointValue(
@@ -52,7 +48,6 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
     { fallback: 'md' },
   )
   const { t } = useTranslation('templates')
-  const date = useMemo(() => new Date(now), [now])
   const { address } = useAccount()
   const filter = useAssetFilterFromQuery()
   const orderBy = useOrderByQuery<AssetsOrderBy>('BEST_PRICE_ASC')
@@ -63,7 +58,7 @@ const ExplorePage: NextPage<Props> = ({ now }) => {
       limit,
       offset,
       orderBy,
-      filter: convertFilterToAssetFilter(filter, date),
+      condition: convertFilterToAssetFilter(filter),
     },
   })
   useCart({ onCheckout: refetch })

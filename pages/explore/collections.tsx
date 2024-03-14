@@ -45,9 +45,7 @@ import usePaginate from '../../hooks/usePaginate'
 import usePaginateQuery from '../../hooks/usePaginateQuery'
 import { formatError, removeEmptyFromObject } from '../../utils'
 
-type Props = {}
-
-const CollectionsPage: NextPage<Props> = ({}) => {
+const CollectionsPage: NextPage = () => {
   const { CHAINS, PAGINATION_LIMIT } = useEnvironment()
   const { pathname, push, query, replace } = useRouter()
   const isSmall = useBreakpointValue(
@@ -64,7 +62,7 @@ const CollectionsPage: NextPage<Props> = ({}) => {
       limit,
       offset,
       orderBy,
-      filter: convertFilterToCollectionFilter(filter),
+      condition: convertFilterToCollectionFilter(filter),
     },
   })
 

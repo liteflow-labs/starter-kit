@@ -20,7 +20,7 @@ import { HiOutlineSearch } from '@react-icons/all-files/hi/HiOutlineSearch'
 import { NextPage } from 'next'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import AcceptOfferButton from '../../../../components/Button/AcceptOffer'
 import Empty from '../../../../components/Empty/Empty'
 import Image from '../../../../components/Image/Image'
@@ -43,11 +43,7 @@ import useRequiredQueryParamSingle from '../../../../hooks/useRequiredQueryParam
 import LargeLayout from '../../../../layouts/large'
 import { dateFromNow, formatError } from '../../../../utils'
 
-type Props = {
-  now: string
-}
-
-const BidReceivedPage: NextPage<Props> = ({ now }) => {
+const BidReceivedPage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('templates')
   const { replace, pathname, query } = useRouter()
@@ -58,14 +54,12 @@ const BidReceivedPage: NextPage<Props> = ({ now }) => {
   const userAddress = useRequiredQueryParamSingle('id')
   const ownerLoggedIn = useIsLoggedIn(userAddress)
 
-  const date = useMemo(() => new Date(now), [now])
   const { data, refetch } = useFetchUserBidsReceivedQuery({
     variables: {
       address: userAddress,
       limit,
       offset,
       orderBy,
-      now: date,
     },
   })
   const bids = data?.bids?.nodes
