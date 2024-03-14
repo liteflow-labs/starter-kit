@@ -18,12 +18,14 @@ import React, {
   Fragment,
   JSX,
   PropsWithChildren,
+  useCallback,
   useEffect,
   useMemo,
   useState,
 } from 'react'
 import { Cookies, CookiesProvider, useCookies } from 'react-cookie'
 import {
+  Connector,
   WagmiConfig,
   useDisconnect,
   useAccount as useWagmiAccount,
@@ -128,36 +130,43 @@ function AccountProvider({
   const { LITEFLOW_API_KEY, BASE_URL } = useEnvironment()
   const { jwtToken, login, logout } = useAccount()
   const { disconnect } = useDisconnect()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen: openSignModal, onClose } = useDisclosure()
   const [cookies] = useCookies<string, COOKIES>([COOKIE_JWT_TOKEN])
 
   const { connector } = useWagmiAccount({
-    async onConnect({ connector }) {
-      if (!connector) return
-      try {
-        await login(connector)
-        // jwtToken from useAccount is null on refresh, so we need to check the cookies
-        if (!cookies[COOKIE_JWT_TOKEN]) onOpen()
-      } catch (e: any) {
-        disconnect()
-      }
-    },
-    onDisconnect() {
+    onConnect: useCallback(
+      async ({ connector }: { connector?: Connector }) => {
+        if (!connector) return
+        try {
+          const isConnected = await login(connector)
+          if (!isConnected) openSignModal()
+        } catch (e: any) {
+          disconnect()
+        }
+      },
+      [disconnect, login, openSignModal],
+    ),
+    onDisconnect: useCallback(() => {
       void logout()
-    },
+    }, [logout]),
   })
 
   // handle change of account
   useEffect(() => {
     if (!connector) return
-    const handleLogin = () => {
-      login(connector).then(onOpen).catch(onError)
+    const handleLogin = async () => {
+      try {
+        const isConnected = await login(connector)
+        if (!isConnected) openSignModal()
+      } catch (error) {
+        onError(1)
+      }
     }
     connector.on('change', handleLogin)
     return () => {
       connector.off('change', handleLogin)
     }
-  }, [connector, login, onError, onOpen])
+  }, [connector, cookies, login, onError, openSignModal])
 
   const client = useMemo(
     // The client needs to be reset when the jwtToken changes but only on the client as the server will
