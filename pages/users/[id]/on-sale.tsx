@@ -14,11 +14,7 @@ import usePaginateQuery from '../../../hooks/usePaginateQuery'
 import useRequiredQueryParamSingle from '../../../hooks/useRequiredQueryParamSingle'
 import LargeLayout from '../../../layouts/large'
 
-type Props = {
-  now: string
-}
-
-const OnSalePage: NextPage<Props> = ({ now }) => {
+const OnSalePage: NextPage = () => {
   const { BASE_URL, PAGINATION_LIMIT } = useEnvironment()
   const { t } = useTranslation('templates')
   const { pathname, replace, query } = useRouter()
@@ -28,7 +24,6 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
   const { address } = useAccount()
   const userAddress = useRequiredQueryParamSingle('id')
 
-  const date = useMemo(() => new Date(now), [now])
   const { data, refetch } = useFetchOnSaleAssetsQuery({
     variables: {
       address: userAddress,
@@ -36,7 +31,6 @@ const OnSalePage: NextPage<Props> = ({ now }) => {
       limit,
       offset,
       orderBy,
-      now: date,
     },
   })
 

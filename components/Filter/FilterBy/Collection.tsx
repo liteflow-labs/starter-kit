@@ -17,11 +17,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { FC, useCallback, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { concatToQuery } from '../../../concat'
-import {
-  CollectionFilter,
-  StringFilter,
-  useSearchCollectionQuery,
-} from '../../../graphql'
+import { useSearchCollectionQuery } from '../../../graphql'
 import { Filter } from '../../../hooks/useAssetFilterFromQuery'
 import { formatError } from '../../../utils'
 import CollectionListItem from '../../Collection/ListItem'
@@ -53,14 +49,8 @@ const FilterByCollection: FC<Props> = ({
     variables: {
       offset: 0, // the offset change must be done when calling the fetchMore function to concat queries' results
       limit: PAGINATION_LIMIT,
-      filter: {
-        name: {
-          includesInsensitive: filterResult.collectionSearch || '',
-        } as StringFilter,
-        ...(filterResult.chains.length
-          ? { chainId: { in: filterResult.chains } }
-          : {}),
-      } as CollectionFilter,
+      chainIds: filterResult.chains,
+      search: filterResult.collectionSearch || null,
     },
     notifyOnNetworkStatusChange: true,
   })

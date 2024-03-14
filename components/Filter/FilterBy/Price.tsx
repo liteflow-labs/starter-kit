@@ -43,9 +43,7 @@ const FilterByPrice: FC<Props> = ({
 
   const filterResult = watch()
 
-  const { data: currencyData } = useFetchCurrenciesQuery({
-    ssr: false,
-  })
+  const { data: currencyData } = useFetchCurrenciesQuery()
   const currencies = useMemo(
     () =>
       filterResult.chains.length > 0

@@ -20,18 +20,12 @@ import TokenMedia from '../Token/Media'
 import TokenMetadata from '../Token/Metadata'
 
 export type Props = {
-  date: Date
   chainId: number
   collectionAddress: string
   tokenId: string
 }
 
-const FeaturedToken: FC<Props> = ({
-  date,
-  chainId,
-  collectionAddress,
-  tokenId,
-}) => {
+const FeaturedToken: FC<Props> = ({ chainId, collectionAddress, tokenId }) => {
   const { address } = useAccount()
 
   const fetchFeaturedTokenQuery = useFetchFeaturedTokenQuery({
@@ -39,7 +33,6 @@ const FeaturedToken: FC<Props> = ({
       chainId,
       collectionAddress,
       tokenId,
-      now: date,
       address: address || '',
     },
   })
@@ -52,9 +45,7 @@ const FeaturedToken: FC<Props> = ({
   const media = useDetectAssetMedia(asset)
 
   const refresh = useCallback(async () => {
-    await fetchFeaturedTokenQuery.refetch({
-      now: new Date(),
-    })
+    await fetchFeaturedTokenQuery.refetch()
   }, [fetchFeaturedTokenQuery])
 
   useCart({ onCheckout: fetchFeaturedTokenQuery.refetch })

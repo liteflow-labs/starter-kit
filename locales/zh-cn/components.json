@@ -305,9 +305,9 @@
       "purchased_other": "已购买 <0>{{count}}</0> 个版本，单价为 <1/>"
     },
     "burn": {
-      "quantity_one": "{{count}} 版本已烧毁",
-      "purchased_other": "{{count}} 个版本已烧毁",
-      "by": "截至 {{user}}"
+      "quantity_one": "<0>{{count}}</0> 版本已烧毁",
+      "quantity_other": "<0>{{count}}</0> 个版本已烧毁",
+      "by": "截至 <0/>"
     }
   },
   "modal": {

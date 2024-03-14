@@ -1,18 +1,15 @@
-query GetNotifications($address: Address!, $limit: Int!, $offset: Int!) {
+query GetNotifications($limit: Int!, $offset: Int!) {
   notifications(
-    filter: {
-      accountAddress: { equalTo: $address }
-      action: {
-        in: [
-          ACCOUNT_VERIFICATION_VALIDATED
-          BID_ACCEPTED
-          BID_CREATED
-          OFFER_PURCHASED
-          BID_EXPIRED
-          OFFER_EXPIRED
-          REFERRAL_REFEREE_REGISTERED
-        ]
-      }
+    condition: {
+      actions: [
+        ACCOUNT_VERIFICATION_VALIDATED
+        BID_ACCEPTED
+        BID_CREATED
+        OFFER_PURCHASED
+        BID_EXPIRED
+        OFFER_EXPIRED
+        REFERRAL_REFEREE_REGISTERED
+      ]
     }
     first: $limit
     orderBy: CREATED_AT_DESC
