@@ -185,8 +185,24 @@ const getEnvironment = async (
       bsc,
       polygon,
       polygonMumbai,
-      neonMainnet,
-      neonDevnet,
+      {
+        ...neonMainnet,
+        blockExplorers: {
+          default: {
+            name: 'Blockscout',
+            url: 'https://neon.blockscout.com',
+          },
+        },
+      },
+      {
+        ...neonDevnet,
+        blockExplorers: {
+          default: {
+            name: 'Blockscout',
+            url: 'https://neon-devnet.blockscout.com',
+          },
+        },
+      },
       arbitrum,
       arbitrumSepolia,
       {
