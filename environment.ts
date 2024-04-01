@@ -259,7 +259,6 @@ const getEnvironment = async (): Promise<Environment> => {
           },
         },
       },
-      neonDevnet,
       arbitrum,
       arbitrumSepolia,
       {
