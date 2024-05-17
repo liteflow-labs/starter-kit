@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 import { useEffect, useMemo, useState } from 'react'
 import { useFeesLazyQuery } from '../graphql'
 

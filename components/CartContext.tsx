@@ -1,5 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { useBatchPurchase } from '@liteflow/react'
-import { BigNumber } from 'ethers'
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import useAccount from '../hooks/useAccount'
 import { CartItem, CartContext as Context } from '../hooks/useCart'
