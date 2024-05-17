@@ -61,8 +61,7 @@ export default function useAccount(): AccountDetail {
   const login = useCallback(
     async (connector: Connector) => {
       const wallet = await connector.getWalletClient()
-      const signer = walletClientToSigner(wallet)
-      const currentAddress = (await signer.getAddress()).toLowerCase()
+      const currentAddress = wallet.account.address.toLowerCase()
       if (jwt && currentAddress === jwt.address) {
         setAuthenticationToken(jwt.token)
         // fully login, nothing to do

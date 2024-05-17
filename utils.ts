@@ -4,6 +4,7 @@ import duration from 'dayjs/plugin/duration'
 import isBetween from 'dayjs/plugin/isBetween'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import utc from 'dayjs/plugin/utc'
+import { BaseError } from 'viem'
 
 dayjs.extend(utc)
 dayjs.extend(relativeTime)
@@ -57,16 +58,28 @@ export const dateIsBetween = (
   return dayjs(now).isBetween(dayjs(startDate), dayjs(endDate))
 }
 
-export const formatError = (error: unknown): string | undefined => {
+export function formatError(error: unknown): string | undefined {
   if (!error) return
-  if ((error as any).code === 'ACTION_REJECTED')
+
+  if (typeof error === 'string') return error
+  if (
+    typeof error === 'object' &&
+    'code' in error &&
+    error.code === 'ACTION_REJECTED'
+  )
     return 'Transaction was cancelled'
-  if ((error as any).error) return formatError((error as any).error)
-  if ((error as any).data?.message) return formatError((error as any).data)
+  if (error instanceof BaseError) return error.shortMessage
+  if (typeof error === 'object' && 'error' in error)
+    return formatError(error.error)
+  if (typeof error === 'object' && 'data' in error)
+    return formatError(error.data)
+  if (typeof error === 'object' && 'message' in error)
+    return formatError(error.message)
   if ((error as any).response?.errors?.length >= 0)
     return formatError((error as any).response.errors[0])
-  if ((error as Error).message) return (error as Error).message
-  return (error as any).toString()
+  if (error instanceof Error) return error.message
+
+  return 'An unknown error occurred'
 }
 
 export function removeEmptyFromObject<T = any>(obj: {
