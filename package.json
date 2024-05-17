@@ -23,7 +23,7 @@
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/units": "^5.7.0",
-    "@liteflow/react": "^3.0.0-rc.3",
+    "@liteflow/react": "^3.0.0",
     "@magiclabs/wagmi-connector": "^1.1.6",
     "@metamask/jazzicon": "^2.0.0",
     "@nft/chat": "^0.2.0",
