@@ -122,7 +122,7 @@ const CartStepTransaction: FC<Props> = ({
       try {
         setApprovalLoading((x) => ({ ...x, [currencyId]: true }))
         const transaction = await sendTransaction(signer, tx)
-        await transaction.wait()
+        await signer.waitForTransactionReceipt({ hash: transaction.hash })
         await fetchApproval({
           variables: { accountAddress: address, items: approvalItems },
         })
