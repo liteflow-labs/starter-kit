@@ -1,4 +1,5 @@
 import { Box } from '@chakra-ui/react'
+import { Web3Provider } from '@ethersproject/providers'
 import { Account, Chat, ChatProvider } from '@nft/chat'
 import request, { gql } from 'graphql-request'
 import { NextPage } from 'next'
@@ -53,6 +54,20 @@ const ChatPage: NextPage = () => {
 
   const theme = useMemo(() => getTheme(BRAND_COLOR), [BRAND_COLOR])
 
+  // create ether signer from signer to be compatible with ChatProvider
+  const etherSigner = useMemo(() => {
+    if (!signer) return
+    // from https://wagmi.sh/react/guides/ethers#reference-implementation-1
+    const { account, chain, transport } = signer
+    const network = {
+      chainId: chain.id,
+      name: chain.name,
+      ensAddress: chain.contracts?.ensRegistry?.address,
+    }
+    const provider = new Web3Provider(transport, network)
+    return provider.getSigner(account.address)
+  }, [signer])
+
   return (
     <LargeLayout>
       <Head title="Chat" />
@@ -68,7 +83,7 @@ const ChatPage: NextPage = () => {
         mx={{ base: -6, lg: 0 }}
       >
         <ChatProvider
-          signer={signer}
+          signer={etherSigner}
           theme={theme}
           lookupAddress={lookupAddress}
         >
