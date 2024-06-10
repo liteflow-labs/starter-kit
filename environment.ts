@@ -10,6 +10,7 @@ import {
   Chain,
   goerli as ethereumGoerli,
   mainnet as ethereumMainnet,
+  sepolia as ethereumSepolia,
   neonDevnet,
   neonMainnet,
   polygon,
@@ -237,10 +238,46 @@ const getEnvironment = async (): Promise<Environment> => {
     CHAINS: [
       ethereumMainnet,
       ethereumGoerli,
+      ethereumSepolia,
       bscTestnet,
       bsc,
       polygon,
       polygonMumbai,
+      {
+        id: 80_002,
+        name: 'Polygon Amoy',
+        network: 'polygon-amoy',
+        nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+        rpcUrls: {
+          alchemy: {
+            http: ['https://polygon-amoy.g.alchemy.com/v2'],
+            webSocket: ['wss://polygon-amoy.g.alchemy.com/v2'],
+          },
+          default: {
+            http: ['https://rpc-amoy.polygon.technology'],
+          },
+          public: {
+            http: ['https://rpc-amoy.polygon.technology'],
+          },
+        },
+        blockExplorers: {
+          etherscan: {
+            name: 'Etherscan',
+            url: 'https://amoy.polygonscan.com',
+          },
+          default: {
+            name: 'Etherscan',
+            url: 'https://amoy.polygonscan.com',
+          },
+        },
+        contracts: {
+          multicall3: {
+            address: '0xca11bde05977b3631167028862be2a173976ca11',
+            blockCreated: 3127388,
+          },
+        },
+        testnet: true,
+      },
       {
         ...neonMainnet,
         blockExplorers: {
