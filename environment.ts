@@ -8,13 +8,11 @@ import {
   bsc,
   bscTestnet,
   Chain,
-  goerli as ethereumGoerli,
   mainnet as ethereumMainnet,
   sepolia as ethereumSepolia,
   neonDevnet,
   neonMainnet,
   polygon,
-  polygonMumbai,
 } from 'wagmi/chains'
 
 type RemoteConfig = {
@@ -95,7 +93,7 @@ export type Environment = {
    * Wallet/chain configuration
    */
 
-  // List of supported chains. Liteflow is supporting the following: ethereumMainnet, ethereumGoerli, bscTestnet, bsc, polygon, polygonMumbai
+  // List of supported chains. Liteflow is supporting the following: ethereumMainnet, ethereumSepolia, bscTestnet, bsc, polygon, polygonAmoy, neonMainnet, neonDevnet, arbitrum, arbitrumSepolia, lightlinkPhoenix, lightlinkPegasus
   CHAINS: Chain[]
 
   // Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
@@ -237,12 +235,10 @@ const getEnvironment = async (): Promise<Environment> => {
     // Wallet/chain configuration
     CHAINS: [
       ethereumMainnet,
-      ethereumGoerli,
       ethereumSepolia,
       bscTestnet,
       bsc,
       polygon,
-      polygonMumbai,
       {
         id: 80_002,
         name: 'Polygon Amoy',
