@@ -5,6 +5,7 @@ import { Box, ChakraProvider, useDisclosure } from '@chakra-ui/react'
 import { LiteflowProvider } from '@liteflow/react'
 import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
+import { Analytics } from '@vercel/analytics/react'
 import dayjs from 'dayjs'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
 import App from 'next/app'
@@ -41,6 +42,7 @@ import useAccount, { COOKIES, COOKIE_JWT_TOKEN } from '../hooks/useAccount'
 import useEnvironment from '../hooks/useEnvironment'
 import { getTheme } from '../styles/theme'
 import Error from './_error'
+
 require('dayjs/locale/ja')
 require('dayjs/locale/zh-cn')
 require('dayjs/locale/es-mx')
@@ -275,7 +277,10 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
                         {errorCode ? (
                           <Error statusCode={errorCode} />
                         ) : (
-                          <Component {...pageProps} />
+                          <>
+                            <Component {...pageProps} />
+                            <Analytics />
+                          </>
                         )}
                       </Layout>
                     </CartContext>
