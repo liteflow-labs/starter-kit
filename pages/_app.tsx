@@ -5,6 +5,7 @@ import { Box, ChakraProvider, useDisclosure } from '@chakra-ui/react'
 import { LiteflowProvider } from '@liteflow/react'
 import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
+import { Analytics } from '@vercel/analytics/react'
 import dayjs from 'dayjs'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
 import App from 'next/app'
@@ -277,7 +278,10 @@ function MyApp({ Component, pageProps }: AppProps<MyAppProps>): JSX.Element {
                         {errorCode ? (
                           <Error statusCode={errorCode} />
                         ) : (
-                          <Component {...pageProps} />
+                          <>
+                            <Component {...pageProps} />
+                            <Analytics />
+                          </>
                         )}
                       </Layout>
                     </CartContext>
