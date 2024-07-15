@@ -111,7 +111,10 @@ const TokenMedia: FC<{
           fill
           objectFit={fill ? 'cover' : 'contain'}
           sizes={sizes}
-          unoptimized={mediaToDisplay.mimetype === 'image/gif'}
+          unoptimized={
+            mediaToDisplay.mimetype === 'image/gif' ||
+            mediaToDisplay.mimetype === 'image/svg+xml'
+          }
         />
       </Box>
     )
