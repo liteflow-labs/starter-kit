@@ -6,7 +6,6 @@ query NavbarAccount($account: Address!, $lastNotification: Datetime!) {
   }
   notifications(
     condition: { after: $lastNotification }
-    includeWhenCollectionDeleted: YES
     includeWhenTradeDeleted: YES
   ) {
     totalCount
