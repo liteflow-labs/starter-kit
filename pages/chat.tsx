@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react'
 import { Web3Provider } from '@ethersproject/providers'
 import { Account, Chat, ChatProvider } from '@nft/chat'
+import type { LookupAccountQuery, LookupAccountQueryVariables } from 'graphql'
 import request, { gql } from 'graphql-request'
 import { NextPage } from 'next'
 import { useCallback, useMemo } from 'react'
@@ -22,12 +23,7 @@ const ChatPage: NextPage = () => {
     async (address: string) => {
       const res = accounts.get(address)
       if (res) return res
-      const promise = request<{
-        account: {
-          name?: string
-          image?: string
-        }
-      }>(
+      const promise = request<LookupAccountQuery, LookupAccountQueryVariables>(
         `${
           process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL ||
           'https://api.liteflow.com'
