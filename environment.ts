@@ -1,13 +1,14 @@
-import request from 'graphql-request'
+import type { ConfigQuery, ConfigQueryVariables } from 'graphql'
+import request, { gql } from 'graphql-request'
 import { LRUCache } from 'lru-cache'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
+  Chain,
   arbitrum,
   arbitrumSepolia,
   bsc,
   bscTestnet,
-  Chain,
   mainnet as ethereumMainnet,
   sepolia as ethereumSepolia,
   neonDevnet,
@@ -180,23 +181,25 @@ const cache = new LRUCache({
       : 0, // no ttl, user need to refresh the page
   fetchMethod: async (key: string) => {
     invariant(key === 'config', 'Invalid key')
-    const { config } = await request<{ config: RemoteConfig }>(
+    const { config } = await request<ConfigQuery, ConfigQueryVariables>(
       `${
         process.env.NEXT_PUBLIC_LITEFLOW_BASE_URL || 'https://api.liteflow.com'
       }/${process.env.NEXT_PUBLIC_LITEFLOW_API_KEY}/graphql`,
-      `query Config {
-        config {
-          name
-          hasLazyMint
-          maxRoyaltiesPerTenThousand
-          offerValiditySeconds
-          metadata
+      gql`
+        query Config {
+          config {
+            name
+            hasLazyMint
+            maxRoyaltiesPerTenThousand
+            offerValiditySeconds
+            metadata
+          }
         }
-      }`,
+      `,
       undefined,
       [['origin', process.env.NEXT_PUBLIC_BASE_URL || '']],
     )
-    return config
+    return config satisfies RemoteConfig
   },
 })
 

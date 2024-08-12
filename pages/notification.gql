@@ -14,7 +14,6 @@ query GetNotifications($limit: Int!, $offset: Int!) {
     first: $limit
     orderBy: CREATED_AT_DESC
     offset: $offset
-    includeWhenCollectionDeleted: YES
     includeWhenTradeDeleted: YES
   ) {
     pageInfo {
