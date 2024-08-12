@@ -2,11 +2,11 @@ import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { createContext } from 'react'
 import invariant from 'ts-invariant'
 import {
+  Chain,
   arbitrum,
   arbitrumSepolia,
   bsc,
   bscTestnet,
-  Chain,
   mainnet as ethereumMainnet,
   sepolia as ethereumSepolia,
   neonDevnet,
