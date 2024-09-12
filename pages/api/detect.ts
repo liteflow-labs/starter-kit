@@ -14,7 +14,7 @@ export default async function detect(
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<void> {
-  res.setHeader('Cache-Control', 'max-age=60')
+  res.setHeader('Cache-Control', 'public, max-age=60')
   const domain = req.headers['x-forwarded-host'] || req.headers['host']
   const {
     rows: [organization],
