@@ -7,6 +7,8 @@ import {
   Chain,
   arbitrum,
   arbitrumSepolia,
+  base,
+  baseSepolia,
   bsc,
   bscTestnet,
   mainnet as ethereumMainnet,
@@ -94,7 +96,7 @@ export type Environment = {
    * Wallet/chain configuration
    */
 
-  // List of supported chains. Liteflow is supporting the following: ethereumMainnet, ethereumSepolia, bscTestnet, bsc, polygon, polygonAmoy, neonMainnet, neonDevnet, arbitrum, arbitrumSepolia, lightlinkPhoenix, lightlinkPegasus
+  // List of supported chains. Liteflow is supporting the following: ethereumMainnet, ethereumSepolia, bscTestnet, bsc, polygon, polygonAmoy, neonMainnet, neonDevnet, arbitrum, arbitrumSepolia, lightlinkPhoenix, lightlinkPegasus, base, baseSepolia
   CHAINS: Chain[]
 
   // Wallet connect project ID, you can get one at https://cloud.walletconnect.com/
@@ -346,6 +348,8 @@ const getEnvironment = async (): Promise<Environment> => {
           },
         },
       },
+      base,
+      baseSepolia,
     ],
     WALLET_CONNECT_PROJECT_ID:
       process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
