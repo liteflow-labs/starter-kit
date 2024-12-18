@@ -51,14 +51,12 @@ const DropMintForm: FC<Props> = ({ collection, drops, ...props }) => {
   )
 
   const dropsToRender = useMemo(() => {
-    if (inprogressDrops.length > 0)
-      return inprogressDrops.map((drop) => (
-        <MintFormInprogress key={drop.id} collection={collection} drop={drop} />
-      ))
-    if (upcomingDrops.length > 0)
-      return upcomingDrops.map((drop) => (
-        <MintFormUpcoming key={drop.id} drop={drop} />
-      ))
+    if (inprogressDrops.length > 0 && inprogressDrops[0])
+      return (
+        <MintFormInprogress collection={collection} drop={inprogressDrops[0]} />
+      )
+    if (upcomingDrops.length > 0 && upcomingDrops[0])
+      return <MintFormUpcoming drop={upcomingDrops[0]} />
     return <MintFormEnded collection={collection} drops={drops} />
   }, [drops, inprogressDrops, upcomingDrops, collection])
 
