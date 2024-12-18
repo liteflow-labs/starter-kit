@@ -30,6 +30,13 @@ export const dateFromNow = (date: Date | string): string => {
   return dayjs(date).fromNow()
 }
 
+export const dateTooLong = (
+  date: Date | string | undefined | null,
+): boolean => {
+  if (!date) return true
+  return dayjs(date).diff(dayjs(), 'years') > 50
+}
+
 export const formatDate = (date: Date | string): string => {
   return dayjs(date).utc().format('DD/MM/YYYY, HH[:]mm UTC')
 }
