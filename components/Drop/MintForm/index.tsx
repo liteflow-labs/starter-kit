@@ -22,6 +22,8 @@ type Props = StyleProps & {
     isAllowed: boolean
     maxQuantity: string | null
     currency: {
+      chainId: number
+      address: string | null
       decimals: number
       symbol: string
       image: string

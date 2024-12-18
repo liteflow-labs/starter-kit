@@ -42,6 +42,8 @@ query FetchCollectionDrops(
       maxQuantity(minter: $minter)
       currency {
         id
+        chainId
+        address
         decimals
         symbol
         image
