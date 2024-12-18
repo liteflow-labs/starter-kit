@@ -110,11 +110,11 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                   {isExpanded && (
                     <>
                       {!dateTooLong(drop.endDate) && (
-                      <Text variant="text-sm" color="gray.500">
-                        {t('drop.listItem.endDate', {
-                          endDate: formatDate(drop.endDate),
-                        })}
-                      </Text>
+                        <Text variant="text-sm" color="gray.500">
+                          {t('drop.listItem.endDate', {
+                            endDate: formatDate(drop.endDate),
+                          })}
+                        </Text>
                       )}
                       {drop.supply && (
                         <Text variant="text-sm" color="gray.500">
