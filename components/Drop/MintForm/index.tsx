@@ -1,6 +1,6 @@
 import { StyleProps, VStack } from '@chakra-ui/react'
 import { FC, useEffect, useMemo, useState } from 'react'
-import { dateIsBefore, dateIsBetween } from '../../../utils'
+import { dateIsAfter, dateIsBefore, dateIsBetween } from '../../../utils'
 import MintFormEnded from './Ended'
 import MintFormInprogress from './Inprogress'
 import MintFormUpcoming from './Upcoming'
@@ -13,7 +13,7 @@ type Props = StyleProps & {
   drops: {
     id: string
     name: string
-    endDate: Date
+    endDate: Date | null
     startDate: Date
     unitPrice: string
     minted: string
@@ -42,7 +42,9 @@ const DropMintForm: FC<Props> = ({ collection, drops, ...props }) => {
   const inprogressDrops = useMemo(
     () =>
       drops.filter((drop) =>
-        dateIsBetween(date, drop.startDate, drop.endDate),
+        drop.endDate
+          ? dateIsBetween(date, drop.startDate, drop.endDate)
+          : dateIsAfter(date, drop.startDate),
       ) || [],
     [date, drops],
   )

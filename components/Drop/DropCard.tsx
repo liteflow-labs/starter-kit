@@ -40,7 +40,7 @@ type Props = {
       }
     }
     startDate: Date
-    endDate: Date
+    endDate: Date | null
     unitPrice: string
     currency: {
       decimals: number
@@ -96,7 +96,7 @@ export default function DropCard({ drop, onCountdownEnd }: Props) {
       </Box>
 
       <Flex position="relative" w="full">
-        {status === Status.INPROGRESS && (
+        {status === Status.INPROGRESS && !!drop.endDate && (
           // Hidden countdown to trigger refetch when countdown ends
           <DropCountdown
             date={new Date(drop.endDate)}

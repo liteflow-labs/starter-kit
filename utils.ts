@@ -30,13 +30,6 @@ export const dateFromNow = (date: Date | string): string => {
   return dayjs(date).fromNow()
 }
 
-export const dateTooLong = (
-  date: Date | string | undefined | null,
-): boolean => {
-  if (!date) return true
-  return dayjs(date).diff(dayjs(), 'years') > 50
-}
-
 export const formatDate = (date: Date | string): string => {
   return dayjs(date).utc().format('DD/MM/YYYY, HH[:]mm UTC')
 }
@@ -55,6 +48,10 @@ export const getHumanizedDate = (second: number): string => {
 
 export const dateIsBefore = (now: Date, startDate: Date): boolean => {
   return dayjs(now).isBefore(dayjs(startDate))
+}
+
+export const dateIsAfter = (now: Date, endDate: Date): boolean => {
+  return dayjs(now).isAfter(dayjs(endDate))
 }
 
 export const dateIsBetween = (

@@ -7,7 +7,7 @@ type Props = StyleProps & {
     id: string
     name: string
     startDate: Date
-    endDate: Date
+    endDate: Date | null
     unitPrice: string
     isAllowed: boolean
     currency: {

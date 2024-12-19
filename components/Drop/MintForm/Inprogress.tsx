@@ -24,7 +24,7 @@ import { FC, JSX, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import invariant from 'ts-invariant'
 import useSigner from '../../../hooks/useSigner'
-import { dateTooLong, formatError } from '../../../utils'
+import { formatError } from '../../../utils'
 import Countdown from '../../Countdown/Countdown'
 import Image from '../../Image/Image'
 import MintDropModal from '../../Modal/MintDrop'
@@ -42,7 +42,7 @@ type Props = {
   drop: {
     id: string
     name: string
-    endDate: Date
+    endDate: Date | null
     unitPrice: string
     minted: string
     supply: string | null
@@ -241,11 +241,17 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
             <Trans
               ns="components"
               i18nKey={
-                dateTooLong(drop.endDate)
-                  ? 'drop.form.in-progress.untilSoldOut'
-                  : 'drop.form.in-progress.endsIn'
+                drop.endDate
+                  ? 'drop.form.in-progress.endsIn'
+                  : 'drop.form.in-progress.untilSoldOut'
               }
-              components={[<Countdown date={drop.endDate} key="countdown" />]}
+              components={[
+                drop.endDate ? (
+                  <Countdown date={drop.endDate} key="countdown" />
+                ) : (
+                  <></>
+                ),
+              ]}
             />
           </Text>
         </Flex>

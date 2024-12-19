@@ -15,14 +15,14 @@ import numbro from 'numbro'
 import { FC, useMemo } from 'react'
 import Price from '../../components/Price/Price'
 import useDropStatus, { Status } from '../../hooks/useTimeStatus'
-import { dateTooLong, formatDate } from '../../utils'
+import { formatDate } from '../../utils'
 
 type Props = {
   drop: {
     id: string
     name: string
     startDate: Date
-    endDate: Date
+    endDate: Date | null
     unitPrice: string
     isAllowed: boolean
     currency: {
@@ -109,7 +109,7 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                   </Text>
                   {isExpanded && (
                     <>
-                      {!dateTooLong(drop.endDate) && (
+                      {!!drop.endDate && (
                         <Text variant="text-sm" color="gray.500">
                           {t('drop.listItem.endDate', {
                             endDate: formatDate(drop.endDate),
