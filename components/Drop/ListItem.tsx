@@ -22,7 +22,7 @@ type Props = {
     id: string
     name: string
     startDate: Date
-    endDate: Date
+    endDate: Date | null
     unitPrice: string
     isAllowed: boolean
     currency: {
@@ -109,11 +109,13 @@ const DropListItem: FC<Props> = ({ drop, isOpen }) => {
                   </Text>
                   {isExpanded && (
                     <>
-                      <Text variant="text-sm" color="gray.500">
-                        {t('drop.listItem.endDate', {
-                          endDate: formatDate(drop.endDate),
-                        })}
-                      </Text>
+                      {!!drop.endDate && (
+                        <Text variant="text-sm" color="gray.500">
+                          {t('drop.listItem.endDate', {
+                            endDate: formatDate(drop.endDate),
+                          })}
+                        </Text>
+                      )}
                       {drop.supply && (
                         <Text variant="text-sm" color="gray.500">
                           {t('drop.listItem.supply', {

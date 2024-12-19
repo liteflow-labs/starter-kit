@@ -50,6 +50,10 @@ export const dateIsBefore = (now: Date, startDate: Date): boolean => {
   return dayjs(now).isBefore(dayjs(startDate))
 }
 
+export const dateIsAfter = (now: Date, endDate: Date): boolean => {
+  return dayjs(now).isAfter(dayjs(endDate))
+}
+
 export const dateIsBetween = (
   now: Date,
   startDate: Date,

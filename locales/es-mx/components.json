@@ -176,7 +176,8 @@
         "mintedOut": "Minted out",
         "mint": "Mint",
         "notEligible": "You're not eligible for this mint stage",
-        "endsIn": "Ends in <0/>"
+        "endsIn": "Ends in <0/>",
+        "untilSoldOut": "Until sold out"
       },
       "upcoming": {
         "price": "Price:",

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { dateIsBefore, dateIsBetween } from '../utils'
+import { dateIsAfter, dateIsBefore } from '../utils'
 
 export enum Status {
   UPCOMING = 'upcoming',
@@ -9,7 +9,7 @@ export enum Status {
 
 type HookArgs = {
   startDate: Date
-  endDate: Date
+  endDate: Date | null
 }
 
 export default function useTimeStatus({
@@ -25,7 +25,7 @@ export default function useTimeStatus({
 
   return useMemo(() => {
     if (dateIsBefore(date, startDate)) return Status.UPCOMING
-    if (dateIsBetween(date, startDate, endDate)) return Status.INPROGRESS
-    return Status.ENDED
+    if (endDate && dateIsAfter(date, endDate)) return Status.ENDED
+    return Status.INPROGRESS
   }, [date, endDate, startDate])
 }
