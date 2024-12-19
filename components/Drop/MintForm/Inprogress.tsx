@@ -14,6 +14,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useMintDrop } from '@liteflow/react'
 import ConnectButtonWithNetworkSwitch from 'components/Button/ConnectWithNetworkSwitch'
 import useAccount from 'hooks/useAccount'
+import useApproveCurrency from 'hooks/useApproveCurrency'
 import useBlockExplorer from 'hooks/useBlockExplorer'
 import Trans from 'next-translate/Trans'
 import useTranslation from 'next-translate/useTranslation'
@@ -41,7 +42,7 @@ type Props = {
   drop: {
     id: string
     name: string
-    endDate: Date
+    endDate: Date | null
     unitPrice: string
     minted: string
     supply: string | null
@@ -49,6 +50,8 @@ type Props = {
     isAllowed: boolean
     maxQuantity: string | null
     currency: {
+      chainId: number
+      address: string | null
       decimals: number
       symbol: string
       image: string
@@ -75,6 +78,11 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
   const [mintDrop, { activeStep, transactionHash }] = useMintDrop(signer)
 
   const quantity = watch('quantity')
+  const approve = useApproveCurrency(
+    drop.currency,
+    collection.address as `0x${string}`,
+  )
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const blockExplorer = useBlockExplorer(collection.chainId)
 
@@ -86,6 +94,7 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       onOpen()
+      await approve.mutateAsync(BigInt(drop.unitPrice) * BigInt(data.quantity))
       const mintedDrops = await mintDrop(drop.id, data.quantity)
       invariant(mintedDrops[0], 'Error minting drop')
       mintedDrops.length === 1
@@ -231,8 +240,18 @@ const MintFormInprogress: FC<Props> = ({ collection, drop }): JSX.Element => {
           <Text variant="subtitle2">
             <Trans
               ns="components"
-              i18nKey="drop.form.in-progress.endsIn"
-              components={[<Countdown date={drop.endDate} key="countdown" />]}
+              i18nKey={
+                drop.endDate
+                  ? 'drop.form.in-progress.endsIn'
+                  : 'drop.form.in-progress.untilSoldOut'
+              }
+              components={[
+                drop.endDate ? (
+                  <Countdown date={drop.endDate} key="countdown" />
+                ) : (
+                  <></>
+                ),
+              ]}
             />
           </Text>
         </Flex>
