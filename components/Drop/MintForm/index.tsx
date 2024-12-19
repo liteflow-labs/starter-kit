@@ -1,6 +1,6 @@
 import { StyleProps, VStack } from '@chakra-ui/react'
 import { FC, useEffect, useMemo, useState } from 'react'
-import { dateIsBefore, dateIsBetween } from '../../../utils'
+import { dateIsAfter, dateIsBefore, dateIsBetween } from '../../../utils'
 import MintFormEnded from './Ended'
 import MintFormInprogress from './Inprogress'
 import MintFormUpcoming from './Upcoming'
@@ -13,7 +13,7 @@ type Props = StyleProps & {
   drops: {
     id: string
     name: string
-    endDate: Date
+    endDate: Date | null
     startDate: Date
     unitPrice: string
     minted: string
@@ -22,6 +22,8 @@ type Props = StyleProps & {
     isAllowed: boolean
     maxQuantity: string | null
     currency: {
+      chainId: number
+      address: string | null
       decimals: number
       symbol: string
       image: string
@@ -40,7 +42,9 @@ const DropMintForm: FC<Props> = ({ collection, drops, ...props }) => {
   const inprogressDrops = useMemo(
     () =>
       drops.filter((drop) =>
-        dateIsBetween(date, drop.startDate, drop.endDate),
+        drop.endDate
+          ? dateIsBetween(date, drop.startDate, drop.endDate)
+          : dateIsAfter(date, drop.startDate),
       ) || [],
     [date, drops],
   )
@@ -51,14 +55,12 @@ const DropMintForm: FC<Props> = ({ collection, drops, ...props }) => {
   )
 
   const dropsToRender = useMemo(() => {
-    if (inprogressDrops.length > 0)
-      return inprogressDrops.map((drop) => (
-        <MintFormInprogress key={drop.id} collection={collection} drop={drop} />
-      ))
-    if (upcomingDrops.length > 0)
-      return upcomingDrops.map((drop) => (
-        <MintFormUpcoming key={drop.id} drop={drop} />
-      ))
+    if (inprogressDrops.length > 0 && inprogressDrops[0])
+      return (
+        <MintFormInprogress collection={collection} drop={inprogressDrops[0]} />
+      )
+    if (upcomingDrops.length > 0 && upcomingDrops[0])
+      return <MintFormUpcoming drop={upcomingDrops[0]} />
     return <MintFormEnded collection={collection} drops={drops} />
   }, [drops, inprogressDrops, upcomingDrops, collection])
 
