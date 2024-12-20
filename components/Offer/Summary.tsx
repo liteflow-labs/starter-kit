@@ -66,7 +66,7 @@ const Summary: FC<Props> = ({
           ) : (
             <Heading as={Flex} variant="heading3" color="gray.500" mb={2}>
               {t('offer.summary.fees', {
-                value: feesOnTopPerTenThousand.div(100).toString(),
+                value: parseFloat(feesOnTopPerTenThousand.toString()) / 100,
               })}
               <Text
                 as={Price}
