@@ -408,7 +408,7 @@ const SalesDirectForm: FC<Props> = ({ asset, currencies, onCreated }) => {
             ) : (
               <Text variant="text" color="gray.500">
                 {t('sales.direct.form.fees', {
-                  value: feesPerTenThousand.div(100).toString(),
+                  value: parseFloat(feesPerTenThousand.toString()) / 100,
                 })}
                 <Text
                   as={Price}
@@ -481,7 +481,7 @@ const SalesDirectForm: FC<Props> = ({ asset, currencies, onCreated }) => {
             ) : (
               <Text variant="text" color="gray.500">
                 {t('sales.direct.form.total-fees', {
-                  value: feesPerTenThousand.div(100).toString(),
+                  value: parseFloat(feesPerTenThousand.toString()) / 100,
                 })}
                 <Text
                   as={Price}
