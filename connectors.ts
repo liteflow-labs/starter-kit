@@ -61,7 +61,11 @@ function connectors(environment: Environment): ClientWithChain {
           walletConnectWallet({ chains, projectId }),
           braveWallet({ chains, shimDisconnect }),
           environment.MAGIC_API_KEY
-            ? emailConnector({ chains, apiKey: environment.MAGIC_API_KEY })
+            ? emailConnector({
+                chains,
+                apiKey: environment.MAGIC_API_KEY,
+                alchemyApiKey: environment.ALCHEMY_API_KEY,
+              })
             : undefined,
         ].filter(Boolean),
       },
@@ -95,10 +99,16 @@ function connectors(environment: Environment): ClientWithChain {
 function emailConnector({
   chains,
   apiKey,
+  alchemyApiKey,
 }: {
   chains: Chain[]
   apiKey: string
+  alchemyApiKey: string | undefined
 }): Wallet {
+  if (!alchemyApiKey)
+    throw new Error(
+      'env NEXT_PUBLIC_ALCHEMY_API_KEY is required for email connector',
+    )
   return {
     id: 'magic',
     name: 'Magic',
@@ -112,8 +122,8 @@ function emailConnector({
           networks: chains.map((chain) => ({
             chainId: chain.id,
             rpcUrl:
-              chain.id === 1 // the default provider for Ethereum Mainnet (cloudflare) is not working with Magic
-                ? 'https://rpc.ankr.com/eth'
+              chain.id === 1 // the default provider for Ethereum Mainnet is not working with Magic, only Alchemy is
+                ? 'https://eth-mainnet.g.alchemy.com/v2/' + alchemyApiKey
                 : chain.rpcUrls.default.http[0]!,
           })),
         },
