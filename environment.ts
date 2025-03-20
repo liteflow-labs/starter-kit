@@ -182,8 +182,26 @@ const getEnvironment = async (
     CHAINS: [
       ethereumMainnet,
       ethereumSepolia,
-      bscTestnet,
-      bsc,
+      {
+        ...bsc,
+        rpcUrls: {
+          ...bsc.rpcUrls,
+          alchemy: {
+            http: ['https://bnb-mainnet.g.alchemy.com/v2'],
+            webSocket: ['wss://bnb-mainnet.g.alchemy.com/v2'],
+          },
+        },
+      },
+      {
+        ...bscTestnet,
+        rpcUrls: {
+          ...bscTestnet.rpcUrls,
+          alchemy: {
+            http: ['https://bnb-testnet.g.alchemy.com/v2'],
+            webSocket: ['wss://bnb-testnet.g.alchemy.com/v2'],
+          },
+        },
+      },
       polygon,
       {
         id: 80_002,
