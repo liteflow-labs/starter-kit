@@ -4,41 +4,20 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-
-      - name: Install Node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Node version
-        run: node -v
-
-      - name: Npm version
-        run: npm -v
-
-      - name: Set version in env
-        run: |
-          echo "node-version=$(node -v)" >> $GITHUB_ENV
-          echo "npm-version=$(npm -v)" >> $GITHUB_ENV
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+      - run: npm ci
+      - run: npm run lint
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.cache-name }}-node${{ env.node-version }}-npm${{ env.npm-version }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-node${{ env.node-version }}-npm${{ env.npm-version }}-
-
-      - name: Install dependencies
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm install
-
-      - name: Lint
-        run: npm run lint
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
