@@ -54,7 +54,7 @@ const Banner: FC = () => {
         lineHeight={5}
         color="white"
       >
-        The Web3 as a Service Company
+        Analyze, Launch, & Scale Web3 Projects
       </Flex>
       <Flex
         display={{ base: 'none', md: 'flex' }}
@@ -77,7 +77,7 @@ const Banner: FC = () => {
       </Flex>
       <Flex
         as={Link}
-        href="https://meetings.hubspot.com/alan364/liteflow-discovery-call"
+        href="https://calendar.app.google/YzVXKVV4qwRZXo5u8"
         isExternal
         mr={{ base: 5, lg: 8 }}
         ml="auto"
