@@ -186,6 +186,8 @@ const getEnvironment = async (
         ...bsc,
         rpcUrls: {
           ...bsc.rpcUrls,
+          default: { http: ['https://bsc-dataseed.binance.org'] },
+          public: { http: ['https://bsc-dataseed.binance.org'] },
           alchemy: {
             http: ['https://bnb-mainnet.g.alchemy.com/v2'],
             webSocket: ['wss://bnb-mainnet.g.alchemy.com/v2'],
