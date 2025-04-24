@@ -9,6 +9,7 @@ const removeImports = require('next-remove-imports')()
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  output: 'standalone',
   images: {
     minimumCacheTTL: 3600 * 24 * 365, // 1 year
     remotePatterns: [
