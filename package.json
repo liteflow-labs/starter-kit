@@ -1,6 +1,6 @@
 {
   "name": "starter-kit",
-  "version": "3.6.1",
+  "version": "3.6.4",
   "private": true,
   "scripts": {
     "clean": "rimraf .next",
