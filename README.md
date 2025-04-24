@@ -121,3 +121,11 @@ The theme is based on [ChakraUI](https://chakra-ui.com/) and can be [customized]
 #### Application
 
 Your application includes default navigation, metadata, and wallets that can be updated directly from the `pages/_app.tsx` file.
+
+## Build and publish Docker image
+
+Make sure to have the envs in the file `.env.production`.
+
+```bash
+docker build -t IMAGE_TAG --platform linux/amd64 --push .
+```
