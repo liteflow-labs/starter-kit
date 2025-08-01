@@ -12,7 +12,12 @@ import { FC, useCallback, useEffect, useState } from 'react'
 import { AssetMedia } from '../../hooks/useDetectAssetMedia'
 import Image from '../Image/Image'
 
-const supportedMedia = [/^image\/*/, /^video\/*/, /^application\/octet-stream$/]
+const supportedMedia = [
+  /^image\/*/,
+  /^video\/*/,
+  /^application\/octet-stream$/,
+  /^text\/html$/,
+]
 
 const TokenMedia: FC<{
   media: AssetMedia
@@ -74,6 +79,15 @@ const TokenMedia: FC<{
         </Center>
       </>
     )
+
+  // display html
+  if (mediaToDisplay.mimetype === 'text/html') {
+    return (
+      <Box position="relative" w="full" h="full">
+        <iframe src={mediaToDisplay.url} width="100%" height="100%" />
+      </Box>
+    )
+  }
 
   // display video
   if (
