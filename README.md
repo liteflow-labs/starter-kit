@@ -129,3 +129,7 @@ Make sure to have the envs in the file `.env.production`.
 ```bash
 docker build -t IMAGE_TAG --platform linux/amd64 --push .
 ```
+
+## Built on this template
+
+- [Commons Protocol](https://github.com/TerexitariusStomp/commons-protocol) — open-source public-goods NFT marketplace where artifact sales fund projects and a community endowment. The template's explore/checkout/profile stack is used with the hosted Liteflow backend swapped for open, self-hostable adapters (sudoswap pools + a D1 indexer).
